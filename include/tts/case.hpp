@@ -71,7 +71,7 @@ void TTS_FUNCTION( ::tts::env& runtime)                                         
   @param DESCRIPTION  String literal describing the scope of the test case
   @param TYPES        Boost.Preprocessor sequence of types
 **/
-#define TTS_CASE_TPL(DESCRIPTION, TYPES)                                                            \
+#define TTS_CASE_TPL(DESCRIPTION, ...)                                                              \
 template<typename T> void TTS_FUNCTION( tts::env& );                                                \
 namespace                                                                                           \
 {                                                                                                   \
@@ -90,7 +90,7 @@ namespace                                                                       
                                 if(!runtime.is_compact()) { runtime.stream() << std::endl; }        \
                                 TTS_FUNCTION<T>(runtime);                                           \
                               }                                                                     \
-                            , ::tts::detail::typelist<TTS_REMOVE_PARENS(TYPES)>{}                   \
+                            , ::tts::detail::typelist<__VA_ARGS__>{}                                \
                             );                                                                      \
                           }                                                                         \
                         )                                                                           \
