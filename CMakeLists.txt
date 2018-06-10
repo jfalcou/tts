@@ -41,18 +41,21 @@ add_subdirectory(doc)
 install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts
           DESTINATION include
         )
+## -------------------------------------------------------------------------------------------------
+## Options
+## -------------------------------------------------------------------------------------------------
+option( TTS_BUILD_TEST  "Build tests for tts" ON )
 
 ##===================================================================================================
 ## Setup Testing
 ##===================================================================================================
-enable_testing()
 
-##===================================================================================================
-## Setup Coverage Test
-##===================================================================================================
-add_custom_target(tests)
-add_custom_target(unit)
+if( SPY_BUILD_TEST )
+  enable_testing()
+  add_custom_target(tests)
+  add_custom_target(unit)
 
-enable_testing()
-add_dependencies(tests unit)
-add_subdirectory(test)
+  enable_testing()
+  add_dependencies(tests unit)
+  add_subdirectory(test)
+endif()
