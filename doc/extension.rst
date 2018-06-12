@@ -1,8 +1,13 @@
-Developer's Guide
-=================
+Customizing TTS
+===============
 
-User-defined Extension Points
------------------------------
+Extension Points
+----------------
+
+TODO
+
+Custom Driver
+----------------
 
 TODO
 
