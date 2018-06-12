@@ -1,15 +1,11 @@
 ##==================================================================================================
-##                                 Copyright 2018 Joel FALCOU
+##  TTS - Tiny Test System
+##  Copyright 2018 Joel FALCOU
 ##
-##                   Distributed under the Boost Software License, Version 1.0.
-##                        See accompanying file LICENSE.txt or copy at
-##                            http://www.boost.org/LICENSE_1_0.txt
+##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+##  SPDX-License-Identifier: MIT
 ##==================================================================================================
 
-##==================================================================================================
-## if they don't already exist, create a target and all of its logical parents
-## e.g. foo.bar.baz.thing -> foo.baz.thing -> foo.thing -> thing
-##==================================================================================================
 function(add_target_parent target)
   string(REGEX REPLACE "[^.]+\\.([^.]+)$" "\\1" parent_target ${target})
   string(REGEX REPLACE "^.*\\.([^.]+)$" "\\1" suffix ${parent_target})

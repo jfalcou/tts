@@ -1,18 +1,12 @@
- //==================================================================================================
- /*!
-   @file
+//==================================================================================================
+/**
+  TTS - Tiny Test System
+  Copyright 2018 Joel FALCOU
 
-   Defines extensible comparator for relation tests macro
-
-   @copyright 2015 LRI UMR 8623 CNRS/Univ Parcompare_ Sud XI
-   @copyright 2018 Joel FALCOU
-
-
-   Distributed under the Boost Software License, Version 1.0.
-   (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
-
- **/
- //==================================================================================================
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+**/
+//==================================================================================================
  #ifndef TTS_DETAIL_COMPARATOR_HPP_INCLUDED
  #define TTS_DETAIL_COMPARATOR_HPP_INCLUDED
 

@@ -1,17 +1,12 @@
 //==================================================================================================
-/*!
-  @file
+/**
+  TTS - Tiny Test System
+  Copyright 2018 Joel FALCOU
 
-  Defines the basic absdist function
-
-  @copyright 2018 Joel FALCOU
-
-
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
-
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
 **/
-//==================================================================================================
+//====================================================================================================
 #ifndef TTS_TESTS_IMPL_ABSDIST_HPP_INCLUDED
 #define TTS_TESTS_IMPL_ABSDIST_HPP_INCLUDED
 
