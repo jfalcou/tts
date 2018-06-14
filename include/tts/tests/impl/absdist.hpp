@@ -10,7 +10,6 @@
 #ifndef TTS_TESTS_IMPL_ABSDIST_HPP_INCLUDED
 #define TTS_TESTS_IMPL_ABSDIST_HPP_INCLUDED
 
-#include <tts/tests/impl/traits.hpp>
 #include <type_traits>
 #include <algorithm>
 #include <iterator>
@@ -28,9 +27,9 @@ namespace tts
   {
     template<typename U, typename V>
     static    auto test(int)
-          ->  decltype( ext::absdist<detail::common_t<U,V>>()
-                                      ( static_cast<detail::common_t<U,V>>(std::declval<U>())
-                                      , static_cast<detail::common_t<U,V>>(std::declval<V>())
+          ->  decltype( ext::absdist<std::common_type_t<U,V>>()
+                                      ( static_cast<std::common_type_t<U,V>>(std::declval<U>())
+                                      , static_cast<std::common_type_t<U,V>>(std::declval<V>())
                                       )
                         , std::true_type {}
                       );
@@ -57,7 +56,7 @@ namespace tts
                       , "Missing absdist specialisation for current types"
                       );
 
-        using common_t = detail::common_t<T1,T2>;
+        using common_t = std::common_type_t<T1,T2>;
         return ext::absdist<common_t>() ( static_cast<common_t>(a)
                                         , static_cast<common_t>(b)
                                         );
@@ -82,13 +81,11 @@ namespace tts
     {
       inline double operator()(T a, T b) const
       {
-        auto inf_ = std::numeric_limits<T>::infinity();
-        auto aa   = std::abs(a);
-        auto ab   = std::abs(b);
+        if( (a == b ) || (std::isnan(a) && std::isnan(b)) )
+          return 0.;
 
-        if( (a == b  ) || ((a != a) && (b!=b)) )  return 0.;
-        if( (a != a  ) || (b  != b) )             return inf_;
-        if( (aa==inf_) || (ab == inf_) )          return inf_;
+        if( std::isinf(a) || std::isinf(b) || std::isnan(a) || std::isnan(b) )
+          return std::numeric_limits<double>::infinity();
 
         return std::abs(a-b);
       }

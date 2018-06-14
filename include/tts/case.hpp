@@ -42,8 +42,8 @@
 void TTS_FUNCTION( ::tts::env& );                                                                   \
 namespace                                                                                           \
 {                                                                                                   \
-  static inline bool                                                                                \
-  TTS_REGISTRATION = ::tts::detail::registration(::tts::detail::test(DESCRIPTION, TTS_FUNCTION));   \
+  inline bool TTS_REGISTRATION = ::tts::detail                                                      \
+                                 ::registration(::tts::detail::test(DESCRIPTION, TTS_FUNCTION));    \
 }                                                                                                   \
 void TTS_FUNCTION( ::tts::env& runtime)                                                             \
 /**/
@@ -70,7 +70,7 @@ void TTS_FUNCTION( ::tts::env& runtime)                                         
 template<typename T> void TTS_FUNCTION( tts::env& );                                                \
 namespace                                                                                           \
 {                                                                                                   \
-  static inline bool                                                                                \
+  inline bool                                                                                       \
   TTS_REGISTRATION = ::tts::detail::registration                                                    \
                       ( ::tts::detail::test                                                         \
                         ( DESCRIPTION                                                               \

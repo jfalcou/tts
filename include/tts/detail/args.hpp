@@ -23,7 +23,7 @@ namespace tts { namespace detail
     args_map()
     {
       // List of environment variable to map onto options
-      std::pair<std::string,std::string> envvars[] =  { {"TTS_COMPACT" , "compact"}
+      std::pair<std::string,std::string> envvars[] =  { {"TTS_COMPACT"  , "compact"}
                                                       , {"TTS_FAIL_ONLY", "fail-only"}
                                                       };
 

@@ -17,7 +17,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 ## Prevent in-source build
 ##==================================================================================================
 if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
-  message( FATAL_ERROR "Building in-source, not recommended! Build in a separate directory." )
+  message( FATAL_ERROR "[tts] Building in-source, not recommended! Build in a separate directory." )
 endif()
 
 ##==================================================================================================

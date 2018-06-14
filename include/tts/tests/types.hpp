@@ -11,7 +11,6 @@
 #define TTS_TESTS_TYPES_HPP_INCLUDED
 
 #include <tts/detail/pp_helpers.hpp>
-#include <tts/detail/pp_helpers.hpp>
 #include <tts/detail/type_id.hpp>
 #include <tts/tests/basic.hpp>
 #include <type_traits>
@@ -33,10 +32,10 @@
 #define TTS_TYPE_IS(T, Type)                                                                        \
 do                                                                                                  \
 {                                                                                                   \
-  volatile bool tts_var_b = std::is_same< TTS_REMOVE_PARENS(Type)                                 \
-                                          , TTS_REMOVE_PARENS(T)                                    \
-                                          >::value;                                                 \
-  if( tts_var_b )                                                                                 \
+  volatile bool tts_var_b = std::is_same< TTS_REMOVE_PARENS(Type)                                   \
+                                        , TTS_REMOVE_PARENS(T)                                      \
+                                        >::value;                                                   \
+  if( tts_var_b )                                                                                   \
     TTS_PASS (   "Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                   \
                 <<  " == " << tts::type_id<TTS_REMOVE_PARENS(Type)>()                               \
                 );                                                                                  \

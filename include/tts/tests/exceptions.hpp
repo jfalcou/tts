@@ -32,14 +32,14 @@
 do                                                                                                  \
 {                                                                                                   \
   bool caught = false;                                                                              \
-  try                                 { (void)(TTS_REMOVE_PARENS(X)); }                             \
+  try                            { (void)(TTS_REMOVE_PARENS(X)); }                                  \
   catch( TTS_REMOVE_PARENS(T)& ) { caught = true; }                                                 \
                                                                                                     \
   if(caught)                                                                                        \
     TTS_PASS( TTS_STRING(X) <<  " throws " <<  TTS_STRING(T) );                                     \
   else                                                                                              \
     TTS_FAIL( TTS_STRING(X) <<  " does not throw " <<  TTS_STRING(T) );                             \
-} while( ::tts::detail::is_false() )                                                                        \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 /*!
@@ -64,10 +64,10 @@ do                                                                              
   catch( ... ) { caught = true; }                                                                   \
                                                                                                     \
   if(caught)                                                                                        \
-    TTS_FAIL( TTS_STRING(X) << " throws while not expected to" );                                   \
+    TTS_FAIL( TTS_STRING(X) << " throws while not expected to." );                                  \
   else                                                                                              \
-    TTS_PASS( TTS_STRING(X) << " doesn't throw" );                                                  \
-} while( ::tts::detail::is_false() )                                                                        \
+    TTS_PASS( TTS_STRING(X) << " doesn't throw." );                                                 \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 #endif
