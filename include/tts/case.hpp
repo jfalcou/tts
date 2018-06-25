@@ -12,6 +12,7 @@
 
 #include <tts/detail/pp_helpers.hpp>
 #include <tts/detail/ct_helpers.hpp>
+#include <tts/detail/rt_helpers.hpp>
 #include <tts/detail/test.hpp>
 #include <tts/engine/env.hpp>
 
@@ -45,7 +46,7 @@ namespace                                                                       
   inline bool TTS_REGISTRATION = ::tts::detail                                                      \
                                  ::registration(::tts::detail::test(DESCRIPTION, TTS_FUNCTION));    \
 }                                                                                                   \
-void TTS_FUNCTION( ::tts::env& runtime)                                                             \
+void TTS_FUNCTION( ::tts::env& runtime )                                                            \
 /**/
 
 /*!
@@ -80,9 +81,9 @@ namespace                                                                       
                             ( [&](auto t)                                                           \
                               {                                                                     \
                                 using T = typename decltype(t)::type;                               \
-                                runtime.stream() << std::endl;                                      \
-                                runtime.stream() <<  "With T = [" << ::tts::type_id<T>() << "] ";   \
-                                if(!runtime.is_compact()) { runtime.stream() << std::endl; }        \
+                                runtime.output() << std::endl;                                      \
+                                runtime.output() <<  "With T = [" << ::tts::type_id<T>() << "] ";   \
+                                runtime.output() << std::endl;                                      \
                                 TTS_FUNCTION<T>(runtime);                                           \
                               }                                                                     \
                             , ::tts::detail::typelist<__VA_ARGS__>{}                                \
@@ -92,6 +93,17 @@ namespace                                                                       
                       );                                                                            \
 }                                                                                                   \
 template<typename T> void TTS_FUNCTION( tts::env& runtime )                                         \
+/**/
+
+#define TTS_SETUP( DESCRIPTION )                                                                    \
+runtime.output() << "[SETUP] - " << DESCRIPTION << std::endl;                                       \
+for ( int tts_section = 0, tts_cnt = 1; tts_section < tts_cnt; tts_cnt -= 0==tts_section++ )        \
+/**/
+
+#define TTS_SECTION( DESCRIPTION )                                                                  \
+static int TTS_UNIQUE(id) = 0;                                                                      \
+if( ::tts::detail::section_guard(TTS_UNIQUE(id), tts_section, tts_cnt).check(DESCRIPTION,runtime))  \
+  for(int TTS_UNIQUE(tts_cnt) = 0; TTS_UNIQUE(tts_cnt) <1; TTS_UNIQUE(tts_cnt)++)                   \
 /**/
 
 #endif

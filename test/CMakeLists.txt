@@ -19,6 +19,7 @@ set ( SOURCES
       pass.cpp
       relation.cpp
       relative.cpp
+      sections.cpp
       types.cpp
       ulp.cpp
     )

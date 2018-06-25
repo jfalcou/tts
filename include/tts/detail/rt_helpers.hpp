@@ -127,10 +127,25 @@ namespace tts { namespace detail
 
     explicit operator bool() { return status; }
   };
-} }
 
-#define TTS_DUMP(R)                                                                                 \
-runtime.stream()  << "failing because:\n" << R.lhs << R.op << R.rhs << "\n" << "is incorrect.\n";   \
-/**/
+  // Setup/section environment guard
+  struct section_guard
+  {
+    int & id;
+    int const & section;
+
+    section_guard( int & id_, int const & section_, int & count ) : id( id_), section( section_)
+    {
+      if ( section == 0 ) id = count++ - 1;
+    }
+
+    template<typename Env> bool check(std::string const& desc, Env& e)
+    {
+      if(id == section)
+        e.stream()  << std::endl << "... " << desc << std::endl;
+      return id == section;
+    }
+  };
+} }
 
 #endif
