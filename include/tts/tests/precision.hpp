@@ -35,16 +35,16 @@
 #define TTS_ULP_EQUAL(A,B,X)                                                                        \
 do                                                                                                  \
 {                                                                                                   \
-  auto tts_var_r = ::tts::ulpdist((A),(B));                                                       \
-  auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                     \
-  if( tts_var_r <= (X) )                                                                          \
+  auto tts_var_r = ::tts::ulpdist((A),(B));                                                         \
+  auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                       \
+  if( tts_var_r <= (X) )                                                                            \
     TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << " ULPs." ); \
   else                                                                                              \
-    TTS_FAIL( "Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs                         \
-                            << " within " << X << " ULPs " << "but found: " << tts_var_r          \
+    TTS_FAIL( "Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs                             \
+                            << " within " << X << " ULPs " << "but found: " << tts_var_r            \
                             << " ULPs instead."                                                     \
             );                                                                                      \
-} while( ::tts::detail::is_false() )                                                                        \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 /*!
@@ -84,15 +84,15 @@ do                                                                              
 #define TTS_ALL_ULP_EQUAL(A,B,X)                                                                    \
 do                                                                                                  \
 {                                                                                                   \
-  auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::ulp(B,X));                                         \
-  if( tts_var_r )                                                                                 \
+  auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::ulp(B,X));                                           \
+  if( tts_var_r )                                                                                   \
     TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << " ULPs." ); \
   else                                                                                              \
     TTS_FAIL( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B)                                   \
-                            << " within " << X << " ULPs " << "but found: " << tts_var_r.rhs      \
-                            << " ULPs instead."                                                     \
+                            << " within " << X << " ULPs " << "but found: " << tts_var_r.rhs        \
+                            << " instead."                                                          \
             );                                                                                      \
-} while( ::tts::detail::is_false() )                                                                        \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 /*!
@@ -131,17 +131,17 @@ do                                                                              
 #define TTS_RELATIVE_EQUAL(A,B,X)                                                                   \
 do                                                                                                  \
 {                                                                                                   \
-  auto tts_var_r = ::tts::reldist((A),(B));                                                       \
-  auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                     \
-  if( tts_var_r <= (X/100.))                                                                      \
-    TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " ~ " << X << " %.");\
+  auto tts_var_r = ::tts::reldist((A),(B));                                                         \
+  auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                       \
+  if( tts_var_r <= (X/100.))                                                                        \
+    TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " ~ " << X << " %.");          \
   else                                                                                              \
-    TTS_FAIL( "Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs                         \
+    TTS_FAIL( "Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs                             \
                             << " within " << X << " % "                                             \
-                            << "but found: " << 100*tts_var_r                                     \
+                            << "but found: " << 100*tts_var_r                                       \
                             << " % instead."                                                        \
             );                                                                                      \
-} while( ::tts::detail::is_false() )                                                                        \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 /*!
@@ -164,16 +164,16 @@ do                                                                              
 #define TTS_ALL_RELATIVE_EQUAL(A,B,X)                                                               \
 do                                                                                                  \
 {                                                                                                   \
-  auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::relative(B,X));                                    \
-  if( tts_var_r )                                                                                 \
+  auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::relative(B,X));                                      \
+  if( tts_var_r )                                                                                   \
     TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << " %.");     \
   else                                                                                              \
     TTS_FAIL( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B)                                   \
                             << " within " << X << " % "                                             \
-                            << "but found: " << tts_var_r.rhs                                     \
-                            << " % instead."                                                        \
+                            << "but found: " << tts_var_r.rhs                                       \
+                            << " instead."                                                          \
             );                                                                                      \
-} while( ::tts::detail::is_false() )                                                                        \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 /*!
@@ -212,17 +212,17 @@ do                                                                              
 #define TTS_ABSOLUTE_EQUAL(A,B,X)                                                                   \
   do                                                                                                \
   {                                                                                                 \
-    auto tts_var_r = ::tts::absdist((A),(B));                                                     \
-    auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                   \
-    if( tts_var_r <= (X))                                                                         \
+    auto tts_var_r = ::tts::absdist((A),(B));                                                       \
+    auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                     \
+    if( tts_var_r <= (X))                                                                           \
       TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " ~ " << X << ".");          \
     else                                                                                            \
-      TTS_FAIL( "Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs                       \
+      TTS_FAIL( "Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs                           \
                 << " within " << X                                                                  \
-                << " but found: " << tts_var_r                                                    \
+                << " but found: " << tts_var_r                                                      \
                 << " instead."                                                                      \
         );                                                                                          \
-  } while( ::tts::detail::is_false() )                                                                      \
+  } while( ::tts::detail::is_false() )                                                              \
 /**/
 
 /*!
@@ -245,16 +245,16 @@ do                                                                              
 #define TTS_ALL_ABSOLUTE_EQUAL(A,B,X)                                                               \
 do                                                                                                  \
 {                                                                                                   \
-  auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::absolute(B,X));                                    \
-  if( tts_var_r )                                                                                 \
+  auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::absolute(B,X));                                      \
+  if( tts_var_r )                                                                                   \
     TTS_PASS( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << ".");       \
   else                                                                                              \
     TTS_FAIL( "Expecting: " << TTS_STRING(A) " == " TTS_STRING(B)                                   \
                             << " within " << X                                                      \
-                            << " but found: " << tts_var_r.rhs                                    \
-                            << " % instead."                                                        \
+                            << " but found: " << tts_var_r.rhs                                      \
+                            << " instead."                                                          \
             );                                                                                      \
-} while( ::tts::detail::is_false() )                                                                        \
+} while( ::tts::detail::is_false() )                                                                \
 /**/
 
 #endif

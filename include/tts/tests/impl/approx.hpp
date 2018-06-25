@@ -93,13 +93,14 @@ namespace tts
       (e.idx >= 0) ? ls << "  [" << e.idx << "]: " : ls << "  ";
       ls << to_string(e.ref) << " vs " << to_string(e.data);
       Measure::to_stream(ls,e.value);
+      ls << "\n";
     }
 
     // Stream max error
     s.precision(20);
     Measure::to_stream(s,u.max());
 
-    return os << "{\n"  + ls.str() + "}\n with a maximal error of " + s.str();
+    return os << "\n{\n"  + ls.str() + "}\n with a maximal error of " + s.str();
   }
 
   namespace ext

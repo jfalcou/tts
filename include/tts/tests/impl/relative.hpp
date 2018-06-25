@@ -29,7 +29,7 @@ namespace tts
       template<typename Stream> static void to_stream(Stream& s, double v)
       {
         s.precision(2);
-        s << " (" << std::fixed << v*100. << " %)\n";
+        s << " (" << std::fixed << v*100. << " %)";
       }
     };
   }
