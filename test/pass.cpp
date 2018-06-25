@@ -12,20 +12,6 @@
 
 TTS_CASE( "Check that forced pass passes" )
 {
-//! [pass]
   TTS_PASS("Forced pass");
-//! [pass]
-
-//! [info]
-  TTS_INFO("This is an info");
-//! [info]
-
-//! [warn]
-  TTS_WARNING("This is a warning");
-//! [warn]
-
-//! [error]
-  TTS_ERROR("This is an error");
-//! [error]
 }
 

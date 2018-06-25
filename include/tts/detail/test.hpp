@@ -22,7 +22,7 @@ namespace tts { namespace detail
     using behavior_t = std::function<void( tts::env& )>;
 
     test( std::string const& n, behavior_t const& b ) : name( n ), behaviour( b ) {}
-    void operator()(tts::env& e) { behaviour(e); }
+    void operator()(tts::env& e) { e.scenario(name); behaviour(e); }
 
     std::string name;
     behavior_t  behaviour;

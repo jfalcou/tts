@@ -27,115 +27,57 @@ namespace tts
   **/
   struct env
   {
-    public:
-
-    env(int argc, const char** argv, std::ostream& s = std::cout)
-      : test_count{0}, success_count{0}, invalid_count{0}, os(s)
+    env ( int argc, const char** argv, std::ostream& s = std::cout )
+        : test_count{0}, success_count{0}, invalid_count{0}, os(s)
     {
       args.update(argc,argv);
     }
 
-    /// Trigger environment compact mode
-    void compact(bool m) { compact_mode = m; }
-
-    /// Check the environment mode
-    bool is_compact() const { return compact_mode; }
-
-    /// Trigger environment compact mode
-    void fail_only(bool m) { fail_only_mode = m; }
-
-    /// Check the environment mode
-    bool is_fail_only() const { return fail_only_mode; }
+    void verbose(bool m) { verbose_ = m; }
+    bool verbose() const { return verbose_; }
 
     /// Report a test to be successful
-    void as_success() { test_count++; success_count++; }
+    void as_success()   { test_count++; success_count++;  }
+    void as_invalid()   { test_count++; invalid_count++;  }
+    void as_failure()   { test_count++;                   }
+    bool passed() const { return tests() != successes();  }
 
-    /*!
-      Report a test to be invalid
+    std::ptrdiff_t tests()      const { return test_count;    }
+    std::ptrdiff_t successes()  const { return success_count; }
+    std::ptrdiff_t invalids()   const { return invalid_count; }
+    std::ptrdiff_t failures()   const { return tests() - successes() - invalids(); }
 
-      A test case is to be reported invalid if it performs no test
-    **/
-    void as_invalid() { test_count++; invalid_count++; }
-
-    /// Report a test to fail
-    void as_failure() { test_count++; }
-
-    /// Notify the test driver of the success of all test cases
-    bool passed() const { return tests() != successes(); }
-
-    /// Return the count of tests
-    std::ptrdiff_t tests() const { return test_count; }
-
-    /// Return the count of successes
-    std::ptrdiff_t successes() const { return success_count; }
-
-    /// Return the count of invalid tests
-    std::ptrdiff_t invalids() const { return invalid_count; }
-
-    /// Return the count of failures
-    std::ptrdiff_t failures() const { return tests() - successes() - invalids(); }
-
-    /// Return the output stream of the current driver
     std::ostream& stream() const { return os; }
+    std::ostream& output() const { return !verbose_ ? tts::detail::null_stream : stream(); }
 
-    /// Insert a "[PASS]" message into the stream
+    void                scenario(std::string const& title)  { current_scenario_ = title;  }
+    std::string const&  scenario() const                    { return current_scenario_;   }
+
     std::ostream& pass()
     {
       as_success();
-      if(fail_only_mode)
-      {
-        return tts::detail::null_stream;
-      }
-      else
-      {
-        if(!compact_mode)
-        {
-          return os << "[PASS]" << " - ";
-        }
-        else
-        {
-          os << "+";
-          return tts::detail::null_stream;
-        }
-      }
+      return output();
     }
 
-    /// Insert a "[FAIL]" message into the stream
     std::ostream& fail()
     {
       as_failure();
-      if(!compact_mode)
-      {
-        return os << "[FAIL]" << " - ";
-      }
-      else
-      {
-        os << "-";
-        return tts::detail::null_stream;
-      }
+      return stream();
     }
 
-    /// Insert a "[IVLD]" message into the stream
     std::ostream& invalid()
     {
       as_invalid();
-      if(compact_mode)
-        return os << "!";
-      else
-        return os << "[IVLD]" << " - Empty test case" << std::endl;
+      return stream();
     }
-
-    // Can't be generated due ton reference to ostream member
-    env(env const&)             = delete;
-    env& operator=(env const&)  = delete;
 
     private:
     std::ptrdiff_t  test_count;
     std::ptrdiff_t  success_count;
     std::ptrdiff_t  invalid_count;
-    bool            compact_mode;
-    bool            fail_only_mode;
+    std::string     current_scenario_;
     std::ostream&   os;
+    bool            verbose_;
   };
 
   /*!
@@ -151,42 +93,18 @@ namespace tts
     auto fail_txt = e.failures()  > 1 ? "failures"  : "failure";
     auto inv_txt  = e.invalids()  > 1 ? "invalids"  : "invalid";
 
-    e.stream()  << std::string(80,'-') << "\n"
-      << "Results: "
-      << e.tests()  << " "    << test_txt << " - "
-      << e.successes() << " " << pass_txt << " - "
-      << e.failures() << "/"  << fails     << " " << fail_txt << " - "
-      << e.invalids() << "/"  << invalids  << " " << inv_txt
-      << std::endl;
+    e.output()  << std::string(80,'-') << "\n";
+    e.stream()  << "Results: "
+                << e.tests()  << " "    << test_txt << " - "
+                << e.successes() << " " << pass_txt << " - "
+                << e.failures() << "/"  << fails     << " " << fail_txt << " - "
+                << e.invalids() << "/"  << invalids  << " " << inv_txt
+                << std::endl;
 
     if(!fails && !invalids)
       return e.passed();
     else
       return e.failures() != fails || e.invalids() != invalids;
-  }
-
-  /*!
-    @ingroup group-unit
-
-    Display a header for each scenarios in a test suite
-
-    @param env  Environment to use as data source
-    @param t    Test to process
-  **/
-  template<typename Test>
-  inline void scenario_header( env& env, Test const& t)
-  {
-    if(!env.is_compact())
-    {
-      auto hbar = std::string(80,'-');
-      env.stream()  << hbar << std::endl
-                    << "Scenario: " << t.name << std::endl
-                    << hbar << std::endl;
-    }
-    else
-    {
-      env.stream()  << "Scenario: " << t.name << " : ";
-    }
   }
 
   /*!

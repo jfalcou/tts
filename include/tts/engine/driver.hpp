@@ -40,11 +40,9 @@ namespace tts
   inline bool run(Environment& environment, Suite& tests, Setup const&... setup)
   {
     // retrieve status
-    auto is_compact = args("compact",false);
-    auto is_fail_only = args("fail-only",false);
+    auto fo = args("verbose",false);
 
-    environment.compact(is_compact);
-    environment.fail_only(is_fail_only);
+    environment.verbose(fo);
 
     // randomize test on non-null random seed option
     if(auto seed = args("random",0u))
@@ -54,14 +52,9 @@ namespace tts
 
     for(auto& t : tests )
     {
-      scenario_header(environment,t);
       auto count = environment.tests();
-
       t(environment);
-
       process_invalid(environment, count);
-
-      environment.stream() << std::endl;
     }
 
     return ::tts::report(environment,setup...);
