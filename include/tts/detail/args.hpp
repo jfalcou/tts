@@ -20,20 +20,7 @@ namespace tts { namespace detail
 {
   struct args_map
   {
-    args_map()
-    {
-      // List of environment variable to map onto options
-      std::pair<std::string,std::string> envvars[] =  { {"TTS_COMPACT"  , "compact"}
-                                                      , {"TTS_FAIL_ONLY", "fail-only"}
-                                                      };
-
-      // fill map with environment variable
-      for(auto const& id : envvars)
-      {
-        auto p = get_env(id.first);
-        if(!p.empty()) data_[id.second].push_back(p);
-      }
-    }
+    args_map() {}
 
     void update(int argc, const char** argv) const
     {
@@ -76,47 +63,20 @@ namespace tts { namespace detail
     std::string operator()(std::string const& id, std::string def = "") const
     {
       auto opt = data_.find(id);
-      if(opt != data_.cend())
-      {
-        def = data_[id][0];
-      }
-
+      if(opt != data_.cend()) def = data_[id][0];
       return def;
     }
 
     std::vector<std::string> operator()(std::string const& id, std::vector<std::string> def = {}) const
     {
       auto opt = data_.find(id);
-      if(opt != data_.cend())
-      {
-        def = data_[id];
-      }
-
+      if(opt != data_.cend()) def = data_[id];
       return def;
     }
 
     static bool is_option(std::string const& s)
     {
       return (s.size() > 2) && (s[0] == '-') && (s[1] == '-');
-    }
-
-    // warning-free getenv on MSVC
-    static std::string get_env(std::string const& name)
-    {
-#if defined(BOOST_MSVC)
-      char* buf = 0;
-      std::size_t sz = 0;
-
-      _dupenv_s(&buf, &sz, name.c_str());
-
-      std::string that = buf ? buf : " ";
-      free(buf);
-#else
-      auto p = std::getenv(name.c_str());
-      std::string that = p ? p : "";
-#endif
-
-      return that;
     }
 
     private:
@@ -126,13 +86,6 @@ namespace tts { namespace detail
 
 namespace tts
 {
-  /*!
-    @ingroup group-common
-
-    Centralized options provider
-
-    Provides a global access to all the command line and environment options.
-  **/
   inline const detail::args_map args;
 }
 
