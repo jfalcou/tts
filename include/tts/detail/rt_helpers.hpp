@@ -142,7 +142,7 @@ namespace tts { namespace detail
     template<typename Env> bool check(std::string const& desc, Env& e)
     {
       if(id == section)
-        e.stream()  << std::endl << "... " << desc << std::endl;
+        e.output()  << std::endl << "... " << desc << std::endl;
       return id == section;
     }
   };
