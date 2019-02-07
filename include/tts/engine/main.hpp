@@ -10,12 +10,12 @@
 #ifndef TTS_ENGINE_MAIN_HPP_INCLUDED
 #define TTS_ENGINE_MAIN_HPP_INCLUDED
 
+#include <tts/detail/test.hpp>
 #include <tts/engine/driver.hpp>
 #include <tts/engine/env.hpp>
-#include <tts/detail/test.hpp>
 
 #if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
-#define TTS_CUSTOM_DRIVER_FUNCTION main
+#  define TTS_CUSTOM_DRIVER_FUNCTION main
 #endif
 
 //==================================================================================================
@@ -28,10 +28,10 @@
 */
 //==================================================================================================
 #if !defined(TTS_USE_CUSTOM_DRIVER)
-int TTS_CUSTOM_DRIVER_FUNCTION(int argc, const char** argv)
+int TTS_CUSTOM_DRIVER_FUNCTION(int argc, const char **argv)
 {
-  ::tts::env runtime(argc,argv,std::cout);
-  return ::tts::run( runtime, ::tts::detail::suite, 0, 0 );
+  ::tts::env runtime(argc, argv, std::cout);
+  return ::tts::run(runtime, ::tts::detail::suite, 0, 0);
 }
 #endif
 

@@ -10,9 +10,9 @@
 #ifndef TTS_TESTS_IMPL_ABSOLUTE_HPP_INCLUDED
 #define TTS_TESTS_IMPL_ABSOLUTE_HPP_INCLUDED
 
-#include <tts/tests/impl/approx.hpp>
-#include <tts/tests/impl/absdist.hpp>
 #include <string>
+#include <tts/tests/impl/absdist.hpp>
+#include <tts/tests/impl/approx.hpp>
 
 namespace tts
 {
@@ -20,16 +20,15 @@ namespace tts
   {
     struct absolute_measure
     {
-      template<typename T, typename U>
-      double operator()(T const& data, U const& ref) const
+      template<typename T, typename U> double operator()(T const &data, U const &ref) const
       {
-        return ::tts::absdist(data,ref);
+        return ::tts::absdist(data, ref);
       }
 
-      template<typename Stream> static void to_stream(Stream& s, double v)
+      template<typename Stream> static void to_stream(Stream &s, double v)
       {
         s.precision(5);
-        s << " (" <<  v << ")";
+        s << " (" << v << ")";
       }
     };
   }
@@ -38,7 +37,7 @@ namespace tts
   template<typename R> using absolute_ = approx_<detail::absolute_measure, R>;
 
   // Simple absolute_ constructor like call
-  template<typename R> inline absolute_<R> absolute(R const& t, double n) { return {t,n}; }
+  template<typename R> inline absolute_<R> absolute(R const &t, double n) { return {t, n}; }
 }
 
 #endif

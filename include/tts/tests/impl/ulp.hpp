@@ -10,9 +10,9 @@
 #ifndef TTS_TESTS_IMPL_ULP_HPP_INCLUDED
 #define TTS_TESTS_IMPL_ULP_HPP_INCLUDED
 
+#include <string>
 #include <tts/tests/impl/approx.hpp>
 #include <tts/tests/impl/ulpdist.hpp>
-#include <string>
 
 namespace tts
 {
@@ -20,13 +20,12 @@ namespace tts
   {
     struct ulp_measure
     {
-      template<typename T, typename U>
-      double operator()(T const& data, U const& ref) const
+      template<typename T, typename U> double operator()(T const &data, U const &ref) const
       {
-        return tts::ulpdist(data,ref);
+        return tts::ulpdist(data, ref);
       }
 
-      template<typename Stream> static void to_stream(Stream& s, double v)
+      template<typename Stream> static void to_stream(Stream &s, double v)
       {
         s << " (" << v << " ULPs)";
       }
@@ -36,7 +35,7 @@ namespace tts
   template<typename R> using ulp_ = approx_<detail::ulp_measure, R>;
 
   // Simple ulp_ constructor like call
-  template<typename R> inline ulp_<R> ulp(R const& t, double n) { return {t,n}; }
+  template<typename R> inline ulp_<R> ulp(R const &t, double n) { return {t, n}; }
 }
 
 #endif

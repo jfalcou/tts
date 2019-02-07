@@ -22,27 +22,23 @@
   @c std::is_same<T,Type> evaluates to @true_.
   @param Type Second type to compare
 **/
-#define TTS_TYPE_IS(T, Type)                                                                        \
-do                                                                                                  \
-{                                                                                                   \
-  constexpr auto check = std::is_same_v<TTS_REMOVE_PARENS(Type), TTS_REMOVE_PARENS(T)>;             \
-  if constexpr( check )                                                                             \
-  {                                                                                                 \
-    TTS_PASS(     "Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                  \
-              <<  " == "       << tts::type_id<TTS_REMOVE_PARENS(Type)>()                           \
-            );                                                                                      \
-  }                                                                                                 \
-                                                                                                    \
-  if constexpr( !check )                                                                            \
-  {                                                                                                 \
-    TTS_FAIL(     "Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                  \
-              <<  " == "       << tts::type_id<TTS_REMOVE_PARENS(Type)>()                           \
-              <<  " found "    << tts::type_id<TTS_REMOVE_PARENS(T)>()                              \
-              <<  " instead"                                                                        \
-            );                                                                                      \
-  }                                                                                                 \
-} while( ::tts::detail::is_false() )                                                                \
-/**/
+#define TTS_TYPE_IS(T, Type)                                                                       \
+  do                                                                                               \
+  {                                                                                                \
+    constexpr auto check = std::is_same_v<TTS_REMOVE_PARENS(Type), TTS_REMOVE_PARENS(T)>;          \
+    if constexpr(check)                                                                            \
+    {                                                                                              \
+      TTS_PASS("Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                    \
+                            << " == " << tts::type_id<TTS_REMOVE_PARENS(Type)>());                 \
+    }                                                                                              \
+                                                                                                   \
+    if constexpr(!check)                                                                           \
+    {                                                                                              \
+      TTS_FAIL("Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                    \
+                            << " == " << tts::type_id<TTS_REMOVE_PARENS(Type)>() << " found "      \
+                            << tts::type_id<TTS_REMOVE_PARENS(T)>() << " instead");                \
+    }                                                                                              \
+  } while(::tts::detail::is_false()) /**/
 
 /*!
   @ingroup group-unit
@@ -50,8 +46,8 @@ do                                                                              
   For a given expression @c Expression and a given type @c Type, consider the test successful if
   and only if @c std::is_same<decltype(Expression),Type> evaluates to @true_ .
 **/
-#define TTS_EXPR_IS(Expression, Type)                                                               \
-TTS_TYPE_IS(decltype( TTS_REMOVE_PARENS(Expression)), Type)                                         \
-/**/
+#define TTS_EXPR_IS(Expression, Type)                                                              \
+  TTS_TYPE_IS(decltype(TTS_REMOVE_PARENS(Expression)), Type)                                       \
+  /**/
 
 #endif

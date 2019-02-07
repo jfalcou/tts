@@ -11,7 +11,7 @@
 #define TTS_HPP_INCLUDED
 
 #include <tts/case.hpp>
-#include <tts/types.hpp>
 #include <tts/engine/main.hpp>
+#include <tts/types.hpp>
 
 #endif

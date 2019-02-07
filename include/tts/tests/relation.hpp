@@ -29,7 +29,7 @@
   @param A First argument of the test
   @param B Second argument of the test
 **/
-#define TTS_EQUAL( A, B )      TTS_EXPECT( (A) == (B) )
+#define TTS_EQUAL(A, B) TTS_EXPECT((A) == (B))
 
 /*!
   @ingroup group-unit
@@ -49,7 +49,7 @@
   @param A First argument of the test
   @param B Second argument of the test
 **/
-#define TTS_NOT_EQUAL( A, B )  TTS_EXPECT( (A) != (B) )
+#define TTS_NOT_EQUAL(A, B) TTS_EXPECT((A) != (B))
 
 /*!
   @ingroup group-unit
@@ -69,7 +69,7 @@
   @param A First argument of the test
   @param B Second argument of the test
 **/
-#define TTS_LESS(A,B)        TTS_EXPECT( (A) < (B) )
+#define TTS_LESS(A, B) TTS_EXPECT((A) < (B))
 
 /*!
   @ingroup group-unit
@@ -89,7 +89,7 @@
   @param A First argument of the test
   @param B Second argument of the test
 **/
-#define TTS_GREATER(A,B)       TTS_EXPECT( (A) > (B) )
+#define TTS_GREATER(A, B) TTS_EXPECT((A) > (B))
 
 /*!
   @ingroup group-unit
@@ -109,14 +109,15 @@
   @param A First argument of the test
   @param B Second argument of the test
 **/
-#define TTS_LESS_EQUAL(A,B)  TTS_EXPECT( (A) <= (B) )
+#define TTS_LESS_EQUAL(A, B) TTS_EXPECT((A) <= (B))
 
 /*!
   @ingroup group-unit
   Test for value greater-or-equal-than relationship.
 
   This macro performs a greater-or-equal-than test between its arguments using either the natural
-  @c >= operator or an ADL-accessible function named @c compare_greater_equal, whichever occurs first.
+  @c >= operator or an ADL-accessible function named @c compare_greater_equal, whichever occurs
+first.
 
   @par Usage:
 
@@ -129,6 +130,6 @@
   @param A First argument of the test
   @param B Second argument of the test
 **/
-#define TTS_GREATER_EQUAL(A,B) TTS_EXPECT( (A) >= (B) )
+#define TTS_GREATER_EQUAL(A, B) TTS_EXPECT((A) >= (B))
 
 #endif

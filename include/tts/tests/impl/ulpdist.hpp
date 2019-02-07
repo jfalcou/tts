@@ -10,34 +10,29 @@
 #ifndef TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
 #define TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
 
-#include <type_traits>
 #include <algorithm>
-#include <iterator>
 #include <cmath>
+#include <iterator>
+#include <type_traits>
 
 namespace tts
 {
   namespace ext
   {
-    template< typename T1, typename T2 = T1, typename EnableIF = void> struct ulpdist;
+    template<typename T1, typename T2 = T1, typename EnableIF = void> struct ulpdist;
   }
 
-  template<typename T1, typename T2>
-  struct support_ulpdist
+  template<typename T1, typename T2> struct support_ulpdist
   {
     template<typename U, typename V>
-    static    auto test(int)
-          ->  decltype( ext::ulpdist<std::common_type_t<U,V>>()
-                                      ( static_cast<std::common_type_t<U,V>>(std::declval<U>())
-                                      , static_cast<std::common_type_t<U,V>>(std::declval<V>())
-                                      )
-                        , std::true_type {}
-                      );
+    static auto test(int) -> decltype(ext::ulpdist<std::common_type_t<U, V>>()(
+                                          static_cast<std::common_type_t<U, V>>(std::declval<U>()),
+                                          static_cast<std::common_type_t<U, V>>(std::declval<V>())),
+                                      std::true_type {});
 
-    template<typename,typename>
-    static std::false_type test(...);
+    template<typename, typename> static std::false_type test(...);
 
-    using type = decltype(test<T1,T2>(0));
+    using type = decltype(test<T1, T2>(0));
   };
 
   namespace ext
@@ -47,72 +42,59 @@ namespace tts
 
       @brief User extension point for ULP computation
     **/
-    template<typename T1, typename T2, typename EnableIF>
-    struct ulpdist
+    template<typename T1, typename T2, typename EnableIF> struct ulpdist
     {
-      inline double operator()(T1 const& a, T2 const& b) const
+      inline double operator()(T1 const &a, T2 const &b) const
       {
-        static_assert ( support_ulpdist<T1,T2>::type::value
-                      , "Missing ulpdist specialisation for current types"
-                      );
+        static_assert(support_ulpdist<T1, T2>::type::value,
+                      "Missing ulpdist specialisation for current types");
 
-        using common_t = std::common_type_t<T1,T2>;
-        return ext::ulpdist<common_t>() ( static_cast<common_t>(a)
-                                        , static_cast<common_t>(b)
-                                        );
+        using common_t = std::common_type_t<T1, T2>;
+        return ext::ulpdist<common_t>()(static_cast<common_t>(a), static_cast<common_t>(b));
       }
     };
 
     // Overload for booleans
-    template< typename T>
-    struct ulpdist<T,T,typename std::enable_if<std::is_same<T,bool>::value>::type>
+    template<typename T>
+    struct ulpdist<T, T, typename std::enable_if<std::is_same<T, bool>::value>::type>
     {
-      inline double operator()(T a, T b) const
-      {
-        return a == b ? 0. : 1.;
-      }
+      inline double operator()(T a, T b) const { return a == b ? 0. : 1.; }
     };
 
     // Overload for reals
     template<typename T>
-    struct ulpdist< T, T
-                  , typename std::enable_if<std::is_floating_point<T>::value>::type
-                  >
+    struct ulpdist<T, T, typename std::enable_if<std::is_floating_point<T>::value>::type>
     {
       inline double operator()(T a, T b) const
       {
-        if( (a == b ) || (std::isnan(a) && std::isnan(b)) )
-          return 0.;
+        if((a == b) || (std::isnan(a) && std::isnan(b))) return 0.;
 
-        if( std::isnan(a) || std::isnan(b) )
-          return std::numeric_limits<double>::infinity();
+        if(std::isnan(a) || std::isnan(b)) return std::numeric_limits<double>::infinity();
 
-        int e1 = 0,e2 = 0;
-        T   m1,m2;
+        int e1 = 0, e2 = 0;
+        T   m1, m2;
         m1 = std::frexp(a, &e1);
         m2 = std::frexp(b, &e2);
 
         int expo = -std::max(e1, e2);
 
-        T e = (e1 == e2)  ? std::abs(m1-m2)
-                          : std::abs(std::ldexp(a, expo)- std::ldexp(b, expo));
+        T e = (e1 == e2) ? std::abs(m1 - m2) : std::abs(std::ldexp(a, expo) - std::ldexp(b, expo));
 
-        return double(e/std::numeric_limits<T>::epsilon());
+        return double(e / std::numeric_limits<T>::epsilon());
       }
     };
 
     // Overload for integers
     template<typename T>
-    struct ulpdist< T, T
-                  , typename std::enable_if <   std::is_integral<T>::value
-                                            &&  !std::is_same<T,bool>::value
-                                            >::type
-                  >
+    struct ulpdist<
+        T,
+        T,
+        typename std::enable_if<std::is_integral<T>::value && !std::is_same<T, bool>::value>::type>
     {
       inline double operator()(T a, T b) const
       {
         using u_t = typename std::make_unsigned<T>::type;
-        return static_cast<double>( (a<b) ? u_t(b-a) : u_t(a-b) );
+        return static_cast<double>((a < b) ? u_t(b - a) : u_t(a - b));
       }
     };
   }
@@ -169,9 +151,9 @@ namespace tts
     @param a1 Second value to compare
     @return The distance in ULP between a0 and a1
   **/
-  template<typename T, typename U> inline double ulpdist(T const& a0, U const& a1)
+  template<typename T, typename U> inline double ulpdist(T const &a0, U const &a1)
   {
-    return ext::ulpdist<T,U>()(a0,a1);
+    return ext::ulpdist<T, U>()(a0, a1);
   }
 }
 
