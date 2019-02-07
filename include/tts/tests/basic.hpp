@@ -18,8 +18,8 @@
 #define TTS_EXPECT(EXPR)                                                                           \
   do                                                                                               \
   {                                                                                                \
-    auto tts_var_d = TTS_DECOMPOSE(EXPR);                                                          \
-    if(bool(tts_var_d))                                                                            \
+    ::tts::detail::result tts_var_d = TTS_DECOMPOSE(EXPR);                                         \
+    if(tts_var_d)                                                                                  \
     {                                                                                              \
       TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(EXPR)));                          \
     }                                                                                              \
@@ -35,8 +35,8 @@
 #define TTS_EXPECT_NOT(EXPR)                                                                       \
   do                                                                                               \
   {                                                                                                \
-    auto tts_var_d = TTS_DECOMPOSE(EXPR);                                                          \
-    if(bool(tts_var_d))                                                                            \
+    ::tts::detail::result tts_var_d = TTS_DECOMPOSE(EXPR);                                         \
+    if(tts_var_d)                                                                                  \
     {                                                                                              \
       TTS_FAIL("Not expecting: " << ::tts::detail::red_(tts_var_d.lhs)                             \
                              << " " << ::tts::detail::white_(tts_var_d.op) << " "                  \
