@@ -14,61 +14,57 @@
 #include <iostream>
 #include <type_traits>
 
-namespace tts
+namespace tts::detail
 {
-  namespace detail
+  // Check if T is streamable
+  template<typename T, typename Enable = void>
+  struct is_streamable : std::false_type
   {
-    // Check if T is streamable
-    template<typename T> struct is_streamable_impl
-    {
-      template<typename> static auto test(...) -> std::false_type;
-      template<typename U>
-      static auto test(int) -> decltype(std::cout << std::declval<U>(), std::true_type());
-      using type = std::is_same<decltype(test<T>(0)), std::true_type>;
-    };
+  };
 
-    template<typename T> struct is_streamable : is_streamable_impl<T>::type
-    {
-    };
-    template<typename T> using is_streamable_t                 = typename is_streamable<T>::type;
-    template<typename T> inline constexpr bool is_streamable_v = is_streamable<T>::value;
+  template<typename T>
+  struct is_streamable<T, std::void_t< decltype(std::cout << std::declval<T>())> > : std::true_type
+  {
+  };
 
-    // Check if T is a container
-    template<typename T> struct is_container_impl
-    {
-      template<typename> static auto test(...) -> std::false_type;
-      template<typename U>
-      static auto test(int) -> decltype(std::declval<U>().begin(),
-                                        std::declval<U>().end(),
-                                        std::declval<U>().size(),
-                                        std::true_type());
+  template<typename T> using is_streamable_t                 = typename is_streamable<T>::type;
+  template<typename T> inline constexpr bool is_streamable_v = is_streamable<T>::value;
 
-      using type = std::is_same<decltype(test<T>(0)), std::true_type>;
-    };
+  // Check if T is a container
+  template<typename T> struct is_container_impl
+  {
+    template<typename> static auto test(...) -> std::false_type;
+    template<typename U>
+    static auto test(int) -> decltype(std::declval<U>().begin(),
+                                      std::declval<U>().end(),
+                                      std::declval<U>().size(),
+                                      std::true_type());
 
-    template<typename T> struct is_container : is_container_impl<T>::type
-    {
-    };
-    template<typename T> using is_container_t                 = typename is_container<T>::type;
-    template<typename T> inline constexpr bool is_container_v = is_container<T>::value;
+    using type = std::is_same<decltype(test<T>(0)), std::true_type>;
+  };
 
-    // Simple types container
-    template<typename... Args> struct typelist
-    {
-    };
+  template<typename T> struct is_container : is_container_impl<T>::type
+  {
+  };
+  template<typename T> using is_container_t                 = typename is_container<T>::type;
+  template<typename T> inline constexpr bool is_container_v = is_container<T>::value;
 
-    // Type box
-    template<typename T> struct box
-    {
-      using type = T;
-    };
+  // Simple types container
+  template<typename... Args> struct typelist
+  {
+  };
 
-    // Iterate statically over a typelist
-    template<typename Function, typename... Types>
-    void for_each_type(Function &&f, typelist<Types...> const &)
-    {
-      (f(box<Types> {}), ...);
-    }
+  // Type box
+  template<typename T> struct box
+  {
+    using type = T;
+  };
+
+  // Iterate statically over a typelist
+  template<typename Function, typename... Types>
+  void for_each_type(Function &&f, typelist<Types...> const &)
+  {
+    (f(box<Types> {}), ...);
   }
 }
 

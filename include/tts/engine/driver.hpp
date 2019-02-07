@@ -12,10 +12,13 @@
 
 #include <algorithm>
 #include <random>
+#include <chrono>
 #include <tts/detail/args.hpp>
 
 namespace tts
 {
+  namespace detail { int usage(std::string const&); }
+
   /*!
     @ingroup group-common
 
@@ -39,19 +42,42 @@ namespace tts
   template<typename Environment, typename Suite, typename... Setup>
   inline bool run(Environment &environment, Suite &tests, Setup const &... setup)
   {
-    // retrieve status
-    auto fo = args("verbose", false);
+    using namespace std::literals;
 
+    if(args("help"sv, false))
+      return ::tts::detail::usage(environment.name());
+
+    // retrieve status
+    auto fo = args("pass"sv, false);
     environment.verbose(fo);
 
+    // check if tests needs to be repeated
+    auto repetition = args("repeat"sv, 1);
+
     // randomize test on non-null random seed option
-    if(auto seed = args("random", 0u))
-    { std::shuffle(tests.begin(), tests.end(), std::mt19937 {seed}); }
+    auto seed = args("seed"sv, 1);
+
+    // no seed ? See if e didn't asked for fully randomized
+    if(args("seed"sv, ""s) == "time"sv)
+      seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+
+    auto order = args("order","declared"s);
+
+    if(order == "random"s)
+    {
+      std::shuffle(tests.begin(), tests.end(), std::mt19937 {seed});
+    }
+    else if(order == "sorted"s)
+    {
+      std::sort ( tests.begin(), tests.end()
+                , [](auto const& a, auto const& b) { return a.name < b.name; }
+                );
+    }
 
     for(auto &t: tests)
     {
       auto count = environment.tests();
-      t(environment);
+      for(int i=0;i<repetition;++i) t(environment);
       process_invalid(environment, count);
     }
 

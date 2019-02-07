@@ -5,7 +5,6 @@
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
-include(compilers)
 include(add_target_parent)
 
 ##===================================================================================================
@@ -13,12 +12,20 @@ include(add_target_parent)
 ##===================================================================================================
 function(make_unit root)
 
+  if( MSVC )
+    set( options /std:c++latest /W3 /EHsc)
+  else()
+    set( options -std=c++17 -Wall -Wno-missing-braces )
+  endif()
+
   foreach(file ${ARGN})
 
     string(REPLACE ".cpp" ".unit" base ${file})
     set(test "${root}.${base}")
 
     add_executable(${test} ${file})
+    target_compile_options  ( ${test} PRIVATE ${options} )
+
     set_property( TARGET ${test}
                   PROPERTY RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/unit"
                 )
@@ -33,8 +40,17 @@ function(make_unit root)
                             EXCLUDE_FROM_ALL TRUE
                           )
 
-    add_target_parent(${test})
+    target_include_directories( ${test}
+                                PUBLIC
+                                    $<INSTALL_INTERFACE:include>
+                                    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                                PRIVATE
+                                    ${PROJECT_SOURCE_DIR}/src
+                              )
 
+    target_link_libraries(${test} tts)
+
+    add_target_parent(${test})
     add_dependencies(unit ${test})
 
   endforeach()

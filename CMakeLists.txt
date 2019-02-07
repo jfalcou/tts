@@ -5,12 +5,12 @@
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 
 ##==================================================================================================
 ## Setup project
 ##==================================================================================================
-project(TTS CXX)
+project(TTS VERSION 0.1 LANGUAGES CXX)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 ##==================================================================================================
@@ -26,9 +26,9 @@ endif()
 include(parse_revision)
 
 ##==================================================================================================
-## Add include directories
+## Add src CMake's
 ##==================================================================================================
-include_directories(${PROJECT_SOURCE_DIR}/include)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 
 ##==================================================================================================
 ## Options

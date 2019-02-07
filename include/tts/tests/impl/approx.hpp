@@ -11,9 +11,9 @@
 #define TTS_TESTS_IMPL_APPROX_HPP_INCLUDED
 
 #include <string>
+#include <vector>
 #include <tts/detail/comparator.hpp>
 #include <tts/detail/rt_helpers.hpp>
-#include <vector>
 
 namespace tts
 {
@@ -105,7 +105,7 @@ namespace tts
     s.precision(20);
     Measure::to_stream(s, u.max());
 
-    return os << "\n{\n" + ls.str() + "}\n with a maximal error of " + s.str();
+    return os << "\n{\n" << ls.str() << "}\n with a maximal error of " << s.str();
   }
 
   namespace ext

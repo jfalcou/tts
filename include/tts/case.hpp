@@ -13,6 +13,7 @@
 #include <tts/detail/ct_helpers.hpp>
 #include <tts/detail/pp_helpers.hpp>
 #include <tts/detail/rt_helpers.hpp>
+#include <tts/detail/color.hpp>
 #include <tts/detail/test.hpp>
 #include <tts/engine/env.hpp>
 
@@ -76,7 +77,8 @@
               [&](auto t) {                                                                        \
                 using T = typename decltype(t)::type;                                              \
                 runtime.output() << std::endl;                                                     \
-                runtime.output() << "With T = [" << ::tts::type_id<T>() << "] ";                   \
+                runtime.output() << "With T = ["                                                   \
+                                 << ::tts::detail::magenta_(::tts::type_id<T>()) << "] ";          \
                 runtime.output() << std::endl;                                                     \
                 TTS_FUNCTION<T>(runtime);                                                          \
               },                                                                                   \
@@ -86,7 +88,7 @@
   template<typename T> void TTS_FUNCTION(tts::env &runtime) /**/
 
 #define TTS_SETUP(DESCRIPTION)                                                                     \
-  runtime.output() << "[SETUP] - " << DESCRIPTION << std::endl;                                    \
+  runtime.output() << "[SETUP] - " << ::tts::detail::magenta_(DESCRIPTION) << std::endl;           \
   for(int tts_section = 0, tts_cnt = 1; tts_section < tts_cnt; tts_cnt -= 0 == tts_section++) /**/
 
 #define TTS_SECTION(DESCRIPTION)                                                                   \
