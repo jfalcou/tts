@@ -10,79 +10,80 @@
 #ifndef TTS_COMMON_ARGS_HPP_INCLUDED
 #define TTS_COMMON_ARGS_HPP_INCLUDED
 
-#include <unordered_map>
-#include <sstream>
 #include <cstdlib>
+#include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
-namespace tts { namespace detail
+namespace tts
 {
-  struct args_map
+  namespace detail
   {
-    args_map() {}
-
-    void update(int argc, const char** argv) const
+    struct args_map
     {
-      bool found = false;
-      std::string id;
+      args_map() {}
 
-      for(int i=1;i<argc;++i)
+      void update(int argc, const char **argv) const
       {
-        // look for --name value pattern
-        std::string cur{argv[i]};
+        bool        found = false;
+        std::string id;
 
-        if(is_option(cur))
+        for(int i = 1; i < argc; ++i)
         {
-          found = true;
-          id    = std::string{cur.begin()+2,cur.end()}; // Remove the '--'
-        }
-        else
-        {
-          // if an option was found and we're looking at another impromptu option, update the map
-          if(found && !is_option(cur))
+          // look for --name value pattern
+          std::string cur {argv[ i ]};
+
+          if(is_option(cur))
           {
-            data_[id].push_back(cur);
+            found = true;
+            id    = std::string {cur.begin() + 2, cur.end()}; // Remove the '--'
+          }
+          else
+          {
+            // if an option was found and we're looking at another impromptu option, update the map
+            if(found && !is_option(cur)) { data_[ id ].push_back(cur); }
           }
         }
       }
-    }
 
-    template<typename R> R operator()(std::string const& id, R def = R{} ) const
-    {
-      auto opt = data_.find(id);
-      if(opt != data_.cend())
+      template<typename R> R operator()(std::string const &id, R def = R {}) const
       {
-        std::istringstream s(opt->second[0]);
-        s >> def;
+        auto opt = data_.find(id);
+        if(opt != data_.cend())
+        {
+          std::istringstream s(opt->second[ 0 ]);
+          s >> def;
+        }
+
+        return def;
       }
 
-      return def;
-    }
+      std::string operator()(std::string const &id, std::string def = "") const
+      {
+        auto opt = data_.find(id);
+        if(opt != data_.cend()) def = data_[ id ][ 0 ];
+        return def;
+      }
 
-    std::string operator()(std::string const& id, std::string def = "") const
-    {
-      auto opt = data_.find(id);
-      if(opt != data_.cend()) def = data_[id][0];
-      return def;
-    }
+      std::vector<std::string> operator()(std::string const &      id,
+                                          std::vector<std::string> def = {}) const
+      {
+        auto opt = data_.find(id);
+        if(opt != data_.cend()) def = data_[ id ];
+        return def;
+      }
 
-    std::vector<std::string> operator()(std::string const& id, std::vector<std::string> def = {}) const
-    {
-      auto opt = data_.find(id);
-      if(opt != data_.cend()) def = data_[id];
-      return def;
-    }
-
-    static bool is_option(std::string const& s)
-    {
-      return (s.size() > 2) && (s[0] == '-') && (s[1] == '-');
-    }
+      static bool is_option(std::string const &s)
+      {
+        return (s.size() > 2) && (s[ 0 ] == '-') && (s[ 1 ] == '-');
+      }
 
     private:
-    mutable std::unordered_map<std::string,std::vector<std::string>> data_;
-  };
-} }
+      mutable std::unordered_map<std::string, std::vector<std::string>> data_;
+    };
+  }
+}
 
 namespace tts
 {

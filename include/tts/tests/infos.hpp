@@ -13,21 +13,21 @@
 #include <tts/detail/rt_helpers.hpp>
 
 // Count a test as passed and display its infos
-#define TTS_PASS( MESSAGE )                                                         \
-runtime.pass()  << ::tts::detail::at(__FILE__,__LINE__) << ": passed: Scenario: "   \
-                << runtime.scenario() << " - " << MESSAGE << std::endl              \
-/**/
+#define TTS_PASS(MESSAGE)                                                                          \
+  runtime.pass() << ::tts::detail::at(__FILE__, __LINE__)                                          \
+                 << ": passed: Scenario: " << runtime.scenario() << " - " << MESSAGE               \
+                 << std::endl /**/
 
 // Count a test as failed and display its infos
-#define TTS_FAIL( MESSAGE )                                                             \
-runtime.fail()  << ::tts::detail::at(__FILE__,__LINE__) << ": **FAILED**: Scenario: "   \
-                << runtime.scenario() << " - " << MESSAGE << std::endl                  \
-/**/
+#define TTS_FAIL(MESSAGE)                                                                          \
+  runtime.fail() << ::tts::detail::at(__FILE__, __LINE__)                                          \
+                 << ": **FAILED**: Scenario: " << runtime.scenario() << " - " << MESSAGE           \
+                 << std::endl /**/
 
 // Count a test as invalid and display its infos
-#define TTS_INVALID( MESSAGE )                                                              \
-runtime.invalid() << ::tts::detail::at(__FILE__,__LINE__) << ": **INVALID**: Scenario: "    \
-                  << runtime.scenario() << " - " << MESSAGE << std::endl                    \
-/**/
+#define TTS_INVALID(MESSAGE)                                                                       \
+  runtime.invalid() << ::tts::detail::at(__FILE__, __LINE__)                                       \
+                    << ": **INVALID**: Scenario: " << runtime.scenario() << " - " << MESSAGE       \
+                    << std::endl /**/
 
 #endif

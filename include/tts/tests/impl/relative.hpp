@@ -10,9 +10,9 @@
 #ifndef TTS_TESTS_IMPL_RELATIVE_HPP_INCLUDED
 #define TTS_TESTS_IMPL_RELATIVE_HPP_INCLUDED
 
+#include <string>
 #include <tts/tests/impl/approx.hpp>
 #include <tts/tests/impl/reldist.hpp>
-#include <string>
 
 namespace tts
 {
@@ -20,16 +20,15 @@ namespace tts
   {
     struct relative_measure
     {
-      template<typename T, typename U>
-      double operator()(T const& data, U const& ref) const
+      template<typename T, typename U> double operator()(T const &data, U const &ref) const
       {
-        return ::tts::reldist(data,ref);
+        return ::tts::reldist(data, ref);
       }
 
-      template<typename Stream> static void to_stream(Stream& s, double v)
+      template<typename Stream> static void to_stream(Stream &s, double v)
       {
         s.precision(2);
-        s << " (" << std::fixed << v*100. << " %)";
+        s << " (" << std::fixed << v * 100. << " %)";
       }
     };
   }
@@ -38,7 +37,7 @@ namespace tts
   template<typename R> using relative_ = approx_<detail::relative_measure, R>;
 
   // Simple relative_ constructor like call
-  template<typename R> inline relative_<R> relative(R const& t, double n) { return {t,n/100.}; }
+  template<typename R> inline relative_<R> relative(R const &t, double n) { return {t, n / 100.}; }
 }
 
 #endif

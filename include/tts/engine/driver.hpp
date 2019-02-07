@@ -10,9 +10,9 @@
 #ifndef TTS_ENGINE_DRIVER_HPP_INCLUDED
 #define TTS_ENGINE_DRIVER_HPP_INCLUDED
 
-#include <tts/detail/args.hpp>
 #include <algorithm>
 #include <random>
+#include <tts/detail/args.hpp>
 
 namespace tts
 {
@@ -37,27 +37,25 @@ namespace tts
     @return A boolean value indicating if the whole test is considered a success.
   **/
   template<typename Environment, typename Suite, typename... Setup>
-  inline bool run(Environment& environment, Suite& tests, Setup const&... setup)
+  inline bool run(Environment &environment, Suite &tests, Setup const &... setup)
   {
     // retrieve status
-    auto fo = args("verbose",false);
+    auto fo = args("verbose", false);
 
     environment.verbose(fo);
 
     // randomize test on non-null random seed option
-    if(auto seed = args("random",0u))
-    {
-      std::shuffle( tests.begin(), tests.end(), std::mt19937{seed} );
-    }
+    if(auto seed = args("random", 0u))
+    { std::shuffle(tests.begin(), tests.end(), std::mt19937 {seed}); }
 
-    for(auto& t : tests )
+    for(auto &t: tests)
     {
       auto count = environment.tests();
       t(environment);
       process_invalid(environment, count);
     }
 
-    return ::tts::report(environment,setup...);
+    return ::tts::report(environment, setup...);
   }
 }
 

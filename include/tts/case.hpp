@@ -10,8 +10,8 @@
 #ifndef TTS_CASE_HPP_INCLUDED
 #define TTS_CASE_HPP_INCLUDED
 
-#include <tts/detail/pp_helpers.hpp>
 #include <tts/detail/ct_helpers.hpp>
+#include <tts/detail/pp_helpers.hpp>
 #include <tts/detail/rt_helpers.hpp>
 #include <tts/detail/test.hpp>
 #include <tts/engine/env.hpp>
@@ -39,15 +39,14 @@
 
   @param DESCRIPTION String literal describing the purpose of the test case
 **/
-#define TTS_CASE(DESCRIPTION)                                                                       \
-void TTS_FUNCTION( ::tts::env& );                                                                   \
-namespace                                                                                           \
-{                                                                                                   \
-  inline bool TTS_REGISTRATION = ::tts::detail                                                      \
-                                 ::registration(::tts::detail::test(DESCRIPTION, TTS_FUNCTION));    \
-}                                                                                                   \
-void TTS_FUNCTION( ::tts::env& runtime )                                                            \
-/**/
+#define TTS_CASE(DESCRIPTION)                                                                      \
+  void TTS_FUNCTION(::tts::env &);                                                                 \
+  namespace                                                                                        \
+  {                                                                                                \
+    inline bool TTS_REGISTRATION =                                                                 \
+        ::tts::detail ::registration(::tts::detail::test(DESCRIPTION, TTS_FUNCTION));              \
+  }                                                                                                \
+  void TTS_FUNCTION(::tts::env &runtime) /**/
 
 /*!
   @ingroup group-unit
@@ -67,43 +66,33 @@ void TTS_FUNCTION( ::tts::env& runtime )                                        
   @param DESCRIPTION  String literal describing the scope of the test case
   @param TYPES        Boost.Preprocessor sequence of types
 **/
-#define TTS_CASE_TPL(DESCRIPTION, ...)                                                              \
-template<typename T> void TTS_FUNCTION( tts::env& );                                                \
-namespace                                                                                           \
-{                                                                                                   \
-  inline bool                                                                                       \
-  TTS_REGISTRATION = ::tts::detail::registration                                                    \
-                      ( ::tts::detail::test                                                         \
-                        ( DESCRIPTION                                                               \
-                        , [](::tts::env& runtime)                                                   \
-                          {                                                                         \
-                            ::tts::detail::for_each_type                                            \
-                            ( [&](auto t)                                                           \
-                              {                                                                     \
-                                using T = typename decltype(t)::type;                               \
-                                runtime.output() << std::endl;                                      \
-                                runtime.output() <<  "With T = [" << ::tts::type_id<T>() << "] ";   \
-                                runtime.output() << std::endl;                                      \
-                                TTS_FUNCTION<T>(runtime);                                           \
-                              }                                                                     \
-                            , ::tts::detail::typelist<__VA_ARGS__>{}                                \
-                            );                                                                      \
-                          }                                                                         \
-                        )                                                                           \
-                      );                                                                            \
-}                                                                                                   \
-template<typename T> void TTS_FUNCTION( tts::env& runtime )                                         \
-/**/
+#define TTS_CASE_TPL(DESCRIPTION, ...)                                                             \
+  template<typename T> void TTS_FUNCTION(tts::env &);                                              \
+  namespace                                                                                        \
+  {                                                                                                \
+    inline bool TTS_REGISTRATION =                                                                 \
+        ::tts::detail::registration(::tts::detail::test(DESCRIPTION, [](::tts::env &runtime) {     \
+          ::tts::detail::for_each_type(                                                            \
+              [&](auto t) {                                                                        \
+                using T = typename decltype(t)::type;                                              \
+                runtime.output() << std::endl;                                                     \
+                runtime.output() << "With T = [" << ::tts::type_id<T>() << "] ";                   \
+                runtime.output() << std::endl;                                                     \
+                TTS_FUNCTION<T>(runtime);                                                          \
+              },                                                                                   \
+              ::tts::detail::typelist<__VA_ARGS__> {});                                            \
+        }));                                                                                       \
+  }                                                                                                \
+  template<typename T> void TTS_FUNCTION(tts::env &runtime) /**/
 
-#define TTS_SETUP( DESCRIPTION )                                                                    \
-runtime.output() << "[SETUP] - " << DESCRIPTION << std::endl;                                       \
-for ( int tts_section = 0, tts_cnt = 1; tts_section < tts_cnt; tts_cnt -= 0==tts_section++ )        \
-/**/
+#define TTS_SETUP(DESCRIPTION)                                                                     \
+  runtime.output() << "[SETUP] - " << DESCRIPTION << std::endl;                                    \
+  for(int tts_section = 0, tts_cnt = 1; tts_section < tts_cnt; tts_cnt -= 0 == tts_section++) /**/
 
-#define TTS_SECTION( DESCRIPTION )                                                                  \
-static int TTS_UNIQUE(id) = 0;                                                                      \
-if( ::tts::detail::section_guard(TTS_UNIQUE(id), tts_section, tts_cnt).check(DESCRIPTION,runtime))  \
-  for(int TTS_UNIQUE(tts_cnt) = 0; TTS_UNIQUE(tts_cnt) <1; TTS_UNIQUE(tts_cnt)++)                   \
-/**/
+#define TTS_SECTION(DESCRIPTION)                                                                   \
+  static int TTS_UNIQUE(id) = 0;                                                                   \
+  if(::tts::detail::section_guard(TTS_UNIQUE(id), tts_section, tts_cnt)                            \
+         .check(DESCRIPTION, runtime))                                                             \
+    for(int TTS_UNIQUE(tts_cnt) = 0; TTS_UNIQUE(tts_cnt) < 1; TTS_UNIQUE(tts_cnt)++) /**/
 
 #endif
