@@ -13,30 +13,28 @@
 #include <tts/detail/comparator.hpp>
 #include <tts/detail/rt_helpers.hpp>
 
-namespace tts
+namespace tts::detail
 {
-  namespace detail
+  // Carry value around up to display point inside test macro
+  template<typename Expression> struct lhs_expr
   {
-    // Carry value around up to display point inside test macro
-    template<typename Expression> struct lhs_expr
+    Expression lhs;
+
+    lhs_expr(Expression x)
+        : lhs(x)
     {
-      Expression lhs;
+    }
 
-      lhs_expr(Expression x)
-          : lhs(x)
-      {
-      }
+    lhs_expr(lhs_expr const &) = delete;
+    lhs_expr &operator=(lhs_expr const &) = delete;
 
-      lhs_expr(lhs_expr const &) = delete;
-      lhs_expr &operator=(lhs_expr const &) = delete;
-
-      operator result()
-      {
-        return result {bool(lhs),
-                       ::tts::detail::to_string(bool(lhs)),
-                       ::tts::detail::to_string(""),
-                       ::tts::detail::to_string("")};
-      }
+    operator result()
+    {
+      return result {bool(lhs),
+                     ::tts::detail::to_string(bool(lhs)),
+                     ::tts::detail::to_string(""),
+                     ::tts::detail::to_string("")};
+    }
 
 #define TTS_BINARY_DECOMPOSE(OP, SB, FN)                                                           \
   template<typename R> result operator OP(R const &rhs)                                            \
@@ -56,27 +54,26 @@ namespace tts
       TTS_BINARY_DECOMPOSE(<=, "<=", le)
 
 #undef TTS_BINARY_DECOMPOSE
-    };
+  };
 
-    /*!
-      @brief Trampoline type for custom display of value injected from a macro.
-      @ingroup group-details
+  /*!
+    @brief Trampoline type for custom display of value injected from a macro.
+    @ingroup group-details
 
-      When a macro like TTS_EXPECT( a == b ) is called, it's often useful to be able to
-      display the value of a and b without having to butcher the macro API. The decomposer
-      type is used to provide a member pointer access overload able to catch arbitrary binary
-      expression and forward them to the display system.
+    When a macro like TTS_EXPECT( a == b ) is called, it's often useful to be able to
+    display the value of a and b without having to butcher the macro API. The decomposer
+    type is used to provide a member pointer access overload able to catch arbitrary binary
+    expression and forward them to the display system.
 
-      @note This code is a direct adaptation of the similar technique used by Martin Moene in LEST
-    **/
-    struct decomposer
+    @note This code is a direct adaptation of the similar technique used by Martin Moene in LEST
+  **/
+  struct decomposer
+  {
+    template<typename Expression> lhs_expr<Expression const &> operator->*(Expression const &expr)
     {
-      template<typename Expression> lhs_expr<Expression const &> operator->*(Expression const &expr)
-      {
-        return {expr};
-      }
-    };
-  }
+      return {expr};
+    }
+  };
 }
 
 /*!

@@ -38,12 +38,15 @@
     auto tts_var_r = ::tts::ulpdist((A), (B));                                                     \
     auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                    \
     if(tts_var_r <= (X))                                                                           \
-      TTS_PASS("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X              \
-                             << " ULPs.");                                                         \
+      TTS_PASS("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
+                             << ::tts::detail::white_(tts_var_d.rhs) << " within "                 \
+                             << ::tts::detail::white_(X) << " ULPs");                              \
     else                                                                                           \
-      TTS_FAIL("Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs << " within " << X        \
-                             << " ULPs "                                                           \
-                             << "but found: " << tts_var_r << " ULPs instead.");                   \
+      TTS_FAIL("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
+                             << ::tts::detail::white_(tts_var_d.rhs) << " within "                 \
+                             << ::tts::detail::white_(X) << " ULPs but found: "                    \
+                             << ::tts::detail::red_(tts_var_r)                                     \
+                             << " ULPs instead.");                                                 \
   } while(::tts::detail::is_false()) /**/
 
 /*!
@@ -84,10 +87,13 @@
   {                                                                                                \
     auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::ulp(B, X));                                       \
     if(tts_var_r)                                                                                  \
-      TTS_PASS("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X              \
-                             << " ULPs.");                                                         \
+      TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
+                             << ::tts::detail::white_(TTS_STRING(B)) << " within "                 \
+                             << ::tts::detail::white_(X) << " ULPs");                              \
     else                                                                                           \
-      TTS_FAIL("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << " ULPs "  \
+      TTS_FAIL("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
+                             << ::tts::detail::white_(TTS_STRING(B)) << " within "                 \
+                             << ::tts::detail::white_(X) << " ULPs "                               \
                              << "but found: " << tts_var_r.rhs << " instead.");                    \
   } while(::tts::detail::is_false()) /**/
 
@@ -130,11 +136,15 @@
     auto tts_var_r = ::tts::reldist((A), (B));                                                     \
     auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                    \
     if(tts_var_r <= (X / 100.))                                                                    \
-      TTS_PASS("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " ~ " << X << " %.");        \
+      TTS_PASS("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
+                             << ::tts::detail::white_(tts_var_d.rhs) << " within "                 \
+                             << ::tts::detail::white_(X) << " %");                                 \
     else                                                                                           \
-      TTS_FAIL("Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs << " within " << X        \
-                             << " % "                                                              \
-                             << "but found: " << 100 * tts_var_r << " % instead.");                \
+      TTS_FAIL("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
+                             << ::tts::detail::white_(tts_var_d.rhs) << " within "                 \
+                             << ::tts::detail::white_(X) << " % but found: "                       \
+                             << ::tts::detail::red_(100 * tts_var_r)                               \
+                             << " % instead.");                                                    \
   } while(::tts::detail::is_false()) /**/
 
 /*!
@@ -159,9 +169,13 @@
   {                                                                                                \
     auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::relative(B, X));                                  \
     if(tts_var_r)                                                                                  \
-      TTS_PASS("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << " %.");   \
+      TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
+                             << ::tts::detail::white_(TTS_STRING(B)) << " within "                 \
+                             << ::tts::detail::white_(X) << " % ");                                \
     else                                                                                           \
-      TTS_FAIL("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << " % "     \
+      TTS_FAIL("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
+                             << ::tts::detail::white_(TTS_STRING(B)) << " within "                 \
+                             << ::tts::detail::white_(X) << " % "                                  \
                              << "but found: " << tts_var_r.rhs << " instead.");                    \
   } while(::tts::detail::is_false()) /**/
 
@@ -204,10 +218,15 @@
     auto tts_var_r = ::tts::absdist((A), (B));                                                     \
     auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                    \
     if(tts_var_r <= (X))                                                                           \
-      TTS_PASS("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " ~ " << X << ".");          \
+      TTS_PASS("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
+                             << ::tts::detail::white_(tts_var_d.rhs) << " within ~"                \
+                             << ::tts::detail::white_(X));                                         \
     else                                                                                           \
-      TTS_FAIL("Expecting: " << tts_var_d.lhs << " == " << tts_var_d.rhs << " within " << X        \
-                             << " but found: " << tts_var_r << " instead.");                       \
+      TTS_FAIL("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
+                             << ::tts::detail::white_(tts_var_d.rhs) << " within ~"                \
+                             << ::tts::detail::white_(X) << " but was found ~"                     \
+                             << ::tts::detail::red_(tts_var_r)                                     \
+                             << " instead.");                                                      \
   } while(::tts::detail::is_false()) /**/
 
 /*!
@@ -232,9 +251,13 @@
   {                                                                                                \
     auto tts_var_r = TTS_DECOMPOSE((A) == ::tts::absolute(B, X));                                  \
     if(tts_var_r)                                                                                  \
-      TTS_PASS("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X << ".");     \
+      TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
+                             << ::tts::detail::white_(TTS_STRING(B)) << " within ~"                \
+                             << ::tts::detail::white_(X))          ;                               \
     else                                                                                           \
-      TTS_FAIL("Expecting: " << TTS_STRING(A) " == " TTS_STRING(B) << " within " << X              \
+      TTS_FAIL("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
+                             << ::tts::detail::white_(TTS_STRING(B)) << " within ~"                \
+                             << ::tts::detail::white_(X)                                           \
                              << " but found: " << tts_var_r.rhs << " instead.");                   \
   } while(::tts::detail::is_false()) /**/
 

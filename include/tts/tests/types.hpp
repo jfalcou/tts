@@ -28,15 +28,17 @@
     constexpr auto check = std::is_same_v<TTS_REMOVE_PARENS(Type), TTS_REMOVE_PARENS(T)>;          \
     if constexpr(check)                                                                            \
     {                                                                                              \
-      TTS_PASS("Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                    \
-                            << " == " << tts::type_id<TTS_REMOVE_PARENS(Type)>());                 \
+      TTS_PASS("Expecting " << ::tts::detail::white_(TTS_STRING(TTS_REMOVE_PARENS(T)))             \
+                            << " == "                                                              \
+                            << ::tts::detail::green_(tts::type_id<TTS_REMOVE_PARENS(Type)>()));    \
     }                                                                                              \
                                                                                                    \
     if constexpr(!check)                                                                           \
     {                                                                                              \
-      TTS_FAIL("Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T))                                    \
-                            << " == " << tts::type_id<TTS_REMOVE_PARENS(Type)>() << " found "      \
-                            << tts::type_id<TTS_REMOVE_PARENS(T)>() << " instead");                \
+      TTS_FAIL("Expecting " << ::tts::detail::white_(tts::type_id<TTS_REMOVE_PARENS(Type)>())      \
+                            << " found "                                                           \
+                            << ::tts::detail::red_(tts::type_id<TTS_REMOVE_PARENS(T)>()))          \
+                            << " instead";                                                         \
     }                                                                                              \
   } while(::tts::detail::is_false()) /**/
 

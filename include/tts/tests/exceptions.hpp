@@ -42,9 +42,11 @@
     }                                                                                              \
                                                                                                    \
     if(caught)                                                                                     \
-      TTS_PASS(TTS_STRING(X) << " throws " << TTS_STRING(T));                                      \
+      TTS_PASS( ::tts::detail::white_(TTS_STRING(X))                                               \
+                << " throws " << ::tts::detail::white_(TTS_STRING(T)));                            \
     else                                                                                           \
-      TTS_FAIL(TTS_STRING(X) << " does not throw " << TTS_STRING(T));                              \
+      TTS_FAIL(     ::tts::detail::white_(TTS_STRING(X)) << " does not throw "                     \
+                <<  ::tts::detail::red_(TTS_STRING(T)));                                           \
   } while(::tts::detail::is_false()) /**/
 
 /*!
@@ -75,9 +77,10 @@
     }                                                                                              \
                                                                                                    \
     if(caught)                                                                                     \
-      TTS_FAIL(TTS_STRING(X) << " throws while not expected to.");                                 \
+      TTS_FAIL(     ::tts::detail::white_(TTS_STRING(X))                                           \
+                <<  ::tts::detail::red_(" throws while not expected to."));                        \
     else                                                                                           \
-      TTS_PASS(TTS_STRING(X) << " doesn't throw.");                                                \
+      TTS_PASS(::tts::detail::white_(TTS_STRING(X)) << " doesn't throw.");                         \
   } while(::tts::detail::is_false()) /**/
 
 #endif
