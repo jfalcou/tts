@@ -20,8 +20,10 @@ namespace tts::detail
                   "  --help             Display this help message\n"
                   "  --pass             Report passing tests\n"
                   "  --no-color         Disable color display\n"
-                  "  --random n         Use n as random generator seed\n"
-                  "  --random time      Use time for random generator seed\n"
+                  "  --seed n           Use n as random generator seed\n"
+                  "  --seed time        Use time for random generator seed\n"
+                  "  --order random     Execute tests randomly\n"
+                  "  --order sorted     Execute tests sorted by name\n"
                   "  --repeat n         Repeat each tests n times\n"
                   "\n";
     return 0;
