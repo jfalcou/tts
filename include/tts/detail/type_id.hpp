@@ -33,7 +33,11 @@ namespace tts
       std::size_t size = 0;
       auto ptr = abi::__cxa_demangle( name, nullptr, &size, &status );
 
-      return std::string(ptr);
+      std::string that(ptr);
+
+      free( ptr );
+
+      return that;
       #endif
     }
   }
