@@ -16,6 +16,9 @@
 #include <iomanip>
 
 #if __has_include(<windows.h>)
+#define NOMINMAX
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #define TTS_USE_CONSOLE_ATTRIBUTES
 #endif

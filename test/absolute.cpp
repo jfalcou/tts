@@ -61,7 +61,6 @@ TTS_CASE_TPL( "Absolute distance between floating point", TTS_IEEE_TYPES)
 TTS_CASE("Absolute distance between different types")
 {
   TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
-  TTS_ABSOLUTE_EQUAL(true , 1LL  , 0.);
   TTS_ABSOLUTE_EQUAL(1. , 2.f    , 1.);
 }
 //! [absolute]

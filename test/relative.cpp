@@ -61,7 +61,6 @@ TTS_CASE_TPL( "Relative distance between floating point", TTS_IEEE_TYPES )
 TTS_CASE("Relative distance between different types")
 {
   TTS_RELATIVE_EQUAL('A'  , 80LL  , 18.75);
-  TTS_RELATIVE_EQUAL(true , 1LL   , 0.);
   TTS_RELATIVE_EQUAL(1. , 2.f     , 100.);
 }
 //! [relative]

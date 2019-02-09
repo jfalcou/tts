@@ -33,7 +33,6 @@ TTS_CASE("ULP distance between different types")
   auto pi = 3.14159265358979323846;
 
   TTS_ULP_EQUAL('A'  , 80LL                   , 15.         );
-  TTS_ULP_EQUAL(true , 1LL                    , 0.          );
   TTS_ULP_EQUAL( pi  , static_cast<float>(pi) , 9.84293e+07 );
   TTS_ULP_EQUAL( 1.  , short{1}               , 0.          );
 //! [ulp]

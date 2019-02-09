@@ -32,7 +32,7 @@ namespace tts::detail
   };
 
   using test_suite = std::vector<test>;
-  inline test_suite suite;
+  static test_suite suite;
 
   template<typename Test> bool registration(Test &&t)
   {

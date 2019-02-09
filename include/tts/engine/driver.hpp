@@ -14,6 +14,7 @@
 #include <random>
 #include <chrono>
 #include <tts/detail/args.hpp>
+#include <tts/detail/test.hpp>
 
 namespace tts
 {
@@ -55,11 +56,13 @@ namespace tts
     auto repetition = args("repeat"sv, 1);
 
     // randomize test on non-null random seed option
-    auto seed = args("seed"sv, 1);
+    unsigned int seed = args("seed"sv, 1);
 
     // no seed ? See if e didn't asked for fully randomized
-    if(args("seed"sv, ""s) == "time"sv)
-      seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    if (args("seed"sv, ""s) == "time"sv) {
+      auto now = std::chrono::high_resolution_clock::now();
+      seed = static_cast<unsigned int>(now.time_since_epoch().count());
+    }
 
     auto order = args("order","declared"s);
 

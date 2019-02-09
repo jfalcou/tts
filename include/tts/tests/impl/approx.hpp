@@ -57,7 +57,8 @@ namespace tts
     };
 
     bool                      mismatched() const { return size_mismatch; }
-    double                    max() const { return max_diff; }
+
+    double maximum() const { return max_diff; }
     std::vector<error> const &report() const { return errors; }
 
   private:
@@ -103,7 +104,7 @@ namespace tts
 
     // Stream max error
     s.precision(20);
-    Measure::to_stream(s, u.max());
+    Measure::to_stream(s, u.maximum());
 
     return os << "\n{\n" << ls.str() << "}\n with a maximal error of " << s.str();
   }
