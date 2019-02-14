@@ -16,6 +16,21 @@ jobs:
           name: Running tests
           command: . .circleci/run.sh clang++-7
 
+  clang-8:
+    docker:
+      - image: teeks99/clang-ubuntu:8
+    steps:
+      - checkout
+      - run:
+          name: Setup dependencies
+          command: . .circleci/prepare.sh
+      - run:
+          name: Install GIT
+          command: 'apt-get update && sudo apt-get install -y git'
+      - run:
+          name: Running tests
+          command: . .circleci/run.sh clang++-8
+
   gcc-8:
     docker:
       - image: gcc:latest
@@ -47,3 +62,4 @@ workflows:
       - gcc-8
       - gcc-7
       - clang-7
+      - clang-8
