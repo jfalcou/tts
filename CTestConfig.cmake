@@ -18,7 +18,7 @@ set(CTEST_CDASH_QUERY_VERSION   TRUE)
 # SITE is host name
 execute_process(COMMAND hostname OUTPUT_VARIABLE HOST OUTPUT_STRIP_TRAILING_WHITESPACE)
 string(REGEX REPLACE "\\.(local|home)$" "" HOST ${HOST})
-string(TOLOWER ${HOST} SITE)
+string(TOLOWER ${HOST} LOWHOST)
 
 set(OS ${CMAKE_SYSTEM_NAME})
 string(TOLOWER ${CMAKE_CXX_COMPILER_ID} COMPILER)
@@ -32,5 +32,23 @@ else()
     set(VERSION ${VERSION_MAJOR})
 endif()
 
-set(COMPILER "${COMPILER}::${VERSION}")
-set(CTEST_BUILD_NAME "${OS}-${COMPILER}")
+# We add branch tag if necessary
+find_package(Git QUIET)
+if(GIT_EXECUTABLE)
+    execute_process(COMMAND ${GIT_EXECUTABLE} symbolic-ref HEAD
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        OUTPUT_VARIABLE BRANCH OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE BRANCH_RESULT ERROR_QUIET
+        )
+    if(NOT BRANCH_RESULT)
+        string(REGEX REPLACE "^.+/([^/]+)$" "\\1" BRANCH ${BRANCH})
+    else()
+        set(BRANCH "dirty")
+    endif()
+endif()
+
+set(COMPILER "${COMPILER}-${VERSION}")
+set(BUILDNAME "${OS}-${COMPILER}@${BRANCH}")
+set(CTEST_BUILD_NAME "${BUILDNAME}")
+set(SITE "${LOWHOST}")
+set(CTEST_SITE "${SITE}")
