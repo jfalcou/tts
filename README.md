@@ -1,5 +1,7 @@
 # TTS
 
+[![CircleCI](https://circleci.com/gh/jfalcou/tts.svg?style=svg&circle-token=8482adcf5f6785a67d19cf73b6fd4959d53e0e25)](https://circleci.com/gh/jfalcou/tts)
+
 ## Overview
 
 Tiny Test System is a C++ open-source Unit Test library designed following

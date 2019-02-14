@@ -30,10 +30,17 @@ function(make_unit root)
                   PROPERTY RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/unit"
                 )
 
+    if( CI_ENABLED )
+    add_test( NAME ${test}
+              WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/unit"
+              COMMAND $<TARGET_FILE:${test}> --no-color --pass
+            )
+    else()
     add_test( NAME ${test}
               WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/unit"
               COMMAND $<TARGET_FILE:${test}>
             )
+    endif()
 
     set_target_properties ( ${test} PROPERTIES
                             EXCLUDE_FROM_DEFAULT_BUILD TRUE

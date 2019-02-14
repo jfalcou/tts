@@ -56,10 +56,10 @@ install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts
 
 if( TTS_BUILD_TEST )
   enable_testing()
+  include(CTest)
   add_custom_target(tests)
   add_custom_target(unit)
 
-  enable_testing()
   add_dependencies(tests unit)
   add_subdirectory(test)
 endif()
