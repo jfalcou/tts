@@ -7,10 +7,6 @@
 ##==================================================================================================
 #!/usr/bin/env bash
 
-g++ --version
-
-mkdir -p build
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCI_ENABLED=1
-ninja unit -j 8
-ctest -D Experimental -j 8
+apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
+apt-get update && sudo apt-get install -y cmake
+apt-get update && sudo apt-get install -y ninja-build
