@@ -15,10 +15,8 @@ jobs:
           name: Install Ninja
           command: 'apt-get update && sudo apt-get install -y ninja-build'
       - run:
-          name: Building tests
-          command: g++ --version && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja
-      - run: cd build && ninja unit -j 8
-      - run: cd build && ctest -j 8
+          name: Running tests
+          command: . .circleci/run.sh
 
   gcc-7:
     docker:
@@ -35,10 +33,8 @@ jobs:
           name: Install Ninja
           command: 'apt-get update && sudo apt-get install -y ninja-build'
       - run:
-          name: Building tests
-          command: g++ --version && mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja
-      - run: cd build && ninja unit -j 8
-      - run: cd build && ctest -j 8
+          name: Running tests
+          command: . .circleci/run.sh
 
 workflows:
   version: 2
