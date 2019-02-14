@@ -1,6 +1,18 @@
 version: 2.0
 
 jobs:
+  clang-7:
+    docker:
+      - image: teeks99/clang-ubuntu:7
+    steps:
+      - checkout
+      - run:
+          name: Setup dependencies
+          command: . .circleci/prepare.sh
+      - run:
+          name: Running tests
+          command: . .circleci/run.sh clang++-7
+
   gcc-8:
     docker:
       - image: gcc:latest
@@ -11,7 +23,7 @@ jobs:
           command: . .circleci/prepare.sh
       - run:
           name: Running tests
-          command: . .circleci/run.sh
+          command: . .circleci/run.sh g++
 
   gcc-7:
     docker:
@@ -23,7 +35,7 @@ jobs:
           command: . .circleci/prepare.sh
       - run:
           name: Running tests
-          command: . .circleci/run.sh
+          command: . .circleci/run.sh g++
 
 workflows:
   version: 2
@@ -31,3 +43,4 @@ workflows:
     jobs:
       - gcc-8
       - gcc-7
+      - clang-7

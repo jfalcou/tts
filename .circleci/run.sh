@@ -11,6 +11,6 @@ g++ --version
 
 mkdir -p build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCI_ENABLED=1
+cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCI_ENABLED=1 -DCMAKE_CXX_COMPILER=$1
 ninja unit -j 8
 ctest -D Experimental -j 8
