@@ -65,13 +65,13 @@ endif()
 if(NOT DEFINED TTS_VERSION_STRING)
   if((NOT GIT_EXECUTABLE OR NOT EXISTS GIT_EXECUTABLE) AND IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git)
 
-    message ( FATAL_ERROR "[tts] Git not found, verify your GIT_EXECUTABLE variable "
+    message ( STATUS "[tts] Git not found, verify your GIT_EXECUTABLE variable "
                           "or specify TTS_VERSION_STRING manually"
             )
 
   elseif(NOT EXISTS ${PROJECT_SOURCE_DIR}/tagname)
 
-  message ( FATAL_ERROR "TTS_VERSION_STRING must be specified "
+  message ( STATUS  "TTS_VERSION_STRING must be specified "
                         "manually if no tagname file nor Git"
           )
 
