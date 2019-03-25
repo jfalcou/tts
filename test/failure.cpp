@@ -14,6 +14,7 @@
 #include <tts/tests/precision.hpp>
 #include <tts/tests/relation.hpp>
 #include <tts/tests/types.hpp>
+#include <stdexcept>
 
 //! [fail]
 TTS_CASE( "Check that forced failure fails" )
@@ -28,11 +29,12 @@ TTS_CASE( "Check that forced broken expectation fails" )
   TTS_EXPECT_NOT(true == true);
 }
 
-void foo(bool x)  { if(x) throw 0; }
+void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
 
 TTS_CASE( "Check that forced broken exceptions tests fails" )
 {
-  TTS_THROW(foo(false),int);
+  TTS_THROW(foo(false),std::runtime_error);
+  TTS_THROW(foo(true),std::bad_alloc);
   TTS_NO_THROW(foo(true));
 }
 
@@ -74,5 +76,5 @@ TTS_CASE( "Check that forced broken types tests fails" )
 int main(int argc, const char** argv)
 {
   ::tts::env runtime(argc,argv,std::cout);
-  return ::tts::run( runtime, ::tts::detail::suite, 19, 0 );
+  return ::tts::run( runtime, ::tts::detail::suite, 20, 0 );
 }

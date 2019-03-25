@@ -10,12 +10,13 @@
 #ifndef TTS_DETAIL_RT_HELPERS_HPP_INCLUDED
 #define TTS_DETAIL_RT_HELPERS_HPP_INCLUDED
 
+#include <tts/detail/ct_helpers.hpp>
+#include <tts/detail/type_id.hpp>
+#include <tts/engine/env.hpp>
 #include <cstddef>
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include <tts/detail/ct_helpers.hpp>
-#include <tts/detail/type_id.hpp>
 
 namespace tts::detail
 {
@@ -103,16 +104,6 @@ namespace tts::detail
 
   extern null_buffer_t null_buffer;
   extern std::ostream  null_stream;
-
-  // Simple wrapper for __FILE__/__LINE__
-  struct location
-  {
-    std::string file;
-    std::size_t line;
-  };
-
-  std::ostream &operator<<(std::ostream &os, location const &l);
-  location at(std::string const &f, std::size_t l);
 
   // Represent a test result and its displayable representation
   struct result

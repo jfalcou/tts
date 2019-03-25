@@ -11,76 +11,17 @@
 #define TTS_TESTS_EXCEPTIONS_HPP_INCLUDED
 
 #include <tts/detail/pp_helpers.hpp>
-#include <tts/tests/basic.hpp>
+#include <tts/detail/exceptions.hpp>
+#include <tts/detail/infos.hpp>
+#include <typeinfo>
 
-/*!
-  @ingroup group-unit
-  Test if an expression @c X throws an exception of type @c T.
+#define TTS_THROW(X, T)                                                                             \
+::tts::detail::throw_test ( runtime, {__FILE__,__LINE__},TTS_STRING(X),TTS_STRING(T)                \
+                          , []{ X; }, typeid(T).hash_code()                                         \
+                          )                                                                         \
+/**/
 
-  @par Usage:
-
-  @snippet test/unit/exceptions.cpp throw
-
-  where @c foo is defined as :
-
-  @snippet test/unit/exceptions.cpp throwing_foo
-
-  @param X Expression to test
-  @param T Exception type expected to be thrown
-**/
-#define TTS_THROW(X, T)                                                                            \
-  do                                                                                               \
-  {                                                                                                \
-    bool caught = false;                                                                           \
-    try                                                                                            \
-    {                                                                                              \
-      (void)(TTS_REMOVE_PARENS(X));                                                                \
-    }                                                                                              \
-    catch(TTS_REMOVE_PARENS(T) &)                                                                  \
-    {                                                                                              \
-      caught = true;                                                                               \
-    }                                                                                              \
-                                                                                                   \
-    if(caught)                                                                                     \
-      TTS_PASS( ::tts::detail::white_(TTS_STRING(X))                                               \
-                << " throws " << ::tts::detail::white_(TTS_STRING(T)));                            \
-    else                                                                                           \
-      TTS_FAIL(     ::tts::detail::white_(TTS_STRING(X)) << " does not throw "                     \
-                <<  ::tts::detail::red_(TTS_STRING(T)));                                           \
-  } while(::tts::detail::is_false()) /**/
-
-/*!
-  @ingroup group-unit
-  Test if an expression @c X does not throw any exception.
-
-  @par Usage:
-
-  @snippet test/unit/exceptions.cpp no_throw
-
-  where @c foo is defined as :
-
-  @snippet test/unit/exceptions.cpp throwing_foo
-
-  @param X Expression to test
-**/
-#define TTS_NO_THROW(X)                                                                            \
-  do                                                                                               \
-  {                                                                                                \
-    bool caught = false;                                                                           \
-    try                                                                                            \
-    {                                                                                              \
-      (void)(TTS_REMOVE_PARENS(X));                                                                \
-    }                                                                                              \
-    catch(...)                                                                                     \
-    {                                                                                              \
-      caught = true;                                                                               \
-    }                                                                                              \
-                                                                                                   \
-    if(caught)                                                                                     \
-      TTS_FAIL(     ::tts::detail::white_(TTS_STRING(X))                                           \
-                <<  ::tts::detail::red_(" throws while not expected to."));                        \
-    else                                                                                           \
-      TTS_PASS(::tts::detail::white_(TTS_STRING(X)) << " doesn't throw.");                         \
-  } while(::tts::detail::is_false()) /**/
-
+#define TTS_NO_THROW(X)                                                                             \
+::tts::detail::nothrow_test(runtime, {__FILE__,__LINE__},TTS_STRING(X), []{ X; } )                  \
+/**/
 #endif

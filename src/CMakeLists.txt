@@ -9,7 +9,10 @@
 add_library ( tts
               args.cpp
               env.cpp
+              exceptions.cpp
               helpers.cpp
+              info.cpp
+              info.cpp
               test.cpp
               type_id.cpp
               usage.cpp
