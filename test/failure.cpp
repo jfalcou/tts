@@ -57,15 +57,14 @@ TTS_CASE( "Check that forced broken precision tests fails on array" )
 
 TTS_CASE( "Check that forced broken relation tests fails" )
 {
-  TTS_EQUAL( 1, 0 );
+  int x = 0;
+  TTS_EQUAL( 1, x );
   TTS_NOT_EQUAL( 1, 1 );
   TTS_LESS(1,0);
   TTS_GREATER(0,1);
   TTS_LESS_EQUAL(1,0);
   TTS_GREATER_EQUAL(0,1);
 }
-
-struct meta { template<typename T> struct apply { using type = T&; }; };
 
 TTS_CASE( "Check that forced broken types tests fails" )
 {

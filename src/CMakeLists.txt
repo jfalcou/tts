@@ -12,7 +12,7 @@ add_library ( tts
               exceptions.cpp
               helpers.cpp
               info.cpp
-              info.cpp
+              relation.cpp
               test.cpp
               type_id.cpp
               usage.cpp

@@ -10,126 +10,44 @@
 #ifndef TTS_TESTS_RELATION_HPP_INCLUDED
 #define TTS_TESTS_RELATION_HPP_INCLUDED
 
-#include <tts/tests/basic.hpp>
+#include <tts/detail/pp_helpers.hpp>
+#include <tts/detail/comparator.hpp>
+#include <tts/detail/relations.hpp>
 
-/*!
-  @ingroup group-unit
-  Test for value equality.
+#define TTS_EQUAL(A, B)                                                                             \
+::tts::detail::check_relation ( runtime, tts::detail::eq((A),(B)), TTS_STRING(A), TTS_STRING(B)     \
+                              , "==", ::tts::detail::to_string(A), ::tts::detail::to_string(B)      \
+                              )                                                                     \
+/**/
 
-  This macro performs an equality test between its arguments using the @c == operator.
+#define TTS_NOT_EQUAL(A, B)                                                                         \
+::tts::detail::check_relation ( runtime, tts::detail::neq((A),(B)), TTS_STRING(A), TTS_STRING(B)    \
+                              , "!=", ::tts::detail::to_string(A), ::tts::detail::to_string(B)      \
+                              )                                                                     \
+/**/
 
-  @par Usage:
+#define TTS_LESS(A, B)                                                                              \
+::tts::detail::check_relation ( runtime, tts::detail::lt((A),(B)), TTS_STRING(A), TTS_STRING(B)     \
+                              , "<", ::tts::detail::to_string(A), ::tts::detail::to_string(B)       \
+                              )                                                                     \
+/**/
 
-  @snippet test/unit/relation.cpp equal
+#define TTS_GREATER(A, B)                                                                           \
+::tts::detail::check_relation ( runtime, tts::detail::gt((A),(B)), TTS_STRING(A), TTS_STRING(B)     \
+                              , ">", ::tts::detail::to_string(A), ::tts::detail::to_string(B)       \
+                              )                                                                     \
+/**/
 
-  where @c foo::bar is defined as follow:
+#define TTS_LESS_EQUAL(A, B)                                                                        \
+::tts::detail::check_relation ( runtime, tts::detail::le((A),(B)), TTS_STRING(A), TTS_STRING(B)     \
+                              , "<=", ::tts::detail::to_string(A), ::tts::detail::to_string(B)      \
+                              )                                                                     \
+/**/
 
-  @snippet test/unit/relation.cpp bar
-
-  @param A First argument of the test
-  @param B Second argument of the test
-**/
-#define TTS_EQUAL(A, B) TTS_EXPECT((A) == (B))
-
-/*!
-  @ingroup group-unit
-  Test for value inequality.
-
-  This macro performs an inequality test between its arguments using either the natural
-  @c != operator or an ADL-accessible function named @c compare_not_equal, whichever occurs first.
-
-  @par Usage:
-
-  @snippet test/unit/relation.cpp not_equal
-
-  where @c foo::bar is defined as follow:
-
-  @snippet test/unit/relation.cpp bar
-
-  @param A First argument of the test
-  @param B Second argument of the test
-**/
-#define TTS_NOT_EQUAL(A, B) TTS_EXPECT((A) != (B))
-
-/*!
-  @ingroup group-unit
-  Test for value less-than relationship.
-
-  This macro performs a less-than test between its arguments using either the natural @c < operator
-  or an ADL-accessible function named @c compare_less , whichever occurs first.
-
-  @par Usage:
-
-  @snippet test/unit/relation.cpp less
-
-  where @c foo::bar is defined as follow:
-
-  @snippet test/unit/relation.cpp bar
-
-  @param A First argument of the test
-  @param B Second argument of the test
-**/
-#define TTS_LESS(A, B) TTS_EXPECT((A) < (B))
-
-/*!
-  @ingroup group-unit
-  Test for value greater-than relationship.
-
-  This macro performs a greater-than test between its arguments using either the natural
-  @c > operator or an ADL-accessible function named @c compare_greater, whichever occurs first.
-
-  @par Usage:
-
-  @snippet test/unit/relation.cpp greater
-
-  where @c foo::bar is defined as follow:
-
-  @snippet test/unit/relation.cpp bar
-
-  @param A First argument of the test
-  @param B Second argument of the test
-**/
-#define TTS_GREATER(A, B) TTS_EXPECT((A) > (B))
-
-/*!
-  @ingroup group-unit
-  Test for value lesser-or-equal-than relationship.
-
-  This macro performs a lesser-or-equal-than test between its arguments using either the natural
-  @c <= operator or an ADL-accessible function named @c compare_less_equal, whichever occurs first.
-
-  @par Usage:
-
-  @snippet test/unit/relation.cpp less_equal
-
-  where @c foo::bar is defined as follow:
-
-  @snippet test/unit/relation.cpp bar
-
-  @param A First argument of the test
-  @param B Second argument of the test
-**/
-#define TTS_LESS_EQUAL(A, B) TTS_EXPECT((A) <= (B))
-
-/*!
-  @ingroup group-unit
-  Test for value greater-or-equal-than relationship.
-
-  This macro performs a greater-or-equal-than test between its arguments using either the natural
-  @c >= operator or an ADL-accessible function named @c compare_greater_equal, whichever occurs
-first.
-
-  @par Usage:
-
-  @snippet test/unit/relation.cpp greater_equal
-
-  where @c foo::bar is defined as follow:
-
-  @snippet test/unit/relation.cpp bar
-
-  @param A First argument of the test
-  @param B Second argument of the test
-**/
-#define TTS_GREATER_EQUAL(A, B) TTS_EXPECT((A) >= (B))
+#define TTS_GREATER_EQUAL(A, B)                                                                     \
+::tts::detail::check_relation ( runtime, tts::detail::ge((A),(B)), TTS_STRING(A), TTS_STRING(B)     \
+                              , ">=", ::tts::detail::to_string(A), ::tts::detail::to_string(B)      \
+                              )                                                                     \
+/**/
 
 #endif
