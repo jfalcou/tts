@@ -11,59 +11,17 @@
 #define TTS_TESTS_PRECISION_HPP_INCLUDED
 
 #include <tts/detail/decompose.hpp>
-#include <tts/tests/basic.hpp>
+#include <tts/detail/precision.hpp>
 #include <tts/tests/impl/absolute.hpp>
 #include <tts/tests/impl/relative.hpp>
 #include <tts/tests/impl/ulp.hpp>
 
-/*!
-  @ingroup group-unit
+#include <tts/tests/basic.hpp>
 
-  @brief Check for equality within ULP distance
+#define TTS_ULP_EQUAL(A, B, X)                                                                      \
+::tts::detail::check_ulp(runtime, ::tts::ulpdist((A),(B)),X,TTS_STRING(A),TTS_STRING(B))            \
+/**/
 
-  Evaluates @c A and @c B and checks if their respective value are withing @c X ULPs of
-  each other.
-
-  @par Example:
-
-  @snippet test/unit/ulp.cpp ulp
-
-  @param A First expression to compare
-  @param B Second expression to compare
-  @param X ULP distance threshold
-**/
-#define TTS_ULP_EQUAL(A, B, X)                                                                     \
-  do                                                                                               \
-  {                                                                                                \
-    auto tts_var_r = ::tts::ulpdist((A), (B));                                                     \
-    auto tts_var_d = TTS_DECOMPOSE((A) == (B));                                                    \
-    if(tts_var_r <= (X))                                                                           \
-      TTS_PASS("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
-                             << ::tts::detail::white_(tts_var_d.rhs) << " within "                 \
-                             << ::tts::detail::white_(X) << " ULPs");                              \
-    else                                                                                           \
-      TTS_FAIL("Expecting: " << ::tts::detail::white_(tts_var_d.lhs) << " == "                     \
-                             << ::tts::detail::white_(tts_var_d.rhs) << " within "                 \
-                             << ::tts::detail::white_(X) << " ULPs but found: "                    \
-                             << ::tts::detail::red_(tts_var_r)                                     \
-                             << " ULPs instead.");                                                 \
-  } while(::tts::detail::is_false()) /**/
-
-/*!
-  @ingroup group-unit
-
-  @brief Check for equality within IEEE rules
-
-  Evaluates @c A and @c B and checks if their respective value(s) are equal at 0 ULPs or
-  are both NaNs.
-
-  @par Example:
-
-  @snippet test/unit/ulp.cpp ieee
-
-  @param A First expression to compare
-  @param B Second expression to compare
-**/
 #define TTS_IEEE_EQUAL(A, B) TTS_ULP_EQUAL(A, B, 0.)
 
 /*!
@@ -89,11 +47,11 @@
     if(tts_var_r)                                                                                  \
       TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
                              << ::tts::detail::white_(TTS_STRING(B)) << " within "                 \
-                             << ::tts::detail::white_(X) << " ULPs");                              \
+                             << ::tts::detail::green_(X) << " ULPs");                              \
     else                                                                                           \
       TTS_FAIL("Expecting: " << ::tts::detail::white_(TTS_STRING(A)) << " == "                     \
                              << ::tts::detail::white_(TTS_STRING(B)) << " within "                 \
-                             << ::tts::detail::white_(X) << " ULPs "                               \
+                             << ::tts::detail::red_(X) << " ULPs "                                 \
                              << "but found: " << tts_var_r.rhs << " instead.");                    \
   } while(::tts::detail::is_false()) /**/
 
