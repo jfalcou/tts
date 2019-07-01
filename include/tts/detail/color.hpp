@@ -45,7 +45,7 @@ namespace tts::detail
   {
     template<typename T> inline std::basic_ostream<T>& setup(std::basic_ostream<T>& os) const
     {
-      if(&os == &std::cout && !args("no-color",false))
+      if(&os == &std::cout && args.has_color())
       {
 #if defined(TTS_USE_CONSOLE_ATTRIBUTES)
         auto h = GetStdHandle(STD_OUTPUT_HANDLE);

@@ -10,12 +10,8 @@
 #ifndef TTS_COMMON_ARGS_HPP_INCLUDED
 #define TTS_COMMON_ARGS_HPP_INCLUDED
 
-#include <cstdlib>
-#include <sstream>
+#include <cstddef>
 #include <string>
-#include <string_view>
-#include <unordered_map>
-#include <vector>
 
 namespace tts::detail
 {
@@ -23,36 +19,20 @@ namespace tts::detail
   {
     args_map();
 
-    void update(int argc, const char **argv) const;
+    void update(int argc, char **argv) const;
 
-    template<typename R, typename ID> R operator()(ID const &id, R def = R {}) const
-    {
-      auto opt = data_.find(id);
-      if(opt != data_.cend())
-      {
-        std::istringstream s(std::string(opt->second[ 0 ]));
-        s >> def;
-      }
-
-      return def;
-    }
-
-    template<typename ID> std::string operator()(ID const &id, std::string def = "") const
-    {
-      auto opt = data_.find(id);
-      if(opt != data_.cend()) def = data_[ id ][ 0 ];
-      return def;
-    }
-
-    template<typename ID> auto const& values(ID const &id) const
-    {
-      return data_[ id ];
-    }
-
-    static bool is_option(std::string_view const &s);
+    bool                has_color()   const { return !disable_colors_;  }
+    bool                verbose()     const { return report_pass_;      }
+    std::size_t         repetition()  const { return repetition_;       }
+    std::string const&  order()       const { return order_;            }
+    unsigned int        seed()        const { return seed_;             }
 
     private:
-    mutable std::unordered_map<std::string_view, std::vector<std::string_view>> data_;
+    mutable bool disable_colors_;
+    mutable bool report_pass_;
+    mutable std::size_t repetition_;
+    mutable std::string order_;
+    mutable unsigned int seed_;
   };
 }
 

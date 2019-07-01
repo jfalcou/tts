@@ -72,7 +72,7 @@ TTS_CASE( "Check that forced broken types tests fails" )
   TTS_EXPR_IS( 1.f , void**   );
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
   ::tts::env runtime(argc,argv,std::cout);
   return ::tts::run( runtime, ::tts::detail::suite, 20, 0 );

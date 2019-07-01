@@ -25,7 +25,7 @@ namespace tts
   **/
   struct env
   {
-    env(int argc, const char **argv, std::ostream &s = std::cout);
+    env(int argc, char **argv, std::ostream &s = std::cout);
 
     std::string const& name() const;
 

@@ -16,7 +16,6 @@ add_library ( tts
               test.cpp
               type_id.cpp
               ulp.cpp
-              usage.cpp
             )
 
 if( MSVC )

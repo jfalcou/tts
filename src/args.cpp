@@ -8,44 +8,65 @@
 **/
 //==================================================================================================
 
-#include <cstdlib>
 #include <iostream>
-#include <sstream>
+#include <cstddef>
 #include <string>
-#include <unordered_map>
-#include <vector>
-#include <algorithm>
+#include <chrono>
 #include <tts/detail/args.hpp>
+#include <tts/detail/cxxopts.hpp>
 
 namespace tts::detail
 {
-  args_map::args_map() {}
-
-  void args_map::update(int argc, const char **argv) const
+  args_map::args_map()  : disable_colors_{false}
+                        , report_pass_{false}
+                        , repetition_{1}
+                        , order_{""}
+                        , seed_{1}
   {
-    std::vector<std::string_view> args{argv+1,argv+argc};
-    auto found = std::find_if(args.begin(), args.end(), [](auto const& a) { return is_option(a); } );
 
-    while(found != args.end())
-    {
-      // Get an ID
-      auto id   = found->substr(2);
-
-      // Fetch the next '--option'
-      auto prev = ++found;
-      found = std::find_if(found, args.end(), [](auto const& a) { return is_option(a); } );
-
-      // If found, insert everything else in the option
-      if(prev != found)
-        data_[id].insert(data_[id].begin(),prev,found);
-      else
-        data_[id].push_back("1");
-    }
   }
 
-  bool args_map::is_option(std::string_view const &s)
+  void args_map::update(int argc, char **argv) const
   {
-    return (s.size() > 2) && (s[ 0 ] == '-') && (s[ 1 ] == '-');
+    cxxopts::Options options(argv[0], "TTS Unit Tests Options");
+
+    options
+    .allow_unrecognised_options()
+    .add_options()( "n,no-color", "Disable colored output"  )
+                  ( "p,pass"    , "Report passing tests"    )
+                  ( "r,repeat"  , "Repeat each tests arg times"
+                  , cxxopts::value<std::size_t>()
+                  )
+                  ( "o,order"   , "Execute tests at 'random' or 'sorted'"
+                  , cxxopts::value<std::string>()
+                  )
+                  ( "s,seed"    , "Set random seed to args (default is time)"
+                  , cxxopts::value<unsigned int>()
+                  )
+                  ( "help"      , "Display this help message");
+
+    auto result = options.parse(argc, argv);
+
+    if (result.count("help"))
+    {
+      std::cout << options.help({""}) << std::endl;
+      exit(0);
+    }
+
+    disable_colors_ = result.count("no-color") != 0;
+    report_pass_    = result.count("pass") != 0;
+
+    if( result.count("repeat")  ) repetition_ = result["repeat"].as<std::size_t>();
+    if( result.count("order")   ) order_      = result["order" ].as<std::string>();
+    if( result.count("seed")    )
+    {
+      seed_ = result["seed"].as<unsigned int>();
+    }
+    else
+    {
+      auto now = std::chrono::high_resolution_clock::now();
+      seed_ = static_cast<unsigned int>(now.time_since_epoch().count());
+    }
   }
 }
 

@@ -28,7 +28,7 @@
 */
 //==================================================================================================
 #if !defined(TTS_USE_CUSTOM_DRIVER)
-int TTS_CUSTOM_DRIVER_FUNCTION(int argc, const char **argv)
+int TTS_CUSTOM_DRIVER_FUNCTION(int argc, char **argv)
 {
   ::tts::env runtime(argc, argv, std::cout);
   return ::tts::run(runtime, ::tts::detail::suite, 0, 0);
