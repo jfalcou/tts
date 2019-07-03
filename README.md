@@ -1,6 +1,6 @@
-# TTS
+<img src="https://github.com/jfalcou/tts/raw/develop/doc/_static/logo.png" alt="" data-canonical-src="https://github.com/jfalcou/tts/raw/develop/doc/_static/logo.png" align="left"  width="15%" height="15%" />
 
-[![CircleCI](https://circleci.com/gh/jfalcou/tts.svg?style=svg&circle-token=8482adcf5f6785a67d19cf73b6fd4959d53e0e25)](https://circleci.com/gh/jfalcou/tts)
+# TTS
 
 ## Overview
 
@@ -16,6 +16,11 @@ tests for :
 - A few customization points for 3rd party types
 
 making TTS suitable for numerical-heavy testing.
+
+## Status
+
+CircleCI : 
+[![CircleCI](https://circleci.com/gh/jfalcou/tts.svg?style=svg&circle-token=8482adcf5f6785a67d19cf73b6fd4959d53e0e25)](https://circleci.com/gh/jfalcou/tts)
 
 ## License
 
