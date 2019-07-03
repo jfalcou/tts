@@ -73,15 +73,6 @@ namespace n1
 namespace tts { namespace ext
 {
   template<typename EnableIf>
-  struct equal<n1::my_real,n1::my_real,EnableIf>
-  {
-    inline bool operator()(n1::my_real const& l, n1::my_real const& r) const
-    {
-      return l.x == r.x;
-    }
-  };
-
-  template<typename EnableIf>
   struct reldist<n1::my_real,n1::my_real,EnableIf>
   {
     inline double operator()(n1::my_real const& a, n1::my_real const& b) const

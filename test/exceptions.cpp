@@ -10,7 +10,7 @@
 #include <tts/tts.hpp>
 #include <tts/tests/exceptions.hpp>
 
-struct some_exception_type {};
+struct some_exception_type : std::exception {};
 
 //! [throwing_foo]
 void foo(bool x)

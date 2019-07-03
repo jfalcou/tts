@@ -9,10 +9,13 @@
 add_library ( tts
               args.cpp
               env.cpp
+              exceptions.cpp
               helpers.cpp
+              info.cpp
+              precision.cpp
+              relation.cpp
               test.cpp
               type_id.cpp
-              usage.cpp
             )
 
 if( MSVC )

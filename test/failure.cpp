@@ -14,6 +14,7 @@
 #include <tts/tests/precision.hpp>
 #include <tts/tests/relation.hpp>
 #include <tts/tests/types.hpp>
+#include <stdexcept>
 
 //! [fail]
 TTS_CASE( "Check that forced failure fails" )
@@ -28,11 +29,12 @@ TTS_CASE( "Check that forced broken expectation fails" )
   TTS_EXPECT_NOT(true == true);
 }
 
-void foo(bool x)  { if(x) throw 0; }
+void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
 
 TTS_CASE( "Check that forced broken exceptions tests fails" )
 {
-  TTS_THROW(foo(false),int);
+  TTS_THROW(foo(false),std::runtime_error);
+  TTS_THROW(foo(true),std::bad_alloc);
   TTS_NO_THROW(foo(true));
 }
 
@@ -49,13 +51,15 @@ TTS_CASE( "Check that forced broken precision tests fails on array" )
   std::vector<float> b{2.f,-1.f,1.f,5.f};
 
   TTS_ALL_ULP_EQUAL(a, b, 0.5);
+  TTS_ALL_ULP_EQUAL(a, 1.f, 0.5);
   TTS_ALL_RELATIVE_EQUAL(a, b, 5);
   TTS_ALL_ABSOLUTE_EQUAL(a, b, 1);
 }
 
 TTS_CASE( "Check that forced broken relation tests fails" )
 {
-  TTS_EQUAL( 1, 0 );
+  int x = 0;
+  TTS_EQUAL( 1, x );
   TTS_NOT_EQUAL( 1, 1 );
   TTS_LESS(1,0);
   TTS_GREATER(0,1);
@@ -63,16 +67,14 @@ TTS_CASE( "Check that forced broken relation tests fails" )
   TTS_GREATER_EQUAL(0,1);
 }
 
-struct meta { template<typename T> struct apply { using type = T&; }; };
-
 TTS_CASE( "Check that forced broken types tests fails" )
 {
   TTS_TYPE_IS( int, float );
   TTS_EXPR_IS( 1.f , void**   );
 }
 
-int main(int argc, const char** argv)
+int main(int argc, char** argv)
 {
   ::tts::env runtime(argc,argv,std::cout);
-  return ::tts::run( runtime, ::tts::detail::suite, 19, 0 );
+  return ::tts::run( runtime, ::tts::detail::suite, 21, 0 );
 }

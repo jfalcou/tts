@@ -10,10 +10,10 @@
 #ifndef TTS_CASE_HPP_INCLUDED
 #define TTS_CASE_HPP_INCLUDED
 
+#include <tts/detail/color.hpp>
 #include <tts/detail/ct_helpers.hpp>
 #include <tts/detail/pp_helpers.hpp>
 #include <tts/detail/rt_helpers.hpp>
-#include <tts/detail/color.hpp>
 #include <tts/detail/test.hpp>
 #include <tts/engine/env.hpp>
 
@@ -44,7 +44,7 @@
   void TTS_FUNCTION(::tts::env &);                                                                 \
   namespace                                                                                        \
   {                                                                                                \
-    static bool TTS_REGISTRATION =                                                    \
+    static bool TTS_REGISTRATION =                                                                 \
         ::tts::detail ::registration(::tts::detail::test(DESCRIPTION, TTS_FUNCTION));              \
   }                                                                                                \
   void TTS_FUNCTION(::tts::env &runtime) /**/
@@ -77,8 +77,8 @@
               [&](auto t) {                                                                        \
                 using T = typename decltype(t)::type;                                              \
                 runtime.output() << std::endl;                                                     \
-                runtime.output() << "With T = ["                                                   \
-                                 << ::tts::detail::magenta_(::tts::type_id<T>()) << "] ";          \
+                runtime.output() << "With T = [" << ::tts::detail::magenta_(::tts::type_id<T>())   \
+                                 << "] ";                                                          \
                 runtime.output() << std::endl;                                                     \
                 TTS_FUNCTION<T>(runtime);                                                          \
               },                                                                                   \

@@ -14,7 +14,7 @@
 
 namespace tts
 {
-  env::env(int argc, const char **argv, std::ostream &s)
+  env::env(int argc, char **argv, std::ostream &s)
       : test_count {0}
       , success_count {0}
       , invalid_count {0}
