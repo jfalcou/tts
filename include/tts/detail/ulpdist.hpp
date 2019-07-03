@@ -10,8 +10,8 @@
 #ifndef TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
 #define TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
 
-#include <type_traits>
 #include <cmath>
+#include <type_traits>
 
 namespace tts
 {
@@ -22,13 +22,11 @@ namespace tts
 
   template<typename T, typename U> inline double ulpdist(T const &a, U const &b)
   {
-    if constexpr( std::is_same_v<T,U>)
+    if constexpr(std::is_same_v<T, U>)
     {
-      if constexpr( std::is_same_v<T,bool> )  // Boolean case
-      {
-        return a == b ? 0. : 1.;
-      }
-      else if constexpr( std::is_floating_point_v<T> )  // IEEE cases
+      if constexpr(std::is_same_v<T, bool>) // Boolean case
+      { return a == b ? 0. : 1.; }
+      else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
         if((a == b) || (std::isnan(a) && std::isnan(b))) return 0.;
 
@@ -45,14 +43,14 @@ namespace tts
 
         return double(e / std::numeric_limits<T>::epsilon());
       }
-      else if constexpr( std::is_integral_v<T> && !std::is_same_v<T, bool> ) // Natural case
+      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
       {
         using u_t = typename std::make_unsigned<T>::type;
         return static_cast<double>((a < b) ? u_t(b - a) : u_t(a - b));
       }
-      else  // External case
+      else // External case
       {
-        return ext::ulpdist<T>()(a,b);
+        return ext::ulpdist<T>()(a, b);
       }
     }
     else

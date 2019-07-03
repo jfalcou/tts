@@ -17,13 +17,12 @@
 namespace tts::detail
 {
   // Check if T is streamable
-  template<typename T, typename Enable = void>
-  struct is_streamable : std::false_type
+  template<typename T, typename Enable = void> struct is_streamable : std::false_type
   {
   };
 
   template<typename T>
-  struct is_streamable<T, std::void_t< decltype(std::cout << std::declval<T>())> > : std::true_type
+  struct is_streamable<T, std::void_t<decltype(std::cout << std::declval<T>())>> : std::true_type
   {
   };
 

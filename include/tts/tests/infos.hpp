@@ -12,16 +12,13 @@
 
 #include <tts/detail/infos.hpp>
 
-#define TTS_PASS(MESSAGE)                                                                           \
-::tts::detail::pass(runtime, {__FILE__, __LINE__}) << MESSAGE << std::endl                          \
-/**/
+#define TTS_PASS(MESSAGE)                                                                          \
+  ::tts::detail::pass(runtime, {__FILE__, __LINE__}) << MESSAGE << std::endl /**/
 
-#define TTS_FAIL(MESSAGE)                                                                           \
-::tts::detail::fail(runtime, {__FILE__, __LINE__})<< MESSAGE << std::endl                           \
-/**/
+#define TTS_FAIL(MESSAGE)                                                                          \
+  ::tts::detail::fail(runtime, {__FILE__, __LINE__}) << MESSAGE << std::endl /**/
 
-#define TTS_INVALID(MESSAGE)                                                                        \
-::tts::detail::invalid(runtime,{__FILE__, __LINE__}) << MESSAGE << std::endl                        \
-/**/
+#define TTS_INVALID(MESSAGE)                                                                       \
+  ::tts::detail::invalid(runtime, {__FILE__, __LINE__}) << MESSAGE << std::endl /**/
 
 #endif

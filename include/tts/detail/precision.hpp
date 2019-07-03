@@ -28,23 +28,34 @@ namespace tts
   {
     struct location;
 
-    void check_precision( env&, location const&, double, double
-                        , std::string_view, std::string_view, std::string_view
-                        );
+    void check_precision(env &,
+                         location const &,
+                         double,
+                         double,
+                         std::string_view,
+                         std::string_view,
+                         std::string_view);
 
-    bool has_matching_size( env&, location const&, std::string_view , std::string_view
-                          , std::size_t , std::size_t
-                          );
+    bool has_matching_size(env &,
+                           location const &,
+                           std::string_view,
+                           std::string_view,
+                           std::size_t,
+                           std::size_t);
 
-    void report_all_errors( env&, location const&, std::vector<error> const&
-                          , double, std::string_view, std::string_view, std::string_view
-                          );
+    void report_all_errors(env &,
+                           location const &,
+                           std::vector<error> const &,
+                           double,
+                           std::string_view,
+                           std::string_view,
+                           std::string_view);
 
     template<typename Values, typename Refs, typename Check>
-    std::vector<error> all_check( Values const& v, Refs const& r, double target, Check fn )
+    std::vector<error> all_check(Values const &v, Refs const &r, double target, Check fn)
     {
       std::vector<tts::error> errors;
-      std::ptrdiff_t idx = 0;
+      std::ptrdiff_t          idx = 0;
 
       auto br = tts::detail::begin(r);
       auto bv = tts::detail::begin(v);
@@ -52,10 +63,10 @@ namespace tts
 
       while(bv != ev)
       {
-        auto m = fn(*bv,*br);
+        auto m = fn(*bv, *br);
 
         if(m > target)
-          errors.push_back( {m, tts::detail::to_string(*br), tts::detail::to_string(*bv), idx} );
+          errors.push_back({m, tts::detail::to_string(*br), tts::detail::to_string(*bv), idx});
 
         idx++;
         br++;

@@ -46,12 +46,12 @@ namespace tts::detail
   }                                                                                                \
   /**/
 
-      TTS_BINARY_DECOMPOSE(==, "==", eq)
-      TTS_BINARY_DECOMPOSE(!=, "!=", neq)
-      TTS_BINARY_DECOMPOSE(<, "<", lt)
-      TTS_BINARY_DECOMPOSE(>, ">", gt)
-      TTS_BINARY_DECOMPOSE(>=, ">=", ge)
-      TTS_BINARY_DECOMPOSE(<=, "<=", le)
+    TTS_BINARY_DECOMPOSE(==, "==", eq)
+    TTS_BINARY_DECOMPOSE(!=, "!=", neq)
+    TTS_BINARY_DECOMPOSE(<, "<", lt)
+    TTS_BINARY_DECOMPOSE(>, ">", gt)
+    TTS_BINARY_DECOMPOSE(>=, ">=", ge)
+    TTS_BINARY_DECOMPOSE(<=, "<=", le)
 
 #undef TTS_BINARY_DECOMPOSE
   };

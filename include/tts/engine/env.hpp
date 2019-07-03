@@ -27,7 +27,7 @@ namespace tts
   {
     env(int argc, char **argv, std::ostream &s = std::cout);
 
-    std::string const& name() const;
+    std::string const &name() const;
 
     void verbose(bool m);
     bool verbose() const;

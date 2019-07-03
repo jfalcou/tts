@@ -10,10 +10,10 @@
 #ifndef TTS_DETAIL_INFO_HPP_INCLUDED
 #define TTS_DETAIL_INFO_HPP_INCLUDED
 
-#include <tts/engine/env.hpp>
 #include <cstddef>
-#include <string>
 #include <iostream>
+#include <string>
+#include <tts/engine/env.hpp>
 
 namespace tts::detail
 {
@@ -26,9 +26,9 @@ namespace tts::detail
 
   std::ostream &operator<<(std::ostream &os, location const &l);
 
-  std::ostream& pass(tts::env& runtime, location const& l);
-  std::ostream& fail(tts::env& runtime, location const& l);
-  std::ostream& invalid(tts::env& runtime, location const& l);
+  std::ostream &pass(tts::env &runtime, location const &l);
+  std::ostream &fail(tts::env &runtime, location const &l);
+  std::ostream &invalid(tts::env &runtime, location const &l);
 }
 
 #endif

@@ -17,7 +17,10 @@
 
 namespace tts
 {
-  namespace detail { int usage(std::string const&); }
+  namespace detail
+  {
+    int usage(std::string const &);
+  }
 
   /*!
     @ingroup group-common
@@ -45,20 +48,17 @@ namespace tts
     environment.verbose(args.verbose());
 
     if(args.order() == "random")
-    {
-      std::shuffle(tests.begin(), tests.end(), std::mt19937{args.seed()});
-    }
+    { std::shuffle(tests.begin(), tests.end(), std::mt19937 {args.seed()}); }
     else if(args.order() == "sorted")
     {
-      std::sort ( tests.begin(), tests.end()
-                , [](auto const& a, auto const& b) { return a.name < b.name; }
-                );
+      std::sort(
+          tests.begin(), tests.end(), [](auto const &a, auto const &b) { return a.name < b.name; });
     }
 
     for(auto &t: tests)
     {
       auto count = environment.tests();
-      for(std::size_t i=0;i<args.repetition();++i) t(environment);
+      for(std::size_t i = 0; i < args.repetition(); ++i) t(environment);
       process_invalid(environment, count);
     }
 

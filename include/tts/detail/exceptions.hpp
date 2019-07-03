@@ -20,14 +20,14 @@ namespace tts
   namespace detail
   {
     struct location;
-    void throw_test ( tts::env& runtime, location const& l
-                    , std::string_view s, std::string_view t
-                    , void(*statement)(), std::size_t
-                    );
+    void throw_test(tts::env &       runtime,
+                    location const & l,
+                    std::string_view s,
+                    std::string_view t,
+                    void (*statement)(),
+                    std::size_t);
 
-    void nothrow_test ( env& runtime,  location const& l
-                      , std::string_view s, void(*statement)()
-                      );
+    void nothrow_test(env &runtime, location const &l, std::string_view s, void (*statement)());
   }
 }
 

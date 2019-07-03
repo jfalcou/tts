@@ -18,10 +18,13 @@ namespace tts
 
   namespace detail
   {
-    void check_relation ( ::tts::env& runtime, bool result
-                        , std::string_view a, std::string_view b, std::string_view op
-                        , std::string const& va, std::string const& vb
-                        );
+    void check_relation(::tts::env &       runtime,
+                        bool               result,
+                        std::string_view   a,
+                        std::string_view   b,
+                        std::string_view   op,
+                        std::string const &va,
+                        std::string const &vb);
   }
 }
 
