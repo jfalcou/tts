@@ -7,10 +7,10 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-#include <cstdlib>
-#include <string>
 #include <tts/detail/rt_helpers.hpp>
-#include <tts/detail/color.hpp>
+#include <cstdlib>
+#include <iomanip>
+#include <string>
 
 namespace tts::detail
 {
@@ -25,12 +25,4 @@ namespace tts::detail
   int null_buffer_t::overflow(int c) { return c; }
   null_buffer_t null_buffer = {};
   std::ostream  null_stream(&null_buffer);
-
-  // Simple wrapper for __FILE__/__LINE__
-  std::ostream &operator<<(std::ostream &os, location const &l)
-  {
-    return os << darkgray_(l.file) << ":" << darkgray_(l.line);
-  }
-
-  location at(std::string const &f, std::size_t l) { return {f, l}; }
 }

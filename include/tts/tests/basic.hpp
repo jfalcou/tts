@@ -19,14 +19,11 @@
   do                                                                                               \
   {                                                                                                \
     ::tts::detail::result tts_var_d = TTS_DECOMPOSE(EXPR);                                         \
-    if(tts_var_d)                                                                                  \
-    {                                                                                              \
-      TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(EXPR)));                          \
-    }                                                                                              \
+    if(tts_var_d) { TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(EXPR))); }          \
     else                                                                                           \
     {                                                                                              \
-      TTS_FAIL("Expecting: " << ::tts::detail::red_(tts_var_d.lhs)                                 \
-                             << " " << ::tts::detail::white_(tts_var_d.op) << " "                  \
+      TTS_FAIL("Expecting: " << ::tts::detail::red_(tts_var_d.lhs) << " "                          \
+                             << ::tts::detail::white_(tts_var_d.op) << " "                         \
                              << ::tts::detail::red_(tts_var_d.rhs));                               \
     }                                                                                              \
   } while(::tts::detail::is_false()) /**/
@@ -38,9 +35,9 @@
     ::tts::detail::result tts_var_d = TTS_DECOMPOSE(EXPR);                                         \
     if(tts_var_d)                                                                                  \
     {                                                                                              \
-      TTS_FAIL("Not expecting: " << ::tts::detail::red_(tts_var_d.lhs)                             \
-                             << " " << ::tts::detail::white_(tts_var_d.op) << " "                  \
-                             << ::tts::detail::red_(tts_var_d.rhs));                               \
+      TTS_FAIL("Not expecting: " << ::tts::detail::red_(tts_var_d.lhs) << " "                      \
+                                 << ::tts::detail::white_(tts_var_d.op) << " "                     \
+                                 << ::tts::detail::red_(tts_var_d.rhs));                           \
     }                                                                                              \
     else                                                                                           \
     {                                                                                              \

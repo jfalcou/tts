@@ -12,13 +12,15 @@
 
 #include <algorithm>
 #include <random>
-#include <chrono>
 #include <tts/detail/args.hpp>
 #include <tts/detail/test.hpp>
 
 namespace tts
 {
-  namespace detail { int usage(std::string const&); }
+  namespace detail
+  {
+    int usage(std::string const &);
+  }
 
   /*!
     @ingroup group-common
@@ -43,44 +45,20 @@ namespace tts
   template<typename Environment, typename Suite, typename... Setup>
   inline bool run(Environment &environment, Suite &tests, Setup const &... setup)
   {
-    using namespace std::literals;
+    environment.verbose(args.verbose());
 
-    if(args("help"sv, false))
-      return ::tts::detail::usage(environment.name());
-
-    // retrieve status
-    auto fo = args("pass"sv, false);
-    environment.verbose(fo);
-
-    // check if tests needs to be repeated
-    auto repetition = args("repeat"sv, 1);
-
-    // randomize test on non-null random seed option
-    unsigned int seed = args("seed"sv, 1);
-
-    // no seed ? See if e didn't asked for fully randomized
-    if (args("seed"sv, ""s) == "time"sv) {
-      auto now = std::chrono::high_resolution_clock::now();
-      seed = static_cast<unsigned int>(now.time_since_epoch().count());
-    }
-
-    auto order = args("order","declared"s);
-
-    if(order == "random"s)
+    if(args.order() == "random")
+    { std::shuffle(tests.begin(), tests.end(), std::mt19937 {args.seed()}); }
+    else if(args.order() == "sorted")
     {
-      std::shuffle(tests.begin(), tests.end(), std::mt19937 {seed});
-    }
-    else if(order == "sorted"s)
-    {
-      std::sort ( tests.begin(), tests.end()
-                , [](auto const& a, auto const& b) { return a.name < b.name; }
-                );
+      std::sort(
+          tests.begin(), tests.end(), [](auto const &a, auto const &b) { return a.name < b.name; });
     }
 
     for(auto &t: tests)
     {
       auto count = environment.tests();
-      for(int i=0;i<repetition;++i) t(environment);
+      for(std::size_t i = 0; i < args.repetition(); ++i) t(environment);
       process_invalid(environment, count);
     }
 
