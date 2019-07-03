@@ -12,10 +12,10 @@ add_library ( tts
               exceptions.cpp
               helpers.cpp
               info.cpp
+              precision.cpp
               relation.cpp
               test.cpp
               type_id.cpp
-              ulp.cpp
             )
 
 if( MSVC )

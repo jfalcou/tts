@@ -11,14 +11,59 @@
 #define TTS_DETAIL_PRECISION_HPP_INCLUDED
 
 #include <string>
+#include <vector>
 
 namespace tts
 {
   struct env;
 
+  struct error
+  {
+    double         value;
+    std::string    data, ref;
+    std::ptrdiff_t idx;
+  };
+
   namespace detail
   {
-    void check_ulp(env&, double, double, std::string_view, std::string_view);
+    struct location;
+
+    void check_precision( env&, location const&, double, double
+                        , std::string_view, std::string_view, std::string_view
+                        );
+
+    bool has_matching_size( env&, location const&, std::string_view , std::string_view
+                          , std::size_t , std::size_t
+                          );
+
+    void report_all_errors( env&, location const&, std::vector<error> const&
+                          , double, std::string_view, std::string_view, std::string_view
+                          );
+
+    template<typename Values, typename Refs, typename Check>
+    std::vector<error> all_check( Values const& v, Refs const& r, double target, Check fn )
+    {
+      std::vector<tts::error> errors;
+      std::ptrdiff_t idx = 0;
+
+      auto br = tts::detail::begin(r);
+      auto bv = tts::detail::begin(v);
+      auto ev = tts::detail::end(v);
+
+      while(bv != ev)
+      {
+        auto m = fn(*bv,*br);
+
+        if(m > target)
+          errors.push_back( {m, tts::detail::to_string(*br), tts::detail::to_string(*bv), idx} );
+
+        idx++;
+        br++;
+        bv++;
+      }
+
+      return errors;
+    }
   }
 }
 

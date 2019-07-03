@@ -51,6 +51,7 @@ TTS_CASE( "Check that forced broken precision tests fails on array" )
   std::vector<float> b{2.f,-1.f,1.f,5.f};
 
   TTS_ALL_ULP_EQUAL(a, b, 0.5);
+  TTS_ALL_ULP_EQUAL(a, 1.f, 0.5);
   TTS_ALL_RELATIVE_EQUAL(a, b, 5);
   TTS_ALL_ABSOLUTE_EQUAL(a, b, 1);
 }
@@ -75,5 +76,5 @@ TTS_CASE( "Check that forced broken types tests fails" )
 int main(int argc, char** argv)
 {
   ::tts::env runtime(argc,argv,std::cout);
-  return ::tts::run( runtime, ::tts::detail::suite, 20, 0 );
+  return ::tts::run( runtime, ::tts::detail::suite, 21, 0 );
 }
