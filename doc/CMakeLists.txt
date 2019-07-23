@@ -1,6 +1,6 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2018 Joel FALCOU
+##  Copyright 2019 Joel FALCOU
 ##
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
@@ -13,15 +13,6 @@ find_package(Sphinx)
 
 if(SPHINX_FOUND)
     set(SPHINX_THEME sphinx_rtd_theme)
-
-# set(SPHINX_OPTIONS
-#                      "\"textcolor\": \"rgb(0,0,255)\"
-#                     , \"headingcolor\": \"rgb(0,0,255)\""
-#                     , \"headingcolor\": \"rgb(0,0,255)\""
-#                     , \"headingcolor\": \"rgb(0,0,255)\""
-#                     , \"headingcolor\": \"rgb(0,0,255)\""
-#    )
-
     set(BINARY_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
     set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
     set(SPHINX_HTML_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/html")

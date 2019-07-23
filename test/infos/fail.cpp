@@ -7,18 +7,17 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+#define TTS_USE_CUSTOM_DRIVER
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
+#include <tts/tests/infos.hpp>
 
-// ![all_relative]
-TTS_CASE("Relative distance between containers")
+TTS_CASE( "Check that forced failure fails" )
 {
-  std::vector<float> a{1.f,1.1f,0.9f,1.3f};
-  std::vector<float> b{1.f,1.f,1.f,1.f};
-  std::vector<float> s{1.1f};
-
-  TTS_ALL_RELATIVE_EQUAL(a  , b   , 25);
-  TTS_ALL_RELATIVE_EQUAL(s  , 1.f , 25);
-  TTS_ALL_RELATIVE_EQUAL(1.f, s   , 25);
+  TTS_FAIL("Forced fail");
 }
-// ![all_relative]
+
+int main(int argc, char** argv)
+{
+  ::tts::env runtime(argc,argv,std::cout);
+  return ::tts::run( runtime, ::tts::detail::suite, 1, 0 );
+}

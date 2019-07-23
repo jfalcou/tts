@@ -1,0 +1,29 @@
+$ ./my_test
+Results: 1 test - 0 success - 0/0 failure - 1/0 invalid
+$ ./my_test
+Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+../../test/pass.cpp:21: passed- This one's a success
+../../test/pass.cpp:22: passed - Expecting: (2+2) == 4
+--------------------------------------------------------------------------------
+Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Verify basic relations
+--------------------------------------------------------------------------------
+../../test/pass.cpp:21: passed: - Expecting: a == b
+../../test/pass.cpp:22: passed: - Expecting: true != false
+../../test/pass.cpp:23: passed: - Expecting: -1.f < 0.5
+--------------------------------------------------------------------------------
+Results: 3 tests - 3 successes - 0/0 failure - 0/0 invalid
+--------------------------------------------------------------------------------
+[SCENARIO] - ULP distance
+--------------------------------------------------------------------------------
+../../test/precision/ulp.cpp:18: passed - Expecting: 'A' == 80LL within 15 ULP
+../../test/precision/ulp.cpp:19: passed - Expecting: 1.f == 1.f+eps within 0.5 ULP
+../../test/precision/ulp.cpp:20: passed - Expecting: pi == static_cast<float>(pi) within 98429300 ULP
+../../test/precision/ulp.cpp:21: passed - Expecting: 1. == short{1} within 0 ULP
+
