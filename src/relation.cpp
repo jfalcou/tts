@@ -15,24 +15,18 @@
 
 namespace tts::detail
 {
-  void check_relation ( ::tts::env& runtime, bool result
-                      , std::string_view a, std::string_view b, std::string_view op
-                      , std::string const& va, std::string const& vb
+  void check_relation ( ::tts::env& r, location const& l, bool result
+                      , std::string_view a , std::string_view b, std::string_view op
+                      , std::string_view va, std::string_view vb
                       )
   {
     if(result)
     {
-      TTS_PASS("Expecting: "  << ::tts::detail::white_(a)   << " "
-                              << ::tts::detail::white_(op)  << " "
-                              << ::tts::detail::white_(b)
-              );
+      pass(r,l) << "Expecting: " << white_(a) << " " << white_(op) << " " << white_(b) << "\n";
     }
     else
     {
-      TTS_FAIL("Expecting: "  << ::tts::detail::red_(va)  << " "
-                              << ::tts::detail::red_(op) << " "
-                              << ::tts::detail::red_(vb)
-              );
+      fail(r,l) << "Expecting: " << red_(va) << " " << red_(op) << " " << red_(vb) << "\n";
     }
   }
 }

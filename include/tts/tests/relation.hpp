@@ -12,60 +12,73 @@
 
 #include <tts/detail/comparator.hpp>
 #include <tts/detail/pp_helpers.hpp>
+#include <tts/detail/infos.hpp>
 #include <tts/detail/relations.hpp>
 
 #define TTS_EQUAL(A, B)                                                                            \
   ::tts::detail::check_relation(runtime,                                                           \
+                                {__FILE__, __LINE__},                                              \
                                 tts::detail::eq((A), (B)),                                         \
                                 TTS_STRING(A),                                                     \
                                 TTS_STRING(B),                                                     \
                                 "==",                                                              \
                                 ::tts::detail::to_string(A),                                       \
-                                ::tts::detail::to_string(B)) /**/
+                                ::tts::detail::to_string(B))                                       \
+/**/
 
 #define TTS_NOT_EQUAL(A, B)                                                                        \
   ::tts::detail::check_relation(runtime,                                                           \
+                                {__FILE__, __LINE__},                                              \
                                 tts::detail::neq((A), (B)),                                        \
                                 TTS_STRING(A),                                                     \
                                 TTS_STRING(B),                                                     \
                                 "!=",                                                              \
                                 ::tts::detail::to_string(A),                                       \
-                                ::tts::detail::to_string(B)) /**/
+                                ::tts::detail::to_string(B))                                       \
+/**/
 
 #define TTS_LESS(A, B)                                                                             \
   ::tts::detail::check_relation(runtime,                                                           \
+                                {__FILE__, __LINE__},                                              \
                                 tts::detail::lt((A), (B)),                                         \
                                 TTS_STRING(A),                                                     \
                                 TTS_STRING(B),                                                     \
                                 "<",                                                               \
                                 ::tts::detail::to_string(A),                                       \
-                                ::tts::detail::to_string(B)) /**/
+                                ::tts::detail::to_string(B))                                       \
+/**/
 
 #define TTS_GREATER(A, B)                                                                          \
   ::tts::detail::check_relation(runtime,                                                           \
+                                {__FILE__, __LINE__},                                              \
                                 tts::detail::gt((A), (B)),                                         \
                                 TTS_STRING(A),                                                     \
                                 TTS_STRING(B),                                                     \
                                 ">",                                                               \
                                 ::tts::detail::to_string(A),                                       \
-                                ::tts::detail::to_string(B)) /**/
+                                ::tts::detail::to_string(B))                                       \
+/**/
 
 #define TTS_LESS_EQUAL(A, B)                                                                       \
   ::tts::detail::check_relation(runtime,                                                           \
+                                {__FILE__, __LINE__},                                              \
                                 tts::detail::le((A), (B)),                                         \
                                 TTS_STRING(A),                                                     \
                                 TTS_STRING(B),                                                     \
                                 "<=",                                                              \
                                 ::tts::detail::to_string(A),                                       \
-                                ::tts::detail::to_string(B)) /**/
+                                ::tts::detail::to_string(B))                                       \
+/**/
 
 #define TTS_GREATER_EQUAL(A, B)                                                                    \
   ::tts::detail::check_relation(runtime,                                                           \
+                                {__FILE__, __LINE__},                                              \
                                 tts::detail::ge((A), (B)),                                         \
                                 TTS_STRING(A),                                                     \
                                 TTS_STRING(B),                                                     \
                                 ">=",                                                              \
                                 ::tts::detail::to_string(A),                                       \
-                                ::tts::detail::to_string(B)) /**/
+                                ::tts::detail::to_string(B))                                       \
+/**/
 
 #endif

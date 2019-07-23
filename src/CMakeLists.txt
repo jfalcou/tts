@@ -6,7 +6,7 @@
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
 
-add_library ( tts
+add_library ( tts SHARED
               args.cpp
               env.cpp
               exceptions.cpp

@@ -36,8 +36,8 @@
     {                                                                                              \
       TTS_FAIL("Expecting " << ::tts::detail::white_(tts::type_id<TTS_REMOVE_PARENS(Type)>())      \
                             << " found "                                                           \
-                            << ::tts::detail::red_(tts::type_id<TTS_REMOVE_PARENS(T)>()))          \
-          << " instead";                                                                           \
+                            << ::tts::detail::red_(tts::type_id<TTS_REMOVE_PARENS(T)>())           \
+          << " instead");                                                                          \
     }                                                                                              \
   } while(::tts::detail::is_false()) /**/
 
