@@ -18,13 +18,19 @@
 #include <tts/detail/ulpdist.hpp>
 
 #define TTS_ULP_EQUAL(A, B, X)                                                                     \
-  ::tts::detail::check_precision(runtime,                                                          \
-                                 {__FILE__, __LINE__},                                             \
-                                 ::tts::ulpdist((A), (B)),                                         \
-                                 X,                                                                \
-                                 TTS_STRING(A),                                                    \
-                                 TTS_STRING(B),                                                    \
-                                 "ULP") /**/
+  do                                                                                               \
+  {                                                                                                \
+    auto eval_a = (A);                                                                             \
+    auto eval_b = (B);                                                                             \
+    ::tts::detail::check_precision(runtime,                                                        \
+                                   {__FILE__, __LINE__},                                           \
+                                   ::tts::ulpdist(eval_a, eval_b),                                 \
+                                   X,                                                              \
+                                   TTS_STRING(eval_a),                                             \
+                                   TTS_STRING(eval_b),                                             \
+                                   "ULP");                                                         \
+  } while(::tts::detail::is_false())                                                               \
+/**/
 
 #define TTS_ALL_ULP_EQUAL(A, B, X)                                                                 \
   do                                                                                               \
@@ -45,17 +51,23 @@
   } while(::tts::detail::is_false())
 /**/
 
-#define TTS_IEEE_EQUAL(A, B) TTS_ULP_EQUAL(A, B, 0.)
-#define TTS_ALL_IEEE_EQUAL(A, B) TTS_ALL_ULP_EQUAL(A, B, 0.)
+#define TTS_IEEE_EQUAL(A, B)      TTS_ULP_EQUAL(A, B, 0.)
+#define TTS_ALL_IEEE_EQUAL(A, B)  TTS_ALL_ULP_EQUAL(A, B, 0.)
 
 #define TTS_RELATIVE_EQUAL(A, B, X)                                                                \
-  ::tts::detail::check_precision(runtime,                                                          \
-                                 {__FILE__, __LINE__},                                             \
-                                 ::tts::reldist((A), (B)),                                         \
-                                 X,                                                                \
-                                 TTS_STRING(A),                                                    \
-                                 TTS_STRING(B),                                                    \
-                                 "%") /**/
+  do                                                                                               \
+  {                                                                                                \
+    auto eval_a = (A);                                                                             \
+    auto eval_b = (B);                                                                             \
+    ::tts::detail::check_precision(runtime,                                                        \
+                                   {__FILE__, __LINE__},                                           \
+                                   ::tts::reldist(eval_a, eval_b),                                 \
+                                   X,                                                              \
+                                   TTS_STRING(eval_a),                                             \
+                                   TTS_STRING(eval_b),                                             \
+                                   "%");                                                           \
+  } while(::tts::detail::is_false())                                                               \
+/**/
 
 #define TTS_ALL_RELATIVE_EQUAL(A, B, X)                                                            \
   do                                                                                               \
@@ -79,13 +91,19 @@
 #define TTS_ALL_EQUAL(A, B) TTS_ALL_RELATIVE_EQUAL(A, B, 0)
 
 #define TTS_ABSOLUTE_EQUAL(A, B, X)                                                                \
-  ::tts::detail::check_precision(runtime,                                                          \
-                                 {__FILE__, __LINE__},                                             \
-                                 ::tts::absdist((A), (B)),                                         \
-                                 X,                                                                \
-                                 TTS_STRING(A),                                                    \
-                                 TTS_STRING(B),                                                    \
-                                 " unit") /**/
+  do                                                                                               \
+  {                                                                                                \
+    auto eval_a = (A);                                                                             \
+    auto eval_b = (B);                                                                             \
+    ::tts::detail::check_precision(runtime,                                                        \
+                                   {__FILE__, __LINE__},                                           \
+                                   ::tts::absdist(eval_a, eval_b),                                 \
+                                   X,                                                              \
+                                   TTS_STRING(eval_a),                                             \
+                                   TTS_STRING(eval_b),                                             \
+                                   " unit");                                                       \
+  } while(::tts::detail::is_false())                                                               \
+/**/
 
 #define TTS_ALL_ABSOLUTE_EQUAL(A, B, X)                                                            \
   do                                                                                               \
