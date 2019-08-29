@@ -12,6 +12,7 @@
 
 // Generate local unique ID for function or registration varianle using line descriptor
 #define TTS_FUNCTION TTS_UNIQUE(tts_function)
+#define TTS_CALLER   TTS_UNIQUE(tts_caller)
 #define TTS_REGISTRATION TTS_UNIQUE(tts_registration)
 #define TTS_UNIQUE3(ID, LINE) ID##LINE
 #define TTS_UNIQUE2(ID, LINE) TTS_UNIQUE3(ID, LINE)
