@@ -26,8 +26,8 @@
                                    {__FILE__, __LINE__},                                           \
                                    ::tts::ulpdist(eval_a, eval_b),                                 \
                                    X,                                                              \
-                                   TTS_STRING(eval_a),                                             \
-                                   TTS_STRING(eval_b),                                             \
+                                   TTS_STRING(A),                                                  \
+                                   TTS_STRING(B),                                                  \
                                    "ULP");                                                         \
   } while(::tts::detail::is_false())                                                               \
 /**/
@@ -63,8 +63,8 @@
                                    {__FILE__, __LINE__},                                           \
                                    ::tts::reldist(eval_a, eval_b),                                 \
                                    X,                                                              \
-                                   TTS_STRING(eval_a),                                             \
-                                   TTS_STRING(eval_b),                                             \
+                                   TTS_STRING(A),                                                  \
+                                   TTS_STRING(B),                                                  \
                                    "%");                                                           \
   } while(::tts::detail::is_false())                                                               \
 /**/
@@ -99,8 +99,8 @@
                                    {__FILE__, __LINE__},                                           \
                                    ::tts::absdist(eval_a, eval_b),                                 \
                                    X,                                                              \
-                                   TTS_STRING(eval_a),                                             \
-                                   TTS_STRING(eval_b),                                             \
+                                   TTS_STRING(A),                                                  \
+                                   TTS_STRING(B),                                                  \
                                    " unit");                                                       \
   } while(::tts::detail::is_false())                                                               \
 /**/
