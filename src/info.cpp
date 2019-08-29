@@ -28,20 +28,20 @@ namespace tts::detail
   {
     return runtime.pass() << l
                    << ": " << ::tts::detail::green_("passed")
-                   << ": " << ::tts::detail::white_(runtime.scenario()) << " - ";
+                   << " - ";
   }
 
   std::ostream & fail(tts::env& runtime, location const& l)
   {
     return runtime.fail() << l
                    << ": " << ::tts::detail::red_("**FAILED**")
-                   << ": " << ::tts::detail::white_(runtime.scenario()) << " - ";
+                   << " - ";
   }
 
   std::ostream & invalid(tts::env& runtime, location const& l)
   {
     return runtime.invalid()  << l
                               << ": " << ::tts::detail::yellow_("**INVALID**")
-                              << ": " << ::tts::detail::white_(runtime.scenario()) << " - ";
+                              << " - ";
   }
 }
