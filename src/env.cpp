@@ -11,6 +11,7 @@
 #include <tts/engine/env.hpp>
 #include <tts/detail/rt_helpers.hpp>
 #include <tts/detail/color.hpp>
+#include <tts/api.hpp>
 
 namespace tts
 {
@@ -74,7 +75,7 @@ namespace tts
     return stream();
   }
 
-  bool report(env const &e, std::ptrdiff_t fails, std::ptrdiff_t invalids)
+  TTS_API bool report(env const &e, std::ptrdiff_t fails, std::ptrdiff_t invalids)
   {
     auto test_txt = e.tests() > 1 ? "tests" : "test";
     auto pass_txt = e.successes() > 1 ? "successes" : "success";
@@ -97,7 +98,7 @@ namespace tts
       return e.failures() != fails || e.invalids() != invalids;
   }
 
-  void process_invalid(env &env, std::ptrdiff_t count)
+  TTS_API void process_invalid(env &env, std::ptrdiff_t count)
   {
     if(count == env.tests()) env.invalid();
   }

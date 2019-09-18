@@ -9,6 +9,7 @@
 //==================================================================================================
 #include <tts/engine/env.hpp>
 #include <tts/detail/test.hpp>
+#include <tts/api.hpp>
 
 namespace tts::detail
 {

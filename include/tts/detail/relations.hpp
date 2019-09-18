@@ -10,6 +10,7 @@
 #ifndef TTS_DETAIL_RELATIONS_HPP_INCLUDED
 #define TTS_DETAIL_RELATIONS_HPP_INCLUDED
 
+#include <tts/api.hpp>
 #include <string>
 
 namespace tts
@@ -19,14 +20,14 @@ namespace tts
   namespace detail
   {
     struct location;
-    void check_relation(::tts::env &       runtime,
-                        location const&    l,
-                        bool               result,
-                        std::string_view   a,
-                        std::string_view   b,
-                        std::string_view   op,
-                        std::string_view   va,
-                        std::string_view   vb);
+    TTS_API void check_relation(::tts::env &       runtime,
+                                location const&    l,
+                                bool               result,
+                                std::string_view   a,
+                                std::string_view   b,
+                                std::string_view   op,
+                                std::string_view   va,
+                                std::string_view   vb);
   }
 }
 

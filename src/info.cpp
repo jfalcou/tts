@@ -11,6 +11,7 @@
 #include <tts/detail/color.hpp>
 #include <tts/engine/env.hpp>
 #include <tts/tests/infos.hpp>
+#include <tts/api.hpp>
 #include <typeinfo>
 #include <cstdlib>
 #include <string>
@@ -24,21 +25,21 @@ namespace tts::detail
   }
 
   // Basic messaging
-  std::ostream & pass(tts::env& runtime, location const& l)
+  TTS_API std::ostream & pass(tts::env& runtime, location const& l)
   {
     return runtime.pass() << l
                    << ": " << ::tts::detail::green_("passed")
                    << " - ";
   }
 
-  std::ostream & fail(tts::env& runtime, location const& l)
+  TTS_API std::ostream & fail(tts::env& runtime, location const& l)
   {
     return runtime.fail() << l
                    << ": " << ::tts::detail::red_("**FAILED**")
                    << " - ";
   }
 
-  std::ostream & invalid(tts::env& runtime, location const& l)
+  TTS_API std::ostream & invalid(tts::env& runtime, location const& l)
   {
     return runtime.invalid()  << l
                               << ": " << ::tts::detail::yellow_("**INVALID**")

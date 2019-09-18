@@ -10,17 +10,18 @@
 #ifndef TTS_DETAIL_TYPE_ID_HPP_INCLUDED
 #define TTS_DETAIL_TYPE_ID_HPP_INCLUDED
 
+#include <tts/api.hpp>
+#include <type_traits>
+#include <typeinfo>
 #include <cstddef>
 #include <cstdlib>
 #include <string>
-#include <type_traits>
-#include <typeinfo>
 
 namespace tts
 {
   namespace detail
   {
-    std::string demangle(char const *name);
+    TTS_API std::string demangle(char const *name);
   }
 
   // Type name demangling function

@@ -10,12 +10,13 @@
 #ifndef TTS_COMMON_ARGS_HPP_INCLUDED
 #define TTS_COMMON_ARGS_HPP_INCLUDED
 
+#include <tts/api.hpp>
 #include <cstddef>
 #include <string>
 
 namespace tts::detail
 {
-  struct args_map
+  struct TTS_API args_map
   {
     args_map();
 
@@ -38,7 +39,7 @@ namespace tts::detail
 
 namespace tts
 {
-  extern const detail::args_map args;
+  extern TTS_API const detail::args_map args;
 }
 
 #endif

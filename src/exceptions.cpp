@@ -12,13 +12,14 @@
 #include <cstdlib>
 #include <string>
 #include <typeinfo>
+#include <tts/api.hpp>
 
 namespace tts::detail
 {
-  void throw_test ( env& runtime,  location const& l
-                  , std::string_view s, std::string_view t
-                  , void(*statement)(), std::size_t ref_code
-                  )
+  TTS_API void throw_test ( env& runtime,  location const& l
+                          , std::string_view s, std::string_view t
+                          , void(*statement)(), std::size_t ref_code
+                          )
   {
     bool caught = false;
 
@@ -41,9 +42,9 @@ namespace tts::detail
     }
   }
 
-  void nothrow_test ( env& runtime,  location const& l
-                    , std::string_view s, void(*statement)()
-                    )
+  TTS_API void nothrow_test ( env& runtime,  location const& l
+                            , std::string_view s, void(*statement)()
+                            )
   {
     bool caught = false;
 

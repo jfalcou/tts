@@ -10,13 +10,14 @@
 #ifndef TTS_DETAIL_RT_HELPERS_HPP_INCLUDED
 #define TTS_DETAIL_RT_HELPERS_HPP_INCLUDED
 
+#include <tts/detail/ct_helpers.hpp>
+#include <tts/detail/type_id.hpp>
+#include <tts/engine/env.hpp>
+#include <tts/api.hpp>
 #include <cstddef>
 #include <iomanip>
 #include <sstream>
 #include <string>
-#include <tts/detail/ct_helpers.hpp>
-#include <tts/detail/type_id.hpp>
-#include <tts/engine/env.hpp>
 
 namespace tts::detail
 {
@@ -51,11 +52,11 @@ namespace tts::detail
   }
 
   // Externally extensible to_string converter
-  std::string to_string(std::nullptr_t);
-  std::string to_string(bool v);
-  std::string to_string(std::string const &v);
-  std::string to_string(char const *v);
-  std::string to_string(char v);
+  TTS_API std::string to_string(std::nullptr_t);
+  TTS_API std::string to_string(bool v);
+  TTS_API std::string to_string(std::string const &v);
+  TTS_API std::string to_string(char const *v);
+  TTS_API std::string to_string(char v);
 
   template<typename T> inline std::string to_string(T const &v)
   {

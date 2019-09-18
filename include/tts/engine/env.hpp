@@ -10,6 +10,7 @@
 #ifndef TTS_ENGINE_ENV_HPP_INCLUDED
 #define TTS_ENGINE_ENV_HPP_INCLUDED
 
+#include <tts/api.hpp>
 #include <cstddef>
 #include <iostream>
 #include <string>
@@ -23,7 +24,7 @@ namespace tts
     This data structure holds information required to run and report tests status across
     test cases.
   **/
-  struct env
+  struct TTS_API env
   {
     env(int argc, char **argv, std::ostream &s = std::cout);
 
@@ -69,7 +70,7 @@ namespace tts
     Display the results aggregated across all tests cases and return a value indicating if the
     whole test is successful or not.
   **/
-  bool report(env const &e, std::ptrdiff_t fails, std::ptrdiff_t invalids);
+  TTS_API bool report(env const &e, std::ptrdiff_t fails, std::ptrdiff_t invalids);
 
   /*!
     @ingroup group-unit
@@ -79,7 +80,7 @@ namespace tts
     @param env    Environment to use as data source
     @param count  Expected number of test to have run
   **/
-  void process_invalid(env &env, std::ptrdiff_t count);
+  TTS_API void process_invalid(env &env, std::ptrdiff_t count);
 }
 
 #endif

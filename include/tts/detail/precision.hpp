@@ -10,6 +10,7 @@
 #ifndef TTS_DETAIL_PRECISION_HPP_INCLUDED
 #define TTS_DETAIL_PRECISION_HPP_INCLUDED
 
+#include <tts/api.hpp>
 #include <string>
 #include <vector>
 
@@ -28,7 +29,7 @@ namespace tts
   {
     struct location;
 
-    void check_precision(env &,
+    TTS_API void check_precision(env &,
                          location const &,
                          double,
                          double,
@@ -36,14 +37,14 @@ namespace tts
                          std::string_view,
                          std::string_view);
 
-    bool has_matching_size(env &,
+    TTS_API bool has_matching_size(env &,
                            location const &,
                            std::string_view,
                            std::string_view,
                            std::size_t,
                            std::size_t);
 
-    void report_all_errors(env &,
+    TTS_API void report_all_errors(env &,
                            location const &,
                            std::vector<error> const &,
                            double,

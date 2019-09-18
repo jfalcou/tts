@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+#include <tts/api.hpp>
 #include <tts/engine/env.hpp>
 #include <tts/tests/infos.hpp>
 #include <tts/detail/color.hpp>
@@ -15,10 +16,10 @@
 
 namespace tts::detail
 {
-  void check_relation ( ::tts::env& r, location const& l, bool result
-                      , std::string_view a , std::string_view b, std::string_view op
-                      , std::string_view va, std::string_view vb
-                      )
+  TTS_API void check_relation ( ::tts::env& r, location const& l, bool result
+                              , std::string_view a , std::string_view b, std::string_view op
+                              , std::string_view va, std::string_view vb
+                              )
   {
     if(result)
     {

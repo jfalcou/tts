@@ -10,6 +10,7 @@
 #ifndef TTS_DETAIL_TEST_HPP_INCLUDED
 #define TTS_DETAIL_TEST_HPP_INCLUDED
 
+#include <tts/api.hpp>
 #include <functional>
 #include <vector>
 
@@ -21,7 +22,7 @@ namespace tts
 namespace tts::detail
 {
   // Test case wrapper class
-  struct test
+  struct TTS_API test
   {
     using behavior_t = std::function<void(tts::env &)>;
     test(std::string const &n, behavior_t const &b);

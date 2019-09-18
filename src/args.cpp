@@ -14,6 +14,7 @@
 #include <chrono>
 #include <tts/detail/args.hpp>
 #include <tts/detail/cxxopts.hpp>
+#include <tts/api.hpp>
 
 namespace tts::detail
 {

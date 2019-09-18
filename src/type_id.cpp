@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+#include <tts/api.hpp>
 #include <cstdlib>
 #include <string>
 
@@ -16,7 +17,7 @@
 
 namespace tts::detail
 {
-  std::string demangle(char const *name)
+  TTS_API std::string demangle(char const *name)
   {
 #if defined(_MSC_VER)
     return std::string(name);

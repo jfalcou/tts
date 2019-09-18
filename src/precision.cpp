@@ -13,6 +13,7 @@
 #include <tts/detail/precision.hpp>
 #include <tts/tests/basic.hpp>
 #include <string>
+#include <tts/api.hpp>
 
 namespace tts::detail
 {

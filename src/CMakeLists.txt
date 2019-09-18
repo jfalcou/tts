@@ -21,8 +21,10 @@ add_library ( tts SHARED
 if( MSVC )
   set( options /std:c++latest /W3 /EHsc)
 else()
-  set( options -std=c++17 -Wall -Wno-missing-braces )
+  set( options -std=c++17 -Wall -Wno-missing-braces -fvisibility=hidden)
 endif()
+
+target_compile_definitions(tts PRIVATE TTS_API_EXPORTS=1)
 
 target_include_directories(tts
     PUBLIC
