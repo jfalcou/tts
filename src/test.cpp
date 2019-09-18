@@ -13,13 +13,13 @@
 
 namespace tts::detail
 {
-  test::test(std::string const &n, behavior_t const &b)
-      : name(n)
-      , behaviour(b)
+  TTS_API test::test(std::string const &n, behavior_t const &b)
+                    : name(n)
+                    , behaviour(b)
   {
   }
 
-  void test::operator()(tts::env &e)
+  TTS_API void test::operator()(tts::env &e)
   {
     e.scenario(name);
     behaviour(e);

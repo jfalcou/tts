@@ -15,61 +15,58 @@
 
 namespace tts
 {
-  env::env(int argc, char **argv, std::ostream &s)
-      : test_count {0}
-      , success_count {0}
-      , invalid_count {0}
-      , test_name_(argv[0])
-      , os(s)
+  TTS_API env::env(int argc, char **argv, std::ostream &s)
+                  : test_count {0}
+                  , success_count {0}
+                  , invalid_count {0}
+                  , test_name_(argv[0])
+                  , os(s)
   {
     args.update(argc, argv);
   }
 
-  std::string const& env::name() const { return test_name_; }
+  TTS_API void env::verbose(bool m) { verbose_ = m; }
+  TTS_API bool env::verbose() const { return verbose_; }
 
-  void env::verbose(bool m) { verbose_ = m; }
-  bool env::verbose() const { return verbose_; }
-
-  void env::as_success()
+  TTS_API void env::as_success()
   {
     test_count++;
     success_count++;
   }
 
-  void env::as_invalid()
+  TTS_API void env::as_invalid()
   {
     test_count++;
     invalid_count++;
   }
 
-  void env::as_failure() { test_count++; }
+  TTS_API void env::as_failure() { test_count++; }
 
-  bool env::passed() const { return tests() != successes(); }
+  TTS_API bool env::passed() const { return tests() != successes(); }
 
-  std::ptrdiff_t env::tests() const { return test_count; }
-  std::ptrdiff_t env::successes() const { return success_count; }
-  std::ptrdiff_t env::invalids() const { return invalid_count; }
-  std::ptrdiff_t env::failures() const { return tests() - successes() - invalids(); }
+  TTS_API std::ptrdiff_t env::tests() const { return test_count; }
+  TTS_API std::ptrdiff_t env::successes() const { return success_count; }
+  TTS_API std::ptrdiff_t env::invalids() const { return invalid_count; }
+  TTS_API std::ptrdiff_t env::failures() const { return tests() - successes() - invalids(); }
 
-  std::ostream & env::stream() const { return os; }
-  std::ostream & env::output() const { return !verbose() ? tts::detail::null_stream : stream(); }
+  TTS_API std::ostream & env::stream() const { return os; }
+  TTS_API std::ostream & env::output() const { return !verbose() ? tts::detail::null_stream : stream(); }
 
-  void                env::scenario(std::string const &title) { current_scenario_ = title; }
-  std::string const & env::scenario() const { return current_scenario_; }
+  TTS_API void env::scenario(std::string const &title) { current_scenario_ = title; }
 
-  std::ostream & env::pass()
+  TTS_API std::ostream & env::pass()
   {
     as_success();
     return output();
   }
 
-  std::ostream & env::fail()
+  TTS_API std::ostream & env::fail()
   {
     as_failure();
     return stream();
   }
 
-  std::ostream & env::invalid()
+  TTS_API std::ostream & env::invalid()
   {
     as_invalid();
     return stream();

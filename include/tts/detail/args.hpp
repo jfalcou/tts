@@ -16,11 +16,11 @@
 
 namespace tts::detail
 {
-  struct TTS_API args_map
+  struct args_map
   {
     args_map();
 
-    void update(int argc, char **argv) const;
+    TTS_API void update(int argc, char **argv) const;
 
     bool               has_color() const { return !disable_colors_; }
     bool               verbose() const { return report_pass_; }

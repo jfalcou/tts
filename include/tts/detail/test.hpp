@@ -22,11 +22,11 @@ namespace tts
 namespace tts::detail
 {
   // Test case wrapper class
-  struct TTS_API test
+  struct test
   {
     using behavior_t = std::function<void(tts::env &)>;
-    test(std::string const &n, behavior_t const &b);
-    void operator()(tts::env &e);
+    TTS_API test(std::string const &n, behavior_t const &b);
+    TTS_API void operator()(tts::env &e);
 
     std::string name;
     behavior_t  behaviour;
