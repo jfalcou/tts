@@ -24,35 +24,35 @@ namespace tts
     This data structure holds information required to run and report tests status across
     test cases.
   **/
-  struct TTS_API env
+  struct env
   {
-    env(int argc, char **argv, std::ostream &s = std::cout);
+    TTS_API env(int argc, char **argv, std::ostream &s = std::cout);
 
-    std::string const &name() const;
+    std::string const &name() const { return test_name_; }
 
-    void verbose(bool m);
-    bool verbose() const;
+    TTS_API void verbose(bool m);
+    TTS_API bool verbose() const;
 
     /// Report a test to be successful
-    void as_success();
-    void as_invalid();
-    void as_failure();
-    bool passed() const;
+    TTS_API void as_success();
+    TTS_API void as_invalid();
+    TTS_API void as_failure();
+    TTS_API bool passed() const;
 
-    std::ptrdiff_t tests() const;
-    std::ptrdiff_t successes() const;
-    std::ptrdiff_t invalids() const;
-    std::ptrdiff_t failures() const;
+    TTS_API std::ptrdiff_t tests() const;
+    TTS_API std::ptrdiff_t successes() const;
+    TTS_API std::ptrdiff_t invalids() const;
+    TTS_API std::ptrdiff_t failures() const;
 
-    std::ostream &stream() const;
-    std::ostream &output() const;
+    TTS_API std::ostream &stream() const;
+    TTS_API std::ostream &output() const;
 
-    void               scenario(std::string const &title);
-    std::string const &scenario() const;
+    TTS_API void               scenario(std::string const &title);
+    std::string const &scenario() const { return current_scenario_; }
 
-    std::ostream &pass();
-    std::ostream &fail();
-    std::ostream &invalid();
+    TTS_API std::ostream &pass();
+    TTS_API std::ostream &fail();
+    TTS_API std::ostream &invalid();
 
   private:
     std::ptrdiff_t test_count;

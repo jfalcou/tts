@@ -27,7 +27,7 @@ namespace tts::detail
 
   }
 
-  void args_map::update(int argc, char **argv) const
+  TTS_API void args_map::update(int argc, char **argv) const
   {
     cxxopts::Options options(argv[0], "TTS Unit Tests Options");
 
