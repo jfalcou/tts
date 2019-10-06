@@ -11,9 +11,18 @@
 #define TTS_DETAIL_PP_HELPERS_HPP_INCLUDED
 
 // Generate local unique ID for function or registration varianle using line descriptor
+#ifndef TTS_FUNCTION
 #define TTS_FUNCTION TTS_UNIQUE(tts_function)
+#endif
+
+#ifndef TTS_CALLER
 #define TTS_CALLER   TTS_UNIQUE(tts_caller)
+#endif
+
+#ifndef TTS_REGISTRATION
 #define TTS_REGISTRATION TTS_UNIQUE(tts_registration)
+#endif
+
 #define TTS_UNIQUE3(ID, LINE) ID##LINE
 #define TTS_UNIQUE2(ID, LINE) TTS_UNIQUE3(ID, LINE)
 #define TTS_UNIQUE(ID) TTS_UNIQUE2(ID, __LINE__)
