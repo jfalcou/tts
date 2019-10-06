@@ -42,8 +42,24 @@ namespace tts::detail
       return &c;
   }
 
+  template<typename C> inline auto begin(C &c)
+  {
+    if constexpr(detail::is_container_v<C>)
+      return c.begin();
+    else
+      return &c;
+  }
+
   // Container-aware end function
   template<typename C> inline auto end(C const &c)
+  {
+    if constexpr(detail::is_container_v<C>)
+      return c.end();
+    else
+      return (&c) + 1;
+  }
+
+  template<typename C> inline auto end(C&c)
   {
     if constexpr(detail::is_container_v<C>)
       return c.end();
