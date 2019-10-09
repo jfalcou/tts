@@ -13,4 +13,4 @@ mkdir -p build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -G Ninja -DCI_ENABLED=1 -DCMAKE_CXX_COMPILER=$1 -DTTS_VERSION_STRING=CircleCI
 ninja unit -j 8
-ctest -D Experimental -j 8
+ctest  -j 8

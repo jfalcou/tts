@@ -24,6 +24,8 @@ else()
   set( options -std=c++17 -Wall -Wno-missing-braces -fvisibility=hidden)
 endif()
 
+set_target_properties( tts PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/unit" )
+
 target_compile_definitions(tts PRIVATE TTS_API_EXPORTS=1)
 
 target_include_directories(tts
