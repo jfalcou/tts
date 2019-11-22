@@ -21,6 +21,8 @@ function(make_unit root)
   foreach(file ${ARGN})
 
     string(REPLACE ".cpp" ".unit" base ${file})
+    string(REPLACE "/"    "." base ${base})
+    string(REPLACE "\\"   "." base ${base})
     set(test "${root}.${base}")
 
     add_executable(${test} ${file})

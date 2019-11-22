@@ -10,6 +10,14 @@
 #include <tts/tts.hpp>
 #include <tts/tests/precision.hpp>
 
+TTS_CASE("Relative distance between different types")
+{
+  TTS_RELATIVE_EQUAL(42.f , 42.f  , 0     );
+  TTS_RELATIVE_EQUAL('A'  , 80LL  , 18.75 );
+  TTS_RELATIVE_EQUAL(1.   , 2.f   , 100.  );
+  TTS_RELATIVE_EQUAL(1    , 10    , 900.  );
+}
+
 TTS_CASE( "Relative distance between boolean" )
 {
   TTS_RELATIVE_EQUAL(true , true  , 0.);
@@ -57,30 +65,7 @@ TTS_CASE_TPL( "Relative distance between floating point", TTS_IEEE_TYPES )
   TTS_RELATIVE_EQUAL(a - 0.499f, a, 50 );
 }
 
-//! [relative]
-TTS_CASE("Relative distance between different types")
-{
-  TTS_RELATIVE_EQUAL('A'  , 80LL  , 18.75);
-  TTS_RELATIVE_EQUAL(1. , 2.f     , 100.);
-}
-//! [relative]
-
-namespace n1
-{
-  struct my_real { float x; operator float() const { return x; } };
-}
-
-namespace tts { namespace ext
-{
-  template<typename EnableIf>
-  struct reldist<n1::my_real,n1::my_real,EnableIf>
-  {
-    inline double operator()(n1::my_real const& a, n1::my_real const& b) const
-    {
-      return a.x/b.x;
-    }
-  };
-} }
+#include "my_real.hpp"
 
 TTS_CASE("Relative distance of type with custom reldist")
 {

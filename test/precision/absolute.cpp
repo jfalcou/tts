@@ -10,6 +10,12 @@
 #include <tts/tts.hpp>
 #include <tts/tests/precision.hpp>
 
+TTS_CASE("Absolute distance between different types")
+{
+  TTS_ABSOLUTE_EQUAL(-2.  , 2.f  , 4.);
+  TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
+}
+
 TTS_CASE( "Absolute distance between boolean" )
 {
   TTS_ABSOLUTE_EQUAL(true , true  , 0.);
@@ -57,30 +63,7 @@ TTS_CASE_TPL( "Absolute distance between floating point", TTS_IEEE_TYPES)
   TTS_ABSOLUTE_EQUAL(a - 0.499f, a, .5 );
 }
 
-//! [absolute]
-TTS_CASE("Absolute distance between different types")
-{
-  TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
-  TTS_ABSOLUTE_EQUAL(1. , 2.f    , 1.);
-}
-//! [absolute]
-
-namespace n1
-{
-  struct my_real { float x; };
-}
-
-namespace tts { namespace ext
-{
-  template<typename EnableIf>
-  struct absdist<n1::my_real,n1::my_real,EnableIf>
-  {
-    inline double operator()(n1::my_real const& a, n1::my_real const& b) const
-    {
-      return std::abs(a.x - b.x);
-    }
-  };
-} }
+#include "my_real.hpp"
 
 TTS_CASE("Absolute distance of type with custom reldist")
 {

@@ -44,7 +44,7 @@ namespace tts::detail
                   ( "s,seed"    , "Set random seed to args (default is time)"
                   , cxxopts::value<unsigned int>()
                   )
-                  ( "help"      , "Display this help message");
+                  ( "h,help"      , "Display this help message");
 
     auto result = options.parse(argc, argv);
 

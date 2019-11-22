@@ -16,13 +16,6 @@
 #include <tts/tests/types.hpp>
 #include <stdexcept>
 
-//! [fail]
-TTS_CASE( "Check that forced failure fails" )
-{
-  TTS_FAIL("Forced fail");
-}
-//! [fail]
-
 TTS_CASE( "Check that forced broken expectation fails" )
 {
   TTS_EXPECT(false == true);
@@ -76,5 +69,5 @@ TTS_CASE( "Check that forced broken types tests fails" )
 int main(int argc, char** argv)
 {
   ::tts::env runtime(argc,argv,std::cout);
-  return ::tts::run( runtime, ::tts::detail::suite, 21, 0 );
+  return ::tts::run( runtime, ::tts::detail::suite, 20, 0 );
 }

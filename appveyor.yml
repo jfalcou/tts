@@ -13,8 +13,5 @@ build_script:
 - cmake --build . --target unit --verbose --config Release
 
 test_script:
-- set OLDPATH=%PATH%
-- set PATH=C:\projects\tts\build\src\Release;%PATH%
 - ctest -C Release -VV
-- set PATH=C:\projects\tts\build\src\Debug;%OLDPATH%
 - ctest -C Debug   -VV

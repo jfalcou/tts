@@ -1,5 +1,5 @@
 /*
-                               Copyright 2018 Joel FALCOU
+                               Copyright 2019 Joel FALCOU
 
                    Distributed under the Boost Software License, Version 1.0.
                         See accompanying file LICENSE.txt or copy at
@@ -10,4 +10,21 @@
 div.sphinxsidebarwrapper
 {
   word-wrap: break-word;
+}
+
+/* Color for code blocks */
+.highlight {
+    background: #e7f2fa;
+}
+
+/* No box around code inline */
+.rst-content tt.literal, .rst-content tt.literal, .rst-content code.literal
+{
+    color: #E74C3C;
+    border: none 0px;
+}
+
+code, .rst-content tt, .rst-content code
+{
+    background: inherit;
 }

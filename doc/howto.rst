@@ -1,173 +1,236 @@
-Getting Started
-===============
+Using TTS
+=========
 
 Basic test structure
 --------------------
-
-Unit Test are usually gathered into *scenario* in which a specific behavior of a software
+Unit Test are usually gathered into **scenarios** in which a specific behavior of a software
 component is tested. Such scenario are usually isolated into different executables.
-Then, each scenario is decomposed into *test suite*, i.e a group of related test verifying that
-the current scenario is correctly serviced by the software component. Test suite are themselves
+Then, each scenario is decomposed into **test suites**, i.e a group of related test verifying that
+the current scenario is correctly serviced by the software component. Test suites are themselves
 composed of at least one test case.
 
 With TTS, this decomposition (scenario/suite/test) is supported by various macro. The smallest
 viable TTS scenario is then defined by a single C++ source file composed of:
 
-  * the inclusion of the file tts/unit.hpp
-  * at least one test case defined by the appropriate macro (for example @ref TTS_CASE
-  or @ref TTS_CASE_TPL
+  * the inclusion of the file ``tts/tts.hpp``
+  * at least one test case defined by the appropriate macro.
 
-That's it ! This is a fully functional TTS test suite.
+That's it ! This is a fully functional TTS test suite. Let's dive into the detail and how TTS
+manage and report tests.
 
 Specify a Test Case
 -------------------
-
 Test cases are function performing repeatable, minimal operations able to unambiguously
-capture a function or class behavior and assess its correctness.
-In TTS, a test case can be defined either as:
+capture a function or class behavior and assess its correctness. In TTS, a test case can be
+defined either as:
 
-* a single function defined by the @ref TTS_CASE macro. In this case, the test
+* a single function defined by the :ref:`tts-case` macro. In this case, the test
   function will be run and proceed to every tests it contains.
 
-* a family of functions generated from a template function and a list of types passed
-  as a Boost.Preprocessor sequence via the @ref TTS_CASE_TPL macro. Inside the test case
-  itself, the template type is accessible through the template parameter ``T``.
+* a family of functions generated from a template function and a sequence of types
+  via the :ref:`tts-case-tpl` macro. Inside the test case itself, the template type is accessible
+  through the template parameter ``T``.
 
 In both case, the test case is defined with an unique string description. Additionally, good
-testing practices recommend to have fine grain test case to simplify test management.
+testing practices recommend to have fine grain test cases to simplify test management.
 
-.. literalinclude:: simple.cpp
+.. literalinclude:: reference/simple.cpp
    :language: cpp
    :lines: 8-13
 
 After compiling and launching the test, you should end up with the following output:
 
-.. literalinclude:: bad.output
+.. literalinclude:: output
+   :lines: 1-2
 
-The unit test output contains the descriptive string of the test, its output and a
-report of the total number of tests performed, the number of passing tests, the number
-of failing tests and the number of invalid tests.
+The unit test reports the total number of tests performed, the number of passing tests, the number
+of failing tests and the number of invalid tests. Depending on your terminal's settings, this
+outputs may be colored [#f1]_.
 
 In this case, unsurprisingly, our empty test is reported as invalid as we consider an empty test
-case as erroneous in itself. TTS enforces a no test is a failure rule that applies at the test
-case level. Any test case with no actual testing will be considered as a failure. Every test
-functions then require at least one call to any Testing Macros.
+case as erroneous in itself. TTS enforces a **"no test is invalid"** rule that applies at the test
+case level. Any test case with no actual testing will be considered as a failure and reported as an
+invalid test. Every test functions then require at least one call to any Testing Macros.
 
 Testing Macros
 --------------
-
-TTS provides a set of macros to perform usual tests operations and reporting their success or failure to the test suite manager directly from within a test case.
+TTS provides a set of macros to perform usual tests operations and reporting their success or
+failure to the test suite manager directly from within a test case.
 
 Basic Tests
 ^^^^^^^^^^^
-
 Those macros provide a way to test how an arbitrary expression evaluate or to force a test
 failure or success.
 
-Macro                     | Description
-:------------------------ | :-----------------------------------
-`TTS_PASS(MSG)`        | Forces a success and displays  `MSG`
-`TTS_FAIL(MSG)`        | Forces a failure and displays  `MSG`
-`TTS_EXPECT(XPR)`      | Checks if `XPR == true`
-`TTS_EXPECT_NOT(XPR)`  | Checks if `XPR == false`
++-------------------------+------------------------------------------------+
+| Macro                   | Description                                    |
++=========================+================================================+
+| :ref:`tts-pass`         | Forces a success and displays a message        |
++-------------------------+------------------------------------------------+
+| :ref:`tts-fail`         | Forces a failure and displays a message        |
++-------------------------+------------------------------------------------+
+| :ref:`tts-expect`       | Checks if an expression evaluates to ``true``  |
++-------------------------+------------------------------------------------+
+| :ref:`tts-expect-not`   | Checks if an expression evaluates to ``false`` |
++-------------------------+------------------------------------------------+
 
-These macros are accessible in the tts/unit/tests/basic.hpp file.
+Let's amend our initial test by adding a single call to :ref:`tts-pass`:
+
+.. literalinclude:: reference/simple.cpp
+   :language: cpp
+   :lines: 15-23
+
+and run it again:
+
+.. literalinclude:: output
+   :lines: 3-4
+
+One may notice that no other informations are displayed. This is the default behavior. One can
+activate a more verbose output by passing the ``--pass`` through the :ref:`tts-cli`. The output
+now includes all the informations gathered by the testing macros, including the source file
+location of each tests and the current scenario being tested.
+
+.. literalinclude:: output
+   :lines: 5-12
+
+More complex tests may be required including relation between values or precision measurements.
 
 Relational Tests
 ^^^^^^^^^^^^^^^^
-
 Relational tests compares the equality or ordering of values. Test is considered
 successful if values are properly ordered with respect to each other:
 
-Macro                       | Description
-:-------------------------- | :-----------------
-`TTS_EQUAL(A,B)`         | Checks if `A == B`
-`TTS_NOT_EQUAL(A,B)`     | Checks if `A != B`
-`TTS_LESS(A,B)`          | Checks if `A < B`
-`TTS_GREATER(A,B)`       | Checks if `A > B`
-`TTS_LESS_EQUAL(A,B)`    | Checks if `A <= B`
-`TTS_GREATER_EQUAL(A,B)` | Checks if `A >= B`
++--------------------------+------------------------------------------------------+
+| Macro                    | Description                                          |
++==========================+======================================================+
+| :ref:`tts-equal`         | Checks if one value is equal to another              |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-not-equal`     | Checks if one value is not equal to another          |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-less`          | Checks if one value is lesser or equal than another  |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-greater`       | Checks if one value is greater  than another         |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-less-equal`    | Checks if one value is lesser or equal than another  |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-greater-equal` | Checks if one value is greater or equal than another |
++--------------------------+------------------------------------------------------+
 
-These macros are accessible in the tts/unit/tests/relation.hpp file.
+These macros are accessible in the ``tts/unit/tests/relation.hpp`` header file.
 
-Note that all those relational tests are performed using either the default comparison operators
-or, in the a custom types is being tested, a user-defined function named `is_equal`,`is_not_equal`,
-`is_less` and so on that are found automatically via argument look-up.
+Note that all those relational tests are performed using either the default ``==`` and ``<``
+operators. One can customize this behavior by providing :ref:`custom-equal` or :ref:`custom-order`.
+
+Let's see how those tests integrates in our small test suite:
+
+.. literalinclude:: reference/simple.cpp
+   :language: cpp
+   :lines: 25-36
+
+If everything goes right, the following output is to be expected:
+
+.. literalinclude:: output
+   :lines: 13-21
 
 Precision Tests
 ^^^^^^^^^^^^^^^
-
 These tests are intended to compare floating points results, allowing a third parameter to
 state the admitted possible difference between the two quantities. This difference can be expressed
 in:
 
   * ULPs, that is units in the last place, which is an indication of the number of floating
-  points values that are representable between the compared quantities.
+    points values that are representable between the compared quantities (see the
+    :ref:`rationale-precision` section for more details).
+  * A relative tolerance, that is a percentage of the reference quantity which defines a validity
+    interval around the expected value.
+  * A absolute tolerance, that is a fixed quantity which defines a validity interval around the
+    expected value.
 
-  * A relative tolerance, that is a fixed quantity which defines a validity interval around the
-  expected value.
++--------------------------+------------------------------------------------------+
+| Macro                    | Description                                          |
++==========================+======================================================+
+| :ref:`tts-ulp-equal`     | Checks if two values are equal within some ULPs      |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-ieee-equal`    | Checks if two values are equal as IEEE 754 values    |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-rel-equal`     | Checks if one value is not equal to another          |
++--------------------------+------------------------------------------------------+
+| :ref:`tts-abs-equal`     | Checks if one value is lesser or equal than another  |
++--------------------------+------------------------------------------------------+
 
-Macro                           | Description
-:------------------------------ | :----------------------------------
-`TTS_ULP_EQUAL(A,B,N)`       | Checks if `A == B` within `N` ULPs.
-`TTS_RELATIVE_EQUAL(A,B,N)`  | Checks if `A == B +/- N`
+As for the relational comparison macros, the behavior of this set of test comparison can
+customized through a set of specific function (see :ref:`custom-ulp`, :ref:`custom-rel`
+or :ref:`custom-abs`.
 
-These macros are accessible in the tts/unit/tests/precision.hpp file.
+Let's have a look at the expected output of such macros
+
+.. literalinclude:: ../test/precision/ulp.cpp
+   :language: cpp
+   :lines: 10-22
+
+.. literalinclude:: output
+   :lines: 22-28
+
+Sequence Tests
+^^^^^^^^^^^^^^
+
+Another common use-case often consists in comparing two series of values.
+Additional macros are provided for these use-cases. They perform element-wise comparison
+of values and also detects size mismatch in the series. If an error occurs, a sum up of incorrect
+values with their position and source of error is reported.
+
++---------------------------+------------------------------------------------------+
+| Macro                     | Description                                          |
++===========================+======================================================+
+| :ref:`tts-all-ulp-equal`  | Checks if one value is equal to another              |
++---------------------------+------------------------------------------------------+
+| :ref:`tts-all-ieee-equal` | Checks if one value is equal to another              |
++---------------------------+------------------------------------------------------+
+| :ref:`tts-all-rel-equal`  | Checks if one value is not equal to another          |
++---------------------------+------------------------------------------------------+
+| :ref:`tts-all-equal`      | Checks if one value is equal to another              |
++---------------------------+------------------------------------------------------+
+| :ref:`tts-all-abs-equal`  | Checks if one value is lesser or equal than another  |
++---------------------------+------------------------------------------------------+
+
+These macros are accessible in the ``tts/unit/tests/precision.hpp`` header file.
 
 Runtime Error Tests
 ^^^^^^^^^^^^^^^^^^^
-
 Those tests check if a given expression exhibit a given runtime behavior with respect
 to exceptions and assertions. Expression can be tested for being able to throw or not
-and to trigger an assertion failure or not.
+and to trigger an assertion failure or not. Note that those test macros requires the
+exception to be detected to inherits from ``std::exception``.
 
-Macro                   | Description
-:---------------------- | :----------------------------------------------------------------
-`TTS_THROW(XPR,T)`   | Checks if the evaluation of `XPR` throws an exception of type `T`
-`TTS_NO_THROW(XPR)`  | Checks if the evaluation of `XPR` doesn't throw
-`TTS_ASSERT(XPR)`    | Checks if the evaluation of `XPR` triggers an assertion
-`TTS_NO_ASSERT(XPR)` | Checks if the evaluation of `XPR` doesn't trigger an assertion
++---------------------+-------------------------------------------------------------------+
+| Macro               | Description                                                       |
++=====================+===================================================================+
+| :ref:`tts-throw`    | Checks if a given expression throws an exception of a given type  |
++---------------------+-------------------------------------------------------------------+
+| :ref:`tts-no-throw` | Checks if a given expression does not throw                       |
++---------------------+-------------------------------------------------------------------+
 
-These macros are accessible in the tts/unit/tests/exceptions.hpp file.
-
-Note that testing for assertion failure require the use of `BOOST_ASSERT` or `BOOST_ASSERT_MSG` macros
-and the definiton of the `BOOST_ENABLE_ASSERT_HANDLER` preprocessor symbol when compiling.
+These macros are accessible in the ``tts/unit/tests/exceptions.hpp`` file.
 
 Type Related Tests
 ^^^^^^^^^^^^^^^^^^
-
 Those tests check if a given type or type of expression is verify some relation with another types
 or some general types requirements.
 
-Macro                     | Description
-:------------------------ | :---------------------------------------
-`TTS_TYPE_IS(T,U)`     | Checks if types `T` and `U` are the same
-`TTS_EXPR_IS(X,U)`     | Checks if the type of `X` and `U` are the same
++---------------------+--------------------------------------------------------------------+
+| Macro               | Description                                                        |
++=====================+====================================================================+
+| :ref:`tts-type-is`  | Checks if two types are the same                                   |
++---------------------+--------------------------------------------------------------------+
+| :ref:`tts-expr-is`  | Checks if a given expression evaluates to a result of a given type |
++---------------------+--------------------------------------------------------------------+
 
-These macros are accessible in the tts/unit/tests/types.hpp file.
+These macros are accessible in the ``tts/unit/tests/types.hpp`` file.
 
-Command Line and Environment Usage
-----------------------------------
+Tests Fixtures
+--------------
 
-TTS provides options that can be provided either by the command line or by setting up
-environment variables to control some aspects of the test behavior.
 
-Command Line option       | Environment Variable | Value  | Description
-:------------------------ | :------------------- | :------| :-----------------------------------
-`--random`                | | non-zero unsigned integer | Randomize tests order using a given seed
+.. rubric:: Footnotes
 
-You can pass other arbitrary options on the command line by using the format `--name value`.
-Those options are then accessible through the `args` function.
-
-@section unit-howto-custom Extension Points
-
-TODO
-
-@subsection unit-howto-custom-driver Custom Driver
-
-TODO
-
-@subsection unit-howto-custom-case Custom Test Case
-
-TODO
-
+.. [#f1] Passing ``--no-color`` through the :ref:`tts-cli` remove said colors.

@@ -1,14 +1,15 @@
-User's Manual
-=============
+Reference Manual
+================
 
-Test case definition
---------------------
+.. toctree::
+   :maxdepth: 2
 
-Basic Tests
------------
-
-Relationnal Tests
------------------
-
-Precision Tests
----------------
+   reference/scenario
+   reference/infos
+   reference/basic
+   reference/relation
+   reference/precision
+   reference/sequence
+   reference/exception
+   reference/types
+   reference/fixtures
