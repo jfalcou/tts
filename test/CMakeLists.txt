@@ -32,6 +32,7 @@ set ( SOURCES
       sequence/relative.cpp
       sequence/ulp.cpp
       types.cpp
+      range.cpp
     )
 
 make_unit( "tts" ${SOURCES})
