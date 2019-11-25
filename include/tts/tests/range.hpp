@@ -15,6 +15,7 @@
 #include <tts/detail/type_id.hpp>
 #include <tts/detail/ulpdist.hpp>
 #include <tts/detail/args.hpp>
+#include <tts/tests/infos.hpp>
 #include <iostream>
 #include <iomanip>
 #include <vector>
