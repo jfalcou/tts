@@ -56,17 +56,14 @@ namespace tts
     void run(producer<P>& p, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs)
     {
       std::cout << bar << "\n";
-      std::cout << p.size() << " inputs of type " << tts::type_id<T>()
-                << " comparing " << fs << " vs " << gs
-                << " using " <<  tts::type_id<P>()
+      std::cout << p.size() << " inputs comparing " << fs << " vs " << gs
+                << " using " << tts::type_id<P>()
                 << "\n";
       std::cout << bar << "\n";
       std::cout << std::left  << std::setw(12)            << "Max ULP"
                               << std::setw(12)            << "Count (#)"
                               << std::setw(12)            << "Ratio (%)"
-                              << std::setw(char_shift+8)  << "Input"
-                              << std::setw(char_shift+8)  << "Expected"
-                              << std::setw(char_shift+8)  << "Result"
+                              << std::setw(char_shift+8)  << "Results"
                               << "\n";
       std::cout << bar << std::endl;
 
@@ -121,7 +118,7 @@ namespace tts
 
            if(u == 0            ) ulps = 0;
       else if(u == 1            ) ulps = 0.5;
-      else if(u == nb_buckets-1 ) ulps = std::numeric_limits<T>::infinity();
+      else if(u == nb_buckets-1 ) ulps = std::numeric_limits<double>::infinity();
       else                        ulps = 1<<(u-2);
 
       if(histogram[u])
@@ -132,10 +129,10 @@ namespace tts
                   << std::left << std::setw(12)  <<  histogram[u]
                   << std::setprecision(5)
                   << std::left << std::setw(12)  <<  ratio(histogram[u],cnt)
-                  << std::setprecision(char_shift)
-                  << std::left  << std::setw(char_shift+8)  <<  sample_values[u]
-                  << std::left  << std::setw(char_shift+8)  <<  expected_values[u]
-                  << std::left  << std::setw(char_shift+8)  <<  result_values[u]
+                  << std::setprecision(char_shift*4) << "Found: "
+                  << std::left <<  sample_values[u]  << " = "
+                  << std::left <<  result_values[u] << " instead of "
+                  << std::left <<  expected_values[u]
                   << "\n";
       }
     }
@@ -143,11 +140,12 @@ namespace tts
 }
 
 // Generate a range based test between two function
-#define TTS_RANGE_CHECK(Producer, RefFunc, NewFunc)                                            \
+#define TTS_RANGE_CHECK(Producer, RefFunc, NewFunc)                                                 \
   do                                                                                                \
   {                                                                                                 \
     ::tts::checker<typename decltype(Producer)::value_type> local_tts_checker;                      \
     local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc), TTS_STRING(NewFunc));      \
+    TTS_PASS("Range based check completed.");                                                       \
   } while(::tts::detail::is_false())                                                                \
 /**/
 
