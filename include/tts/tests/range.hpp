@@ -140,11 +140,12 @@ namespace tts
 }
 
 // Generate a range based test between two function
-#define TTS_RANGE_CHECK(Producer, RefFunc, NewFunc)                                            \
+#define TTS_RANGE_CHECK(Producer, RefFunc, NewFunc)                                                 \
   do                                                                                                \
   {                                                                                                 \
     ::tts::checker<typename decltype(Producer)::value_type> local_tts_checker;                      \
     local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc), TTS_STRING(NewFunc));      \
+    TTS_PASS("Range based check completed.");                                                       \
   } while(::tts::detail::is_false())                                                                \
 /**/
 
