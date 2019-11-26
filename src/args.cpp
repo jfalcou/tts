@@ -21,6 +21,7 @@ namespace tts::detail
   args_map::args_map()  : disable_colors_{false}
                         , report_pass_{false}
                         , repetition_{1}
+                        , count_{10000}
                         , order_{""}
                         , seed_{1}
   {
@@ -44,6 +45,9 @@ namespace tts::detail
                   ( "s,seed"    , "Set random seed to args (default is time)"
                   , cxxopts::value<unsigned int>()
                   )
+                  ( "c,count"    , "Set size of experiments (default is 10000)"
+                  , cxxopts::value<unsigned int>()
+                  )
                   ( "h,help"      , "Display this help message");
 
     auto result = options.parse(argc, argv);
@@ -57,7 +61,8 @@ namespace tts::detail
     disable_colors_ = result.count("no-color") != 0;
     report_pass_    = result.count("pass") != 0;
 
-    if( result.count("repeat")  ) repetition_ = result["repeat"].as<std::size_t>();
+    if( result.count("count")   ) count_      = result["count"].as<unsigned int>();
+    if( result.count("repeat")  ) repetition_ = result["repeat"].as<unsigned int>();
     if( result.count("order")   ) order_      = result["order" ].as<std::string>();
     if( result.count("seed")    )
     {

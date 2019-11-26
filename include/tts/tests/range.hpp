@@ -29,6 +29,7 @@ namespace tts
     auto        next()            { return static_cast<T&>(*this).next();       }
     std::size_t size()      const { return static_cast<T const&>(*this).size(); }
     static auto prng_seed()       { return args.seed(); }
+    static auto count()           { return args.count(); }
   };
 
   template<typename T> struct checker
