@@ -15,7 +15,7 @@ if(SPHINX_FOUND)
     set(SPHINX_THEME sphinx_rtd_theme)
     set(BINARY_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
     set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
-    set(SPHINX_HTML_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/html")
+    set(SPHINX_HTML_DIR  "${CMAKE_SOURCE_DIR}/docs")
 
     configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
