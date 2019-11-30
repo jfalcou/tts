@@ -24,12 +24,12 @@ Test cases are function performing repeatable, minimal operations able to unambi
 capture a function or class behavior and assess its correctness. In TTS, a test case can be
 defined either as:
 
-* a single function defined by the :ref:`tts-case` macro. In this case, the test
+* a single function defined by the :ref:`TTS_CASE <tts-case>` macro. In this case, the test
   function will be run and proceed to every tests it contains.
 
 * a family of functions generated from a template function and a sequence of types
-  via the :ref:`tts-case-tpl` macro. Inside the test case itself, the template type is accessible
-  through the template parameter ``T``.
+  via the :ref:`TTS_CASE_TPL <tts-case-tpl>` macro. Inside the test case itself, the template
+  type is accessible through the template parameter ``T``.
 
 In both case, the test case is defined with an unique string description. Additionally, good
 testing practices recommend to have fine grain test cases to simplify test management.
@@ -62,19 +62,21 @@ Basic Tests
 Those macros provide a way to test how an arbitrary expression evaluate or to force a test
 failure or success.
 
-+-------------------------+------------------------------------------------+
-| Macro                   | Description                                    |
-+=========================+================================================+
-| :ref:`tts-pass`         | Forces a success and displays a message        |
-+-------------------------+------------------------------------------------+
-| :ref:`tts-fail`         | Forces a failure and displays a message        |
-+-------------------------+------------------------------------------------+
-| :ref:`tts-expect`       | Checks if an expression evaluates to ``true``  |
-+-------------------------+------------------------------------------------+
-| :ref:`tts-expect-not`   | Checks if an expression evaluates to ``false`` |
-+-------------------------+------------------------------------------------+
++---------------------------------+------------------------------------------------+
+| Macro                           | Description                                    |
++=================================+================================================+
+| :ref:`TTS_PASS <tts-pass>`      | Forces a success and displays a message        |
++---------------------------------+------------------------------------------------+
+| :ref:`TTS_FAIL <tts-fail>`      | Forces a failure and displays a message        |
++---------------------------------+------------------------------------------------+
+| :ref:`TTS_INVALID <tts-invalid>`| Forces a failure and displays a message        |
++---------------------------------+------------------------------------------------+
+| :ref:`tts-expect`               | Checks if an expression evaluates to ``true``  |
++---------------------------------+------------------------------------------------+
+| :ref:`tts-expect-not`           | Checks if an expression evaluates to ``false`` |
++---------------------------------+------------------------------------------------+
 
-Let's amend our initial test by adding a single call to :ref:`tts-pass`:
+Let's amend our initial test by adding a single call to :ref:`TTS_PASS <tts-pass>`:
 
 .. literalinclude:: reference/simple.cpp
    :language: cpp
