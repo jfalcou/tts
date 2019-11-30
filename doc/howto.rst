@@ -78,7 +78,7 @@ Let's amend our initial test by adding a single call to :ref:`tts-pass`:
 
 .. literalinclude:: reference/simple.cpp
    :language: cpp
-   :lines: 15-23
+   :lines: 16-24
 
 and run it again:
 
@@ -125,7 +125,7 @@ Let's see how those tests integrates in our small test suite:
 
 .. literalinclude:: reference/simple.cpp
    :language: cpp
-   :lines: 25-36
+   :lines: 27-38
 
 If everything goes right, the following output is to be expected:
 
