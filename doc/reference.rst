@@ -12,4 +12,3 @@ Reference Manual
    reference/sequence
    reference/exception
    reference/types
-   reference/fixtures
