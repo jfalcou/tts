@@ -8,7 +8,15 @@
 **/
 //==================================================================================================
 #define TTS_USE_CUSTOM_DRIVER
+
+//! [invalid]
 #include <tts/tts.hpp>
+
+TTS_CASE( "Check forcing a test to be invalid" )
+{
+  TTS_INVALID("Forced invalid");
+}
+//! [invalid]
 
 TTS_CASE( "Check detection of invalid test" )        { (void)runtime; }
 TTS_CASE( "Check detection of more invalid tests" )  { (void)runtime; }
@@ -16,5 +24,5 @@ TTS_CASE( "Check detection of more invalid tests" )  { (void)runtime; }
 int main(int argc, char** argv)
 {
   ::tts::env runtime(argc,argv,std::cout);
-  return ::tts::run( runtime, ::tts::detail::suite, 0, 2 );
+  return ::tts::run( runtime, ::tts::detail::suite, 0, 3 );
 }

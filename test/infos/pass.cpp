@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //===================================================================================================
+//! [pass]
 #include <tts/tts.hpp>
 #include <tts/tests/infos.hpp>
 
@@ -14,3 +15,4 @@ TTS_CASE( "Check that forced pass passes" )
 {
   TTS_PASS("Forced pass");
 }
+//! [pass]
