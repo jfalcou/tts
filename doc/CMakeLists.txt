@@ -53,13 +53,23 @@ add_custom_command( OUTPUT  ${SPHINX_INDEX_FILE}
                                                   ${SPHINX_HTML_DIR}
                     WORKING_DIRECTORY ${SPHINX_HTML_DIR}
                     DEPENDS
-                    ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
+                    ${DOXYGEN_INDEX_FILE}
+                    ${CMAKE_CURRENT_SOURCE_DIR}/extension.rst
                     ${CMAKE_CURRENT_SOURCE_DIR}/howto.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
                     ${CMAKE_CURRENT_SOURCE_DIR}/install.rst
                     ${CMAKE_CURRENT_SOURCE_DIR}/rationale.rst
                     ${CMAKE_CURRENT_SOURCE_DIR}/reference.rst
-                    ${CMAKE_CURRENT_SOURCE_DIR}/extension.rst
-                    ${DOXYGEN_INDEX_FILE}
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/basic.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/exception.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/infos.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/precision.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/relation.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/scenario.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/sequence.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference/types.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/_static/css/custom.css
+                    ${CMAKE_CURRENT_SOURCE_DIR}/_static/logo.png
                     MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/conf.py
                     COMMENT "Generating documentation with Sphinx"
                   )
