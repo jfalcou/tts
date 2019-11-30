@@ -8,11 +8,12 @@
 **/
 //==================================================================================================
 
+//! [tts_subcase]
 #include <vector>
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
 
-// Adapted from CATCH and LEST
+
 TTS_CASE( "Default-constructed pointer behavior" )
 {
   std::vector<int> v( 5 );
@@ -55,3 +56,4 @@ TTS_CASE( "Default-constructed pointer behavior" )
     TTS_EXPECT( v.capacity() >= 5u );
   }
 }
+//! [tts_subcase]
