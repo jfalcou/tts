@@ -7,7 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
+#include <tts/tts.hpp>
 #include <tts/tests/range.hpp>
 #include <cmath>
 
@@ -35,10 +35,8 @@ template<typename T> struct random_producer : tts::producer<random_producer<T>>
 float sin_x(float x)      { return std::sqrt(x); }
 float sin_rough(float x)  { return std::sqrt(x)+1e-4; }
 
-int main()
+TTS_CASE( "Default-constructed pointer behavior" )
 {
   random_producer<float>  p(147896325);
   TTS_RANGE_CHECK(p,sin_x,sin_rough);
-
-  return 0;
 }
