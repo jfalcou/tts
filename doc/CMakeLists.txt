@@ -12,24 +12,62 @@
 find_package(Sphinx)
 
 if(SPHINX_FOUND)
-    set(SPHINX_THEME sphinx_rtd_theme)
-    set(BINARY_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/_build")
-    set(SPHINX_CACHE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_doctrees")
-    set(SPHINX_HTML_DIR  "${CMAKE_SOURCE_DIR}/docs")
+find_package(Doxygen)
 
-    configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in"
-        "${BINARY_BUILD_DIR}/conf.py"
-        @ONLY)
+# Find all the headers
+file(GLOB_RECURSE TTS_HEADERS ${CMAKE_SOURCE_DIR}/include/tts/*.hpp)
 
-    add_custom_target ( doc ALL ${SPHINX_EXECUTABLE}
-                                -q -b html
-                                -c "${BINARY_BUILD_DIR}"
-                                -d "${SPHINX_CACHE_DIR}"
-                                "${CMAKE_CURRENT_SOURCE_DIR}"
-                                "${SPHINX_HTML_DIR}"
-                        COMMENT "Building HTML documentation with Sphinx"
-                      )
+# Setup doxygen
+set(DOXYGEN_INPUT_DIR   ${PROJECT_SOURCE_DIR}/include/tts)
+set(DOXYGEN_OUTPUT_DIR  ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
+set(DOXYGEN_INDEX_FILE  ${DOXYGEN_OUTPUT_DIR}/xml/index.xml)
+set(DOXYFILE_IN         ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+set(DOXYFILE_OUT        ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+set(DOXYGEN_EXAMPLE_DIR "${CMAKE_CURRENT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/test")
+
+# Replace variables inside @@ with the current values
+configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+file(MAKE_DIRECTORY ${DOXYGEN_OUTPUT_DIR})
+
+# Only regenerate Doxygen when the Doxyfile or public headers change
+add_custom_command( OUTPUT  ${DOXYGEN_INDEX_FILE}
+                    DEPENDS ${TTS_HEADERS}
+                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+                    MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
+                    COMMENT "Extracting comments"
+                    VERBATIM
+                  )
+
+add_custom_target(tts-doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+
+set(SPHINX_HTML_DIR   "${CMAKE_SOURCE_DIR}/docs")
+set(SPHINX_SOURCE     "${CMAKE_CURRENT_SOURCE_DIR}")
+set(SPHINX_INDEX_FILE "${SPHINX_HTML_DIR}/index.html")
+
+configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in" "${CMAKE_CURRENT_SOURCE_DIR}/conf.py" @ONLY)
+
+add_custom_command( OUTPUT  ${SPHINX_INDEX_FILE}
+                    COMMAND ${SPHINX_EXECUTABLE}  -q -b html
+                                                  -Dbreathe_projects.tts=${DOXYGEN_OUTPUT_DIR}/xml
+                                                  ${SPHINX_SOURCE}
+                                                  ${SPHINX_HTML_DIR}
+                    WORKING_DIRECTORY ${SPHINX_HTML_DIR}
+                    DEPENDS
+                    ${CMAKE_CURRENT_SOURCE_DIR}/index.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/howto.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/install.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/rationale.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/reference.rst
+                    ${CMAKE_CURRENT_SOURCE_DIR}/extension.rst
+                    ${DOXYGEN_INDEX_FILE}
+                    MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/conf.py
+                    COMMENT "Generating documentation with Sphinx"
+                  )
+add_custom_target(doc ALL DEPENDS ${SPHINX_INDEX_FILE})
+
 else()
-    message(STATUS "[eve] Sphinx not found - Disabling documentation")
+    message(STATUS "[tts] Sphinx not found - Disabling documentation")
 endif()
+
+
+
