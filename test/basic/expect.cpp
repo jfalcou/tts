@@ -7,6 +7,8 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [expect]
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
 
@@ -20,3 +22,4 @@ TTS_CASE( "Check that expectation can be met" )
   TTS_EXPECT(b >  a);
   TTS_EXPECT(b >= a);
 }
+//! [expect]

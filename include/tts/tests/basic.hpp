@@ -38,9 +38,22 @@
                              << ::tts::detail::white_(tts_var_d.op) << " "                         \
                              << ::tts::detail::red_(tts_var_d.rhs));                               \
     }                                                                                              \
-  } while(::tts::detail::is_false()) /**/
+  } while(::tts::detail::is_false())
+/**/
 
-// Test pass if Expr evaluates to false
+//==================================================================================================
+/**
+  * @brief Checks if a given expression evaluates to `false`.
+  *
+  * **Required header:** `#include <tts/tests/basic.hpp>`
+  *
+  *  **Example:**
+  *
+  *  @snippet basic/expect_not.cpp expect-not
+  *
+  *  @param Expr Expression to test
+**/
+//==================================================================================================
 #define TTS_EXPECT_NOT(Expr)                                                                       \
   do                                                                                               \
   {                                                                                                \
@@ -55,6 +68,8 @@
     {                                                                                              \
       TTS_PASS("Not expecting: " << ::tts::detail::white_(TTS_STRING(Expr)));                      \
     }                                                                                              \
-  } while(::tts::detail::is_false()) /**/
+  } while(::tts::detail::is_false())
+/**/
 
 #endif
+
