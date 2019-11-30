@@ -1,3 +1,5 @@
+.. _tts-scenario:
+
 Scenario definition
 ===================
 

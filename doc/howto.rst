@@ -62,19 +62,19 @@ Basic Tests
 Those macros provide a way to test how an arbitrary expression evaluate or to force a test
 failure or success.
 
-+---------------------------------+------------------------------------------------+
-| Macro                           | Description                                    |
-+=================================+================================================+
-| :ref:`TTS_PASS <tts-pass>`      | Forces a success and displays a message        |
-+---------------------------------+------------------------------------------------+
-| :ref:`TTS_FAIL <tts-fail>`      | Forces a failure and displays a message        |
-+---------------------------------+------------------------------------------------+
-| :ref:`TTS_INVALID <tts-invalid>`| Forces a failure and displays a message        |
-+---------------------------------+------------------------------------------------+
-| :ref:`tts-expect`               | Checks if an expression evaluates to ``true``  |
-+---------------------------------+------------------------------------------------+
-| :ref:`tts-expect-not`           | Checks if an expression evaluates to ``false`` |
-+---------------------------------+------------------------------------------------+
++-----------------------------------------+------------------------------------------------+
+| Macro                                   | Description                                    |
++=========================================+================================================+
+| :ref:`TTS_PASS <tts-pass>`              | Forces a success and displays a message        |
++-----------------------------------------+------------------------------------------------+
+| :ref:`TTS_FAIL <tts-fail>`              | Forces a failure and displays a message        |
++-----------------------------------------+------------------------------------------------+
+| :ref:`TTS_INVALID <tts-invalid>`        | Forces a failure and displays a message        |
++-----------------------------------------+------------------------------------------------+
+| :ref:`TTS_EXPECT <tts-expect>`          | Checks if an expression evaluates to ``true``  |
++-----------------------------------------+------------------------------------------------+
+| :ref:`TTS_EXPECT_NOT <tts-expect-not>`  | Checks if an expression evaluates to ``false`` |
++-----------------------------------------+------------------------------------------------+
 
 Let's amend our initial test by adding a single call to :ref:`TTS_PASS <tts-pass>`:
 
