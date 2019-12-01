@@ -30,6 +30,9 @@ Reference Manual
    - :ref:`TTS_ALL_RELATIVE_EQUAL <tts-all-rel-equal>`
    - :ref:`TTS_ALL_EQUAL <tts-all-equal>`
    - :ref:`TTS_ALL_ABSOLUTE_EQUAL <tts-all-abs-equal>`
+- :ref:`tts-exceptions`
+   - :ref:`TTS_THROW <tts-throw>`
+   - :ref:`TTS_NO_THROW <tts-no-throw>`
 
 .. toctree::
    :hidden:
