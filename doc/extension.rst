@@ -32,38 +32,50 @@ TTS supports options that can be passed as command line arguments of the test bi
 |                |          |   ``./my_test --help``                                                |
 +----------------+----------+-----------------------------------------------------------------------+
 
+
+.. _custom-comparison:
+
+Custom Comparison
+-----------------
+
 .. _custom-equal:
 
 Custom Equality Comparison
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 
 .. _custom-order:
 
 Custom Ordering
----------------
+^^^^^^^^^^^^^^^
 
 TODO
+
+
+.. _custom-precision:
+
+Custom Precision Comparison
+---------------------------
 
 .. _custom-ulp:
 
 Custom ULP Comparison
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 
 .. _custom-rel:
 
 Custom Relative Comparison
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 
 .. _custom-abs:
 
 Custom Absolute Comparison
---------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 

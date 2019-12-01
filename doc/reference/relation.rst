@@ -2,6 +2,17 @@
 
 Relational Tests
 ================
+The following component provides macros to perform ordering test between values.
+
+To use those macros, include the ``tts/tests/relation.hpp`` file.
+
+Macros
+^^^^^^
+
+.. note::
+   Ordering and equality comparisons are, by default, handled by the ``operator==`` or
+   ``opetator<`` overloads. In the case one needs to perform a custom comparison, see
+   the :ref:`custom-comparison` section.
 
 .. _tts-equal:
 
