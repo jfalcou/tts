@@ -28,3 +28,7 @@ code, .rst-content tt, .rst-content code
 {
     background: inherit;
 }
+
+.wy-nav-content {
+    max-width: none !important;
+}
