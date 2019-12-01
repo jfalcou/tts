@@ -176,26 +176,26 @@ Let's have a look at the expected output of such macros
 Sequence Tests
 ^^^^^^^^^^^^^^
 
-Another common use-case often consists in comparing two series of values.
-Additional macros are provided for these use-cases. They perform element-wise comparison
-of values and also detects size mismatch in the series. If an error occurs, a sum up of incorrect
-values with their position and source of error is reported.
+Another common use-case often consists in comparing two series of values. Additional macros are
+provided for these use-cases. They perform element-wise comparison of values and also detects size
+mismatch in the series. If an error occurs, a summary of incorrect values with their position and
+source of error is reported.
 
-+---------------------------+------------------------------------------------------+
-| Macro                     | Description                                          |
-+===========================+======================================================+
-| :ref:`tts-all-ulp-equal`  | Checks if one value is equal to another              |
-+---------------------------+------------------------------------------------------+
-| :ref:`tts-all-ieee-equal` | Checks if one value is equal to another              |
-+---------------------------+------------------------------------------------------+
-| :ref:`tts-all-rel-equal`  | Checks if one value is not equal to another          |
-+---------------------------+------------------------------------------------------+
-| :ref:`tts-all-equal`      | Checks if one value is equal to another              |
-+---------------------------+------------------------------------------------------+
-| :ref:`tts-all-abs-equal`  | Checks if one value is lesser or equal than another  |
-+---------------------------+------------------------------------------------------+
++---------------------------------------------------+---------------------------------------------------------------------------+
+| Macro                                             | Description                                                               |
++===================================================+===========================================================================+
+| :ref:`TTS_ALL_ULP_EQUAL <tts-all-ulp-equal>`      | Checks if all values of two sequences are equal within an ULP distance    |
++---------------------------------------------------+---------------------------------------------------------------------------+
+| :ref:`TTS_ALL_IEEE_EQUAL <tts-all-ieee-equal>`    | Checks if all values of two sequences are equal within 0 ULP              |
++---------------------------------------------------+---------------------------------------------------------------------------+
+| :ref:`TTS_ALL_RELATIVE_EQUAL <tts-all-rel-equal>` | Checks if all values of two sequences are equal within a percentage       |
++---------------------------------------------------+---------------------------------------------------------------------------+
+| :ref:`TTS_ALL_EQUAL <tts-all-equal>`              | Checks if all values of two sequences are equal                           |
++---------------------------------------------------+---------------------------------------------------------------------------+
+| :ref:`TTS_ALL_ABSOLUTE_EQUAL <tts-all-abs-equal>` | Checks if all values of two sequences are equal within an absolute value  |
++---------------------------------------------------+---------------------------------------------------------------------------+
 
-These macros are accessible in the ``tts/unit/tests/precision.hpp`` header file.
+These macros are accessible in the ``tts/unit/tests/sequence.hpp`` header file.
 
 Runtime Error Tests
 ^^^^^^^^^^^^^^^^^^^
@@ -207,9 +207,9 @@ exception to be detected to inherits from ``std::exception``.
 +---------------------+-------------------------------------------------------------------+
 | Macro               | Description                                                       |
 +=====================+===================================================================+
-| :ref:`tts-throw`    | Checks if a given expression throws an exception of a given type  |
+| :ref:`TTS_ <tts-throw`    | Checks if a given expression throws an exception of a given type  |
 +---------------------+-------------------------------------------------------------------+
-| :ref:`tts-no-throw` | Checks if a given expression does not throw                       |
+| :ref:`TTS_ <tts-no-throw` | Checks if a given expression does not throw                       |
 +---------------------+-------------------------------------------------------------------+
 
 These macros are accessible in the ``tts/unit/tests/exceptions.hpp`` file.
@@ -222,16 +222,12 @@ or some general types requirements.
 +---------------------+--------------------------------------------------------------------+
 | Macro               | Description                                                        |
 +=====================+====================================================================+
-| :ref:`tts-type-is`  | Checks if two types are the same                                   |
+| :ref:`TTS_ <tts-type-is`  | Checks if two types are the same                                   |
 +---------------------+--------------------------------------------------------------------+
-| :ref:`tts-expr-is`  | Checks if a given expression evaluates to a result of a given type |
+| :ref:`TTS_ <tts-expr-is`  | Checks if a given expression evaluates to a result of a given type |
 +---------------------+--------------------------------------------------------------------+
 
 These macros are accessible in the ``tts/unit/tests/types.hpp`` file.
-
-Tests Fixtures
---------------
-
 
 .. rubric:: Footnotes
 

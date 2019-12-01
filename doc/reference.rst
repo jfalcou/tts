@@ -23,7 +23,13 @@ Reference Manual
    - :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`
    - :ref:`TTS_IEEE_EQUAL <tts-ieee-equal>`
    - :ref:`TTS_RELATIVE_EQUAL <tts-rel-equal>`
-   - :ref:`TTS_RELATIVE_EQUAL <tts-abs-equal>`
+   - :ref:`TTS_ABSOLUTE_EQUAL <tts-abs-equal>`
+- :ref:`tts-sequence`
+   - :ref:`TTS_ALL_ULP_EQUAL <tts-all-ulp-equal>`
+   - :ref:`TTS_ALL_IEEE_EQUAL <tts-all-ieee-equal>`
+   - :ref:`TTS_ALL_RELATIVE_EQUAL <tts-all-rel-equal>`
+   - :ref:`TTS_ALL_EQUAL <tts-all-equal>`
+   - :ref:`TTS_ALL_ABSOLUTE_EQUAL <tts-all-abs-equal>`
 
 .. toctree::
    :hidden:

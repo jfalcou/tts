@@ -7,8 +7,10 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [all-ulp-equal]
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
+#include <tts/tests/sequence.hpp>
 #include <vector>
 
 TTS_CASE("ULP distance between sequences")
@@ -23,3 +25,4 @@ TTS_CASE("ULP distance between sequences")
   TTS_ALL_ULP_EQUAL(s  , 1.f , 1.5);
   TTS_ALL_ULP_EQUAL(1.f, s   , 1.5);
 }
+//! [all-ulp-equal]
