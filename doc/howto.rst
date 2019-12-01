@@ -102,21 +102,21 @@ Relational Tests
 Relational tests compares the equality or ordering of values. Test is considered
 successful if values are properly ordered with respect to each other:
 
-+--------------------------+------------------------------------------------------+
-| Macro                    | Description                                          |
-+==========================+======================================================+
-| :ref:`tts-equal`         | Checks if one value is equal to another              |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-not-equal`     | Checks if one value is not equal to another          |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-less`          | Checks if one value is lesser or equal than another  |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-greater`       | Checks if one value is greater  than another         |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-less-equal`    | Checks if one value is lesser or equal than another  |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-greater-equal` | Checks if one value is greater or equal than another |
-+--------------------------+------------------------------------------------------+
++-----------------------------------------------+-------------------------------------------------------+
+| Macro                                         | Description                                           |
++===============================================+=======================================================+
+| :ref:`TTS_EQUAL <tts-equal>`                  | Checks if values are equal than each other            |
++-----------------------------------------------+-------------------------------------------------------+
+| :ref:`TTS_NOT_EQUAL <tts-not-equal>`          | Checks if values are not equal than each other        |
++-----------------------------------------------+-------------------------------------------------------+
+| :ref:`TTS_LESS <tts-less>`                    | Checks if values are lesser or equal than each other  |
++-----------------------------------------------+-------------------------------------------------------+
+| :ref:`TTS_GREATER <tts-greater>`              | Checks if values are greater  than each other         |
++-----------------------------------------------+-------------------------------------------------------+
+| :ref:`TTS_LESS_EQUAL <tts-less-equal>`        | Checks if values are lesser or equal than each other  |
++-----------------------------------------------+-------------------------------------------------------+
+| :ref:`TTS_GREATER_EQUAL <tts-greater-equal>`  | Checks if values are greater or equal than each other |
++-----------------------------------------------+-------------------------------------------------------+
 
 These macros are accessible in the ``tts/unit/tests/relation.hpp`` header file.
 
@@ -148,17 +148,17 @@ in:
   * A absolute tolerance, that is a fixed quantity which defines a validity interval around the
     expected value.
 
-+--------------------------+------------------------------------------------------+
-| Macro                    | Description                                          |
-+==========================+======================================================+
-| :ref:`tts-ulp-equal`     | Checks if two values are equal within some ULPs      |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-ieee-equal`    | Checks if two values are equal as IEEE 754 values    |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-rel-equal`     | Checks if one value is not equal to another          |
-+--------------------------+------------------------------------------------------+
-| :ref:`tts-abs-equal`     | Checks if one value is lesser or equal than another  |
-+--------------------------+------------------------------------------------------+
++-------------------------------------------+------------------------------------------------------+
+| Macro                                     | Description                                          |
++===========================================+======================================================+
+| :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`      | Checks if two values are equal within some ULPs      |
++-------------------------------------------+------------------------------------------------------+
+| :ref:`TTS_IEEE_EQUAL <tts-ieee-equal>`    | Checks if two values are equal as IEEE 754 values    |
++-------------------------------------------+------------------------------------------------------+
+| :ref:`TTS_RELATIVE_EQUAL <tts-rel-equal>` | Checks if one value is not equal to another          |
++-------------------------------------------+------------------------------------------------------+
+| :ref:`TTS_ABSOLUTE_EQUAL <tts-abs-equal>` | Checks if one value is lesser or equal than another  |
++-------------------------------------------+------------------------------------------------------+
 
 As for the relational comparison macros, the behavior of this set of test comparison can
 customized through a set of specific function (see :ref:`custom-ulp`, :ref:`custom-rel`
