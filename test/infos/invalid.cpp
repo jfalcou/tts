@@ -11,6 +11,7 @@
 
 //! [invalid]
 #include <tts/tts.hpp>
+#include <tts/tests/infos.hpp>
 
 TTS_CASE( "Check forcing a test to be invalid" )
 {
