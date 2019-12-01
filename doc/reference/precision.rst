@@ -1,32 +1,13 @@
+.. _tts-precision:
+
 Precision Tests
 ===============
 
 .. _tts-ulp-equal:
 
-TTS_ULP_EQUAL
--------------
+.. doxygendefine:: TTS_ULP_EQUAL
+   :project: tts
 
-**Required header:** ``#include <tts/tests/precision.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_ULP_EQUAL( LHS, RHS, THRES )
-
-Checks if the ULP distance between ``LHS`` and ``RHS`` is less or equal to  ``THRES``.
-
-.. note::
-   ULP comparison is, by default, handled by the ``tts::ulpdist`` overload. In the case one
-   needs to perform a custom ULP comparison, see the :ref:`custom-ulp` section.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-  - ``THRES``       : Maximum number of ULPs between the two values to compare
-
-**Example:**
-
-.. literalinclude:: ../../test/precision/ulp.cpp
-   :language: cpp
-   :lines: 10-22
 
 .. _tts-ieee-equal:
 

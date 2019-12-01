@@ -12,6 +12,15 @@ Reference Manual
 - :ref:`tts-basic`
    - :ref:`TTS_EXPECT <tts-expect>`
    - :ref:`TTS_EXPECT_NOT <tts-expect-not>`
+- :ref:`tts-relation`
+   - :ref:`TTS_EQUAL <tts-equal>`
+   - :ref:`TTS_NOT_EQUAL <tts-not-equal>`
+   - :ref:`TTS_LESS <tts-less>`
+   - :ref:`TTS_GREATER <tts-greater>`
+   - :ref:`TTS_LESS_EQUAL <tts-less-equal>`
+   - :ref:`TTS_GREATER_EQUAL <tts-greater-equal>`
+- :ref:`tts-precision`
+   - :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`
 
 .. toctree::
    :hidden:
