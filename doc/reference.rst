@@ -21,6 +21,9 @@ Reference Manual
    - :ref:`TTS_GREATER_EQUAL <tts-greater-equal>`
 - :ref:`tts-precision`
    - :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`
+   - :ref:`TTS_IEEE_EQUAL <tts-ieee-equal>`
+   - :ref:`TTS_RELATIVE_EQUAL <tts-rel-equal>`
+   - :ref:`TTS_RELATIVE_EQUAL <tts-abs-equal>`
 
 .. toctree::
    :hidden:

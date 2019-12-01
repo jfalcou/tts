@@ -1,4 +1,4 @@
-.. _tts-relaton:
+.. _tts-relation:
 
 Relational Tests
 ================
