@@ -7,6 +7,8 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [not-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
@@ -17,6 +19,7 @@ TTS_CASE( "Check correctness of inequality tests" )
   std::vector<float> a{1,2,3}, b{7,9};
   TTS_NOT_EQUAL(a,b);
 }
+//! [not-equal]
 
 #include "foo.hpp"
 
