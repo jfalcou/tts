@@ -7,8 +7,10 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [all-equal]
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
+#include <tts/tests/sequence.hpp>
 #include <vector>
 
 TTS_CASE("Equality for sequences")
@@ -20,3 +22,4 @@ TTS_CASE("Equality for sequences")
   TTS_ALL_EQUAL(vy , 6.f );
   TTS_ALL_EQUAL(6.f, vy  );
 }
+//! [all-equal]

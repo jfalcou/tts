@@ -7,8 +7,10 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [all-relative-equal]
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
+#include <tts/tests/sequence.hpp>
 
 TTS_CASE("Relative distance between sequences")
 {
@@ -20,3 +22,4 @@ TTS_CASE("Relative distance between sequences")
   TTS_ALL_RELATIVE_EQUAL(s  , 1.f , 25);
   TTS_ALL_RELATIVE_EQUAL(1.f, s   , 25);
 }
+//! [all-relative-equal]

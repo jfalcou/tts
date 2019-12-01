@@ -89,6 +89,7 @@ html_theme = 'sphinx_rtd_theme'
 #
 html_theme_options = {
                        'prev_next_buttons_location': 'both',
+                       'logo_only': 'True'
                      }
 html_logo = '@CMAKE_CURRENT_SOURCE_DIR@/_static/logo.png'
 
