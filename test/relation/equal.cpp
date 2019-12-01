@@ -7,6 +7,8 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [equal]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
@@ -17,6 +19,7 @@ TTS_CASE( "Check correctness of equality tests" )
   std::vector<float> a{1,2,3}, b{1,2,3};
   TTS_EQUAL(a,b);
 }
+//! [equal]
 
 #include "foo.hpp"
 

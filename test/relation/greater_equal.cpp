@@ -7,10 +7,12 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [greater-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
-TTS_CASE( "Check correctness of less-equal comparison tests" )
+TTS_CASE( "Check correctness of greater-equal comparison tests" )
 {
   TTS_GREATER_EQUAL(69LL, 42.f);
   TTS_GREATER_EQUAL(69., 69);
@@ -19,10 +21,11 @@ TTS_CASE( "Check correctness of less-equal comparison tests" )
   TTS_GREATER_EQUAL(a,b);
   TTS_GREATER_EQUAL(a,a);
 }
+//! [greater-equal]
 
 #include "foo.hpp"
 
-TTS_CASE( "Check correctness of less-equal comparison tests on custom types" )
+TTS_CASE( "Check correctness of greater-equal comparison tests on custom types" )
 {
   foo::bar x{0.7f},y{0.5f};
 
