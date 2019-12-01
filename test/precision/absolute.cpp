@@ -7,31 +7,17 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [abs-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/precision.hpp>
 
-TTS_CASE("Absolute distance between different types")
+TTS_CASE("Absolute distance")
 {
   TTS_ABSOLUTE_EQUAL(-2.  , 2.f  , 4.);
   TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
 }
-
-TTS_CASE( "Absolute distance between boolean" )
-{
-  TTS_ABSOLUTE_EQUAL(true , true  , 0.);
-  TTS_ABSOLUTE_EQUAL(true , false , 100.);
-  TTS_ABSOLUTE_EQUAL(false, false , 0.);
-  TTS_ABSOLUTE_EQUAL(false, true  , 100.);
-}
-
-TTS_CASE_TPL( "Absolute distance between integers", TTS_INTEGRAL_TYPES)
-{
-  T a = 65, b = a+5;
-
-  TTS_ABSOLUTE_EQUAL(a, a, 0.);
-  TTS_ABSOLUTE_EQUAL(a, b, 5.1);
-  TTS_ABSOLUTE_EQUAL(b, a, 5.1);
-}
+//! [abs-equal]
 
 TTS_CASE_TPL( "Absolute distance between floating point", TTS_IEEE_TYPES)
 {
@@ -61,6 +47,23 @@ TTS_CASE_TPL( "Absolute distance between floating point", TTS_IEEE_TYPES)
   TTS_ABSOLUTE_EQUAL(a, a - 0.499f, .5 );
   TTS_ABSOLUTE_EQUAL(a + 0.499f, a, .5 );
   TTS_ABSOLUTE_EQUAL(a - 0.499f, a, .5 );
+}
+
+TTS_CASE( "Absolute distance between boolean" )
+{
+  TTS_ABSOLUTE_EQUAL(true , true  , 0.);
+  TTS_ABSOLUTE_EQUAL(true , false , 100.);
+  TTS_ABSOLUTE_EQUAL(false, false , 0.);
+  TTS_ABSOLUTE_EQUAL(false, true  , 100.);
+}
+
+TTS_CASE_TPL( "Absolute distance between integers", TTS_INTEGRAL_TYPES)
+{
+  T a = 65, b = a+5;
+
+  TTS_ABSOLUTE_EQUAL(a, a, 0.);
+  TTS_ABSOLUTE_EQUAL(a, b, 5.1);
+  TTS_ABSOLUTE_EQUAL(b, a, 5.1);
 }
 
 #include "my_real.hpp"
