@@ -3,6 +3,14 @@
 Status tests
 ============
 
+The following component provides macros to display informations about tests status within
+scenarios.
+
+To use those macros, include the ``tts/tests/infos.hpp`` file.
+
+Macros
+^^^^^^
+
 .. _tts-pass:
 
 .. doxygendefine:: TTS_PASS

@@ -25,11 +25,6 @@
   *
   * @snippet relation/equal.cpp equal
   *
-  * @note
-  * Equality comparison is, by default, handled by the proper ``operator==`` overload. In the case
-  * one needs to perform a custom equality comparison, see the
-  * <a href="../extension.html#custom-equality-comparison">Custom Equality Comparison</a> section.
-  *
   *  @param LHS Expression to compare
   *  @param RHS Expression to compare
 **/
@@ -59,11 +54,6 @@ do                                                                              
   * **Example:**
   *
   * @snippet relation/not_equal.cpp not-equal
-  *
-  * @note
-  * Equality comparison is, by default, handled by the proper ``operator==`` overload. In the case
-  * one needs to perform a custom equality comparison, see the
-  * <a href="../extension.html#custom-equality-comparison">Custom Equality Comparison</a> section.
   *
   *  @param LHS Expression to compare
   *  @param RHS Expression to compare
@@ -95,11 +85,6 @@ do                                                                              
   *
   * @snippet relation/less.cpp less
   *
-  * @note
-  * Ordering is, by default, handled by the proper ``operator<`` overload. In the case
-  * one needs to perform a custom comparison, see the
-  * <a href="../extension.html#custom-ordering">Custom Ordering</a> section.
-  *
   *  @param LHS Expression to compare
   *  @param RHS Expression to compare
 **/
@@ -129,11 +114,6 @@ do                                                                              
   * **Example:**
   *
   * @snippet relation/greater.cpp greater
-  *
-  * @note
-  * Ordering is, by default, handled by the proper ``operator<`` overload. In the case
-  * one needs to perform a custom comparison, see the
-  * <a href="../extension.html#custom-ordering">Custom Ordering</a> section.
   *
   *  @param LHS Expression to compare
   *  @param RHS Expression to compare
@@ -165,11 +145,6 @@ do                                                                              
   *
   * @snippet relation/less_equal.cpp less-equal
   *
-  * @note
-  * Ordering is, by default, handled by the proper ``operator<`` overload. In the case
-  * one needs to perform a custom comparison, see the
-  * <a href="../extension.html#custom-ordering">Custom Ordering</a> section.
-  *
   *  @param LHS Expression to compare
   *  @param RHS Expression to compare
 **/
@@ -199,11 +174,6 @@ do                                                                              
   * **Example:**
   *
   * @snippet relation/greater_equal.cpp greater-equal
-  *
-  * @note
-  * Ordering is, by default, handled by the proper ``operator<`` overload. In the case
-  * one needs to perform a custom comparison, see the
-  * <a href="../extension.html#custom-ordering">Custom Ordering</a> section.
   *
   *  @param LHS Expression to compare
   *  @param RHS Expression to compare
