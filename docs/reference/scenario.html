@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scenario definition &mdash; tts  - (internal version) documentation</title>
+  <title>Scenario definition &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tts
+            <a href="../index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -91,8 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../howto.html">Using TTS</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Reference Manual</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Scenario definition</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tts-case">TTS_CASE</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-case-tpl">TTS_CASE_TPL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macros">Macros</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="infos.html">Status tests</a></li>
@@ -101,8 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="precision.html">Precision Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sequence.html">Sequence Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exception.html">Runtime Error Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types.html">Types Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Test Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Type Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extension.html">Customizing TTS</a></li>
@@ -160,8 +162,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/reference/scenario.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -183,42 +183,138 @@
            <div itemprop="articleBody">
             
   <div class="section" id="scenario-definition">
-<h1>Scenario definition<a class="headerlink" href="#scenario-definition" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="tts-case">
-<span id="id1"></span><h2>TTS_CASE<a class="headerlink" href="#tts-case" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/case.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_CASE( Description )</span>
-</pre></div>
-</div>
-<p>Introduces new test scenario and registers it into the current test driver.</p>
-<p>The following block will contains user defined preparation, actual tests, expectations and
-clean-up for said test case.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Test cases performing no actual tests swill be reported as an automatic failure.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Description</span></code>: A literal string describing the scenario intents.</p></li>
-</ul>
-</dd>
-</dl>
+<span id="tts-scenario"></span><h1>Scenario definition<a class="headerlink" href="#scenario-definition" title="Permalink to this headline">¶</a></h1>
+<p>The following component provides macros to define test cases as a simple function
+or as a template function. THose are the basic blocks of writing tests with TTS.</p>
+<p>To use those macros, include the <code class="docutils literal notranslate"><span class="pre">tts/case.hpp</span></code> file.</p>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="tts-case"></span><dl class="macro">
+<dt id="c.TTS_CASE">
+<span class="target" id="a00143_1a5897f0b21806aea6048cc5fe338dd47d"></span><code class="sig-name descname">TTS_CASE</code><span class="sig-paren">(</span>Description<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_CASE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Introduces new test scenario and registers it into the current test driver. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
+<p>The following block will contains user defined preparation, actual tests, expectations and clean-up for said test case.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/infos.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/basic.hpp&gt;</span>
 
-<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s">&quot;Make a simple test suite&quot;</span> <span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Make a simple test suite&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-
+  <span class="n">TTS_PASS</span><span class="p">(</span><span class="s2">&quot;This one&#39;s a success&quot;</span><span class="p">);</span>
+  <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-case-tpl">
-<span id="id2"></span><h2>TTS_CASE_TPL<a class="headerlink" href="#tts-case-tpl" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/case.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_CASE_TPL( Description, ... )</span>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Test cases performing no actual tests swill be reported as invalid.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Description</span></code>: A literal string describing the scenario intents. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<span class="target" id="tts-case-tpl"></span><dl class="macro">
+<dt id="c.TTS_CASE_TPL">
+<span class="target" id="a00143_1a6258fcae76b062e955616db47c9a0d96"></span><code class="sig-name descname">TTS_CASE_TPL</code><span class="sig-paren">(</span>Description, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_CASE_TPL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a block defining a template test case. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
+<p>The following block will contains user defined preparation, actual tests, expectations and clean-up for said test case parametrized by a template type named <code class="docutils literal notranslate"><span class="pre">T</span></code> and instantiated for each type in the types sequence.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/basic.hpp&gt;</span>
+
+<span class="n">TTS_CASE_TPL</span><span class="p">(</span> <span class="s2">&quot;Make a simple test suite for some types&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">double</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">TTS_EXPECT</span><span class="p">(</span><span class="n">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">);</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Test cases performing no actual tests swill be reported as invalid.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Description</span></code>: A literal string describing the scenario intents. </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">...</span></code>: Lists of types to generate the test case from </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<span class="target" id="tts-subcase"></span><dl class="macro">
+<dt id="c.TTS_SUBCASE">
+<span class="target" id="a00143_1a0931d5d9c6ba056c400907aa366a3039"></span><code class="sig-name descname">TTS_SUBCASE</code><span class="sig-paren">(</span>Description<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_SUBCASE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a nested test case. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Classic approach for test design is to use fixtures to specify how data required by multiples test should be constructed and/or destructed. This leads to a very object-oriented style of tests which may be inconvenient.</p>
+<p>Using nested cases, one can define a common set of code to be run before any nested cases is run itself, thus enforcing the fact that each nested cases is run which similar setup.</p>
+<p>Nested cases can be nested to an arbitrary depth and no nested cases of a given depth can interact with each other.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;vector&gt;</span>
+<span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/basic.hpp&gt;</span>
+
+
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Default-constructed pointer behavior&quot;</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span> <span class="mi">5</span> <span class="p">);</span>
+
+  <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+  <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+
+  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;resizing bigger changes size and capacity&quot;</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;resizing smaller changes size but not capacity&quot;</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="n">u</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;reserving bigger changes capacity but not size&quot;</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+
+    <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;reserving smaller again does not change capacity&quot;</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">7</span> <span class="p">);</span>
+      <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;reserving smaller does not change size or capacity&quot;</span> <span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Test cases performing no actual tests swill be reported as invalid.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Description</span></code>: A literal string describing the scenario intents. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 </div>
 

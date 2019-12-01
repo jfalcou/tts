@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Customizing TTS &mdash; tts  - (internal version) documentation</title>
+  <title>Customizing TTS &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Design Rationale" href="rationale.html" />
-    <link rel="prev" title="Test Fixtures" href="reference/fixtures.html" /> 
+    <link rel="prev" title="Type Tests" href="reference/types.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -52,7 +52,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> tts
+            <a href="index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -92,12 +96,19 @@
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Manual</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Customizing TTS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-interface">Command Line Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-equality-comparison">Custom Equality Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-ordering">Custom Ordering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-ulp-comparison">Custom ULP Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-relative-comparison">Custom Relative Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-absolute-comparison">Custom Absolute Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-driver">Custom Driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-test-driver">Custom Test Driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-comparison">Custom Comparison</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-equality-comparison">Custom Equality Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-ordering">Custom Ordering</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-precision-comparison">Custom Precision Comparison</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-ulp-comparison">Custom ULP Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-relative-comparison">Custom Relative Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-absolute-comparison">Custom Absolute Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-data-producer">Custom Data Producer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="rationale.html">Design Rationale</a></li>
@@ -152,8 +163,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/extension.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -165,7 +174,7 @@
         <a href="rationale.html" class="btn btn-neutral float-right" title="Design Rationale" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reference/fixtures.html" class="btn btn-neutral float-left" title="Test Fixtures" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="reference/types.html" class="btn btn-neutral float-left" title="Type Tests" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -244,28 +253,38 @@
 </tbody>
 </table>
 </div>
+<div class="section" id="custom-test-driver">
+<span id="custom-driver"></span><h2>Custom Test Driver<a class="headerlink" href="#custom-test-driver" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+<div class="section" id="custom-comparison">
+<span id="id1"></span><h2>Custom Comparison<a class="headerlink" href="#custom-comparison" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="custom-equality-comparison">
-<span id="custom-equal"></span><h2>Custom Equality Comparison<a class="headerlink" href="#custom-equality-comparison" title="Permalink to this headline">¶</a></h2>
+<span id="custom-equal"></span><h3>Custom Equality Comparison<a class="headerlink" href="#custom-equality-comparison" title="Permalink to this headline">¶</a></h3>
 <p>TODO</p>
 </div>
 <div class="section" id="custom-ordering">
-<span id="custom-order"></span><h2>Custom Ordering<a class="headerlink" href="#custom-ordering" title="Permalink to this headline">¶</a></h2>
+<span id="custom-order"></span><h3>Custom Ordering<a class="headerlink" href="#custom-ordering" title="Permalink to this headline">¶</a></h3>
 <p>TODO</p>
 </div>
+</div>
+<div class="section" id="custom-precision-comparison">
+<span id="custom-precision"></span><h2>Custom Precision Comparison<a class="headerlink" href="#custom-precision-comparison" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="custom-ulp-comparison">
-<span id="custom-ulp"></span><h2>Custom ULP Comparison<a class="headerlink" href="#custom-ulp-comparison" title="Permalink to this headline">¶</a></h2>
+<span id="custom-ulp"></span><h3>Custom ULP Comparison<a class="headerlink" href="#custom-ulp-comparison" title="Permalink to this headline">¶</a></h3>
 <p>TODO</p>
 </div>
 <div class="section" id="custom-relative-comparison">
-<span id="custom-rel"></span><h2>Custom Relative Comparison<a class="headerlink" href="#custom-relative-comparison" title="Permalink to this headline">¶</a></h2>
+<span id="custom-rel"></span><h3>Custom Relative Comparison<a class="headerlink" href="#custom-relative-comparison" title="Permalink to this headline">¶</a></h3>
 <p>TODO</p>
 </div>
 <div class="section" id="custom-absolute-comparison">
-<span id="custom-abs"></span><h2>Custom Absolute Comparison<a class="headerlink" href="#custom-absolute-comparison" title="Permalink to this headline">¶</a></h2>
+<span id="custom-abs"></span><h3>Custom Absolute Comparison<a class="headerlink" href="#custom-absolute-comparison" title="Permalink to this headline">¶</a></h3>
 <p>TODO</p>
 </div>
-<div class="section" id="custom-driver">
-<span id="id1"></span><h2>Custom Driver<a class="headerlink" href="#custom-driver" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="custom-data-producer">
+<span id="custom-producer"></span><h2>Custom Data Producer<a class="headerlink" href="#custom-data-producer" title="Permalink to this headline">¶</a></h2>
 <p>TODO</p>
 </div>
 </div>
@@ -281,7 +300,7 @@
         <a href="rationale.html" class="btn btn-neutral float-right" title="Design Rationale" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="reference/fixtures.html" class="btn btn-neutral float-left" title="Test Fixtures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="reference/types.html" class="btn btn-neutral float-left" title="Type Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

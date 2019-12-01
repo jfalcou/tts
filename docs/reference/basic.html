@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Tests &mdash; tts  - (internal version) documentation</title>
+  <title>Basic Tests &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tts
+            <a href="../index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -93,16 +97,14 @@
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario definition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infos.html">Status tests</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Basic Tests</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tts-expect">TTS_EXPECT</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-expect-not">TTS_EXPECT_NOT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macros">Macros</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="relation.html">Relational Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="precision.html">Precision Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sequence.html">Sequence Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exception.html">Runtime Error Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types.html">Types Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Test Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Type Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extension.html">Customizing TTS</a></li>
@@ -160,8 +162,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/reference/basic.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -183,27 +183,24 @@
            <div itemprop="articleBody">
             
   <div class="section" id="basic-tests">
-<h1>Basic Tests<a class="headerlink" href="#basic-tests" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="tts-expect">
-<span id="id1"></span><h2>TTS_EXPECT<a class="headerlink" href="#tts-expect" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/basic.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_EXPECT( Condition )</span>
-</pre></div>
-</div>
-<p>Checks if <code class="docutils literal notranslate"><span class="pre">Condition</span></code> evaluates to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Condition</span></code>: Expression to test</p></li>
-</ul>
-</dd>
-</dl>
+<span id="tts-basic"></span><h1>Basic Tests<a class="headerlink" href="#basic-tests" title="Permalink to this headline">¶</a></h1>
+<p>The following component provides macros to perform basic tests over expression that
+simply evaluates as a boolean value.</p>
+<p>To use those macros, include the <code class="docutils literal notranslate"><span class="pre">tts/tests/basic.hpp</span></code> file.</p>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="tts-expect"></span><dl class="macro">
+<dt id="c.TTS_EXPECT">
+<span class="target" id="a00155_1ac05bcf275ee796fdac7a0fd803724e69"></span><code class="sig-name descname">TTS_EXPECT</code><span class="sig-paren">(</span>Expr<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_EXPECT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a given expression evaluates to <code class="docutils literal notranslate"><span class="pre">true</span></code>. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/basic.hpp</span><span class="pre">&gt;</span></code></p>
 <p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/basic.hpp&gt;</span><span class="cp"></span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/basic.hpp&gt;</span>
 
-<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s">&quot;Check that expectation can be met&quot;</span> <span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Check that expectation can be met&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+  <span class="nb">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
 
   <span class="n">TTS_EXPECT</span><span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">);</span>
   <span class="n">TTS_EXPECT</span><span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span>  <span class="n">b</span><span class="p">);</span>
@@ -213,27 +210,27 @@
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-expect-not">
-<span id="id2"></span><h2>TTS_EXPECT_NOT<a class="headerlink" href="#tts-expect-not" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/basic.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_EXPECT_NOT( Condition )</span>
-</pre></div>
-</div>
-<p>Checks if <code class="docutils literal notranslate"><span class="pre">Condition</span></code> evaluates to <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Condition</span></code>: Expression to test</p></li>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Expr</span></code>: Expression to test </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/basic.hpp&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s">&quot;Check that counter-expectation can be met&quot;</span> <span class="p">)</span>
+<span class="target" id="tts-expect-not"></span><dl class="macro">
+<dt id="c.TTS_EXPECT_NOT">
+<span class="target" id="a00155_1af7b554db7af40e10e366fc2779732a25"></span><code class="sig-name descname">TTS_EXPECT_NOT</code><span class="sig-paren">(</span>Expr<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_EXPECT_NOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a given expression evaluates to <code class="docutils literal notranslate"><span class="pre">false</span></code>. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/basic.hpp</span><span class="pre">&gt;</span></code></p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/basic.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Check that counter-expectation can be met&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+  <span class="nb">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
 
   <span class="n">TTS_EXPECT_NOT</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">);</span>
   <span class="n">TTS_EXPECT_NOT</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span>  <span class="n">b</span><span class="p">);</span>
@@ -243,6 +240,15 @@
 <span class="p">}</span>
 </pre></div>
 </div>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Expr</span></code>: Expression to test </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 </div>
 
