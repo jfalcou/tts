@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Status tests &mdash; tts  - (internal version) documentation</title>
+  <title>Status tests &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tts
+            <a href="../index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -92,8 +96,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../reference.html">Reference Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario definition</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Status tests</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tts-pass">TTS_PASS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-fail">TTS_FAIL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macros">Macros</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="basic.html">Basic Tests</a></li>
@@ -101,8 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="precision.html">Precision Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sequence.html">Sequence Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exception.html">Runtime Error Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types.html">Types Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Test Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Type Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extension.html">Customizing TTS</a></li>
@@ -160,8 +162,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/reference/infos.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -183,54 +183,84 @@
            <div itemprop="articleBody">
             
   <div class="section" id="status-tests">
-<h1>Status tests<a class="headerlink" href="#status-tests" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="tts-pass">
-<span id="id1"></span><h2>TTS_PASS<a class="headerlink" href="#tts-pass" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/infos.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_PASS( Message )</span>
-</pre></div>
-</div>
-<p>Register a test which always passes and streams a custom message string.</p>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Message</span></code>: A literal string to display as additional informations</p></li>
-</ul>
-</dd>
-</dl>
+<span id="tts-infos"></span><h1>Status tests<a class="headerlink" href="#status-tests" title="Permalink to this headline">¶</a></h1>
+<p>The following component provides macros to display informations about tests status within
+scenarios.</p>
+<p>To use those macros, include the <code class="docutils literal notranslate"><span class="pre">tts/tests/infos.hpp</span></code> file.</p>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="tts-pass"></span><dl class="macro">
+<dt id="c.TTS_PASS">
+<span class="target" id="a00161_1aaba95b4d979dd285e0fb78243a807108"></span><code class="sig-name descname">TTS_PASS</code><span class="sig-paren">(</span>Message<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_PASS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a test which always passes and streams a custom Message string. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/infos.hpp</span><span class="pre">&gt;</span></code></p>
 <p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/infos.hpp&gt;</span><span class="cp"></span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/infos.hpp&gt;</span>
 
-<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s">&quot;Check that forced pass passes&quot;</span> <span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Check that forced pass passes&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">TTS_PASS</span><span class="p">(</span><span class="s">&quot;Forced pass&quot;</span><span class="p">);</span>
+  <span class="n">TTS_PASS</span><span class="p">(</span><span class="s2">&quot;Forced pass&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-fail">
-<span id="id2"></span><h2>TTS_FAIL<a class="headerlink" href="#tts-fail" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/infos.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_FAIL( Message )</span>
-</pre></div>
-</div>
-<p>Register a test which always fails and streams a custom message string.</p>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">Message</span></code>: A literal string to display as additional informations</p></li>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Message</span></code>: A literal string to display as additional informations </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/infos.hpp&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s">&quot;Check that forced failure fails&quot;</span> <span class="p">)</span>
+<span class="target" id="tts-fail"></span><dl class="macro">
+<dt id="c.TTS_FAIL">
+<span class="target" id="a00161_1a251bcaf3210f08e607760669187b79b4"></span><code class="sig-name descname">TTS_FAIL</code><span class="sig-paren">(</span>Message<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_FAIL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a test which always fails and streams a custom message string. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/infos.hpp</span><span class="pre">&gt;</span></code></p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/infos.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Check that forced failure fails&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">TTS_FAIL</span><span class="p">(</span><span class="s">&quot;Forced fail&quot;</span><span class="p">);</span>
+  <span class="n">TTS_FAIL</span><span class="p">(</span><span class="s2">&quot;Forced fail&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Message</span></code>: A literal string to display as additional informations </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<span class="target" id="tts-invalid"></span><dl class="macro">
+<dt id="c.TTS_INVALID">
+<span class="target" id="a00161_1af35db1dedd83bd219475744da7852f06"></span><code class="sig-name descname">TTS_INVALID</code><span class="sig-paren">(</span>Message<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_INVALID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a test as invalid and streams a custom message string. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/infos.hpp</span><span class="pre">&gt;</span></code></p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/infos.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Check forcing a test to be invalid&quot;</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">TTS_INVALID</span><span class="p">(</span><span class="s2">&quot;Forced invalid&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Message</span></code>: A literal string to display as additional informations </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 </div>
 

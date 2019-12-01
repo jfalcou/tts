@@ -1,46 +1,27 @@
+.. _tts-infos:
+
 Status tests
 ============
 
+The following component provides macros to display informations about tests status within
+scenarios.
+
+To use those macros, include the ``tts/tests/infos.hpp`` file.
+
+Macros
+^^^^^^
+
 .. _tts-pass:
 
-TTS_PASS
---------
-
-**Required header:** ``#include <tts/tests/infos.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_PASS( Message )
-
-Register a test which always passes and streams a custom message string.
-
-**Parameters**
-  - ``Message``: A literal string to display as additional informations
-
-**Example:**
-
-.. literalinclude:: ../../test/infos/pass.cpp
-   :language: cpp
-   :lines: 10-16
+.. doxygendefine:: TTS_PASS
+   :project: tts
 
 .. _tts-fail:
 
-TTS_FAIL
---------
+.. doxygendefine:: TTS_FAIL
+   :project: tts
 
-**Required header:** ``#include <tts/tests/infos.hpp>``
+.. _tts-invalid:
 
-.. code-block:: c++
-
-   #define TTS_FAIL( Message )
-
-Register a test which always fails and streams a custom message string.
-
-**Parameters**
-  - ``Message``: A literal string to display as additional informations
-
-**Example:**
-
-.. literalinclude:: ../../test/infos/fail.cpp
-   :language: cpp
-   :lines: 11-17
+.. doxygendefine:: TTS_INVALID
+   :project: tts

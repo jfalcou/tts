@@ -1,159 +1,45 @@
+.. _tts-relation:
+
 Relational Tests
 ================
+The following component provides macros to perform ordering test between values.
+
+To use those macros, include the ``tts/tests/relation.hpp`` file.
+
+Macros
+^^^^^^
+
+.. note::
+   Ordering and equality comparisons are, by default, handled by the ``operator==`` or
+   ``opetator<`` overloads. In the case one needs to perform a custom comparison, see
+   the :ref:`custom-comparison` section.
 
 .. _tts-equal:
 
-TTS_EQUAL
----------
-
-**Required header:** ``#include <tts/tests/relation.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_EQUAL( LHS, RHS )
-
-Checks if ``LHS == RHS`` evaluates to ``true``.
-
-.. note::
-   Equality comparison is, by default, handled by the proper ``operator==`` overload. In the case one
-   needs to perform a custom equality comparison, see the :ref:`custom-equal` section.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-
-**Example:**
-
-.. literalinclude:: ../../test/relation/equal.cpp
-   :language: cpp
-   :lines: 10-19
+.. doxygendefine:: TTS_EQUAL
+   :project: tts
 
 .. _tts-not-equal:
 
-TTS_NOT_EQUAL
--------------
-
-**Required header:** ``#include <tts/tests/relation.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_NOT_EQUAL( LHS, RHS )
-
-Checks if ``LHS == RHS`` evaluates to ``false``.
-
-.. note::
-   Equality comparison is, by default, handled by the proper ``operator==`` overload. In case one
-   needs to perform a custom equality comparison, see :ref:`custom-equal`.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-
-**Example:**
-
-.. literalinclude:: ../../test/relation/not_equal.cpp
-   :language: cpp
-   :lines: 10-19
+.. doxygendefine:: TTS_NOT_EQUAL
+   :project: tts
 
 .. _tts-less:
 
-TTS_LESS
---------
-
-**Required header:** ``#include <tts/tests/relation.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_LESS( LHS, RHS )
-
-Checks if ``LHS < RHS`` evaluates to ``true``.
-
-.. note::
-   Less-than comparison is, by default, handled by the proper ``operator<`` overload. In case one
-   needs to perform a custom equality comparison, see :ref:`custom-order`.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-
-**Example:**
-
-.. literalinclude:: ../../test/relation/less.cpp
-   :language: cpp
-   :lines: 10-19
-
+.. doxygendefine:: TTS_LESS
+   :project: tts
 
 .. _tts-greater:
 
-TTS_GREATER
------------
-
-**Required header:** ``#include <tts/tests/relation.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_GREATER( LHS, RHS )
-
-Checks if ``LHS > RHS`` evaluates to ``true``.
-
-.. note::
-   Less-than comparison is, by default, handled by the proper ``operator<`` overload. In case one
-   needs to perform a custom equality comparison, see :ref:`custom-order`.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-
-**Example:**
-
-.. literalinclude:: ../../test/relation/greater.cpp
-   :language: cpp
-   :lines: 10-19
+.. doxygendefine:: TTS_GREATER
+   :project: tts
 
 .. _tts-less-equal:
 
-TTS_LESS_EQUAL
---------------
-
-**Required header:** ``#include <tts/tests/relation.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_LESS_EQUAL( LHS, RHS )
-
-Checks if ``LHS <= RHS`` evaluates to ``true``.
-
-.. note::
-   Less-than comparison is, by default, handled by the proper operator overloads. In case one
-   needs to perform a custom equality comparison, see :ref:`custom-order`.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-
-**Example:**
-
-.. literalinclude:: ../../test/relation/less_equal.cpp
-   :language: cpp
-   :lines: 10-22
+.. doxygendefine:: TTS_LESS_EQUAL
+   :project: tts
 
 .. _tts-greater-equal:
 
-TTS_GREATER_EQUAL
------------------
-
-**Required header:** ``#include <tts/tests/relation.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_GREATER_EQUAL( LHS, RHS )
-
-Checks if ``LHS >= RHS`` evaluates to ``true``.
-
-.. note::
-   Less-than comparison is, by default, handled by the proper operator overloads. In case one
-   needs to perform a custom equality comparison, see :ref:`custom-order`.
-
-**Parameters**
-  - ``LHS``, ``RHS``: Expression to compares
-
-**Example:**
-
-.. literalinclude:: ../../test/relation/greater_equal.cpp
-   :language: cpp
-   :lines: 10-22
+.. doxygendefine:: TTS_GREATER_EQUAL
+   :project: tts

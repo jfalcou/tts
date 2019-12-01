@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using TTS &mdash; tts  - (internal version) documentation</title>
+  <title>Using TTS &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> tts
+            <a href="index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -98,9 +102,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#sequence-tests">Sequence Tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#runtime-error-tests">Runtime Error Tests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#type-related-tests">Type Related Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dataset-testing">Dataset Testing</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#tests-fixtures">Tests Fixtures</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Manual</a></li>
@@ -157,8 +161,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/howto.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -208,8 +210,8 @@ defined either as:</p>
 <li><p>a single function defined by the <a class="reference internal" href="reference/scenario.html#tts-case"><span class="std std-ref">TTS_CASE</span></a> macro. In this case, the test
 function will be run and proceed to every tests it contains.</p></li>
 <li><p>a family of functions generated from a template function and a sequence of types
-via the <a class="reference internal" href="reference/scenario.html#tts-case-tpl"><span class="std std-ref">TTS_CASE_TPL</span></a> macro. Inside the test case itself, the template type is accessible
-through the template parameter <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></li>
+via the <a class="reference internal" href="reference/scenario.html#tts-case-tpl"><span class="std std-ref">TTS_CASE_TPL</span></a> macro. Inside the test case itself, the template
+type is accessible through the template parameter <code class="docutils literal notranslate"><span class="pre">T</span></code>.</p></li>
 </ul>
 <p>In both case, the test case is defined with an unique string description. Additionally, good
 testing practices recommend to have fine grain test cases to simplify test management.</p>
@@ -217,7 +219,7 @@ testing practices recommend to have fine grain test cases to simplify test manag
 
 <span class="n">TTS_CASE</span><span class="p">(</span> <span class="s">&quot;Make a simple test suite&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-
+  <span class="c1">// This test case is empty and thus will be reported as invalid</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -244,8 +246,8 @@ failure to the test suite manager directly from within a test case.</p>
 failure or success.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 34%" />
-<col style="width: 66%" />
+<col style="width: 46%" />
+<col style="width: 54%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Macro</p></th>
@@ -259,10 +261,13 @@ failure or success.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="reference/infos.html#tts-fail"><span class="std std-ref">TTS_FAIL</span></a></p></td>
 <td><p>Forces a failure and displays a message</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="reference/basic.html#tts-expect"><span class="std std-ref">TTS_EXPECT</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="reference/infos.html#tts-invalid"><span class="std std-ref">TTS_INVALID</span></a></p></td>
+<td><p>Forces a failure and displays a message</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="reference/basic.html#tts-expect"><span class="std std-ref">TTS_EXPECT</span></a></p></td>
 <td><p>Checks if an expression evaluates to <code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="reference/basic.html#tts-expect-not"><span class="std std-ref">TTS_EXPECT_NOT</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="reference/basic.html#tts-expect-not"><span class="std std-ref">TTS_EXPECT_NOT</span></a></p></td>
 <td><p>Checks if an expression evaluates to <code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
 </tr>
 </tbody>
@@ -306,8 +311,8 @@ Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
 successful if values are properly ordered with respect to each other:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 68%" />
+<col style="width: 46%" />
+<col style="width: 54%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Macro</p></th>
@@ -316,22 +321,22 @@ successful if values are properly ordered with respect to each other:</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="reference/relation.html#tts-equal"><span class="std std-ref">TTS_EQUAL</span></a></p></td>
-<td><p>Checks if one value is equal to another</p></td>
+<td><p>Checks if values are equal than each other</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="reference/relation.html#tts-not-equal"><span class="std std-ref">TTS_NOT_EQUAL</span></a></p></td>
-<td><p>Checks if one value is not equal to another</p></td>
+<td><p>Checks if values are not equal than each other</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="reference/relation.html#tts-less"><span class="std std-ref">TTS_LESS</span></a></p></td>
-<td><p>Checks if one value is lesser or equal than another</p></td>
+<td><p>Checks if values are lesser or equal than each other</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="reference/relation.html#tts-greater"><span class="std std-ref">TTS_GREATER</span></a></p></td>
-<td><p>Checks if one value is greater  than another</p></td>
+<td><p>Checks if values are greater  than each other</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="reference/relation.html#tts-less-equal"><span class="std std-ref">TTS_LESS_EQUAL</span></a></p></td>
-<td><p>Checks if one value is lesser or equal than another</p></td>
+<td><p>Checks if values are lesser or equal than each other</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="reference/relation.html#tts-greater-equal"><span class="std std-ref">TTS_GREATER_EQUAL</span></a></p></td>
-<td><p>Checks if one value is greater or equal than another</p></td>
+<td><p>Checks if values are greater or equal than each other</p></td>
 </tr>
 </tbody>
 </table>
@@ -384,8 +389,8 @@ expected value.</p></li>
 </div></blockquote>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 68%" />
+<col style="width: 44%" />
+<col style="width: 56%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Macro</p></th>
@@ -411,7 +416,8 @@ expected value.</p></li>
 customized through a set of specific function (see <a class="reference internal" href="extension.html#custom-ulp"><span class="std std-ref">Custom ULP Comparison</span></a>, <a class="reference internal" href="extension.html#custom-rel"><span class="std std-ref">Custom Relative Comparison</span></a>
 or <a class="reference internal" href="extension.html#custom-abs"><span class="std std-ref">Custom Absolute Comparison</span></a>.</p>
 <p>Let’s have a look at the expected output of such macros</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//! [ulp-equal]</span>
+<span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
 
 <span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;ULP distance&quot;</span><span class="p">)</span>
@@ -422,8 +428,6 @@ or <a class="reference internal" href="extension.html#custom-abs"><span class="s
   <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span><span class="sc">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80LL</span>                   <span class="p">,</span> <span class="mf">15.</span>         <span class="p">);</span>
   <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="mf">1.f</span> <span class="p">,</span> <span class="mf">1.f</span><span class="o">+</span><span class="n">eps</span>                <span class="p">,</span> <span class="mf">0.5</span>         <span class="p">);</span>
   <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="n">pi</span>  <span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span> <span class="p">,</span> <span class="mf">9.84293e+07</span> <span class="p">);</span>
-  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="mf">1.</span>  <span class="p">,</span> <span class="kt">short</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>               <span class="p">,</span> <span class="mf">0.</span>          <span class="p">);</span>
-<span class="p">}</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--------------------------------------------------------------------------------</span>
@@ -438,14 +442,14 @@ or <a class="reference internal" href="extension.html#custom-abs"><span class="s
 </div>
 <div class="section" id="sequence-tests">
 <h3>Sequence Tests<a class="headerlink" href="#sequence-tests" title="Permalink to this headline">¶</a></h3>
-<p>Another common use-case often consists in comparing two series of values.
-Additional macros are provided for these use-cases. They perform element-wise comparison
-of values and also detects size mismatch in the series. If an error occurs, a sum up of incorrect
-values with their position and source of error is reported.</p>
+<p>Another common use-case often consists in comparing two series of values. Additional macros are
+provided for these use-cases. They perform element-wise comparison of values and also detects size
+mismatch in the series. If an error occurs, a summary of incorrect values with their position and
+source of error is reported.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 67%" />
+<col style="width: 40%" />
+<col style="width: 60%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Macro</p></th>
@@ -454,34 +458,33 @@ values with their position and source of error is reported.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="reference/sequence.html#tts-all-ulp-equal"><span class="std std-ref">TTS_ALL_ULP_EQUAL</span></a></p></td>
-<td><p>Checks if one value is equal to another</p></td>
+<td><p>Checks if all values of two sequences are equal within an ULP distance</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="reference/sequence.html#tts-all-ieee-equal"><span class="std std-ref">TTS_ALL_IEEE_EQUAL</span></a></p></td>
-<td><p>Checks if one value is equal to another</p></td>
+<td><p>Checks if all values of two sequences are equal within 0 ULP</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="reference/sequence.html#tts-all-rel-equal"><span class="std std-ref">TTS_ALL_RELATIVE_EQUAL</span></a></p></td>
-<td><p>Checks if one value is not equal to another</p></td>
+<td><p>Checks if all values of two sequences are equal within a percentage</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="reference/sequence.html#tts-all-equal"><span class="std std-ref">TTS_ALL_EQUAL</span></a></p></td>
-<td><p>Checks if one value is equal to another</p></td>
+<td><p>Checks if all values of two sequences are equal</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="reference/sequence.html#tts-all-abs-equal"><span class="std std-ref">TTS_ALL_ABSOLUTE_EQUAL</span></a></p></td>
-<td><p>Checks if one value is lesser or equal than another</p></td>
+<td><p>Checks if all values of two sequences are equal within an absolute value</p></td>
 </tr>
 </tbody>
 </table>
-<p>These macros are accessible in the <code class="docutils literal notranslate"><span class="pre">tts/unit/tests/precision.hpp</span></code> header file.</p>
+<p>These macros are accessible in the <code class="docutils literal notranslate"><span class="pre">tts/unit/tests/sequence.hpp</span></code> header file.</p>
 </div>
 <div class="section" id="runtime-error-tests">
 <h3>Runtime Error Tests<a class="headerlink" href="#runtime-error-tests" title="Permalink to this headline">¶</a></h3>
 <p>Those tests check if a given expression exhibit a given runtime behavior with respect
-to exceptions and assertions. Expression can be tested for being able to throw or not
-and to trigger an assertion failure or not. Note that those test macros requires the
-exception to be detected to inherits from <code class="docutils literal notranslate"><span class="pre">std::exception</span></code>.</p>
+to exceptions. Expression can be tested for being able to throw or not. Note that those
+test macros requires the exception to be detected to inherits from <code class="docutils literal notranslate"><span class="pre">std::exception</span></code>.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 24%" />
-<col style="width: 76%" />
+<col style="width: 35%" />
+<col style="width: 65%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Macro</p></th>
@@ -505,8 +508,8 @@ exception to be detected to inherits from <code class="docutils literal notransl
 or some general types requirements.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 24%" />
-<col style="width: 76%" />
+<col style="width: 34%" />
+<col style="width: 66%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Macro</p></th>
@@ -524,15 +527,15 @@ or some general types requirements.</p>
 </table>
 <p>These macros are accessible in the <code class="docutils literal notranslate"><span class="pre">tts/unit/tests/types.hpp</span></code> file.</p>
 </div>
-</div>
-<div class="section" id="tests-fixtures">
-<h2>Tests Fixtures<a class="headerlink" href="#tests-fixtures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dataset-testing">
+<h3>Dataset Testing<a class="headerlink" href="#dataset-testing" title="Permalink to this headline">¶</a></h3>
 <p class="rubric">Footnotes</p>
 <dl class="footnote brackets">
 <dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Passing <code class="docutils literal notranslate"><span class="pre">--no-color</span></code> through the <a class="reference internal" href="extension.html#tts-cli"><span class="std std-ref">Command Line Interface</span></a> remove said colors.</p>
 </dd>
 </dl>
+</div>
 </div>
 </div>
 

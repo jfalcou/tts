@@ -7,6 +7,8 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [less-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
@@ -19,6 +21,7 @@ TTS_CASE( "Check correctness of less-equal comparison tests" )
   TTS_LESS_EQUAL(a,b);
   TTS_LESS_EQUAL(a,a);
 }
+//! [less-equal]
 
 #include "foo.hpp"
 

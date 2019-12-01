@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Reference Manual &mdash; tts  - (internal version) documentation</title>
+  <title>Reference Manual &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> tts
+            <a href="index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -97,8 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="reference/precision.html">Precision Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/sequence.html">Sequence Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference/exception.html">Runtime Error Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/types.html">Types Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/fixtures.html">Test Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/types.html">Type Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="extension.html">Customizing TTS</a></li>
@@ -154,8 +157,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/reference.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -178,59 +179,84 @@
             
   <div class="section" id="reference-manual">
 <h1>Reference Manual<a class="headerlink" href="#reference-manual" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/scenario.html#tts-scenario"><span class="std std-ref">Scenario definition</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/scenario.html#tts-case"><span class="std std-ref">TTS_CASE</span></a></p></li>
+<li><p><a class="reference internal" href="reference/scenario.html#tts-case-tpl"><span class="std std-ref">TTS_CASE_TPL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/scenario.html#tts-subcase"><span class="std std-ref">TTS_SUBCASE</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/infos.html#tts-infos"><span class="std std-ref">Status tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/infos.html#tts-pass"><span class="std std-ref">TTS_PASS</span></a></p></li>
+<li><p><a class="reference internal" href="reference/infos.html#tts-fail"><span class="std std-ref">TTS_FAIL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/infos.html#tts-invalid"><span class="std std-ref">TTS_INVALID</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/basic.html#tts-basic"><span class="std std-ref">Basic Tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/basic.html#tts-expect"><span class="std std-ref">TTS_EXPECT</span></a></p></li>
+<li><p><a class="reference internal" href="reference/basic.html#tts-expect-not"><span class="std std-ref">TTS_EXPECT_NOT</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/relation.html#tts-relation"><span class="std std-ref">Relational Tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/relation.html#tts-equal"><span class="std std-ref">TTS_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/relation.html#tts-not-equal"><span class="std std-ref">TTS_NOT_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/relation.html#tts-less"><span class="std std-ref">TTS_LESS</span></a></p></li>
+<li><p><a class="reference internal" href="reference/relation.html#tts-greater"><span class="std std-ref">TTS_GREATER</span></a></p></li>
+<li><p><a class="reference internal" href="reference/relation.html#tts-less-equal"><span class="std std-ref">TTS_LESS_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/relation.html#tts-greater-equal"><span class="std std-ref">TTS_GREATER_EQUAL</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/precision.html#tts-precision"><span class="std std-ref">Precision Tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/precision.html#tts-ulp-equal"><span class="std std-ref">TTS_ULP_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/precision.html#tts-ieee-equal"><span class="std std-ref">TTS_IEEE_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/precision.html#tts-rel-equal"><span class="std std-ref">TTS_RELATIVE_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/precision.html#tts-abs-equal"><span class="std std-ref">TTS_ABSOLUTE_EQUAL</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/sequence.html#tts-sequence"><span class="std std-ref">Sequence Tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/sequence.html#tts-all-ulp-equal"><span class="std std-ref">TTS_ALL_ULP_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/sequence.html#tts-all-ieee-equal"><span class="std std-ref">TTS_ALL_IEEE_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/sequence.html#tts-all-rel-equal"><span class="std std-ref">TTS_ALL_RELATIVE_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/sequence.html#tts-all-equal"><span class="std std-ref">TTS_ALL_EQUAL</span></a></p></li>
+<li><p><a class="reference internal" href="reference/sequence.html#tts-all-abs-equal"><span class="std std-ref">TTS_ALL_ABSOLUTE_EQUAL</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/exception.html#tts-exceptions"><span class="std std-ref">Runtime Error Tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/exception.html#tts-throw"><span class="std std-ref">TTS_THROW</span></a></p></li>
+<li><p><a class="reference internal" href="reference/exception.html#tts-no-throw"><span class="std std-ref">TTS_NO_THROW</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="reference/types.html#tts-types"><span class="std std-ref">Type Tests</span></a></dt><dd><ul>
+<li><p><a class="reference internal" href="reference/types.html#tts-type-is"><span class="std std-ref">TTS_TYPE_IS</span></a></p></li>
+<li><p><a class="reference internal" href="reference/types.html#tts-expr-is"><span class="std std-ref">TTS_EXPR_IS</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="reference/scenario.html">Scenario definition</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/scenario.html#tts-case">TTS_CASE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/scenario.html#tts-case-tpl">TTS_CASE_TPL</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/infos.html">Status tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/infos.html#tts-pass">TTS_PASS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/infos.html#tts-fail">TTS_FAIL</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/basic.html">Basic Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/basic.html#tts-expect">TTS_EXPECT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/basic.html#tts-expect-not">TTS_EXPECT_NOT</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/relation.html">Relational Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/relation.html#tts-equal">TTS_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/relation.html#tts-not-equal">TTS_NOT_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/relation.html#tts-less">TTS_LESS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/relation.html#tts-greater">TTS_GREATER</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/relation.html#tts-less-equal">TTS_LESS_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/relation.html#tts-greater-equal">TTS_GREATER_EQUAL</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/precision.html">Precision Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/precision.html#tts-ulp-equal">TTS_ULP_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/precision.html#tts-ieee-equal">TTS_IEEE_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/precision.html#tts-relative-equal">TTS_RELATIVE_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/precision.html#tts-absolute-equal">TTS_ABSOLUTE_EQUAL</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/sequence.html">Sequence Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/sequence.html#tts-all-ulp-equal">TTS_ALL_ULP_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/sequence.html#tts-all-ieee-equal">TTS_ALL_IEEE_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/sequence.html#tts-all-relative-equal">TTS_ALL_RELATIVE_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/sequence.html#tts-all-equal">TTS_ALL_EQUAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/sequence.html#tts-all-absolute-equal">TTS_ALL_ABSOLUTE_EQUAL</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/exception.html">Runtime Error Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/exception.html#tts-throw">TTS_THROW</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/exception.html#tts-no-throw">TTS_NO_THROW</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/types.html">Types Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/types.html#tts-type-is">TTS_TYPE_IS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/types.html#tts-expr-is">TTS_EXPR_IS</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/fixtures.html">Test Fixtures</a></li>
-</ul>
 </div>
 </div>
 

@@ -1,42 +1,26 @@
+.. _tts-scenario:
+
 Scenario definition
 ===================
 
+The following component provides macros to define test cases as a simple function
+or as a template function. THose are the basic blocks of writing tests with TTS.
+
+To use those macros, include the ``tts/case.hpp`` file.
+
+Macros
+^^^^^^
 .. _tts-case:
 
-TTS_CASE
---------
-
-**Required header:** ``#include <tts/case.hpp>``
-
-.. code-block:: c++
-
-   #define TTS_CASE( Description )
-
-Introduces new test scenario and registers it into the current test driver.
-
-The following block will contains user defined preparation, actual tests, expectations and
-clean-up for said test case.
-
-.. note::
-   Test cases performing no actual tests swill be reported as an automatic failure.
-
-**Parameters**
-  - ``Description``: A literal string describing the scenario intents.
-
-**Example:**
-
-.. literalinclude:: simple.cpp
-   :language: cpp
-   :lines: 8-13
+.. doxygendefine:: TTS_CASE
+   :project: tts
 
 .. _tts-case-tpl:
 
-TTS_CASE_TPL
-------------
+.. doxygendefine:: TTS_CASE_TPL
+   :project: tts
 
-**Required header:** ``#include <tts/case.hpp>``
+.. _tts-subcase:
 
-.. code-block:: c++
-
-   #define TTS_CASE_TPL( Description, ... )
-
+.. doxygendefine:: TTS_SUBCASE
+   :project: tts

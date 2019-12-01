@@ -7,6 +7,8 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+
+//! [less]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
@@ -17,6 +19,7 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
   std::vector<float> a{1,2,3}, b{12,3};
   TTS_LESS(a,b);
 }
+//! [less]
 
 #include "foo.hpp"
 

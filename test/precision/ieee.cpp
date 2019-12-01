@@ -7,6 +7,8 @@
   SPDX-License-Identifier: MIT
 **/
 //====================================================================================================
+
+//! [ieee-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/precision.hpp>
 
@@ -19,6 +21,7 @@ TTS_CASE("IEEE equality")
   TTS_IEEE_EQUAL(2. , 2. );
   TTS_IEEE_EQUAL(65 , 'A');
 }
+//! [ieee-equal]
 
 #include "my_real.hpp"
 

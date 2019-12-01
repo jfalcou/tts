@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Precision Tests &mdash; tts  - (internal version) documentation</title>
+  <title>Precision Tests &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tts
+            <a href="../index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -95,16 +99,12 @@
 <li class="toctree-l2"><a class="reference internal" href="basic.html">Basic Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="relation.html">Relational Tests</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Precision Tests</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tts-ulp-equal">TTS_ULP_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-ieee-equal">TTS_IEEE_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-relative-equal">TTS_RELATIVE_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-absolute-equal">TTS_ABSOLUTE_EQUAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macros">Macros</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="sequence.html">Sequence Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exception.html">Runtime Error Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types.html">Types Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Test Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Type Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extension.html">Customizing TTS</a></li>
@@ -162,8 +162,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/reference/precision.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -185,141 +183,148 @@
            <div itemprop="articleBody">
             
   <div class="section" id="precision-tests">
-<h1>Precision Tests<a class="headerlink" href="#precision-tests" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="tts-ulp-equal">
-<span id="id1"></span><h2>TTS_ULP_EQUAL<a class="headerlink" href="#tts-ulp-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_ULP_EQUAL( LHS, RHS, THRES )</span>
-</pre></div>
-</div>
-<p>Checks if the ULP distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to  <code class="docutils literal notranslate"><span class="pre">THRES</span></code>.</p>
+<span id="tts-precision"></span><h1>Precision Tests<a class="headerlink" href="#precision-tests" title="Permalink to this headline">¶</a></h1>
+<p>The following component provides macros to perform precision tests between values.
+To use those macros, include the <code class="docutils literal notranslate"><span class="pre">tts/tests/precision.hpp</span></code> file.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-ulp"><span class="std std-ref">Custom ULP Comparison</span></a> section.</p>
+<p>Precision comparisons are, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code>, <code class="docutils literal notranslate"><span class="pre">tts::reldist</span></code> or
+<code class="docutils literal notranslate"><span class="pre">tts::absdist</span></code> overloads. In the case one needs to perform a custom precision comparison, see
+the <a class="reference internal" href="../extension.html#custom-precision"><span class="std std-ref">Custom Precision Comparison</span></a> section.</p>
 </div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compares</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">THRES</span></code>       : Maximum number of ULPs between the two values to compare</p></li>
-</ul>
-</dd>
-</dl>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="tts-ulp-equal"></span><dl class="macro">
+<dt id="c.TTS_ULP_EQUAL">
+<span class="target" id="a00164_1a00f8f2283ac761d8cf23974a3a200d48"></span><code class="sig-name descname">TTS_ULP_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, ULP<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ULP_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if two values are within a given ULP distance. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
 <p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/precision.hpp&gt;</span>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;ULP distance&quot;</span><span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;ULP distance&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="k">auto</span> <span class="n">pi</span>   <span class="o">=</span> <span class="mf">3.14159265358979323846</span><span class="p">;</span>
-  <span class="k">auto</span> <span class="n">eps</span>  <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">epsilon</span><span class="p">();</span>
+  <span class="n">auto</span> <span class="n">pi</span>   <span class="o">=</span> <span class="mf">3.14159265358979323846</span><span class="p">;</span>
+  <span class="n">auto</span> <span class="n">eps</span>  <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">::</span><span class="n">epsilon</span><span class="p">();</span>
 
-  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span><span class="sc">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80LL</span>                   <span class="p">,</span> <span class="mf">15.</span>         <span class="p">);</span>
-  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="mf">1.f</span> <span class="p">,</span> <span class="mf">1.f</span><span class="o">+</span><span class="n">eps</span>                <span class="p">,</span> <span class="mf">0.5</span>         <span class="p">);</span>
-  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="n">pi</span>  <span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span> <span class="p">,</span> <span class="mf">9.84293e+07</span> <span class="p">);</span>
-  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="mf">1.</span>  <span class="p">,</span> <span class="kt">short</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>               <span class="p">,</span> <span class="mf">0.</span>          <span class="p">);</span>
+  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span><span class="s1">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80</span><span class="n">LL</span>                   <span class="p">,</span> <span class="mf">15.</span>         <span class="p">);</span>
+  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="mf">1.</span><span class="n">f</span> <span class="p">,</span> <span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="n">eps</span>                <span class="p">,</span> <span class="mf">0.5</span>         <span class="p">);</span>
+  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="n">pi</span>  <span class="p">,</span> <span class="n">static_cast</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span> <span class="p">,</span> <span class="mf">9.84293e+07</span> <span class="p">);</span>
+  <span class="n">TTS_ULP_EQUAL</span><span class="p">(</span> <span class="mf">1.</span>  <span class="p">,</span> <span class="n">short</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>               <span class="p">,</span> <span class="mf">0.</span>          <span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-ieee-equal">
-<span id="id2"></span><h2>TTS_IEEE_EQUAL<a class="headerlink" href="#tts-ieee-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_IEEE_EQUAL( LHS, RHS )</span>
-</pre></div>
-</div>
-<p>Checks if the ULP distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is exactly equal to 0. Note that, contrary to
-<a class="reference internal" href="relation.html#tts-equal"><span class="std std-ref">TTS_EQUAL</span></a>, this macro allows comparison of infinites or NaN values.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-ulp"><span class="std std-ref">Custom ULP Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compares</p></li>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code> overload. In the case one needs to perform a custom ULP comparison, see the <a class="reference external" href="../extension.html#custom-ulp-comparison">Custom ULP Comparison</a> section.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ULP</span></code>: Maximum number of ULPs between the two values to compare </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;IEEE equality&quot;</span><span class="p">)</span>
+<span class="target" id="tts-ieee-equal"></span><dl class="macro">
+<dt id="c.TTS_IEEE_EQUAL">
+<span class="target" id="a00164_1a550c39f250f23f36e2567becce49b7b8"></span><code class="sig-name descname">TTS_IEEE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_IEEE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if two values are equal at 0 ULP. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if the ULP distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is exactly equal to 0. Contrary to TTS_EQUAL, this test handles comparison with infinites or NaN values.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/precision.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;IEEE equality&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">quiet_NaN</span><span class="p">();</span>
+  <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">::</span><span class="n">quiet_NaN</span><span class="p">();</span>
   <span class="n">TTS_IEEE_EQUAL</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
 
-  <span class="n">TTS_IEEE_EQUAL</span><span class="p">(</span><span class="mf">1.f</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">);</span>
+  <span class="n">TTS_IEEE_EQUAL</span><span class="p">(</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span> <span class="mf">1.</span><span class="n">f</span><span class="p">);</span>
   <span class="n">TTS_IEEE_EQUAL</span><span class="p">(</span><span class="mf">2.</span> <span class="p">,</span> <span class="mf">2.</span> <span class="p">);</span>
-  <span class="n">TTS_IEEE_EQUAL</span><span class="p">(</span><span class="mi">65</span> <span class="p">,</span> <span class="sc">&#39;A&#39;</span><span class="p">);</span>
+  <span class="n">TTS_IEEE_EQUAL</span><span class="p">(</span><span class="mi">65</span> <span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-relative-equal">
-<span id="tts-rel-equal"></span><h2>TTS_RELATIVE_EQUAL<a class="headerlink" href="#tts-relative-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_RELATIVE_EQUAL( LHS, RHS, THRES )</span>
-</pre></div>
-</div>
-<p>Checks if the relative distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to <code class="docutils literal notranslate"><span class="pre">THRES</span></code> percent.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Relative comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::reldist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-rel"><span class="std std-ref">Custom Relative Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compares</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">THRES</span></code>       : Maximum percentage between the two values to compare</p></li>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code> overload. In the case one needs to perform a custom ULP comparison, see the <a class="reference external" href="../extension.html#custom-ulp-comparison">Custom ULP Comparison</a> section.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;Relative distance between different types&quot;</span><span class="p">)</span>
+<span class="target" id="tts-rel-equal"></span><dl class="macro">
+<dt id="c.TTS_RELATIVE_EQUAL">
+<span class="target" id="a00164_1a0c1eaae31b310a3c37ed887a0627acf7"></span><code class="sig-name descname">TTS_RELATIVE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, P<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_RELATIVE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if two values are within a given percentage. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if the relative distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to <code class="docutils literal notranslate"><span class="pre">P</span></code> percent.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/precision.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;Relative distance&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">42.f</span> <span class="p">,</span> <span class="mf">42.f</span>  <span class="p">,</span> <span class="mi">0</span>     <span class="p">);</span>
-  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="sc">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80LL</span>  <span class="p">,</span> <span class="mf">18.75</span> <span class="p">);</span>
-  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">1.</span>   <span class="p">,</span> <span class="mf">2.f</span>   <span class="p">,</span> <span class="mf">100.</span>  <span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">42.</span><span class="n">f</span> <span class="p">,</span> <span class="mf">42.</span><span class="n">f</span>  <span class="p">,</span> <span class="mi">0</span>     <span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="s1">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80</span><span class="n">LL</span>  <span class="p">,</span> <span class="mf">18.75</span> <span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">1.</span>   <span class="p">,</span> <span class="mf">2.</span><span class="n">f</span>   <span class="p">,</span> <span class="mf">100.</span>  <span class="p">);</span>
   <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mi">1</span>    <span class="p">,</span> <span class="mi">10</span>    <span class="p">,</span> <span class="mf">900.</span>  <span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-absolute-equal">
-<span id="tts-abs-equal"></span><h2>TTS_ABSOLUTE_EQUAL<a class="headerlink" href="#tts-absolute-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_ABSOLUTE_EQUAL( LHS, RHS, THRES )</span>
-</pre></div>
-</div>
-<p>Checks if the absolute distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to <code class="docutils literal notranslate"><span class="pre">THRES</span></code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Absolute comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::absdist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-abs"><span class="std std-ref">Custom Absolute Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compares</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">THRES</span></code>       : Maximum value between the two values to compare</p></li>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Relative comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::reldist</span></code> overload. In the case one needs to perform a custom relative distance comparison, see the <a class="reference external" href="../extension.html#custom-relative-comparison">Custom Relative Comparison</a> section.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code>: Maximum error percentage between the two values to compare </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;Absolute distance between different types&quot;</span><span class="p">)</span>
+<span class="target" id="tts-abs-equal"></span><dl class="macro">
+<dt id="c.TTS_ABSOLUTE_EQUAL">
+<span class="target" id="a00164_1abc253433ca587c926c0f848fbe2966bd"></span><code class="sig-name descname">TTS_ABSOLUTE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, N<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ABSOLUTE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the absolute distance between two values is under a given threshold. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if the absolute distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/precision.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;Relative distance&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">TTS_ABSOLUTE_EQUAL</span><span class="p">(</span><span class="o">-</span><span class="mf">2.</span>  <span class="p">,</span> <span class="mf">2.f</span>  <span class="p">,</span> <span class="mf">4.</span><span class="p">);</span>
-  <span class="n">TTS_ABSOLUTE_EQUAL</span><span class="p">(</span><span class="sc">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80LL</span> <span class="p">,</span> <span class="mi">15</span><span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">42.</span><span class="n">f</span> <span class="p">,</span> <span class="mf">42.</span><span class="n">f</span>  <span class="p">,</span> <span class="mi">0</span>     <span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="s1">&#39;A&#39;</span>  <span class="p">,</span> <span class="mi">80</span><span class="n">LL</span>  <span class="p">,</span> <span class="mf">18.75</span> <span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">1.</span>   <span class="p">,</span> <span class="mf">2.</span><span class="n">f</span>   <span class="p">,</span> <span class="mf">100.</span>  <span class="p">);</span>
+  <span class="n">TTS_RELATIVE_EQUAL</span><span class="p">(</span><span class="mi">1</span>    <span class="p">,</span> <span class="mi">10</span>    <span class="p">,</span> <span class="mf">900.</span>  <span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+ <dl class="simple">
+<dt><strong>Note</strong></dt><dd><p>Absolute comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::absdist</span></code> overload. In the case one needs to perform a custom absolute distance comparison, see the <a class="reference external" href="../extension.html#custom-absolute-comparison">Custom Absolute Comparison</a> section.</p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span></code>: Maximum absolute error between the two values to compare </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 </div>
 

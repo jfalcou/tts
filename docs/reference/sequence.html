@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Sequence Tests &mdash; tts  - (internal version) documentation</title>
+  <title>Sequence Tests &mdash; tts 1.0.0 documentation</title>
   
 
   
@@ -52,7 +52,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> tts
+            <a href="../index.html">
           
 
           
@@ -63,6 +63,10 @@
 
           
             
+            
+              <div class="version">
+                1.0.0
+              </div>
             
           
 
@@ -96,16 +100,11 @@
 <li class="toctree-l2"><a class="reference internal" href="relation.html">Relational Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="precision.html">Precision Tests</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Sequence Tests</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#tts-all-ulp-equal">TTS_ALL_ULP_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-all-ieee-equal">TTS_ALL_IEEE_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-all-relative-equal">TTS_ALL_RELATIVE_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-all-equal">TTS_ALL_EQUAL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#tts-all-absolute-equal">TTS_ALL_ABSOLUTE_EQUAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macros">Macros</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="exception.html">Runtime Error Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="types.html">Types Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fixtures.html">Test Fixtures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="types.html">Type Tests</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../extension.html">Customizing TTS</a></li>
@@ -163,8 +162,6 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/reference/sequence.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -186,215 +183,187 @@
            <div itemprop="articleBody">
             
   <div class="section" id="sequence-tests">
-<h1>Sequence Tests<a class="headerlink" href="#sequence-tests" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="tts-all-ulp-equal">
-<span id="id1"></span><h2>TTS_ALL_ULP_EQUAL<a class="headerlink" href="#tts-all-ulp-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_ALL_ULP_EQUAL( LHS, RHS, THRES )</span>
-</pre></div>
-</div>
-<p>Checks if the ULP distances between all values in the sequences <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> are less
-or equal to  <code class="docutils literal notranslate"><span class="pre">THRES</span></code>.</p>
+<span id="tts-sequence"></span><h1>Sequence Tests<a class="headerlink" href="#sequence-tests" title="Permalink to this headline">¶</a></h1>
+<p>The following component provides macros to perform tests over sequence of values.
+All those macros are based on the fact that the check to perform must pass for every elements
+of the sequence. For convenience, one can substitute one of two of the input sequences by a scalar.
+This scalar will be interpreted as a sequence of one element.</p>
+<p>To use those macros, include the <code class="docutils literal notranslate"><span class="pre">tts/tests/sequence.hpp</span></code> file.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For convenience, one can substitute one of two of the input sequences by a scalar. This scalar
-will be interpreted as a sequence of one element.</p>
+<p>Precision comparisons are, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code>, <code class="docutils literal notranslate"><span class="pre">tts::reldist</span></code> or
+<code class="docutils literal notranslate"><span class="pre">tts::absdist</span></code> overloads. In the case one needs to perform a custom precision comparison, see
+the <a class="reference internal" href="../extension.html#custom-precision"><span class="std std-ref">Custom Precision Comparison</span></a> section.</p>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-ulp"><span class="std std-ref">Custom ULP Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Sequences to compares</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">THRES</span></code>       : Maximum number of ULPs between the values of the two sequences to compare</p></li>
-</ul>
-</dd>
-</dl>
+<div class="section" id="macros">
+<h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="tts-all-ulp-equal"></span><dl class="macro">
+<dt id="c.TTS_ALL_ULP_EQUAL">
+<span class="target" id="a00173_1a405c060aa36e98df8ce91cd4687699d1"></span><code class="sig-name descname">TTS_ALL_ULP_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, ULP<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ALL_ULP_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>ULP distance check for sequences. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/sequence.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if all values of two containers are within a given ULP distance and if both arguments have the same size.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/sequence.hpp&gt;</span>
+<span class="c1">#include &lt;vector&gt;</span>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;ULP distance between sequences&quot;</span><span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;ULP distance between sequences&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="k">auto</span> <span class="n">eps</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">epsilon</span><span class="p">();</span>
+  <span class="n">auto</span> <span class="n">eps</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">::</span><span class="n">epsilon</span><span class="p">();</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="o">+</span><span class="n">eps</span><span class="p">,</span><span class="mf">1.f</span><span class="o">-</span><span class="n">eps</span><span class="p">,</span><span class="mf">1.f</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">eps</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="mf">1.f</span><span class="o">+</span><span class="n">eps</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="n">eps</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="o">-</span><span class="n">eps</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">eps</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="n">eps</span><span class="p">};</span>
 
   <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="n">a</span>  <span class="p">,</span> <span class="n">b</span>   <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
-  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="n">s</span>  <span class="p">,</span> <span class="mf">1.f</span> <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
-  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="mf">1.f</span><span class="p">,</span> <span class="n">s</span>   <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
+  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="n">s</span>  <span class="p">,</span> <span class="mf">1.</span><span class="n">f</span> <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
+  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span> <span class="n">s</span>   <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-all-ieee-equal">
-<span id="id2"></span><h2>TTS_ALL_IEEE_EQUAL<a class="headerlink" href="#tts-all-ieee-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_ALL_IEEE_EQUAL( LHS, RHS )</span>
-</pre></div>
-</div>
-<p>Checks if the ULP distances between all values in the sequences <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> are exactly
-equal to 0. Note that, contrary to <a class="reference internal" href="relation.html#tts-equal"><span class="std std-ref">TTS_EQUAL</span></a>, this macro allows comparison of infinites or
-NaN values.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For convenience, one can substitute one of two of the input sequences by a scalar. This scalar
-will be interpreted as a sequence of one element.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::ulpdist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-ulp"><span class="std std-ref">Custom ULP Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Sequences to compares</p></li>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ULP</span></code>: Maximum number of ULPs between all the values to compare </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;IEEE equality for sequences&quot;</span><span class="p">)</span>
+<span class="target" id="tts-all-ieee-equal"></span><dl class="macro">
+<dt id="c.TTS_ALL_IEEE_EQUAL">
+<span class="target" id="a00173_1a00ad97a7b646b373583ab6b3cfb88ab2"></span><code class="sig-name descname">TTS_ALL_IEEE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ALL_IEEE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exact ULP equality check for sequences. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/sequence.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if all values of two containers are within 0 ULP distance and if both arguments have the same size.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/sequence.hpp&gt;</span>
+<span class="c1">#include &lt;vector&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;IEEE equality for sequences&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;::</span><span class="n">quiet_NaN</span><span class="p">();</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vx</span><span class="p">{</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">};</span>
+  <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">::</span><span class="n">quiet_NaN</span><span class="p">();</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">vx</span><span class="p">{</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">};</span>
 
   <span class="n">TTS_ALL_IEEE_EQUAL</span><span class="p">(</span><span class="n">vx</span><span class="p">,</span><span class="n">vx</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-all-relative-equal">
-<span id="tts-all-rel-equal"></span><h2>TTS_ALL_RELATIVE_EQUAL<a class="headerlink" href="#tts-all-relative-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_RELATIVE_EQUAL( LHS, RHS, THRES )</span>
-</pre></div>
-</div>
-<p>Checks if the relative distances between all values in the sequences <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> are
-less or equal to <code class="docutils literal notranslate"><span class="pre">THRES</span></code> percent.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For convenience, one can substitute one of two of the input sequences by a scalar. This scalar
-will be interpreted as a sequence of one element.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Relative comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::reldist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-rel"><span class="std std-ref">Custom Relative Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Sequences to compares</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">THRES</span></code>       : Maximum percentage between the values of the two sequences to compare</p></li>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
 </ul>
 </dd>
 </dl>
+</p>
+</dd></dl>
+
+<span class="target" id="tts-all-rel-equal"></span><dl class="macro">
+<dt id="c.TTS_ALL_RELATIVE_EQUAL">
+<span class="target" id="a00173_1a1d750915e7883b8b33e0c1ca09fc0d83"></span><code class="sig-name descname">TTS_ALL_RELATIVE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, P<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ALL_RELATIVE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Relative error check for sequences. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/sequence.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if all values of two containers are within a given error percentage and if both arguments have the same size.</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/sequence.hpp&gt;</span>
+<span class="c1">#include &lt;vector&gt;</span>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;Relative distance between sequences&quot;</span><span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;ULP distance between sequences&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.1f</span><span class="p">,</span><span class="mf">0.9f</span><span class="p">,</span><span class="mf">1.3f</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="mf">1.1f</span><span class="p">};</span>
+  <span class="n">auto</span> <span class="n">eps</span> <span class="o">=</span> <span class="n">std</span><span class="p">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span><span class="p">::</span><span class="n">epsilon</span><span class="p">();</span>
 
-  <span class="n">TTS_ALL_RELATIVE_EQUAL</span><span class="p">(</span><span class="n">a</span>  <span class="p">,</span> <span class="n">b</span>   <span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
-  <span class="n">TTS_ALL_RELATIVE_EQUAL</span><span class="p">(</span><span class="n">s</span>  <span class="p">,</span> <span class="mf">1.f</span> <span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
-  <span class="n">TTS_ALL_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">1.f</span><span class="p">,</span> <span class="n">s</span>   <span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="n">eps</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="o">-</span><span class="n">eps</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="mi">3</span><span class="o">*</span><span class="n">eps</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="o">+</span><span class="n">eps</span><span class="p">};</span>
+
+  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="n">a</span>  <span class="p">,</span> <span class="n">b</span>   <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
+  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="n">s</span>  <span class="p">,</span> <span class="mf">1.</span><span class="n">f</span> <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
+  <span class="n">TTS_ALL_ULP_EQUAL</span><span class="p">(</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span> <span class="n">s</span>   <span class="p">,</span> <span class="mf">1.5</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="tts-all-equal">
-<span id="id3"></span><h2>TTS_ALL_EQUAL<a class="headerlink" href="#tts-all-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_ALL_EQUAL( LHS, RHS )</span>
-</pre></div>
-</div>
-<p>Checks if the relative distances between all values in the sequences <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> are
-exactly equal to 0%.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For convenience, one can substitute one of two of the input sequences by a scalar. This scalar
-will be interpreted as a sequence of one element.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>ULP comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::reldist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-rel"><span class="std std-ref">Custom Relative Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Sequences to compares</p></li>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code>: Maximum error percentage between all the values to compare </p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+</p>
+</dd></dl>
 
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;Equality for sequences&quot;</span><span class="p">)</span>
+<span class="target" id="tts-all-equal"></span><dl class="macro">
+<dt id="c.TTS_ALL_EQUAL">
+<span class="target" id="a00173_1a7b813f8e66abe856f51c35daff7f02f9"></span><code class="sig-name descname">TTS_ALL_EQUAL</code><span class="sig-paren">(</span>LHS, RHS<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ALL_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality check for sequences. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/sequence.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if all values of two containers are equals and have the same size.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/sequence.hpp&gt;</span>
+<span class="c1">#include &lt;vector&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;Equality for sequences&quot;</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vx</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">vy</span><span class="p">{</span><span class="mi">6</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">vx</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">vy</span><span class="p">{</span><span class="mi">6</span><span class="p">};</span>
 
   <span class="n">TTS_ALL_EQUAL</span><span class="p">(</span><span class="n">vx</span> <span class="p">,</span><span class="n">vx</span>   <span class="p">);</span>
-  <span class="n">TTS_ALL_EQUAL</span><span class="p">(</span><span class="n">vy</span> <span class="p">,</span> <span class="mf">6.f</span> <span class="p">);</span>
-  <span class="n">TTS_ALL_EQUAL</span><span class="p">(</span><span class="mf">6.f</span><span class="p">,</span> <span class="n">vy</span>  <span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="tts-all-absolute-equal">
-<span id="tts-all-abs-equal"></span><h2>TTS_ALL_ABSOLUTE_EQUAL<a class="headerlink" href="#tts-all-absolute-equal" title="Permalink to this headline">¶</a></h2>
-<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;tts/tests/precision.hpp&gt;</span></code></p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define TTS_ABSOLUTE_EQUAL( LHS, RHS, THRES )</span>
-</pre></div>
-</div>
-<p>Checks if the absolute distances between all values in the sequences <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> are
-less or equal to <code class="docutils literal notranslate"><span class="pre">THRES</span></code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For convenience, one can substitute one of two of the input sequences by a scalar. This scalar
-will be interpreted as a sequence of one element.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Absolute comparison is, by default, handled by the <code class="docutils literal notranslate"><span class="pre">tts::absdist</span></code> overload. In the case one
-needs to perform a custom ULP comparison, see the <a class="reference internal" href="../extension.html#custom-abs"><span class="std std-ref">Custom Absolute Comparison</span></a> section.</p>
-</div>
-<dl class="simple">
-<dt><strong>Parameters</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>, <code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Sequences to compares</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">THRES</span></code>       : Maximum value between the values of the two sequences compare</p></li>
-</ul>
-</dd>
-</dl>
-<p><strong>Example:</strong></p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;tts/tts.hpp&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;tts/tests/precision.hpp&gt;</span><span class="cp"></span>
-
-<span class="n">TTS_CASE</span><span class="p">(</span><span class="s">&quot;Absolute distance between sequences&quot;</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.1f</span><span class="p">,</span><span class="mf">0.9f</span><span class="p">,</span><span class="mf">1.3f</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">,</span><span class="mf">1.f</span><span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="mf">1.1f</span><span class="p">};</span>
-
-  <span class="n">TTS_ALL_ABSOLUTE_EQUAL</span><span class="p">(</span><span class="n">a</span>  <span class="p">,</span> <span class="n">b</span>   <span class="p">,</span> <span class="mf">.4</span><span class="p">);</span>
-  <span class="n">TTS_ALL_ABSOLUTE_EQUAL</span><span class="p">(</span><span class="n">s</span>  <span class="p">,</span> <span class="mf">1.f</span> <span class="p">,</span> <span class="mf">.15</span><span class="p">);</span>
-  <span class="n">TTS_ALL_ABSOLUTE_EQUAL</span><span class="p">(</span><span class="mf">1.f</span><span class="p">,</span> <span class="n">s</span>   <span class="p">,</span> <span class="mf">.15</span><span class="p">);</span>
+  <span class="n">TTS_ALL_EQUAL</span><span class="p">(</span><span class="n">vy</span> <span class="p">,</span> <span class="mf">6.</span><span class="n">f</span> <span class="p">);</span>
+  <span class="n">TTS_ALL_EQUAL</span><span class="p">(</span><span class="mf">6.</span><span class="n">f</span><span class="p">,</span> <span class="n">vy</span>  <span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<span class="target" id="tts-all-abs-equal"></span><dl class="macro">
+<dt id="c.TTS_ALL_ABSOLUTE_EQUAL">
+<span class="target" id="a00173_1a0fc2dd7d61822e7b197002ea01db505b"></span><code class="sig-name descname">TTS_ALL_ABSOLUTE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, X<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ALL_ABSOLUTE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Absolute distance check for sequences. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/sequence.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Checks if all values of two containers are within a given absolute distance and have the same size.</p>
+<p><strong>Example:</strong></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;tts/tts.hpp&gt;</span>
+<span class="c1">#include &lt;tts/tests/sequence.hpp&gt;</span>
+
+<span class="n">TTS_CASE</span><span class="p">(</span><span class="s2">&quot;Relative distance between sequences&quot;</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.1</span><span class="n">f</span><span class="p">,</span><span class="mf">0.9</span><span class="n">f</span><span class="p">,</span><span class="mf">1.3</span><span class="n">f</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">{</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span><span class="mf">1.</span><span class="n">f</span><span class="p">};</span>
+  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">float</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">{</span><span class="mf">1.1</span><span class="n">f</span><span class="p">};</span>
+
+  <span class="n">TTS_ALL_RELATIVE_EQUAL</span><span class="p">(</span><span class="n">a</span>  <span class="p">,</span> <span class="n">b</span>   <span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+  <span class="n">TTS_ALL_RELATIVE_EQUAL</span><span class="p">(</span><span class="n">s</span>  <span class="p">,</span> <span class="mf">1.</span><span class="n">f</span> <span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+  <span class="n">TTS_ALL_RELATIVE_EQUAL</span><span class="p">(</span><span class="mf">1.</span><span class="n">f</span><span class="p">,</span> <span class="n">s</span>   <span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+ <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RHS</span></code>: Expression to compare </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code>: Maximum error between all the values to compare </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
 </div>
 </div>
 
