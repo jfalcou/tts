@@ -33,6 +33,9 @@ Reference Manual
 - :ref:`tts-exceptions`
    - :ref:`TTS_THROW <tts-throw>`
    - :ref:`TTS_NO_THROW <tts-no-throw>`
+- :ref:`tts-types`
+   - :ref:`TTS_TYPE_IS <tts-type-is>`
+   - :ref:`TTS_EXPR_IS <tts-expr-is>`
 
 .. toctree::
    :hidden:

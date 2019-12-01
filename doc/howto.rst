@@ -216,18 +216,22 @@ These macros are accessible in the ``tts/unit/tests/exceptions.hpp`` file.
 
 Type Related Tests
 ^^^^^^^^^^^^^^^^^^
+
 Those tests check if a given type or type of expression is verify some relation with another types
 or some general types requirements.
 
-+---------------------+--------------------------------------------------------------------+
-| Macro               | Description                                                        |
-+=====================+====================================================================+
-| :ref:`TTS_ <tts-type-is`  | Checks if two types are the same                                   |
-+---------------------+--------------------------------------------------------------------+
-| :ref:`TTS_ <tts-expr-is`  | Checks if a given expression evaluates to a result of a given type |
-+---------------------+--------------------------------------------------------------------+
++-----------------------------------+--------------------------------------------------------------------+
+| Macro                             | Description                                                        |
++===================================+====================================================================+
+| :ref:`TTS_TYPE_IS <tts-type-is>`  | Checks if two types are the same                                   |
++-----------------------------------+--------------------------------------------------------------------+
+| :ref:`TTS_EXPR_IS <tts-expr-is>`  | Checks if a given expression evaluates to a result of a given type |
++-----------------------------------+--------------------------------------------------------------------+
 
 These macros are accessible in the ``tts/unit/tests/types.hpp`` file.
+
+Dataset Testing
+^^^^^^^^^^^^^^^
 
 .. rubric:: Footnotes
 

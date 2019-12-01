@@ -1,11 +1,11 @@
 //==================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright 2018 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
-**/
+*/
 //==================================================================================================
 #ifndef TTS_TESTS_TYPES_HPP_INCLUDED
 #define TTS_TESTS_TYPES_HPP_INCLUDED
@@ -15,13 +15,22 @@
 #include <tts/tests/basic.hpp>
 #include <type_traits>
 
-/*!
-  @ingroup group-unit
-  @brief Check for type equality
-  For a given types @c T and  @c Type, consider the test successful if and only if
-  @c std::is_same<T,Type> evaluates to @true_.
-  @param Type Second type to compare
+//==================================================================================================
+/**
+  * @brief Check for type equivalence
+  *
+  * **Required header:** `#include <tts/tests/types.hpp>`
+  *
+  * Checks if two types satisfy `std::is_same_v<T1,T2> == true`.
+  *
+  * **Example:**
+  *
+  * @snippet types.cpp type_is
+  *
+  *  @param T1 Type to compare
+  *  @param T2 Type to compare
 **/
+//==================================================================================================
 #define TTS_TYPE_IS(T, Type)                                                                       \
   do                                                                                               \
   {                                                                                                \
@@ -39,16 +48,27 @@
                             << ::tts::detail::red_(tts::type_id<TTS_REMOVE_PARENS(T)>())           \
           << " instead");                                                                          \
     }                                                                                              \
-  } while(::tts::detail::is_false()) /**/
+  } while(::tts::detail::is_false())
+/**/
 
-/*!
-  @ingroup group-unit
-  @brief Check for type equality
-  For a given expression @c Expression and a given type @c Type, consider the test successful if
-  and only if @c std::is_same<decltype(Expression),Type> evaluates to @true_ .
+//==================================================================================================
+/**
+  * @brief Check for the type of an expression
+  *
+  * **Required header:** `#include <tts/tests/types.hpp>`
+  *
+  * Checks if and expression evaulates to a given type.
+  *
+  * **Example:**
+  *
+  * @snippet types.cpp expr_is
+  *
+  *  @param Expression  Expression to evaluates
+  *  @param Type        Expected expression type
 **/
+//==================================================================================================
 #define TTS_EXPR_IS(Expression, Type)                                                              \
-  TTS_TYPE_IS(decltype(TTS_REMOVE_PARENS(Expression)), Type)                                       \
-  /**/
+  TTS_TYPE_IS(decltype(TTS_REMOVE_PARENS(Expression)), Type)
+/**/
 
 #endif
