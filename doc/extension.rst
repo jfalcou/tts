@@ -32,6 +32,12 @@ TTS supports options that can be passed as command line arguments of the test bi
 |                |          |   ``./my_test --help``                                                |
 +----------------+----------+-----------------------------------------------------------------------+
 
+.. _custom-driver:
+
+Custom Test Driver
+------------------
+
+TODO
 
 .. _custom-comparison:
 
@@ -79,9 +85,10 @@ Custom Absolute Comparison
 
 TODO
 
-.. _custom-driver:
 
-Custom Driver
--------------
+.. _custom-producer:
+
+Custom Data Producer
+--------------------
 
 TODO
