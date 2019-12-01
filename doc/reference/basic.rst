@@ -3,7 +3,7 @@
 Basic Tests
 ===========
 
-The following component provides macros to perform basic text over expression that
+The following component provides macros to perform basic tests over expression that
 simply evaluates as a boolean value.
 
 To use those macros, include the ``tts/tests/basic.hpp`` file.

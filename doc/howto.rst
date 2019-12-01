@@ -199,18 +199,18 @@ These macros are accessible in the ``tts/unit/tests/sequence.hpp`` header file.
 
 Runtime Error Tests
 ^^^^^^^^^^^^^^^^^^^
-Those tests check if a given expression exhibit a given runtime behavior with respect
-to exceptions and assertions. Expression can be tested for being able to throw or not
-and to trigger an assertion failure or not. Note that those test macros requires the
-exception to be detected to inherits from ``std::exception``.
 
-+---------------------+-------------------------------------------------------------------+
-| Macro               | Description                                                       |
-+=====================+===================================================================+
-| :ref:`TTS_ <tts-throw`    | Checks if a given expression throws an exception of a given type  |
-+---------------------+-------------------------------------------------------------------+
-| :ref:`TTS_ <tts-no-throw` | Checks if a given expression does not throw                       |
-+---------------------+-------------------------------------------------------------------+
+Those tests check if a given expression exhibit a given runtime behavior with respect
+to exceptions. Expression can be tested for being able to throw or not. Note that those
+test macros requires the exception to be detected to inherits from ``std::exception``.
+
++------------------------------------+-------------------------------------------------------------------+
+| Macro                              | Description                                                       |
++====================================+===================================================================+
+| :ref:`TTS_THROW <tts-throw>`       | Checks if a given expression throws an exception of a given type  |
++------------------------------------+-------------------------------------------------------------------+
+| :ref:`TTS_NO_THROW <tts-no-throw>` | Checks if a given expression does not throw                       |
++------------------------------------+-------------------------------------------------------------------+
 
 These macros are accessible in the ``tts/unit/tests/exceptions.hpp`` file.
 
