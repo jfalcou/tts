@@ -17,19 +17,27 @@
 #include <tts/detail/args.hpp>
 #include <tts/tests/infos.hpp>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <vector>
 #include <string>
+
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
 
 namespace tts
 {
   // CRTP base class for data producer
   template<typename T> struct producer
   {
-    auto        next()            { return static_cast<T&>(*this).next();       }
-    std::size_t size()      const { return static_cast<T const&>(*this).size(); }
-    static auto prng_seed()       { return args.seed(); }
-    static auto count()           { return args.count(); }
+    auto        next()            { return self().next();   }
+    std::size_t size()      const { return self().size();   }
+    static auto prng_seed()       { return args.seed();     }
+    static auto count()           { return args.count();    }
+
+    auto&       self()        { return static_cast<T&>(*this);        }
+    auto const& self() const  { return static_cast<T const&>(*this);  }
   };
 
   template<typename T> struct checker
@@ -48,59 +56,108 @@ namespace tts
 
     checker() : histogram(nb_buckets),
                 sample_values(nb_buckets),
-                expected_values(nb_buckets),
-                result_values(nb_buckets),
+                expected_values(nb_buckets), result_values(nb_buckets),
                 char_shift(std::numeric_limits<T>::digits10 + 2), bar(100,'-')
     {
     }
 
+    static std::size_t thread_id()
+    {
+      #if defined(_OPENMP)
+      return omp_get_thread_num();
+      #else
+      return 0;
+      #endif
+    }
+
+    static std::size_t thread_count()
+    {
+      #if defined(_OPENMP)
+      return omp_get_num_threads();
+      #else
+      return 1;
+      #endif
+    }
+
     template<typename P, typename RefFunc, typename OtherFunc>
-    void run(producer<P>& p, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs)
+    void run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs)
     {
       std::cout << bar << "\n";
-      std::cout << p.size() << " inputs comparing " << fs << " vs " << gs
+      std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
                 << " using " << tts::type_id<P>()
                 << "\n";
       std::cout << bar << "\n";
       std::cout << std::left  << std::setw(12)            << "Max ULP"
                               << std::setw(12)            << "Count (#)"
-                              << std::setw(12)            << "Ratio (%)"
+                              << std::setw(10)            << "Ratio (%)"
                               << std::setw(char_shift+8)  << "Results"
                               << "\n";
       std::cout << bar << std::endl;
 
-      for(std::size_t i = 0 ; i < p.size(); ++i)
+      // Compute histogram in parallel
+      #pragma omp parallel
       {
-        auto v          = p.next();
-        auto reference  = f(v);
-        auto challenger = g(v);
+        auto sz = thread_count();
+        auto id = thread_id();
+        auto per_thread = q.size()/sz + ((id < q.size()%sz) ? 1 : 0);
+        P p(q, id, per_thread, sz);
 
-        auto ulp = ::tts::ulpdist(reference, challenger);
+        std::vector<std::size_t>  local_histogram(nb_buckets);
+        std::vector<T>            local_sample_values(nb_buckets, std::numeric_limits<T>::max());
+        std::vector<bool>         found(nb_buckets);
 
-        // Find bucket to be the upper power of 2 of ulp
-        std::size_t bucket;
+        #pragma omp for schedule(static)
+        for(std::size_t i = 0 ; i < p.size(); ++i)
+        {
+          auto v          = p.next();
+          auto reference  = f(v);
+          auto challenger = g(v);
 
-             if(ulp == 0       ) bucket = 0;
-        else if(ulp == 0.5     ) bucket = 1;
-        else if(std::isinf(ulp)) bucket = nb_buckets-1;
-        else                     bucket = std::min<std::size_t> ( nb_buckets-2,
-                                                                  std::log2(next2(std::ceil(ulp)))+2
-                                                                );
+          auto ulp = ::tts::ulpdist(reference, challenger);
 
-        sample_values[bucket]    = v;
-        expected_values[bucket]  = reference;
-        result_values[bucket]    = challenger;
-        histogram[bucket]++;
+          // Find bucket to be the upper power of 2 of ulp
+          std::size_t bucket;
+
+               if(ulp == 0       ) bucket = 0;
+          else if(ulp == 0.5     ) bucket = 1;
+          else if(std::isinf(ulp)) bucket = nb_buckets-1;
+          else                     bucket = std::min<std::size_t> ( nb_buckets-2,
+                                                                    std::log2(next2(ulp))+2
+                                                                  );
+
+          if( found[bucket] == false)
+          {
+            found[bucket]           = true;
+            sample_values[bucket]   = v;
+          }
+
+          local_histogram[bucket]++;
+        }
+
+        #pragma omp barrier
+
+        // Merge histogram
+        #pragma omp critical
+        {
+          for(std::size_t i=0;i<nb_buckets;++i)
+          {
+            histogram[i]       += local_histogram[i];
+            sample_values[i]    = std::min(sample_values[i], local_sample_values[i]);
+            expected_values[i]  = f(sample_values[i]);
+            result_values[i]    = g(sample_values[i]);
+          }
+        }
       }
 
       for(std::size_t i=0;i<histogram.size();++i)
-        display(i,p.size());
+        display(i,q.size());
 
       std::cout << bar << "\n";
     }
 
-    static std::size_t next2( std::size_t v )
+    static std::size_t next2( double x )
     {
+      std::size_t v = std::ceil(x);
       v--;
       v |= v >> 1; v |= v >> 2; v |= v >> 4; v |= v >> 8; v |= v >> 16;
       v++;
@@ -130,7 +187,7 @@ namespace tts
                   << std::setprecision(5)
                   << std::left << std::setw(12)  <<  histogram[u]
                   << std::setprecision(5)
-                  << std::left << std::setw(12)  <<  ratio(histogram[u],cnt)
+                  << std::left << std::setw(10)  <<  ratio(histogram[u],cnt)
                   << std::setprecision(char_shift*4) << "Found: "
                   << std::left <<  sample_values[u]  << " = "
                   << std::left <<  result_values[u] << " instead of "
