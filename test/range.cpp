@@ -11,17 +11,23 @@
 #include <tts/tests/range.hpp>
 #include <cmath>
 
-template<typename T> struct random_producer : tts::producer<random_producer<T>>
+template<typename T> struct some_producer : tts::producer<some_producer<T>>
 {
   using value_type = T;
 
-  random_producer(std::size_t count, value_type s = {}) : seed_{s}, count_(count), step_{0} {}
+  some_producer(std::size_t count, value_type s = {}) : seed_{s}, count_(count) {}
+
+  template<typename P>
+  some_producer ( P const& src, std::size_t i, std::size_t p, std::size_t)
+                : some_producer(src.self())
+  {
+    seed_ += i*p;
+  }
 
   value_type  next()
   {
-    step_++;
     auto old = seed_;
-    seed_ += 0.01f;
+    seed_ += 1.f;
     return old;
   }
 
@@ -29,14 +35,14 @@ template<typename T> struct random_producer : tts::producer<random_producer<T>>
 
   private:
   T seed_;
-  std::size_t count_, step_;
+  std::size_t count_;
 };
 
-float sin_x(float x)      { return std::sqrt(x); }
-float sin_rough(float x)  { return std::sqrt(x)+1e-4; }
+float ok_x  (float x) { return std::sqrt(x); }
+float ajar_x(float x) { return std::sqrt(x)+1e-6; }
 
 TTS_CASE( "Default-constructed pointer behavior" )
 {
-  random_producer<float>  p(147896325);
-  TTS_RANGE_CHECK(p,sin_x,sin_rough);
+  some_producer<float>  p(200);
+  TTS_RANGE_CHECK(p,ok_x,ajar_x);
 }
