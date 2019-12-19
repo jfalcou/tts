@@ -1,0 +1,19 @@
+##==================================================================================================
+##  TTS - Tiny Test System
+##  Copyright 2018 Joel FALCOU
+##
+##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+##  SPDX-License-Identifier: MIT
+##==================================================================================================
+get_filename_component(tts_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${tts_CMAKE_DIR})
+list(REMOVE_AT CMAKE_MODULE_PATH -1)
+find_package(OpenMP)
+
+if(NOT TARGET tts::tts)
+    include("${tts_CMAKE_DIR}/ttsTargets.cmake")
+endif()
+
+set(TTS_LIBRARIES tts::tts)

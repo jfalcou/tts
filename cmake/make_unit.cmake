@@ -57,7 +57,16 @@ function(make_unit root)
                                     ${PROJECT_SOURCE_DIR}/src
                               )
 
-    target_link_libraries(${test} tts)
+    # No OpenMP 3.1 on MSVC
+    if( MSVC )
+      target_link_libraries(${test} tts)
+    else()
+      if(OpenMP_CXX_FOUND)
+        target_link_libraries(${test} tts OpenMP::OpenMP_CXX)
+      else()
+        target_link_libraries(${test} tts)
+      endif()
+    endif()
 
     add_target_parent(${test})
     add_dependencies(unit ${test})
