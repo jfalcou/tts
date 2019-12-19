@@ -26,6 +26,44 @@
 #include <omp.h>
 #endif
 
+namespace tts::detail
+{
+
+  class text_field
+  {
+    int width_;
+
+    public:
+    text_field( int width ) : width_( width ) {}
+    friend std::ostream& operator<<( std::ostream& os, text_field const& manip )
+    {
+      os.setf( std::ios_base::left, std::ios_base::adjustfield );
+      os.fill( ' ' );
+      os.width( manip.width_ );
+      os.precision( 2 );
+      return os;
+    }
+  };
+
+  class value_field
+  {
+    int width_, myPrec;
+
+    public:
+    value_field( int width, int prec = 2 ) : width_( width ), myPrec(prec) {}
+    friend std::ostream&
+    operator<<( std::ostream& os, value_field const& manip )
+    {
+        os.setf( std::ios_base::left , std::ios_base::adjustfield );
+        os.setf( std::ios_base::fixed, std::ios_base::floatfield  );
+        os.fill( ' ' );
+        os.precision( manip.myPrec );
+        os.width( manip.width_ );
+        return os;
+    }
+  };
+}
+
 namespace tts
 {
   // CRTP base class for data producer
@@ -50,6 +88,8 @@ namespace tts
     std::size_t               char_shift;
     std::string               bar;
 
+    using base_type = std::decay_t<decltype(*tts::detail::begin(T()))>;
+
     // 0 + inf + 0.5 + 16 bits = all ulp between 0, 0.5 and 65536
     static constexpr std::size_t nb_buckets = 2+1+16;
     public:
@@ -57,7 +97,7 @@ namespace tts
     checker() : histogram(nb_buckets),
                 sample_values(nb_buckets),
                 expected_values(nb_buckets), result_values(nb_buckets),
-                char_shift(std::numeric_limits<T>::digits10 + 2), bar(100,'-')
+                char_shift(std::numeric_limits<base_type>::digits10+2), bar(100,'-')
     {
     }
 
@@ -87,10 +127,10 @@ namespace tts
                 << " using " << tts::type_id<P>()
                 << "\n";
       std::cout << bar << "\n";
-      std::cout << std::left  << std::setw(12)            << "Max ULP"
-                              << std::setw(12)            << "Count (#)"
-                              << std::setw(10)            << "Ratio (%)"
-                              << std::setw(char_shift+8)  << "Results"
+      std::cout << std::left  << detail::text_field(16) << "Max ULP"
+                              << detail::text_field(16) << "Count (#)"
+                              << detail::text_field(16) << "Ratio (%)"
+                              << detail::text_field(10) << "Results"
                               << "\n";
       std::cout << bar << std::endl;
 
@@ -182,16 +222,12 @@ namespace tts
 
       if(histogram[u])
       {
-        std::cout << std::setprecision(4)
-                  << std::left << std::setw(12)   << ulps
-                  << std::setprecision(5)
-                  << std::left << std::setw(12)  <<  histogram[u]
-                  << std::setprecision(5)
-                  << std::left << std::setw(10)  <<  ratio(histogram[u],cnt)
-                  << std::setprecision(char_shift*4) << "Found: "
-                  << std::left <<  sample_values[u]  << " = "
-                  << std::left <<  result_values[u] << " instead of "
-                  << std::left <<  expected_values[u]
+        std::cout << detail::text_field(16)   <<  ulps
+                  << detail::value_field(16)  <<  histogram[u]
+                  << detail::value_field(16)  <<  ratio(histogram[u],cnt)
+                  << detail::value_field(10,char_shift) << "Found: "
+                  << sample_values[u]  << " = " << result_values[u]
+                  << " instead of " << expected_values[u]
                   << "\n";
       }
     }
