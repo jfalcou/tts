@@ -1,51 +1,24 @@
 version: 2.0
 
 jobs:
-  clang-7:
+  clang:
     docker:
-      - image: teeks99/clang-ubuntu:7
+      - image: ubuntu:disco
     steps:
       - checkout
       - run:
           name: Setup dependencies
           command: . .circleci/prepare.sh
       - run:
-          name: Install GIT
-          command: 'apt-get update && sudo apt-get install -y git'
-      - run:
-          name: Running tests
-          command: . .circleci/run.sh clang++-7
-
-  clang-8:
-    docker:
-      - image: teeks99/clang-ubuntu:8
-    steps:
-      - checkout
-      - run:
-          name: Setup dependencies
-          command: . .circleci/prepare.sh
-      - run:
-          name: Install GIT
-          command: 'apt-get update && sudo apt-get install -y git'
+          name: Install clang-8
+          command: 'apt-get update && sudo apt-get install -y clang-8'
       - run:
           name: Running tests
           command: . .circleci/run.sh clang++-8
 
-  gcc-8:
+  gcc:
     docker:
       - image: gcc:latest
-    steps:
-      - checkout
-      - run:
-          name: Setup dependencies
-          command: . .circleci/prepare.sh
-      - run:
-          name: Running tests
-          command: . .circleci/run.sh g++
-
-  gcc-7:
-    docker:
-      - image: gcc:7
     steps:
       - checkout
       - run:
@@ -59,7 +32,5 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - gcc-8
-      - gcc-7
-      - clang-7
-      - clang-8
+      - gcc
+      - clang
