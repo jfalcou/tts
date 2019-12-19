@@ -18,6 +18,8 @@ add_library ( tts SHARED
               type_id.cpp
             )
 
+add_library(tts::tts ALIAS tts)
+
 if( MSVC )
   set( options /std:c++latest /W3 /EHsc)
 else()
