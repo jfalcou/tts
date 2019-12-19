@@ -27,6 +27,8 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
   template<typename V1, typename V2>
   static auto compare(V1 const& v1, V2 const& v2) { return std::min(v1,v2); }
 
+  static auto max() { return std::numeric_limits<T>::max(); }
+
   value_type  next()
   {
     auto old = seed_;
