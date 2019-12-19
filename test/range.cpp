@@ -24,6 +24,9 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
     seed_ += i*p;
   }
 
+  template<typename V1, typename V2>
+  static auto compare(V1 const& v1, V2 const& v2) { return std::min(v1,v2); }
+
   value_type  next()
   {
     auto old = seed_;

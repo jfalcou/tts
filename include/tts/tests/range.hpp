@@ -142,7 +142,7 @@ namespace tts
           for(std::size_t i=0;i<nb_buckets;++i)
           {
             histogram[i]       += local_histogram[i];
-            sample_values[i]    = std::min(sample_values[i], local_sample_values[i]);
+            sample_values[i]    = P::compare(sample_values[i], local_sample_values[i]);
             expected_values[i]  = f(sample_values[i]);
             result_values[i]    = g(sample_values[i]);
           }
