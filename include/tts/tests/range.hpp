@@ -103,7 +103,7 @@ namespace tts
         P p(q, id, per_thread, sz);
 
         std::vector<std::size_t>  local_histogram(nb_buckets);
-        std::vector<T>            local_sample_values(nb_buckets, std::numeric_limits<T>::max());
+        std::vector<T>            local_sample_values(nb_buckets, P::max());
         std::vector<bool>         found(nb_buckets);
 
         #pragma omp for schedule(static)
