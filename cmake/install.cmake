@@ -5,68 +5,70 @@
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.5)
 
 ##==================================================================================================
-## Setup project
+## Install process
 ##==================================================================================================
-project(TTS VERSION 0.1 LANGUAGES CXX)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(GNUInstallDirs)
+set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/tts)
+
+install(TARGETS tts
+    EXPORT tts-targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
 
 ##==================================================================================================
-## Prevent in-source build
+## This is required so that the exported target has the name TTS and not tts
 ##==================================================================================================
-if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
-  message( FATAL_ERROR "[tts] Building in-source, not recommended! Build in a separate directory." )
-endif()
+set_target_properties(tts PROPERTIES EXPORT_NAME tts)
+
+install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
 
 ##==================================================================================================
-## Find OpenMP
+## Export the targets to a script
 ##==================================================================================================
-find_package(OpenMP)
+install(EXPORT tts-targets
+  FILE
+    ttsTargets.cmake
+  NAMESPACE
+    tts::
+  DESTINATION
+    ${INSTALL_CONFIGDIR}
+)
 
 ##==================================================================================================
-## Compute version string and mode
+## Create a ConfigVersion.cmake file
 ##==================================================================================================
-include(parse_revision)
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/ttsConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/ttsConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/ttsConfig.cmake
+    INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
+)
 
 ##==================================================================================================
-## Add src CMake's
+##Install the config, configversion and custom find modules
 ##==================================================================================================
-add_subdirectory(${PROJECT_SOURCE_DIR}/src)
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/ttsConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/ttsConfigVersion.cmake
+    DESTINATION ${INSTALL_CONFIGDIR}
+)
 
 ##==================================================================================================
-## Options
+## Exporting from the build tree
 ##==================================================================================================
-option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
-option( TTS_BUILD_DOC     "Build doc for tts"       ON  )
-option( TTS_IS_DEPENDENT  "Dependent mode for tts"  OFF )
+export(EXPORT tts-targets FILE ${CMAKE_CURRENT_BINARY_DIR}/ttsTargets.cmake NAMESPACE tts::)
 
 ##==================================================================================================
-## Setup Documentation
+## Register package in user's package registry
 ##==================================================================================================
-if( TTS_BUILD_DOC )
-  add_subdirectory(doc)
-endif()
-
-##==================================================================================================
-## Setup Install target only if not used as dependent
-##==================================================================================================
-if( NOT TTS_IS_DEPENDENT )
-  include(install)
-else()
-  message(STATUS "[tts] TTS is used as a in-project dependency - No install targets available")
-endif()
-
-##==================================================================================================
-## Setup Testing
-##==================================================================================================
-if( TTS_BUILD_TEST )
-  enable_testing()
-  include(CTest)
-  add_custom_target(tests)
-  add_custom_target(unit)
-
-  add_dependencies(tests unit)
-  add_subdirectory(test)
-endif()
+export(PACKAGE tts)
