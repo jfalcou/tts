@@ -81,14 +81,15 @@ namespace tts
   template<typename T> struct checker
   {
     private:
+    using base_type = std::decay_t<decltype(*tts::detail::begin(T()))>;
+
     std::vector<std::size_t>  histogram;
-    std::vector<T>            sample_values;
-    std::vector<T>            expected_values;
-    std::vector<T>            result_values;
+    std::vector<base_type>    sample_values;
+    std::vector<base_type>    expected_values;
+    std::vector<base_type>    result_values;
     std::size_t               char_shift;
     std::string               bar;
 
-    using base_type = std::decay_t<decltype(*tts::detail::begin(T()))>;
 
     // 0 + inf + 0.5 + 16 bits = all ulp between 0, 0.5 and 65536
     static constexpr std::size_t nb_buckets = 2+1+16;
@@ -139,39 +140,51 @@ namespace tts
       {
         auto sz = thread_count();
         auto id = thread_id();
-        auto per_thread = q.size()/sz + ((id < q.size()%sz) ? 1 : 0);
+        auto per_thread = q.size()/sz + (( (id+1) < (q.size()%sz)) ? 1 : 0);
         P p(q, id, per_thread, sz);
 
         std::vector<std::size_t>  local_histogram(nb_buckets);
-        std::vector<T>            local_sample_values(nb_buckets, P::max());
+        std::vector<base_type>    local_sample_values(nb_buckets, P::max());
         std::vector<bool>         found(nb_buckets);
 
+        auto n = ::tts::detail::size(typename P::value_type{});
+
         #pragma omp for schedule(static)
-        for(std::size_t i = 0 ; i < p.size(); ++i)
+        for(std::size_t i = 0 ; i < p.size(); i+=n)
         {
           auto v          = p.next();
           auto reference  = f(v);
           auto challenger = g(v);
 
-          auto ulp = ::tts::ulpdist(reference, challenger);
+          auto bv = ::tts::detail::begin(v);
+          auto br = ::tts::detail::begin(reference);
+          auto bc = ::tts::detail::begin(challenger);
 
-          // Find bucket to be the upper power of 2 of ulp
-          std::size_t bucket;
-
-               if(ulp == 0       ) bucket = 0;
-          else if(ulp == 0.5     ) bucket = 1;
-          else if(std::isinf(ulp)) bucket = nb_buckets-1;
-          else                     bucket = std::min<std::size_t> ( nb_buckets-2,
-                                                                    std::log2(next2(ulp))+2
-                                                                  );
-
-          if( found[bucket] == false)
+          for(std::size_t k=0;k<n;k++)
           {
-            found[bucket]           = true;
-            sample_values[bucket]   = v;
-          }
+            auto ulp = ::tts::ulpdist(*br, *bc);
 
-          local_histogram[bucket]++;
+            // Find bucket to be the upper power of 2 of ulp
+            std::size_t bucket;
+
+                 if(ulp == 0       ) bucket = 0;
+            else if(ulp == 0.5     ) bucket = 1;
+            else if(std::isinf(ulp)) bucket = nb_buckets-1;
+            else                     bucket = std::min<std::size_t> ( nb_buckets-2,
+                                                                      std::log2(next2(ulp))+2
+                                                                    );
+
+            if( found[bucket] == false)
+            {
+              found[bucket]           = true;
+              sample_values[bucket]   = *bv;
+            }
+
+            local_histogram[bucket]++;
+            bv++;
+            br++;
+            bc++;
+          }
         }
 
         #pragma omp barrier
@@ -182,16 +195,19 @@ namespace tts
           for(std::size_t i=0;i<nb_buckets;++i)
           {
             histogram[i]       += local_histogram[i];
-            sample_values[i]    = P::compare(sample_values[i], local_sample_values[i]);
-            expected_values[i]  = f(sample_values[i]);
-            result_values[i]    = g(sample_values[i]);
+            sample_values[i]    = std::min(sample_values[i], local_sample_values[i]);
+            expected_values[i]  = *::tts::detail::begin(f(sample_values[i]));
+            result_values[i]    = *::tts::detail::begin(g(sample_values[i]));
           }
         }
       }
 
+      std::size_t total = 0;
       for(std::size_t i=0;i<histogram.size();++i)
-        display(i,q.size());
+        total += display(i,q.size(),gs);
 
+      std::cout << bar << "\n";
+      std::cout << detail::text_field(16) << "Total: " << detail::value_field(16)  << total << "\n";
       std::cout << bar << "\n";
     }
 
@@ -205,13 +221,12 @@ namespace tts
       return v;
     }
 
-
     static double ratio(std::size_t value, std::size_t count)
     {
       return 100.*(double(value)/count);
     }
 
-    void display(std::size_t u, std::size_t cnt)
+    auto display(std::size_t u, std::size_t cnt, std::string_view gs)
     {
       double ulps;
 
@@ -226,10 +241,12 @@ namespace tts
                   << detail::value_field(16)  <<  histogram[u]
                   << detail::value_field(16)  <<  ratio(histogram[u],cnt)
                   << detail::value_field(10,char_shift) << "Found: "
-                  << sample_values[u]  << " = " << result_values[u]
-                  << " instead of " << expected_values[u]
-                  << "\n";
+                  << gs << "(" << +sample_values[u]  << ") = " << +result_values[u];
+        if(u) std::cout << " instead of " << +expected_values[u];
+        std::cout << "\n";
       }
+
+      return histogram[u];
     }
   };
 }
