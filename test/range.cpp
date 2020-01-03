@@ -18,21 +18,18 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
   some_producer(std::size_t count, value_type s = {}) : seed_{s}, count_(count) {}
 
   template<typename P>
-  some_producer ( P const& src, std::size_t i, std::size_t p, std::size_t)
+  some_producer ( P const& src, std::size_t i, std::size_t p, std::size_t s)
                 : some_producer(src.self())
   {
     seed_ += i*p;
   }
-
-  template<typename V1, typename V2>
-  static auto compare(V1 const& v1, V2 const& v2) { return std::min(v1,v2); }
 
   static auto max() { return std::numeric_limits<T>::max(); }
 
   value_type  next()
   {
     auto old = seed_;
-    seed_ += 1.f;
+    seed_++;
     return old;
   }
 
@@ -46,8 +43,17 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
 float ok_x  (float x) { return std::sqrt(x); }
 float ajar_x(float x) { return std::sqrt(x)+1e-6; }
 
-TTS_CASE( "Default-constructed pointer behavior" )
+TTS_CASE( "Test some range on float" )
 {
   some_producer<float>  p(200);
   TTS_RANGE_CHECK(p,ok_x,ajar_x);
+}
+
+std::int8_t absc  (std::int8_t x) { return x; }
+std::int8_t absc_c(std::int8_t x) { return x != 78 ? x+1 : x; }
+
+TTS_CASE( "Test some range on int8" )
+{
+  some_producer<std::int8_t>  p(256,-128);
+  TTS_RANGE_CHECK(p,absc,absc_c);
 }
