@@ -24,16 +24,19 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
     seed_ += i*p;
   }
 
-  static auto max() { return std::numeric_limits<T>::max(); }
+  auto first()  const noexcept { return seed_;           }
+  auto last()   const noexcept { return seed_ + count_;  }
 
-  value_type  next()
+  static auto max() noexcept { return std::numeric_limits<T>::max(); }
+
+  value_type  next() noexcept
   {
     auto old = seed_;
     seed_++;
     return old;
   }
 
-  std::size_t size() const { return count_; }
+  std::size_t size() const noexcept { return count_; }
 
   private:
   T seed_;

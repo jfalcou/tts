@@ -69,13 +69,15 @@ namespace tts
   // CRTP base class for data producer
   template<typename T> struct producer
   {
-    auto        next()            { return self().next();   }
-    std::size_t size()      const { return self().size();   }
-    static auto prng_seed()       { return args.seed();     }
-    static auto count()           { return args.count();    }
+    auto        first()     const noexcept { return *tts::detail::begin(self().first());}
+    auto        last()      const noexcept { return *tts::detail::begin(self().last()); }
+    auto        next()            noexcept { return self().next();   }
+    std::size_t size()      const noexcept { return self().size();   }
+    static auto prng_seed()       noexcept { return args.seed();     }
+    static auto count()           noexcept { return args.count();    }
 
-    auto&       self()        { return static_cast<T&>(*this);        }
-    auto const& self() const  { return static_cast<T const&>(*this);  }
+    auto&       self()       noexcept { return static_cast<T&>(*this);        }
+    auto const& self() const noexcept { return static_cast<T const&>(*this);  }
   };
 
   template<typename T> struct checker
@@ -126,6 +128,7 @@ namespace tts
       std::cout << bar << "\n";
       std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
                 << " using " << tts::type_id<P>()
+                << " in range [" << +q.first() << ", " << +q.last() << "["
                 << "\n";
       std::cout << bar << "\n";
       std::cout << std::left  << detail::text_field(16) << "Max ULP"
@@ -135,19 +138,24 @@ namespace tts
                               << "\n";
       std::cout << bar << std::endl;
 
+      std::size_t nbthreads;
+
       // Compute histogram in parallel
       #pragma omp parallel
       {
         auto sz = thread_count();
         auto id = thread_id();
+
+        if (id == 0) nbthreads = sz;
         auto per_thread = q.size()/sz + (( (id+1) < (q.size()%sz)) ? 1 : 0);
+
         P p(q, id, per_thread, sz);
 
         std::vector<std::size_t>  local_histogram(nb_buckets);
         std::vector<base_type>    local_sample_values(nb_buckets, P::max());
         std::vector<bool>         found(nb_buckets);
 
-        auto n = ::tts::detail::size(typename P::value_type{});
+        std::size_t n = ::tts::detail::size(typename P::value_type{});
 
         #pragma omp for schedule(static)
         for(std::size_t i = 0 ; i < p.size(); i+=n)
@@ -209,6 +217,7 @@ namespace tts
       std::cout << bar << "\n";
       std::cout << detail::text_field(16) << "Total: " << detail::value_field(16)  << total << "\n";
       std::cout << bar << "\n";
+      std::cout << "the process used " << nbthreads << " threads.\n";
     }
 
     static std::size_t next2( double x )
@@ -241,9 +250,21 @@ namespace tts
                   << detail::value_field(16)  <<  histogram[u]
                   << detail::value_field(16)  <<  ratio(histogram[u],cnt)
                   << detail::value_field(10,char_shift) << "Found: "
-                  << gs << "(" << +sample_values[u]  << ") = " << +result_values[u];
+                  << gs << "(";
+        if constexpr(std::is_floating_point_v<base_type>)
+        {
+          std::cout << std::scientific;
+        }
+
+        std::cout << +sample_values[u]  << ") = " << +result_values[u];
+
         if(u) std::cout << " instead of " << +expected_values[u];
         std::cout << "\n";
+
+        if constexpr(std::is_floating_point_v<base_type>)
+        {
+          std::cout << std::fixed;
+        }
       }
 
       return histogram[u];
