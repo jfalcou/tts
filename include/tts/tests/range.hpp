@@ -125,11 +125,18 @@ namespace tts
     template<typename P, typename RefFunc, typename OtherFunc>
     void run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs)
     {
+      std::size_t nbthreads;
+
+      #pragma omp parallel
+      {
+        if(!thread_id()) nbthreads = thread_count();
+      }
+
       std::cout << bar << "\n";
       std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
                 << " using " << tts::type_id<P>()
                 << " in range [" << +q.first() << ", " << +q.last() << "["
-                << "\n";
+                << " - Using " << nbthreads << " threads.\n";
       std::cout << bar << "\n";
       std::cout << std::left  << detail::text_field(16) << "Max ULP"
                               << detail::text_field(16) << "Count (#)"
@@ -138,15 +145,11 @@ namespace tts
                               << "\n";
       std::cout << bar << std::endl;
 
-      std::size_t nbthreads;
-
       // Compute histogram in parallel
       #pragma omp parallel
       {
         auto sz = thread_count();
         auto id = thread_id();
-
-        if (id == 0) nbthreads = sz;
         auto per_thread = q.size()/sz + (( (id+1) < (q.size()%sz)) ? 1 : 0);
 
         P p(q, id, per_thread, sz);
@@ -217,7 +220,6 @@ namespace tts
       std::cout << bar << "\n";
       std::cout << detail::text_field(16) << "Total: " << detail::value_field(16)  << total << "\n";
       std::cout << bar << "\n";
-      std::cout << "the process used " << nbthreads << " threads.\n";
     }
 
     static std::size_t next2( double x )
