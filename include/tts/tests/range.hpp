@@ -80,18 +80,17 @@ namespace tts
     auto const& self() const noexcept { return static_cast<T const&>(*this);  }
   };
 
-  template<typename T> struct checker
+  template<typename T, typename S = T> struct checker
   {
     private:
     using base_type = std::decay_t<decltype(*tts::detail::begin(T()))>;
-
+    using resl_type = std::decay_t<decltype(*tts::detail::begin(S()))>;
     std::vector<std::size_t>  histogram;
     std::vector<base_type>    sample_values;
-    std::vector<base_type>    expected_values;
-    std::vector<base_type>    result_values;
+    std::vector<resl_type>    expected_values;
+    std::vector<resl_type>    result_values;
     std::size_t               char_shift;
     std::string               bar;
-
 
     // 0 + inf + 0.5 + 16 bits = all ulp between 0, 0.5 and 65536
     static constexpr std::size_t nb_buckets = 2+1+16;
@@ -135,7 +134,7 @@ namespace tts
       std::cout << bar << "\n";
       std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
                 << " using " << tts::type_id<P>()
-                << " in range [" << +q.first() << ", " << +q.last() << "["
+                << " in range [" << +q.first() << ", " << +q.last() << "]"
                 << " - Using " << nbthreads << " threads.\n";
       std::cout << bar << "\n";
       std::cout << std::left  << detail::text_field(16) << "Max ULP"
@@ -253,20 +252,22 @@ namespace tts
                   << detail::value_field(16)  <<  ratio(histogram[u],cnt)
                   << detail::value_field(10,char_shift) << "Found: "
                   << gs << "(";
-        if constexpr(std::is_floating_point_v<base_type>)
-        {
-          std::cout << std::scientific;
-        }
 
-        std::cout << +sample_values[u]  << ") = " << +result_values[u];
+
+        if constexpr(std::is_floating_point_v<base_type>)
+          std::cout << std::scientific << std::showpos;
+
+        std::cout << +sample_values[u]  << ") = ";
+
+        if constexpr(!std::is_floating_point_v<resl_type>)
+          std::cout << std::fixed << std::noshowpos;
+
+        std::cout << +result_values[u];
 
         if(u) std::cout << " instead of " << +expected_values[u];
         std::cout << "\n";
 
-        if constexpr(std::is_floating_point_v<base_type>)
-        {
-          std::cout << std::fixed;
-        }
+        std::cout << std::fixed<< std::noshowpos;
       }
 
       return histogram[u];
@@ -278,7 +279,9 @@ namespace tts
 #define TTS_RANGE_CHECK(Producer, RefFunc, NewFunc)                                                 \
   do                                                                                                \
   {                                                                                                 \
-    ::tts::checker<typename decltype(Producer)::value_type> local_tts_checker;                      \
+    using local_tts_base_type = typename decltype(Producer)::value_type;                            \
+    using local_tts_resl_type = decltype(RefFunc(local_tts_base_type()));                           \
+    ::tts::checker<local_tts_base_type, local_tts_resl_type> local_tts_checker;                     \
     local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc), TTS_STRING(NewFunc));      \
     TTS_PASS("Range based check completed.");                                                       \
   } while(::tts::detail::is_false())                                                                \
