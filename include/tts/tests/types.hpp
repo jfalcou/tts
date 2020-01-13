@@ -57,7 +57,7 @@
   *
   * **Required header:** `#include <tts/tests/types.hpp>`
   *
-  * Checks if and expression evaulates to a given type.
+  * Checks if an expression evaluates to a given type.
   *
   * **Example:**
   *

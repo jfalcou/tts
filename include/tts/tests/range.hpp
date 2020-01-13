@@ -16,6 +16,7 @@
 #include <tts/detail/ulpdist.hpp>
 #include <tts/detail/args.hpp>
 #include <tts/tests/infos.hpp>
+#include <tts/tests/relation.hpp>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -28,7 +29,6 @@
 
 namespace tts::detail
 {
-
   class text_field
   {
     int width_;
@@ -47,17 +47,17 @@ namespace tts::detail
 
   class value_field
   {
-    int width_, myPrec;
+    int width_, precision_;
 
     public:
-    value_field( int width, int prec = 2 ) : width_( width ), myPrec(prec) {}
+    value_field( int width, int prec = 2 ) : width_( width ), precision_(prec) {}
     friend std::ostream&
     operator<<( std::ostream& os, value_field const& manip )
     {
         os.setf( std::ios_base::left , std::ios_base::adjustfield );
         os.setf( std::ios_base::fixed, std::ios_base::floatfield  );
         os.fill( ' ' );
-        os.precision( manip.myPrec );
+        os.precision( manip.precision_ );
         os.width( manip.width_ );
         return os;
     }
@@ -75,6 +75,7 @@ namespace tts
     std::size_t size()      const noexcept { return self().size();   }
     static auto prng_seed()       noexcept { return args.seed();     }
     static auto count()           noexcept { return args.count();    }
+    static auto ulpmax()          noexcept { return args.ulpmax();   }
 
     auto&       self()       noexcept { return static_cast<T&>(*this);        }
     auto const& self() const noexcept { return static_cast<T const&>(*this);  }
@@ -89,13 +90,13 @@ namespace tts
     std::vector<base_type>    sample_values;
     std::vector<resl_type>    expected_values;
     std::vector<resl_type>    result_values;
+    double                    max_ulp = 0.0;
     std::size_t               char_shift;
     std::string               bar;
 
     // 0 + inf + 0.5 + 16 bits = all ulp between 0, 0.5 and 65536
     static constexpr std::size_t nb_buckets = 2+1+16;
     public:
-
     checker() : histogram(nb_buckets),
                 sample_values(nb_buckets),
                 expected_values(nb_buckets), result_values(nb_buckets),
@@ -122,8 +123,9 @@ namespace tts
     }
 
     template<typename P, typename RefFunc, typename OtherFunc>
-    void run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs)
+    double run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs,  double &threshold)
     {
+      threshold = (threshold > 1.5) ? next2(threshold) : std::ceil(threshold*2)/2;
       std::size_t nbthreads;
 
       #pragma omp parallel
@@ -133,13 +135,14 @@ namespace tts
 
       std::cout << bar << "\n";
       std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
-                << " using " << tts::type_id<P>()
-                << " in range [" << +q.first() << ", " << +q.last() << "]"
-                << " - Using " << nbthreads << " threads.\n";
+                << " with " << tts::type_id<P>()
+                << " in range [" << +q.first() << ", " << +q.last() << "["
+                << " using " << nbthreads << " threads.\n"
+                << "\n";
       std::cout << bar << "\n";
       std::cout << std::left  << detail::text_field(16) << "Max ULP"
                               << detail::text_field(16) << "Count (#)"
-                              << detail::text_field(16) << "Ratio (%)"
+                              << detail::text_field(16) << "Cum. Ratio (%)"
                               << detail::text_field(10) << "Results"
                               << "\n";
       std::cout << bar << std::endl;
@@ -149,9 +152,24 @@ namespace tts
       {
         auto sz = thread_count();
         auto id = thread_id();
-        auto per_thread = q.size()/sz + (( (id+1) < (q.size()%sz)) ? 1 : 0);
+        auto per_thread = q.size()/sz;
+        int i0, i1;
 
-        P p(q, id, per_thread, sz);
+        if (id == 0) nbthreads = sz;
+
+        if(id == sz-1)
+        {
+          per_thread = q.size() - per_thread*(sz-1);
+          i1 = q.size();
+          i0 = i1 - per_thread;
+        }
+        else
+        {
+          i0 = id*per_thread;
+          i1 = (id+1)*per_thread;
+        }
+
+        P p(q, i0, i1, sz);
 
         std::vector<std::size_t>  local_histogram(nb_buckets);
         std::vector<base_type>    local_sample_values(nb_buckets, P::max());
@@ -159,13 +177,13 @@ namespace tts
 
         std::size_t n = ::tts::detail::size(typename P::value_type{});
 
-        #pragma omp for schedule(static)
-        for(std::size_t i = 0 ; i < p.size(); i+=n)
+        double local_max_ulp = 0.0;
+
+        for(auto i = i0 ; i < i1; i+=n)
         {
           auto v          = p.next();
           auto reference  = f(v);
           auto challenger = g(v);
-
           auto bv = ::tts::detail::begin(v);
           auto br = ::tts::detail::begin(reference);
           auto bc = ::tts::detail::begin(challenger);
@@ -175,14 +193,8 @@ namespace tts
             auto ulp = ::tts::ulpdist(*br, *bc);
 
             // Find bucket to be the upper power of 2 of ulp
-            std::size_t bucket;
-
-                 if(ulp == 0       ) bucket = 0;
-            else if(ulp == 0.5     ) bucket = 1;
-            else if(std::isinf(ulp)) bucket = nb_buckets-1;
-            else                     bucket = std::min<std::size_t> ( nb_buckets-2,
-                                                                      std::log2(next2(ulp))+2
-                                                                    );
+            std::size_t bucket = last_bucket_less(ulp);
+            local_max_ulp = std::max(local_max_ulp, ulp);
 
             if( found[bucket] == false)
             {
@@ -209,16 +221,42 @@ namespace tts
             expected_values[i]  = *::tts::detail::begin(f(sample_values[i]));
             result_values[i]    = *::tts::detail::begin(g(sample_values[i]));
           }
+
+          max_ulp = std::max(max_ulp, local_max_ulp);
         }
       }
 
       std::size_t total = 0;
+      std::size_t total_ok = 0;
+      std::size_t last_bucket_ok = last_bucket_less(threshold);
       for(std::size_t i=0;i<histogram.size();++i)
-        total += display(i,q.size(),gs);
+      {
+        std::size_t tmp = display(i,q.size(),gs);
+        total += tmp;
+        if(i <= last_bucket_ok) total_ok += tmp;
+      }
 
       std::cout << bar << "\n";
-      std::cout << detail::text_field(16) << "Total: " << detail::value_field(16)  << total << "\n";
+      std::cout << detail::text_field(16) << "Total:   " << detail::value_field(16)  << total << "\n";
+      std::cout << "Percent of values under "
+                << threshold << " ulp" << ((threshold < 2.0) ? "" : "s" )  << " is "
+                << std::fixed << (total_ok*100.0)/q.size() << "% (" << total_ok
+                << " values over " << q.size() << ").\n";
+
       std::cout << bar << "\n";
+
+      return max_ulp;
+    }
+
+    static std::size_t last_bucket_less(double ulp)
+    {
+      size_t bucket;
+      if     (ulp <= 1.5     ) bucket = std::ceil(ulp*2);
+      else if(std::isinf(ulp)) bucket = nb_buckets-1;
+      else                     bucket = std::min<std::size_t> ( nb_buckets-2,
+                                                                std::log2(next2(ulp))+4
+                                                              );
+      return bucket;
     }
 
     static std::size_t next2( double x )
@@ -238,30 +276,28 @@ namespace tts
 
     auto display(std::size_t u, std::size_t cnt, std::string_view gs)
     {
+      static double cumhist = 0.0;
       double ulps;
 
-           if(u == 0            ) ulps = 0;
-      else if(u == 1            ) ulps = 0.5;
+      if     (u <= 3            ) ulps = u/2.0;
       else if(u == nb_buckets-1 ) ulps = std::numeric_limits<double>::infinity();
-      else                        ulps = 1<<(u-2);
+      else                        ulps = 1<<(u-4);
 
       if(histogram[u])
       {
+        cumhist+= histogram[u];
         std::cout << detail::text_field(16)   <<  ulps
                   << detail::value_field(16)  <<  histogram[u]
-                  << detail::value_field(16)  <<  ratio(histogram[u],cnt)
+                  << detail::value_field(16)  <<  ratio(cumhist,cnt)
                   << detail::value_field(10,char_shift) << "Found: "
                   << gs << "(";
 
-
         if constexpr(std::is_floating_point_v<base_type>)
           std::cout << std::scientific << std::showpos;
-
         std::cout << +sample_values[u]  << ") = ";
 
         if constexpr(!std::is_floating_point_v<resl_type>)
           std::cout << std::fixed << std::noshowpos;
-
         std::cout << +result_values[u];
 
         if(u) std::cout << " instead of " << +expected_values[u];
@@ -276,15 +312,24 @@ namespace tts
 }
 
 // Generate a range based test between two function
-#define TTS_RANGE_CHECK(Producer, RefFunc, NewFunc)                                                 \
+#define TTS_ULP_RANGE_CHECK(Producer, RefFunc, NewFunc, Ulpmax)                                     \
   do                                                                                                \
   {                                                                                                 \
     using local_tts_base_type = typename decltype(Producer)::value_type;                            \
     using local_tts_resl_type = decltype(RefFunc(local_tts_base_type()));                           \
+                                                                                                    \
     ::tts::checker<local_tts_base_type, local_tts_resl_type> local_tts_checker;                     \
-    local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc), TTS_STRING(NewFunc));      \
-    TTS_PASS("Range based check completed.");                                                       \
+                                                                                                    \
+    double local_tts_threshold = ::tts::args.has_ulp() ? Producer.ulpmax() : Ulpmax;   \
+    double local_tts_max_ulp = local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc)  \
+                                                    , TTS_STRING(NewFunc),local_tts_threshold);     \
+                                                                                                    \
+    TTS_LESS_EQUAL(local_tts_max_ulp, local_tts_threshold);                                         \
   } while(::tts::detail::is_false())                                                                \
+/**/
+
+// Generate a range based test between two function
+#define TTS_RANGE_CHECK(Producer, Ref, New) TTS_ULP_RANGE_CHECK(Producer, Ref, New, 2.0)
 /**/
 
 #endif
