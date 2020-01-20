@@ -126,13 +126,13 @@ namespace tts
     double run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs,  double &threshold)
     {
       threshold = (threshold > 1.5) ? next2(threshold) : std::ceil(threshold*2)/2;
-      std::size_t nbthreads;
-
+      std::size_t nbthreads = 1;
+      
       #pragma omp parallel
       {
-        if(!thread_id()) nbthreads = thread_count();
+        if(!thread_id()) nbthreads = thread_count(); 
       }
-
+ 
       std::cout << bar << "\n";
       std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
                 << " with " << tts::type_id<P>()
@@ -153,7 +153,7 @@ namespace tts
         auto sz = thread_count();
         auto id = thread_id();
         auto per_thread = q.size()/sz;
-        int i0, i1;
+        unsigned int i0, i1;
 
         if (id == 0) nbthreads = sz;
 
@@ -320,7 +320,7 @@ namespace tts
                                                                                                     \
     ::tts::checker<local_tts_base_type, local_tts_resl_type> local_tts_checker;                     \
                                                                                                     \
-    double local_tts_threshold = ::tts::args.has_ulp() ? Producer.ulpmax() : Ulpmax;   \
+    double local_tts_threshold = ::tts::args.has_ulp() ? Producer.ulpmax() : Ulpmax;                \
     double local_tts_max_ulp = local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc)  \
                                                     , TTS_STRING(NewFunc),local_tts_threshold);     \
                                                                                                     \
