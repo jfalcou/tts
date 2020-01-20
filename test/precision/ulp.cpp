@@ -62,11 +62,11 @@ TTS_CASE_TPL( "ULP distance between floating point", TTS_IEEE_TYPES)
   TTS_ULP_EQUAL(minf , a     , inf );
   TTS_ULP_EQUAL(minf , minf  , inf );
 
-  TTS_ULP_EQUAL(a, a-eps   , 0.5 );
+  TTS_ULP_EQUAL(a, a-eps   , 1   );
   TTS_ULP_EQUAL(a, a+eps   , 0.5 );
   TTS_ULP_EQUAL(a, a+3*eps , 1.5 );
 
-  TTS_ULP_EQUAL(a-eps  , a , 0.5 );
+  TTS_ULP_EQUAL(a-eps  , a , 1   );
   TTS_ULP_EQUAL(a+eps  , a , 0.5 );
   TTS_ULP_EQUAL(a+3*eps, a , 1.5 );
 }

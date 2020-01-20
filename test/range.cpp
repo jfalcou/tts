@@ -43,12 +43,12 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
   std::size_t count_;
 };
 
-float ok_x  (float x) { return std::sqrt(x); }
-float ajar_x(float x) { return std::sqrt(x)+1e-6; }
+float ok_x  (float x) { return x; }
+float ajar_x(float x) { return x+1e-7f; }
 
 TTS_CASE( "Test some range on float" )
 {
-  some_producer<float>  p(200);
+  some_producer<float>  p(200, 1.f);
   TTS_ULP_RANGE_CHECK(p,ok_x,ajar_x,16);
 }
 
