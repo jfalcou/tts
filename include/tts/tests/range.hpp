@@ -127,7 +127,7 @@ namespace tts
     {
       threshold = (threshold > 1.5) ? next2(threshold) : std::ceil(threshold*2)/2;
       std::size_t nbthreads = 1;
-      
+
       #pragma omp parallel
       {
         if(!thread_id()) nbthreads = thread_count(); 
