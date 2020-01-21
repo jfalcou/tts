@@ -130,9 +130,9 @@ namespace tts
 
       #pragma omp parallel
       {
-        if(!thread_id()) nbthreads = thread_count(); 
+        if(!thread_id()) nbthreads = thread_count();
       }
- 
+
       std::cout << bar << "\n";
       std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
                 << " with " << tts::type_id<P>()
