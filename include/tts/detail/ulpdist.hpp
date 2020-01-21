@@ -11,6 +11,7 @@
 #define TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
 
 #include <cmath>
+#include <cstring>
 #include <type_traits>
 
 namespace tts
@@ -20,33 +21,71 @@ namespace tts
     template<typename T1, typename T2 = T1, typename EnableIF = void> struct ulpdist;
   }
 
+  namespace detail
+  {
+    template<typename T> inline auto as_int(T const &a) noexcept
+    {
+      using Target = std::conditional_t<std::is_same_v<T, float>,std::int32_t, std::int64_t>;
+      Target that;
+
+      void const *src = reinterpret_cast<void const *>(&a);
+      void *      dst = reinterpret_cast<void *>(&that);
+
+      std::memcpy(dst, src, sizeof(a));
+
+      return that;
+    }
+
+    template<typename T> inline auto bitinteger( T const &a) noexcept
+    {
+      using r_t = std::conditional_t<std::is_same_v<T, float>, std::int32_t, std::int64_t>;
+      constexpr r_t Signmask = r_t(1) << (sizeof(r_t)*8-1);
+
+      r_t ia = as_int(a);
+
+      return std::signbit(a) ?  Signmask-ia : ia;
+    }
+  }
+
   template<typename T, typename U> inline double ulpdist(T const &a, U const &b)
   {
     if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
-      { return a == b ? 0. : 1.; }
+      {
+        return a == b ? 0. : 0.5;
+      }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (std::isnan(a) && std::isnan(b))) return 0.;
+        using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
 
-        if(std::isnan(a) || std::isnan(b)) return std::numeric_limits<double>::infinity();
+        if((a == b) || (std::isnan(a) && std::isnan(b)))
+        {
+          return 0.;
+        }
+        else if (std::isunordered(a, b))
+        {
+          return std::numeric_limits<double>::infinity();
+        }
+        else
+        {
+          auto aa = detail::bitinteger(a);
+          auto bb = detail::bitinteger(b);
 
-        int e1 = 0, e2 = 0;
-        T   m1, m2;
-        m1 = std::frexp(a, &e1);
-        m2 = std::frexp(b, &e2);
+          if(aa > bb) std::swap(aa, bb);
 
-        int expo = -std::max(e1, e2);
+          auto z = static_cast<ui_t>(bb-aa);
 
-        T e = (e1 == e2) ? std::abs(m1 - m2) : std::abs(std::ldexp(a, expo) - std::ldexp(b, expo));
-
-        return double(e / std::numeric_limits<T>::epsilon());
+          if( std::signbit(a) ^ std::signbit(b) ) ++z;
+          return z/2.;
+        }
       }
       else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
       {
         using u_t = typename std::make_unsigned<T>::type;
-        return static_cast<double>((a < b) ? u_t(b - a) : u_t(a - b));
+
+        // TODO: Fix overflow in case of very huge integral value
+        return ((a < b) ? u_t(b - a) : u_t(a - b))/2.;
       }
       else // External case
       {
