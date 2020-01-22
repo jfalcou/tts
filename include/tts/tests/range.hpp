@@ -75,10 +75,6 @@ namespace tts
     std::size_t size()      const noexcept { return self().size();   }
     static auto prng_seed()       noexcept { return args.seed();     }
     static auto count()           noexcept { return args.count();    }
-//     static auto ulpmax()          noexcept { return args.ulpmax();   }
-//     static auto hex()             noexcept { return args.hex();      }
-
-        
 
     auto&       self()       noexcept { return static_cast<T&>(*this);        }
     auto const& self() const noexcept { return static_cast<T const&>(*this);  }
@@ -345,7 +341,7 @@ namespace tts
       TTS_ULP_RANGE_CHECK(Producer, Ref, New, 2.0)                                                  \
     else                                                                                            \
        TTS_ULP_RANGE_CHECK(Producer, Ref, New, 0)                                                   \
-} while(::tts::detail::is_false())                                                                  \  
+} while(::tts::detail::is_false())                                                                  \
 /**/
 
 #endif
