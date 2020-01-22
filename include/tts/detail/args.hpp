@@ -30,7 +30,9 @@ namespace tts::detail
     std::string const &order()      const { return order_; }
     unsigned int       seed()       const { return seed_; }
     double             ulpmax()     const { return ulpmax_;}
-
+    bool               hex()        const { return hex_; 
+    }
+    
   private:
     mutable bool         disable_colors_;
     mutable bool         report_pass_;
@@ -40,6 +42,7 @@ namespace tts::detail
     mutable std::string  order_;
     mutable unsigned int seed_;
     mutable double       ulpmax_;
+    mutable bool         hex_; 
   };
 }
 
