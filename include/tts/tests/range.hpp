@@ -298,7 +298,7 @@ namespace tts
           else
             std::cout << std::scientific << std::showpos;
         }
-        
+
         std::cout << +sample_values[u]  << ") = ";
 
         if constexpr(!std::is_floating_point_v<resl_type>)
@@ -337,7 +337,7 @@ namespace tts
 #define TTS_RANGE_CHECK(Producer, Ref, New)                                                         \
   do                                                                                                \
   {                                                                                                 \
-    if constexpr(std::is_floating_point_v<typename decltype(Producer)::value_type>)                 \
+    if constexpr(std::is_floating_point_v<typename decltype(Producer)::base_type>)                  \
       TTS_ULP_RANGE_CHECK(Producer, Ref, New, 2.0);                                                 \
     else                                                                                            \
       TTS_ULP_RANGE_CHECK(Producer, Ref, New, 0.0);                                                 \
