@@ -26,6 +26,8 @@ namespace tts::detail
                         , order_{""}
                         , seed_{1}
                         , ulpmax_{2.0}
+                        , hex_{false}
+      
   {}
 
   TTS_API void args_map::update(int argc, char **argv) const
@@ -48,8 +50,11 @@ namespace tts::detail
                   ( "c,count"    , "Set size of experiments (default is 10000)"
                   , cxxopts::value<unsigned int>()
                   )
-                  ( "u,ulpmax"    , "Set global failure ulp threshold (default is 1.0)"
+                  ( "u,ulpmax"    , "Set global failure ulp threshold (default is 2.0)"
                   , cxxopts::value<double>()
+                  )
+                  ( "x,hex"    , "print the floating results in hexfloat mode"
+                  , cxxopts::value<bool>()
                   )
                   ( "h,help"      , "Display this help message");
 
@@ -79,6 +84,7 @@ namespace tts::detail
       auto now = std::chrono::high_resolution_clock::now();
       seed_ = static_cast<unsigned int>(now.time_since_epoch().count());
     }
+    if( result.count("hex")  ) hex_     = result["hex"].as<bool>();
   }
 }
 
