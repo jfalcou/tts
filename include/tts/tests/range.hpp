@@ -75,7 +75,6 @@ namespace tts
     std::size_t size()      const noexcept { return self().size();   }
     static auto prng_seed()       noexcept { return args.seed();     }
     static auto count()           noexcept { return args.count();    }
-    static auto ulpmax()          noexcept { return args.ulpmax();   }
 
     auto&       self()       noexcept { return static_cast<T&>(*this);        }
     auto const& self() const noexcept { return static_cast<T const&>(*this);  }
@@ -153,7 +152,7 @@ namespace tts
         auto sz = thread_count();
         auto id = thread_id();
         auto per_thread = q.size()/sz;
-        unsigned int i0, i1;
+        long unsigned int i0, i1;
 
         if (id == 0) nbthreads = sz;
 
@@ -218,8 +217,8 @@ namespace tts
           {
             histogram[i]       += local_histogram[i];
             sample_values[i]    = std::min(sample_values[i], local_sample_values[i]);
-            expected_values[i]  = *::tts::detail::begin(f(sample_values[i]));
-            result_values[i]    = *::tts::detail::begin(g(sample_values[i]));
+            expected_values[i]  = *::tts::detail::begin(f(T(sample_values[i])));
+            result_values[i]    = *::tts::detail::begin(g(T(sample_values[i])));
           }
 
           max_ulp = std::max(max_ulp, local_max_ulp);
@@ -231,7 +230,7 @@ namespace tts
       std::size_t last_bucket_ok = last_bucket_less(threshold);
       for(std::size_t i=0;i<histogram.size();++i)
       {
-        std::size_t tmp = display(i,q.size(),gs);
+        std::size_t tmp = display(i,q.size(),gs, ::tts::args.hex());
         total += tmp;
         if(i <= last_bucket_ok) total_ok += tmp;
       }
@@ -274,7 +273,7 @@ namespace tts
       return 100.*(double(value)/count);
     }
 
-    auto display(std::size_t u, std::size_t cnt, std::string_view gs)
+    auto display(std::size_t u, std::size_t cnt, std::string_view gs, bool hex)
     {
       static double cumhist = 0.0;
       double ulps;
@@ -293,7 +292,13 @@ namespace tts
                   << gs << "(";
 
         if constexpr(std::is_floating_point_v<base_type>)
-          std::cout << std::scientific << std::showpos;
+        {
+          if (hex)
+            std::cout << std::hexfloat << std::showpos;
+          else
+            std::cout << std::scientific << std::showpos;
+        }
+        
         std::cout << +sample_values[u]  << ") = ";
 
         if constexpr(!std::is_floating_point_v<resl_type>)
@@ -320,7 +325,7 @@ namespace tts
                                                                                                     \
     ::tts::checker<local_tts_base_type, local_tts_resl_type> local_tts_checker;                     \
                                                                                                     \
-    double local_tts_threshold = ::tts::args.has_ulp() ? Producer.ulpmax() : Ulpmax;                \
+    double local_tts_threshold = ::tts::args.has_ulp() ? ::tts::args.ulpmax() : Ulpmax;             \
     double local_tts_max_ulp = local_tts_checker.run(Producer,RefFunc,NewFunc, TTS_STRING(RefFunc)  \
                                                     , TTS_STRING(NewFunc),local_tts_threshold);     \
                                                                                                     \
@@ -329,7 +334,14 @@ namespace tts
 /**/
 
 // Generate a range based test between two function
-#define TTS_RANGE_CHECK(Producer, Ref, New) TTS_ULP_RANGE_CHECK(Producer, Ref, New, 2.0)
+#define TTS_RANGE_CHECK(Producer, Ref, New)                                                         \
+  do                                                                                                \
+  {                                                                                                 \
+    if constexpr(std::is_floating_point_v<typename decltype(Producer)::value_type>)                 \
+      TTS_ULP_RANGE_CHECK(Producer, Ref, New, 2.0);                                                 \
+    else                                                                                            \
+      TTS_ULP_RANGE_CHECK(Producer, Ref, New, 0.0);                                                 \
+  } while(::tts::detail::is_false())                                                                \
 /**/
 
 #endif
