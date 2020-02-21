@@ -19,6 +19,8 @@ set ( SOURCES
       precision/ieee.cpp
       precision/relative.cpp
       precision/ulp.cpp
+      range/basic.cpp
+      range/random.cpp
       relation/equal.cpp
       relation/greater.cpp
       relation/greater_equal.cpp
@@ -32,7 +34,6 @@ set ( SOURCES
       sequence/relative.cpp
       sequence/ulp.cpp
       types.cpp
-      range.cpp
     )
 
 make_unit( "tts" ${SOURCES})

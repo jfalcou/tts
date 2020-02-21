@@ -54,12 +54,12 @@ namespace tts::detail
     friend std::ostream&
     operator<<( std::ostream& os, value_field const& manip )
     {
-        os.setf( std::ios_base::left , std::ios_base::adjustfield );
-        os.setf( std::ios_base::fixed, std::ios_base::floatfield  );
-        os.fill( ' ' );
-        os.precision( manip.precision_ );
-        os.width( manip.width_ );
-        return os;
+      os.setf( std::ios_base::left , std::ios_base::adjustfield );
+      os.setf( std::ios_base::fixed, std::ios_base::floatfield  );
+      os.fill( ' ' );
+      os.precision( manip.precision_ );
+      os.width( manip.width_ );
+      return os;
     }
   };
 }
@@ -122,7 +122,10 @@ namespace tts
     }
 
     template<typename P, typename RefFunc, typename OtherFunc>
-    double run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs,  double &threshold)
+    double run( P const& q, RefFunc f, OtherFunc g
+              , std::string_view fs, std::string_view gs
+              ,  double &threshold
+              )
     {
       threshold = (threshold > 1.5) ? next2(threshold) : std::ceil(threshold*2)/2;
       std::size_t nbthreads = 1;
@@ -171,7 +174,9 @@ namespace tts
         P p(q, i0, i1, sz);
 
         std::vector<std::size_t>  local_histogram(nb_buckets);
-        std::vector<base_type>    local_sample_values(nb_buckets, P::max());
+        std::vector<base_type>    local_sample_values( nb_buckets
+                                                     , std::numeric_limits<base_type>::max()
+                                                     );
         std::vector<bool>         found(nb_buckets);
 
         std::size_t n = ::tts::detail::size(typename P::value_type{});

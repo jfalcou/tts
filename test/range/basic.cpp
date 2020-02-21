@@ -9,7 +9,6 @@
 //==================================================================================================
 #include <tts/tts.hpp>
 #include <tts/tests/range.hpp>
-#include <cmath>
 
 template<typename T> struct some_producer : tts::producer<some_producer<T>>
 {
@@ -26,8 +25,6 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
 
   auto first()  const noexcept { return seed_;           }
   auto last()   const noexcept { return seed_ + count_;  }
-
-  static auto max() noexcept { return std::numeric_limits<T>::max(); }
 
   value_type  next() noexcept
   {
