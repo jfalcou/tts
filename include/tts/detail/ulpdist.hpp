@@ -7,44 +7,19 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-#ifndef TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
-#define TTS_TESTS_IMPL_ULPDIST_HPP_INCLUDED
+#ifndef TTS_DETAIL_ULPDIST_HPP_INCLUDED
+#define TTS_DETAIL_ULPDIST_HPP_INCLUDED
 
-#include <cmath>
-#include <cstring>
+#include <tts/detail/bits.hpp>
 #include <type_traits>
+#include <cstring>
+#include <cmath>
 
 namespace tts
 {
   namespace ext
   {
     template<typename T1, typename T2 = T1, typename EnableIF = void> struct ulpdist;
-  }
-
-  namespace detail
-  {
-    template<typename T> inline auto as_int(T const &a) noexcept
-    {
-      using Target = std::conditional_t<std::is_same_v<T, float>,std::int32_t, std::int64_t>;
-      Target that;
-
-      void const *src = reinterpret_cast<void const *>(&a);
-      void *      dst = reinterpret_cast<void *>(&that);
-
-      std::memcpy(dst, src, sizeof(a));
-
-      return that;
-    }
-
-    template<typename T> inline auto bitinteger( T const &a) noexcept
-    {
-      using r_t = std::conditional_t<std::is_same_v<T, float>, std::int32_t, std::int64_t>;
-      constexpr r_t Signmask = r_t(1) << (sizeof(r_t)*8-1);
-
-      r_t ia = as_int(a);
-
-      return std::signbit(a) ?  Signmask-ia : ia;
-    }
   }
 
   template<typename T, typename U> inline double ulpdist(T const &a, U const &b)
