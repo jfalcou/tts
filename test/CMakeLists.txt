@@ -20,6 +20,7 @@ set ( SOURCES
       precision/relative.cpp
       precision/ulp.cpp
       range/basic.cpp
+      range/exhaustive.cpp
       range/random.cpp
       relation/equal.cpp
       relation/greater.cpp
