@@ -155,7 +155,7 @@ namespace tts
         auto sz = thread_count();
         auto id = thread_id();
         auto per_thread = q.size()/sz;
-        long unsigned int i0, i1;
+        std::size_t i0, i1;
 
         if (id == 0) nbthreads = sz;
 

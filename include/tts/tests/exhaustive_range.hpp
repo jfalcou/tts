@@ -43,7 +43,7 @@ namespace tts
     {}
 
     template<typename P>
-    exhaustive_producer ( P const& src, std::size_t i0, std::size_t i1, std::size_t)
+    exhaustive_producer ( P const& src, std::size_t i0, std::size_t, std::size_t)
                   : exhaustive_producer(src.self())
     {
       current_ = std::clamp(tts::detail::next(current_,i0), pmi_, pmx_);
