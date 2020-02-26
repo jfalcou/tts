@@ -57,6 +57,7 @@ namespace tts
 
     for(auto &t: tests)
     {
+      environment.scenario_header(t.name);
       auto count = environment.tests();
       for(std::size_t i = 0; i < args.repetition(); ++i) t(environment);
       process_invalid(environment, count);

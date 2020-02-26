@@ -47,8 +47,7 @@ namespace tts
     TTS_API std::ostream &stream() const;
     TTS_API std::ostream &output() const;
 
-    TTS_API void               scenario(std::string const &title);
-    std::string const &scenario() const { return current_scenario_; }
+    TTS_API void scenario_header(std::string const& name);
 
     TTS_API std::ostream &pass();
     TTS_API std::ostream &fail();

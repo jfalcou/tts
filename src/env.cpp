@@ -52,8 +52,6 @@ namespace tts
   TTS_API std::ostream & env::stream() const { return os; }
   TTS_API std::ostream & env::output() const { return !verbose() ? tts::detail::null_stream : stream(); }
 
-  TTS_API void env::scenario(std::string const &title) { current_scenario_ = title; }
-
   TTS_API std::ostream & env::pass()
   {
     as_success();
@@ -70,6 +68,21 @@ namespace tts
   {
     as_invalid();
     return stream();
+  }
+
+  TTS_API void env::scenario_header(std::string const& name)
+  {
+    if(verbose())
+    {
+      auto hbar = std::string(80,'-');
+      stream()  << hbar << std::endl
+                << "[SCENARIO] - " << ::tts::detail::yellow_(name) << std::endl
+                << hbar << std::endl;
+    }
+    else
+    {
+      output() << "[SCENARIO] - " << ::tts::detail::yellow_(name) << std::endl;
+    }
   }
 
   TTS_API bool report(env const &e, std::ptrdiff_t fails, std::ptrdiff_t invalids)

@@ -13,47 +13,50 @@
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
 
-
-TTS_CASE( "Default-constructed pointer behavior" )
+TTS_CASE( "Sections and sub-sections behavior" )
 {
-  std::vector<int> v( 5 );
-
-  TTS_EXPECT( v.size() == 5u );
-  TTS_EXPECT( v.capacity() >= 5u );
-
-  TTS_SUBCASE( "resizing bigger changes size and capacity" )
+  TTS_WHEN("A vector is initialized with 5 elements")
   {
-    v.resize( 10 );
+    std::vector<int> v( 5 );
 
-    TTS_EXPECT( v.size() == 10u );
-    TTS_EXPECT( v.capacity() >= 10u );
-  }
-
-  TTS_SUBCASE( "resizing smaller changes size but not capacity" )
-  {
-    v.resize( 0 );
-    TTS_EXPECT( v.size() == 0u );
-    TTS_EXPECT( v.capacity() >= 5u );
-  }
-
-  TTS_SUBCASE( "reserving bigger changes capacity but not size" )
-  {
-    v.reserve( 10 );
     TTS_EXPECT( v.size() == 5u );
-    TTS_EXPECT( v.capacity() >= 10u );
+    TTS_EXPECT( v.capacity() >= 5u );
 
-    TTS_SUBCASE( "reserving smaller again does not change capacity" )
+    TTS_AND_THEN( "is resized to a larger size" )
     {
-      v.reserve( 7 );
+      v.resize( 10 );
+
+      TTS_EXPECT( v.size() == 10u );
       TTS_EXPECT( v.capacity() >= 10u );
+    }
+
+    TTS_AND_THEN( "is resized to a smaller size" )
+    {
+      v.resize( 0 );
+      TTS_EXPECT( v.size() == 0u );
+      TTS_EXPECT( v.capacity() >= 5u );
     }
   }
 
-  TTS_SUBCASE( "reserving smaller does not change size or capacity" )
+  TTS_WHEN("A vector is uninitialized elements")
   {
-    v.reserve( 0 );
-    TTS_EXPECT( v.size() == 5u );
-    TTS_EXPECT( v.capacity() >= 5u );
+    std::vector<int> v;
+
+    TTS_EXPECT( v.size() == 0u );
+
+    TTS_AND_THEN( "is now reserved to a larger size" )
+    {
+      v.reserve( 10 );
+      TTS_EXPECT( v.size() == 0u );
+      TTS_EXPECT( v.capacity() >= 10u );
+
+      TTS_AND_THEN( "is now reserved to an empty state" )
+      {
+        v.reserve( 0 );
+        TTS_EXPECT( v.size() == 0u );
+        TTS_EXPECT( v.capacity() >= 10u );
+      }
+    }
   }
 }
 //! [tts_subcase]
