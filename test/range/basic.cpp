@@ -17,7 +17,7 @@ template<typename T> struct some_producer : tts::producer<some_producer<T>>
   some_producer(std::size_t count, value_type s = {}) : seed_{s}, count_(count) {}
 
   template<typename P>
-  some_producer ( P const& src, std::size_t i0, std::size_t i1, std::size_t s)
+  some_producer ( P const& src, std::size_t i0, std::size_t, std::size_t)
                 : some_producer(src.self())
   {
     seed_ += i0;
