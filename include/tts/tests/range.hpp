@@ -76,6 +76,12 @@ namespace tts
     static auto prng_seed()       noexcept { return args.seed();     }
     static auto count()           noexcept { return args.count();    }
 
+    template<typename V>
+    static V valmin(V v)    noexcept { return args.has_valmin() ? args.valmin(): v; }
+
+    template<typename V>
+    static V valmax(V v)    noexcept { return args.has_valmax() ? args.valmax(): v; }
+
     auto&       self()       noexcept { return static_cast<T&>(*this);        }
     auto const& self() const noexcept { return static_cast<T const&>(*this);  }
   };

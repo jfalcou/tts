@@ -23,7 +23,8 @@ namespace tts::detail
   {
     if(r <= x)
       pass(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << green_(x) << " " << m << "\n";
+                      << green_(x) << " " << m << " and found: "
+                      << green_(r) << "\n";
     else
       fail(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
                       << red_(x) <<  " " << m << " but found: "
