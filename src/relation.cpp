@@ -23,12 +23,12 @@ namespace tts::detail
   {
     if(result)
     {
-      pass(r,l) << "Expecting: " << white_(a) << " " << white_(op) << " " << white_(b) << "\n";
+      pass(r,l) << "Expecting: " << white << a << " " << op << " " << b << reset << "\n";
     }
     else
     {
-      fail(r,l) << "Expecting: "  << white_(a)  << " " << white_(op)  << " " << white_(b)
-                << " but "        << red_(va)   << " " << red_(op)    << " " << red_(vb)
+      fail(r,l) << "Expecting: "  << white << a  << " " << op << " " <<  b << reset
+                << " but "        << red   << va << " " << op << " " << vb << reset
                 << " occured instead.\n";
     }
   }

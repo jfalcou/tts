@@ -13,6 +13,7 @@
 #include <tts/api.hpp>
 #include <string>
 #include <vector>
+#include <tts/detail/rt_helpers.hpp>
 
 namespace tts
 {

@@ -23,28 +23,22 @@ namespace tts::detail
   std::ostream &operator<<(std::ostream &os, location const &l)
   {
     std::filesystem::path p(l.file);
-    return os << darkgray_(p.filename().c_str()) << ":" << darkgray_(l.line);
+    return os << blue << p.filename().c_str() << detail::reset << ":" << blue << l.line ;
   }
 
   // Basic messaging
   TTS_API std::ostream & pass(tts::env& runtime, location const& l)
   {
-    return runtime.pass() << l
-                   << ": " << ::tts::detail::green_("passed")
-                   << " - ";
+    return runtime.pass() << l << ": " << green << bold << "PASSED" << detail::reset << " - ";
   }
 
   TTS_API std::ostream & fail(tts::env& runtime, location const& l)
   {
-    return runtime.fail() << l
-                   << ": " << ::tts::detail::red_("**FAILED**")
-                   << " - ";
+    return runtime.fail() << l << ": " << red << bold << "**FAILED**" << detail::reset << " - ";
   }
 
   TTS_API std::ostream & invalid(tts::env& runtime, location const& l)
   {
-    return runtime.invalid()  << l
-                              << ": " << ::tts::detail::yellow_("**INVALID**")
-                              << " - ";
+    return runtime.invalid() << l << ": " << yellow << bold << "<!>INVALID<!>" << detail::reset << " - ";
   }
 }

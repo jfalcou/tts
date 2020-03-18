@@ -25,14 +25,16 @@ namespace tts::detail
                       )
   {
     if(r <= x)
-      pass(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << green_(x) << " " << m << " and found: "
-                      << green_(r) << "\n";
+      pass(runtime,l) << "Expecting: " << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << green << x << reset << " " << m << " and found: "
+                      << green << r << reset << "\n";
     else
-      fail(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << red_(x) <<  " " << m << " but found: "
-                      << white_(va) << " == " << white_(vb) << " within "
-                      << red_(r) <<  " " << m << " instead.\n";
+      fail(runtime,l) << "Expecting: " << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << red << x << reset <<  " " << m << " but found: "
+                      << white << va << reset << " == " << white << vb << reset << " within "
+                      << red << r << reset <<  " " << m << " instead.\n";
   }
 
   bool has_matching_size( tts::env& runtime, location const& l
@@ -44,7 +46,8 @@ namespace tts::detail
 
     if(!ok)
     {
-      fail(runtime,l) << white_(a) << " and " << white_(b) << red_(" sizes mismatch") << ".\n";
+      fail(runtime,l) << white << a << reset << " and "
+                      << white << b << red << " sizes mismatch" << reset << ".\n";
     }
 
     return ok;
@@ -56,13 +59,15 @@ namespace tts::detail
   {
     if(err.empty())
     {
-      pass(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << green_(x) << " " << m << "\n";
+      pass(runtime,l) << "Expecting: " << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << green << x << reset << " " << m << "\n";
     }
     else
     {
-      fail(runtime,l) << "Expecting: "  << white_(a) << " == " << white_(b) << " within "
-                      << red_(x) << " " << m << " but found:\n{\n";
+      fail(runtime,l) << "Expecting: "  << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << red << x << reset << " " << m << " but found:\n{\n";
 
       for(auto& e : err)
       {

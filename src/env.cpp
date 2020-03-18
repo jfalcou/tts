@@ -76,12 +76,12 @@ namespace tts
     {
       auto hbar = std::string(80,'-');
       stream()  << hbar << std::endl
-                << "[SCENARIO] - " << ::tts::detail::yellow_(name) << std::endl
+                << "[SCENARIO] - " << ::tts::detail::yellow << name << detail::reset << std::endl
                 << hbar << std::endl;
     }
     else
     {
-      output() << "[SCENARIO] - " << ::tts::detail::yellow_(name) << std::endl;
+      output() << "[SCENARIO] - " << ::tts::detail::yellow << name << detail::reset << std::endl;
     }
   }
 
@@ -92,14 +92,14 @@ namespace tts
     auto fail_txt = e.failures() > 1 ? "failures" : "failure";
     auto inv_txt  = e.invalids() > 1 ? "invalids" : "invalid";
 
-    e.output()  << detail::default_ << std::string(80, '-') << "\n";
-    e.stream()  << detail::white_("Results: ")
-                << detail::white_(e.tests())  << " "    << detail::white_(test_txt) << " - "
-                << detail::white_(e.successes()) << " " << detail::green_(pass_txt) << " - "
-                << detail::white_(e.failures()) << "/"  << fails     << " "
-                << detail::red_(fail_txt) << " - "
-                << detail::white_(e.invalids()) << "/"  << invalids  << " "
-                << detail::yellow_(inv_txt)
+    e.output()  << detail::reset << std::string(80, '-') << "\n";
+    e.stream()  << detail::white << "Results: " << e.tests()  << " " << test_txt << " - "
+                << e.successes() << detail::reset
+                << " " << detail::green << pass_txt << detail::reset << " - "
+                << detail::white << e.failures() << "/"  << fails     << " "<< detail::reset
+                << detail::red << fail_txt << detail::reset << " - "
+                << detail::white << e.invalids() << "/"  << invalids  << " " << detail::reset
+                << detail::yellow << inv_txt
                 << std::endl;
 
     if(!fails && !invalids)
