@@ -196,7 +196,7 @@ the <a class="reference internal" href="../extension.html#custom-precision"><spa
 <h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="tts-ulp-equal"></span><dl class="macro">
 <dt id="c.TTS_ULP_EQUAL">
-<span class="target" id="a00164_1a00f8f2283ac761d8cf23974a3a200d48"></span><code class="sig-name descname">TTS_ULP_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, ULP<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ULP_EQUAL" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00173_1a00f8f2283ac761d8cf23974a3a200d48"></span><code class="sig-name descname">TTS_ULP_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, ULP<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ULP_EQUAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if two values are within a given ULP distance. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
 <p><strong>Example:</strong></p>
@@ -230,7 +230,7 @@ the <a class="reference internal" href="../extension.html#custom-precision"><spa
 
 <span class="target" id="tts-ieee-equal"></span><dl class="macro">
 <dt id="c.TTS_IEEE_EQUAL">
-<span class="target" id="a00164_1a550c39f250f23f36e2567becce49b7b8"></span><code class="sig-name descname">TTS_IEEE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_IEEE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00173_1a550c39f250f23f36e2567becce49b7b8"></span><code class="sig-name descname">TTS_IEEE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_IEEE_EQUAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if two values are equal at 0 ULP. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
 <p>Checks if the ULP distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is exactly equal to 0. Contrary to TTS_EQUAL, this test handles comparison with infinites or NaN values.</p>
@@ -263,7 +263,7 @@ the <a class="reference internal" href="../extension.html#custom-precision"><spa
 
 <span class="target" id="tts-rel-equal"></span><dl class="macro">
 <dt id="c.TTS_RELATIVE_EQUAL">
-<span class="target" id="a00164_1a0c1eaae31b310a3c37ed887a0627acf7"></span><code class="sig-name descname">TTS_RELATIVE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, P<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_RELATIVE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00173_1a0c1eaae31b310a3c37ed887a0627acf7"></span><code class="sig-name descname">TTS_RELATIVE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, P<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_RELATIVE_EQUAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if two values are within a given percentage. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
 <p>Checks if the relative distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to <code class="docutils literal notranslate"><span class="pre">P</span></code> percent.</p>
@@ -295,7 +295,7 @@ the <a class="reference internal" href="../extension.html#custom-precision"><spa
 
 <span class="target" id="tts-abs-equal"></span><dl class="macro">
 <dt id="c.TTS_ABSOLUTE_EQUAL">
-<span class="target" id="a00164_1abc253433ca587c926c0f848fbe2966bd"></span><code class="sig-name descname">TTS_ABSOLUTE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, N<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ABSOLUTE_EQUAL" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00173_1abc253433ca587c926c0f848fbe2966bd"></span><code class="sig-name descname">TTS_ABSOLUTE_EQUAL</code><span class="sig-paren">(</span>LHS, RHS, N<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_ABSOLUTE_EQUAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the absolute distance between two values is under a given threshold. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/precision.hpp</span><span class="pre">&gt;</span></code></p>
 <p>Checks if the absolute distance between <code class="docutils literal notranslate"><span class="pre">LHS</span></code> and <code class="docutils literal notranslate"><span class="pre">RHS</span></code> is less or equal to <code class="docutils literal notranslate"><span class="pre">N</span></code>.</p>

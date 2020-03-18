@@ -20,7 +20,12 @@ Macros
 .. doxygendefine:: TTS_CASE_TPL
    :project: tts
 
-.. _tts-subcase:
+.. _tts-when:
 
-.. doxygendefine:: TTS_SUBCASE
+.. doxygendefine:: TTS_WHEN
+   :project: tts
+
+.. _tts-and_then:
+
+.. doxygendefine:: TTS_AND_THEN
    :project: tts

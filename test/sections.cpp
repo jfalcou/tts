@@ -8,7 +8,7 @@
 **/
 //==================================================================================================
 
-//! [tts_subcase]
+//! [tts_when]
 #include <vector>
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
@@ -50,7 +50,7 @@ TTS_CASE( "Sections and sub-sections behavior" )
       TTS_EXPECT( v.size() == 0u );
       TTS_EXPECT( v.capacity() >= 10u );
 
-      TTS_AND_THEN( "is now reserved to an empty state" )
+      TTS_AND_THEN( "    is now reserved to an empty state" )
       {
         v.reserve( 0 );
         TTS_EXPECT( v.size() == 0u );
@@ -59,4 +59,4 @@ TTS_CASE( "Sections and sub-sections behavior" )
     }
   }
 }
-//! [tts_subcase]
+//! [tts_when]

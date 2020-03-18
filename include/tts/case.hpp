@@ -87,6 +87,17 @@
   void TTS_FUNCTION(::tts::env &runtime)                                                           \
 /**/
 
+//==================================================================================================
+/**
+  * @brief Start a nested cases zone.
+  *
+  * **Required header:** `#include <tts/case.hpp>`
+  *
+  * Open a section where nested test cases can be defined and nested properly.
+  *
+  *  @param Story A literal string describing the scenario intents.
+**/
+//==================================================================================================
 #define TTS_WHEN(Story)                                                                            \
 runtime.output() << "When      : " << ::tts::detail::yellow_(Story) << std::endl;                  \
 for ( int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ ) \
@@ -95,7 +106,7 @@ for ( int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 
 
 //==================================================================================================
 /**
-  * @brief Defines a nested test case.
+  * @brief Create a nested test case.
   *
   * **Required header:** `#include <tts/case.hpp>`
   *
@@ -108,10 +119,10 @@ for ( int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 
   *
   * Nested cases can be nested to an arbitrary depth and no nested cases of a given depth can
   * interact with each other.
-
+  *
   *  **Example:**
   *
-  *  @snippet sections.cpp tts_subcase
+  *  @snippet sections.cpp tts_when
   *
   *  @note
   *  Test cases performing no actual tests swill be reported as invalid.
