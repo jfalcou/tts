@@ -57,10 +57,10 @@ namespace tts::detail
                   ( "u,ulpmax"   , "Set global failure ulp threshold for range tests (default is 2.0)"
                   , cxxopts::value<double>()
                   )
-                  ( "valmin"   , "Set minimal value for range tests (default is code)"
+                  ( "v,valmin"   , "Set minimal value for range tests (default is code)"
                   , cxxopts::value<double>()
                   )
-                  ( "valmax"   , "Set maximal value for range tests (default is code)"
+                  ( "w,valmax"   , "Set maximal value for range tests (default is code)"
                   , cxxopts::value<double>()
                   )
                   ( "x,hex"      , "print the floating results in hexfloat mode"
