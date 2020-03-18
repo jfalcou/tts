@@ -3,18 +3,18 @@ version: 2.0
 jobs:
   clang:
     docker:
-      - image: ubuntu:disco
+      - image: ubuntu:rolling
     steps:
       - checkout
       - run:
           name: Setup dependencies
           command: . .circleci/prepare.sh
       - run:
-          name: Install clang-8
-          command: 'apt-get update && sudo apt-get install -y clang-8'
+          name: Install clang-9
+          command: 'apt-get update && sudo apt-get install -y clang-9 && sudo apt-get install -y libstdc++-9-dev'
       - run:
           name: Running tests
-          command: . .circleci/run.sh clang++-8
+          command: . .circleci/run.sh clang++-9
 
   gcc:
     docker:
