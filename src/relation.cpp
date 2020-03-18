@@ -27,7 +27,9 @@ namespace tts::detail
     }
     else
     {
-      fail(r,l) << "Expecting: " << red_(va) << " " << red_(op) << " " << red_(vb) << "\n";
+      fail(r,l) << "Expecting: "  << white_(a)  << " " << white_(op)  << " " << white_(b)
+                << " but "        << red_(va)   << " " << red_(op)    << " " << red_(vb)
+                << " occured instead.\n";
     }
   }
 }

@@ -34,9 +34,10 @@
     if(tts_var_d) { TTS_PASS("Expecting: " << ::tts::detail::white_(TTS_STRING(Expr))); }          \
     else                                                                                           \
     {                                                                                              \
-      TTS_FAIL("Expecting: " << ::tts::detail::red_(tts_var_d.lhs) << " "                          \
-                             << ::tts::detail::white_(tts_var_d.op) << " "                         \
-                             << ::tts::detail::red_(tts_var_d.rhs));                               \
+      TTS_FAIL( "Expecting: " << ::tts::detail::white_(TTS_STRING(Expr)) << " but "                \
+                              << ::tts::detail::red_(tts_var_d.lhs) << " "                         \
+                              << ::tts::detail::white_(tts_var_d.op) << " "                        \
+                              << ::tts::detail::red_(tts_var_d.rhs) << " occured instead.");       \
     }                                                                                              \
   } while(::tts::detail::is_false())
 /**/
@@ -60,13 +61,14 @@
     ::tts::detail::result tts_var_d = TTS_DECOMPOSE(Expr);                                         \
     if(tts_var_d)                                                                                  \
     {                                                                                              \
-      TTS_FAIL("Not expecting: " << ::tts::detail::red_(tts_var_d.lhs) << " "                      \
-                                 << ::tts::detail::white_(tts_var_d.op) << " "                     \
-                                 << ::tts::detail::red_(tts_var_d.rhs));                           \
+      TTS_FAIL( "Not Expecting: " << ::tts::detail::white_(TTS_STRING(Expr)) << " but "            \
+                                  << ::tts::detail::red_(tts_var_d.lhs) << " "                     \
+                                  << ::tts::detail::white_(tts_var_d.op) << " "                    \
+                                  << ::tts::detail::red_(tts_var_d.rhs) << " occured anyway.");    \
     }                                                                                              \
     else                                                                                           \
     {                                                                                              \
-      TTS_PASS("Not expecting: " << ::tts::detail::white_(TTS_STRING(Expr)));                      \
+      TTS_PASS( "Not Expecting: " << ::tts::detail::white_(TTS_STRING(Expr)) );                    \
     }                                                                                              \
   } while(::tts::detail::is_false())
 /**/
