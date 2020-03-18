@@ -51,7 +51,7 @@ namespace tts
       current_ = std::clamp(tts::detail::next(current_,i0), pmi_, pmx_);
     }
 
-    private:
+    protected:
     T           current_,first_, last_, pmi_, pmx_;
     std::size_t size_;
   };
