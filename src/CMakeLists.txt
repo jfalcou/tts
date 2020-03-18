@@ -8,6 +8,7 @@
 
 add_library ( tts SHARED
               args.cpp
+              color.cpp
               env.cpp
               exceptions.cpp
               helpers.cpp

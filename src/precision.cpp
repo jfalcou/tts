@@ -12,23 +12,35 @@
 #include <tts/detail/color.hpp>
 #include <tts/detail/precision.hpp>
 #include <tts/tests/basic.hpp>
-#include <string>
 #include <tts/api.hpp>
+#include <string>
+#include <iomanip>
 
 namespace tts::detail
 {
   void check_precision( tts::env& runtime, location const& l, double r, double x
-                      , std::string_view a, std::string_view b, std::string_view m
+                      , double va, double vb
+                      , std::string_view a, std::string_view b
+                      , std::string_view m
                       )
   {
+    auto fmt_x = (x<100 ? std::defaultfloat : std::scientific);
+    auto fmt_r = (r<100 ? std::defaultfloat : std::scientific);
+
     if(r <= x)
-      pass(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << green_(x) << " " << m << " and found: "
-                      << green_(r) << "\n";
+      pass(runtime,l) << "Expecting: " << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << green << std::setprecision(2) << fmt_x << x << reset << " " << m
+                      << " and found: "
+                      << green << std::setprecision(2) << fmt_r << r << reset << " " << m << "\n";
     else
-      fail(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << red_(x) <<  " " << m << " but found: "
-                      << red_(r) <<  " " << m << " instead.\n";
+      fail(runtime,l) << "Expecting: " << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << red << std::setprecision(2) << fmt_x << x << reset <<  " " << m
+                      << " but found: "
+                      << white << va << reset << " == " << white << vb << reset << " within "
+                      << red << std::setprecision(2) << fmt_r << r << reset <<  " " << m
+                      << " instead.\n";
   }
 
   bool has_matching_size( tts::env& runtime, location const& l
@@ -40,7 +52,8 @@ namespace tts::detail
 
     if(!ok)
     {
-      fail(runtime,l) << white_(a) << " and " << white_(b) << red_(" sizes mismatch") << ".\n";
+      fail(runtime,l) << white << a << reset << " and "
+                      << white << b << red << " sizes mismatch" << reset << ".\n";
     }
 
     return ok;
@@ -52,13 +65,15 @@ namespace tts::detail
   {
     if(err.empty())
     {
-      pass(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
-                      << green_(x) << " " << m << "\n";
+      pass(runtime,l) << "Expecting: " << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << green << x << reset << " " << m << "\n";
     }
     else
     {
-      fail(runtime,l) << "Expecting: "  << white_(a) << " == " << white_(b) << " within "
-                      << red_(x) << " " << m << " but found:\n{\n";
+      fail(runtime,l) << "Expecting: "  << white << a << reset
+                      << " == " << white << b << reset << " within "
+                      << red << x << reset << " " << m << " but found:\n{\n";
 
       for(auto& e : err)
       {

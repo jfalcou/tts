@@ -23,6 +23,17 @@ TTS_CASE( "Check that forced broken expectation fails" )
   TTS_EXPECT_NOT(true == true);
 }
 
+TTS_CASE( "Check that forced broken relation tests fails" )
+{
+  int x = 0;
+  TTS_EQUAL( 1, x );
+  TTS_NOT_EQUAL( x, x );
+  TTS_LESS(1,x);
+  TTS_GREATER(x,1);
+  TTS_LESS_EQUAL(1,x);
+  TTS_GREATER_EQUAL(x,1);
+}
+
 void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
 
 TTS_CASE( "Check that forced broken exceptions tests fails" )
@@ -34,9 +45,11 @@ TTS_CASE( "Check that forced broken exceptions tests fails" )
 
 TTS_CASE( "Check that forced broken precision tests fails" )
 {
+  double x = 1. + 1e-15;
+
   TTS_RELATIVE_EQUAL(1,2,0);
-  TTS_ULP_EQUAL(1., 2., 0.5 );
-  TTS_ABSOLUTE_EQUAL(1., 2., 0.5 );
+  TTS_ULP_EQUAL(1., x, 0.5 );
+  TTS_ABSOLUTE_EQUAL(x ,1., 1e-16 );
 }
 
 TTS_CASE( "Check that forced broken precision tests fails on array" )
@@ -50,21 +63,10 @@ TTS_CASE( "Check that forced broken precision tests fails on array" )
   TTS_ALL_ABSOLUTE_EQUAL(a, b, 1);
 }
 
-TTS_CASE( "Check that forced broken relation tests fails" )
-{
-  int x = 0;
-  TTS_EQUAL( 1, x );
-  TTS_NOT_EQUAL( 1, 1 );
-  TTS_LESS(1,0);
-  TTS_GREATER(0,1);
-  TTS_LESS_EQUAL(1,0);
-  TTS_GREATER_EQUAL(0,1);
-}
-
 TTS_CASE( "Check that forced broken types tests fails" )
 {
-  TTS_TYPE_IS( int, float );
-  TTS_EXPR_IS( 1.f , void**   );
+  TTS_TYPE_IS( int , float  );
+  TTS_EXPR_IS( 1.f , void** );
 }
 
 int main(int argc, char** argv)

@@ -30,19 +30,15 @@ namespace tts::detail
 
     operator result()
     {
-      return result {bool(lhs),
-                     ::tts::detail::to_string(bool(lhs)),
-                     ::tts::detail::to_string(""),
-                     ::tts::detail::to_string("")};
+      return result {bool(lhs),::tts::detail::to_string(bool(lhs)),"",""};
     }
 
 #define TTS_BINARY_DECOMPOSE(OP, SB, FN)                                                           \
   template<typename R> result operator OP(R const &rhs)                                            \
   {                                                                                                \
-    return {tts::detail::FN(lhs, rhs),                                                             \
-            ::tts::detail::to_string(lhs),                                                         \
-            ::tts::detail::split_line(lhs, rhs, SB),                                               \
-            ::tts::detail::to_string(rhs)};                                                        \
+    return { tts::detail::FN(lhs, rhs)                                                             \
+           , ::tts::detail::to_string(lhs), SB, ::tts::detail::to_string(rhs)                      \
+           };                                                                                      \
   }                                                                                                \
   /**/
 

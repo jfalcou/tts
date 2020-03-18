@@ -76,8 +76,9 @@
           ::tts::detail::for_each_type(                                                            \
               [&](auto t) {                                                                        \
                 using T = typename decltype(t)::type;                                              \
-                runtime.output() << ".. with T = [" << ::tts::detail::magenta_(::tts::type_id<T>())\
-                                 << "] " << std::endl;                                             \
+                runtime.output()  << ".. with T = [" << ::tts::detail::magenta                     \
+                                  << ::tts::type_id<T>() << ::tts::detail::reset                   \
+                                  << "] " << std::endl;                                            \
                 TTS_FUNCTION<T>(runtime);                                                          \
               },                                                                                   \
               ::tts::detail::typelist<__VA_ARGS__> {});                                            \
@@ -99,7 +100,8 @@
 **/
 //==================================================================================================
 #define TTS_WHEN(Story)                                                                            \
-runtime.output() << "When      : " << ::tts::detail::yellow_(Story) << std::endl;                  \
+runtime.output()  << "When      : " << ::tts::detail::yellow << Story                              \
+                  << ::tts::detail::reset << std::endl;                                            \
 for ( int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ ) \
    for ( tts::detail::only_once tts__only_once_setup{}; tts__only_once_setup; )                    \
 /**/
