@@ -25,6 +25,10 @@ CircleCI :
 AppVeyo :
 [![Build status](https://ci.appveyor.com/api/projects/status/020yd3e6dwhu4dae/branch/master?svg=true)](https://ci.appveyor.com/project/jfalcou/tts/branch/master)
 
+## Acknowledgment
+
+Thanks to Ihor Kalnytskyi for [Termcolor](https://termcolor.readthedocs.io/).
+
 ## License
 
 This library is licensed under the [MIT License](http://opensource.org/licenses/MIT):
