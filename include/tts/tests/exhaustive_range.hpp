@@ -19,6 +19,7 @@ namespace tts
   template<typename T>
   struct exhaustive_producer : tts::producer<exhaustive_producer<T>>
   {
+    using base = tts::producer<exhaustive_producer<T>>;
     using value_type = T;
 
     T first() const noexcept  { return first_;  }
@@ -35,8 +36,9 @@ namespace tts
 
     template<typename U, typename V>
     exhaustive_producer(U mn, V mx)
-                : current_( static_cast<T>(mn) )
-                , first_(static_cast<T>(mn)), last_(static_cast<T>(mx))
+                : current_(base::valmin(static_cast<T>(mn)))
+                , first_(current_)
+                , last_(base::valmax(static_cast<T>(mx)))
                 , pmi_(first_)
                 , pmx_(tts::detail::prev(last_))
                 , size_(tts::detail::nb_values(first_,last_))
