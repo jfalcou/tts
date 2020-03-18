@@ -34,8 +34,8 @@ namespace tts
                          location const &,
                          double,
                          double,
-                         double,
-                         double,
+                         std::string const&,
+                         std::string const&,
                          std::string_view,
                          std::string_view,
                          std::string_view);

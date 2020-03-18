@@ -19,7 +19,7 @@
 namespace tts::detail
 {
   void check_precision( tts::env& runtime, location const& l, double r, double x
-                      , double va, double vb
+                      , std::string const& va, std::string const& vb
                       , std::string_view a, std::string_view b
                       , std::string_view m
                       )
