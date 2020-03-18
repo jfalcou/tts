@@ -13,6 +13,7 @@
 #include <tts/tests/infos.hpp>
 #include <tts/api.hpp>
 #include <typeinfo>
+#include <filesystem>
 #include <cstdlib>
 #include <string>
 
@@ -21,7 +22,8 @@ namespace tts::detail
   // Simple wrapper for __FILE__/__LINE__
   std::ostream &operator<<(std::ostream &os, location const &l)
   {
-    return os << darkgray_(l.file) << ":" << darkgray_(l.line);
+    std::filesystem::path p(l.file);
+    return os << darkgray_(p.filename().c_str()) << ":" << darkgray_(l.line);
   }
 
   // Basic messaging
