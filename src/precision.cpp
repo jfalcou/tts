@@ -24,17 +24,23 @@ namespace tts::detail
                       , std::string_view m
                       )
   {
+    auto fmt_x = (x<100 ? std::defaultfloat : std::scientific);
+    auto fmt_r = (r<100 ? std::defaultfloat : std::scientific);
+
     if(r <= x)
       pass(runtime,l) << "Expecting: " << white << a << reset
                       << " == " << white << b << reset << " within "
-                      << green << x << reset << " " << m << " and found: "
-                      << green << r << reset << "\n";
+                      << green << std::setprecision(2) << fmt_x << x << reset << " " << m
+                      << " and found: "
+                      << green << std::setprecision(2) << fmt_r << r << reset << " " << m << "\n";
     else
       fail(runtime,l) << "Expecting: " << white << a << reset
                       << " == " << white << b << reset << " within "
-                      << red << x << reset <<  " " << m << " but found: "
+                      << red << std::setprecision(2) << fmt_x << x << reset <<  " " << m
+                      << " but found: "
                       << white << va << reset << " == " << white << vb << reset << " within "
-                      << red << r << reset <<  " " << m << " instead.\n";
+                      << red << std::setprecision(2) << fmt_r << r << reset <<  " " << m
+                      << " instead.\n";
   }
 
   bool has_matching_size( tts::env& runtime, location const& l
