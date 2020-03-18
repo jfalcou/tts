@@ -191,7 +191,7 @@ or properties.</p>
 <h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="tts-type-is"></span><dl class="macro">
 <dt id="c.TTS_TYPE_IS">
-<span class="target" id="a00199_1ac8e715a920da6879c681d5dff05808b7"></span><code class="sig-name descname">TTS_TYPE_IS</code><span class="sig-paren">(</span>T, Type<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_TYPE_IS" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00235_1ac8e715a920da6879c681d5dff05808b7"></span><code class="sig-name descname">TTS_TYPE_IS</code><span class="sig-paren">(</span>T, Type<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_TYPE_IS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check for type equivalence. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/types.hpp</span><span class="pre">&gt;</span></code></p>
 <p>Checks if two types satisfy <code class="docutils literal notranslate"><span class="pre">std::is_same_v&lt;T1,T2&gt;</span> <span class="pre">==</span> <span class="pre">true</span></code>.</p>
@@ -214,10 +214,10 @@ or properties.</p>
 
 <span class="target" id="tts-expr-is"></span><dl class="macro">
 <dt id="c.TTS_EXPR_IS">
-<span class="target" id="a00199_1af7014b40c7afa5e9a3423fa9c5e0560e"></span><code class="sig-name descname">TTS_EXPR_IS</code><span class="sig-paren">(</span>Expression, Type<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_EXPR_IS" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00235_1af7014b40c7afa5e9a3423fa9c5e0560e"></span><code class="sig-name descname">TTS_EXPR_IS</code><span class="sig-paren">(</span>Expression, Type<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_EXPR_IS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check for the type of an expression. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/tests/types.hpp</span><span class="pre">&gt;</span></code></p>
-<p>Checks if and expression evaulates to a given type.</p>
+<p>Checks if an expression evaluates to a given type.</p>
 <p><strong>Example:</strong></p>
 <p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Check that expression types can be tested for equality&quot;</span> <span class="p">)</span>
 <span class="p">{</span>

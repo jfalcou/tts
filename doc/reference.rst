@@ -4,7 +4,8 @@ Reference Manual
 - :ref:`tts-scenario`
    - :ref:`TTS_CASE <tts-case>`
    - :ref:`TTS_CASE_TPL <tts-case-tpl>`
-   - :ref:`TTS_SUBCASE <tts-subcase>`
+   - :ref:`TTS_WHEN <tts-when>`
+   - :ref:`TTS_AND_THEN <tts-and_then>`
 - :ref:`tts-infos`
    - :ref:`TTS_PASS <tts-pass>`
    - :ref:`TTS_FAIL <tts-fail>`

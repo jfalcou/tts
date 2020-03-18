@@ -191,7 +191,7 @@ or as a template function. THose are the basic blocks of writing tests with TTS.
 <h2>Macros<a class="headerlink" href="#macros" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="tts-case"></span><dl class="macro">
 <dt id="c.TTS_CASE">
-<span class="target" id="a00143_1a5897f0b21806aea6048cc5fe338dd47d"></span><code class="sig-name descname">TTS_CASE</code><span class="sig-paren">(</span>Description<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_CASE" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00149_1a5897f0b21806aea6048cc5fe338dd47d"></span><code class="sig-name descname">TTS_CASE</code><span class="sig-paren">(</span>Description<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_CASE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Introduces new test scenario and registers it into the current test driver. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
 <p>The following block will contains user defined preparation, actual tests, expectations and clean-up for said test case.</p>
@@ -220,7 +220,7 @@ or as a template function. THose are the basic blocks of writing tests with TTS.
 
 <span class="target" id="tts-case-tpl"></span><dl class="macro">
 <dt id="c.TTS_CASE_TPL">
-<span class="target" id="a00143_1a6258fcae76b062e955616db47c9a0d96"></span><code class="sig-name descname">TTS_CASE_TPL</code><span class="sig-paren">(</span>Description, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_CASE_TPL" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="a00149_1a6258fcae76b062e955616db47c9a0d96"></span><code class="sig-name descname">TTS_CASE_TPL</code><span class="sig-paren">(</span>Description, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_CASE_TPL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts a block defining a template test case. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
 <p>The following block will contains user defined preparation, actual tests, expectations and clean-up for said test case parametrized by a template type named <code class="docutils literal notranslate"><span class="pre">T</span></code> and instantiated for each type in the types sequence.</p>
@@ -246,10 +246,25 @@ or as a template function. THose are the basic blocks of writing tests with TTS.
 </p>
 </dd></dl>
 
-<span class="target" id="tts-subcase"></span><dl class="macro">
-<dt id="c.TTS_SUBCASE">
-<span class="target" id="a00143_1a0931d5d9c6ba056c400907aa366a3039"></span><code class="sig-name descname">TTS_SUBCASE</code><span class="sig-paren">(</span>Description<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_SUBCASE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a nested test case. </p>
+<span class="target" id="tts-when"></span><dl class="macro">
+<dt id="c.TTS_WHEN">
+<span class="target" id="a00149_1a0f0422cf371a5cd278e1ee0fd05b3c80"></span><code class="sig-name descname">TTS_WHEN</code><span class="sig-paren">(</span>Story<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_WHEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a nested cases zone. </p>
+<p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
+<p>Open a section where nested test cases can be defined and nested properly.</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Story</span></code>: A literal string describing the scenario intents. </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<span class="target" id="tts-and-then"></span><dl class="macro">
+<dt id="c.TTS_AND_THEN">
+<span class="target" id="a00149_1a480fb73a749c1cf9834384d85a42148e"></span><code class="sig-name descname">TTS_AND_THEN</code><span class="sig-paren">(</span>Description<span class="sig-paren">)</span><a class="headerlink" href="#c.TTS_AND_THEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a nested test case. </p>
 <p><strong>Required header:</strong> <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;</span><span class="pre">tts/case.hpp</span><span class="pre">&gt;</span></code></p>
 <p>Classic approach for test design is to use fixtures to specify how data required by multiples test should be constructed and/or destructed. This leads to a very object-oriented style of tests which may be inconvenient.</p>
 <p>Using nested cases, one can define a common set of code to be run before any nested cases is run itself, thus enforcing the fact that each nested cases is run which similar setup.</p>
@@ -259,47 +274,50 @@ or as a template function. THose are the basic blocks of writing tests with TTS.
 <span class="c1">#include &lt;tts/tts.hpp&gt;</span>
 <span class="c1">#include &lt;tts/tests/basic.hpp&gt;</span>
 
-
-<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Default-constructed pointer behavior&quot;</span> <span class="p">)</span>
+<span class="n">TTS_CASE</span><span class="p">(</span> <span class="s2">&quot;Sections and sub-sections behavior&quot;</span> <span class="p">)</span>
 <span class="p">{</span>
-  <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span> <span class="mi">5</span> <span class="p">);</span>
-
-  <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
-  <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
-
-  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;resizing bigger changes size and capacity&quot;</span> <span class="p">)</span>
+  <span class="n">TTS_WHEN</span><span class="p">(</span><span class="s2">&quot;A vector is initialized with 5 elements&quot;</span><span class="p">)</span>
   <span class="p">{</span>
-    <span class="n">v</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+    <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span> <span class="mi">5</span> <span class="p">);</span>
 
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;resizing smaller changes size but not capacity&quot;</span> <span class="p">)</span>
-  <span class="p">{</span>
-    <span class="n">v</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="n">u</span> <span class="p">);</span>
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
-  <span class="p">}</span>
-
-  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;reserving bigger changes capacity but not size&quot;</span> <span class="p">)</span>
-  <span class="p">{</span>
-    <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
     <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
 
-    <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;reserving smaller again does not change capacity&quot;</span> <span class="p">)</span>
+    <span class="n">TTS_AND_THEN</span><span class="p">(</span> <span class="s2">&quot;is resized to a larger size&quot;</span> <span class="p">)</span>
     <span class="p">{</span>
-      <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">7</span> <span class="p">);</span>
+      <span class="n">v</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+
+      <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
       <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">TTS_AND_THEN</span><span class="p">(</span> <span class="s2">&quot;is resized to a smaller size&quot;</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">v</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+      <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="n">u</span> <span class="p">);</span>
+      <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
     <span class="p">}</span>
   <span class="p">}</span>
 
-  <span class="n">TTS_SUBCASE</span><span class="p">(</span> <span class="s2">&quot;reserving smaller does not change size or capacity&quot;</span> <span class="p">)</span>
+  <span class="n">TTS_WHEN</span><span class="p">(</span><span class="s2">&quot;A vector is uninitialized elements&quot;</span><span class="p">)</span>
   <span class="p">{</span>
-    <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
-    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="n">u</span> <span class="p">);</span>
+    <span class="n">std</span><span class="p">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="nb">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+
+    <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="n">u</span> <span class="p">);</span>
+
+    <span class="n">TTS_AND_THEN</span><span class="p">(</span> <span class="s2">&quot;is now reserved to a larger size&quot;</span> <span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">10</span> <span class="p">);</span>
+      <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="n">u</span> <span class="p">);</span>
+      <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+
+      <span class="n">TTS_AND_THEN</span><span class="p">(</span> <span class="s2">&quot;    is now reserved to an empty state&quot;</span> <span class="p">)</span>
+      <span class="p">{</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">reserve</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+        <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="n">u</span> <span class="p">);</span>
+        <span class="n">TTS_EXPECT</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="n">u</span> <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

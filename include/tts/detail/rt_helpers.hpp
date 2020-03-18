@@ -148,14 +148,16 @@ namespace tts::detail
 
     template<typename Env> bool check(std::string const &desc, Env &e)
     {
-      if(id == section)
-      {
-        e.output() << std::endl << std::string(80,'-') << std::endl;
-        e.output() << desc << std::endl;
-        e.output() << std::string(80,'-') << std::endl;
-      }
+      if(id == section) e.output() << desc << std::endl;
       return id == section;
     }
+  };
+
+  struct only_once
+  {
+    bool once;
+    only_once() : once(true){}
+    explicit operator bool() { bool result = once; once = false; return result; }
   };
 }
 
