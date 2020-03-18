@@ -54,7 +54,7 @@ namespace tts
                   , size_(src.self().size_)
     {}
 
-    private:
+    protected:
     T                 first_;
     T                 last_;
     distribution_type distribution_;
