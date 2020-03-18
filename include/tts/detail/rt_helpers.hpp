@@ -105,14 +105,6 @@ namespace tts::detail
     }
   }
 
-  // Split line if huge container is to be printed
-  template<typename LHS, typename RHS>
-  inline std::string split_line(LHS const &, RHS const &, std::string const &op)
-  {
-    return (detail::is_container_v<LHS> ? "\n" : "") + op +
-           (detail::is_container_v<RHS> ? "\n" : "");
-  }
-
   // Make an iostream that just do nothing
   struct null_buffer_t : std::streambuf
   {

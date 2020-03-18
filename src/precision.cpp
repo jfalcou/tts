@@ -12,13 +12,16 @@
 #include <tts/detail/color.hpp>
 #include <tts/detail/precision.hpp>
 #include <tts/tests/basic.hpp>
-#include <string>
 #include <tts/api.hpp>
+#include <string>
+#include <iomanip>
 
 namespace tts::detail
 {
   void check_precision( tts::env& runtime, location const& l, double r, double x
-                      , std::string_view a, std::string_view b, std::string_view m
+                      , double va, double vb
+                      , std::string_view a, std::string_view b
+                      , std::string_view m
                       )
   {
     if(r <= x)
@@ -28,6 +31,7 @@ namespace tts::detail
     else
       fail(runtime,l) << "Expecting: " << white_(a) << " == " << white_(b) << " within "
                       << red_(x) <<  " " << m << " but found: "
+                      << white_(va) << " == " << white_(vb) << " within "
                       << red_(r) <<  " " << m << " instead.\n";
   }
 

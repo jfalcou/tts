@@ -33,6 +33,8 @@ namespace tts
                          location const &,
                          double,
                          double,
+                         double,
+                         double,
                          std::string_view,
                          std::string_view,
                          std::string_view);
