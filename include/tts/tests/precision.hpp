@@ -46,7 +46,8 @@
                                    {__FILE__, __LINE__},                                           \
                                    ::tts::ulpdist(eval_a, eval_b),                                 \
                                    ULP,                                                            \
-                                   eval_a, eval_b,                                                 \
+                                   ::tts::detail::to_string(eval_a),                               \
+                                   ::tts::detail::to_string(eval_b),                               \
                                    TTS_STRING(LHS),                                                \
                                    TTS_STRING(RHS),                                                \
                                    "ULP");                                                         \
@@ -108,7 +109,8 @@
                                    {__FILE__, __LINE__},                                           \
                                    ::tts::reldist(eval_a, eval_b),                                 \
                                    P,                                                              \
-                                   eval_a, eval_b,                                                 \
+                                   ::tts::detail::to_string(eval_a),                               \
+                                   ::tts::detail::to_string(eval_b),                               \
                                    TTS_STRING(LHS),                                                \
                                    TTS_STRING(RHS),                                                \
                                    "%");                                                           \
@@ -147,7 +149,8 @@
                                    {__FILE__, __LINE__},                                           \
                                    ::tts::absdist(eval_a, eval_b),                                 \
                                    N,                                                              \
-                                   eval_a, eval_b,                                                 \
+                                   ::tts::detail::to_string(eval_a),                               \
+                                   ::tts::detail::to_string(eval_b),                               \
                                    TTS_STRING(LHS),                                                \
                                    TTS_STRING(RHS),                                                \
                                    " unit");                                                       \
