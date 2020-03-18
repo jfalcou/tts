@@ -37,24 +37,13 @@
 **/
 //==================================================================================================
 #define TTS_CASE(Description)                                                                      \
-  void TTS_CALLER(::tts::env &, int&, int&);                                                       \
-                                                                                                   \
-  void TTS_FUNCTION(::tts::env & runtime)                                                          \
-  {                                                                                                \
-    runtime.output() << std::string(80, '-') << std::endl;                                         \
-    runtime.output() << "[SCENARIO] - " << ::tts::detail::yellow_(Description) << std::endl;       \
-    runtime.output() << std::string(80, '-') << std::endl;                                         \
-    for(int tts_section = 0, tts_cnt = 1; tts_section < tts_cnt; tts_cnt -= 0 == tts_section++)    \
-    {                                                                                              \
-      TTS_CALLER(runtime,tts_section,tts_cnt);                                                     \
-    }                                                                                              \
-  }                                                                                                \
+  void TTS_FUNCTION(::tts::env & runtime);                                                         \
   namespace                                                                                        \
   {                                                                                                \
     static bool TTS_REGISTRATION =                                                                 \
         ::tts::detail ::registration(::tts::detail::test(Description, TTS_FUNCTION));              \
   }                                                                                                \
-  void TTS_CALLER(::tts::env &runtime, int& tts_section, int& tts_cnt)                             \
+  void TTS_FUNCTION(::tts::env &runtime)                                                           \
 /**/
 
 //==================================================================================================
@@ -79,15 +68,7 @@
 **/
 //==================================================================================================
 #define TTS_CASE_TPL(Description, ...)                                                             \
-  template<typename T> void TTS_CALLER(::tts::env &, int&, int&);                                  \
-                                                                                                   \
-  template<typename T> void TTS_FUNCTION(::tts::env & runtime)                                     \
-  {                                                                                                \
-    for(int tts_section = 0, tts_cnt = 1; tts_section < tts_cnt; tts_cnt -= 0 == tts_section++)    \
-    {                                                                                              \
-      TTS_CALLER<T>(runtime,tts_section,tts_cnt);                                                  \
-    }                                                                                              \
-  }                                                                                                \
+  template<typename T> void TTS_FUNCTION(::tts::env & runtime);                                    \
   namespace                                                                                        \
   {                                                                                                \
     static bool TTS_REGISTRATION =                                                                 \
@@ -95,23 +76,39 @@
           ::tts::detail::for_each_type(                                                            \
               [&](auto t) {                                                                        \
                 using T = typename decltype(t)::type;                                              \
-                runtime.output() << std::string(80, '-') << std::endl;                             \
-                runtime.output() << "[SCENARIO] - " << ::tts::detail::yellow_(Description);        \
-                runtime.output() << " with T = [" << ::tts::detail::magenta_(::tts::type_id<T>())  \
-                                 << "] " << std::endl;                                             \
-                runtime.output() << std::string(80, '-') << std::endl;                             \
+                runtime.output()  << ".. with T = [" << ::tts::detail::magenta                     \
+                                  << ::tts::type_id<T>() << ::tts::detail::reset                   \
+                                  << "] " << std::endl;                                            \
                 TTS_FUNCTION<T>(runtime);                                                          \
               },                                                                                   \
               ::tts::detail::typelist<__VA_ARGS__> {});                                            \
         }));                                                                                       \
   }                                                                                                \
   template<typename T>                                                                             \
-  void TTS_CALLER(::tts::env &runtime, int& tts_section, int& tts_cnt)                             \
+  void TTS_FUNCTION(::tts::env &runtime)                                                           \
 /**/
 
 //==================================================================================================
 /**
-  * @brief Defines a nested test case.
+  * @brief Start a nested cases zone.
+  *
+  * **Required header:** `#include <tts/case.hpp>`
+  *
+  * Open a section where nested test cases can be defined and nested properly.
+  *
+  *  @param Story A literal string describing the scenario intents.
+**/
+//==================================================================================================
+#define TTS_WHEN(Story)                                                                            \
+runtime.output()  << "When      : " << ::tts::detail::yellow << Story                              \
+                  << ::tts::detail::reset << std::endl;                                            \
+for ( int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ ) \
+   for ( tts::detail::only_once tts__only_once_setup{}; tts__only_once_setup; )                    \
+/**/
+
+//==================================================================================================
+/**
+  * @brief Create a nested test case.
   *
   * **Required header:** `#include <tts/case.hpp>`
   *
@@ -124,10 +121,10 @@
   *
   * Nested cases can be nested to an arbitrary depth and no nested cases of a given depth can
   * interact with each other.
-
+  *
   *  **Example:**
   *
-  *  @snippet sections.cpp tts_subcase
+  *  @snippet sections.cpp tts_when
   *
   *  @note
   *  Test cases performing no actual tests swill be reported as invalid.
@@ -135,10 +132,13 @@
   *  @param Description A literal string describing the scenario intents.
 **/
 //==================================================================================================
-#define TTS_SUBCASE(Description)                                                                   \
-  static int TTS_UNIQUE(id) = 0;                                                                   \
-  if(::tts::detail::section_guard(TTS_UNIQUE(id), tts_section, tts_cnt)                            \
-         .check(Description, runtime))                                                             \
-    for(int TTS_UNIQUE(tts_cnt) = 0; TTS_UNIQUE(tts_cnt) < 1; TTS_UNIQUE(tts_cnt)++) /**/
+#define TTS_AND_THEN(Description)                                                                  \
+static int TTS_UNIQUE(id) = 0;                                                                     \
+if(::tts::detail::section_guard(TTS_UNIQUE( id ), tts_section, tts_count )                         \
+                              .check(std::string("  And then: ") + Description, runtime)           \
+  )                                                                                                \
+for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )   \
+  for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                   \
+/**/
 
 #endif

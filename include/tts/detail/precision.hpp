@@ -13,6 +13,7 @@
 #include <tts/api.hpp>
 #include <string>
 #include <vector>
+#include <tts/detail/rt_helpers.hpp>
 
 namespace tts
 {
@@ -31,6 +32,8 @@ namespace tts
 
     TTS_API void check_precision(env &,
                          location const &,
+                         double,
+                         double,
                          double,
                          double,
                          std::string_view,

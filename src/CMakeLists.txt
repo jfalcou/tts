@@ -8,6 +8,7 @@
 
 add_library ( tts SHARED
               args.cpp
+              color.cpp
               env.cpp
               exceptions.cpp
               helpers.cpp
@@ -21,21 +22,21 @@ add_library ( tts SHARED
 add_library(tts::tts ALIAS tts)
 
 if( MSVC )
-  set( options /std:c++latest /W3 /EHsc)
+target_compile_options  ( tts PRIVATE /W3 /EHsc)
 else()
-  set( options -std=c++17 -Wall -Wno-missing-braces -fvisibility=hidden)
+target_compile_options  ( tts PRIVATE -Wall -fvisibility=hidden)
 endif()
 
-set_target_properties( tts PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/unit" )
+set_target_properties     ( tts PROPERTIES  RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/unit" )
+target_compile_features   ( tts PRIVATE     cxx_std_17                                            )
+target_compile_definitions( tts PRIVATE     TTS_API_EXPORTS=1                                     )
 
-target_compile_definitions(tts PRIVATE TTS_API_EXPORTS=1)
-
-target_include_directories(tts
-    PUBLIC
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    PRIVATE
-        ${PROJECT_SOURCE_DIR}/src
-)
+target_include_directories( tts
+                            PUBLIC
+                                $<INSTALL_INTERFACE:include>
+                                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                            PRIVATE
+                                ${PROJECT_SOURCE_DIR}/src
+                          )
 
 target_compile_options( tts PRIVATE ${options} )

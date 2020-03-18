@@ -54,12 +54,12 @@ namespace tts::detail
     friend std::ostream&
     operator<<( std::ostream& os, value_field const& manip )
     {
-        os.setf( std::ios_base::left , std::ios_base::adjustfield );
-        os.setf( std::ios_base::fixed, std::ios_base::floatfield  );
-        os.fill( ' ' );
-        os.precision( manip.precision_ );
-        os.width( manip.width_ );
-        return os;
+      os.setf( std::ios_base::left , std::ios_base::adjustfield );
+      os.setf( std::ios_base::fixed, std::ios_base::floatfield  );
+      os.fill( ' ' );
+      os.precision( manip.precision_ );
+      os.width( manip.width_ );
+      return os;
     }
   };
 }
@@ -75,6 +75,12 @@ namespace tts
     std::size_t size()      const noexcept { return self().size();   }
     static auto prng_seed()       noexcept { return args.seed();     }
     static auto count()           noexcept { return args.count();    }
+
+    template<typename V>
+    static V valmin(V v)    noexcept { return args.has_valmin() ? args.valmin(): v; }
+
+    template<typename V>
+    static V valmax(V v)    noexcept { return args.has_valmax() ? args.valmax(): v; }
 
     auto&       self()       noexcept { return static_cast<T&>(*this);        }
     auto const& self() const noexcept { return static_cast<T const&>(*this);  }
@@ -122,7 +128,10 @@ namespace tts
     }
 
     template<typename P, typename RefFunc, typename OtherFunc>
-    double run(producer<P> const& q, RefFunc f, OtherFunc g, std::string_view fs, std::string_view gs,  double &threshold)
+    double run( P const& q, RefFunc f, OtherFunc g
+              , std::string_view fs, std::string_view gs
+              ,  double &threshold
+              )
     {
       threshold = (threshold > 1.5) ? next2(threshold) : std::ceil(threshold*2)/2;
       std::size_t nbthreads = 1;
@@ -152,7 +161,7 @@ namespace tts
         auto sz = thread_count();
         auto id = thread_id();
         auto per_thread = q.size()/sz;
-        long unsigned int i0, i1;
+        std::size_t i0, i1;
 
         if (id == 0) nbthreads = sz;
 
@@ -171,7 +180,9 @@ namespace tts
         P p(q, i0, i1, sz);
 
         std::vector<std::size_t>  local_histogram(nb_buckets);
-        std::vector<base_type>    local_sample_values(nb_buckets, P::max());
+        std::vector<base_type>    local_sample_values( nb_buckets
+                                                     , std::numeric_limits<base_type>::max()
+                                                     );
         std::vector<bool>         found(nb_buckets);
 
         std::size_t n = ::tts::detail::size(typename P::value_type{});

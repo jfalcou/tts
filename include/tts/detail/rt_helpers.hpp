@@ -105,14 +105,6 @@ namespace tts::detail
     }
   }
 
-  // Split line if huge container is to be printed
-  template<typename LHS, typename RHS>
-  inline std::string split_line(LHS const &, RHS const &, std::string const &op)
-  {
-    return (detail::is_container_v<LHS> ? "\n" : "") + op +
-           (detail::is_container_v<RHS> ? "\n" : "");
-  }
-
   // Make an iostream that just do nothing
   struct null_buffer_t : std::streambuf
   {
@@ -148,14 +140,16 @@ namespace tts::detail
 
     template<typename Env> bool check(std::string const &desc, Env &e)
     {
-      if(id == section)
-      {
-        e.output() << std::endl << std::string(80,'-') << std::endl;
-        e.output() << desc << std::endl;
-        e.output() << std::string(80,'-') << std::endl;
-      }
+      if(id == section) e.output() << desc << std::endl;
       return id == section;
     }
+  };
+
+  struct only_once
+  {
+    bool once;
+    only_once() : once(true){}
+    explicit operator bool() { bool result = once; once = false; return result; }
   };
 }
 

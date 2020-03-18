@@ -13,6 +13,7 @@
 #include <tts/tests/infos.hpp>
 #include <tts/api.hpp>
 #include <typeinfo>
+#include <filesystem>
 #include <cstdlib>
 #include <string>
 
@@ -21,28 +22,23 @@ namespace tts::detail
   // Simple wrapper for __FILE__/__LINE__
   std::ostream &operator<<(std::ostream &os, location const &l)
   {
-    return os << darkgray_(l.file) << ":" << darkgray_(l.line);
+    std::filesystem::path p(l.file);
+    return os << blue << p.filename().c_str() << detail::reset << ":" << blue << l.line ;
   }
 
   // Basic messaging
   TTS_API std::ostream & pass(tts::env& runtime, location const& l)
   {
-    return runtime.pass() << l
-                   << ": " << ::tts::detail::green_("passed")
-                   << " - ";
+    return runtime.pass() << l << ": " << green << bold << "PASSED" << detail::reset << " - ";
   }
 
   TTS_API std::ostream & fail(tts::env& runtime, location const& l)
   {
-    return runtime.fail() << l
-                   << ": " << ::tts::detail::red_("**FAILED**")
-                   << " - ";
+    return runtime.fail() << l << ": " << red << bold << "**FAILED**" << detail::reset << " - ";
   }
 
   TTS_API std::ostream & invalid(tts::env& runtime, location const& l)
   {
-    return runtime.invalid()  << l
-                              << ": " << ::tts::detail::yellow_("**INVALID**")
-                              << " - ";
+    return runtime.invalid() << l << ": " << yellow << bold << "<!>INVALID<!>" << detail::reset << " - ";
   }
 }

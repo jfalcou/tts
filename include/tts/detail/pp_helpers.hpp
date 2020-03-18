@@ -15,10 +15,6 @@
 #define TTS_FUNCTION TTS_UNIQUE(tts_function)
 #endif
 
-#ifndef TTS_CALLER
-#define TTS_CALLER   TTS_UNIQUE(tts_caller)
-#endif
-
 #ifndef TTS_REGISTRATION
 #define TTS_REGISTRATION TTS_UNIQUE(tts_registration)
 #endif
