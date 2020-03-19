@@ -99,7 +99,7 @@ namespace tts
                 << detail::white << e.failures() << "/"  << fails     << " "<< detail::reset
                 << detail::red << fail_txt << detail::reset << " - "
                 << detail::white << e.invalids() << "/"  << invalids  << " " << detail::reset
-                << detail::yellow << inv_txt
+                << detail::yellow << inv_txt << detail::reset
                 << std::endl;
 
     if(!fails && !invalids)
