@@ -1,33 +1,28 @@
 <!--
-  TTS - Tiny Test System
+  **TTS** - Tiny Test System
   Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
  -->
-                    <meta charset="utf-8">
+<meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
                        **Tiny Test System**
-                         0.1 Release
 
-<center>
-                          (insert crumbs.html here)
-[**Overview**](#overview) ∙ [**Install**](#installingtts) ∙ [**Tutorial**](#tutorial) ∙ [**Changelog**](#changes)
-</center>
+**TTS** is a **Tiny Test System** designed to simplify the design of unit tests in `C++17`.
+**TTS** is based on the BDD methodology and is largely inspired by [the LEST framework][lest]
+by Martin Moene in both implementation and general design.
+<br>
 
-Overview
-====================================================================================================
-
-TTS is a **Tiny Test System** designed to simplify the design of unit tests in `C++17`.
-**TTS** is based on the BDD methodology and is largely inspired by [the LEST framework](https://github.com/martinmoene/lest)
-by Martin Moene in both implementation and general design. **TTS** is however
-biased toward testing numerical computation code by providing a selection of various precision-oriented
-checks including exhaustive exploration of a function's precision by [testing each and every possible
-values](https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/)
-or by testing functions over random samples of values.
+**TTS** is however biased toward testing numerical computation code by providing a selection of
+various precision-oriented checks including exhaustive exploration of a function's precision by
+[testing each and every possible values][dawson] or by testing functions over random samples of
+values.
 
 **TTS** is also meant to be extended for user-defined types so testing your own types using
 our methodology is as simple as overloading a function. This documentation will walk you through
 the basic philosophy of tests definitions with **TTS** and present all the checks available.
+
+  (insert crumbs.html here)
 
 Build and setup
 ====================================================================================================
@@ -46,7 +41,8 @@ Once retrieved, you should have a ``tts`` folder which contains the whole source
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
  $ cd tts
  $ ls
-   appveyor.yml  build  cmake  CMakeLists.txt  CTestConfig.cmake  doc  docs  format.sh  include  LICENSE.md  README.md  src  test
+   appveyor.yml  build  cmake  CMakeLists.txt  CTestConfig.cmake  doc
+   docs  format.sh  include  LICENSE.md  README.md  src  test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Installing
@@ -107,19 +103,19 @@ the current scenario is correctly serviced by the software component.
 <br>
 Test suites are themselves composed of at least one test case.
 
-With TTS, this decomposition (scenario/suite/test) is supported by various macro. The smallest
-viable TTS scenario is then defined by a single C++ source file composed of:
+With **TTS**, this decomposition (scenario/suite/test) is supported by various macro. The smallest
+viable **TTS** scenario is then defined by a single C++ source file composed of:
 
   * the inclusion of the file `tts/tts.hpp`
   * at least one test case defined by the appropriate macro.
 
-That's it ! This is a fully functional TTS test suite. Let's dive into the detail and how TTS
+That's it ! This is a fully functional **TTS** test suite. Let's dive into the detail and how **TTS**
 manage and report tests.
 
 Specify a Test Case
 ----------------------------------------------------------------------------------------------------
 Test cases are function performing repeatable, minimal operations able to unambiguously
-capture a function or class behavior and assess its correctness. In TTS, a test case can be
+capture a function or class behavior and assess its correctness. In **TTS**, a test case can be
 defined either as:
 
 * a single function defined by the :ref:`TTS_CASE <tts-case>` macro. In this case, the test
@@ -154,14 +150,14 @@ of failing tests and the number of invalid tests. Depending on your terminal's s
 outputs may be colored[^f1].
 
 In this case, unsurprisingly, our empty test is reported as invalid as we consider an empty test
-case as erroneous in itself. TTS enforces a **"no test is invalid"** rule that applies at the test
+case as erroneous in itself. **TTS** enforces a **"no test is invalid"** rule that applies at the test
 case level. Any test case with no actual testing will be considered as a failure and reported as an
 invalid test. Every test functions then require at least one call to any Testing Macros.
 
 Testing Macros
 ----------------------------------------------------------------------------------------------------
 
-TTS provides a set of macros to perform usual tests operations and reporting their success or
+**TTS** provides a set of macros to perform usual tests operations and reporting their success or
 failure to the test suite manager directly from within a test case.
 
 ### Information Tests
@@ -197,7 +193,7 @@ Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 One may notice that no other informations are displayed. This is the default behavior. One can
-activate a more verbose output by passing the `--pass` through the :ref`TTS command line interface`.
+activate a more verbose output by passing the `--pass` through the :ref`**TTS** command line interface`.
 
 The output now includes all the informations gathered by the testing macros, including the source
 file location of each tests and the current scenario being tested.
@@ -374,6 +370,8 @@ Macro                                                                 | Descript
 
 These macros are accessible in the `tts/unit/tests/sequence.hpp` header file.
 
+TODO: Example
+
 ### Runtime Error Tests
 Those tests check if a given expression exhibit a given runtime behavior with respect
 to exceptions. Expression can be tested for being able to throw or not. Note that those
@@ -386,6 +384,8 @@ Macro                                             | Description
 
 These macros are accessible in the `tts/unit/tests/exceptions.hpp` file.
 
+TODO: Example
+
 ### Type Related Tests
 Those tests check if a given type or type of expression is verify some relation with another types
 or some general types requirements.
@@ -397,50 +397,24 @@ Macro                                            | Description
 
 These macros are accessible in the `tts/unit/tests/types.hpp` file.
 
+TODO: Example
+
 ### Data-set Testing
 TODO
 
-Changes
-====================================================================================================
+----------------------------------------------------------------------------------------------------
+<!-- Shortcuts -->
+[lest]: https://github.com/martinmoene/lest
+[dawson]: https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/
 
-**Version 0.1: **
-
- * Initial release
-
-Licence
-====================================================================================================
-
-
-This library is licensed under the [MIT License](http://opensource.org/licenses/MIT):
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
-Copyright (c) 2020 Joel FALCOU
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software
-and associated documentation files (the “Software”), to deal in the Software without restriction,
-including without limitation the rights to use, copy, modify, merge, publish, distribute,
-sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+<!-- Footnotes -->
 [^f1]: Passing `--no-color` through the :ref:`tts-cli` remove said colors.
 
 [^f2]: Values are IEEE equal if they're separated by exactly 0 ULP.
 
 <!-- End of Document -->
-<script>markdeepOptions = {tocStyle:'long', definitionStyle:'long'};</script>
-<link rel="stylesheet" href="tts.css">
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'medium'};</script>
+-<link rel="stylesheet" href="tts.css">
 <!-- Markdeep: -->
-<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style>
 <script src="markdeep.min.js"></script>
-<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>
-<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

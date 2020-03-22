@@ -1,213 +1,38 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
 body {
-    font-weight: 400;
-    font-size: 18px;
-    font-family: Roboto,Arial,sans-serif;
-    text-align: left;
-    line-height: 170%;
     -webkit-font-smoothing: unset;
+    font-family: Roboto,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 170%;
+    max-width: 960px;
+    text-align: justify;
 }
 
-
-/* reset heading/link fonts to that of body */
-.md a,
-.md div.title, contents, .md .tocHeader,
-.md h1, .md h2, .md h3, .md h4, .md h5, .md h6,
-.md .nonumberh1, .md .nonumberh2, .md .nonumberh3, .md .nonumberh4, .md .nonumberh5, .md .nonumberh6,
-.md .shortTOC, .md .mediumTOC, .md .longTOC {
-    font-family: inherit;
-}
-
-.md div.title, .md div.subtitle {
-    position: absolute;
-    right: 0px;
-    text-align: right;
-    color: white;
-    z-index: 10;
-    margin: 0px;
-    padding-right: 30px;
-    font-weight: 900;
-}
-
+/* insert logo */
 .md div.title {
-    text-align: right;
-    position: absolute;
-    left: -230px;
-    top: 0px;
-    height: 85px;
-    padding-top: 20px;
-    font-size: 21px;
-    border-bottom: 8px solid #510b73;
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.75);
-    background-color:  #b29fb3;
     background-image: url('logo.png');
+    background-position: 75%;
     background-repeat: no-repeat;
-    background-position: top left;
     background-size: contain;
-}
-
-.md .imagecaption, .md div.listingcaption {
-    display: inline;
-}
-
-.md div.subtitle {
-    top: 60px;
-}
-
-.md .tocHeader {
-    display:none;
-}
-
-.md .longTOC .level1 {
-    font-weight: 300;
-    margin-bottom: -30px;
-    font-size: 16px;
-}
-
-.md h1 {
-    font-weight: bold;
-    font-size: 150%;
-    font-family: Roboto,sans-serif;
-    padding-bottom: 25px;
-    border-bottom: 1px solid #000;
-    margin-bottom: 25px;
-    margin-left:-20px;
-    margin-right:-20px;
-    padding-left:20px;
-    padding-top:25px;
-}
-
-.md h2 {
-    color: rgb(0, 72, 49);
-    font-size: 120%;
-    border-bottom: 1px solid #836685;
-}
-
-.md h3, .md h4, .md h5, .md h6 {
-    font-size: 120%;
-}
-
-.md table.table th {
-    background: #836685;
-    color: black;
-}
-
-.md code {
-    background: unset;
-    font-size: 100%;
-}
-
-.md .tocTop {
-    display: inline;
-}
-
-body {
+    color: #000;
+    font-size: 45px;
+    font-weight: 900;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-top: 20px;
     position: absolute;
-    left: 230px;
-    right:0px;
-    margin: 0px;
-    padding: 0px;
-    max-width: unset;
-    padding-right: 15px;
+    left:-200px;
+    right: 0px;
+    top: -14px;
+    z-index: 10;
 }
-
 
 .md div.afterTitles {
-    height: 115px;
+    height: 75px;
 }
-
-
-.md .admonition {
-border-radius: unset;
-position: relative;
-margin-left: -10px;
-border-left: 4px solid rgb(118, 185, 0);
-padding-left: 48px;
-background: unset !important;
-}
-
-.md .admonition-title {
-border: unset !important;
-margin-left: -55px;
-margin-bottom: -15px;
-}
-
-.md .admonition.warn, .md .admonition.warning {
-border-left: 4px solid rgb(255, 165, 0);
-}
-
-.md .admonition.warn::before, .md .admonition.warning::before {
-display: none;
-}
-
-.md .admonition.warn .admonition-title, .md .admonition.warning .admonition-title {
-border-bottom: 1px solid rgba(68,138,255,1);
-}
-
-.md .admonition.tip {
-border: 1px solid rgba(68,138,255,1);
-border-left: 2.5rem solid rgba(68,138,255,1);
-background: #202020;
-}
-.md .admonition.tip .admonition-title {
-border-bottom: 1px solid rgba(68,138,255,1);
-}
-
-.md .admonition.error {
-border: 1px solid rgba(255,23,68,1);
-border-left: 2.5rem solid rgba(255,23,68,1);
-background: #202020;
-}
-
-.md .admonition.error .admonition-title {
-border-bottom: 1px solid rgba(255,23,68,1);
-}
-
-.md a:link, .md a:visited, .md a:link code, .md a:visited code {
-color: #836685;
-text-decoration: underline;
-}
-
-.md a:hover, .md a:hover code {
-color: #836685;
-}
-
-@media screen {
-    .md .longTOC {
-        display: block;
-        white-space: nowrap;
-        width: 200px;
-        border-right: 1px solid #777;
-        overflow-y: auto;
-        font-family: inherit;
-        position: fixed;
-        left: 0px;
-        top: 115px;
-        bottom:0px;
-        margin: 0px;
-        padding: 0px;
-        padding-left:10px;
-        padding-top: -120px;
-    }
-
-    .scrolled .md .longTOC {
-        position: fixed;
-        top: 0px;
-    }
-
-
 
 /* no numbering of headings */
 .md h1:before, .md h2:before, .md h3:before, .md h4:before, .md h5:before, .md h6:before { content: none; }
 .md .tocNumber { display: none; }
-
-.md .longTOC a, .md .longTOC a:hover, .md .longTOC code {
-    text-decoration: none;
-    color: #000;
-    font-size: 16px;
-    font-family: sans-serif;
-}
-
-}
-
