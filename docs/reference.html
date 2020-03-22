@@ -1,84 +1,148 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
                     <meta charset="utf-8">
                        **Tiny Test System**
                          0.1 Release
 
-<center>**Tiny Test System**
-<br>
-[*User Manual*](index.html) ∙
+<center>
+                          (insert crumbs.html here)
+[**Scenario**](#secnariodefinition) ∙ [**Status**](#statustests) ∙ [**Basic**](#basictests) ∙ [**Relations**](#relationaltests) ∙ [**Precision**](#precisiontests) ∙ [**Sequence**](#sequencetests) ∙ [**Runtime Error**](#runtimeerrortests) ∙ [**Type**](#typetests)
 </center>
 
 Scenario definition
 ====================================================================================================
+The following component provides macros to define test cases as a simple function or as a template
+function. Those are the basic blocks of writing tests with TTS.
+<br>
+To use those macros, include the `tts/case.hpp` file.
 
-- :ref:`tts-scenario`
-   - :ref:`TTS_CASE <tts-case>`
-   - :ref:`TTS_CASE_TPL <tts-case-tpl>`
-   - :ref:`TTS_WHEN <tts-when>`
-   - :ref:`TTS_AND_THEN <tts-and_then>`
+<!--
+- :ref:`TTS_CASE <tts-case>`
+- :ref:`TTS_CASE_TPL <tts-case-tpl>`
+- :ref:`TTS_WHEN <tts-when>`
+- :ref:`TTS_AND_THEN <tts-and_then>`
+-->
 
 Status Tests
 ====================================================================================================
+The following component provides macros to display informations about tests status within scenarios.
+<br>
+To use those macros, include the `tts/tests/infos.hpp` file.
 
-- :ref:`tts-infos`
-   - :ref:`TTS_PASS <tts-pass>`
-   - :ref:`TTS_FAIL <tts-fail>`
-   - :ref:`TTS_INVALID <tts-invalid>`
+  (insert reference/tts_pass.html     here)
+  (insert reference/tts_fail.html     here)
+  (insert reference/tts_invalid.html  here)
 
 Basic Tests
 ====================================================================================================
+The following component provides macros to perform basic tests over expression that simply evaluates
+as a boolean value.
+<br>
+To use those macros, include the `tts/tests/basic.hpp` file.
 
-- :ref:`tts-basic`
-   - :ref:`TTS_EXPECT <tts-expect>`
-   - :ref:`TTS_EXPECT_NOT <tts-expect-not>`
+<!--
+- :ref:`TTS_EXPECT <tts-expect>`
+- :ref:`TTS_EXPECT_NOT <tts-expect-not>`
+-->
 
 Relational Tests
 ====================================================================================================
+The following component provides macros to perform ordering test between values.
+<br>
+To use those macros, include the `tts/tests/relation.hpp` file.
 
-- :ref:`tts-relation`
-   - :ref:`TTS_EQUAL <tts-equal>`
-   - :ref:`TTS_NOT_EQUAL <tts-not-equal>`
-   - :ref:`TTS_LESS <tts-less>`
-   - :ref:`TTS_GREATER <tts-greater>`
-   - :ref:`TTS_LESS_EQUAL <tts-less-equal>`
-   - :ref:`TTS_GREATER_EQUAL <tts-greater-equal>`
+!!! Attention Note
+   Ordering and equality comparisons are, by default, handled by the `operator==` or
+   `opetator<` overloads. In the case one needs to perform a custom comparison, see
+   the :ref:`custom-comparison` section.
+
+<!--
+- :ref:`TTS_EQUAL <tts-equal>`
+- :ref:`TTS_NOT_EQUAL <tts-not-equal>`
+- :ref:`TTS_LESS <tts-less>`
+- :ref:`TTS_GREATER <tts-greater>`
+- :ref:`TTS_LESS_EQUAL <tts-less-equal>`
+- :ref:`TTS_GREATER_EQUAL <tts-greater-equal>`
+-->
 
 Precision Tests
 ====================================================================================================
+The following component provides macros to perform precision tests between values.
+<br>
+To use those macros, include the `tts/tests/precision.hpp` file.
 
-- :ref:`tts-precision`
-   - :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`
-   - :ref:`TTS_IEEE_EQUAL <tts-ieee-equal>`
-   - :ref:`TTS_RELATIVE_EQUAL <tts-rel-equal>`
-   - :ref:`TTS_ABSOLUTE_EQUAL <tts-abs-equal>`
+!!! Attention Note
+   Precision comparisons are, by default, handled by the `tts::ulpdist`, `tts::reldist` or
+   `tts::absdist` overloads. In the case one needs to perform a custom precision comparison, see
+   the :ref:`custom-precision` section.
+
+<!--
+- :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`
+- :ref:`TTS_IEEE_EQUAL <tts-ieee-equal>`
+- :ref:`TTS_RELATIVE_EQUAL <tts-rel-equal>`
+- :ref:`TTS_ABSOLUTE_EQUAL <tts-abs-equal>`
+-->
 
 Sequence Tests
 ====================================================================================================
+The following component provides macros to perform tests over sequence of values. All those macros
+are based on the fact that the check to perform must pass for every elements of the sequence.
+<br>
+For convenience, one can substitute one of two of the input sequences by a scalar that will be
+interpreted as a sequence of one element.
+<br>
+To use those macros, include the `tts/tests/sequence.hpp` file.
 
-- :ref:`tts-sequence`
-   - :ref:`TTS_ALL_ULP_EQUAL <tts-all-ulp-equal>`
-   - :ref:`TTS_ALL_IEEE_EQUAL <tts-all-ieee-equal>`
-   - :ref:`TTS_ALL_RELATIVE_EQUAL <tts-all-rel-equal>`
-   - :ref:`TTS_ALL_EQUAL <tts-all-equal>`
-   - :ref:`TTS_ALL_ABSOLUTE_EQUAL <tts-all-abs-equal>`
+!!! Attention Note
+    Precision comparisons are, by default, handled by the `tts::ulpdist`, `tts::reldist` or
+    `tts::absdist` overloads. In the case one needs to perform a custom precision comparison, see
+    the :ref:`custom-precision` section.
+
+<!--
+- :ref:`TTS_ALL_ULP_EQUAL <tts-all-ulp-equal>`
+- :ref:`TTS_ALL_IEEE_EQUAL <tts-all-ieee-equal>`
+- :ref:`TTS_ALL_RELATIVE_EQUAL <tts-all-rel-equal>`
+- :ref:`TTS_ALL_EQUAL <tts-all-equal>`
+- :ref:`TTS_ALL_ABSOLUTE_EQUAL <tts-all-abs-equal>`
+-->
 
 Runtime Error Tests
 ====================================================================================================
+The following component provides macros to perform basic tests on the throwing or
+absence of runtime exceptions.
+<br>
+Note that those test macros requires the exception to be detected to inherits from `std::exception`.
+<br>
+To use those macros, include the `tts/tests/exception.hpp` file.
 
-- :ref:`tts-exceptions`
-   - :ref:`TTS_THROW <tts-throw>`
-   - :ref:`TTS_NO_THROW <tts-no-throw>`
+<!--
+- :ref:`TTS_THROW <tts-throw>`
+- :ref:`TTS_NO_THROW <tts-no-throw>`
+-->
 
 Type Tests
 ====================================================================================================
+The following component provides macros to perform tests over expression type equivalence
+or properties.
+<br>
+To use those macros, include the `tts/tests/types.hpp` file.
 
-- :ref:`tts-types`
-   - :ref:`TTS_TYPE_IS <tts-type-is>`
-   - :ref:`TTS_EXPR_IS <tts-expr-is>`
+<!--
+- :ref:`TTS_TYPE_IS <tts-type-is>`
+- :ref:`TTS_EXPR_IS <tts-expr-is>`
+-->
 
-<script>markdeepOptions = {tocStyle:'long', definitionStyle:'long', linkAPIDefinitions: true};</script>
+<!-- End of Document -->
+<script>markdeepOptions = {tocStyle:'long', definitionStyle:'long'};</script>
 <link rel="stylesheet" href="tts.css">
-<link rel="shortcut icon" href="../console/favicon.ico">
-<link rel="icon" type="image/png" sizes="64x64" href="favicon-64x64.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
-
+<!-- Markdeep: -->
+<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style>
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>
+<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>

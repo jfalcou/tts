@@ -1,21 +1,28 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
                     <meta charset="utf-8">
                        **Tiny Test System**
                          0.1 Release
 
-<center>**Tiny Test System**
-<br>
-[*Overview*](#overview) ∙ [*Install*](#installingtts) ∙ [*Usage*](#usingtts) ∙ [*Changelog*](#changes)
-<br>
-[*Reference*](reference.html) ∙ [*Rationale*](rationale.html)
+<center>
+                          (insert crumbs.html here)
+[**Overview**](#overview) ∙ [**Install**](#installingtts) ∙ [**Tutorial**](#tutorial) ∙ [**Changelog**](#changes)
 </center>
 
 Overview
 ====================================================================================================
 
 TTS is a **Tiny Test System** designed to simplify the design of unit tests in `C++17`.
-**TTS** is based on the BDD methodology and is largely inspired by [the LEST framework](https://github.com/martinmoene/lest) by Martin Moene in both implementation and general design. **TTS** is however
+**TTS** is based on the BDD methodology and is largely inspired by [the LEST framework](https://github.com/martinmoene/lest)
+by Martin Moene in both implementation and general design. **TTS** is however
 biased toward testing numerical computation code by providing a selection of various precision-oriented
-checks including exhaustive exploration of a function's precision by [testing each and every possible values](https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/)
+checks including exhaustive exploration of a function's precision by [testing each and every possible
+values](https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/)
 or by testing functions over random samples of values.
 
 **TTS** is also meant to be extended for user-defined types so testing your own types using
@@ -25,22 +32,69 @@ the basic philosophy of tests definitions with **TTS** and present all the check
 Build and setup
 ====================================================================================================
 
-Retrieving TTS
+Retrieving the source
 ----------------------------------------------------------------------------------------------------
 
-Building TTS
+**TTS** is available on GitHub and can be retrieved via the following command:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ git clone -b master https://github.com/jfalcou/tts.git
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once retrieved, you should have a ``tts`` folder which contains the whole source code.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ cd tts
+ $ ls
+   appveyor.yml  build  cmake  CMakeLists.txt  CTestConfig.cmake  doc  docs  format.sh  include  LICENSE.md  README.md  src  test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installing
 ----------------------------------------------------------------------------------------------------
 
-Installing TTS
+Create a ``build`` directory here and enter it. Once in the ``build`` directory,
+you can use  **CMake** to generate the build system for **TTS**. We recommend using
+Ninja but any build system is fine.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ mkdir build
+ $ cd build
+ $ cmake .. -G Ninja
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once **CMake** completes, you can use the ``install`` target to build and install **TTS**.
+By default, the library will be installed in the ``/usr/local`` directory, thus requiring
+root privileges.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ sudo ninja install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can select an alternative installation path by specifying the ``CMAKE_INSTALL_PREFIX``
+option at configuration time.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ cmake .. -G Ninja -DCMAKE_INSTALL_PREFIX=path/to/install
+ $ ninja install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once completed, the following files and folders are installed:
+
+- `$CMAKE_INSTALL_PREFIX/include/tts`
+- `$CMAKE_INSTALL_PREFIX/lib/cmake/tts`
+- `$CMAKE_INSTALL_PREFIX/lib/libtts.so`
+
+
+CMake integration
 ----------------------------------------------------------------------------------------------------
 
-Compiling with TTS
-----------------------------------------------------------------------------------------------------
+### Classic usage
 
-TTS as a dependency
-----------------------------------------------------------------------------------------------------
+### ExternalProject
 
-Using TTS
+**TTS** can also be used directly from CMake as an ``ExternalProject``. To do so,
+
+Tutorial
 ====================================================================================================
 
 Basic test structure
@@ -110,25 +164,23 @@ Testing Macros
 TTS provides a set of macros to perform usual tests operations and reporting their success or
 failure to the test suite manager directly from within a test case.
 
-### Basic Tests
-Those macros provide a way to test how an arbitrary expression evaluate or to force a test
-failure or success.
+### Information Tests
+Those macros provide a way to force a test as a failure or success.
 
-Macro             | Description
------------------ | --------------------------------------------
-`TTS_PASS`        | Forces a success and displays a message
-`TTS_FAIL`        | Forces a failure and displays a message
-`TTS_INVALID`     | Forces a failure and displays a message
-`TTS_EXPECT`      | Checks if an expression evaluates to `true`
-`TTS_EXPECT_NOT`  | Checks if an expression evaluates to `false`
+Macro                                                 | Description
+----------------------------------------------------- | --------------------------------------------
+[**`TTS_PASS`**](reference.html#tts_pass)             | Forces a success and displays a message
+[**`TTS_FAIL`**](reference.html#tts_fail)             | Forces a failure and displays a message
+[**`TTS_INVALID`**](reference.html#tts_invalid)       | Forces a failure and displays a message
+[**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
+[**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
 
-Let's amend our initial test by adding a single call to :ref:`TTS_PASS <tts-pass>`:
+Let's amend our initial test by adding a single call to [**`TTS_PASS`**](reference.html#tts_pass):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
 #include <tts/tests/infos.hpp>
-#include <tts/tests/basic.hpp>
 
 TTS_CASE( "Make a simple test suite" )
 {
@@ -162,18 +214,54 @@ Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
 
 Let's have a look at more complex checks and tests.
 
+### Basic Tests
+Those macros provide a way to test how an arbitrary expression evaluates.
+
+Macro                                                 | Description
+----------------------------------------------------- | --------------------------------------------
+[**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
+[**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
+
+These macros are accessible in the `tts/unit/tests/basic.hpp` header file.
+
+Let's see the effect of [**`TTS_EXPECT`**](reference.html#tts_expect):
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/basic.hpp>
+
+TTS_CASE( "Make a simple test suite" )
+{
+  TTS_EXPECT((1+1) == 2);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+and run it again:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+pass.cpp:7: Expected (1+1) == 2
+--------------------------------------------------------------------------------
+Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ### Relational Tests
 Relational tests compares the equality or ordering of values. Test is considered
 successful if values are properly ordered with respect to each other:
 
-Macro               | Description
-------------------- | --------------------------------------------
-`TTS_EQUAL`         | Checks if values are equal than each other
-`TTS_NOT_EQUAL`     | Checks if values are not equal than each other
-`TTS_LESS`          | Checks if values are lesser or equal than each other
-`TTS_GREATER`       | Checks if values are greater  than each other
-`TTS_LESS_EQUAL`    | Checks if values are lesser or equal than each other
-`TTS_GREATER_EQUAL` | Checks if values are greater or equal than each other
+Macro                                                       | Description
+----------------------------------------------------------- | --------------------------------------------
+[**`TTS_EQUAL`**](reference.html#tts_equal)                 | Checks if values are equal than each other
+[**`TTS_NOT_EQUAL`**](reference.html#tts_not_equal)         | Checks if values are not equal than each other
+[**`TTS_LESS`**](reference.html#tts_less)                   | Checks if values are lesser or equal than each other
+[**`TTS_GREATER`**](reference.html#tts_greater)             | Checks if values are greater  than each other
+[**`TTS_LESS_EQUAL`**](reference.html#tts_less_equal)       | Checks if values are lesser or equal than each other
+[**`TTS_GREATER_EQUAL`**](reference.html#tts_greater_equal) | Checks if values are greater or equal than each other
 
 These macros are accessible in the `tts/unit/tests/relation.hpp` header file.
 
@@ -218,20 +306,20 @@ These tests are intended to compare floating points results, allowing a third pa
 state the admitted possible difference between the two quantities. This difference can be expressed
 in:
 
-  * ULPs, that is units in the last place, which is an indication of the number of floating
+  * ULPs --or units in the last place-- which is an indication of the number of floating
     points values that are representable between the compared quantities (see the
-    :ref:`rationale-precision` section for more details).
+    [Precision testing](rationale.html#precisiontesting) section).
   * A relative tolerance, that is a percentage of the reference quantity which defines a validity
     interval around the expected value.
   * A absolute tolerance, that is a fixed quantity which defines a validity interval around the
     expected value.
 
-Macro                 | Description
---------------------- | --------------------------------------------
-`TTS_ULP_EQUAL`       | Checks if two values are equal within some ULPs
-`TTS_IEEE_EQUAL`      | Checks if two values are equal as IEEE 754 values (i.e they're separated by 0 ULP)
-`TTS_RELATIVE_EQUAL`  | Checks if one value is not equal to another
-`TTS_ABSOLUTE_EQUAL`  | Checks if one value is lesser or equal than another
+Macro                                                          | Description
+-------------------------------------------------------------- | --------------------------------------------
+[**`TTS_ULP_EQUAL`**](reference.html#tts_ulp_equal)            | Checks if two values are equal within some ULPs
+[**`TTS_IEEE_EQUAL`**](reference.html#tts_ieee_equal)          | Checks if two values are equal as IEEE 754 values[^f2]
+[**`TTS_RELATIVE_EQUAL`**](reference.html#tts_relative_equal)  | Checks if one value is not equal to another
+[**`TTS_ABSOLUTE_EQUAL`**](reference.html#tts_absolute_equal)  | Checks if one value is lesser or equal than another
 
 As for the relational comparison macros, the behavior of this set of test comparison can
 customized through a set of specific function (see :ref:`custom-ulp`, :ref:`custom-rel`
@@ -276,13 +364,13 @@ provided for these use-cases. They perform element-wise comparison of values and
 mismatch in the series. If an error occurs, a summary of incorrect values with their position and
 source of error is reported.
 
-Macro                    | Description
------------------------- | --------------------------------------------------------------------------
-`TTS_ALL_ULP_EQUAL`      | Checks if all values of two sequences are equal within an ULP distance
-`TTS_ALL_IEEE_EQUAL>`    | Checks if all values of two sequences are equal within 0 ULP
-`TTS_ALL_RELATIVE_EQUAL` | Checks if all values of two sequences are equal within a percentage
-`TTS_ALL_EQUAL`          | Checks if all values of two sequences are equal
-`TTS_ALL_ABSOLUTE_EQUAL` | Checks if all values of two sequences are equal within an absolute value
+Macro                                                                 | Description
+--------------------------------------------------------------------- | ----------------------------------------------------------
+[**`TTS_ALL_ULP_EQUAL`**](reference.html#tts_all_ulp_equal)           | Checks if two sequences are equal within an ULP distance
+[**`TTS_ALL_IEEE_EQUAL`**](reference.html#tts_all_ieee_equal)         | Checks if two sequences are equal within 0 ULP
+[**`TTS_ALL_RELATIVE_EQUAL`**](reference.html#tts_all_relative_equal) | Checks if two sequences are equal within a percentage
+[**`TTS_ALL_EQUAL`**](reference.html#tts_all_equal)                   | Checks if two sequences are equal
+[**`TTS_ALL_ABSOLUTE_EQUAL`**](reference.html#tts_all_absolute_equal) | Checks if two sequences are equal within an absolute value
 
 These macros are accessible in the `tts/unit/tests/sequence.hpp` header file.
 
@@ -291,10 +379,10 @@ Those tests check if a given expression exhibit a given runtime behavior with re
 to exceptions. Expression can be tested for being able to throw or not. Note that those
 test macros requires the exception to be detected to inherits from `std::exception`.
 
-| Macro          | Description
----------------- | ------------------------------------------------------------------
-| `TTS_THROW`    | Checks if a given expression throws an exception of a given type
-| `TTS_NO_THROW` | Checks if a given expression does not throw
+Macro                                             | Description
+---------------------------------- -------------- | ------------------------------------------------------------------
+[**`TTS_THROW`**](reference.html#tts_throw)       | Checks if a given expression throws an exception of a given type
+[**`TTS_NO_THROW`**](reference.html#tts_no_throw) | Checks if a given expression does not throw
 
 These macros are accessible in the `tts/unit/tests/exceptions.hpp` file.
 
@@ -302,14 +390,14 @@ These macros are accessible in the `tts/unit/tests/exceptions.hpp` file.
 Those tests check if a given type or type of expression is verify some relation with another types
 or some general types requirements.
 
-Macro         | Description
-------------- | -----------------------------------------------------------------
-`TTS_TYPE_IS`  | Checks if two types are the same
-`TTS_EXPR_IS`  | Checks if a given expression evaluates to a result of a given type
+Macro                                            | Description
+------------------------------------------------ | -----------------------------------------------------------------
+[**`TTS_TYPE_IS`**](reference.html#tts_type_is)  | Checks if two types are the same
+[**`TTS_EXPR_IS`**](reference.html#tts_expr_is)  | Checks if a given expression evaluates to a result of a given type
 
 These macros are accessible in the `tts/unit/tests/types.hpp` file.
 
-### Dataset Testing
+### Data-set Testing
 TODO
 
 Changes
@@ -346,10 +434,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [^f1]: Passing `--no-color` through the :ref:`tts-cli` remove said colors.
 
-<script>markdeepOptions = {tocStyle:'long', definitionStyle:'long', linkAPIDefinitions: true};</script>
-<link rel="stylesheet" href="tts.css">
-<link rel="shortcut icon" href="../console/favicon.ico">
-<link rel="icon" type="image/png" sizes="64x64" href="favicon-64x64.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="markdeep.min.js"></script><script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
+[^f2]: Values are IEEE equal if they're separated by exactly 0 ULP.
 
+<!-- End of Document -->
+<script>markdeepOptions = {tocStyle:'long', definitionStyle:'long'};</script>
+<link rel="stylesheet" href="tts.css">
+<!-- Markdeep: -->
+<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style>
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>
+<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>

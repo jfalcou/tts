@@ -65,13 +65,6 @@ body {
     font-size: 16px;
 }
 
-.md .longTOC .level2 {
-    font-weight: 300;
-    margin-bottom: -30px;
-    font-size: 14px;
-}
-
-
 .md h1 {
     font-weight: bold;
     font-size: 150%;
@@ -212,7 +205,7 @@ color: #836685;
 .md .longTOC a, .md .longTOC a:hover, .md .longTOC code {
     text-decoration: none;
     color: #000;
-    font-size: 12px;
+    font-size: 16px;
     font-family: sans-serif;
 }
 
