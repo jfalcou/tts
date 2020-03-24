@@ -86,6 +86,7 @@ CMake integration
 
 Classic usage
 ----------------------------------------------------------------------------------------------------
+Once installed, **TTS** is usable directly from CMake via the `FindPackage` command.
 
 ExternalProject
 ----------------------------------------------------------------------------------------------------
@@ -99,10 +100,10 @@ Basic test structure
 ----------------------------------------------------------------------------------------------------
 Unit Test are usually gathered into **scenarios** in which a specific behavior of a software
 component is tested. Such scenario are usually isolated into different executables.
-<br>
+
 Each scenario is decomposed into **test suites**, i.e a group of related test verifying that
 the current scenario is correctly serviced by the software component.
-<br>
+
 Test suites are themselves composed of at least one test case.
 
 With **TTS**, this decomposition (scenario/suite/test) is supported by various macro. The smallest
@@ -380,13 +381,46 @@ to exceptions. Expression can be tested for being able to throw or not. Note tha
 test macros requires the exception to be detected to inherits from `std::exception`.
 
 Macro                                             | Description
----------------------------------- -------------- | ------------------------------------------------------------------
+------------------------------------------------  | ------------------------------------------------------------------
 [**`TTS_THROW`**](reference.html#tts_throw)       | Checks if a given expression throws an exception of a given type
 [**`TTS_NO_THROW`**](reference.html#tts_no_throw) | Checks if a given expression does not throw
 
 These macros are accessible in the `tts/unit/tests/exceptions.hpp` file.
 
-TODO: Example
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/exceptions.hpp>
+
+struct some_exception_type : std::exception {};
+
+void foo() { throw some_exception_type(); }
+void bar() noexcept { }
+
+TTS_CASE( "Check that we can handle exceptions" )
+{
+  TTS_THROW( foo(), some_exception_type );
+  TTS_NO_THROW( bar() );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Check that we can handle exceptions
+--------------------------------------------------------------------------------
+exceptions.cpp:11: PASSED - foo() throws some_exception_type
+exceptions.cpp:12: PASSED - bar() does not throws.
+--------------------------------------------------------------------------------
+Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
 ### Type Related Tests
 Those tests check if a given type or type of expression is verify some relation with another types
@@ -399,7 +433,43 @@ Macro                                            | Description
 
 These macros are accessible in the `tts/unit/tests/types.hpp` file.
 
-TODO: Example
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/types.hpp>
+#include <memory>
+
+TTS_CASE( "Check that types can be tested for equality" )
+{
+  TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
+}
+
+TTS_CASE( "Check that expression types can be tested for equality" )
+{
+  TTS_EXPR_IS( std::make_unique<float>(3.1415f), std::unique_ptr<float> );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Check that types can be tested for equality
+--------------------------------------------------------------------------------
+types.cpp:7: PASSED - Expecting std::add_pointer<float const>::type to be float const*
+--------------------------------------------------------------------------------
+[SCENARIO] - Check that expression types can be tested for equality
+--------------------------------------------------------------------------------
+types.cpp:12: PASSED - Expecting decltype(std::make_unique<float>(3.1415f)) to be std::unique_ptr<float, std::default_delete<float> >
+--------------------------------------------------------------------------------
+Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
 ## Data-set Testing
 TODO
