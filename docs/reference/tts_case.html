@@ -6,37 +6,39 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_CASE
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_CASE(Description)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tts.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Introduces new test scenario and registers it into the current test driver.
+
+The following block will contain user-defined code for said test case. Test cases performing
+no actual tests will be reported as invalid.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `Description`: A literal string describing the scenario intents.
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE( "Check that forced failure fails" )
 {
-  TTS_FAIL("Forced fail");
+  // Insert your test code here
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

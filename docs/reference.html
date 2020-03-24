@@ -8,21 +8,32 @@
 <meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
                        **Tiny Test System**
 
+**TTS** tests is meant to cover a large scope of checks from simple validation to complex
+numeric based tests. Each category of tests macros lives in its own header and can be
+included in a fine grain way.
+
+Categories are :
+- [Scenario related](#scenariodefinition) macros: those helps structure test cases.
+- [Status related](#statustests) macros: those provide way to force pass or failure of tests.
+- [Basic tests](#basictests) macros: those provide simple expectation checks.
+- [Relational tests](#statustests) macros: those provide checks based on equality and ordering.
+- [Precision related](#precisiontests) macros: those provide checks for IEEE754 comparisons.
+- [Sequence related](#sequencetests) macros: those provide checks operating on sequences and containers.
+- [Runtime related](#runtimeerrortests) macros: those provide checks for runtime behavior.
+- [Type related](#typetests) macros: those provide checks for types comparisons.
+- [Dataset related](#datasettests) macros: those provide facility to compare functions behavior over data ranges.
+
   (insert crumbs.html here)
 
 Scenario definition
 ====================================================================================================
 The following component provides macros to define test cases as a simple function or as a template
-function. Those are the basic blocks of writing tests with TTS.
-<br>
-To use those macros, include the `tts/case.hpp` file.
+function. Those are the basic blocks of writing tests with TTS. To use those macros, include the `tts/tts.hpp` file.
 
-<!--
-- :ref:`TTS_CASE <tts-case>`
-- :ref:`TTS_CASE_TPL <tts-case-tpl>`
-- :ref:`TTS_WHEN <tts-when>`
-- :ref:`TTS_AND_THEN <tts-and_then>`
--->
+  (insert reference/tts_case.html     here)
+  (insert reference/tts_case_tpl.html here)
+  (insert reference/tts_when.html     here)
+  (insert reference/tts_and_then.html here)
 
 Status Tests
 ====================================================================================================
@@ -42,7 +53,7 @@ as a boolean value.
 To use those macros, include the `tts/tests/basic.hpp` file.
 
   (insert reference/tts_expect.html     here)
-  (insert reference/tts_expect_not.html     here)
+  (insert reference/tts_expect_not.html here)
 
 Relational Tests
 ====================================================================================================
@@ -52,17 +63,15 @@ To use those macros, include the `tts/tests/relation.hpp` file.
 
 !!! Attention Note
    Ordering and equality comparisons are, by default, handled by the `operator==` or
-   `opetator<` overloads. In the case one needs to perform a custom comparison, see
+   `operator<` overloads. In the case one needs to perform a custom comparison, see
    the :ref:`custom-comparison` section.
 
-<!--
-- :ref:`TTS_EQUAL <tts-equal>`
-- :ref:`TTS_NOT_EQUAL <tts-not-equal>`
-- :ref:`TTS_LESS <tts-less>`
-- :ref:`TTS_GREATER <tts-greater>`
-- :ref:`TTS_LESS_EQUAL <tts-less-equal>`
-- :ref:`TTS_GREATER_EQUAL <tts-greater-equal>`
--->
+  (insert reference/tts_equal.html          here)
+  (insert reference/tts_not_equal.html      here)
+  (insert reference/tts_less.html           here)
+  (insert reference/tts_greater.html        here)
+  (insert reference/tts_less_equal.html     here)
+  (insert reference/tts_greater_equal.html  here)
 
 Precision Tests
 ====================================================================================================
@@ -75,12 +84,10 @@ To use those macros, include the `tts/tests/precision.hpp` file.
    `tts::absdist` overloads. In the case one needs to perform a custom precision comparison, see
    the :ref:`custom-precision` section.
 
-<!--
-- :ref:`TTS_ULP_EQUAL <tts-ulp-equal>`
-- :ref:`TTS_IEEE_EQUAL <tts-ieee-equal>`
-- :ref:`TTS_RELATIVE_EQUAL <tts-rel-equal>`
-- :ref:`TTS_ABSOLUTE_EQUAL <tts-abs-equal>`
--->
+  (insert reference/tts_ulp_equal.html      here)
+  (insert reference/tts_ieee_equal.html     here)
+  (insert reference/tts_relative_equal.html here)
+  (insert reference/tts_absolute_equal.html here)
 
 Sequence Tests
 ====================================================================================================
@@ -97,13 +104,11 @@ To use those macros, include the `tts/tests/sequence.hpp` file.
     `tts::absdist` overloads. In the case one needs to perform a custom precision comparison, see
     the :ref:`custom-precision` section.
 
-<!--
-- :ref:`TTS_ALL_ULP_EQUAL <tts-all-ulp-equal>`
-- :ref:`TTS_ALL_IEEE_EQUAL <tts-all-ieee-equal>`
-- :ref:`TTS_ALL_RELATIVE_EQUAL <tts-all-rel-equal>`
-- :ref:`TTS_ALL_EQUAL <tts-all-equal>`
-- :ref:`TTS_ALL_ABSOLUTE_EQUAL <tts-all-abs-equal>`
--->
+  (insert reference/tts_all_equal.html          here)
+  (insert reference/tts_all_ulp_equal.html      here)
+  (insert reference/tts_all_ieee_equal.html     here)
+  (insert reference/tts_all_relative_equal.html here)
+  (insert reference/tts_all_absolute_equal.html here)
 
 Runtime Error Tests
 ====================================================================================================
@@ -114,10 +119,8 @@ Note that those test macros requires the exception to be detected to inherits fr
 <br>
 To use those macros, include the `tts/tests/exception.hpp` file.
 
-<!--
-- :ref:`TTS_THROW <tts-throw>`
-- :ref:`TTS_NO_THROW <tts-no-throw>`
--->
+  (insert reference/tts_throw.html      here)
+  (insert reference/tts_no_throw.html   here)
 
 Type Tests
 ====================================================================================================
@@ -126,10 +129,11 @@ or properties.
 <br>
 To use those macros, include the `tts/tests/types.hpp` file.
 
-<!--
-- :ref:`TTS_TYPE_IS <tts-type-is>`
-- :ref:`TTS_EXPR_IS <tts-expr-is>`
--->
+  (insert reference/tts_type_is.html      here)
+  (insert reference/tts_expr_is.html      here)
+
+Dataset Tests
+====================================================================================================
 
 ----------------------------------------------------------------------------------------------------
 <!-- Shortcuts -->

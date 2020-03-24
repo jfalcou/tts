@@ -6,37 +6,39 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_TYPE_IS
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_TYPE_IS(T1, T2)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/types.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `Type`: Type to compare.
+    - `Target`: Expected type.
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/types.hpp>
+#include <type_traits>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE( "Check that types can be tested for equality" )
 {
-  TTS_FAIL("Forced fail");
+  TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

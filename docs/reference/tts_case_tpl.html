@@ -8,24 +8,31 @@
 
 <meta charset="utf-8">
 
-TTS_EXPECT
+TTS_CASE_TPL
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_EXPECT(Expression)
+#define TTS_CASE_TPL(Description, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/basic.hpp>`
+**Required header:** `#include &lt;tts/tts.hpp>`
 
-Checks if a given expression evaluates to `true`.
+Starts a block defining a template test case.
+
+The following block will contains user defined preparation, actual tests, expectations and
+clean-up for said test case parametrized by a template type named `T` and instantiated for
+each type in the types sequence.
+
+As for [TTS_CASE](#tts_case), test cases performing no actual tests will be reported as invalid.
 
 **Parameters:**
 :
-    - `Expression`: Expression to evaluate and compare to `true`.
+    - `Description`: A literal string describing the scenario intents.
+    - `...`: Lists of types to generate the test case from.
 
 **Example:**
 
@@ -34,15 +41,10 @@ Checks if a given expression evaluates to `true`.
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
 
-TTS_CASE( "Check that expectation can be met" )
+TTS_CASE_TPL( "Make a simple test suite for some types", int, float, double )
 {
-  int a = 42, b = 69;
-
-  TTS_EXPECT(a != b);
-  TTS_EXPECT(a <  b);
-  TTS_EXPECT(a <= b);
-  TTS_EXPECT(b >  a);
-  TTS_EXPECT(b >= a);
+  // This test will be run for T=int, T=float and T=double
+  TTS_EXPECT(sizeof(T) >= 4);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

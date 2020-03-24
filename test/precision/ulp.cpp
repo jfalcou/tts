@@ -1,14 +1,13 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2019 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //====================================================================================================
 
-//! [ulp-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/precision.hpp>
 
@@ -22,7 +21,6 @@ TTS_CASE("ULP distance")
   TTS_ULP_EQUAL( pi  , static_cast<float>(pi) , 9.84293e+07 );
   TTS_ULP_EQUAL( 1.  , short{1}               , 0.          );
 }
-//! [ulp-equal]
 
 TTS_CASE( "ULP distance between boolean" )
 {

@@ -6,37 +6,42 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_LESS
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_LESS(LHS,RHS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/relation.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Performs less-than comparison between two values. This comparison is performed by using
+the proper `operator<` overload or by a :ref:custom_comaprison.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `LHS`, `RHS`:  Expressions to compare
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/relation.hpp>
+#include <vector>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE( "Check correctness of less-than comparison tests" )
 {
-  TTS_FAIL("Forced fail");
+  TTS_LESS(42., 69);
+
+  std::vector<float> a{1,2,3}, b{12,3};
+  TTS_LESS(a,b);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

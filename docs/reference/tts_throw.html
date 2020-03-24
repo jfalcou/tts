@@ -6,37 +6,43 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_THROW
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_THROW(Expression, Exception)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/basic.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if a given `Expression` throws an exception of type `Exception` which must inherits from
+std::exception.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `Expression`: Expression to evaluate.
+    - `Exception`: Expected exception type to be thrown.
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/exceptions.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+struct some_exception_type : std::exception {};
+
+void foo() { throw some_exception_type(); }
+
+TTS_CASE( "Check that we can capture thrown exceptions" )
 {
-  TTS_FAIL("Forced fail");
+  TTS_THROW( foo(), some_exception_type );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

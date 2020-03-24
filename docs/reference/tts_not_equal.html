@@ -6,37 +6,42 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_NOT_EQUAL
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_NOT_EQUAL(LHS,RHS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/relation.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Performs inequality comparison between two values.  This comparison is performed by
+using the proper `operator==` overload or by a :ref:custom_comaprison.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `LHS`, `RHS`:  Expressions to compare
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/relation.hpp>
+#include <vector>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE( "Check correctness of inequality tests" )
 {
-  TTS_FAIL("Forced fail");
+  TTS_NOT_EQUAL(42,69.f);
+
+  std::vector<float> a{1,2,3}, b{7,9};
+  TTS_NOT_EQUAL(a,b);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

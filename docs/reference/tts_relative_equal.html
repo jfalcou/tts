@@ -6,37 +6,42 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_RELATIVE_EQUAL
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_RELATIVE_EQUAL(LHS,RHS,X)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/precision.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if two values are within a given percentage. This comparison is performed by using
+the proper `tts::reldist` overloads (see :ref:reldist).
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `LHS`, `RHS`:  Expressions to compare
+    - `X`:  Maximal percentage acceptable for passing the test
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/precision.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE("Relative distance")
 {
-  TTS_FAIL("Forced fail");
+  TTS_RELATIVE_EQUAL(42.f , 42.f  , 0     );
+  TTS_RELATIVE_EQUAL('A'  , 80LL  , 18.75 );
+  TTS_RELATIVE_EQUAL(1.   , 2.f   , 100.  );
+  TTS_RELATIVE_EQUAL(1    , 10    , 900.  );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

@@ -6,37 +6,45 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_IEEE_EQUAL
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_IEEE_EQUAL(LHS,RHS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/precision.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if two values are exactly within a 0 [ULP](rationale.html#precisiontesting) of each other.
+This also allow for infinites and NaNs to be compared equal if both values are the same infinites
+or are both NaN. This comparison is performed by using the proper `tts::ulpdist` overloads
+(see :ref:ulp).
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `LHS`, `RHS`:  Expressions to compare
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/precision.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE("IEEE equality")
 {
-  TTS_FAIL("Forced fail");
+  float x = std::numeric_limits<float>::quiet_NaN();
+  TTS_IEEE_EQUAL(x,x);
+
+  TTS_IEEE_EQUAL(1.f, 1.f);
+  TTS_IEEE_EQUAL(2. , 2. );
+  TTS_IEEE_EQUAL(65 , 'A');
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

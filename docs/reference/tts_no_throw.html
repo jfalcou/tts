@@ -6,37 +6,39 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_NO_THROW
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_NO_THROW(Expression)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/basic.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if a given `Expression` throws no exception.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `Expression`: Expression to evaluate.
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/exceptions.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+void bar() {}
+
+TTS_CASE( "Check that nothrow function are detected as such" )
 {
-  TTS_FAIL("Forced fail");
+  TTS_NO_THROW( bar() );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

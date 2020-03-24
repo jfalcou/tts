@@ -1,14 +1,13 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2018 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
 
-//! [abs-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/precision.hpp>
 
@@ -17,7 +16,6 @@ TTS_CASE("Absolute distance")
   TTS_ABSOLUTE_EQUAL(-2.  , 2.f  , 4.);
   TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
 }
-//! [abs-equal]
 
 TTS_CASE_TPL( "Absolute distance between floating point", TTS_IEEE_TYPES)
 {

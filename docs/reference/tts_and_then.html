@@ -1,0 +1,69 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_AND_THEN
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_AND_THEN(Description)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tts.hpp>`
+
+Create a nested test case inside a [TTS_AND_THEN](#tts_and_then) section.
+
+Nested test cases performing no actual tests swill be reported as invalid.
+
+**Parameters:**
+:
+    - `Description`: A literal string describing the scenario intents.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/basic.hpp>
+#include <vector>
+
+TTS_CASE( "Test std::vector resize behavior" )
+{
+  TTS_WHEN("A vector is uninitialized")
+  {
+    std::vector<int> v;
+
+    TTS_EXPECT( v.size() == 0u );
+
+    TTS_AND_THEN( "is now reserved to a larger size" )
+    {
+      v.reserve( 10 );
+      TTS_EXPECT( v.size() == 0u );
+      TTS_EXPECT( v.capacity() >= 10u );
+
+      TTS_AND_THEN( "    is now reserved to an empty state" )
+      {
+        v.reserve( 0 );
+        TTS_EXPECT( v.size() == 0u );
+        TTS_EXPECT( v.capacity() >= 10u );
+      }
+    }
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

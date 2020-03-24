@@ -9,7 +9,6 @@
 //==================================================================================================
 #define TTS_USE_CUSTOM_DRIVER
 
-//! [fail]
 #include <tts/tts.hpp>
 #include <tts/tests/infos.hpp>
 
@@ -17,7 +16,6 @@ TTS_CASE( "Check that forced failure fails" )
 {
   TTS_FAIL("Forced fail");
 }
-//! [fail]
 
 int main(int argc, char** argv)
 {

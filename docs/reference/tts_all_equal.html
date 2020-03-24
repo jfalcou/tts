@@ -6,37 +6,44 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_ALL_EQUAL
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_ALL_EQUAL(LHS,RHS)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/sequence.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if all values of two containers are equal and if both arguments have the same size.
+One parameters can be set a scalar values, in which case the test will check the container
+parameter's size is 1.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `LHS`, `RHS`:  Sequences to compare
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/sequence.hpp>
+#include <vector>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE("Equality for sequences")
 {
-  TTS_FAIL("Forced fail");
+  std::vector<float> vx{1,2,3,4,5};
+  std::vector<float> vy{6};
+
+  TTS_ALL_EQUAL(vx , vx  );
+  TTS_ALL_EQUAL(vy , 6.f );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

@@ -6,37 +6,42 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_EXPR_IS
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_EXPR_IS(Expression, Type)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/types.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if an `Expression` evaluates to a value of a given `Type`.
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `Expression`: Expression to evaluate.
+    - `Type`: Expected type.
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/types.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE( "Check that expression types can be tested for equality" )
 {
-  TTS_FAIL("Forced fail");
+  double d;
+
+  TTS_EXPR_IS( &d + 5        , double*   );
+  TTS_EXPR_IS( std::move(d)  , double&&  );
+  TTS_EXPR_IS( std::swap(d,d), void      );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

@@ -6,37 +6,40 @@
   SPDX-License-Identifier: MIT
  -->
 
-                    <meta charset="utf-8">
+<meta charset="utf-8">
 
-TTS_FAIL
+TTS_ABSOLUTE_EQUAL
 ----------------------------------------------------------------------------------------------------
 
 **Synopsis:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_FAIL(Message)
+#define TTS_ABSOLUTE_EQUAL(LHS,RHS,X)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/infos.hpp>`
+**Required header:** `#include &lt;tts/tests/precision.hpp>`
 
-Register a test which always fails and displays a custom `Message`.
+Checks if the absolute distance between `LHS` and `RHS` is less or equal to `X`.
+This comparison is performed by using the proper `tts::absdist` overloads (see :ref:reldist).
 
 **Parameters:**
 :
-    - `Message`: A literal string to display as additional informations
+    - `LHS`, `RHS`:  Expressions to compare
+    - `X`:  Maximal absolute distance acceptable for passing the test
 
 **Example:**
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
+#include <tts/tests/precision.hpp>
 
-TTS_CASE( "Check that forced pass passes" )
+TTS_CASE("Absolute distance")
 {
-  TTS_FAIL("Forced fail");
+  TTS_ABSOLUTE_EQUAL(-2.  , 2.f  , 4.);
+  TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
