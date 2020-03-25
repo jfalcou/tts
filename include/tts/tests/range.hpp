@@ -345,14 +345,4 @@ namespace tts
   } while(::tts::detail::is_false())                                                                \
 /**/
 
-#define TTS_RANGE_CHECK(Producer, Ref, New)                                                         \
-  do                                                                                                \
-  {                                                                                                 \
-    if constexpr(std::is_floating_point_v<typename decltype(Producer)::base_type>)                  \
-      TTS_ULP_RANGE_CHECK(Producer, Ref, New, 2.0);                                                 \
-    else                                                                                            \
-      TTS_ULP_RANGE_CHECK(Producer, Ref, New, 0.0);                                                 \
-  } while(::tts::detail::is_false())                                                                \
-/**/
-
 #endif
