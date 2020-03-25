@@ -134,6 +134,19 @@ To use those macros, include the `tts/tests/types.hpp` file.
 
 Dataset Tests
 ====================================================================================================
+Producers are class that fulfills a given interface so that range checks can use them as data
+generators. **TTS** provides a base class to define custom producers and two ready-to-use
+producers for checking behavior over random input or the exhaustive list of values within an
+interval.
+<br>
+To use those components, include the `tts/tests/range.hpp` file.
+
+<!--
+  (jinsert reference/tts_producer.html             here)
+  (jinsert reference/tts_random_producer.html      here)
+  (jinsert reference/tts_exhaustive_producer.html  here)
+  (jinsert reference/tts_ulp_range_check.html  here)
+-->
 
 ----------------------------------------------------------------------------------------------------
 <!-- Shortcuts -->
