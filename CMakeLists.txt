@@ -34,15 +34,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/src)
 ## Options
 ##==================================================================================================
 option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
-option( TTS_BUILD_DOC     "Build doc for tts"       ON  )
 option( TTS_IS_DEPENDENT  "Dependent mode for tts"  OFF )
-
-##==================================================================================================
-## Setup Documentation
-##==================================================================================================
-if( TTS_BUILD_DOC )
-  add_subdirectory(doc)
-endif()
 
 ##==================================================================================================
 ## Setup Install target only if not used as dependent

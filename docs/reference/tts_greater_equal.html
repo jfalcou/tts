@@ -1,0 +1,54 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_GREATER_EQUAL
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_GREATER_EQUAL(LHS,RHS)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/relation.hpp>`
+
+Performs greater-than-or-equal comparison between two values. This comparison is performed by using
+the proper `operator<` and `operator==` overloads or by a :ref:custom_comaprison.
+
+**Parameters:**
+:
+    - `LHS`, `RHS`:  Expressions to compare
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/relation.hpp>
+#include <vector>
+
+TTS_CASE( "Check correctness of greater-equal comparison tests" )
+{
+  TTS_GREATER_EQUAL(69LL, 42.f);
+  TTS_GREATER_EQUAL(69., 69);
+
+  std::vector<float> a{12,3}, b{7,9,11};
+  TTS_GREATER_EQUAL(a,b);
+  TTS_GREATER_EQUAL(a,a);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

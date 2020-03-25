@@ -1,264 +1,503 @@
+<!--
+  **TTS** - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+<meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
+                       **Tiny Test System**
+
+**TTS** is a **Tiny Test System** designed to simplify the design of unit tests in `C++17`.
+**TTS** is based on the BDD methodology and is largely inspired by [the LEST framework][lest]
+by Martin Moene in both implementation and general design.
+<br>
+
+**TTS** is however biased toward testing numerical computation code by providing a selection of
+various precision-oriented checks including exhaustive exploration of a function's precision by
+[testing each and every possible values][dawson] or by testing functions over random samples of
+values.
+
+**TTS** is also meant to be extended for user-defined types so testing your own types using
+our methodology is as simple as overloading a function. This documentation will walk you through
+the basic philosophy of tests definitions with **TTS** and present all the checks available.
+
+  (insert crumbs.html here)
+
+Build and setup
+====================================================================================================
+
+Retrieving the source
+----------------------------------------------------------------------------------------------------
+
+**TTS** is available on GitHub and can be retrieved via the following command:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ git clone -b master https://github.com/jfalcou/tts.git
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once retrieved, you should have a ``tts`` folder which contains the whole source code.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ cd tts
+ $ ls
+   appveyor.yml  build  cmake  CMakeLists.txt  CTestConfig.cmake  doc
+   docs  format.sh  include  LICENSE.md  README.md  src  test
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Installing
+----------------------------------------------------------------------------------------------------
+
+Create a ``build`` directory here and enter it. Once in the ``build`` directory,
+you can use  **CMake** to generate the build system for **TTS**. We recommend using
+Ninja but any build system is fine.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ mkdir build
+ $ cd build
+ $ cmake .. -G Ninja
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once **CMake** completes, you can use the ``install`` target to build and install **TTS**.
+By default, the library will be installed in the ``/usr/local`` directory, thus requiring
+root privileges.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ sudo ninja install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can select an alternative installation path by specifying the ``CMAKE_INSTALL_PREFIX``
+option at configuration time.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+ $ cmake .. -G Ninja -DCMAKE_INSTALL_PREFIX=path/to/install
+ $ ninja install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once completed, the following files and folders are installed:
+
+- `$CMAKE_INSTALL_PREFIX/include/tts`
+- `$CMAKE_INSTALL_PREFIX/lib/cmake/tts`
+- `$CMAKE_INSTALL_PREFIX/lib/libtts.so`
 
 
-<!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Tiny Test System &mdash; tts 1.0.0 documentation</title>
-  
+CMake integration
+====================================================================================================
 
-  
-  
-  
-  
+Classic usage
+----------------------------------------------------------------------------------------------------
+Once installed, **TTS** is usable directly from CMake via the `FindPackage` command.
 
-  
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
+ExternalProject
+----------------------------------------------------------------------------------------------------
 
-    
+**TTS** can also be used directly from CMake as an ``ExternalProject``. To do so,
 
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Build and setup" href="install.html" /> 
-</head>
+Tutorial
+====================================================================================================
 
-<body class="wy-body-for-nav">
+Basic test structure
+----------------------------------------------------------------------------------------------------
+Unit Test are usually gathered into **scenarios** in which a specific behavior of a software
+component is tested. Such scenario are usually isolated into different executables.
 
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
+Each scenario is decomposed into **test suites**, i.e a group of related test verifying that
+the current scenario is correctly serviced by the software component.
 
-          
-            <a href="#">
-          
+Test suites are themselves composed of at least one test case.
 
-          
-            
-            <img src="_static/logo.png" class="logo" alt="Logo"/>
-          
-          </a>
+With **TTS**, this decomposition (scenario/suite/test) is supported by various macro. The smallest
+viable **TTS** scenario is then defined by a single C++ source file composed of:
 
-          
-            
-            
-              <div class="version">
-                1.0.0
-              </div>
-            
-          
+  * the inclusion of the file `tts/tts.hpp`
+  * at least one test case defined by the appropriate macro.
 
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
+That's it ! This is a fully functional **TTS** test suite. Let's dive into the detail and how **TTS**
+manage and report tests.
 
-          
-        </div>
+Specify a Test Case
+----------------------------------------------------------------------------------------------------
+Test cases are function performing repeatable, minimal operations able to unambiguously
+capture a function or class behavior and assess its correctness. In **TTS**, a test case can be
+defined either as:
 
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Build and setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="howto.html">Using TTS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Manual</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extension.html">Customizing TTS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">Design Rationale</a></li>
-</ul>
+* a single function defined by the :ref:`TTS_CASE <tts-case>` macro. In this case, the test
+  function will be run and proceed to every tests it contains.
+* a family of functions generated from a template function and a sequence of types
+  via the :ref:`TTS_CASE_TPL <tts-case-tpl>` macro. Inside the test case itself, the template
+  type is accessible through the template parameter `T`.
 
-            
-          
-        </div>
-      </div>
-    </nav>
+In both case, the test case is defined with an unique string description. Additionally, good
+testing practices recommend to have fine grain test cases to simplify test management.
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
 
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">tts</a>
-        
-      </nav>
+TTS_CASE( "Make a simple test suite" )
+{
+  // This test case is empty and thus will be reported as invalid
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
+After compiling and launching the test, you should end up with the following output:
 
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test
+Results: 1 test - 0 success - 0/0 failure - 1/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+The unit test reports the total number of tests performed, the number of passing tests, the number
+of failing tests and the number of invalid tests. Depending on your terminal's settings, this
+outputs may be colored[^f1].
 
+In this case, unsurprisingly, our empty test is reported as invalid as we consider an empty test
+case as erroneous in itself. **TTS** enforces a **"no test is invalid"** rule that applies at the test
+case level. Any test case with no actual testing will be considered as a failure and reported as an
+invalid test. Every test functions then require at least one call to any Testing Macros.
 
+Testing Macros
+----------------------------------------------------------------------------------------------------
 
+**TTS** provides a set of macros to perform usual tests operations and reporting their success or
+failure to the test suite manager directly from within a test case.
 
+### Information Tests
+Those macros provide a way to force a test as a failure or success.
 
+Macro                                                 | Description
+----------------------------------------------------- | --------------------------------------------
+[**`TTS_PASS`**](reference.html#tts_pass)             | Forces a success and displays a message
+[**`TTS_FAIL`**](reference.html#tts_fail)             | Forces a failure and displays a message
+[**`TTS_INVALID`**](reference.html#tts_invalid)       | Forces a failure and displays a message
+[**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
+[**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
 
+Let's amend our initial test by adding a single call to [**`TTS_PASS`**](reference.html#tts_pass):
 
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/infos.hpp>
 
+TTS_CASE( "Make a simple test suite" )
+{
+  TTS_PASS("This one's a success");
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
+and run it again:
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test
+Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+One may notice that no other informations are displayed. This is the default behavior. One can
+activate a more verbose output by passing the `--pass` through the :ref`**TTS** command line interface`.
 
+The output now includes all the informations gathered by the testing macros, including the source
+file location of each tests and the current scenario being tested.
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+pass.cpp:7: passed- This one's a success
+--------------------------------------------------------------------------------
+Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-<div role="navigation" aria-label="breadcrumbs navigation">
+Let's have a look at more complex checks and tests.
 
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="#">Docs</a> &raquo;</li>
-        
-      <li>Tiny Test System</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-        
-      </li>
-    
-  </ul>
+### Basic Tests
+Those macros provide a way to test how an arbitrary expression evaluates.
 
-  
-  <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
-      
-        <a href="install.html" class="btn btn-neutral float-right" title="Build and setup" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-  </div>
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="tiny-test-system">
-<h1>Tiny Test System<a class="headerlink" href="#tiny-test-system" title="Permalink to this headline">¶</a></h1>
-<p>TTS is a <strong>Tiny Test System</strong> designed to simplify the design of unit tests in <cite>C++17</cite>.
-<strong>TTS</strong> is based on the BDD methodology and is largely inspired by <a class="reference external" href="https://github.com/martinmoene/lest">the LEST framework</a> by Martin
-Moene in both implementation and general design.</p>
-<p><strong>TTS</strong> is however biased toward testing numerical computation code by providing a selection of
-various precision oriented checks including exhaustive exploration of a function’s precision by
-testing each and every possible values <a class="footnote-reference brackets" href="#f1" id="id1">1</a> or by testing functions over random samples of values.</p>
-<p><strong>TTS</strong> is also meant to be extended for user-defined types so testing your own types using our
-methodology is as simple as overloading a function.</p>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Build and setup</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#retrieving-tts">Retrieving TTS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#building-tts">Building TTS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#installing-tts">Installing TTS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#compiling-with-tts">Compiling with TTS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#tts-as-a-dependency">TTS as a dependency</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="howto.html">Using TTS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="howto.html#basic-test-structure">Basic test structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howto.html#specify-a-test-case">Specify a Test Case</a></li>
-<li class="toctree-l2"><a class="reference internal" href="howto.html#testing-macros">Testing Macros</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference Manual</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extension.html">Customizing TTS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="extension.html#command-line-interface">Command Line Interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extension.html#custom-test-driver">Custom Test Driver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extension.html#custom-comparison">Custom Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extension.html#custom-precision-comparison">Custom Precision Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extension.html#custom-data-producer">Custom Data Producer</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rationale.html">Design Rationale</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rationale.html#precision-testing">Precision testing</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<p class="rubric">Footnotes</p>
-<dl class="footnote brackets">
-<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>This methodology is inspired from <a class="reference external" href="https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/">this Bruce Dawson’s blog post</a> and can be used to completely map the behavior of functions.</p>
-</dd>
-</dl>
-</div>
+Macro                                                 | Description
+----------------------------------------------------- | --------------------------------------------
+[**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
+[**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
 
+These macros are accessible in the `tts/unit/tests/basic.hpp` header file.
 
-           </div>
-           
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="install.html" class="btn btn-neutral float-right" title="Build and setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-    </div>
-  
+Let's see the effect of [**`TTS_EXPECT`**](reference.html#tts_expect):
 
-  <hr/>
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/basic.hpp>
 
-  <div role="contentinfo">
-    <p>
-        &copy; Copyright 2019, Joel Falcou
+TTS_CASE( "Make a simple test suite" )
+{
+  TTS_EXPECT((1+1) == 2);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
-    </p>
-  </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+and run it again:
 
-</footer>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+pass.cpp:7: Expected (1+1) == 2
+--------------------------------------------------------------------------------
+Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        </div>
-      </div>
+### Relational Tests
+Relational tests compares the equality or ordering of values. Test is considered
+successful if values are properly ordered with respect to each other:
 
-    </section>
+Macro                                                       | Description
+----------------------------------------------------------- | --------------------------------------------
+[**`TTS_EQUAL`**](reference.html#tts_equal)                 | Checks if values are equal than each other
+[**`TTS_NOT_EQUAL`**](reference.html#tts_not_equal)         | Checks if values are not equal than each other
+[**`TTS_LESS`**](reference.html#tts_less)                   | Checks if values are lesser or equal than each other
+[**`TTS_GREATER`**](reference.html#tts_greater)             | Checks if values are greater  than each other
+[**`TTS_LESS_EQUAL`**](reference.html#tts_less_equal)       | Checks if values are lesser or equal than each other
+[**`TTS_GREATER_EQUAL`**](reference.html#tts_greater_equal) | Checks if values are greater or equal than each other
 
-  </div>
-  
+These macros are accessible in the `tts/unit/tests/relation.hpp` header file.
 
+Note that all those relational tests are performed using either the default `==` and `&lt;`
+operators. One can customize this behavior by providing :ref:`custom-equal` or :ref:`custom-order`.
 
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
+Let's see how those tests integrates in our small test suite:
 
-  
-  
-    
-   
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/relation.hpp>
+#include <vector>
 
-</body>
-</html>
+TTS_CASE( "Verify basic relations" )
+{
+  std::vector<float> a{1,2,3}, b{1,2,3};
+
+  TTS_EQUAL(a, b);
+  TTS_NOT_EQUAL( true, false );
+  TTS_LESS( -1.f, 0.5 );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Verify basic relations
+--------------------------------------------------------------------------------
+pass.cpp:9: passed: - Expecting: a == b
+pass.cpp:10: passed: - Expecting: true != false
+pass.cpp:11: passed: - Expecting: -1.f < 0.5
+--------------------------------------------------------------------------------
+Results: 3 tests - 3 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Precision Tests
+These tests are intended to compare floating points results, allowing a third parameter to
+state the admitted possible difference between the two quantities. This difference can be expressed
+in:
+
+  * ULPs --or units in the last place-- which is an indication of the number of floating
+    points values that are representable between the compared quantities (see the
+    [Precision testing](rationale.html#precisiontesting) section).
+  * A relative tolerance, that is a percentage of the reference quantity which defines a validity
+    interval around the expected value.
+  * A absolute tolerance, that is a fixed quantity which defines a validity interval around the
+    expected value.
+
+Macro                                                          | Description
+-------------------------------------------------------------- | --------------------------------------------
+[**`TTS_ULP_EQUAL`**](reference.html#tts_ulp_equal)            | Checks if two values are equal within some ULPs
+[**`TTS_IEEE_EQUAL`**](reference.html#tts_ieee_equal)          | Checks if two values are equal as IEEE 754 values[^f2]
+[**`TTS_RELATIVE_EQUAL`**](reference.html#tts_relative_equal)  | Checks if one value is not equal to another
+[**`TTS_ABSOLUTE_EQUAL`**](reference.html#tts_absolute_equal)  | Checks if one value is lesser or equal than another
+
+As for the relational comparison macros, the behavior of this set of test comparison can
+customized through a set of specific function (see :ref:`custom-ulp`, :ref:`custom-rel`
+or :ref:`custom-abs`.
+
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/precision.hpp>
+
+TTS_CASE("ULP distance")
+{
+  auto pi   = 3.14159265358979323846;
+  auto eps  = std::numeric_limits<float>::epsilon();
+
+  TTS_ULP_EQUAL('A'  , 80LL                   , 15.         );
+  TTS_ULP_EQUAL( 1.f , 1.f+eps                , 0.5         );
+  TTS_ULP_EQUAL( pi  , static_cast<float>(pi) , 9.84293e+07 );
+  TTS_ULP_EQUAL( 1.  , short{1}               , 0.          );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - ULP distance
+--------------------------------------------------------------------------------
+ulp.cpp:9: PASSED - Expecting: 'A' == 80LL within 15 ULP and found: 7.5 ULP
+ulp.cpp:10: PASSED - Expecting: 1.f == 1.f+eps within 0.5 ULP and found: 0.5 ULP
+ulp.cpp:11: PASSED - Expecting: pi == static_cast<float>(pi) within 9.84e+07 ULP and found: 9.84e+07 ULP
+ulp.cpp:12: PASSED - Expecting: 1. == short{1} within 0 ULP and found: 0 ULP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Sequence Tests
+Another common use-case often consists in comparing two series of values. Additional macros are
+provided for these use-cases. They perform element-wise comparison of values and also detects size
+mismatch in the series. If an error occurs, a summary of incorrect values with their position and
+source of error is reported.
+
+Macro                                                                 | Description
+--------------------------------------------------------------------- | ----------------------------------------------------------
+[**`TTS_ALL_ULP_EQUAL`**](reference.html#tts_all_ulp_equal)           | Checks if two sequences are equal within an ULP distance
+[**`TTS_ALL_IEEE_EQUAL`**](reference.html#tts_all_ieee_equal)         | Checks if two sequences are equal within 0 ULP
+[**`TTS_ALL_RELATIVE_EQUAL`**](reference.html#tts_all_relative_equal) | Checks if two sequences are equal within a percentage
+[**`TTS_ALL_EQUAL`**](reference.html#tts_all_equal)                   | Checks if two sequences are equal
+[**`TTS_ALL_ABSOLUTE_EQUAL`**](reference.html#tts_all_absolute_equal) | Checks if two sequences are equal within an absolute value
+
+These macros are accessible in the `tts/unit/tests/sequence.hpp` header file.
+
+TODO: Example
+
+### Runtime Error Tests
+Those tests check if a given expression exhibit a given runtime behavior with respect
+to exceptions. Expression can be tested for being able to throw or not. Note that those
+test macros requires the exception to be detected to inherits from `std::exception`.
+
+Macro                                             | Description
+------------------------------------------------  | ------------------------------------------------------------------
+[**`TTS_THROW`**](reference.html#tts_throw)       | Checks if a given expression throws an exception of a given type
+[**`TTS_NO_THROW`**](reference.html#tts_no_throw) | Checks if a given expression does not throw
+
+These macros are accessible in the `tts/unit/tests/exceptions.hpp` file.
+
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/exceptions.hpp>
+
+struct some_exception_type : std::exception {};
+
+void foo() { throw some_exception_type(); }
+void bar() noexcept { }
+
+TTS_CASE( "Check that we can handle exceptions" )
+{
+  TTS_THROW( foo(), some_exception_type );
+  TTS_NO_THROW( bar() );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Check that we can handle exceptions
+--------------------------------------------------------------------------------
+exceptions.cpp:11: PASSED - foo() throws some_exception_type
+exceptions.cpp:12: PASSED - bar() does not throws.
+--------------------------------------------------------------------------------
+Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+### Type Related Tests
+Those tests check if a given type or type of expression is verify some relation with another types
+or some general types requirements.
+
+Macro                                            | Description
+------------------------------------------------ | -----------------------------------------------------------------
+[**`TTS_TYPE_IS`**](reference.html#tts_type_is)  | Checks if two types are the same
+[**`TTS_EXPR_IS`**](reference.html#tts_expr_is)  | Checks if a given expression evaluates to a result of a given type
+
+These macros are accessible in the `tts/unit/tests/types.hpp` file.
+
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/types.hpp>
+#include <memory>
+
+TTS_CASE( "Check that types can be tested for equality" )
+{
+  TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
+}
+
+TTS_CASE( "Check that expression types can be tested for equality" )
+{
+  TTS_EXPR_IS( std::make_unique<float>(3.1415f), std::unique_ptr<float> );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Check that types can be tested for equality
+--------------------------------------------------------------------------------
+types.cpp:7: PASSED - Expecting std::add_pointer<float const>::type to be float const*
+--------------------------------------------------------------------------------
+[SCENARIO] - Check that expression types can be tested for equality
+--------------------------------------------------------------------------------
+types.cpp:12: PASSED - Expecting decltype(std::make_unique<float>(3.1415f)) to be std::unique_ptr<float, std::default_delete<float> >
+--------------------------------------------------------------------------------
+Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+## Data-set Testing
+Those tests compares the behavior of two function objets ran over data generated by Producers.
+The macro generate an histogram of ULP distance and display a summary of which values generates
+discrepancies between the two functions. The test is considered as passed if the maximum
+ULP distance measured is below a given threshold specified either at runtime or in the test
+setup.
+
+Macro                                                           | Description
+--------------------------------------------------------------- | -----------------------------------------------------------------
+[**`TTS_RANGE_CHECK`**](reference.html#tts_range_check)         | Checks if two functions never differs from at most a given ULP distance specified at runtime.
+[**`TTS_ULP_RANGE_CHECK`**](reference.html#tts_ulp_range_check) | Checks if two functions never differs from at most a given ULP distance.
+
+These macros are accessible in the `tts/unit/tests/range.hpp` file.
+
+----------------------------------------------------------------------------------------------------
+<!-- Shortcuts -->
+[lest]: https://github.com/martinmoene/lest
+[dawson]: https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/
+
+<!-- Footnotes -->
+[^f1]: Passing `--no-color` through the :ref:`tts-cli` remove said colors.
+
+[^f2]: Values are IEEE equal if they're separated by exactly 0 ULP.
+
+<!-- End of Document -->
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'medium'};</script>
+-<link rel="stylesheet" href="tts.css">
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

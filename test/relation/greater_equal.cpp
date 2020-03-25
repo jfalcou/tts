@@ -1,14 +1,13 @@
  //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2019 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
 
-//! [greater-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
@@ -21,7 +20,6 @@ TTS_CASE( "Check correctness of greater-equal comparison tests" )
   TTS_GREATER_EQUAL(a,b);
   TTS_GREATER_EQUAL(a,a);
 }
-//! [greater-equal]
 
 #include "foo.hpp"
 

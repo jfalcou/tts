@@ -1,14 +1,13 @@
  //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2019 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
 
-//! [greater]
 #include <tts/tts.hpp>
 #include <tts/tests/relation.hpp>
 
@@ -19,7 +18,6 @@ TTS_CASE( "Check correctness of greater-than comparison tests" )
   std::vector<float> a{13,5}, b{2,4,6};
   TTS_GREATER(a,b);
 }
-//! [greater]
 
 #include "foo.hpp"
 

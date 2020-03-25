@@ -327,6 +327,7 @@ namespace tts
   };
 }
 
+//==================================================================================================
 // Generate a range based test between two function
 #define TTS_ULP_RANGE_CHECK(Producer, RefFunc, NewFunc, Ulpmax)                                     \
   do                                                                                                \
@@ -344,7 +345,6 @@ namespace tts
   } while(::tts::detail::is_false())                                                                \
 /**/
 
-// Generate a range based test between two function
 #define TTS_RANGE_CHECK(Producer, Ref, New)                                                         \
   do                                                                                                \
   {                                                                                                 \

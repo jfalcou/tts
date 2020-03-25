@@ -1,0 +1,53 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_EXPECT
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_EXPECT(Expression)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/basic.hpp>`
+
+Checks if a given expression evaluates to `true`.
+
+**Parameters:**
+:
+    - `Expression`: Expression to evaluate and compare to `true`.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/basic.hpp>
+
+TTS_CASE( "Check that expectation can be met" )
+{
+  int a = 42, b = 69;
+
+  TTS_EXPECT(a != b);
+  TTS_EXPECT(a <  b);
+  TTS_EXPECT(a <= b);
+  TTS_EXPECT(b >  a);
+  TTS_EXPECT(b >= a);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

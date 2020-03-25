@@ -16,19 +16,6 @@
 #include <typeinfo>
 
 //==================================================================================================
-/**
-  * @brief Checks if a given expression throws a given exception type.
-  *
-  * **Required header:** `#include <tts/tests/exceptions.hpp>`
-  *
-  *  **Example:**
-  *
-  *  @snippet exceptions.cpp throw
-  *
-  *  @param Expr Expression to test
-  *  @param Exception Exception type supposed to be thrown
-**/
-//==================================================================================================
 #define TTS_THROW(Expr, Exception)                                                                 \
   do                                                                                               \
   {                                                                                                \
@@ -39,18 +26,6 @@
   } while(::tts::detail::is_false())
 /**/
 
-//==================================================================================================
-/**
-  * @brief Checks if a given expression throws no exception.
-  *
-  * **Required header:** `#include <tts/tests/exceptions.hpp>`
-  *
-  *  **Example:**
-  *
-  *  @snippet exceptions.cpp no_throw
-  *
-  *  @param Expr Expression to test
-**/
 //==================================================================================================
 #define TTS_NO_THROW(Expr)                                                                         \
   do                                                                                               \

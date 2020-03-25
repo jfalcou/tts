@@ -1,0 +1,52 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_RELATIVE_EQUAL
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_RELATIVE_EQUAL(LHS,RHS,X)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/precision.hpp>`
+
+Checks if two values are within a given percentage. This comparison is performed by using
+the proper `tts::reldist` overloads (see :ref:reldist).
+
+**Parameters:**
+:
+    - `LHS`, `RHS`:  Expressions to compare
+    - `X`:  Maximal percentage acceptable for passing the test
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/precision.hpp>
+
+TTS_CASE("Relative distance")
+{
+  TTS_RELATIVE_EQUAL(42.f , 42.f  , 0     );
+  TTS_RELATIVE_EQUAL('A'  , 80LL  , 18.75 );
+  TTS_RELATIVE_EQUAL(1.   , 2.f   , 100.  );
+  TTS_RELATIVE_EQUAL(1    , 10    , 900.  );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

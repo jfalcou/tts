@@ -1,14 +1,12 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2019 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
-//! [all-ulp-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/sequence.hpp>
 #include <vector>
@@ -25,4 +23,3 @@ TTS_CASE("ULP distance between sequences")
   TTS_ALL_ULP_EQUAL(s  , 1.f , 1.5);
   TTS_ALL_ULP_EQUAL(1.f, s   , 1.5);
 }
-//! [all-ulp-equal]

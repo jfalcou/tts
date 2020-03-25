@@ -9,7 +9,6 @@
 //==================================================================================================
 #define TTS_USE_CUSTOM_DRIVER
 
-//! [invalid]
 #include <tts/tts.hpp>
 #include <tts/tests/infos.hpp>
 
@@ -17,7 +16,6 @@ TTS_CASE( "Check forcing a test to be invalid" )
 {
   TTS_INVALID("Forced invalid");
 }
-//! [invalid]
 
 TTS_CASE( "Check detection of invalid test" )        { (void)runtime; }
 TTS_CASE( "Check detection of more invalid tests" )  { (void)runtime; }

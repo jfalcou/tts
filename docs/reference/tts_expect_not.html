@@ -1,0 +1,53 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+                    <meta charset="utf-8">
+
+TTS_EXPECT_NOT
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_EXPECT_NOT(Expression)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/basic.hpp>`
+
+Checks if a given expression evaluates to `false`.
+
+**Parameters:**
+:
+    - `Expression`: Expression to evaluate and compare to `false`.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/basic.hpp>
+
+TTS_CASE( "Check that counter-expectation can be met" )
+{
+  int a = 42, b = 69;
+
+  TTS_EXPECT_NOT(a == b);
+  TTS_EXPECT_NOT(a >  b);
+  TTS_EXPECT_NOT(a >= b);
+  TTS_EXPECT_NOT(b <  a);
+  TTS_EXPECT_NOT(b <= a);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

@@ -8,7 +8,6 @@
 **/
 //==================================================================================================
 
-//! [tts_when]
 #include <vector>
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
@@ -59,4 +58,3 @@ TTS_CASE( "Sections and sub-sections behavior" )
     }
   }
 }
-//! [tts_when]
