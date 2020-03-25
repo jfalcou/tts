@@ -1,7 +1,7 @@
 //==================================================================================================
 /*
   TTS - Tiny Test System
-  Copyright 2018 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
@@ -15,19 +15,6 @@
 #include <tts/detail/infos.hpp>
 #include <tts/detail/relations.hpp>
 
-//==================================================================================================
-/**
-  * @brief Performs equality comparison between two values.
-  *
-  * **Required header:** `#include <tts/tests/relation.hpp>`
-  *
-  * **Example:**
-  *
-  * @snippet relation/equal.cpp equal
-  *
-  *  @param LHS Expression to compare
-  *  @param RHS Expression to compare
-**/
 //==================================================================================================
 #define TTS_EQUAL(LHS, RHS)                                                                        \
 do                                                                                                 \
@@ -46,19 +33,6 @@ do                                                                              
 /**/
 
 //==================================================================================================
-/**
-  * @brief Performs non-equality comparison between two values.
-  *
-  * **Required header:** `#include <tts/tests/relation.hpp>`
-  *
-  * **Example:**
-  *
-  * @snippet relation/not_equal.cpp not-equal
-  *
-  *  @param LHS Expression to compare
-  *  @param RHS Expression to compare
-**/
-//==================================================================================================
 #define TTS_NOT_EQUAL(LHS, RHS)                                                                    \
 do                                                                                                 \
 {                                                                                                  \
@@ -75,19 +49,6 @@ do                                                                              
 } while( ::tts::detail::is_false() )                                                               \
 /**/
 
-//==================================================================================================
-/**
-  * @brief Performs a less-than comparison between two values.
-  *
-  * **Required header:** `#include <tts/tests/relation.hpp>`
-  *
-  * **Example:**
-  *
-  * @snippet relation/less.cpp less
-  *
-  *  @param LHS Expression to compare
-  *  @param RHS Expression to compare
-**/
 //==================================================================================================
 #define TTS_LESS(LHS, RHS)                                                                         \
 do                                                                                                 \
@@ -106,19 +67,6 @@ do                                                                              
 /**/
 
 //==================================================================================================
-/**
-  * @brief Performs a greater-than comparison between two values.
-  *
-  * **Required header:** `#include <tts/tests/relation.hpp>`
-  *
-  * **Example:**
-  *
-  * @snippet relation/greater.cpp greater
-  *
-  *  @param LHS Expression to compare
-  *  @param RHS Expression to compare
-**/
-//==================================================================================================
 #define TTS_GREATER(LHS, RHS)                                                                      \
 do                                                                                                 \
 {                                                                                                  \
@@ -136,19 +84,6 @@ do                                                                              
 /**/
 
 //==================================================================================================
-/**
-  * @brief Performs a less-or-equal-than comparison between two values.
-  *
-  * **Required header:** `#include <tts/tests/relation.hpp>`
-  *
-  * **Example:**
-  *
-  * @snippet relation/less_equal.cpp less-equal
-  *
-  *  @param LHS Expression to compare
-  *  @param RHS Expression to compare
-**/
-//==================================================================================================
 #define TTS_LESS_EQUAL(LHS, RHS)                                                                   \
 do                                                                                                 \
 {                                                                                                  \
@@ -165,19 +100,6 @@ do                                                                              
 } while( ::tts::detail::is_false() )                                                               \
 /**/
 
-//==================================================================================================
-/**
-  * @brief Performs a greater-or-equal-than comparison between two values.
-  *
-  * **Required header:** `#include <tts/tests/relation.hpp>`
-  *
-  * **Example:**
-  *
-  * @snippet relation/greater_equal.cpp greater-equal
-  *
-  *  @param LHS Expression to compare
-  *  @param RHS Expression to compare
-**/
 //==================================================================================================
 #define TTS_GREATER_EQUAL(LHS, RHS)                                                                \
 do                                                                                                 \

@@ -16,21 +16,6 @@
 #include <type_traits>
 
 //==================================================================================================
-/**
-  * @brief Check for type equivalence
-  *
-  * **Required header:** `#include <tts/tests/types.hpp>`
-  *
-  * Checks if two types satisfy `std::is_same_v<T1,T2> == true`.
-  *
-  * **Example:**
-  *
-  * @snippet types.cpp type_is
-  *
-  *  @param T1 Type to compare
-  *  @param T2 Type to compare
-**/
-//==================================================================================================
 #define TTS_TYPE_IS(T, Type)                                                                       \
   do                                                                                               \
   {                                                                                                \
@@ -57,21 +42,6 @@
   } while(::tts::detail::is_false())
 /**/
 
-//==================================================================================================
-/**
-  * @brief Check for the type of an expression
-  *
-  * **Required header:** `#include <tts/tests/types.hpp>`
-  *
-  * Checks if an expression evaluates to a given type.
-  *
-  * **Example:**
-  *
-  * @snippet types.cpp expr_is
-  *
-  *  @param Expression  Expression to evaluates
-  *  @param Type        Expected expression type
-**/
 //==================================================================================================
 #define TTS_EXPR_IS(Expression, Type)                                                              \
   TTS_TYPE_IS(decltype(TTS_REMOVE_PARENS(Expression)), Type)

@@ -8,7 +8,6 @@
 **/
 //==================================================================================================
 
-//! [expect-not]
 #include <tts/tts.hpp>
 #include <tts/tests/basic.hpp>
 
@@ -22,4 +21,3 @@ TTS_CASE( "Check that counter-expectation can be met" )
   TTS_EXPECT_NOT(b <  a);
   TTS_EXPECT_NOT(b <= a);
 }
-//! [expect-not]

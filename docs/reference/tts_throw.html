@@ -1,0 +1,53 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_THROW
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_THROW(Expression, Exception)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/basic.hpp>`
+
+Checks if a given `Expression` throws an exception of type `Exception` which must inherits from
+std::exception.
+
+**Parameters:**
+:
+    - `Expression`: Expression to evaluate.
+    - `Exception`: Expected exception type to be thrown.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/exceptions.hpp>
+
+struct some_exception_type : std::exception {};
+
+void foo() { throw some_exception_type(); }
+
+TTS_CASE( "Check that we can capture thrown exceptions" )
+{
+  TTS_THROW( foo(), some_exception_type );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

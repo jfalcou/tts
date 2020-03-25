@@ -1,0 +1,76 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_WHEN
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_WHEN(Description)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tts.hpp>`
+
+Open a section where nested test cases can be defined and nested properly by using the
+[TTS_AND_THEN](#tts_and_then) macros.
+
+Classic approach for testing is to use fixtures to specify how data required by multiples
+test should be constructed and/or destructed. This leads to a very object-oriented style of
+tests which may be inconvenient.
+
+Using nested cases, one can define a common set of code to be run before any nested cases is run
+itself, thus enforcing the fact that each nested cases is run which similar setup.
+
+**Parameters:**
+:
+    - `Description`: A literal string describing the scenario intents.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/basic.hpp>
+#include <vector>
+
+TTS_CASE( "Test std::vector resize behavior" )
+{
+  TTS_WHEN("A vector is initialized with 5 elements")
+  {
+    std::vector<int> v( 5 );
+
+    TTS_AND_THEN( "is resized to a larger size" )
+    {
+      // Here v.size() is 5
+      v.resize( 10 );
+
+      TTS_EXPECT( v.size() == 10u );
+      TTS_EXPECT( v.capacity() >= 10u );
+    }
+
+    TTS_AND_THEN( "is resized to a smaller size" )
+    {
+      // Here v.size() is 5
+      v.resize( 0 );
+      TTS_EXPECT( v.size() == 0u );
+      TTS_EXPECT( v.capacity() >= 5u );
+    }
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

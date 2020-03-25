@@ -1,14 +1,12 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2019 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
-//! [all-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/sequence.hpp>
 #include <vector>
@@ -22,4 +20,3 @@ TTS_CASE("Equality for sequences")
   TTS_ALL_EQUAL(vy , 6.f );
   TTS_ALL_EQUAL(6.f, vy  );
 }
-//! [all-equal]

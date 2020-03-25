@@ -1,14 +1,12 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2019 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
-//! [all-relative-equal]
 #include <tts/tts.hpp>
 #include <tts/tests/sequence.hpp>
 
@@ -22,4 +20,3 @@ TTS_CASE("Relative distance between sequences")
   TTS_ALL_RELATIVE_EQUAL(s  , 1.f , 25);
   TTS_ALL_RELATIVE_EQUAL(1.f, s   , 25);
 }
-//! [all-relative-equal]

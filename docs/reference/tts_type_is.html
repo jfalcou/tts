@@ -1,0 +1,49 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_TYPE_IS
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_TYPE_IS(T1, T2)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/types.hpp>`
+
+Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
+
+**Parameters:**
+:
+    - `Type`: Type to compare.
+    - `Target`: Expected type.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/types.hpp>
+#include <type_traits>
+
+TTS_CASE( "Check that types can be tested for equality" )
+{
+  TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

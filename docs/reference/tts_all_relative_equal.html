@@ -1,0 +1,57 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_ALL_RELATIVE_EQUAL
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_ALL_RELATIVE_EQUAL(LHS,RHS,X)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/sequence.hpp>`
+
+Checks if all values of two containers are within a relative distance of each other
+and if both arguments have the same size. One parameters can be set a scalar values, in which
+case the test will check the container parameter's size is 1.
+
+**Parameters:**
+:
+    - `LHS`, `RHS`:  Sequences to compare
+    - `X`:  Maximal percentage acceptable for passing the test
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/sequence.hpp>
+#include <vector>
+
+TTS_CASE("Relative distance between sequences")
+{
+  std::vector<float> a{1.f,1.1f,0.9f,1.3f};
+  std::vector<float> b{1.f,1.f,1.f,1.f};
+  std::vector<float> s{1.1f};
+
+  TTS_ALL_RELATIVE_EQUAL(a  , b   , 25);
+  TTS_ALL_RELATIVE_EQUAL(s  , 1.f , 25);
+  TTS_ALL_RELATIVE_EQUAL(1.f, s   , 25);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

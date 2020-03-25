@@ -1,0 +1,65 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_ULP_EQUAL
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_ULP_EQUAL(LHS,RHS,X)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** `#include &lt;tts/tests/precision.hpp>`
+
+Checks if two values are within a given [ULP distance](rationale.html#precisiontesting).
+This comparison is performed by using the proper `tts::ulpdist` overloads (see :ref:ulp).
+
+**Parameters:**
+:
+    - `LHS`, `RHS`:  Expressions to compare
+    - `X`:  Maximal ULPs acceptable for passing the test
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+#include <tts/tests/precision.hpp>
+
+TTS_CASE( "ULP distance")
+{
+  float a{1};
+  float eps  = std::numeric_limits<float>::epsilon();
+  float qnan = std::numeric_limits<float>::quiet_NaN();
+  float inf  = std::numeric_limits<float>::infinity();
+  float minf = -inf;
+
+  TTS_ULP_EQUAL(a    , a     , 0.  );
+
+  TTS_ULP_EQUAL(a    , qnan  , inf );
+  TTS_ULP_EQUAL(qnan , qnan  , 0.  );
+
+  TTS_ULP_EQUAL(a    , inf   , inf );
+  TTS_ULP_EQUAL(inf  , inf   , inf );
+
+  TTS_ULP_EQUAL(a, a-eps   , 1   );
+  TTS_ULP_EQUAL(a, a+eps   , 0.5 );
+  TTS_ULP_EQUAL(a, a+3*eps , 1.5 );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>
