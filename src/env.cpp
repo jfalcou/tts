@@ -93,13 +93,13 @@ namespace tts
     auto inv_txt  = e.invalids() > 1 ? "invalids" : "invalid";
 
     e.output()  << detail::reset << std::string(80, '-') << "\n";
-    e.stream()  << detail::white << "Results: " << e.tests()  << " " << test_txt << " - "
-                << e.successes() << detail::reset
+    e.stream()  << "Results: " << e.tests()  << " " << test_txt << " - "
+                << e.successes()
                 << " " << detail::green << pass_txt << detail::reset << " - "
-                << detail::white << e.failures() << "/"  << fails     << " "<< detail::reset
+                << e.failures() << "/"  << fails     << " "<< detail::reset
                 << detail::red << fail_txt << detail::reset << " - "
-                << detail::white << e.invalids() << "/"  << invalids  << " " << detail::reset
-                << detail::yellow << inv_txt << detail::reset
+                << e.invalids() << "/"  << invalids  << " " << detail::reset
+                << detail::magenta << inv_txt << detail::reset
                 << std::endl;
 
     if(!fails && !invalids)

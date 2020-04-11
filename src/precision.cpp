@@ -28,17 +28,15 @@ namespace tts::detail
     auto fmt_r = (r<100 ? std::defaultfloat : std::scientific);
 
     if(r <= x)
-      pass(runtime,l) << "Expecting: " << white << a << reset
-                      << " == " << white << b << reset << " within "
+      pass(runtime,l) << "Expecting: " << a << " == " << b << " within "
                       << green << std::setprecision(2) << fmt_x << x << reset << " " << m
                       << " and found: "
                       << green << std::setprecision(2) << fmt_r << r << reset << " " << m << "\n";
     else
-      fail(runtime,l) << "Expecting: " << white << a << reset
-                      << " == " << white << b << reset << " within "
+      fail(runtime,l) << "Expecting: " << a << " == " << b << " within "
                       << red << std::setprecision(2) << fmt_x << x << reset <<  " " << m
                       << " but found: "
-                      << white << va << reset << " == " << white << vb << reset << " within "
+                      << va << " == " << vb << " within "
                       << red << std::setprecision(2) << fmt_r << r << reset <<  " " << m
                       << " instead.\n";
   }
@@ -52,8 +50,7 @@ namespace tts::detail
 
     if(!ok)
     {
-      fail(runtime,l) << white << a << reset << " and "
-                      << white << b << red << " sizes mismatch" << reset << ".\n";
+      fail(runtime,l) << a << " and " << b << red << " sizes mismatch" << reset << ".\n";
     }
 
     return ok;
@@ -65,14 +62,12 @@ namespace tts::detail
   {
     if(err.empty())
     {
-      pass(runtime,l) << "Expecting: " << white << a << reset
-                      << " == " << white << b << reset << " within "
+      pass(runtime,l) << "Expecting: " << a << " == " << b << " within "
                       << green << x << reset << " " << m << "\n";
     }
     else
     {
-      fail(runtime,l) << "Expecting: "  << white << a << reset
-                      << " == " << white << b << reset << " within "
+      fail(runtime,l) << "Expecting: " << a << " == " << b << " within "
                       << red << x << reset << " " << m << " but found:\n{\n";
 
       for(auto& e : err)

@@ -27,7 +27,6 @@ namespace tts::detail
   TTS_API std::ostream &blue(std::ostream &stream);
   TTS_API std::ostream &magenta(std::ostream &stream);
   TTS_API std::ostream &cyan(std::ostream &stream);
-  TTS_API std::ostream &white(std::ostream &stream);
 }
 
 #endif

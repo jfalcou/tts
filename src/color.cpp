@@ -56,12 +56,6 @@ namespace tts::detail
     return stream;
   }
 
-  TTS_API std::ostream &white(std::ostream &stream)
-  {
-    if (args.has_color())  stream << termcolor::white << termcolor::bold;
-    return stream;
-  }
-
   TTS_API std::ostream &reset(std::ostream &stream)
   {
     if (args.has_color())  stream << termcolor::reset;

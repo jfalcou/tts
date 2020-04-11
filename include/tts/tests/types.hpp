@@ -22,8 +22,7 @@
     constexpr auto check = std::is_same_v<TTS_REMOVE_PARENS(Type), TTS_REMOVE_PARENS(T)>;          \
     if constexpr(check)                                                                            \
     {                                                                                              \
-      TTS_PASS("Expecting " << ::tts::detail::white << TTS_STRING(TTS_REMOVE_PARENS(T))            \
-                            << ::tts::detail::reset << " to be "                                   \
+      TTS_PASS("Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T)) << " to be "                       \
                             << ::tts::detail::green << tts::type_id<TTS_REMOVE_PARENS(Type)>()     \
                             << ::tts::detail::reset                                                \
               );                                                                                   \
@@ -31,10 +30,8 @@
                                                                                                    \
     if constexpr(!check)                                                                           \
     {                                                                                              \
-      TTS_FAIL("Expecting " << ::tts::detail::white << TTS_STRING(TTS_REMOVE_PARENS(T))            \
-                            << ::tts::detail::reset << " to be "                                   \
-                            << ::tts::detail::white << tts::type_id<TTS_REMOVE_PARENS(Type)>()     \
-                            << ::tts::detail::reset << " but found "                               \
+      TTS_FAIL("Expecting " << TTS_STRING(TTS_REMOVE_PARENS(T)) << " to be "                       \
+                            << tts::type_id<TTS_REMOVE_PARENS(Type)>() << " but found "            \
                             << ::tts::detail::red << tts::type_id<TTS_REMOVE_PARENS(T)>()          \
                             << ::tts::detail::reset << " instead"                                  \
               );                                                                                   \
