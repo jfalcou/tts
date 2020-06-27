@@ -5,7 +5,7 @@
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.18)
 
 ##==================================================================================================
 ## Setup project
@@ -26,24 +26,20 @@ endif()
 find_package(OpenMP)
 
 ##==================================================================================================
-## Add src CMake's
-##==================================================================================================
-add_subdirectory(${PROJECT_SOURCE_DIR}/src)
-
-##==================================================================================================
 ## Options
 ##==================================================================================================
 option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
-option( TTS_IS_DEPENDENT  "Dependent mode for tts"  OFF )
 
 ##==================================================================================================
-## Setup Install target only if not used as dependent
+## Setup install process
 ##==================================================================================================
-if( NOT TTS_IS_DEPENDENT )
-  include(install)
-else()
-  message(STATUS "[tts] TTS is used as a in-project dependency - No install targets available")
-endif()
+include(GNUInstallDirs)
+
+install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts/
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+
+export(PACKAGE tts)
 
 ##==================================================================================================
 ## Setup Testing

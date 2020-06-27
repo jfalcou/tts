@@ -8,7 +8,6 @@
 **/
 //==================================================================================================
 #include <tts/tts.hpp>
-#include <tts/tests/sequence.hpp>
 #include <vector>
 
 TTS_CASE("IEEE equality for sequences")
