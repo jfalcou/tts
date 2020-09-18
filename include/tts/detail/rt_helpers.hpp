@@ -32,6 +32,14 @@ namespace tts::detail
     else
       return 1ull;
   }
+  // Container-aware access function
+  template<typename C> inline auto at(C const &c, int i)
+  {
+    if constexpr(detail::is_container_v<C>)
+      return c[i];
+    else
+      return c;
+  }
 
   // Container-aware begin function
   template<typename C> inline auto begin(C const &c)

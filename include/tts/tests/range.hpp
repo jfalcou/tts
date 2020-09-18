@@ -22,6 +22,7 @@
 #include <iomanip>
 #include <vector>
 #include <string>
+#include <limits>
 
 #if defined(_OPENMP)
 #include <omp.h>
@@ -69,8 +70,8 @@ namespace tts
   // CRTP base class for data producer
   template<typename T> struct producer
   {
-    auto        first()     const noexcept { return *tts::detail::begin(self().first());}
-    auto        last()      const noexcept { return *tts::detail::begin(self().last()); }
+    auto        first()     const noexcept { return tts::detail::at(self().first(),0);}
+    auto        last()      const noexcept { return tts::detail::at(self().last(),0); }
     auto        next()            noexcept { return self().next();   }
     std::size_t size()      const noexcept { return self().size();   }
     static auto prng_seed()       noexcept { return args.seed();     }
@@ -89,8 +90,8 @@ namespace tts
   template<typename T, typename S = T> struct checker
   {
     private:
-    using base_type = std::decay_t<decltype(*tts::detail::begin(T()))>;
-    using resl_type = std::decay_t<decltype(*tts::detail::begin(S()))>;
+    using base_type = std::decay_t<decltype(T())>;
+    using resl_type = std::decay_t<decltype(S())>;
     std::vector<std::size_t>  histogram;
     std::vector<base_type>    sample_values;
     std::vector<resl_type>    expected_values;
@@ -135,16 +136,22 @@ namespace tts
     {
       threshold = (threshold > 1.5) ? next2(threshold) : std::ceil(threshold*2)/2;
       std::size_t nbthreads = 1;
-
+      auto qsize = q.size();
       #pragma omp parallel
       {
         if(!thread_id()) nbthreads = thread_count();
       }
 
+      auto bulk = nbthreads*32;
+      qsize = (qsize/bulk + (qsize%bulk ? 1 : 0))*bulk;
+
       std::cout << bar << "\n";
-      std::cout << q.size() << " inputs comparing " << fs << " vs " << gs
+      std::cout << qsize << " inputs comparing " << fs << " vs " << gs
                 << " with " << tts::type_id<P>()
-                << " in range [" << +q.first() << ", " << +q.last() << "["
+                << " in range [";
+      if constexpr(std::is_floating_point_v<decltype(q.first())>)
+        std::cout << std::scientific << std::setprecision(std::numeric_limits<decltype(q.first())>::digits10 + 1);
+      std::cout << +q.first() << ", " << +q.last() << "["
                 << " using " << nbthreads << " threads.\n"
                 << "\n";
       std::cout << bar << "\n";
@@ -160,22 +167,12 @@ namespace tts
       {
         auto sz = thread_count();
         auto id = thread_id();
-        auto per_thread = q.size()/sz;
+        auto per_thread = qsize/sz;
         std::size_t i0, i1;
 
         if (id == 0) nbthreads = sz;
-
-        if(id == sz-1)
-        {
-          per_thread = q.size() - per_thread*(sz-1);
-          i1 = q.size();
-          i0 = i1 - per_thread;
-        }
-        else
-        {
-          i0 = id*per_thread;
-          i1 = (id+1)*per_thread;
-        }
+        i0 = id*per_thread;
+        i1 = (id+1)*per_thread;
 
         P p(q, i0, i1, sz);
 
@@ -194,28 +191,22 @@ namespace tts
           auto v          = p.next();
           auto reference  = f(v);
           auto challenger = g(v);
-          auto bv = ::tts::detail::begin(v);
-          auto br = ::tts::detail::begin(reference);
-          auto bc = ::tts::detail::begin(challenger);
 
           for(std::size_t k=0;k<n;k++)
           {
-            auto ulp = ::tts::ulpdist(*br, *bc);
+            auto ulp = ::tts::ulpdist( tts::detail::at(reference,k), tts::detail::at(challenger,k));
 
             // Find bucket to be the upper power of 2 of ulp
             std::size_t bucket = last_bucket_less(ulp);
             local_max_ulp = std::max(local_max_ulp, ulp);
 
-            if( found[bucket] == false)
+            if( found[bucket] == false )
             {
               found[bucket]           = true;
-              sample_values[bucket]   = *bv;
+              sample_values[bucket]   = v;
             }
 
             local_histogram[bucket]++;
-            bv++;
-            br++;
-            bc++;
           }
         }
 
@@ -227,9 +218,9 @@ namespace tts
           for(std::size_t i=0;i<nb_buckets;++i)
           {
             histogram[i]       += local_histogram[i];
-            sample_values[i]    = std::min(sample_values[i], local_sample_values[i]);
-            expected_values[i]  = *::tts::detail::begin(f(T(sample_values[i])));
-            result_values[i]    = *::tts::detail::begin(g(T(sample_values[i])));
+            sample_values[i]    = detail::at(sample_values[i],0) < detail::at(local_sample_values[i],0) ? sample_values[i] : local_sample_values[i];
+            expected_values[i]  = f(T(sample_values[i]));
+            result_values[i]    = g(T(sample_values[i]));
           }
 
           max_ulp = std::max(max_ulp, local_max_ulp);
@@ -241,7 +232,7 @@ namespace tts
       std::size_t last_bucket_ok = last_bucket_less(threshold);
       for(std::size_t i=0;i<histogram.size();++i)
       {
-        std::size_t tmp = display(i,q.size(),gs, ::tts::args.hex());
+        std::size_t tmp = display(i,qsize,gs, ::tts::args.hex());
         total += tmp;
         if(i <= last_bucket_ok) total_ok += tmp;
       }
@@ -250,8 +241,8 @@ namespace tts
       std::cout << detail::text_field(16) << "Total:   " << detail::value_field(16)  << total << "\n";
       std::cout << "Percent of values under "
                 << threshold << " ulp" << ((threshold < 2.0) ? "" : "s" )  << " is "
-                << std::fixed << (total_ok*100.0)/q.size() << "% (" << total_ok
-                << " values over " << q.size() << ").\n";
+                << std::fixed << (total_ok*100.0)/qsize << "% (" << total_ok
+                << " values over " << qsize << ").\n";
 
       std::cout << bar << "\n";
 
@@ -296,7 +287,7 @@ namespace tts
       if(histogram[u])
       {
         cumhist+= histogram[u];
-        std::cout << detail::text_field(16)   <<  ulps
+        std::cout << detail::text_field(16)   << std::fixed <<  ulps
                   << detail::value_field(16)  <<  histogram[u]
                   << detail::value_field(16)  <<  ratio(cumhist,cnt)
                   << detail::value_field(10,char_shift) << "Found: "
@@ -310,13 +301,13 @@ namespace tts
             std::cout << std::scientific << std::showpos;
         }
 
-        std::cout << +sample_values[u]  << ") = ";
+        std::cout << sample_values[u]  << ") = ";
 
         if constexpr(!std::is_floating_point_v<resl_type>)
           std::cout << std::fixed << std::noshowpos;
-        std::cout << +result_values[u];
+        std::cout << result_values[u];
 
-        if(u) std::cout << " instead of " << +expected_values[u];
+        if(u) std::cout << " instead of " << expected_values[u];
         std::cout << "\n";
 
         std::cout << std::fixed<< std::noshowpos;
