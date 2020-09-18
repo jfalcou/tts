@@ -34,11 +34,11 @@ namespace tts::detail
 
     if(caught)
     {
-      pass(runtime,l)  << white << s << detail::reset << " throws " << white << t << std::endl;
+      pass(runtime,l)  << s << " throws " << green << t << std::endl;
     }
     else
     {
-      fail(runtime,l)  << white << s << detail::reset << " does not throw " <<  red << t << std::endl;
+      fail(runtime,l)  << s << " does not throw " <<  red << t << std::endl;
     }
   }
 
@@ -59,11 +59,11 @@ namespace tts::detail
 
     if(!caught)
     {
-      pass(runtime,l)  << white << s << detail::reset << " does not throws.\n";
+      pass(runtime,l)  << s << " does not throws.\n";
     }
     else
     {
-      fail(runtime,l)  << white << s << detail::reset << " unexpectedly throws.\n";
+      fail(runtime,l)  << s << " unexpectedly throws.\n";
     }
   }
 }

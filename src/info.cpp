@@ -39,6 +39,6 @@ namespace tts::detail
 
   TTS_API std::ostream & invalid(tts::env& runtime, location const& l)
   {
-    return runtime.invalid() << l << ": " << yellow << bold << "<!>INVALID<!>" << detail::reset << " - ";
+    return runtime.invalid() << l << ": " << magenta << bold << "<!>INVALID<!>" << detail::reset << " - ";
   }
 }

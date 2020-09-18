@@ -28,7 +28,7 @@ namespace tts
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
       {
-        return a == b ? 0. : 0.5;
+        return a == b ? 0. : std::numeric_limits<double>::infinity();
       }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
