@@ -15,10 +15,10 @@ jobs:
       - checkout
       - run:
           name: Running Release tests
-          command: . .circleci/run.sh clang++-9 Release
+          command: . .circleci/run.sh clang++ Release
       - run:
           name: Running Debug tests
-          command: . .circleci/run.sh clang++-9 Debug
+          command: . .circleci/run.sh clang++ Debug
 
   gcc:
     docker:
@@ -27,10 +27,10 @@ jobs:
       - checkout
       - run:
           name: Running Release tests
-          command: . .circleci/run.sh g++-9 Release
+          command: . .circleci/run.sh g++ Release
       - run:
           name: Running Debug tests
-          command: . .circleci/run.sh g++-9 Debug
+          command: . .circleci/run.sh g++ Debug
 
 workflows:
   version: 2
