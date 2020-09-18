@@ -1,4 +1,4 @@
-<img src="https://github.com/jfalcou/tts/raw/develop/doc/_static/logo.png" alt="" data-canonical-src="https://github.com/jfalcou/tts/raw/develop/doc/_static/logo.png" align="left"  width="15%" height="15%" />
+<img src="https://github.com/jfalcou/tts/raw/develop/docs/logo.png" alt="" data-canonical-src="https://github.com/jfalcou/tts/raw/develop/docs/logo.png" align="left"  width="15%" height="15%" />
 
 # TTS
 
