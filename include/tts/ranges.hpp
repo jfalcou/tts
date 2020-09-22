@@ -28,6 +28,9 @@ namespace tts
     static auto retrieve(Base const* src)                 noexcept  { return *src;        }
     static void display(Base const& v, std::ostream& os)  noexcept  { os << v;            }
   };
+
+  template<typename Generator>
+  concept initializable = requires(Generator g) { g.init(args); };
 }
 
 //==================================================================================================
@@ -98,7 +101,7 @@ namespace tts::detail
 {
   std::size_t next2( double x ) noexcept
   {
-    std::size_t v = std::ceil(x);
+    auto v = static_cast<std::size_t>(std::ceil(x));
     v--;
     v |= v >> 1; v |= v >> 2; v |= v >> 4; v |= v >> 8; v |= v >> 16;
     v++;
@@ -109,11 +112,11 @@ namespace tts::detail
   std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
   {
     std::size_t bucket;
-    if     (ulp <= 1.5     ) bucket = std::ceil(ulp*2);
+    if     (ulp <= 1.5     ) bucket = static_cast<std::size_t>(std::ceil(ulp*2));
     else if(std::isinf(ulp)) bucket = nb_buckets-1;
-    else                     bucket = std::min<std::size_t> ( nb_buckets-2,
-                                                              std::log2(next2(ulp))+4
-                                                            );
+    else                     bucket = std::min( nb_buckets-2
+                                              , static_cast<std::size_t>(std::log2(next2(ulp))+4)
+                                              );
     return bucket;
   }
 
@@ -147,7 +150,7 @@ namespace tts
     std::size_t count = std::max(32ULL,args.value_or(32ULL, "-b", "--block"));
 
     //-- If possible, initialize the generator
-    if constexpr( requires { g.init(args); })
+    if constexpr( initializable<Generator> )
     {
       g.init(args);
     }
@@ -244,7 +247,11 @@ namespace tts
   do                                                                                                \
   {                                                                                                 \
     std::cout << ::tts::magenta("Comparing: ")  << ::tts::cyan(TTS_STRING(RefFunc))                 \
-              << " with "                       << ::tts::cyan(TTS_STRING(NewFunc)) << "\n";        \
+              << "<" << ::tts::cyan(TTS_STRING(TTS_REMOVE_PARENS(RefType))) << ">"                  \
+              << " with "                       << ::tts::cyan(TTS_STRING(NewFunc))                 \
+              << "<" << ::tts::cyan(TTS_STRING(TTS_REMOVE_PARENS(NewType))) << ">"                  \
+              << " using "                      << ::tts::cyan(TTS_STRING(Producer))                \
+              << "\n";                                                                              \
                                                                                                     \
     auto local_tts_threshold  = arguments.value_or<double>(Ulpmax, "-u","--ulpmax"); ;              \
                                                                                                     \

@@ -15,10 +15,12 @@
 #include <cmath>
 #include <cstdint>
 #include <cstring>
+#include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <vector>
+#include <utility>
 
 //==================================================================================================
 // Misc. Helpers
@@ -64,6 +66,16 @@ namespace tts::detail
       while (first1 != last1 && p(*first1, *first2))  ++first1, ++first2;
       return std::make_pair(first1, first2);
   }
+
+  template<typename T>
+  concept export_as_string = requires(T e) { std::to_string(e); };
+
+  template<typename T>
+  concept export_with_string = requires(T e) { to_string(e); };
+
+  template<typename T>
+  concept sequence = requires(T e) {std::begin(e); std::end(e); };
+
 }
 
 namespace tts
@@ -92,17 +104,17 @@ namespace tts
   template<typename T> constexpr auto typename_of_(T&&){ return typename_<T>; }
 
   // Display a result
-  template<typename T> auto as_string(T const& e)
+  template<typename T> std::string as_string(T const& e)
   {
-    if constexpr( requires{ std::to_string(e); } )
+    if constexpr( detail::export_as_string<T> )
     {
       return std::to_string(e);
     }
-    else if constexpr( requires{ to_string(e); } )
+    else if constexpr( detail::export_with_string<T> )
     {
       return to_string(e);
     }
-    else if constexpr( requires { std::begin(e); std::end(e); } )
+    else if constexpr( detail::sequence<T> )
     {
       std::string that = "{ ";
       for(auto const& v : e) that += as_string(v) + " ";
@@ -474,15 +486,21 @@ namespace tts
 //==================================================================================================
 namespace tts::detail
 {
+  template<typename L, typename R>
+  concept comparable_equal = requires(L l, R r) { compare_equal(l,r); };
+  
+  template<typename L, typename R>
+  concept comparable_less = requires(L l, R r) { compare_less(l,r); };
+  
   template<typename L, typename R> inline bool eq(L const &l, R const &r)
   {
-    if constexpr( requires{ compare_equal(l,r); } ) return compare_equal(l,r);
+    if constexpr( comparable_equal<L,R> ) return compare_equal(l,r);
     else                                            return l == r;
   }
 
   template<typename L, typename R> inline bool lt(L const &l, R const &r)
   {
-    if constexpr( requires{ compare_less(l,r); } )  return compare_less(l,r);
+    if constexpr( comparable_less<L,R> )  return compare_less(l,r);
     else                                            return l < r;
   }
 }
@@ -787,7 +805,7 @@ namespace tts
     bool tts_caught = false;                                                                        \
                                                                                                     \
     try                 { EXPR; }                                                                   \
-    catch(EXCEPTION& e) { tts_caught = true; }                                                      \
+    catch(EXCEPTION&  ) { tts_caught = true; }                                                      \
     catch(...)          { }                                                                         \
                                                                                                     \
     if(tts_caught)                                                                                  \

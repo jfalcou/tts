@@ -8,10 +8,11 @@
 **/
 //==================================================================================================
 #include <tts/ranges.hpp>
+#include <array>
 
-int ok_x  (float x) { return x; }
+int ok_x  (float x) { return static_cast<int>(x); }
 
-int ajar_x(float x) { return (int(x) % 2 == 1) ? x : x+x; }
+int ajar_x(float x) { return static_cast<int>((int(x) % 2 == 1) ? x : x+x); }
 
 std::array<int,4> ajar_ax(std::array<float,4> const& x)
 {
@@ -80,7 +81,8 @@ namespace tts
       generator_.seed(seed);
     }
 
-    T operator()(int, int)
+    template<typename Idx, typename Count>
+    T operator()(Idx, Count)
     {
       return distribution_(generator_);
     }
@@ -100,7 +102,7 @@ namespace tts
 
 TTS_CASE( "Test stateless range check" )
 {
-  TTS_ULP_RANGE_CHECK ( [](int i, int c) { return (100.f*i)/c; }
+  TTS_ULP_RANGE_CHECK ( [](auto i, auto c) { return (100.f*i)/c; }
                       , float, (std::array<float,4>)
                       ,  ok_x, ajar_ax
                       , 128
