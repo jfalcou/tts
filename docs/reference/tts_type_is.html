@@ -19,7 +19,7 @@ TTS_TYPE_IS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/types.hpp>`
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
 
 Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
 
@@ -33,7 +33,6 @@ Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/types.hpp>
 #include <type_traits>
 
 TTS_CASE( "Check that types can be tested for equality" )

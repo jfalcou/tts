@@ -6,16 +6,12 @@ body {
     font-size: 18px;
     font-weight: 400;
     line-height: 170%;
-    max-width: 960px;
+    max-width: 1024px;
     text-align: justify;
 }
 
 /* insert logo */
 .md div.title {
-    background-image: url('logo.png');
-    background-position: 75%;
-    background-repeat: no-repeat;
-    background-size: contain;
     color: #000;
     font-size: 45px;
     font-weight: 900;
@@ -33,6 +29,57 @@ body {
     height: 75px;
 }
 
+
+/* TOCs base style */
+/* green links */
+.md a:link, .md a:visited
+{
+ color:#846785;
+ text-decoration:none
+}
+
 /* no numbering of headings */
 .md h1:before, .md h2:before, .md h3:before, .md h4:before, .md h5:before, .md h6:before { content: none; }
 .md .tocNumber { display: none; }
+
+.smallskip
+{
+  display: block;
+  margin-bottom: -.4em;
+}
+
+/* Hover menu items */
+
+.dropbtn {
+  color: #846785;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  font-size: 12px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 6px 8px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+

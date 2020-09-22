@@ -8,16 +8,13 @@
 <meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
                        **Tiny Test System**
 
-  (insert crumbs.html here)
-
-Design Rationale
-====================================================================================================
-
 This section explains some of the Design choices made by TTS on how to implement some of its
 components and how the usage of its macros was envisioned.
 
+  (insert crumbs.html here)
+
 Precision testing
-----------------------------------------------------------------------------------------------------
+====================================================================================================
 
     *"Are these two floating computations results similar enough ?"*
 
@@ -31,8 +28,8 @@ and their related problems is known by the reader. If not, we strongly recommend
 [Goldberg's paper on the subject](http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
 or a [simplified version](http://floating-point-gui.de/).
 
-**Metric for precision measurement**
-
+Metric for precision measurement
+----------------------------------------------------------------------------------------------------
 The first thing people learn (and often they learn it the hard way) is that strict
 equality for floating points number is often meaningless or very hard to achieve.
 Once this state of fact is integrated, people often goes to use a simple absolute
@@ -47,7 +44,8 @@ the unit in the last place (ULP). Generally, the ULP between a floating point nu
 $x$ and its immediate successor is $2^{E} \times \epsilon$ where $E$ is the
 exponent of $x$.
 
-**Computing ULP Distance**
+Computing ULP Distance
+----------------------------------------------------------------------------------------------------
 
 The ULP distance (or `ulpdist`) is a way to compare floating-point numbers by
 estimating the number of significant bits between their respective representations.
@@ -101,22 +99,21 @@ estimation leads to the following properties:
 
 For example: `ulpdist( double(float(M_PI)), double(M_PI) ) == 9.84293e+07`
 
-**Taking ULP in consideration in your tests**
+Taking ULP in consideration in your tests
+----------------------------------------------------------------------------------------------------
 
 What to do then when writing an unit test that handles floating points number ?
 You basically have three cases :
 
-* The value you compare must be equal by design. In this case, use @ref TTS_EQUAL to clearly state
-  your intent. One such case can be for example functions that construct a floating point value bitwise.
-* The value you compare are the results of an undetermined number of other
-  floating point operations. In this case, use @ref TTS_ULP_EQUAL and
-  try to estimate the maximum amount of ULP your implementation should give. This
-  can be either done by a strict analysis of the function behavior or by some guess
-  work.
-* The value you compare are the results of an undetermined number of other
-  floating point operations but stands in a predictable absolute range of error
-  independent of the architecture and magnitude of the input. In this case, use
-  @ref TTS_RELATIVE_EQUAL.
+  * The value you compare must be equal by design. In this case, use [**`TTS_EQUAL`**](reference.html#tts_equal)
+    to clearly state your intent. One such case can be for example functions that construct a floating point value bitwise.
+  * The value you compare are the results of an undetermined number of other
+    floating point operations. In this case, use [**`TTS_ULP_EQUAL`**](reference.html#tts_ulp_equal)
+    and try to estimate the maximum amount of ULP your implementation should give. This can be either
+    done by a strict analysis of the function behavior or by some guess work.
+  * The value you compare are the results of an undetermined number of other floating point operations
+    but stands in a predictable absolute range of error independent of the architecture and magnitude
+    of the input. In this case, use [**`TTS_RELATIVE_EQUAL`**](reference.html#tts_relative_equal).
 
 Take extreme care to not overestimate the value of ULP measures. Some classical algorithms
 may ends up with hundreds of ULPs but still be meaningful.
@@ -128,7 +125,7 @@ may ends up with hundreds of ULPs but still be meaningful.
 
 <!-- End of Document -->
 <style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'none'};</script>
--<link rel="stylesheet" href="tts.css">
+<link rel="stylesheet" href="tts.css">
 <!-- Markdeep: -->
 <script src="markdeep.min.js"></script>
 <script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

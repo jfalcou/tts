@@ -19,7 +19,7 @@ TTS_ALL_ULP_EQUAL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/sequence.hpp>`
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
 
 Checks if all values of two containers are within a given [ULP distance](rationale.html#precisiontesting)
  and if both arguments have the same size. One parameters can be set a scalar values, in which case
@@ -35,7 +35,6 @@ Checks if all values of two containers are within a given [ULP distance](rationa
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/sequence.hpp>
 #include <vector>
 
 TTS_CASE("ULP distance between sequences")

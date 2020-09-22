@@ -1,0 +1,61 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+uniform_prng
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace tts
+{
+  template<typename T>
+  using uniform_prng = prng_generator < T
+                                      , std::conditional_t< std::is_floating_point_v<T>
+                                                          , std::uniform_real_distribution<T>
+                                                          , std::uniform_int_distribution<T>
+                                                          >
+                                      >;
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** <script type="preformatted">`#include <tts/ranges.hpp>`</script>
+
+`uniform_prng` is a wrapper around the uniform random distribution provided by the standard.
+
+**Template Parameters:**
+:
+    - `T`: Type of values to generate.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/ranges.hpp>
+
+float ok_x (float x) { return x; }
+float bad_x(float x) { return x + x*1e-7f; }
+
+TTS_CASE( "Test range check" )
+{
+  TTS_ULP_RANGE_CHECK ( tts::uniform_prng<float>(-100.f,+100.f)
+                      , float, float , ok_x, bad_x
+                      , 2.
+                      );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

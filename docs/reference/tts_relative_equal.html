@@ -19,10 +19,10 @@ TTS_RELATIVE_EQUAL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/precision.hpp>`
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
 
 Checks if two values are within a given percentage. This comparison is performed by using
-the proper `tts::reldist` overloads (see :ref:reldist).
+the proper `tts::relative_distance` overload (see [customizable per the following protocol](extensions.htm#customrelativecomparison)).
 
 **Parameters:**
 :
@@ -34,7 +34,6 @@ the proper `tts::reldist` overloads (see :ref:reldist).
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
 
 TTS_CASE("Relative distance")
 {

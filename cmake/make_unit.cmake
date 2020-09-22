@@ -1,6 +1,6 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2018 Joel FALCOU
+##  Copyright 2020 Joel FALCOU
 ##
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
@@ -49,13 +49,6 @@ function(make_unit root)
                                 PRIVATE
                                     ${PROJECT_SOURCE_DIR}/src
                               )
-
-    # No OpenMP 3.1 on MSVC
-    if( NOT MSVC )
-      if(OpenMP_CXX_FOUND)
-        target_link_libraries(${test} OpenMP::OpenMP_CXX)
-      endif()
-    endif()
 
     add_target_parent(${test})
     add_dependencies(unit ${test})

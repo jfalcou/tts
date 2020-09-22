@@ -1,6 +1,6 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2018 Joel FALCOU
+##  Copyright 2020 Joel FALCOU
 ##
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
@@ -35,7 +35,7 @@ option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
 ##==================================================================================================
 include(GNUInstallDirs)
 
-install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts/
+install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/
           DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 
