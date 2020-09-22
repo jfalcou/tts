@@ -15,12 +15,10 @@
 #include <cmath>
 #include <cstdint>
 #include <cstring>
-#include <string>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <vector>
-#include <utility>
 
 //==================================================================================================
 // Misc. Helpers
@@ -63,21 +61,27 @@ namespace tts::detail
   template<typename It1, typename It2, typename Func>
   std::pair<It1, It2> mismatch(It1 first1, It1 last1, It2 first2, Func p)
   {
-      while (first1 != last1 && p(*first1, *first2))  ++first1, ++first2;
-      return std::make_pair(first1, first2);
+    while (first1 != last1 && p(*first1, *first2))
+      ++first1, ++first2;
+    return std::make_pair(first1, first2);
   }
 
+  //==================================================================================================
+  // Internal concepts
+  //==================================================================================================
   template<typename T>
-  concept export_as_string = requires(T e) { std::to_string(e); };
+  concept support_std_to_string = requires(T e) { std::to_string(e); };
 
   template<typename T>
-  concept export_with_string = requires(T e) { to_string(e); };
+  concept support_to_string = requires(T e) { to_string(e); };
 
   template<typename T>
   concept sequence = requires(T e) {std::begin(e); std::end(e); };
-
 }
 
+//==================================================================================================
+// Display helpers
+//==================================================================================================
 namespace tts
 {
   template<typename T> struct type_name_
@@ -106,11 +110,11 @@ namespace tts
   // Display a result
   template<typename T> std::string as_string(T const& e)
   {
-    if constexpr( detail::export_as_string<T> )
+    if constexpr( detail::support_std_to_string<T> )
     {
       return std::to_string(e);
     }
-    else if constexpr( detail::export_with_string<T> )
+    else if constexpr( detail::support_to_string<T> )
     {
       return to_string(e);
     }
@@ -488,10 +492,10 @@ namespace tts::detail
 {
   template<typename L, typename R>
   concept comparable_equal = requires(L l, R r) { compare_equal(l,r); };
-  
+
   template<typename L, typename R>
   concept comparable_less = requires(L l, R r) { compare_less(l,r); };
-  
+
   template<typename L, typename R> inline bool eq(L const &l, R const &r)
   {
     if constexpr( comparable_equal<L,R> ) return compare_equal(l,r);

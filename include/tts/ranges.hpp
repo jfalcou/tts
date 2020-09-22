@@ -34,7 +34,7 @@ namespace tts
 }
 
 //==================================================================================================
-// Dsiplay settings
+// Display settings
 //==================================================================================================
 namespace tts::detail
 {
@@ -285,3 +285,52 @@ namespace tts
     }                                                                                               \
   } while(::tts::detail::done())                                                                    \
 /**/
+
+//==================================================================================================
+// Ready-to-use generators
+//==================================================================================================
+namespace tts
+{
+  //================================================================================================
+  // Standard random distribution generator wrapper
+  //================================================================================================
+  template<typename T, typename Distribution>
+  struct prng_generator
+  {
+    template<typename... Args>
+    prng_generator(Args... args) : distribution_(std::forward<Args>(args)...) {}
+
+    void init( options const& args )
+    {
+      auto seed = args.value_or(-1, "-s", "--seed");
+
+      if(seed == -1 )
+      {
+        auto now  = std::chrono::high_resolution_clock::now();
+        seed      = static_cast<unsigned int>(now.time_since_epoch().count());
+      }
+
+      generator_.seed(seed);
+    }
+
+    template<typename Idx, typename Count> T operator()(Idx, Count)
+    {
+      return distribution_(generator_);
+    }
+
+    private:
+    Distribution  distribution_;
+    std::mt19937  generator_;
+  };
+
+  //================================================================================================
+  // Uniform PRNG generator
+  //================================================================================================
+  template<typename T>
+  using uniform_prng = prng_generator < T
+                                      , std::conditional_t< std::is_floating_point_v<T>
+                                                          , std::uniform_real_distribution<T>
+                                                          , std::uniform_int_distribution<T>
+                                                          >
+                                      >;
+}
