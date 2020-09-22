@@ -29,8 +29,8 @@ namespace tts
     static void display(Base const& v, std::ostream& os)  noexcept  { os << v;            }
   };
 
-  template<typename Generator>
-  concept initializable = requires(Generator g) { g.init(args); };
+  template<typename Generator, typename Args>
+  concept initializable = requires(Generator g, Args args) { g.init(args); };
 }
 
 //==================================================================================================
@@ -150,7 +150,7 @@ namespace tts
     std::size_t count = std::max(32ULL,args.value_or(32ULL, "-b", "--block"));
 
     //-- If possible, initialize the generator
-    if constexpr( initializable<Generator> )
+    if constexpr( initializable<Generator,options> )
     {
       g.init(args);
     }
