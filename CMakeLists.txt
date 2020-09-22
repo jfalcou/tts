@@ -5,7 +5,7 @@
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.17)
 
 ##==================================================================================================
 ## Setup project
