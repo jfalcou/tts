@@ -18,53 +18,523 @@ is run.
 Command line Interface
 ====================================================================================================
 
-TTS supports options that can be passed as command line arguments of the test binary.
+TTS supports options that can be passed as command line arguments of the test binary. Those
+options modify how the tests are run.
 
  Options     | Shortcut | Description
 ------------ | -------- | -----------------------------------------------------------------------
-`--count N`  | `-c N`   | Set size of experiments in range tests<br>`./my_test --count 50000`
 `--help`     | `-h`     | Display the list of supported options <br>`./my_test --help`
-`--hex`      | `-x`     | Display all floating points number in hexadecimal
 `--no-color` | `-n`     | Disable the colored output of test results. <br>`./my_test --no-color`
-`--order X`  | `-o X`   | Change the order in which tests are run: <br>`./my_test --order sorted`: tests are run in alphabetical order<br>`./my_test --order random`: tests are run in random order
 `--pass`     | `-p`     | Display both failing and passing tests. <br>`./my_test --pass`
-`--repeat N` | `-r N`   | Repeat each tests `N` times <br>`./my_test --repeat 42`
-`--seed N`   | `-s N`   | Provide the pseudo-random number generator seed <br>`./my_test --seed 13374269`
-`--ulpmax N` | `-u N`   | Set global failure ULP threshold in range tests <br>`./my_test --ulpmax 4.5`
-`--valmax N` | `-w N`   | Replace upper bound in range tests <br>`./my_test --valmax 10.5`
-`--valmin N` | `-v N`   | Replace lower bound in range tests <br>`./my_test --valmin -5.7`
+`--repeat=N` | `-r=N`   | Repeat each tests `N` times <br>`./my_test --repeat=42`
 
+Another set of options is provided to control the specifics of the range check tests.
+
+ Options     | Shortcut | Description
+------------ | -------- | -----------------------------------------------------------------------
+`--hex`      | `-x`     | Display floating point values as hexadecimal. <br>`./my_test --hex`
+`--loop=N`   | `-l=N`   | Repeat each range checks `N` times <br>`./my_test --loop=100`
+`--block=N`  | `-b=N`   | Set size of range checks samples to `N`<br>`./my_test --block=4096`
+`--ulpmax=N` | `-u=N`   | Set global failure ulp threshold for range tests to `N`<br>`./my_test --ulpmax=4`
+`--valmin=N` | `-v=N`   | Set minimal value for range tests to `N`<br>`./my_test --valmin=-100`
+`--valmax=N` | `-w=N`   | Set maximal value for range tests to `N`<br>`./my_test --valmax=1000`
+
+Values of command-line options can be used directly in a test via the `arguments` object available
+to each test case automatically. Command line arguments are detected and parsed on-demand, which
+means that one can define a test-specific command-line argument by just requesting its value.
+
+<a name="options"> The `arguments` object is an instance of the `tts::options` type that provides the
+following members functions.
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+struct options
+{
+  template<typename... Flags> bool is_set(Flags const&... flags ) const;
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `flags` : string containing the flag to check for
+
+**Returns:** `true` if any of the flag passed as an argument is set, `false` otherwise.
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+struct options
+{
+  template<typename T, typename... Flags> T value_or(T const& def,  Flags const&... flags ) const
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `def` : default value if no flag are set
+  - `flags` : string containing the flag to check for
+
+**Returns:** the value associated to the flag if any falg is set, `def` otherwise.
+
+<hr>
+
+Here is a sample test code using user-defined command line arguments:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+
+TTS_CASE( "CLI test - flag" )
+{
+  // Will fail if the test is not called via ./mytest.exe --pass--the-test
+  TTS_EXPECT( arguments.is_set("--pass--the-test") );
+}
+
+TTS_CASE( "CLI test - setting" )
+{
+  // Will fail if the test is not called via ./mytest.exe --xxx=13.37
+  TTS_EQUAL( arguments.value_or(0., "--xxx"), 13.37);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
 Custom Test Driver
 ====================================================================================================
 
-Custom Comparisons
+By default, **TTS** provides an entry point function for the listed tests. However, it may be
+required to handle such an entry point. In this case, one can define the `TTS_CUSTOM_DRIVER_FUNCTION`
+preprocessor symbol to a name of their own entry-point function as shown below.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_CUSTOM_DRIVER_FUNCTION custom_entry_point
+#include <tts/tts.hpp>
+
+TTS_CASE( "Tautological test" )
+{
+  TTS_EXPECT_NOT(false == true);
+}
+
+int main(int argc, char const** argv)
+{
+  custom_entry_point(argc, argv);
+  return tts::report(0,0);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+After defining the `TTS_CUSTOM_DRIVER_FUNCTION` symbol, tests can be added as usual. Then, a
+regular `main` function is to be defined. This function will then performs any special operations
+required then calls the aforementioned entry point function.
+
+Finally, the `main` function will call `tts::report`. `tts::report` is in charge of aggregating test
+results and validate the whole tests with respect to expect number of failures and invalid tests.
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace tts
+{
+  int report(std::ptrdiff_t fails, std::ptrdiff_t invalids);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `fails` : Number of expected failures.
+  - `invalids` : Number of expected invalid tests.
+
+**Returns:** `0` is the tests validate the check, `1` otherwise.
+
+<hr>
+
+Customization Points
 ====================================================================================================
 
+Custom Display
+----------------------------------------------------------------------------------------------------
+By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string` or, in
+the case of sequence-like types, a sequence of calls to `std::to_string`. In case no overload
+for `std::to_string` exists for a given type, a string will be built from the type name and its
+instance's address.
+
+In the case a given type needs to be displayed in a specific manner, **TTS** allows to overload the
+`to_string` in the type's namespace and will use it if it is present.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  struct ratio { int n,d; };
+
+  std::string to_string(ratio const& b) { return std::to_string(n) + "/" + std::to_string(d); }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If needed, one can delegates a part of this string construction to the **TTS** internal string
+generator: `tts::as_string`.
+
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  template<typename T> struct box { T value; };
+
+  template<typename T>
+  std::string to_string(box<T> const& b) { return "box<" + tts::as_string(b.value) + ">"; }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+</script>
 Custom Equality Comparison
 ----------------------------------------------------------------------------------------------------
+**TTS** uses `operator==` to build all its equality-based checks. If needed, one can specialize a
+`compare_equal` function in a type's namespace to let **TTS** use special comparison scheme.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  template<typename T> struct box { T value; };
+
+  template<typename T>
+  bool compare_equal(box<T> const& l, box<T> const& r)
+  {
+    return l.value == r.value;
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
 Custom Ordering
 ----------------------------------------------------------------------------------------------------
+**TTS** uses `operator<` to build all its ordering-based checks. If needed, one can specialize a
+`compare_less` function in a type's namespace to let **TTS** use special comparison scheme.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  template<typename T> struct box { T value; };
+
+  template<typename T>
+  bool compare_less(box<T> const& l, box<T> const& r)
+  {
+    return l.value < r.value;
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
 
 Custom Precision Comparison
 ====================================================================================================
 
 Custom ULP Comparison
 ----------------------------------------------------------------------------------------------------
+**TTS** uses its `ulp_distance` function to perform all ULP checks. If needed, one can specialize
+this function in the `tts` namespace to let **TTS** use special ULP comparison scheme. As usual,
+one can also reuse the pre-existing `tts::ulp_distance` to implement their own.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  struct ratio { int n,d; };
+}
+
+namespace tts
+{
+  double ulp_distance(sample::ratio const &a, sample::ratio const &b)
+  {
+    auto ra = static_cast<double>(a.n) / a.d;
+    auto rb = static_cast<double>(b.n) / b.d;
+
+    return tts::ulp_distance(ra,rb);
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
 
 Custom Relative Comparison
 ----------------------------------------------------------------------------------------------------
+**TTS** uses its `relative_distance` function to perform all relative precision checks. If needed,
+one can specialize this function in the `tts` namespace to let **TTS** use special relative precision
+ scheme. As usual, one can also reuse the pre-existing `tts::relative_distance` to implement their own.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  struct ratio { int n,d; };
+}
+
+namespace tts
+{
+  double relative_distance(sample::ratio const &a, sample::ratio const &b)
+  {
+    return tts::relative_distance( a.n*b.d , b.n*a.d );
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
 Custom Absolute Comparison
 ----------------------------------------------------------------------------------------------------
+**TTS** uses its `absolute_distance` function to perform all absolute precision checks. If needed,
+one can specialize this function in the `tts` namespace to let **TTS** use special absolute precision
+ scheme. As usual, one can also reuse the pre-existing `tts::absolute_distance` to implement their own.
 
-Custom Data Producer
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace sample
+{
+  struct ratio { int n,d; };
+}
+
+namespace tts
+{
+  double relative_distance(sample::ratio const &a, sample::ratio const &b)
+  {
+    return std::abs( a.n*b.d - b.n*a.d );
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+Custom Data Generator
 ====================================================================================================
+Range checks require a data generator to fill their tests. Outside the provided PRNG generators, one
+can build their own generator.
 
+A range generator can be as simple as a callable object providing the following interface.
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+auto operator()(auto index, auto count);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `index` : an integral value representing the index of the generated value.
+  - `count` : an integral value representing the total number of values to be generated.
+
+**Returns:** A value of any type.
+
+<hr>
+
+!!! Attention Note
+   By this definition, any lambda function with the proper interface is a suitable data generator.
+   This makes defining local generator trivial as it doesn't requires an actual callable object
+   to be defined.
+
+A data generator can optionally provide a `init` member function that will allow the generator to
+prepare some internal states and, potentially use the command line arguments to do so. This
+member function has the following interface.
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+void init( tts::options const& args );
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `args` : an instance of [**`tts::options`**](#options) containing current command line arguments.
+
+<hr>
+
+Here's an example of such generator
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+struct cli_generator
+{
+  void init( options const& args )
+  {
+    value_ = args.value_or(1., "--gen-value");
+  }
+
+  template<typename Idx, typename Count> double operator()(Idx i, Count c)
+  {
+    return (value_ * i)/c;
+  }
+
+  private:
+  double value_;
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+This generator will generate `double` between `0` and `value`, each generation returning the `i`th
+portion of the full value. It can then be used this way:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+TTS_CASE( "Test stateless range check" )
+{
+  TTS_ULP_RANGE_CHECK ( cli_generator{}, double, double, f, g , 1. );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+Custom Type Adaptation for Range Checks
+====================================================================================================
+One may need to use custom user-defined types in its Range checks. In this case, they can specialize
+the `tts::adapter` class to provide the required informations on how to handle such type in the check.
+
+The `adapter` class is defined as follow.
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace tts
+{
+  template<typename X> struct adapter
+  {
+    template<typename U, typename Func>
+    static void run(X const*& src, U*& dst, Func f) noexcept;
+
+    template<typename U>
+    static X retrieve(U const* src) noexcept;
+
+    static void display(X const& v, std::ostream& os) noexcept;
+  };
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+template<typename U, typename Func>
+static void run(X const*& src, U*& dst, Func f) noexcept;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+Retrieve an instance of `X` from memory at `src`, apply the function `f` on it and
+store the result into the memory address `dst`.
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `src` : pointer to load an instance of `X` from
+  - `dst` : pointer to store the result of the call to `f`
+  - `f`   : function to apply to the loaded value
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+template<typename U>
+static X retrieve(U const* src) noexcept;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+Retrieve an instance of `X` from an arbitrary pointer of `U`. This process may be required
+when dealings with multi-valued user-defined type to be able to reconstruct a value from a
+pointer to scalar components.
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `src` : pointer to construct an instance of `X` from.
+
+**Returns:** An well-formed instance of `X`
+
+<hr>
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+static void display(X& v, std::ostream& os) noexcept;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+Perform the proper insertion of a given value `v` into an output stream `os`.
+This class member function is used whenever a range check needs to display of value of
+type `X`  in its process.
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `v` : value to stream
+  - `os` : output stream to stream the value to
+
+<hr>
+
+The following code show how we can use this adaptation process to work with `std::array` inside
+range check.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace tts
+{
+  template<typename X> struct adapter<std::array<X,4>>
+  {
+    template<typename U, typename Func>
+    static void run(X const*& src, U*& dst, Func f) noexcept
+    {
+      // Read 4 consecutive X from src to build an array
+      std::array<X,4> that{*src++,*src++,*src++,*src++};
+
+      // Apply f
+      auto res = f(that);
+
+      // Store portion of the result back in memory
+      *dst++ = res[0];
+      *dst++ = res[1];
+      *dst++ = res[2];
+      *dst++ = res[3];
+    }
+
+    static auto retrieve(X const* src) noexcept
+    {
+      // Crudely realign on 4*4
+      auto p = reinterpret_cast<X*>(reinterpret_cast<std::uintptr_t>(src)/16)*16);
+
+      // Read 4 consecutive float
+      std::array<X,4> that{*p++,*p++,*p++,*p++};
+
+      return that;
+    }
+
+    static void display(std::array<X,4> const& v, std::ostream& os) noexcept
+    {
+      os << "[";
+      for(auto const& e : v) std::cout << e << " ";
+      os << "]";
+    }
+  };
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+----------------------------------------------------------------------------------------------------
 <!-- End of Document -->
-<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'medium'};</script>
--<link rel="stylesheet" href="tts.css">
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'none'};</script>
+<link rel="stylesheet" href="tts.css">
 <!-- Markdeep: -->
 <script src="markdeep.min.js"></script>
 <script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

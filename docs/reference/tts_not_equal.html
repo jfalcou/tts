@@ -19,10 +19,10 @@ TTS_NOT_EQUAL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/relation.hpp>`
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
 
 Performs inequality comparison between two values.  This comparison is performed by
-using the proper `operator==` overload or by a :ref:custom_comaprison.
+using the proper `operator==` overload or by a [custom comparison](extensions.htm#customizationpoints).
 
 **Parameters:**
 :
@@ -33,7 +33,6 @@ using the proper `operator==` overload or by a :ref:custom_comaprison.
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/relation.hpp>
 #include <vector>
 
 TTS_CASE( "Check correctness of inequality tests" )

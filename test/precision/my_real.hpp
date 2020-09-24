@@ -10,42 +10,29 @@
 #ifndef MY_REAL_HPP_INCLUDED
 #define MY_REAL_HPP_INCLUDED
 
-#include <tts/tests/precision.hpp>
+#include <tts/tts.hpp>
 
 namespace n1
 {
   struct my_real { float x; operator float() const { return x; } };
 }
 
-
-namespace tts { namespace ext
+namespace tts
 {
-  template<typename EnableIf>
-  struct ulpdist<n1::my_real,n1::my_real,EnableIf>
+  inline double ulp_distance(n1::my_real const &a, n1::my_real const &b)
   {
-    inline double operator()(n1::my_real const& a, n1::my_real const& b) const
-    {
-      return a.x/b.x;
-    }
+    return a.x/b.x;
   };
 
-  template<typename EnableIf>
-  struct reldist<n1::my_real,n1::my_real,EnableIf>
+  inline double relative_distance(n1::my_real const &a, n1::my_real const &b)
   {
-    inline double operator()(n1::my_real const& a, n1::my_real const& b) const
-    {
-      return a.x/b.x;
-    }
+    return a.x/b.x;
   };
 
-  template<typename EnableIf>
-  struct absdist<n1::my_real,n1::my_real,EnableIf>
+  inline double absolute_distance(n1::my_real const &a, n1::my_real const &b)
   {
-    inline double operator()(n1::my_real const& a, n1::my_real const& b) const
-    {
-      return std::abs(a.x - b.x);
-    }
+    return std::abs(a.x - b.x);
   };
-} }
+}
 
 #endif

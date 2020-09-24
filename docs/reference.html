@@ -8,20 +8,9 @@
 <meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
                        **Tiny Test System**
 
-**TTS** tests is meant to cover a large scope of checks from simple validation to complex
+![ ](logo.png width="150px") **TTS** tests is meant to cover a large scope of checks from simple validation to complex
 numeric based tests. Each category of tests macros lives in its own header and can be
 included in a fine grain way.
-
-Categories are :
-- [Scenario related](#scenariodefinition) macros: those helps structure test cases.
-- [Status related](#statustests) macros: those provide way to force pass or failure of tests.
-- [Basic tests](#basictests) macros: those provide simple expectation checks.
-- [Relational tests](#statustests) macros: those provide checks based on equality and ordering.
-- [Precision related](#precisiontests) macros: those provide checks for IEEE754 comparisons.
-- [Sequence related](#sequencetests) macros: those provide checks operating on sequences and containers.
-- [Runtime related](#runtimeerrortests) macros: those provide checks for runtime behavior.
-- [Type related](#typetests) macros: those provide checks for types comparisons.
-- [Dataset related](#datasettests) macros: those provide facility to compare functions behavior over data ranges.
 
   (insert crumbs.html here)
 
@@ -39,7 +28,7 @@ Status Tests
 ====================================================================================================
 The following component provides macros to display informations about tests status within scenarios.
 <br>
-To use those macros, include the `tts/tests/infos.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
   (insert reference/tts_pass.html     here)
   (insert reference/tts_fail.html     here)
@@ -50,7 +39,7 @@ Basic Tests
 The following component provides macros to perform basic tests over expression that simply evaluates
 as a boolean value.
 <br>
-To use those macros, include the `tts/tests/basic.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
   (insert reference/tts_expect.html     here)
   (insert reference/tts_expect_not.html here)
@@ -59,12 +48,12 @@ Relational Tests
 ====================================================================================================
 The following component provides macros to perform ordering test between values.
 <br>
-To use those macros, include the `tts/tests/relation.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
 !!! Attention Note
    Ordering and equality comparisons are, by default, handled by the `operator==` or
    `operator<` overloads. In the case one needs to perform a custom comparison, see
-   the :ref:`custom-comparison` section.
+   the [custom comparisons](extensions.htm#customizationpoints) section.
 
   (insert reference/tts_equal.html          here)
   (insert reference/tts_not_equal.html      here)
@@ -77,12 +66,12 @@ Precision Tests
 ====================================================================================================
 The following component provides macros to perform precision tests between values.
 <br>
-To use those macros, include the `tts/tests/precision.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
 !!! Attention Note
-   Precision comparisons are, by default, handled by the `tts::ulpdist`, `tts::reldist` or
-   `tts::absdist` overloads. In the case one needs to perform a custom precision comparison, see
-   the :ref:`custom-precision` section.
+   Precision comparisons are, by default, handled by the `tts::ulp_distance`, `tts::relative_distance`
+   or `tts::absolute_distance` overloads. In the case one needs to perform a custom precision
+   comparison, see the [Custom Precision Comparison](extensions.htm#customprecisioncomparison) section.
 
   (insert reference/tts_ulp_equal.html      here)
   (insert reference/tts_ieee_equal.html     here)
@@ -97,12 +86,12 @@ are based on the fact that the check to perform must pass for every elements of 
 For convenience, one can substitute one of two of the input sequences by a scalar that will be
 interpreted as a sequence of one element.
 <br>
-To use those macros, include the `tts/tests/sequence.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
 !!! Attention Note
-    Precision comparisons are, by default, handled by the `tts::ulpdist`, `tts::reldist` or
-    `tts::absdist` overloads. In the case one needs to perform a custom precision comparison, see
-    the :ref:`custom-precision` section.
+    Precision comparisons are, by default, handled by the `tts::ulp_distance`, `tts::relative_distance` or
+    `tts::absolute_distance` overloads. In the case one needs to perform a custom precision comparison, see
+    the [Custom Precision Comparison](extensions.htm#customprecisioncomparison) section.
 
   (insert reference/tts_all_equal.html          here)
   (insert reference/tts_all_ulp_equal.html      here)
@@ -117,7 +106,7 @@ absence of runtime exceptions.
 <br>
 Note that those test macros requires the exception to be detected to inherits from `std::exception`.
 <br>
-To use those macros, include the `tts/tests/exception.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
   (insert reference/tts_throw.html      here)
   (insert reference/tts_no_throw.html   here)
@@ -127,7 +116,7 @@ Type Tests
 The following component provides macros to perform tests over expression type equivalence
 or properties.
 <br>
-To use those macros, include the `tts/tests/types.hpp` file.
+To use those macros, include the `tts/tts.hpp` file.
 
   (insert reference/tts_type_is.html      here)
   (insert reference/tts_expr_is.html      here)
@@ -135,25 +124,21 @@ To use those macros, include the `tts/tests/types.hpp` file.
 Dataset Tests
 ====================================================================================================
 Producers are class that fulfills a given interface so that range checks can use them as data
-generators. **TTS** provides a base class to define custom producers and two ready-to-use
-producers for checking behavior over random input or the exhaustive list of values within an
-interval.
+generators. **TTS** provides a base class to define custom producers and a ready-to-use
+producers for checking behavior over random inputs.
 <br>
-To use those components, include the `tts/tests/range.hpp` file.
+To use those components, include the `tts/ranges.hpp` file.
 
-<!--
-  (jinsert reference/tts_producer.html             here)
-  (jinsert reference/tts_random_producer.html      here)
-  (jinsert reference/tts_exhaustive_producer.html  here)
-  (jinsert reference/tts_ulp_range_check.html  here)
--->
+  (insert reference/tts_ulp_range_check.html  here)
+  (insert reference/tts_prng_generator.html   here)
+  (insert reference/tts_uniform_prng.html     here)
 
 ----------------------------------------------------------------------------------------------------
 <!-- Shortcuts -->
 
 <!-- End of Document -->
-<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'medium'};</script>
--<link rel="stylesheet" href="tts.css">
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'none'};</script>
+<link rel="stylesheet" href="tts.css">
 <!-- Markdeep: -->
 <script src="markdeep.min.js"></script>
 <script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

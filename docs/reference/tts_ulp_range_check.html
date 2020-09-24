@@ -1,0 +1,59 @@
+<!--
+  TTS - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+
+<meta charset="utf-8">
+
+TTS_ULP_RANGE_CHECK
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** <script type="preformatted">`#include <tts/ranges.hpp>`</script>
+
+Evaluates the histogram of ULP difference between two functions run on the same data set and that
+they lie in a given [ULP distance](rationale.html#precisiontesting). This comparison is performed
+by using the proper `tts::ulp_distance` overload (see [customizable per the following protocol](extensions.htm#customulpcomparison)).
+
+**Parameters:**
+:
+    - `Producer`: [Data set generator](extensions.html#customdatagenerator) to use.
+    - `RefType` : Type to use as reference function input.
+    - `NewType` : Type to use as challenger function input.
+    - `RefFunc` : Reference function to compare to.
+    - `NewFunc` : Challenger function to be compared to the reference one.
+    - `Ulpmax`  : Maximal ULPs acceptable for passing the test.
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/ranges.hpp>
+
+float ok_x (float x) { return x; }
+float bad_x(float x) { return x + x*1e-7f; }
+
+TTS_CASE( "Test range check" )
+{
+  TTS_ULP_RANGE_CHECK ( [] (auto i, auto c) { return (100.f*i)/c; }
+                      , float, float , ok_x, bad_x
+                      , 2.
+                      );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>

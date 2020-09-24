@@ -7,9 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
 
 TTS_CASE("Absolute distance")
 {
@@ -50,9 +48,9 @@ TTS_CASE_TPL( "Absolute distance between floating point", TTS_IEEE_TYPES)
 TTS_CASE( "Absolute distance between boolean" )
 {
   TTS_ABSOLUTE_EQUAL(true , true  , 0.);
-  TTS_ABSOLUTE_EQUAL(true , false , 100.);
+  TTS_ABSOLUTE_EQUAL(true , false , 1.);
   TTS_ABSOLUTE_EQUAL(false, false , 0.);
-  TTS_ABSOLUTE_EQUAL(false, true  , 100.);
+  TTS_ABSOLUTE_EQUAL(false, true  , 1.);
 }
 
 TTS_CASE_TPL( "Absolute distance between integers", TTS_INTEGRAL_TYPES)
@@ -66,7 +64,7 @@ TTS_CASE_TPL( "Absolute distance between integers", TTS_INTEGRAL_TYPES)
 
 #include "my_real.hpp"
 
-TTS_CASE("Absolute distance of type with custom reldist")
+TTS_CASE("Absolute distance of type with custom absolute distance")
 {
   TTS_ABSOLUTE_EQUAL(n1::my_real{1.f}, n1::my_real{8.f}, 7.);
   TTS_ABSOLUTE_EQUAL(n1::my_real{8.f}, n1::my_real{1.f}, 7.);

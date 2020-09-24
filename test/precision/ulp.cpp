@@ -7,9 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //====================================================================================================
-
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
 
 TTS_CASE("ULP distance")
 {
@@ -24,7 +22,8 @@ TTS_CASE("ULP distance")
 
 TTS_CASE( "ULP distance between boolean" )
 {
-  auto inf = std::numeric_limits<double>::infinity();
+  auto const inf = std::numeric_limits<double>::infinity();
+
   TTS_ULP_EQUAL(true , true  , 0.   );
   TTS_ULP_EQUAL(true , false , inf  );
   TTS_ULP_EQUAL(false, false , 0.   );

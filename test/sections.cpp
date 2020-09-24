@@ -1,16 +1,14 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2018 Joel FALCOU
+  Copyright 2020 Joel FALCOU
 
   Licensed under the MIT License <http://opensource.org/licenses/MIT>.
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
-#include <vector>
 #include <tts/tts.hpp>
-#include <tts/tests/basic.hpp>
+#include <vector>
 
 TTS_CASE( "Sections and sub-sections behavior" )
 {
@@ -37,7 +35,7 @@ TTS_CASE( "Sections and sub-sections behavior" )
     }
   }
 
-  TTS_WHEN("A vector is uninitialized elements")
+  TTS_WHEN("A vector is uninitialized")
   {
     std::vector<int> v;
 

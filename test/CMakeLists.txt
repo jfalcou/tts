@@ -1,6 +1,6 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2019 Joel FALCOU
+##  Copyright 2020 Joel FALCOU
 ##
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
@@ -19,9 +19,7 @@ set ( SOURCES
       precision/ieee.cpp
       precision/relative.cpp
       precision/ulp.cpp
-      range/basic.cpp
-      range/exhaustive.cpp
-      range/random.cpp
+      range.cpp
       relation/equal.cpp
       relation/greater.cpp
       relation/greater_equal.cpp

@@ -8,7 +8,6 @@
 **/
 //==================================================================================================
 #include <tts/tts.hpp>
-#include <tts/tests/sequence.hpp>
 #include <vector>
 
 TTS_CASE("ULP distance between sequences")
@@ -17,9 +16,6 @@ TTS_CASE("ULP distance between sequences")
 
   std::vector<float> a{1.f,1.f+eps,1.f-eps,1.f+3*eps};
   std::vector<float> b{1.f,1.f,1.f,1.f};
-  std::vector<float> s{1.f+eps};
 
-  TTS_ALL_ULP_EQUAL(a  , b   , 1.5);
-  TTS_ALL_ULP_EQUAL(s  , 1.f , 1.5);
-  TTS_ALL_ULP_EQUAL(1.f, s   , 1.5);
+  TTS_ALL_ULP_EQUAL(a, b , 1.5);
 }
