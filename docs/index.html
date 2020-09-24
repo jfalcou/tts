@@ -8,19 +8,17 @@
 <meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
                        **Tiny Test System**
 
-**TTS** is a **Tiny Test System** designed to simplify the design of unit tests in `C++17`.
+![ ](logo.png width="150px") **TTS** is a **Tiny Test System** designed to simplify the design of unit tests in `C++20`.
 **TTS** is based on the BDD methodology and is largely inspired by [the LEST framework][lest]
 by Martin Moene in both implementation and general design.
 <br>
 
 **TTS** is however biased toward testing numerical computation code by providing a selection of
-various precision-oriented checks including exhaustive exploration of a function's precision by
-[testing each and every possible values][dawson] or by testing functions over random samples of
-values.
+various precision-oriented checks including testing functions over samples of values.
 
 **TTS** is also meant to be extended for user-defined types so testing your own types using
-our methodology is as simple as overloading a function. This documentation will walk you through
-the basic philosophy of tests definitions with **TTS** and present all the checks available.
+its methodology is as simple as overloading a function or two. This documentation will walk you
+through the basic philosophy of tests definitions with **TTS** and present all the checks available.
 
   (insert crumbs.html here)
 
@@ -36,7 +34,7 @@ Retrieving the source
  $ git clone -b master https://github.com/jfalcou/tts.git
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once retrieved, you should have a ``tts`` folder which contains the whole source code.
+Once retrieved, you should have a `tts` folder which contains the whole source code.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
  $ cd tts
@@ -48,7 +46,7 @@ Once retrieved, you should have a ``tts`` folder which contains the whole source
 Installing
 ----------------------------------------------------------------------------------------------------
 
-Create a ``build`` directory here and enter it. Once in the ``build`` directory,
+Create a `build` directory here and enter it. Once in the `build` directory,
 you can use  **CMake** to generate the build system for **TTS**. We recommend using
 Ninja but any build system is fine.
 
@@ -58,15 +56,15 @@ Ninja but any build system is fine.
  $ cmake .. -G Ninja
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Once **CMake** completes, you can use the ``install`` target to build and install **TTS**.
-By default, the library will be installed in the ``/usr/local`` directory, thus requiring
+Once **CMake** completes, you can use the `install` target to build and install **TTS**.
+By default, the library will be installed in the `/usr/local` directory, thus requiring
 root privileges.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
  $ sudo ninja install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can select an alternative installation path by specifying the ``CMAKE_INSTALL_PREFIX``
+You can select an alternative installation path by specifying the `CMAKE_INSTALL_PREFIX`
 option at configuration time.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
@@ -76,22 +74,10 @@ option at configuration time.
 
 Once completed, the following files and folders are installed:
 
-- `$CMAKE_INSTALL_PREFIX/include/tts`
-- `$CMAKE_INSTALL_PREFIX/lib/cmake/tts`
-- `$CMAKE_INSTALL_PREFIX/lib/libtts.so`
+- `$CMAKE_INSTALL_PREFIX/include/tts/tts.hpp`
+- `$CMAKE_INSTALL_PREFIX/include/tts/ranges.hpp`
 
-
-CMake integration
-====================================================================================================
-
-Classic usage
-----------------------------------------------------------------------------------------------------
-Once installed, **TTS** is usable directly from CMake via the `FindPackage` command.
-
-ExternalProject
-----------------------------------------------------------------------------------------------------
-
-**TTS** can also be used directly from CMake as an ``ExternalProject``. To do so,
+Once installed, **TTS** is usable directly by providing the path to its installed files.
 
 Tutorial
 ====================================================================================================
@@ -121,11 +107,12 @@ Test cases are function performing repeatable, minimal operations able to unambi
 capture a function or class behavior and assess its correctness. In **TTS**, a test case can be
 defined either as:
 
-* a single function defined by the :ref:`TTS_CASE <tts-case>` macro. In this case, the test
-  function will be run and proceed to every tests it contains.
-* a family of functions generated from a template function and a sequence of types
-  via the :ref:`TTS_CASE_TPL <tts-case-tpl>` macro. Inside the test case itself, the template
-  type is accessible through the template parameter `T`.
+  * a single function defined by the [`TTS_CASE`](reference.html#scenariodefinition/tts_case) macro.
+    In this case, the test function will be run and proceed to every tests it contains.
+
+  * a family of functions generated from a template function and a sequence of types
+    via the [`TTS_CASE_TPL`](reference.html#scenariodefinition/tts_case_tpl) macro. Inside the test case itself, the template
+    type is accessible through the template parameter `T`.
 
 In both case, the test case is defined with an unique string description. Additionally, good
 testing practices recommend to have fine grain test cases to simplify test management.
@@ -179,7 +166,6 @@ Let's amend our initial test by adding a single call to [**`TTS_PASS`**](referen
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/infos.hpp>
 
 TTS_CASE( "Make a simple test suite" )
 {
@@ -196,7 +182,8 @@ Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 One may notice that no other informations are displayed. This is the default behavior. One can
-activate a more verbose output by passing the `--pass` through the :ref`**TTS** command line interface`.
+activate a more verbose output by passing the `--pass` through the
+[**TTS** command line interface](extensions.html#commandlineinterface).
 
 The output now includes all the informations gathered by the testing macros, including the source
 file location of each tests and the current scenario being tested.
@@ -221,14 +208,13 @@ Macro                                                 | Description
 [**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
 [**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
 
-These macros are accessible in the `tts/unit/tests/basic.hpp` header file.
+These macros are accessible in the `tts/tts.hpp` header file.
 
 Let's see the effect of [**`TTS_EXPECT`**](reference.html#tts_expect):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/basic.hpp>
 
 TTS_CASE( "Make a simple test suite" )
 {
@@ -262,17 +248,16 @@ Macro                                                       | Description
 [**`TTS_LESS_EQUAL`**](reference.html#tts_less_equal)       | Checks if values are lesser or equal than each other
 [**`TTS_GREATER_EQUAL`**](reference.html#tts_greater_equal) | Checks if values are greater or equal than each other
 
-These macros are accessible in the `tts/unit/tests/relation.hpp` header file.
+These macros are accessible in the `tts/tts.hpp` header file.
 
 Note that all those relational tests are performed using either the default `==` and `&lt;`
-operators. One can customize this behavior by providing :ref:`custom-equal` or :ref:`custom-order`.
+operators. One can customize this behavior by providing [customized equality comparator](extensions.html#customizationpoints/customequalitycomparison) or [customized ordering comparator](extensions.html#customizationpoints/customordering).
 
 Let's see how those tests integrates in our small test suite:
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/relation.hpp>
 #include <vector>
 
 TTS_CASE( "Verify basic relations" )
@@ -320,16 +305,16 @@ Macro                                                          | Description
 [**`TTS_RELATIVE_EQUAL`**](reference.html#tts_relative_equal)  | Checks if one value is not equal to another
 [**`TTS_ABSOLUTE_EQUAL`**](reference.html#tts_absolute_equal)  | Checks if one value is lesser or equal than another
 
+These macros are accessible in the `tts/tts.hpp` header file.
+
 As for the relational comparison macros, the behavior of this set of test comparison can
-customized through a set of specific function (see :ref:`custom-ulp`, :ref:`custom-rel`
-or :ref:`custom-abs`.
+customized through [a set of specific function](extensions.html#customprecisioncomparison).
 
 Let's have a look at the expected output of such macros
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
 
 TTS_CASE("ULP distance")
 {
@@ -371,9 +356,35 @@ Macro                                                                 | Descript
 [**`TTS_ALL_EQUAL`**](reference.html#tts_all_equal)                   | Checks if two sequences are equal
 [**`TTS_ALL_ABSOLUTE_EQUAL`**](reference.html#tts_all_absolute_equal) | Checks if two sequences are equal within an absolute value
 
-These macros are accessible in the `tts/unit/tests/sequence.hpp` header file.
+These macros are accessible in the `tts/tts.hpp` header file.
 
-TODO: Example
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+
+TTS_CASE("Absolute distance between sequences")
+{
+  std::vector<float> a{1.f,1.1f,0.9f,1.3f};
+  std::vector<float> b{1.f,1.f,1.f,1.f};
+
+  TTS_ALL_ABSOLUTE_EQUAL(a, b, .4);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Absolute distance between sequences
+absolute.cpp:17 - PASSED - Expecting: a == b within 0.4 unit
+--------------------------------------------------------------------------------
+Results: 1 test - 1 success - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
 
 ### Runtime Error Tests
 Those tests check if a given expression exhibit a given runtime behavior with respect
@@ -385,14 +396,13 @@ Macro                                             | Description
 [**`TTS_THROW`**](reference.html#tts_throw)       | Checks if a given expression throws an exception of a given type
 [**`TTS_NO_THROW`**](reference.html#tts_no_throw) | Checks if a given expression does not throw
 
-These macros are accessible in the `tts/unit/tests/exceptions.hpp` file.
+These macros are accessible in the `tts/tts.hpp` file.
 
 Let's have a look at the expected output of such macros
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/exceptions.hpp>
 
 struct some_exception_type : std::exception {};
 
@@ -431,14 +441,13 @@ Macro                                            | Description
 [**`TTS_TYPE_IS`**](reference.html#tts_type_is)  | Checks if two types are the same
 [**`TTS_EXPR_IS`**](reference.html#tts_expr_is)  | Checks if a given expression evaluates to a result of a given type
 
-These macros are accessible in the `tts/unit/tests/types.hpp` file.
+These macros are accessible in the `tts/tts.hpp` file.
 
 Let's have a look at the expected output of such macros
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/types.hpp>
 #include <memory>
 
 TTS_CASE( "Check that types can be tested for equality" )
@@ -472,7 +481,7 @@ Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
 </script>
 
 ## Data-set Testing
-Those tests compares the behavior of two function objets ran over data generated by Producers.
+Those tests compares the behavior of two function objects ran over data generated by Producers.
 The macro generate an histogram of ULP distance and display a summary of which values generates
 discrepancies between the two functions. The test is considered as passed if the maximum
 ULP distance measured is below a given threshold specified either at runtime or in the test
@@ -480,10 +489,72 @@ setup.
 
 Macro                                                           | Description
 --------------------------------------------------------------- | -----------------------------------------------------------------
-[**`TTS_RANGE_CHECK`**](reference.html#tts_range_check)         | Checks if two functions never differs from at most a given ULP distance specified at runtime.
 [**`TTS_ULP_RANGE_CHECK`**](reference.html#tts_ulp_range_check) | Checks if two functions never differs from at most a given ULP distance.
 
-These macros are accessible in the `tts/unit/tests/range.hpp` file.
+This macro is accessible in the `tts/ranges.hpp` file.
+
+Let's have a look at the expected output of this macro.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/ranges.hpp>
+
+int ok_x  (float x) { return static_cast<int>(x); }
+int ajar_x(float x) { return static_cast<int>((int(x) % 2 == 1) ? x : x+x); }
+
+TTS_CASE( "Test simple range check" )
+{
+  TTS_ULP_RANGE_CHECK ( [](auto i, auto c) { return (100.f*i)/c; }
+                      , float, float
+                      ,  ok_x, ajar_x
+                      , 128
+                      );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+$ ./my_test --pass
+--------------------------------------------------------------------------------
+[SCENARIO] - Test simple range check
+Comparing: ok_x<float> with ajar_x<float> using [](auto i, auto c) { return (100.f*i)/c; }
+Max ULP         Count (#)       Cum. Ratio (%)  Samples
+--------------------------------------------------------------------------------
+0.0             17              53.12           Input:          +0.0000000e+00
+                                                Found:          +0
+                                                instead of:     +0
+--------------------------------------------------------------------------------
+4.0             1               56.25           Input:          +6.2500000e+00
+                                                Found:          +12
+                                                instead of:     +6
+--------------------------------------------------------------------------------
+8.0             1               59.38           Input:          +1.2500000e+01
+                                                Found:          +25
+                                                instead of:     +12
+--------------------------------------------------------------------------------
+16.0            2               65.62           Input:          +1.8750000e+01
+                                                Found:          +37
+                                                instead of:     +18
+--------------------------------------------------------------------------------
+32.0            6               84.38           Input:          +3.4375000e+01
+                                                Found:          +68
+                                                instead of:     +34
+--------------------------------------------------------------------------------
+64.0            5               100.00          Input:          +6.8750000e+01
+                                                Found:          +137
+                                                instead of:     +68
+--------------------------------------------------------------------------------
+range.cpp:79 - PASSED - Expecting: ajar_x similar to ok_x within 128.00 ULP and found: 48.50 ULP
+--------------------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+A full histogram of ULPs distance is displayed along with samples value for each ULP buckets.
+This test is usually interesting to map the properties of functions over an arbitrarily constructed
+range of values.
 
 ----------------------------------------------------------------------------------------------------
 <!-- Shortcuts -->
@@ -491,13 +562,13 @@ These macros are accessible in the `tts/unit/tests/range.hpp` file.
 [dawson]: https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/
 
 <!-- Footnotes -->
-[^f1]: Passing `--no-color` through the :ref:`tts-cli` remove said colors.
+[^f1]: Passing `--no-color` through the [**TTS** command line interface](extensions.html#commandlineinterface) remove said colors.
 
 [^f2]: Values are IEEE equal if they're separated by exactly 0 ULP.
 
 <!-- End of Document -->
-<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'medium'};</script>
--<link rel="stylesheet" href="tts.css">
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'none'};</script>
+<link rel="stylesheet" href="tts.css">
 <!-- Markdeep: -->
 <script src="markdeep.min.js"></script>
 <script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

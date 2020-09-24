@@ -7,9 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
-
 #include <tts/tts.hpp>
-#include <tts/tests/relation.hpp>
 
 TTS_CASE( "Check correctness of less-than comparison tests" )
 {

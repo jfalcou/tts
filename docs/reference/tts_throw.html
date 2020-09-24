@@ -19,10 +19,9 @@ TTS_THROW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/basic.hpp>`
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
 
-Checks if a given `Expression` throws an exception of type `Exception` which must inherits from
-std::exception.
+Checks if a given `Expression` throws an exception of type `Exception`.
 
 **Parameters:**
 :
@@ -34,9 +33,8 @@ std::exception.
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/exceptions.hpp>
 
-struct some_exception_type : std::exception {};
+struct some_exception_type {};
 
 void foo() { throw some_exception_type(); }
 

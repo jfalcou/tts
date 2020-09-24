@@ -19,12 +19,12 @@ TTS_IEEE_EQUAL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-**Required header:** `#include &lt;tts/tests/precision.hpp>`
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
 
 Checks if two values are exactly within a 0 [ULP](rationale.html#precisiontesting) of each other.
 This also allow for infinites and NaNs to be compared equal if both values are the same infinites
-or are both NaN. This comparison is performed by using the proper `tts::ulpdist` overloads
-(see :ref:ulp).
+or are both $NaN$. This comparison is performed by using the proper `tts::ulp_distance` overload
+(see [customizable per the following protocol](extensions.htm#customulpcomparison)).
 
 **Parameters:**
 :
@@ -35,7 +35,6 @@ or are both NaN. This comparison is performed by using the proper `tts::ulpdist`
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #include <tts/tts.hpp>
-#include <tts/tests/precision.hpp>
 
 TTS_CASE("IEEE equality")
 {
