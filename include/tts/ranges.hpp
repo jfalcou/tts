@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+#pragma once
 
 //==================================================================================================
 // Dependencies
@@ -147,7 +148,7 @@ namespace tts
     using nout_type = std::decay_t<decltype( challenger( std::declval<NewType>() ))>;
 
     //-- Find how many elements in a block (but at least 4096)
-    std::size_t count = std::max(32ULL,args.value_or(32ULL, "-b", "--block"));
+    std::size_t count = std::max(4096ULL,args.value_or(4096ULL, "-b", "--block"));
 
     //-- If possible, initialize the generator
     if constexpr( initializable<Generator,options> )
