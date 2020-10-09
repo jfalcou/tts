@@ -147,14 +147,8 @@ namespace tts
     using out_type  = std::decay_t<decltype( reference( std::declval<RefType>() ))>;
     using nout_type = std::decay_t<decltype( challenger( std::declval<NewType>() ))>;
 
-    //-- Find how many elements in a block (but at least 4096)
-    std::size_t count = std::max(4096ULL,args.value_or(4096ULL, "-b", "--block"));
-
-    //-- If possible, initialize the generator
-    if constexpr( initializable<Generator,options> )
-    {
-      g.init(args);
-    }
+    //-- Find how many elements in a block
+    std::size_t count = args.value_or(4096ULL, "-b", "--block");
 
     //-- Prepare blocks
     std::vector<out_type> ref_out(count), new_out(count);
@@ -239,6 +233,28 @@ namespace tts
 
     return max_ulp;
   }
+
+  template<typename P>
+  void print_producer(P const& producer, const char* alt)
+  {
+    if constexpr( tts::detail::has_to_string<P>)
+    {
+      std::cout << ::tts::cyan() << producer.to_string() << ::tts::reset();
+    }
+    else
+    {
+      std::cout << ::tts::cyan(alt);
+    }
+  }
+
+  template<typename P>
+  void init_producer(P& producer,  options const& args )
+  {
+    if constexpr( initializable<P,options> )
+    {
+      producer.init(args);
+    }
+  }
 }
 
 //==================================================================================================
@@ -251,15 +267,19 @@ namespace tts
               << "<" << ::tts::cyan(TTS_STRING(TTS_REMOVE_PARENS(RefType))) << ">"                  \
               << " with "                       << ::tts::cyan(TTS_STRING(NewFunc))                 \
               << "<" << ::tts::cyan(TTS_STRING(TTS_REMOVE_PARENS(NewType))) << ">"                  \
-              << " using "                      << ::tts::cyan(TTS_STRING(Producer))                \
-              << "\n";                                                                              \
+              << " using ";                                                                         \
+                                                                                                    \
+    auto generator = TTS_REMOVE_PARENS(Producer);                                                   \
+    tts::init_producer(generator,arguments);                                                        \
+    tts::print_producer(generator,TTS_STRING(Producer));                                            \
+    std::cout << "\n";                                                                              \
                                                                                                     \
     auto local_tts_threshold  = arguments.value_or<double>(Ulpmax, "-u","--ulpmax"); ;              \
                                                                                                     \
     auto local_tts_max_ulp    = ::tts::ulp_histogramm < TTS_REMOVE_PARENS(RefType)                  \
                                                       , TTS_REMOVE_PARENS(NewType)                  \
                                                       >                                             \
-                                ( TTS_REMOVE_PARENS(Producer)                                       \
+                                ( generator                                                         \
                                 , RefFunc, NewFunc                                                  \
                                 , arguments                                                         \
                                 );                                                                  \
@@ -298,20 +318,27 @@ namespace tts
   template<typename T, typename Distribution>
   struct prng_generator
   {
+    using param_type = typename Distribution::param_type;
+
     template<typename... Args>
     prng_generator(Args... args) : distribution_(std::forward<Args>(args)...) {}
 
     void init( options const& args )
     {
-      auto seed = args.value_or(-1, "-s", "--seed");
+      std::mt19937::result_type no_seed(-1);
+      seed_ = args.value_or(no_seed, "-s", "--seed");
 
-      if(seed == -1 )
+      if(seed_ == no_seed )
       {
         auto now  = std::chrono::high_resolution_clock::now();
-        seed      = static_cast<unsigned int>(now.time_since_epoch().count());
+        seed_      = static_cast<unsigned int>(now.time_since_epoch().count());
       }
+      generator_.seed(seed_);
 
-      generator_.seed(seed);
+      auto mn = args.value_or(distribution_.min(), "-v", "--valmin");
+      auto mx = args.value_or(distribution_.max(), "-w", "--valmax");
+
+      distribution_.param(param_type(mn, mx));
     }
 
     template<typename Idx, typename Count> T operator()(Idx, Count)
@@ -319,9 +346,19 @@ namespace tts
       return distribution_(generator_);
     }
 
+    std::string to_string() const
+    {
+      std::ostringstream txt;
+      txt << typename_<Distribution>
+          << "(" << distribution_.min() << ", " << distribution_.max() << ")"
+          << "[seed = " << seed_ << "]";
+      return txt.str();
+    }
+
     private:
-    Distribution  distribution_;
-    std::mt19937  generator_;
+    Distribution              distribution_;
+    std::mt19937              generator_;
+    std::mt19937::result_type seed_;
   };
 
   //================================================================================================

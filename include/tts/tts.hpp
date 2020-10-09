@@ -76,6 +76,9 @@ namespace tts::detail
   concept support_to_string = requires(T e) { to_string(e); };
 
   template<typename T>
+  concept has_to_string = requires(T e) { e.to_string(); };
+
+  template<typename T>
   concept sequence = requires(T e) {std::begin(e); std::end(e); };
 }
 
@@ -250,6 +253,7 @@ namespace tts
     std::cout << "  -u, --ulpmax=arg  Set global failure ulp threshold for range tests (default is 2.0)\n";
     std::cout << "  -v, --valmin=arg  Set minimal value for range tests (default is code)\n";
     std::cout << "  -w, --valmax=arg  Set maximal value for range tests (default is code)\n";
+    std::cout << "  -s, --seed=arg    Set the PRNG seeds (default is time-based)\n";
     std::cout << std::endl;
 
     return 0;
