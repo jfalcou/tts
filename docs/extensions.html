@@ -85,7 +85,7 @@ struct options
 
 <hr>
 
-Here is a sample test code using user-defined command line arguments:
+[**Here is a sample test code**](https://godbolt.org/z/KGj1Tn) using user-defined command line arguments:
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
@@ -110,7 +110,9 @@ Custom Test Driver
 
 By default, **TTS** provides an entry point function for the listed tests. However, it may be
 required to handle such an entry point. In this case, one can define the `TTS_CUSTOM_DRIVER_FUNCTION`
-preprocessor symbol to a name of their own entry-point function as shown below.
+preprocessor symbol to a name of their own entry-point function.
+
+This example uses [**a custom test driver to check for expected failures**](https://godbolt.org/z/E9vdGq):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
@@ -119,13 +121,13 @@ preprocessor symbol to a name of their own entry-point function as shown below.
 
 TTS_CASE( "Tautological test" )
 {
-  TTS_EXPECT_NOT(false == true);
+  TTS_EXPECT(false == true);
 }
 
 int main(int argc, char const** argv)
 {
   custom_entry_point(argc, argv);
-  return tts::report(0,0);
+  return tts::report(1,0);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

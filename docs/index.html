@@ -130,10 +130,12 @@ TTS_CASE( "Make a simple test suite" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-After compiling and launching the test, you should end up with the following output:
+[**After compiling and launching the test**](https://godbolt.org/z/T6Tx8G), you should end up with the following output:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
 Results: 1 test - 0 success - 0/0 failure - 1/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -183,21 +185,19 @@ $ ./my_test
 Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One may notice that no other informations are displayed. This is the default behavior. One can
-activate a more verbose output by passing the `--pass` through the
+One may notice that no other informations are displayed. This is the default behavior.
+One can activate a more verbose output by passing the `--pass` through the
 [**TTS** command line interface](extensions.html#commandlineinterface).
 
-The output now includes all the informations gathered by the testing macros, including the source
-file location of each tests and the current scenario being tested.
+[**The output now includes all the informations gathered by the testing macros**](https://godbolt.org/z/1bavP5),
+including the source file location of each tests and the current scenario being tested.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Make a simple test suite
+example.cpp:5 - PASSED - This one's a success
 --------------------------------------------------------------------------------
-pass.cpp:7: passed- This one's a success
---------------------------------------------------------------------------------
-Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+Results: 1 test - 1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's have a look at more complex checks and tests.
@@ -225,16 +225,14 @@ TTS_CASE( "Make a simple test suite" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-and run it again:
+[**and run it again**](https://godbolt.org/z/fdd95e):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Make a simple test suite
+example.cpp:5 - PASSED - Expecting: (1+1) == 2
 --------------------------------------------------------------------------------
-pass.cpp:7: Expected (1+1) == 2
---------------------------------------------------------------------------------
-Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+Results: 1 test - 1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Relational Tests
@@ -273,16 +271,14 @@ TTS_CASE( "Verify basic relations" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-If everything goes right, the following output is to be expected:
+If everything goes right, [**the following output is to be expected**](https://godbolt.org/z/c194eE):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Verify basic relations
---------------------------------------------------------------------------------
-pass.cpp:9: passed: - Expecting: a == b
-pass.cpp:10: passed: - Expecting: true != false
-pass.cpp:11: passed: - Expecting: -1.f < 0.5
+example.cpp:8 - PASSED - Expecting: a == b
+example.cpp:9 - PASSED - Expecting: true != false
+example.cpp:10 - PASSED - Expecting: -1.f < 0.5
 --------------------------------------------------------------------------------
 Results: 3 tests - 3 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -331,17 +327,17 @@ TTS_CASE("ULP distance")
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-If everything goes right, the following output is to be expected:
+If everything goes right, [**the following output is to be expected**](https://godbolt.org/z/sbhTPc):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - ULP distance
+example.cpp:8 - PASSED - Expecting: 'A' == 80LL within 15 ULP and found: 7.5 ULP
+example.cpp:9 - PASSED - Expecting: 1.f == 1.f+eps within 0.5 ULP and found: 0.5 ULP
+example.cpp:10 - PASSED - Expecting: pi == static_cast<float>(pi) within 9.84e+07 ULP and found: 9.84e+07 ULP
+example.cpp:11 - PASSED - Expecting: 1. == short{1} within 0 ULP and found: 0 ULP
 --------------------------------------------------------------------------------
-ulp.cpp:9: PASSED - Expecting: 'A' == 80LL within 15 ULP and found: 7.5 ULP
-ulp.cpp:10: PASSED - Expecting: 1.f == 1.f+eps within 0.5 ULP and found: 0.5 ULP
-ulp.cpp:11: PASSED - Expecting: pi == static_cast<float>(pi) within 9.84e+07 ULP and found: 9.84e+07 ULP
-ulp.cpp:12: PASSED - Expecting: 1. == short{1} within 0 ULP and found: 0 ULP
+Results: 4 tests - 4 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Sequence Tests
@@ -375,14 +371,13 @@ TTS_CASE("Absolute distance between sequences")
 </script>
 
 
-If everything goes right, the following output is to be expected:
+If everything goes right, [**the following output is to be expected**](https://godbolt.org/z/o438W6):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Absolute distance between sequences
-absolute.cpp:17 - PASSED - Expecting: a == b within 0.4 unit
+example.cpp:8 - PASSED - Expecting: a == b within 0.4 unit
 --------------------------------------------------------------------------------
 Results: 1 test - 1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -419,16 +414,14 @@ TTS_CASE( "Check that we can handle exceptions" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-If everything goes right, the following output is to be expected:
+If everything goes right, [**the following output is to be expected**](https://godbolt.org/z/zj7xoe):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Check that we can handle exceptions
---------------------------------------------------------------------------------
-exceptions.cpp:11: PASSED - foo() throws some_exception_type
-exceptions.cpp:12: PASSED - bar() does not throws.
+example.cpp:10 - PASSED - foo() throws some_exception_type
+example.cpp:11 - PASSED - bar() does not throw
 --------------------------------------------------------------------------------
 Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -464,19 +457,15 @@ TTS_CASE( "Check that expression types can be tested for equality" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-If everything goes right, the following output is to be expected:
+If everything goes right, [**the following output is to be expected**](https://godbolt.org/z/f6e3E4):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Check that types can be tested for equality
---------------------------------------------------------------------------------
-types.cpp:7: PASSED - Expecting std::add_pointer<float const>::type to be float const*
---------------------------------------------------------------------------------
+example.cpp:6 - PASSED - Expecting std::add_pointer<float const>::type to be const float*
 [SCENARIO] - Check that expression types can be tested for equality
---------------------------------------------------------------------------------
-types.cpp:12: PASSED - Expecting decltype(std::make_unique<float>(3.1415f)) to be std::unique_ptr<float, std::default_delete<float> >
+example.cpp:11 - PASSED - Expecting decltype(std::make_unique<float>(3.1415f)) to be std::unique_ptr<float>
 --------------------------------------------------------------------------------
 Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -515,42 +504,58 @@ TTS_CASE( "Test simple range check" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-If everything goes right, the following output is to be expected:
+If everything goes right, [**the following output is to be expected**](https://godbolt.org/z/zj8dTf):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Test simple range check
 Comparing: ok_x<float> with ajar_x<float> using [](auto i, auto c) { return (100.f*i)/c; }
 Max ULP         Count (#)       Cum. Ratio (%)  Samples
 --------------------------------------------------------------------------------
-0.0             17              53.12           Input:          +0.0000000e+00
+0               2069            50.51           Input:          +0.0000000e+00
                                                 Found:          +0
                                                 instead of:     +0
 --------------------------------------------------------------------------------
-4.0             1               56.25           Input:          +6.2500000e+00
-                                                Found:          +12
-                                                instead of:     +6
+0.5             20              51.00           Input:          +5.1269531e-01
+                                                Found:          +1
+                                                instead of:     +0
 --------------------------------------------------------------------------------
-8.0             1               59.38           Input:          +1.2500000e+01
-                                                Found:          +25
-                                                instead of:     +12
+1.0             21              51.51           Input:          +2.0019531e+00
+                                                Found:          +4
+                                                instead of:     +2
 --------------------------------------------------------------------------------
-16.0            2               65.62           Input:          +1.8750000e+01
-                                                Found:          +37
-                                                instead of:     +18
+1.5             20              52.00           Input:          +2.5146484e+00
+                                                Found:          +5
+                                                instead of:     +2
 --------------------------------------------------------------------------------
-32.0            6               84.38           Input:          +3.4375000e+01
-                                                Found:          +68
-                                                instead of:     +34
+2.0             21              52.51           Input:          +4.0039062e+00
+                                                Found:          +8
+                                                instead of:     +4
 --------------------------------------------------------------------------------
-64.0            5               100.00          Input:          +6.8750000e+01
-                                                Found:          +137
-                                                instead of:     +68
+4.0             82              54.52           Input:          +4.5166016e+00
+                                                Found:          +9
+                                                instead of:     +4
 --------------------------------------------------------------------------------
-range.cpp:79 - PASSED - Expecting: ajar_x similar to ok_x within 128.00 ULP and found: 48.50 ULP
+8.0             163             58.50           Input:          +8.5205078e+00
+                                                Found:          +17
+                                                instead of:     +8
 --------------------------------------------------------------------------------
+16.0            328             66.50           Input:          +1.6503906e+01
+                                                Found:          +33
+                                                instead of:     +16
+--------------------------------------------------------------------------------
+32.0            655             82.50           Input:          +3.2519531e+01
+                                                Found:          +65
+                                                instead of:     +32
+--------------------------------------------------------------------------------
+64.0            717             100.00          Input:          +6.4501953e+01
+                                                Found:          +129
+                                                instead of:     +64
+--------------------------------------------------------------------------------
+example.cpp:8 - PASSED - Expecting: ajar_x similar to ok_x within 128.00 ULP and found: 49.50 ULP
+--------------------------------------------------------------------------------
+Results: 1 test - 1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
