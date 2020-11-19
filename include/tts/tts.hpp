@@ -113,7 +113,13 @@ namespace tts
   // Display a result
   template<typename T> std::string as_string(T const& e)
   {
-    if constexpr( detail::support_std_to_string<T> )
+    if constexpr( std::is_pointer_v<T> )
+    {
+      std::ostringstream os;
+      os << std::string(typename_<T>) << "(" << e << ")";
+      return os.str();
+    }
+    else if constexpr( detail::support_std_to_string<T> )
     {
       return std::to_string(e);
     }
@@ -125,16 +131,22 @@ namespace tts
     {
       std::string that = "{ ";
       for(auto const& v : e) that += as_string(v) + " ";
-      that += " }";
+      that += "}";
       return that;
     }
     else
     {
       std::ostringstream os;
-      os << "[" << std::string(typename_<T>.data(), typename_<T>.size()) << "]@(" << &e << ")";
+      os << "[" << std::string(typename_<T>) << "]@(" << &e << ")";
       return os.str();
     }
   }
+
+  inline std::string as_string(bool b) { return b ? std::string("true") : std::string("false"); }
+  inline std::string as_string(std::string const& e)      { return  e;              }
+  inline std::string as_string(std::string_view const& e) { return  std::string(e); }
+  inline std::string as_string(const char* e)             { return  std::string(e); }
+  inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr"); }
 }
 
 //==================================================================================================
