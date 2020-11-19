@@ -45,8 +45,17 @@ TTS_CASE( "Check display of string types" )
 TTS_CASE( "Check display of pointer types" )
 {
   TTS_EQUAL(tts::as_string( nullptr )     , "nullptr"   );
+
+#if defined(__clang__)
+  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0)" );
+  TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0)"  );
+#elif defined(__GNUC__)
   TTS_EQUAL(tts::as_string( (float*)(0) ) , "float*(0)" );
   TTS_EQUAL(tts::as_string( (void*)(0) )  , "void*(0)"  );
+#elif defined(_MSC_VER)
+  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0000000000000000)" );
+  TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0000000000000000)"  );
+#endif
 }
 
 namespace space
