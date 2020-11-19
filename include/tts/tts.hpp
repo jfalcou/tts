@@ -871,7 +871,8 @@ namespace tts
     if(r <= N)                                                                                      \
     {                                                                                               \
       TTS_PASS( "Expecting: "                                                                       \
-                << ::tts::green() << TTS_STRING(LHS) << " == " << TTS_STRING(RHS) << ::tts::reset() \
+                << ::tts::green() << ::tts::as_string(eval_a)                                       \
+                << " == "         << ::tts::as_string(eval_b) << ::tts::reset()                     \
                 << " within " << std::setprecision(2) << tts_fmt_n                                  \
                               << ::tts::green() << N << ::tts::reset << " " << UNIT                 \
                 << " and found: " << std::setprecision(2)  << tts_fmt_r                             \
@@ -881,7 +882,8 @@ namespace tts
     else                                                                                            \
     {                                                                                               \
       TTS_FAIL( "Expecting: "                                                                       \
-                << ::tts::green() << TTS_STRING(LHS) << " == " << TTS_STRING(RHS) << ::tts::reset() \
+                << ::tts::green() << ::tts::as_string(eval_a)                                       \
+                << " == "         << ::tts::as_string(eval_b) << ::tts::reset()                     \
                 << " within " << std::setprecision(2) << tts_fmt_n                                  \
                               << ::tts::green() << N << ::tts::reset << " " << UNIT                 \
                 << " but found: " << std::setprecision(2)  << tts_fmt_r                             \
