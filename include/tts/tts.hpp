@@ -778,6 +778,12 @@ namespace tts
 /**/
 
 //==================================================================================================
+// Test macros - Constexpr expectation
+//==================================================================================================
+#define TTS_CONSTEXPR_EXPECT(EXPR)      TTS_EXPECT( std::bool_constant<EXPR>::value )
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR)  TTS_EXPECT_NOT( std::bool_constant<EXPR>::value )
+
+//==================================================================================================
 // Test macros - Relationship
 //==================================================================================================
 #define TTS_EQUAL(LHS, RHS)         TTS_EXPECT(LHS == RHS)
@@ -786,6 +792,16 @@ namespace tts
 #define TTS_GREATER(LHS, RHS)       TTS_EXPECT(LHS  > RHS)
 #define TTS_LESS_EQUAL(LHS, RHS)    TTS_EXPECT(LHS <= RHS)
 #define TTS_GREATER_EQUAL(LHS, RHS) TTS_EXPECT(LHS >= RHS)
+
+//==================================================================================================
+// Test macros - Constexpr Relationship
+//==================================================================================================
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS)         TTS_CONSTEXPR_EXPECT(LHS == RHS)
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS)     TTS_CONSTEXPR_EXPECT(LHS != RHS)
+#define TTS_CONSTEXPR_LESS(LHS, RHS)          TTS_CONSTEXPR_EXPECT(LHS  < RHS)
+#define TTS_CONSTEXPR_GREATER(LHS, RHS)       TTS_CONSTEXPR_EXPECT(LHS  > RHS)
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS)    TTS_CONSTEXPR_EXPECT(LHS <= RHS)
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS) TTS_CONSTEXPR_EXPECT(LHS >= RHS)
 
 //==================================================================================================
 // Test macros - Type checking

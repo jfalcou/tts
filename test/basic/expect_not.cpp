@@ -19,3 +19,21 @@ TTS_CASE( "Check that counter-expectation can be met" )
   TTS_EXPECT_NOT(b <  a);
   TTS_EXPECT_NOT(b <= a);
 }
+
+constexpr bool eq (int a, int b) { return a == b; }
+constexpr bool neq(int a, int b) { return a != b; }
+constexpr bool lt (int a, int b) { return a < b;  }
+constexpr bool gt (int a, int b) { return a > b;  }
+constexpr bool lte(int a, int b) { return a <= b; }
+constexpr bool gte(int a, int b) { return a >= b; }
+
+TTS_CASE( "Check that constexpr counter-expectation can be met" )
+{
+  TTS_CONSTEXPR_EXPECT_NOT(eq (69, 42));
+  TTS_CONSTEXPR_EXPECT_NOT(neq(42, 42));
+  TTS_CONSTEXPR_EXPECT_NOT(lt (69, 42));
+  TTS_CONSTEXPR_EXPECT_NOT(gt (42, 69));
+  TTS_CONSTEXPR_EXPECT_NOT(lte(69, 42));
+  TTS_CONSTEXPR_EXPECT_NOT(gte(42, 69));
+}
+
