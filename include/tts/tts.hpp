@@ -32,9 +32,10 @@ namespace tts::detail
 
   // Iterate statically over a typelist
   template<typename Function, typename... Types>
-  void for_each_type(Function &&f, typelist<Types...> const &)
+  bool for_each_type(Function &&f, typelist<Types...> const &)
   {
     (f(box<Types> {}), ...);
+    return true;
   }
 
   // bit_cast till we got std::bit_cast :(
@@ -412,7 +413,7 @@ namespace tts::detail
       return true;
     }
 
-    char const* name;
+    std::string name;
     behavior_t  behaviour;
 
     static std::vector<test> suite;
@@ -1033,19 +1034,19 @@ namespace tts::detail
   namespace                                                                                         \
   {                                                                                                 \
     inline bool TTS_REGISTRATION =                                                                  \
-        ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION                            \
-        , []( ::tts::detail::env &runtime, bool verbose, ::tts::options const& arguments )          \
-          {                                                                                         \
-            ::tts::detail::for_each_type(                                                           \
-                [&](auto t) {                                                                       \
-                  using T = typename decltype(t)::type;                                             \
-                  std::cout << ".. with T = [" << ::tts::magenta()                                  \
-                            << ::tts::typename_<T> << ::tts::reset                                  \
-                            << "] " << std::endl;                                                   \
-                  TTS_FUNCTION<T>(runtime,verbose,arguments);                                       \
-                },                                                                                  \
-                ::tts::detail::typelist<__VA_ARGS__> {});                                           \
-          }});                                                                                      \
+      ::tts::detail::for_each_type                                                                  \
+      (                                                                                             \
+        [](auto t) {                                                                                \
+        ::tts::detail::test::acknowledge(::tts::detail::test{                                       \
+            std::string{DESCRIPTION}                                                                \
+            + " (with T = " + std::string{::tts::typename_<typename decltype(t)::type>} + ")"       \
+          , []( ::tts::detail::env &runtime, bool verbose, ::tts::options const& arguments )        \
+            {                                                                                       \
+              TTS_FUNCTION<typename decltype(t)::type>(runtime,verbose,arguments);                  \
+            }                                                                                       \
+          }                                                                                         \
+        );                                                                                          \
+        },::tts::detail::typelist<__VA_ARGS__> {});                                                 \
   }                                                                                                 \
   template<typename T>                                                                              \
   void TTS_FUNCTION ( [[maybe_unused]] ::tts::detail::env &runtime                                  \
