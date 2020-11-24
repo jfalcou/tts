@@ -17,6 +17,13 @@ TTS_CASE( "Check correctness of equality tests" )
   TTS_EQUAL(a,b);
 }
 
+constexpr int f() { return 45; }
+
+TTS_CASE( "Check correctness of constexpr equality tests" )
+{
+  TTS_CONSTEXPR_EQUAL(45,f());
+}
+
 #include "foo.hpp"
 
 TTS_CASE( "Check correctness of equality tests on custom types" )
