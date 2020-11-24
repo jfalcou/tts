@@ -260,6 +260,7 @@ namespace tts
     std::cout << "  -p, --pass        Report passing tests\n";
     std::cout << "  -x, --hex         Print the floating results in hexfloat mode\n";
     std::cout << "\nParameters:\n";
+    std::cout << "  -f, --filter=str  Only run tests with `str` in their description\n";
     std::cout << "  -r, --repeat=arg  Repeat each tests arg times\n";
     std::cout << "  -l, --loop=arg    Repeat each range checks arg times\n";
     std::cout << "  -b, --block=arg   Set size of range checks samples (min. 32)\n";
@@ -459,17 +460,21 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   bool verbose            =  parser.is_set("-p","--pass");
   ::tts::color::status    = !parser.is_set("-n","--no-color");
   std::size_t repetitions =  parser.value_or<int>(1, "-r","--repeat");
+  std::string filter      =  parser.value_or<std::string>("", "-f","--filter");
 
   for(auto &t: ::tts::detail::test::suite)
   {
-    auto count = ::tts::global_runtime.test_count;
+    if(filter.empty() || (t.name.find(filter) != std::string::npos) )
+    {
+      auto count = ::tts::global_runtime.test_count;
 
-    std::cout << ::tts::yellow("[SCENARIO]") << " - " << t.name << std::endl;
-    for(std::size_t i = 0; i < repetitions; ++i)
-      t(::tts::global_runtime, verbose, parser);
+      std::cout << ::tts::yellow("[SCENARIO]") << " - " << t.name << std::endl;
+      for(std::size_t i = 0; i < repetitions; ++i)
+        t(::tts::global_runtime, verbose, parser);
 
-    if(count == ::tts::global_runtime.test_count)
-      ::tts::global_runtime.invalid();
+      if(count == ::tts::global_runtime.test_count)
+        ::tts::global_runtime.invalid();
+    }
   }
 
   if constexpr( ::tts::detail::use_main ) return ::tts::report(0,0);
