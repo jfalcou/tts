@@ -1,0 +1,49 @@
+<!--
+TTS - Tiny Test System
+Copyright 2020 Joel FALCOU
+
+Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+SPDX-License-Identifier: MIT
+-->
+
+<meta charset="utf-8">
+
+TTS_CONSTEXPR_LESS_EQUAL
+----------------------------------------------------------------------------------------------------
+
+**Synopsis:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS,RHS)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Required header:** <script type="preformatted">`#include <tts/tts.hpp>`</script>
+
+Performs less-than-or-equal comparison between two values in a `constexpr` context.
+This comparison is performed by using the proper `operator<` and `operator==` overloads or
+by a [custom comparison](extensions.htm#customizationpoints).
+
+**Parameters:**
+:
+  - `LHS`, `RHS`:  Expressions to compare
+
+**Example:**
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#include <tts/tts.hpp>
+
+TTS_CASE( "Check correctness of less-equal comparison tests" )
+{
+  TTS_CONSTEXPR_LESS_EQUAL(42LL, 69.f);
+  TTS_CONSTEXPR_LESS_EQUAL('A' , 65. );
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+<!-- End of Document -->
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?"></script>
