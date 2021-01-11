@@ -12,6 +12,7 @@ set ( SOURCES
       basic/expect_not.cpp
       exceptions.cpp
       failure.cpp
+      display.cpp
       infos/fail.cpp
       infos/invalid.cpp
       infos/pass.cpp

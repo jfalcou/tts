@@ -32,9 +32,10 @@ namespace tts::detail
 
   // Iterate statically over a typelist
   template<typename Function, typename... Types>
-  void for_each_type(Function &&f, typelist<Types...> const &)
+  bool for_each_type(Function &&f, typelist<Types...> const &)
   {
     (f(box<Types> {}), ...);
+    return true;
   }
 
   // bit_cast till we got std::bit_cast :(
@@ -113,7 +114,13 @@ namespace tts
   // Display a result
   template<typename T> std::string as_string(T const& e)
   {
-    if constexpr( detail::support_std_to_string<T> )
+    if constexpr( std::is_pointer_v<T> )
+    {
+      std::ostringstream os;
+      os << std::string(typename_<T>) << "(" << e << ")";
+      return os.str();
+    }
+    else if constexpr( detail::support_std_to_string<T> )
     {
       return std::to_string(e);
     }
@@ -125,16 +132,22 @@ namespace tts
     {
       std::string that = "{ ";
       for(auto const& v : e) that += as_string(v) + " ";
-      that += " }";
+      that += "}";
       return that;
     }
     else
     {
       std::ostringstream os;
-      os << "[" << std::string(typename_<T>.data(), typename_<T>.size()) << "]@(" << &e << ")";
+      os << "[" << std::string(typename_<T>) << "]@(" << &e << ")";
       return os.str();
     }
   }
+
+  inline std::string as_string(bool b) { return b ? std::string("true") : std::string("false"); }
+  inline std::string as_string(std::string const& e)      { return  e;              }
+  inline std::string as_string(std::string_view const& e) { return  std::string(e); }
+  inline std::string as_string(const char* e)             { return  std::string(e); }
+  inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr"); }
 }
 
 //==================================================================================================
@@ -247,6 +260,7 @@ namespace tts
     std::cout << "  -p, --pass        Report passing tests\n";
     std::cout << "  -x, --hex         Print the floating results in hexfloat mode\n";
     std::cout << "\nParameters:\n";
+    std::cout << "  -f, --filter=str  Only run tests with `str` in their description\n";
     std::cout << "  -r, --repeat=arg  Repeat each tests arg times\n";
     std::cout << "  -l, --loop=arg    Repeat each range checks arg times\n";
     std::cout << "  -b, --block=arg   Set size of range checks samples (min. 32)\n";
@@ -400,7 +414,7 @@ namespace tts::detail
       return true;
     }
 
-    char const* name;
+    std::string name;
     behavior_t  behaviour;
 
     static std::vector<test> suite;
@@ -446,17 +460,21 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   bool verbose            =  parser.is_set("-p","--pass");
   ::tts::color::status    = !parser.is_set("-n","--no-color");
   std::size_t repetitions =  parser.value_or<int>(1, "-r","--repeat");
+  std::string filter      =  parser.value_or<std::string>("", "-f","--filter");
 
   for(auto &t: ::tts::detail::test::suite)
   {
-    auto count = ::tts::global_runtime.test_count;
+    if(filter.empty() || (t.name.find(filter) != std::string::npos) )
+    {
+      auto count = ::tts::global_runtime.test_count;
 
-    std::cout << ::tts::yellow("[SCENARIO]") << " - " << t.name << std::endl;
-    for(std::size_t i = 0; i < repetitions; ++i)
-      t(::tts::global_runtime, verbose, parser);
+      std::cout << ::tts::yellow("[SCENARIO]") << " - " << t.name << std::endl;
+      for(std::size_t i = 0; i < repetitions; ++i)
+        t(::tts::global_runtime, verbose, parser);
 
-    if(count == ::tts::global_runtime.test_count)
-      ::tts::global_runtime.invalid();
+      if(count == ::tts::global_runtime.test_count)
+        ::tts::global_runtime.invalid();
+    }
   }
 
   if constexpr( ::tts::detail::use_main ) return ::tts::report(0,0);
@@ -731,7 +749,7 @@ namespace tts
 //==================================================================================================
 // Test macros - Basic expectation
 //==================================================================================================
-#define TTS_EXPECT(EXPR)                                                                            \
+#define TTS_EXPECT_IMPL(EXPR)                                                                       \
   do                                                                                                \
   {                                                                                                 \
     ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                  \
@@ -748,7 +766,7 @@ namespace tts
   } while(::tts::detail::done())
 /**/
 
-#define TTS_EXPECT_NOT(EXPR)                                                                        \
+#define TTS_EXPECT_NOT_IMPL(EXPR)                                                                   \
   do                                                                                                \
   {                                                                                                 \
     ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                  \
@@ -765,15 +783,34 @@ namespace tts
   } while(::tts::detail::done())
 /**/
 
+#define TTS_EXPECT(EXPR)      TTS_EXPECT_IMPL((EXPR))
+#define TTS_EXPECT_NOT(EXPR)  TTS_EXPECT_NOT_IMPL((EXPR))
+
+//==================================================================================================
+// Test macros - Constexpr expectation
+//==================================================================================================
+#define TTS_CONSTEXPR_EXPECT(EXPR)      TTS_EXPECT_IMPL( std::bool_constant<EXPR>::value )
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR)  TTS_EXPECT_NOT_IMPL( std::bool_constant<EXPR>::value )
+
 //==================================================================================================
 // Test macros - Relationship
 //==================================================================================================
-#define TTS_EQUAL(LHS, RHS)         TTS_EXPECT(LHS == RHS)
-#define TTS_NOT_EQUAL(LHS, RHS)     TTS_EXPECT(LHS != RHS)
-#define TTS_LESS(LHS, RHS)          TTS_EXPECT(LHS  < RHS)
-#define TTS_GREATER(LHS, RHS)       TTS_EXPECT(LHS  > RHS)
-#define TTS_LESS_EQUAL(LHS, RHS)    TTS_EXPECT(LHS <= RHS)
-#define TTS_GREATER_EQUAL(LHS, RHS) TTS_EXPECT(LHS >= RHS)
+#define TTS_EQUAL(LHS, RHS)         TTS_EXPECT_IMPL(LHS == RHS)
+#define TTS_NOT_EQUAL(LHS, RHS)     TTS_EXPECT_IMPL(LHS != RHS)
+#define TTS_LESS(LHS, RHS)          TTS_EXPECT_IMPL(LHS  < RHS)
+#define TTS_GREATER(LHS, RHS)       TTS_EXPECT_IMPL(LHS  > RHS)
+#define TTS_LESS_EQUAL(LHS, RHS)    TTS_EXPECT_IMPL(LHS <= RHS)
+#define TTS_GREATER_EQUAL(LHS, RHS) TTS_EXPECT_IMPL(LHS >= RHS)
+
+//==================================================================================================
+// Test macros - Constexpr Relationship
+//==================================================================================================
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS)         TTS_CONSTEXPR_EXPECT((LHS == RHS))
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS)     TTS_CONSTEXPR_EXPECT((LHS != RHS))
+#define TTS_CONSTEXPR_LESS(LHS, RHS)          TTS_CONSTEXPR_EXPECT((LHS  < RHS))
+#define TTS_CONSTEXPR_GREATER(LHS, RHS)       TTS_CONSTEXPR_EXPECT((LHS  > RHS))
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS)    TTS_CONSTEXPR_EXPECT((LHS <= RHS))
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS) TTS_CONSTEXPR_EXPECT((LHS >= RHS))
 
 //==================================================================================================
 // Test macros - Type checking
@@ -859,7 +896,8 @@ namespace tts
     if(r <= N)                                                                                      \
     {                                                                                               \
       TTS_PASS( "Expecting: "                                                                       \
-                << ::tts::green() << TTS_STRING(LHS) << " == " << TTS_STRING(RHS) << ::tts::reset() \
+                << ::tts::green() << ::tts::as_string(eval_a)                                       \
+                << " == "         << ::tts::as_string(eval_b) << ::tts::reset()                     \
                 << " within " << std::setprecision(2) << tts_fmt_n                                  \
                               << ::tts::green() << N << ::tts::reset << " " << UNIT                 \
                 << " and found: " << std::setprecision(2)  << tts_fmt_r                             \
@@ -869,7 +907,8 @@ namespace tts
     else                                                                                            \
     {                                                                                               \
       TTS_FAIL( "Expecting: "                                                                       \
-                << ::tts::green() << TTS_STRING(LHS) << " == " << TTS_STRING(RHS) << ::tts::reset() \
+                << ::tts::green() << ::tts::as_string(eval_a)                                       \
+                << " == "         << ::tts::as_string(eval_b) << ::tts::reset()                     \
                 << " within " << std::setprecision(2) << tts_fmt_n                                  \
                               << ::tts::green() << N << ::tts::reset << " " << UNIT                 \
                 << " but found: " << std::setprecision(2)  << tts_fmt_r                             \
@@ -1003,19 +1042,19 @@ namespace tts::detail
   namespace                                                                                         \
   {                                                                                                 \
     inline bool TTS_REGISTRATION =                                                                  \
-        ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION                            \
-        , []( ::tts::detail::env &runtime, bool verbose, ::tts::options const& arguments )          \
-          {                                                                                         \
-            ::tts::detail::for_each_type(                                                           \
-                [&](auto t) {                                                                       \
-                  using T = typename decltype(t)::type;                                             \
-                  std::cout << ".. with T = [" << ::tts::magenta()                                  \
-                            << ::tts::typename_<T> << ::tts::reset                                  \
-                            << "] " << std::endl;                                                   \
-                  TTS_FUNCTION<T>(runtime,verbose,arguments);                                       \
-                },                                                                                  \
-                ::tts::detail::typelist<__VA_ARGS__> {});                                           \
-          }});                                                                                      \
+      ::tts::detail::for_each_type                                                                  \
+      (                                                                                             \
+        [](auto t) {                                                                                \
+        ::tts::detail::test::acknowledge(::tts::detail::test{                                       \
+            std::string{DESCRIPTION}                                                                \
+            + " (with T = " + std::string{::tts::typename_<typename decltype(t)::type>} + ")"       \
+          , []( ::tts::detail::env &runtime, bool verbose, ::tts::options const& arguments )        \
+            {                                                                                       \
+              TTS_FUNCTION<typename decltype(t)::type>(runtime,verbose,arguments);                  \
+            }                                                                                       \
+          }                                                                                         \
+        );                                                                                          \
+        },::tts::detail::typelist<__VA_ARGS__> {});                                                 \
   }                                                                                                 \
   template<typename T>                                                                              \
   void TTS_FUNCTION ( [[maybe_unused]] ::tts::detail::env &runtime                                  \
