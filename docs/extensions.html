@@ -21,12 +21,13 @@ Command line Interface
 TTS supports options that can be passed as command line arguments of the test binary. Those
 options modify how the tests are run.
 
- Options     | Shortcut | Description
------------- | -------- | -----------------------------------------------------------------------
-`--help`     | `-h`     | Display the list of supported options <br>`./my_test --help`
-`--no-color` | `-n`     | Disable the colored output of test results. <br>`./my_test --no-color`
-`--pass`     | `-p`     | Display both failing and passing tests. <br>`./my_test --pass`
-`--repeat=N` | `-r=N`   | Repeat each tests `N` times <br>`./my_test --repeat=42`
+ Options            | Shortcut    | Description
+------------------- | ----------- | ---------------------------------------------------------------
+`--help`            | `-h`        | Display the list of supported options <br>`./my_test --help`
+`--no-color`        | `-n`        | Disable the colored output of test results. <br>`./my_test --no-color`
+`--pass`            | `-p`        | Display both failing and passing tests. <br>`./my_test --pass`
+`--repeat=N`        | `-r=N`      | Repeat each tests `N` times <br>`./my_test --repeat=42`
+`--filter="str" `   | -f="str"    | Only run tests containing `str` in their title
 
 Another set of options is provided to control the specifics of the range check tests.
 
