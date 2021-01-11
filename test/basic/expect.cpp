@@ -11,13 +11,15 @@
 
 TTS_CASE( "Check that expectation can be met" )
 {
-  int a = 42, b = 69;
+  int a = 43, b = 69;
 
   TTS_EXPECT(a != b);
   TTS_EXPECT(a <  b);
   TTS_EXPECT(a <= b);
   TTS_EXPECT(b >  a);
   TTS_EXPECT(b >= a);
+
+  TTS_EXPECT( a & b );
 }
 
 constexpr bool eq (int a, int b) { return a == b; }

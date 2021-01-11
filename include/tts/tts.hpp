@@ -752,7 +752,7 @@ namespace tts
 #define TTS_EXPECT(EXPR)                                                                            \
   do                                                                                                \
   {                                                                                                 \
-    ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                  \
+    ::tts::result tts_var_d = TTS_DECOMPOSE((EXPR));                                                \
     if(tts_var_d)                                                                                   \
     {                                                                                               \
       TTS_PASS("Expecting: "  << ::tts::green(TTS_STRING(EXPR)) );                                  \
@@ -769,7 +769,7 @@ namespace tts
 #define TTS_EXPECT_NOT(EXPR)                                                                        \
   do                                                                                                \
   {                                                                                                 \
-    ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                  \
+    ::tts::result tts_var_d = TTS_DECOMPOSE((EXPR));                                                \
     if(tts_var_d)                                                                                   \
     {                                                                                               \
       TTS_FAIL( "Not Expecting: " << ::tts::green(TTS_STRING(EXPR)) << " but " << ::tts::red()      \
