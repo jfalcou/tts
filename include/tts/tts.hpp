@@ -749,10 +749,10 @@ namespace tts
 //==================================================================================================
 // Test macros - Basic expectation
 //==================================================================================================
-#define TTS_EXPECT(EXPR)                                                                            \
+#define TTS_EXPECT_IMPL(EXPR)                                                                       \
   do                                                                                                \
   {                                                                                                 \
-    ::tts::result tts_var_d = TTS_DECOMPOSE((EXPR));                                                \
+    ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                  \
     if(tts_var_d)                                                                                   \
     {                                                                                               \
       TTS_PASS("Expecting: "  << ::tts::green(TTS_STRING(EXPR)) );                                  \
@@ -766,10 +766,10 @@ namespace tts
   } while(::tts::detail::done())
 /**/
 
-#define TTS_EXPECT_NOT(EXPR)                                                                        \
+#define TTS_EXPECT_NOT_IMPL(EXPR)                                                                   \
   do                                                                                                \
   {                                                                                                 \
-    ::tts::result tts_var_d = TTS_DECOMPOSE((EXPR));                                                \
+    ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                  \
     if(tts_var_d)                                                                                   \
     {                                                                                               \
       TTS_FAIL( "Not Expecting: " << ::tts::green(TTS_STRING(EXPR)) << " but " << ::tts::red()      \
@@ -783,21 +783,24 @@ namespace tts
   } while(::tts::detail::done())
 /**/
 
+#define TTS_EXPECT(EXPR)      TTS_EXPECT_IMPL((EXPR))
+#define TTS_EXPECT_NOT(EXPR)  TTS_EXPECT_NOT_IMPL((EXPR))
+
 //==================================================================================================
 // Test macros - Constexpr expectation
 //==================================================================================================
-#define TTS_CONSTEXPR_EXPECT(EXPR)      TTS_EXPECT( std::bool_constant<EXPR>::value )
-#define TTS_CONSTEXPR_EXPECT_NOT(EXPR)  TTS_EXPECT_NOT( std::bool_constant<EXPR>::value )
+#define TTS_CONSTEXPR_EXPECT(EXPR)      TTS_EXPECT_IMPL( std::bool_constant<EXPR>::value )
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR)  TTS_EXPECT_NOT_IMPL( std::bool_constant<EXPR>::value )
 
 //==================================================================================================
 // Test macros - Relationship
 //==================================================================================================
-#define TTS_EQUAL(LHS, RHS)         TTS_EXPECT(LHS == RHS)
-#define TTS_NOT_EQUAL(LHS, RHS)     TTS_EXPECT(LHS != RHS)
-#define TTS_LESS(LHS, RHS)          TTS_EXPECT(LHS  < RHS)
-#define TTS_GREATER(LHS, RHS)       TTS_EXPECT(LHS  > RHS)
-#define TTS_LESS_EQUAL(LHS, RHS)    TTS_EXPECT(LHS <= RHS)
-#define TTS_GREATER_EQUAL(LHS, RHS) TTS_EXPECT(LHS >= RHS)
+#define TTS_EQUAL(LHS, RHS)         TTS_EXPECT_IMPL(LHS == RHS)
+#define TTS_NOT_EQUAL(LHS, RHS)     TTS_EXPECT_IMPL(LHS != RHS)
+#define TTS_LESS(LHS, RHS)          TTS_EXPECT_IMPL(LHS  < RHS)
+#define TTS_GREATER(LHS, RHS)       TTS_EXPECT_IMPL(LHS  > RHS)
+#define TTS_LESS_EQUAL(LHS, RHS)    TTS_EXPECT_IMPL(LHS <= RHS)
+#define TTS_GREATER_EQUAL(LHS, RHS) TTS_EXPECT_IMPL(LHS >= RHS)
 
 //==================================================================================================
 // Test macros - Constexpr Relationship
