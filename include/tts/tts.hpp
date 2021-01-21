@@ -180,7 +180,7 @@ namespace tts
 
 #define TTS_UNIQUE3(ID, LINE) ID##LINE
 #define TTS_UNIQUE2(ID, LINE) TTS_UNIQUE3(ID, LINE)
-#define TTS_UNIQUE(ID)        TTS_UNIQUE2(ID, __LINE__)
+#define TTS_UNIQUE(ID)        TTS_UNIQUE2(ID, __COUNTER__)
 
 #define TTS_CAT(x, y)                     TTS_CAT_I(x, y)
 #define TTS_CAT_I(x, y)                   x##y
@@ -1012,36 +1012,40 @@ namespace tts::detail
     for( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \
 /**/
 
-#define TTS_AND_THEN(DESCRIPTION)                                                                   \
-  static int TTS_UNIQUE(id) = 0;                                                                    \
-  if(::tts::detail::section_guard(TTS_UNIQUE( id ), tts_section, tts_count )                        \
+#define TTS_AND_THEN_IMPL(DESCRIPTION,TTS_LOCAL_ID)                                                 \
+  static int TTS_LOCAL_ID = 0;                                                                      \
+  if(::tts::detail::section_guard(TTS_LOCAL_ID, tts_section, tts_count )                            \
                   .check("  And then: ", DESCRIPTION)                                               \
     )                                                                                               \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )  \
     for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                  \
 /**/
 
+#define TTS_AND_THEN(DESCRIPTION) TTS_AND_THEN_IMPL(DESCRIPTION, TTS_UNIQUE(id))
+
 //==================================================================================================
 // Test case registration macros
 //==================================================================================================
-#define TTS_CASE(DESCRIPTION)                                                                       \
-  void TTS_FUNCTION(::tts::detail::env &, bool, ::tts::options const&);                             \
+#define TTS_CASE_IMPL(DESCRIPTION, FUNC)                                                            \
+  void FUNC(::tts::detail::env &, bool, ::tts::options const&);                                     \
   namespace                                                                                         \
   {                                                                                                 \
-    inline bool TTS_REGISTRATION =                                                                  \
-        ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION, TTS_FUNCTION});           \
+    inline bool TTS_CAT(register_,FUNC) =                                                           \
+        ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION, FUNC});                   \
   }                                                                                                 \
-  void TTS_FUNCTION ( [[maybe_unused]] ::tts::detail::env &runtime                                  \
+  void FUNC ( [[maybe_unused]] ::tts::detail::env &runtime                                          \
                     , [[maybe_unused]] bool verbose                                                 \
                     , [[maybe_unused]] ::tts::options const& arguments                              \
                     )
 /**/
 
-#define TTS_CASE_TPL(DESCRIPTION, ...)                                                              \
-  template<typename T> void TTS_FUNCTION(::tts::detail::env &, bool, ::tts::options const&);        \
+#define TTS_CASE(DESCRIPTION) TTS_CASE_IMPL(DESCRIPTION,TTS_FUNCTION)
+
+#define TTS_CASE_TPL_IMPL(DESCRIPTION, FUNC, ...)                                                   \
+  template<typename T> void FUNC(::tts::detail::env &, bool, ::tts::options const&);                \
   namespace                                                                                         \
   {                                                                                                 \
-    inline bool TTS_REGISTRATION =                                                                  \
+    inline bool TTS_CAT(register_,FUNC) =                                                           \
       ::tts::detail::for_each_type                                                                  \
       (                                                                                             \
         [](auto t) {                                                                                \
@@ -1050,15 +1054,17 @@ namespace tts::detail
             + " (with T = " + std::string{::tts::typename_<typename decltype(t)::type>} + ")"       \
           , []( ::tts::detail::env &runtime, bool verbose, ::tts::options const& arguments )        \
             {                                                                                       \
-              TTS_FUNCTION<typename decltype(t)::type>(runtime,verbose,arguments);                  \
+              FUNC<typename decltype(t)::type>(runtime,verbose,arguments);                          \
             }                                                                                       \
           }                                                                                         \
         );                                                                                          \
         },::tts::detail::typelist<__VA_ARGS__> {});                                                 \
   }                                                                                                 \
   template<typename T>                                                                              \
-  void TTS_FUNCTION ( [[maybe_unused]] ::tts::detail::env &runtime                                  \
+  void FUNC ( [[maybe_unused]] ::tts::detail::env &runtime                                          \
                     , [[maybe_unused]] bool verbose                                                 \
                     , [[maybe_unused]] ::tts::options const& arguments                              \
                     )
 /**/
+
+#define TTS_CASE_TPL(DESCRIPTION, ...)  TTS_CASE_TPL_IMPL(DESCRIPTION,TTS_FUNCTION,__VA_ARGS__)
