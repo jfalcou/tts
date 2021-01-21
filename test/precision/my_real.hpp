@@ -22,17 +22,17 @@ namespace tts
   inline double ulp_distance(n1::my_real const &a, n1::my_real const &b)
   {
     return a.x/b.x;
-  };
+  }
 
   inline double relative_distance(n1::my_real const &a, n1::my_real const &b)
   {
     return a.x/b.x;
-  };
+  }
 
   inline double absolute_distance(n1::my_real const &a, n1::my_real const &b)
   {
     return std::abs(a.x - b.x);
-  };
+  }
 }
 
 #endif
