@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+#define TTS_MAIN
 #define TTS_CUSTOM_DRIVER_FUNCTION invalid_main
 #include <tts/tts.hpp>
 

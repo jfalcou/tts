@@ -233,7 +233,7 @@ namespace tts
     mutable char const *text_;
   };
 
-  bool color::status = true;
+  inline bool color::status = true;
 
   inline std::ostream & operator<<(std::ostream &stream, color const& c)
   {
@@ -415,20 +415,20 @@ namespace tts::detail
 
     void operator()(::tts::detail::env &e, bool v,options const& opts)  { behaviour(e,v,opts); }
 
-    static bool acknowledge(test&& f)
-    {
-      suite.emplace_back( std::forward<test>(f));
-      return true;
-    }
+    static inline bool acknowledge(test&& f);
 
     std::string name;
     behavior_t  behaviour;
-
-    static std::vector<test> suite;
   };
 
   // Global tests suite
-  std::vector<test> test::suite = {};
+  inline std::vector<test> suite = {};
+
+  bool inline test::acknowledge(test&& f)
+  {
+    suite.emplace_back( std::forward<test>(f));
+    return true;
+  }
 }
 
 //==================================================================================================
@@ -451,12 +451,13 @@ namespace tts
 {
   static ::tts::detail::env global_runtime;
 
-  int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
+  inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
   {
     return global_runtime.report(fails,invalids);
   }
 }
 
+#if defined(TTS_MAIN)
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
   ::tts::options parser{argc,argv};
@@ -469,7 +470,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   std::size_t repetitions =  parser.value_or<int>(1, "-r","--repeat");
   std::string filter      =  parser.value_or<std::string>("", "-f","--filter");
 
-  for(auto &t: ::tts::detail::test::suite)
+  for(auto &t: ::tts::detail::suite)
   {
     if(filter.empty() || (t.name.find(filter) != std::string::npos) )
     {
@@ -487,6 +488,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   if constexpr( ::tts::detail::use_main ) return ::tts::report(0,0);
   else                                    return 0;
 }
+#endif
 
 //==================================================================================================
 // Wrapper for source location
@@ -1034,22 +1036,22 @@ namespace tts::detail
 // Test case registration macros
 //==================================================================================================
 #define TTS_CASE_IMPL(DESCRIPTION, FUNC)                                                            \
-  void FUNC(::tts::detail::env &, bool, ::tts::options const&);                                     \
+  static void FUNC(::tts::detail::env &, bool, ::tts::options const&);                              \
   namespace                                                                                         \
   {                                                                                                 \
     inline bool TTS_CAT(register_,FUNC) =                                                           \
         ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION, FUNC});                   \
   }                                                                                                 \
-  void FUNC ( [[maybe_unused]] ::tts::detail::env &runtime                                          \
-                    , [[maybe_unused]] bool verbose                                                 \
-                    , [[maybe_unused]] ::tts::options const& arguments                              \
-                    )
+  static void FUNC( [[maybe_unused]] ::tts::detail::env &runtime                                    \
+                  , [[maybe_unused]] bool verbose                                                   \
+                  , [[maybe_unused]] ::tts::options const& arguments                                \
+                  )
 /**/
 
 #define TTS_CASE(DESCRIPTION) TTS_CASE_IMPL(DESCRIPTION,TTS_FUNCTION)
 
 #define TTS_CASE_TPL_IMPL(DESCRIPTION, FUNC, ...)                                                   \
-  template<typename T> void FUNC(::tts::detail::env &, bool, ::tts::options const&);                \
+  template<typename T> static void FUNC(::tts::detail::env &, bool, ::tts::options const&);         \
   namespace                                                                                         \
   {                                                                                                 \
     inline bool TTS_CAT(register_,FUNC) =                                                           \
@@ -1068,10 +1070,10 @@ namespace tts::detail
         },::tts::detail::typelist<__VA_ARGS__> {});                                                 \
   }                                                                                                 \
   template<typename T>                                                                              \
-  void FUNC ( [[maybe_unused]] ::tts::detail::env &runtime                                          \
-                    , [[maybe_unused]] bool verbose                                                 \
-                    , [[maybe_unused]] ::tts::options const& arguments                              \
-                    )
+  static void FUNC( [[maybe_unused]] ::tts::detail::env &runtime                                    \
+                  , [[maybe_unused]] bool verbose                                                   \
+                  , [[maybe_unused]] ::tts::options const& arguments                                \
+                  )
 /**/
 
 #define TTS_CASE_TPL(DESCRIPTION, ...)  TTS_CASE_TPL_IMPL(DESCRIPTION,TTS_FUNCTION,__VA_ARGS__)

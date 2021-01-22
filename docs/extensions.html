@@ -90,6 +90,7 @@ struct options
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 TTS_CASE( "CLI test - flag" )
@@ -117,6 +118,7 @@ This example uses [**a custom test driver to check for expected failures**](http
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #define TTS_CUSTOM_DRIVER_FUNCTION custom_entry_point
 #include <tts/tts.hpp>
 
@@ -133,13 +135,13 @@ int main(int argc, char const** argv)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
+As usual, at most one translation unit mush use `#define TTS_MAIN`.
 After defining the `TTS_CUSTOM_DRIVER_FUNCTION` symbol, tests can be added as usual. Then, a
 regular `main` function is to be defined. This function will then performs any special operations
 required then calls the aforementioned entry point function.
 
 Finally, the `main` function will call `tts::report`. `tts::report` is in charge of aggregating test
 results and validate the whole tests with respect to expect number of failures and invalid tests.
-
 <hr>
 
 <script type="preformatted">

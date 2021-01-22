@@ -7,33 +7,35 @@
 ##==================================================================================================
 include(make_unit)
 
-set ( SOURCES
-      basic/expect.cpp
-      basic/expect_not.cpp
-      exceptions.cpp
-      failure.cpp
-      display.cpp
-      infos/fail.cpp
-      infos/invalid.cpp
-      infos/pass.cpp
-      precision/absolute.cpp
-      precision/ieee.cpp
-      precision/relative.cpp
-      precision/ulp.cpp
-      range.cpp
-      relation/equal.cpp
-      relation/greater.cpp
-      relation/greater_equal.cpp
-      relation/less.cpp
-      relation/less_equal.cpp
-      relation/not_equal.cpp
-      sections.cpp
-      sequence/absolute.cpp
-      sequence/equal.cpp
-      sequence/ieee.cpp
-      sequence/relative.cpp
-      sequence/ulp.cpp
-      types.cpp
-    )
+make_unit ( "basic"         basic/main.cpp basic/expect.cpp basic/expect_not.cpp)
+make_unit ( "precision"     precision/main.cpp
+                            precision/absolute.cpp
+                            precision/ieee.cpp
+                            precision/relative.cpp
+                            precision/ulp.cpp
+          )
+make_unit ( "relation"      relation/main.cpp
+                            relation/equal.cpp
+                            relation/greater.cpp
+                            relation/greater_equal.cpp
+                            relation/less.cpp
+                            relation/less_equal.cpp
+                            relation/not_equal.cpp
+          )
+make_unit ( "sequence"      sequence/main.cpp
+                            sequence/absolute.cpp
+                            sequence/equal.cpp
+                            sequence/ieee.cpp
+                            sequence/relative.cpp
+                            sequence/ulp.cpp
+)
 
-make_unit( "tts" ${SOURCES})
+make_unit ( "infos.fail"    infos/fail.cpp    )
+make_unit ( "infos.invalid" infos/invalid.cpp )
+make_unit ( "infos.pass"    infos/pass.cpp    )
+make_unit ( "exceptions"    exceptions.cpp    )
+make_unit ( "failure"       failure.cpp       )
+make_unit ( "display"       display.cpp       )
+make_unit ( "range"         range.cpp         )
+make_unit ( "sections"      sections.cpp      )
+make_unit ( "types"         types.cpp         )

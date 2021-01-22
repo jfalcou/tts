@@ -121,6 +121,7 @@ testing practices recommend to have fine grain test cases to simplify test manag
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 TTS_CASE( "Make a simple test suite" )
@@ -130,7 +131,8 @@ TTS_CASE( "Make a simple test suite" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
-[**After compiling and launching the test**](https://godbolt.org/z/T6Tx8G), you should end up with the following output:
+[**After compiling and launching the test**](https://godbolt.org/z/T6Tx8G), you should end up
+with the following output:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test
@@ -138,6 +140,10 @@ $ ./my_test
 --------------------------------------------------------------------------------
 Results: 1 test - 0 success - 0/0 failure - 1/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Notice the `#define TTS_MAIN` line. This is used to notify **TTS** that the current translation unit
+will contains the **TTS** main entry point. You can use **TTS** in multiple translation units
+but only one of them must have the `TTS_MAIN` macro enabled.
 
 The unit test reports the total number of tests performed, the number of passing tests, the number
 of failing tests and the number of invalid tests. Depending on your terminal's settings, this
@@ -169,6 +175,7 @@ Let's amend our initial test by adding a single call to [**`TTS_PASS`**](referen
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 TTS_CASE( "Make a simple test suite" )
@@ -185,7 +192,7 @@ $ ./my_test
 Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One may notice that no other informations are displayed. This is the default behavior.
+One may notice that no other information are displayed. This is the default behavior.
 One can activate a more verbose output by passing the `--pass` through the
 [**TTS** command line interface](extensions.html#commandlineinterface).
 
@@ -216,6 +223,7 @@ Let's see the effect of [**`TTS_EXPECT`**](reference.html#tts_expect):
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 TTS_CASE( "Make a simple test suite" )
@@ -257,6 +265,7 @@ Let's see how those tests integrates in our small test suite:
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 #include <vector>
 
@@ -312,6 +321,7 @@ Let's have a look at the expected output of such macros
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 TTS_CASE("ULP distance")
@@ -358,6 +368,7 @@ These macros are accessible in the `tts/tts.hpp` header file.
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 TTS_CASE("Absolute distance between sequences")
@@ -399,6 +410,7 @@ Let's have a look at the expected output of such macros
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 
 struct some_exception_type : std::exception {};
@@ -442,6 +454,7 @@ Let's have a look at the expected output of such macros
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/tts.hpp>
 #include <memory>
 
@@ -488,6 +501,7 @@ Let's have a look at the expected output of this macro.
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
 #include <tts/ranges.hpp>
 
 int ok_x  (float x) { return static_cast<int>(x); }
