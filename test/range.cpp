@@ -7,6 +7,7 @@
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
+#define TTS_MAIN
 #include <tts/ranges.hpp>
 #include <array>
 
