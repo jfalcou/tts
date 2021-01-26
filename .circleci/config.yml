@@ -18,7 +18,7 @@ commands:
     steps:
       - run:
           name: << parameters.desc >>
-          command:                                                        |
+          command:                                                          |
             mkdir -p build                                                  &&
             cd build                                                        &&
             cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>  &&
@@ -26,7 +26,7 @@ commands:
             ctest  -j 8
 
 jobs:
-  clang:
+  x86_clang:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -35,11 +35,23 @@ jobs:
           desc: Running Debug tests
           tool: "../cmake/toolchain/clang.x86.debug.cmake"
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/clang.x86.release.cmake"
+  x86_gcc:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.x86.debug.cmake"
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.x86.release.cmake"
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - clang
+      - x86_clang
+      - x86_gcc
