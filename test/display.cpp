@@ -62,13 +62,20 @@ TTS_CASE( "Check display of pointer types" )
 namespace space
 {
   struct some_type { int i; };
+  struct some_other_type { int i; };
+
+  std::ostream& operator<<(std::ostream& os, some_other_type const& s)
+  {
+    return os << "[[" << s.i << "]]";
+  }
 
   std::string to_string( some_type const& s ) { return "some_type[" + tts::as_string(s.i) + "]"; }
 }
 
 TTS_CASE( "Check display of type with specific to_string" )
 {
-  TTS_EQUAL(tts::as_string( space::some_type{42} ), "some_type[42]"   );
+  TTS_EQUAL(tts::as_string( space::some_type{42} )      , "some_type[42]" );
+  TTS_EQUAL(tts::as_string( space::some_other_type{63} ), "[[63]]"        );
 }
 
 TTS_CASE( "Check display of sequence type" )

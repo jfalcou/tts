@@ -88,6 +88,9 @@ namespace tts::detail
 
   template<typename T>
   concept sequence = requires(T e) {std::begin(e); std::end(e); };
+
+  template<typename T>
+  concept streamable = requires(T e, std::ostream& o) { o << e; };
 }
 
 //==================================================================================================
@@ -130,6 +133,12 @@ namespace tts
     else if constexpr( detail::support_std_to_string<T> )
     {
       return std::to_string(e);
+    }
+    else if constexpr( detail::streamable<T> )
+    {
+      std::ostringstream os;
+      os << e;
+      return os.str();
     }
     else if constexpr( detail::support_to_string<T> )
     {
