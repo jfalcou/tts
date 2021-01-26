@@ -17,20 +17,17 @@ commands:
         type: string
       proc:
         type: integer
+        default: 8
     steps:
       - run:
           name: << parameters.desc >>
-          command:                                                          |
-            mkdir -p build                                                  &&
-            cd build                                                        &&
-            cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>  &&
-            ninja unit -j << parameters.proc >>                             &&
-            ctest  -j << parameters.proc >>                                 &&
-            cd ..                                                           &&
-            rm -rf build
+          command:                                                                  |
+            mkdir -p build && cd build                                              &&
+            cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>          &&
+            ninja unit -j << parameters.proc >> && ctest  -j << parameters.proc >>
 
 jobs:
-  x86_clang:
+  x86_clang_debug:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -38,12 +35,17 @@ jobs:
       - run_test:
           desc: Running Debug tests
           tool: "../cmake/toolchain/clang.x86.debug.cmake"
-          proc: 8
+
+  x86_clang_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
       - run_test:
-          desc: Running Release tests
+          desc: Running Debug tests
           tool: "../cmake/toolchain/clang.x86.release.cmake"
-          proc: 8
-  arm_clang:
+
+  arm_clang_debug:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -54,12 +56,20 @@ jobs:
       - run_test:
           desc: Running Debug tests
           tool: "../cmake/toolchain/clang.arm.debug.cmake"
-          proc: 8
+
+  arm_clang_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run:
+          name: Update ARM processor model to emulate
+          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
       - run_test:
-          desc: Running Release tests
+          desc: Running Debug tests
           tool: "../cmake/toolchain/clang.arm.release.cmake"
-          proc: 8
-  aarch64_clang:
+
+  aarch64_clang_debug:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -67,12 +77,17 @@ jobs:
       - run_test:
           desc: Running Debug tests
           tool: "../cmake/toolchain/clang.aarch64.debug.cmake"
-          proc: 8
+
+  aarch64_clang_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
       - run_test:
-          desc: Running Release tests
+          desc: Running Debug tests
           tool: "../cmake/toolchain/clang.aarch64.release.cmake"
-          proc: 8
-  x86_gcc:
+
+  x86_gcc_debug:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -80,12 +95,17 @@ jobs:
       - run_test:
           desc: Running Debug tests
           tool: "../cmake/toolchain/gcc.x86.debug.cmake"
-          proc: 8
+
+  x86_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
       - run_test:
-          desc: Running Release tests
+          desc: Running Debug tests
           tool: "../cmake/toolchain/gcc.x86.release.cmake"
-          proc: 8
-  arm_gcc:
+
+  arm_gcc_debug:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -96,12 +116,20 @@ jobs:
       - run_test:
           desc: Running Debug tests
           tool: "../cmake/toolchain/gcc.arm.debug.cmake"
-          proc: 8
+
+  arm_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run:
+          name: Update ARM processor model to emulate
+          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
       - run_test:
-          desc: Running Release tests
+          desc: Running Debug tests
           tool: "../cmake/toolchain/gcc.arm.release.cmake"
-          proc: 8
-  aarch64_gcc:
+
+  aarch64_gcc_debug:
     docker:
       - image: jfalcou/compilers:latest
     steps:
@@ -109,19 +137,41 @@ jobs:
       - run_test:
           desc: Running Debug tests
           tool: "../cmake/toolchain/gcc.aarch64.debug.cmake"
-          proc: 8
+
+  aarch64_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
       - run_test:
-          desc: Running Release tests
+          desc: Running Debug tests
           tool: "../cmake/toolchain/gcc.aarch64.release.cmake"
-          proc: 8
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - x86_clang
-      - x86_gcc
-      - arm_clang
-      - arm_gcc
-      - aarch64_clang
-      - aarch64_gcc
+      - x86_clang_debug
+      - arm_clang_debug
+      - aarch64_clang_debug
+      - x86_gcc_debug
+      - arm_gcc_debug
+      - aarch64_gcc_debug
+      - x86_clang_release:
+          requires:
+            - x86_clang_debug
+      - arm_clang_release:
+          requires:
+            - arm_clang_debug
+      - aarch64_clang_release:
+          requires:
+            - aarch64_clang_debug
+      - x86_gcc_release:
+          requires:
+            - x86_gcc_debug
+      - arm_gcc_release:
+          requires:
+            - arm_gcc_debug
+      - aarch64_gcc_release:
+          requires:
+            - aarch64_gcc_debug
