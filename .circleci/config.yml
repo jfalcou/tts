@@ -1,40 +1,45 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2020 Joel FALCOU
+##  Copyright 2020-2021 Joel FALCOU
 ##
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
 version: 2.1
 
+commands:
+  run_test:
+    description: "Configure and run tests from a CMake Toolchain"
+    parameters:
+      desc:
+        type: string
+      tool:
+        type: string
+    steps:
+      - run:
+          name: << parameters.desc >>
+          command:                                                        |
+            mkdir -p build                                                  &&
+            cd build                                                        &&
+            cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>  &&
+            ninja unit -j 8                                                 &&
+            ctest  -j 8
+
 jobs:
   clang:
     docker:
-      - image: compilaction/clang-dev:latest
+      - image: jfalcou/compilers:latest
     steps:
       - checkout
-      - run:
-          name: Running Release tests
-          command: . .circleci/run.sh clang++ Release
-      - run:
-          name: Running Debug tests
-          command: . .circleci/run.sh clang++ Debug
-
-  gcc:
-    docker:
-      - image: compilaction/gcc-dev:latest
-    steps:
-      - checkout
-      - run:
-          name: Running Release tests
-          command: . .circleci/run.sh g++ Release
-      - run:
-          name: Running Debug tests
-          command: . .circleci/run.sh g++ Debug
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.x86.debug.cmake"
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.x86.release.cmake"
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - gcc
       - clang
