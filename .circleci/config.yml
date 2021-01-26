@@ -43,6 +43,22 @@ jobs:
           desc: Running Release tests
           tool: "../cmake/toolchain/clang.x86.release.cmake"
           proc: 8
+  arm_clang:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run:
+          name: Update ARM processor model to emulate
+          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.arm.debug.cmake"
+          proc: 8
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/clang.arm.release.cmake"
+          proc: 8
   aarch64_clang:
     docker:
       - image: jfalcou/compilers:latest
@@ -69,6 +85,22 @@ jobs:
           desc: Running Release tests
           tool: "../cmake/toolchain/gcc.x86.release.cmake"
           proc: 8
+  arm_gcc:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run:
+          name: Update ARM processor model to emulate
+          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.arm.debug.cmake"
+          proc: 8
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.arm.release.cmake"
+          proc: 8
   aarch64_gcc:
     docker:
       - image: jfalcou/compilers:latest
@@ -88,6 +120,8 @@ workflows:
   build_and_test:
     jobs:
       - x86_clang
-      - aarch64_clang
       - x86_gcc
+      - arm_clang
+      - arm_gcc
+      - aarch64_clang
       - aarch64_gcc
