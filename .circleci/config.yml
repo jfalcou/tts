@@ -45,6 +45,24 @@ jobs:
           desc: Running Debug tests
           tool: "../cmake/toolchain/clang.x86.release.cmake"
 
+  ppc64le_clang_debug:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.ppc64le.debug.cmake"
+
+  ppc64le_clang_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.ppc64le.release.cmake"
+
   arm_clang_debug:
     docker:
       - image: jfalcou/compilers:latest
@@ -152,6 +170,7 @@ workflows:
   build_and_test:
     jobs:
       - x86_clang_debug
+      - ppc64le_clang_debug
       - arm_clang_debug
       - aarch64_clang_debug
       - x86_gcc_debug
@@ -160,6 +179,9 @@ workflows:
       - x86_clang_release:
           requires:
             - x86_clang_debug
+      - ppc64le_clang_release:
+          requires:
+            - ppc64le_clang_debug
       - arm_clang_release:
           requires:
             - arm_clang_debug
