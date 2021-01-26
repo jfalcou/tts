@@ -25,7 +25,9 @@ commands:
             cd build                                                        &&
             cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>  &&
             ninja unit -j << parameters.proc >>                             &&
-            ctest  -j << parameters.proc >>
+            ctest  -j << parameters.proc >>                                 &&
+            cd ..                                                           &&
+            rm -rf build
 
 jobs:
   x86_clang:
@@ -41,6 +43,19 @@ jobs:
           desc: Running Release tests
           tool: "../cmake/toolchain/clang.x86.release.cmake"
           proc: 8
+  aarch64_clang:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.aarch64.debug.cmake"
+          proc: 8
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/clang.aarch64.release.cmake"
+          proc: 8
   x86_gcc:
     docker:
       - image: jfalcou/compilers:latest
@@ -54,10 +69,25 @@ jobs:
           desc: Running Release tests
           tool: "../cmake/toolchain/gcc.x86.release.cmake"
           proc: 8
+  aarch64_gcc:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.aarch64.debug.cmake"
+          proc: 8
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.aarch64.release.cmake"
+          proc: 8
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - x86_clang
+      - aarch64_clang
       - x86_gcc
+      - aarch64_gcc
