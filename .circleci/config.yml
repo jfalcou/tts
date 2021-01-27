@@ -42,7 +42,7 @@ jobs:
     steps:
       - checkout
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/clang.x86.release.cmake"
 
   ppc64le_clang_debug:
@@ -60,7 +60,7 @@ jobs:
     steps:
       - checkout
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/clang.ppc64le.release.cmake"
 
   arm_clang_debug:
@@ -84,7 +84,7 @@ jobs:
           name: Update ARM processor model to emulate
           command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/clang.arm.release.cmake"
 
   aarch64_clang_debug:
@@ -102,7 +102,7 @@ jobs:
     steps:
       - checkout
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/clang.aarch64.release.cmake"
 
   x86_gcc_debug:
@@ -120,8 +120,26 @@ jobs:
     steps:
       - checkout
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/gcc.x86.release.cmake"
+
+  ppc64_gcc_debug:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.ppc64.debug.cmake"
+
+  ppc64_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.ppc64.release.cmake"
 
   arm_gcc_debug:
     docker:
@@ -144,7 +162,7 @@ jobs:
           name: Update ARM processor model to emulate
           command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/gcc.arm.release.cmake"
 
   aarch64_gcc_debug:
@@ -162,7 +180,7 @@ jobs:
     steps:
       - checkout
       - run_test:
-          desc: Running Debug tests
+          desc: Running Release tests
           tool: "../cmake/toolchain/gcc.aarch64.release.cmake"
 
 workflows:
@@ -174,6 +192,7 @@ workflows:
       - arm_clang_debug
       - aarch64_clang_debug
       - x86_gcc_debug
+      - ppc64_gcc_debug
       - arm_gcc_debug
       - aarch64_gcc_debug
       - x86_clang_release:
@@ -191,6 +210,9 @@ workflows:
       - x86_gcc_release:
           requires:
             - x86_gcc_debug
+      - ppc64_gcc_release:
+          requires:
+            - ppc64_gcc_debug
       - arm_gcc_release:
           requires:
             - arm_gcc_debug
