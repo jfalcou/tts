@@ -7,6 +7,8 @@
 ##==================================================================================================
 include(make_unit)
 
+message(STATUS "Current configuration: ${CMAKE_BUILD_TYPE} ${CMAKE_CXX_FLAGS}")
+
 make_unit ( "basic"         basic/main.cpp basic/expect.cpp basic/expect_not.cpp)
 make_unit ( "precision"     precision/main.cpp
                             precision/absolute.cpp
