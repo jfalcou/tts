@@ -17,7 +17,7 @@ commands:
         type: string
       proc:
         type: integer
-        default: 8
+        default: 4
     steps:
       - run:
           name: << parameters.desc >>
