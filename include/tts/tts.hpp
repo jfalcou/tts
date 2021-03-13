@@ -19,6 +19,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <functional>
 
 //==================================================================================================
 // Warning Suppressors
@@ -420,7 +421,7 @@ namespace tts::detail
 {
   struct test
   {
-    using behavior_t = void(*)(::tts::detail::env &,bool,options const&);
+    using behavior_t = std::function<void(::tts::detail::env &,bool,options const&)>;
 
     void operator()(::tts::detail::env &e, bool v,options const& opts)  { behaviour(e,v,opts); }
 
