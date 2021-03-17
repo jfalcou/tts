@@ -421,9 +421,9 @@ namespace tts::detail
 {
   struct test
   {
-    using behavior_t = std::function<void(::tts::detail::env &)>;
+    using behavior_t = std::function<void()>;
 
-    void operator()(::tts::detail::env &e)  { behaviour(e); }
+    void operator()()  { behaviour(); }
 
     static inline bool acknowledge(test&& f);
 
@@ -459,9 +459,9 @@ namespace tts::detail
 
 namespace tts
 {
-  static ::tts::detail::env global_runtime;
-  static bool               verbose_status;
-  static ::tts::options     arguments;
+  inline ::tts::detail::env global_runtime;
+  inline bool               verbose_status;
+  inline ::tts::options     arguments;
 
   inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
   {
@@ -489,7 +489,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       auto count = ::tts::global_runtime.test_count;
 
       std::cout << ::tts::yellow("[SCENARIO]") << " - " << t.name << std::endl;
-      for(std::size_t i = 0; i < repetitions; ++i) t(::tts::global_runtime);
+      for(std::size_t i = 0; i < repetitions; ++i) t();
 
       if(count == ::tts::global_runtime.test_count)
         ::tts::global_runtime.invalid();
@@ -736,8 +736,8 @@ namespace tts
 #define TTS_PASS(Message)                                                                           \
   do                                                                                                \
   {                                                                                                 \
-    runtime.pass();                                                                                 \
-    if(::tts::verbose_status) std::cout << ::tts::location{__FILE__,__LINE__} << " - "                            \
+    ::tts::global_runtime.pass();                                                                   \
+    if(::tts::verbose_status) std::cout << ::tts::location{__FILE__,__LINE__} << " - "              \
                           << ::tts::bold << ::tts::green("PASSED") << ::tts::reset                  \
                           << " - " << Message << std::endl;                                         \
                                                                                                     \
@@ -747,7 +747,7 @@ namespace tts
 #define TTS_FAIL(Message)                                                                           \
   do                                                                                                \
   {                                                                                                 \
-    runtime.fail();                                                                                 \
+    ::tts::global_runtime.fail();                                                                   \
     std::cout << ::tts::location{__FILE__,__LINE__} << " - "                                        \
               << ::tts::bold << ::tts::red("**FAILED**") << ::tts::reset                            \
               << " - " << Message << std::endl;                                                     \
@@ -758,7 +758,7 @@ namespace tts
 #define TTS_INVALID(Message)                                                                        \
   do                                                                                                \
   {                                                                                                 \
-    runtime.invalid();                                                                              \
+    ::tts::global_runtime.invalid();                                                                \
     std::cout << ::tts::location{__FILE__,__LINE__} << " - "                                        \
               << ::tts::bold << ::tts::magenta("!!INVALID!!") << ::tts::reset                       \
               << " - " << Message << std::endl;                                                     \
@@ -1047,19 +1047,19 @@ namespace tts::detail
 // Test case registration macros
 //==================================================================================================
 #define TTS_CASE_IMPL(DESCRIPTION, FUNC)                                                            \
-  static void FUNC(::tts::detail::env &);                                                           \
+  static void FUNC();                                                                               \
   namespace                                                                                         \
   {                                                                                                 \
     inline bool TTS_CAT(register_,FUNC) =                                                           \
         ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION, FUNC});                   \
   }                                                                                                 \
-  static void FUNC( [[maybe_unused]] ::tts::detail::env &runtime )                                  \
+  static void FUNC()                                                                                \
 /**/
 
 #define TTS_CASE(DESCRIPTION) TTS_CASE_IMPL(DESCRIPTION,TTS_FUNCTION)
 
 #define TTS_CASE_TPL_IMPL(DESCRIPTION, FUNC, ...)                                                   \
-  template<typename T> static void FUNC(::tts::detail::env &);                                      \
+  template<typename T> static void FUNC();                                                          \
   namespace                                                                                         \
   {                                                                                                 \
     inline bool TTS_CAT(register_,FUNC) =                                                           \
@@ -1069,16 +1069,12 @@ namespace tts::detail
         ::tts::detail::test::acknowledge(::tts::detail::test{                                       \
             std::string{DESCRIPTION}                                                                \
             + " (with T = " + std::string{::tts::typename_<typename decltype(t)::type>} + ")"       \
-          , []( ::tts::detail::env &runtime)                                                        \
-            {                                                                                       \
-              FUNC<typename decltype(t)::type>(runtime);                                            \
-            }                                                                                       \
+          , []() { FUNC<typename decltype(t)::type>(); }                                            \
           }                                                                                         \
         );                                                                                          \
         },::tts::detail::typelist<__VA_ARGS__> {});                                                 \
   }                                                                                                 \
-  template<typename T>                                                                              \
-  static void FUNC( [[maybe_unused]] ::tts::detail::env &runtime )                                  \
+  template<typename T> static void FUNC()                                                           \
 /**/
 
 #define TTS_CASE_TPL(DESCRIPTION, ...)  TTS_CASE_TPL_IMPL(DESCRIPTION,TTS_FUNCTION,__VA_ARGS__)
