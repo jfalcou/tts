@@ -270,18 +270,18 @@ namespace tts
               << " using ";                                                                         \
                                                                                                     \
     auto generator = TTS_REMOVE_PARENS(Producer);                                                   \
-    tts::init_producer(generator,arguments);                                                        \
+    tts::init_producer(generator,::tts::arguments);                                                 \
     tts::print_producer(generator,TTS_STRING(Producer));                                            \
     std::cout << "\n";                                                                              \
                                                                                                     \
-    auto local_tts_threshold  = arguments.value_or<double>(Ulpmax, "-u","--ulpmax"); ;              \
+    auto local_tts_threshold  = ::tts::arguments.value_or<double>(Ulpmax, "-u","--ulpmax"); ;       \
                                                                                                     \
     auto local_tts_max_ulp    = ::tts::ulp_histogramm < TTS_REMOVE_PARENS(RefType)                  \
                                                       , TTS_REMOVE_PARENS(NewType)                  \
                                                       >                                             \
                                 ( generator                                                         \
                                 , RefFunc, NewFunc                                                  \
-                                , arguments                                                         \
+                                , ::tts::arguments                                                  \
                                 );                                                                  \
                                                                                                     \
     if(local_tts_max_ulp <= local_tts_threshold)                                                    \

@@ -40,9 +40,9 @@ Another set of options is provided to control the specifics of the range check t
 `--valmin=N` | `-v=N`   | Set minimal value for range tests to `N`<br>`./my_test --valmin=-100`
 `--valmax=N` | `-w=N`   | Set maximal value for range tests to `N`<br>`./my_test --valmax=1000`
 
-Values of command-line options can be used directly in a test via the `arguments` object available
-to each test case automatically. Command line arguments are detected and parsed on-demand, which
-means that one can define a test-specific command-line argument by just requesting its value.
+Values of command-line options can be used directly in a test via the `tts::arguments` global object.
+Command line arguments are detected and parsed on-demand, which means that one can define a
+test-specific command-line argument by just requesting its value.
 
 <a name="options"> The `arguments` object is an instance of the `tts::options` type that provides the
 following members functions.
@@ -96,13 +96,13 @@ Here is a sample test code using user-defined command line arguments:
 TTS_CASE( "CLI test - flag" )
 {
   // Will fail if the test is not called via ./mytest.exe --pass--the-test
-  TTS_EXPECT( arguments.is_set("--pass--the-test") );
+  TTS_EXPECT( tts::arguments.is_set("--pass--the-test") );
 }
 
 TTS_CASE( "CLI test - setting" )
 {
   // Will fail if the test is not called via ./mytest.exe --xxx=13.37
-  TTS_EQUAL( arguments.value_or(0., "--xxx"), 13.37);
+  TTS_EQUAL( tts::arguments.value_or(0., "--xxx"), 13.37);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
