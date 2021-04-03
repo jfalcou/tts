@@ -2,6 +2,9 @@
 
 # TTS
 
+[![Licence](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)](https://img.shields.io/github/license/jfalcou/ofw?style=plastic) 
+[![Discord](https://img.shields.io/discord/692734675726237696?style=plastic)](https://discord.com/channels/692734675726237696/692735300522344468) 
+
 ## Overview
 
 Tiny Test System is a C++ open-source Unit Test library designed following
