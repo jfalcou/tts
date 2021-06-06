@@ -49,7 +49,7 @@ TTS_CASE( "Check display of pointer types" )
 #if defined(__clang__)
   TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0)"s );
   TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0)"s  );
-  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0)"s  );
+  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char*(0)"s  );
 #elif defined(__GNUC__)
   TTS_EQUAL(tts::as_string( (float*)(0) ) , "float*(0)"s );
   TTS_EQUAL(tts::as_string( (void*)(0)  ) , "void*(0)"s  );
@@ -57,7 +57,7 @@ TTS_CASE( "Check display of pointer types" )
 #elif defined(_MSC_VER)
   TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0000000000000000)"s );
   TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0000000000000000)"s  );
-  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0000000000000000)"s  );
+  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char*(0000000000000000)"s  );
 #endif
 };
 
