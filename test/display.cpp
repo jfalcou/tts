@@ -30,12 +30,6 @@ TTS_CASE( "Check display of integral types" )
   TTS_EQUAL(tts::as_string( std::uint64_t{69} ), "69"s);
 };
 
-TTS_CASE( "Check display of real types" )
-{
-  TTS_EQUAL(tts::as_string( float{13.37} )   , "13.370000"s  );
-  TTS_EQUAL(tts::as_string( double{42.0069} ), "42.006900"s);
-};
-
 TTS_CASE( "Check display of string types" )
 {
   TTS_EQUAL(tts::as_string( "some string"s        ) , "some string"s           );

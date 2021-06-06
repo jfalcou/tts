@@ -7,6 +7,7 @@
 //==================================================================================================
 #pragma once
 
+#include <iomanip>
 #include <sstream>
 #include <type_traits>
 #include <tts/tools/typename.hpp>
@@ -40,6 +41,21 @@ namespace tts
     {
       std::ostringstream os;
       os << std::string(typename_<T>) << "(" << e << ")";
+      return os.str();
+    }
+    else if constexpr( std::floating_point<T> )
+    {
+      auto precision = ::tts::arguments.value({"--precision"}, 2);
+      bool hexmode   = ::tts::arguments[{"-x","--hex"}];
+      bool scimode   = ::tts::arguments[{"-s","--scientific"}];
+
+      std::ostringstream os;
+
+      os << std::setprecision(precision);
+            if(hexmode) os << std::hexfloat << e << std::defaultfloat;
+      else  if(scimode) os << std::scientific << e << std::defaultfloat;
+      else              os << e;
+
       return os.str();
     }
     else if constexpr( support_std_to_string<T> )

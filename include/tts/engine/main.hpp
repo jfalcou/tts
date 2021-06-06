@@ -39,8 +39,8 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
 
   ::tts::verbose_status       =  ::tts::arguments[{"-p","--pass"}];
   ::tts::detail::color_status = !::tts::arguments[{"-n","--no-color"}];
-  std::size_t repetitions     =  ::tts::arguments.value( {"-r", "--repeat"}, 1            );
-  std::string filter          =  ::tts::arguments.value( {"-f", "--filter"}, std::string{});
+  std::size_t repetitions     =  ::tts::arguments.value( "--repeat", 1            );
+  std::string filter          =  ::tts::arguments.value( "--filter", std::string{});
 
   for(auto &t: ::tts::detail::suite)
   {
