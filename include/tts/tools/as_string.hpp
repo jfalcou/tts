@@ -72,8 +72,21 @@ namespace tts
   }
 
   inline std::string as_string(bool b) { return b ? std::string("true") : std::string("false"); }
-  inline std::string as_string(std::string const& e)      { return  e;              }
-  inline std::string as_string(std::string_view const& e) { return  std::string(e); }
-  inline std::string as_string(const char* e)             { return  std::string(e); }
-  inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr"); }
+  inline std::string as_string(std::string const& e)      { return  e;                          }
+  inline std::string as_string(std::string_view const& e) { return  std::string(e);             }
+  inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr");     }
+
+  inline std::string as_string(const char* e)
+  {
+    std::ostringstream os;
+    os << "char*(" << (void*)e << ")";
+    return os.str();
+  }
+
+  inline std::string as_string(char* e )
+  {
+    std::ostringstream os;
+    os << "char*(" << (void*)e << ")";
+    return os.str();
+  }
 }
