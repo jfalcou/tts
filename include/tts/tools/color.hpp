@@ -43,7 +43,7 @@ namespace tts::detail
         defaultAttributes = info.wAttributes;
       }
 
-      if (foreground > 7) return stream
+      if (foreground > 7) return stream;
 
       if (foreground == -1)
       {
