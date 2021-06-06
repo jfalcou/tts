@@ -35,6 +35,16 @@ namespace tts
 
     operator result() { return result {bool(lhs),as_string(bool(lhs)),"",""}; }
 
+    template<typename R> result operator &&(R const &rhs)
+    {
+      return { lhs && rhs, as_string(lhs), "&&", as_string(rhs) };
+    }
+
+    template<typename R> result operator ||(R const &rhs)
+    {
+      return { lhs || rhs, as_string(lhs), "||", as_string(rhs) };
+    }
+
     template<typename R> result operator ==(R const &rhs)
     {
       return { detail::eq(lhs, rhs), as_string(lhs), "==", as_string(rhs) };
