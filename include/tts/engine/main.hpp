@@ -34,11 +34,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
 {
   ::tts::arguments = ::tts::options{argc,argv};
 
+  ::tts::detail::color_status = !::tts::arguments[{"-n","--no-color"}];
+
   if( ::tts::arguments[{"-h","--help"}] )
     return ::tts::usage(argv[0]);
 
   ::tts::verbose_status       =  ::tts::arguments[{"-p","--pass"}];
-  ::tts::detail::color_status = !::tts::arguments[{"-n","--no-color"}];
   std::size_t repetitions     =  ::tts::arguments.value( "--repeat", 1            );
   std::string filter          =  ::tts::arguments.value( "--filter", std::string{});
 
