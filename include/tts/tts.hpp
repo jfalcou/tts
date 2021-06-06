@@ -20,17 +20,6 @@
 //==================================================================================================
 namespace tts::detail
 {
-  template<typename... T> struct typelist {};
-  template<typename T> struct box { using type = T; };
-
-  // Iterate statically over a typelist
-  template<typename Function, typename... Types>
-  bool for_each_type(Function &&f, typelist<Types...> const &)
-  {
-    (f(box<Types> {}), ...);
-    return true;
-  }
-
   template<typename It1, typename It2, typename Func>
   std::pair<It1, It2> mismatch(It1 first1, It1 last1, It2 first2, Func p)
   {
@@ -53,37 +42,9 @@ namespace tts::detail
 //==================================================================================================
 #include <tts/test/basic.hpp>
 #include <tts/test/relation.hpp>
+#include <tts/test/types.hpp>
 
 #if 0
-//==================================================================================================
-// Test macros - Type checking
-//==================================================================================================
-#define TTS_TYPE_IS(T, TYPE)                                                                        \
-  do                                                                                                \
-  {                                                                                                 \
-    constexpr auto check = std::is_same_v<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(T)>;           \
-    if constexpr(check)                                                                             \
-    {                                                                                               \
-      TTS_PASS("Expecting " << ::tts::green(TTS_STRING(TTS_REMOVE_PARENS(T))) << " to be "          \
-                            << ::tts::green() << tts::typename_<TTS_REMOVE_PARENS(TYPE)>            \
-                            << ::tts::reset                                                         \
-              );                                                                                    \
-    }                                                                                               \
-                                                                                                    \
-    if constexpr(!check)                                                                            \
-    {                                                                                               \
-      TTS_FAIL("Expecting " << ::tts::green(TTS_STRING(TTS_REMOVE_PARENS(T))) << " to be "          \
-                            << ::tts::green() << tts::typename_<TTS_REMOVE_PARENS(TYPE)>            \
-                            << ::tts::reset << " but found "                                        \
-                            << ::tts::red() << tts::typename_<TTS_REMOVE_PARENS(T)>                 \
-                            << ::tts::reset << " instead"                                           \
-              );                                                                                    \
-    }                                                                                               \
-  } while(::tts::detail::done())
-/**/
-
-#define TTS_EXPR_IS(EXPRESSION, TYPE)  TTS_TYPE_IS(decltype(TTS_REMOVE_PARENS(EXPRESSION)), TYPE)
-
 //==================================================================================================
 // Test macros - Exception
 //==================================================================================================
@@ -217,18 +178,6 @@ namespace tts::detail
 //==================================================================================================
 // Test case registration macros
 //==================================================================================================
-#define TTS_CASE_IMPL(DESCRIPTION, FUNC)                                                            \
-  static void FUNC();                                                                               \
-  namespace                                                                                         \
-  {                                                                                                 \
-    inline bool TTS_CAT(register_,FUNC) =                                                           \
-        ::tts::detail::test::acknowledge(::tts::detail::test{DESCRIPTION, FUNC});                   \
-  }                                                                                                 \
-  static void FUNC()                                                                                \
-/**/
-
-#define TTS_CASE(DESCRIPTION) TTS_CASE_IMPL(DESCRIPTION,TTS_FUNCTION)
-
 #define TTS_CASE_TPL_IMPL(DESCRIPTION, FUNC, ...)                                                   \
   template<typename T> static void FUNC();                                                          \
   namespace                                                                                         \

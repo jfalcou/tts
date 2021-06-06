@@ -28,19 +28,19 @@ TTS_CASE( "Check display of integral types" )
   TTS_EQUAL(tts::as_string( std::uint16_t{69} ), "69"s);
   TTS_EQUAL(tts::as_string( std::uint32_t{69} ), "69"s);
   TTS_EQUAL(tts::as_string( std::uint64_t{69} ), "69"s);
-}
+};
 
 TTS_CASE( "Check display of real types" )
 {
   TTS_EQUAL(tts::as_string( float{13.37} )   , "13.370000"s  );
   TTS_EQUAL(tts::as_string( double{42.0069} ), "42.006900"s);
-}
+};
 
 TTS_CASE( "Check display of string types" )
 {
   TTS_EQUAL(tts::as_string( "some string"s        ) , "some string"s           );
   TTS_EQUAL(tts::as_string( "some string_view"sv  ) , "some string_view"s      );
-}
+};
 
 TTS_CASE( "Check display of pointer types" )
 {
@@ -59,7 +59,7 @@ TTS_CASE( "Check display of pointer types" )
   TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0000000000000000)"s  );
   TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0000000000000000)"s  );
 #endif
-}
+};
 
 namespace space
 {
@@ -78,7 +78,7 @@ TTS_CASE( "Check display of type with specific to_string" )
 {
   TTS_EQUAL(tts::as_string( space::some_type{42} )      , "some_type[42]"s );
   TTS_EQUAL(tts::as_string( space::some_other_type{63} ), "[[63]]"s        );
-}
+};
 
 TTS_CASE( "Check display of sequence type" )
 {
@@ -89,4 +89,4 @@ TTS_CASE( "Check display of sequence type" )
                             )
             , "{ some_type[13] some_type[34] }"s
             );
-}
+};

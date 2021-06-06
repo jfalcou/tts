@@ -56,4 +56,4 @@ TTS_CASE( "Sections and sub-sections behavior" )
       }
     }
   }
-}
+};

@@ -10,25 +10,70 @@
 #include <tts/tools/preprocessor.hpp>
 #include <sstream>
 
+//================================================================================================
+// Type wrapping helpers
+//================================================================================================
+namespace tts
+{
+  template<typename     T > struct type  {};
+  template<typename...  Ts> struct types {};
+}
+
+//================================================================================================
+// Lambda "seed" capture
+//================================================================================================
+namespace tts::detail
+{
+  template<typename TestBed> struct lambda_test
+  {
+    lambda_test(TestBed f) : base_test(f) {}
+    auto operator+(auto TestBody) const
+    {
+      base_test( TestBody );
+      return true;
+    }
+
+    TestBed base_test;
+  };
+}
+
 //==================================================================================================
 // Test case registration macros
 //==================================================================================================
-#define TTS_CASE_IMPL(FUNC,...)                                                                     \
-  static void FUNC();                                                                               \
-  namespace                                                                                         \
+#define TTS_CASE_TPL(DESCRIPTION,TYPES)                                                             \
+inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
+[](auto tests)                                                                                      \
   {                                                                                                 \
-    inline std::ostringstream TTS_CAT(name_,FUNC);                                                  \
-    inline bool TTS_CAT(register_,FUNC) =                                                           \
-        ::tts::detail::test::acknowledge(::tts::detail::test{ ( (TTS_CAT(name_,FUNC) << __VA_ARGS__)\
-                                                              , TTS_CAT(name_,FUNC).str()           \
-                                                              )                                     \
-                                                            , FUNC                                  \
-                                                            });                                     \
-  }                                                                                                 \
-  static void FUNC()                                                                                \
+    auto const single_test = [=]<typename T>( ::tts::type<T> )                                      \
+    {                                                                                               \
+      ::tts::detail::test::acknowledge(::tts::detail::test                                          \
+      {                                                                                             \
+          std::string{DESCRIPTION} + " (with T = " + std::string{::tts::typename_<T>} + ")"         \
+        , [=]() {tests(::tts::type<T>{}); }                                                         \
+        });                                                                                         \
+    };                                                                                              \
+                                                                                                    \
+    [&]<template<class...> class L,typename... Ts>(L<Ts...>)                                        \
+    {                                                                                               \
+      (single_test( ::tts::type<Ts>() ),...);                                                       \
+    }( TYPES );                                                                                     \
+                                                                                                    \
+    return true;                                                                                    \
+  }} + []                                                                                           \
 /**/
 
-#define TTS_CASE(...) TTS_CASE_IMPL(TTS_FUNCTION, __VA_ARGS__)
+//==================================================================================================
+// Test case registration macros
+//==================================================================================================
+#define TTS_CASE(...)                                                                               \
+inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
+[](auto tests)                                                                                      \
+  {                                                                                                 \
+    std::ostringstream title;                                                                       \
+    title << __VA_ARGS__;                                                                           \
+    return ::tts::detail::test::acknowledge(::tts::detail::test{ title.str(), [=](){ tests(); } }); \
+  }} + []()                                                                                         \
+/**/
 
 //==================================================================================================
 // Test sub-case registrations

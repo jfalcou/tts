@@ -14,7 +14,7 @@
 TTS_CASE( "Check that forced failure fails" )
 {
   TTS_FAIL("Forced fail");
-}
+};
 
 int main(int argc, char const** argv)
 {

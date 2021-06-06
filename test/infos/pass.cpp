@@ -13,4 +13,4 @@
 TTS_CASE( "Check that forced pass passes" )
 {
   TTS_PASS("Forced pass");
-}
+};

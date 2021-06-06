@@ -9,8 +9,8 @@ include(make_unit)
 
 message(STATUS "Current configuration: ${CMAKE_BUILD_TYPE} ${CMAKE_CXX_FLAGS}")
 
-make_unit ( "basic"         basic/main.cpp 
-                            basic/expect.cpp 
+make_unit ( "basic"         basic/main.cpp
+                            basic/expect.cpp
                             basic/expect_not.cpp
           )
 
@@ -37,12 +37,12 @@ make_unit ( "relation"      relation/main.cpp
 #                             sequence/ulp.cpp
 # )
 
+# make_unit ( "exceptions"    exceptions.cpp    )
+# make_unit ( "failure"       failure.cpp       )
+# make_unit ( "range"         range.cpp         )
+make_unit ( "display"       display.cpp       )
 make_unit ( "infos.fail"    infos/fail.cpp    )
 make_unit ( "infos.invalid" infos/invalid.cpp )
 make_unit ( "infos.pass"    infos/pass.cpp    )
-# make_unit ( "exceptions"    exceptions.cpp    )
-# make_unit ( "failure"       failure.cpp       )
-make_unit ( "display"       display.cpp       )
-# make_unit ( "range"         range.cpp         )
 make_unit ( "sections"      sections.cpp      )
-# make_unit ( "types"         types.cpp         )
+make_unit ( "types"         types.cpp         )
