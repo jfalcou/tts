@@ -18,7 +18,7 @@
 #include <unistd.h>
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 
 namespace tts::detail
