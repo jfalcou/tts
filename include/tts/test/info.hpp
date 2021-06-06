@@ -34,10 +34,9 @@ namespace tts::detail
   do                                                                                                \
   {                                                                                                 \
     ::tts::global_runtime.fail();                                                                   \
-    if(::tts::verbose_status)                                                                       \
-      std::cout << ::tts::source_location::current() << " - " << ::tts::bold                        \
-                << ::tts::red << "**FAILURE**" << ::tts::reset                                      \
-                << " - " << Message << std::endl;                                                   \
+    std::cout << ::tts::source_location::current() << " - " << ::tts::bold                          \
+              << ::tts::red << "**FAILURE**" << ::tts::reset                                        \
+              << " - " << Message << std::endl;                                                     \
   } while(::tts::detail::done())
 /**/
 
@@ -45,10 +44,9 @@ namespace tts::detail
   do                                                                                                \
   {                                                                                                 \
     ::tts::global_runtime.fatal();                                                                  \
-    if(::tts::verbose_status)                                                                       \
-      std::cout << ::tts::source_location::current() << " - " << ::tts::bold                        \
-                << ::tts::red << "** FATAL **" << ::tts::reset                                      \
-                << " - " << Message << std::endl;                                                   \
+    std::cout << ::tts::source_location::current() << " - " << ::tts::bold                          \
+              << ::tts::red << "** FATAL **" << ::tts::reset                                        \
+              << " - " << Message << std::endl;                                                     \
   } while(::tts::detail::done())
 /**/
 
@@ -56,9 +54,8 @@ namespace tts::detail
   do                                                                                                \
   {                                                                                                 \
     ::tts::global_runtime.invalid();                                                                \
-    if(::tts::verbose_status)                                                                       \
-      std::cout << ::tts::source_location::current() << " - " << ::tts::bold                        \
-                << ::tts::magenta << "@@INVALID@@" << ::tts::reset                                  \
-                << " - " << Message << std::endl;                                                   \
+    std::cout << ::tts::source_location::current() << " - " << ::tts::bold                          \
+              << ::tts::magenta << "@@INVALID@@" << ::tts::reset                                    \
+              << " - " << Message << std::endl;                                                     \
   } while(::tts::detail::done())
 /**/
