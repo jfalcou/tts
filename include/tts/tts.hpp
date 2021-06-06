@@ -41,50 +41,11 @@ namespace tts::detail
 // Test macros
 //==================================================================================================
 #include <tts/test/basic.hpp>
+#include <tts/test/exceptions.hpp>
 #include <tts/test/relation.hpp>
 #include <tts/test/types.hpp>
 
 #if 0
-//==================================================================================================
-// Test macros - Exception
-//==================================================================================================
-#define TTS_THROW(EXPR, EXCEPTION)                                                                  \
-  do                                                                                                \
-  {                                                                                                 \
-    bool tts_caught = false;                                                                        \
-                                                                                                    \
-    try                 { EXPR; }                                                                   \
-    catch(EXCEPTION&  ) { tts_caught = true; }                                                      \
-    catch(...)          { }                                                                         \
-                                                                                                    \
-    if(tts_caught)                                                                                  \
-    {                                                                                               \
-      TTS_PASS(   ::tts::green(TTS_STRING(EXPR)) << " throws "                                      \
-              <<  ::tts::green(TTS_STRING(EXCEPTION))                                               \
-              );                                                                                    \
-    }                                                                                               \
-    else                                                                                            \
-    {                                                                                               \
-      TTS_FAIL(   ::tts::green(TTS_STRING(EXPR)) << " does not throw "                              \
-              <<  ::tts::red(TTS_STRING(EXCEPTION))                                                 \
-              );                                                                                    \
-    }                                                                                               \
-  } while(::tts::detail::done())
-/**/
-
-#define TTS_NO_THROW(EXPR)                                                                          \
-  do                                                                                                \
-  {                                                                                                 \
-    bool tts_caught = false;                                                                        \
-                                                                                                    \
-    try        { EXPR; }                                                                            \
-    catch(...) { tts_caught = true; }                                                               \
-                                                                                                    \
-    if(!tts_caught) { TTS_PASS(::tts::green(TTS_STRING(EXPR)) << " does not throw"); }              \
-    else            { TTS_FAIL(::tts::green(TTS_STRING(EXPR)) << " throws ");        }              \
-  } while(::tts::detail::done())
-/**/
-
 //==================================================================================================
 // Test macros - Precision checking base macros
 //==================================================================================================
@@ -174,29 +135,5 @@ namespace tts::detail
 #define TTS_ALL_ABSOLUTE_EQUAL(L, R, N) TTS_SEQUENCE_EQUAL(L,R,N,"unit", ::tts::absolute_distance )
 #define TTS_ALL_EQUAL(L,R)              TTS_ALL_ABSOLUTE_EQUAL(L,R,0)
 #define TTS_ALL_IEEE_EQUAL(L,R)         TTS_ALL_ULP_EQUAL(L, R, 0.)
-
-//==================================================================================================
-// Test case registration macros
-//==================================================================================================
-#define TTS_CASE_TPL_IMPL(DESCRIPTION, FUNC, ...)                                                   \
-  template<typename T> static void FUNC();                                                          \
-  namespace                                                                                         \
-  {                                                                                                 \
-    inline bool TTS_CAT(register_,FUNC) =                                                           \
-      ::tts::detail::for_each_type                                                                  \
-      (                                                                                             \
-        [](auto t) {                                                                                \
-        ::tts::detail::test::acknowledge(::tts::detail::test{                                       \
-            std::string{DESCRIPTION}                                                                \
-            + " (with T = " + std::string{::tts::typename_<typename decltype(t)::type>} + ")"       \
-          , []() { FUNC<typename decltype(t)::type>(); }                                            \
-          }                                                                                         \
-        );                                                                                          \
-        },::tts::detail::typelist<__VA_ARGS__> {});                                                 \
-  }                                                                                                 \
-  template<typename T> static void FUNC()                                                           \
-/**/
-
-#define TTS_CASE_TPL(DESCRIPTION, ...)  TTS_CASE_TPL_IMPL(DESCRIPTION,TTS_FUNCTION,__VA_ARGS__)
 
 #endif

@@ -17,11 +17,11 @@ void foo() { throw some_exception_type(); }
 TTS_CASE( "Check that we can capture thrown exceptions" )
 {
   TTS_THROW( foo(), some_exception_type );
-}
+};
 
 void bar() noexcept { }
 
 TTS_CASE( "Check that nothrow function are detected as such" )
 {
   TTS_NO_THROW( bar() );
-}
+};
