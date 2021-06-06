@@ -19,7 +19,7 @@
 #endif
 
 #include <cstdio>
-#include <ostream>
+#include <iostream>
 
 namespace tts::detail
 {
