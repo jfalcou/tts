@@ -18,4 +18,4 @@ TTS_CASE("ULP distance between sequences")
   std::vector<float> b{1.f,1.f,1.f,1.f};
 
   TTS_ALL_ULP_EQUAL(a, b , 1.5);
-}
+};
