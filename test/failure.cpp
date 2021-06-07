@@ -37,7 +37,6 @@ TTS_CASE( "Check that forced broken exceptions tests fails" )
   TTS_NO_THROW(foo(true));
 };
 
-#if 0
 TTS_CASE( "Check that forced broken precision tests fails" )
 {
   double x = 1. + 1e-15;
@@ -47,7 +46,6 @@ TTS_CASE( "Check that forced broken precision tests fails" )
   TTS_IEEE_EQUAL(1., x );
   TTS_ABSOLUTE_EQUAL(x ,1., 1e-16 );
 };
-#endif
 
 #if 0
 TTS_CASE( "Check that forced broken precision tests fails on array" )
@@ -72,5 +70,5 @@ TTS_CASE( "Check that forced broken types tests fails" )
 int main(int argc, char const** argv)
 {
   fail_main(argc, argv);
-  return ::tts::report(13,0);
+  return ::tts::report(17,0);
 }

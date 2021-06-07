@@ -14,6 +14,22 @@
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #endif
 
+//==================================================================================================
+// Test engine
+//==================================================================================================
+#include <tts/engine/main.hpp>
+#include <tts/test/case.hpp>
+#include <tts/test/info.hpp>
+
+//==================================================================================================
+// Test macros
+//==================================================================================================
+#include <tts/test/basic.hpp>
+#include <tts/test/exceptions.hpp>
+#include <tts/test/precision.hpp>
+#include <tts/test/relation.hpp>
+#include <tts/test/types.hpp>
+
 #if 0
 //==================================================================================================
 // Misc. Helpers
@@ -28,65 +44,6 @@ namespace tts::detail
     return std::make_pair(first1, first2);
   }
 }
-#endif
-
-//==================================================================================================
-// Test engine
-//==================================================================================================
-#include <tts/engine/main.hpp>
-#include <tts/test/case.hpp>
-#include <tts/test/info.hpp>
-
-//==================================================================================================
-// Test macros
-//==================================================================================================
-#include <tts/test/basic.hpp>
-#include <tts/test/exceptions.hpp>
-#include <tts/test/relation.hpp>
-#include <tts/test/types.hpp>
-
-#if 0
-//==================================================================================================
-// Test macros - Precision checking base macros
-//==================================================================================================
-#define TTS_PRECISION_EQUAL(LHS, RHS, N, UNIT, FUNC)                                                \
-  do                                                                                                \
-  {                                                                                                 \
-    auto eval_a = (LHS);                                                                            \
-    auto eval_b = (RHS);                                                                            \
-    auto r      = FUNC(eval_a,eval_b);                                                              \
-    auto tts_fmt_n = (N<1000 ? std::defaultfloat : std::scientific);                                \
-    auto tts_fmt_r = (r<1000 ? std::defaultfloat : std::scientific);                                \
-                                                                                                    \
-    if(r <= N)                                                                                      \
-    {                                                                                               \
-      TTS_PASS( "Expecting: "                                                                       \
-                << ::tts::green() << ::tts::as_string(eval_a)                                       \
-                << " == "         << ::tts::as_string(eval_b) << ::tts::reset()                     \
-                << " within " << std::setprecision(2) << tts_fmt_n                                  \
-                              << ::tts::green() << N << ::tts::reset << " " << UNIT                 \
-                << " and found: " << std::setprecision(2)  << tts_fmt_r                             \
-                              << ::tts::green() << r << ::tts::reset << " " << UNIT                 \
-              );                                                                                    \
-    }                                                                                               \
-    else                                                                                            \
-    {                                                                                               \
-      TTS_FAIL( "Expecting: "                                                                       \
-                << ::tts::green() << ::tts::as_string(eval_a)                                       \
-                << " == "         << ::tts::as_string(eval_b) << ::tts::reset()                     \
-                << " within " << std::setprecision(2) << tts_fmt_n                                  \
-                              << ::tts::green() << N << ::tts::reset << " " << UNIT                 \
-                << " but found: " << std::setprecision(2)  << tts_fmt_r                             \
-                              << ::tts::red() << r << ::tts::reset << " " << UNIT << " instead"     \
-              );                                                                                    \
-    }                                                                                               \
-  } while(::tts::detail::done())
-/**/
-
-#define TTS_ABSOLUTE_EQUAL(L, R, N) TTS_PRECISION_EQUAL(L, R, N, " unit", ::tts::absolute_distance)
-#define TTS_RELATIVE_EQUAL(L, R, N) TTS_PRECISION_EQUAL(L, R, N, "%"    , ::tts::relative_distance)
-#define TTS_ULP_EQUAL(L, R, N)      TTS_PRECISION_EQUAL(L, R, N, "ULP"  , ::tts::ulp_distance)
-#define TTS_IEEE_EQUAL(L,R)         TTS_ULP_EQUAL(L, R, 0.)
 
 //==================================================================================================
 // Test macros - Sequence tests
