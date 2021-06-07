@@ -18,7 +18,7 @@
 {                                                                                                   \
   auto eval_a = (LHS);                                                                              \
   auto eval_b = (RHS);                                                                              \
-  auto r      = ::tts::FUNC(eval_a,eval_b);                                                         \
+  auto r      = FUNC (eval_a,eval_b);                                                               \
   auto& fmt_n = N<1000 ? std::defaultfloat : std::scientific;                                       \
   auto& fmt_r = r<1000 ? std::defaultfloat : std::scientific;                                       \
                                                                                                     \
@@ -57,7 +57,7 @@
 #define TTS_PRECISION_(L,R,N,U,F)         TTS_PRECISION_IMPL(L,R,N,U,F,TTS_FAIL)
 #define TTS_PRECISION_REQUIRED(L,R,N,U,F) TTS_PRECISION_IMPL(L,R,N,U,F,TTS_FATAL)
 
-#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit",absolute_distance, __VA_ARGS__)
-#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   ,relative_distance, __VA_ARGS__)
-#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" ,ulp_distance     , __VA_ARGS__)
-#define TTS_IEEE_EQUAL(L,R  ,...)     TTS_ULP_EQUAL(L,R,0., __VA_ARGS__)
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_distance, __VA_ARGS__ )
+#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, __VA_ARGS__ )
+#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , __VA_ARGS__ )
+#define TTS_IEEE_EQUAL(L,R,...)       TTS_ULP_EQUAL(L, R, 0, __VA_ARGS__ )
