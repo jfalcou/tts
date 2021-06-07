@@ -63,12 +63,18 @@ namespace tts::detail
       SetConsoleTextAttribute(hTerminal, info.wAttributes);
       return stream;
 #else
-    constexpr char const* modifier[] =
+    static char const* modifier[] =
     {
-      "\033[00m", /* -1 reset */
-      "\033[30m", /* 0 = grey   */ "\033[34m", /* 1 = blue  */ "\033[32m", /* 2 = green   */
-      "\033[36m", /* 3 = cyan   */ "\033[31m", /* 4 = red   */ "\033[35m", /* 5 = magenta */
-      "\033[33m", /* 6 = yellow */ "\033[37m", /* 7 = white */ "\033[1m" , /* 8 = bold    */
+      "\033[00m", /* -1 = reset   */
+      "\033[30m", /*  0 = grey    */
+      "\033[34m", /*  1 = blue    */
+      "\033[32m", /*  2 = green   */
+      "\033[36m", /*  3 = cyan    */
+      "\033[31m", /*  4 = red     */
+      "\033[35m", /*  5 = magenta */
+      "\033[33m", /*  6 = yellow  */
+      "\033[37m", /*  7 = white   */
+      "\033[1m" , /*  8 = bold    */
     };
 
     return stream << modifier[foreground+1];

@@ -33,7 +33,6 @@ namespace tts::detail
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
   ::tts::arguments = ::tts::options{argc,argv};
-
   ::tts::detail::color_status = !::tts::arguments[{"-n","--no-color"}];
 
   if( ::tts::arguments[{"-h","--help"}] )

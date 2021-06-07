@@ -12,18 +12,6 @@
 
 namespace tts
 {
-  /*
-  inline std::ostream& reset  (std::ostream &stream) { return detail::modifiy_stream(stream, -1); }
-  inline std::ostream& grey   (std::ostream &stream) { return detail::modifiy_stream(stream,  0); }
-  inline std::ostream& blue   (std::ostream &stream) { return detail::modifiy_stream(stream,  1); }
-  inline std::ostream& green  (std::ostream &stream) { return detail::modifiy_stream(stream,  2); }
-  inline std::ostream& cyan   (std::ostream &stream) { return detail::modifiy_stream(stream,  3); }
-  inline std::ostream& red    (std::ostream &stream) { return detail::modifiy_stream(stream,  4); }
-  inline std::ostream& magenta(std::ostream &stream) { return detail::modifiy_stream(stream,  5); }
-  inline std::ostream& yellow (std::ostream &stream) { return detail::modifiy_stream(stream,  6); }
-  inline std::ostream& white  (std::ostream &stream) { return detail::modifiy_stream(stream,  7); }
-  inline std::ostream& bold   (std::ostream &stream) { return detail::modifiy_stream(stream,  8); }
-  */
   //================================================================================================
   // Options on the command line
   //================================================================================================

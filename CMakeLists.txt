@@ -21,11 +21,6 @@ if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
 endif()
 
 ##==================================================================================================
-## Find OpenMP
-##==================================================================================================
-## find_package(OpenMP)
-
-##==================================================================================================
 ## Options
 ##==================================================================================================
 option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
@@ -40,6 +35,23 @@ install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/
         )
 
 export(PACKAGE tts)
+
+##==================================================================================================
+## Standalone generation
+##==================================================================================================
+add_custom_command(OUTPUT tts.hpp
+  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py"
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/tts/tts.hpp
+          -I src/
+          -o ${CMAKE_CURRENT_SOURCE_DIR}/include/tts/tts.hpp
+          --include-match tts/*
+
+  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+  COMMENT "Generating standalone headers"
+  VERBATIM
+)
+
+add_custom_target(standalone DEPENDS tts.hpp)
 
 ##==================================================================================================
 ## Setup Testing
