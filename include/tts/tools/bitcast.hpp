@@ -7,28 +7,16 @@
 //==================================================================================================
 #pragma once
 
+#include <bit>
 #include <cmath>
 #include <cstdint>
-#include <cstring>
 #include <type_traits>
 #include <utility>
 
 namespace tts::detail
 {
-  //================================================================================================
-  // bit_cast till we got std::bit_cast :(
-  //================================================================================================
-  template<typename U, typename T> inline U bit_cast(T a) noexcept
-  {
-    U that;
-    void const *src = reinterpret_cast<void const *>(&a);
-    void *      dst = reinterpret_cast<void *>(&that);
-    std::memcpy(dst, src, sizeof(a));
-    return that;
-  }
-
-  inline auto as_int(float a)   noexcept  { return bit_cast<std::int32_t>(a); }
-  inline auto as_int(double a)  noexcept  { return bit_cast<std::int64_t>(a); }
+  inline auto as_int(float a)   noexcept  { return std::bit_cast<std::int32_t>(a); }
+  inline auto as_int(double a)  noexcept  { return std::bit_cast<std::int64_t>(a); }
 
   template<typename T> inline auto bitinteger(T a) noexcept
   {
