@@ -15,4 +15,4 @@ TTS_CASE("Absolute distance between sequences")
   std::vector<float> b{1.f,1.f,1.f,1.f};
 
   TTS_ALL_ABSOLUTE_EQUAL(a, b, .4);
-}
+};

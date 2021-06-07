@@ -47,19 +47,23 @@ TTS_CASE( "Check that forced broken precision tests fails" )
   TTS_ABSOLUTE_EQUAL(x ,1., 1e-16 );
 };
 
-#if 0
 TTS_CASE( "Check that forced broken precision tests fails on array" )
 {
   std::vector<float> a{1.f,1.f,1.f,1.f};
   std::vector<float> b{2.f,-1.f,1.f,5.f};
+  std::vector<float> c{2.f,-1.f};
 
   TTS_ALL_EQUAL(a, b);
+  TTS_ALL_EQUAL(a, c);
   TTS_ALL_ULP_EQUAL(a, b, 0.5);
+  TTS_ALL_ULP_EQUAL(b, c, 0.5);
   TTS_ALL_IEEE_EQUAL(a, b);
+  TTS_ALL_IEEE_EQUAL(a, c);
   TTS_ALL_RELATIVE_EQUAL(a, b, 5);
+  TTS_ALL_RELATIVE_EQUAL(a, c, 5);
   TTS_ALL_ABSOLUTE_EQUAL(a, b, 1);
+  TTS_ALL_ABSOLUTE_EQUAL(c, b, 1);
 };
-#endif
 
 TTS_CASE( "Check that forced broken types tests fails" )
 {
@@ -70,5 +74,5 @@ TTS_CASE( "Check that forced broken types tests fails" )
 int main(int argc, char const** argv)
 {
   fail_main(argc, argv);
-  return ::tts::report(17,0);
+  return ::tts::report(27,0);
 }

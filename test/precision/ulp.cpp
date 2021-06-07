@@ -18,7 +18,7 @@ TTS_CASE("ULP distance")
   TTS_ULP_EQUAL( 1.f , 1.f+eps                , 0.5         );
   TTS_ULP_EQUAL( pi  , static_cast<float>(pi) , 9.84293e+07 );
   TTS_ULP_EQUAL( 1.  , short{1}               , 0.          );
-}
+};
 
 TTS_CASE( "ULP distance between boolean" )
 {
@@ -28,18 +28,24 @@ TTS_CASE( "ULP distance between boolean" )
   TTS_ULP_EQUAL(true , false , inf  );
   TTS_ULP_EQUAL(false, false , 0.   );
   TTS_ULP_EQUAL(false, true  , inf  );
-}
+};
 
-TTS_CASE_TPL( "ULP distance between integers", TTS_INTEGRAL_TYPES)
+TTS_CASE_TPL(  "ULP distance between integers"
+            , (tts::types < std::uint8_t,std::uint16_t,std::uint32_t,std::uint64_t
+                          , std::int8_t ,std::int16_t ,std::int32_t ,std::int64_t
+                          >{})
+            )
+<typename T>(::tts::type<T>)
 {
   T a = 65, b = a+5;
 
   TTS_ULP_EQUAL(a, a, 0.);
   TTS_ULP_EQUAL(a, b, 5.);
   TTS_ULP_EQUAL(b, a, 5.);
-}
+};
 
-TTS_CASE_TPL( "ULP distance between floating point", TTS_IEEE_TYPES)
+TTS_CASE_TPL(  "ULP distance between floating points" , (tts::types<double, float>{}) )
+<typename T>(::tts::type<T>)
 {
   T a{1};
   T eps  = std::numeric_limits<T>::epsilon();
@@ -67,7 +73,7 @@ TTS_CASE_TPL( "ULP distance between floating point", TTS_IEEE_TYPES)
   TTS_ULP_EQUAL(a-eps  , a , 1   );
   TTS_ULP_EQUAL(a+eps  , a , 0.5 );
   TTS_ULP_EQUAL(a+3*eps, a , 1.5 );
-}
+};
 
 #include "my_real.hpp"
 
@@ -75,4 +81,4 @@ TTS_CASE("ULP distance of type with custom ulpdist")
 {
   TTS_ULP_EQUAL(n1::my_real{1.f}, n1::my_real{8.f}, 0.125);
   TTS_ULP_EQUAL(n1::my_real{8.f}, n1::my_real{1.f}, 8.);
-}
+};

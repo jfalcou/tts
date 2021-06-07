@@ -15,4 +15,4 @@ TTS_CASE("Relative distance between sequences")
   std::vector<float> b{1.f,1.f,1.f,1.f};
 
   TTS_ALL_RELATIVE_EQUAL(a  , b   , 25);
-}
+};

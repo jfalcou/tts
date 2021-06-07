@@ -16,4 +16,4 @@ TTS_CASE("IEEE equality for sequences")
   std::vector<float> vx{x,x,x,x};
 
   TTS_ALL_IEEE_EQUAL(vx,vx);
-}
+};
