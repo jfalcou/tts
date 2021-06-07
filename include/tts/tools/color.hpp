@@ -9,6 +9,9 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #define TTS_COLOR_WINDOWS
+#if !defined(NOMINMAX)
+#define NOMINMAX
+#endif
 #endif
 
 #if defined(TTS_COLOR_WINDOWS)
