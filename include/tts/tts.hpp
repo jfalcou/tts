@@ -304,6 +304,10 @@ namespace tts::detail
   constexpr bool use_main = false;
 }
 #endif
+namespace tts::detail
+{
+  struct fatal_signal {};
+}
 #if defined(TTS_MAIN)
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
@@ -314,25 +318,27 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   ::tts::verbose_status       =  ::tts::arguments[{"-p","--pass"}];
   std::size_t repetitions     =  ::tts::arguments.value( "--repeat", 1            );
   std::string filter          =  ::tts::arguments.value( "--filter", std::string{});
-  for(auto &t: ::tts::detail::suite)
+  try
   {
-    if(filter.empty() || (t.name.find(filter) != std::string::npos) )
+    for(auto &t: ::tts::detail::suite)
     {
-      auto count = ::tts::global_runtime.test_count;
-      std::cout << ::tts::yellow << ::tts::bold
-                << "[SCENARIO]" << " - " << t.name
-                << ::tts::reset << std::endl;
-      for(std::size_t i = 0; i < repetitions; ++i) t();
-      if(count == ::tts::global_runtime.test_count)
-        ::tts::global_runtime.invalid();
-      if(::tts::global_runtime.fatal_count > 0)
+      if(filter.empty() || (t.name.find(filter) != std::string::npos) )
       {
-        std::cout << "\n" << ::tts::red
-                  << ::tts::bold << "** ABORTING AFTER FIRST FAILURE **"
-                  << "\n";
-        break;
+        auto count = ::tts::global_runtime.test_count;
+        std::cout << ::tts::yellow << ::tts::bold
+                  << "[SCENARIO]" << " - " << t.name
+                  << ::tts::reset << std::endl;
+        for(std::size_t i = 0; i < repetitions; ++i) t();
+        if(count == ::tts::global_runtime.test_count)
+          ::tts::global_runtime.invalid();
       }
     }
+  }
+  catch( ::tts::detail::fatal_signal& )
+  {
+    std::cout << "\n" << ::tts::red
+              << ::tts::bold << "** ABORTING AFTER FIRST FAILURE **"
+              << "\n";
   }
   if constexpr( ::tts::detail::use_main ) return ::tts::report(0,0);
   else                                    return 0;
@@ -515,6 +521,7 @@ namespace tts::detail
     std::cout << ::tts::source_location::current() << " - " << ::tts::bold                          \
               << ::tts::red << "** FATAL **" << ::tts::reset                                        \
               << " - " << Message << std::endl;                                                     \
+    throw ::tts::detail::fatal_signal();                                                            \
   } while(::tts::detail::done())
 #define TTS_INVALID(Message)                                                                        \
   do                                                                                                \

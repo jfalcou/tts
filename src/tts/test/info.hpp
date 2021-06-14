@@ -47,6 +47,7 @@ namespace tts::detail
     std::cout << ::tts::source_location::current() << " - " << ::tts::bold                          \
               << ::tts::red << "** FATAL **" << ::tts::reset                                        \
               << " - " << Message << std::endl;                                                     \
+    throw ::tts::detail::fatal_signal();                                                            \
   } while(::tts::detail::done())
 /**/
 
