@@ -257,7 +257,7 @@ namespace tts
 // Generate a range based test between two function
 //==================================================================================================
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                   \
-  do                                                                                                \
+  [&]()                                                                                             \
   {                                                                                                 \
     std::cout << ::tts::magenta << "Comparing: " << ::tts::cyan << TTS_STRING(RefFunc)              \
               << ::tts::reset << "<"                                                                \
@@ -299,7 +299,7 @@ namespace tts
                                     << local_tts_max_ulp    << ::tts::reset << " ULP instead"       \
               );                                                                                    \
     }                                                                                               \
-  } while(::tts::detail::done())                                                                    \
+  }()
 /**/
 
 //==================================================================================================
