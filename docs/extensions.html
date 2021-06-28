@@ -106,7 +106,7 @@ Here is a sample test code using user-defined command line arguments:
 TTS_CASE( "CLI test - flag" )
 {
   // Will fail if the test is not called via ./mytest.exe --pass--the-test
-  TTS_EXPECT( tts::arguments.["--pass--the-test"] );
+  TTS_EXPECT( tts::arguments["--pass--the-test"] );
 }
 
 TTS_CASE( "CLI test - setting" )

@@ -56,7 +56,9 @@ After compiling and launching the test, you should end up with the following out
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test
-Results: 1 test - 0 success - 0/0 failure - 1/0 invalid
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+Results: 1 test - 0/1 success - 0/0 failure - 1/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The unit test reports the total number of tests performed, the number of passing tests, the number
@@ -89,13 +91,13 @@ Let's amend our initial test by adding a single call to [**`TTS_PASS`**](referen
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_MAIN
-#include <tts/tts.hpp>
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
 
-TTS_CASE( "Make a simple test suite" )
-{
-  TTS_PASS("This one's a success");
-};
+  TTS_CASE( "Make a simple test suite" )
+  {
+    TTS_PASS("This one's a success");
+  };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -103,7 +105,9 @@ and run it again:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test
-Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 One may notice that no other information are displayed. This is the default behavior. One can
@@ -115,12 +119,10 @@ file location of each tests and the current scenario being tested.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Make a simple test suite
+test.cpp[6] - !!SUCCESS!! - This one's a success
 --------------------------------------------------------------------------------
-pass.cpp:7: passed- This one's a success
---------------------------------------------------------------------------------
-Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's have a look at more complex checks and tests.
@@ -153,12 +155,10 @@ and run it again:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Make a simple test suite
+test.cpp[6] - !!SUCCESS!! - (1+1) == 2 evaluates as 2 == 2 as expected.
 --------------------------------------------------------------------------------
-pass.cpp:7: Expected (1+1) == 2
---------------------------------------------------------------------------------
-Results: 1 tests - 1 successes - 0/0 failure - 0/0 invalid
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ## Relational Tests
@@ -202,14 +202,12 @@ If everything goes right, the following output is to be expected:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Verify basic relations
+test.cpp[9] - !!SUCCESS!! - a == b evaluates as { 1 2 3 } == { 1 2 3 } as expected.
+test.cpp[10] - !!SUCCESS!! - true != false evaluates as true != false as expected.
+test.cpp[11] - !!SUCCESS!! - -1.f < 0.5 evaluates as -1 < 0.5 as expected.
 --------------------------------------------------------------------------------
-pass.cpp:9: passed: - Expecting: a == b
-pass.cpp:10: passed: - Expecting: true != false
-pass.cpp:11: passed: - Expecting: -1.f < 0.5
---------------------------------------------------------------------------------
-Results: 3 tests - 3 successes - 0/0 failure - 0/0 invalid
+Results: 3 tests - 3/3 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ## Precision Tests
@@ -261,13 +259,13 @@ If everything goes right, the following output is to be expected:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - ULP distance
+test.cpp[9] - !!SUCCESS!! - 'A' == 80LL evaluates as 65 == 80 within 7.5 ULP when 15 ULP was expected.
+test.cpp[10] - !!SUCCESS!! - 1.f == 1.f+eps evaluates as 1 == 1 within 0.5 ULP when 0.5 ULP was expected.
+test.cpp[11] - !!SUCCESS!! - pi == static_cast<float>(pi) evaluates as 3.1 == 3.1 within 9.84e+07 ULP when 9.84e+07 ULP was expected.
+test.cpp[12] - !!SUCCESS!! - 1. == short{1} evaluates as 1 == 1 within 0 ULP when 0 ULP was expected.
 --------------------------------------------------------------------------------
-ulp.cpp:9: PASSED - Expecting: 'A' == 80LL within 15 ULP and found: 7.5 ULP
-ulp.cpp:10: PASSED - Expecting: 1.f == 1.f+eps within 0.5 ULP and found: 0.5 ULP
-ulp.cpp:11: PASSED - Expecting: pi == static_cast<float>(pi) within 9.84e+07 ULP and found: 9.84e+07 ULP
-ulp.cpp:12: PASSED - Expecting: 1. == short{1} within 0 ULP and found: 0 ULP
+Results: 4 tests - 4/4 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ## Sequence Tests
@@ -307,11 +305,10 @@ If everything goes right, the following output is to be expected:
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Absolute distance between sequences
-absolute.cpp:17 - PASSED - Expecting: a == b within 0.4 unit
+test.cpp[9] - !!SUCCESS!! - a == b evaluates within 0.4 unit for all values.
 --------------------------------------------------------------------------------
-Results: 1 test - 1 success - 0/0 failure - 0/0 invalid
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -352,13 +349,11 @@ If everything goes right, the following output is to be expected:
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Check that we can handle exceptions
+test.cpp[11] - !!SUCCESS!! - foo() throws: some_exception_type as expected.
+test.cpp[12] - !!SUCCESS!! - bar() does not throw as expected.
 --------------------------------------------------------------------------------
-exceptions.cpp:11: PASSED - foo() throws some_exception_type
-exceptions.cpp:12: PASSED - bar() does not throws.
---------------------------------------------------------------------------------
-Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+Results: 2 tests - 2/2 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -398,16 +393,12 @@ If everything goes right, the following output is to be expected:
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Check that types can be tested for equality
---------------------------------------------------------------------------------
-types.cpp:7: PASSED - Expecting std::add_pointer<float const>::type to be float const*
---------------------------------------------------------------------------------
+test.cpp[7] - !!SUCCESS!! - std::add_pointer<float const>::type evaluates as const float* as expected.
 [SCENARIO] - Check that expression types can be tested for equality
+test.cpp[12] - !!SUCCESS!! - decltype(std::make_unique<float>(3.1415f)) evaluates as std::unique_ptr<float> as expected.
 --------------------------------------------------------------------------------
-types.cpp:12: PASSED - Expecting decltype(std::make_unique<float>(3.1415f)) to be std::unique_ptr<float, std::default_delete<float> >
---------------------------------------------------------------------------------
-Results: 2 tests - 2 successes - 0/0 failure - 0/0 invalid
+Results: 2 tests - 2/2 successes - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -450,37 +441,53 @@ If everything goes right, the following output is to be expected:
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 $ ./my_test --pass
---------------------------------------------------------------------------------
 [SCENARIO] - Test simple range check
 Comparing: ok_x<float> with ajar_x<float> using [](auto i, auto c) { return (100.f*i)/c; }
 Max ULP         Count (#)       Cum. Ratio (%)  Samples
 --------------------------------------------------------------------------------
-0.0             17              53.12           Input:          +0.0000000e+00
-                                                Found:          +0
-                                                instead of:     +0
+0               2069            50.51                      Input: 0
+                                                           Found: 0
+                                                           instead of: 0
 --------------------------------------------------------------------------------
-4.0             1               56.25           Input:          +6.2500000e+00
-                                                Found:          +12
-                                                instead of:     +6
+0.5             20              51.00                      Input: 0.51
+                                                           Found: 1
+                                                           instead of: 0
 --------------------------------------------------------------------------------
-8.0             1               59.38           Input:          +1.2500000e+01
-                                                Found:          +25
-                                                instead of:     +12
+1.0             21              51.51                      Input: 2
+                                                           Found: 4
+                                                           instead of: 2
 --------------------------------------------------------------------------------
-16.0            2               65.62           Input:          +1.8750000e+01
-                                                Found:          +37
-                                                instead of:     +18
+1.5             20              52.00                      Input: 2.5
+                                                           Found: 5
+                                                           instead of: 2
 --------------------------------------------------------------------------------
-32.0            6               84.38           Input:          +3.4375000e+01
-                                                Found:          +68
-                                                instead of:     +34
+2.0             21              52.51                      Input: 4
+                                                           Found: 8
+                                                           instead of: 4
 --------------------------------------------------------------------------------
-64.0            5               100.00          Input:          +6.8750000e+01
-                                                Found:          +137
-                                                instead of:     +68
+4.0             82              54.52                      Input: 4.5
+                                                           Found: 9
+                                                           instead of: 4
 --------------------------------------------------------------------------------
-range.cpp:79 - PASSED - Expecting: ajar_x similar to ok_x within 128.00 ULP and found: 48.50 ULP
+8.0             163             58.50                      Input: 8.5
+                                                           Found: 17
+                                                           instead of: 8
 --------------------------------------------------------------------------------
+16.0            328             66.50                      Input: 17
+                                                           Found: 33
+                                                           instead of: 16
+--------------------------------------------------------------------------------
+32.0            655             82.50                      Input: 33
+                                                           Found: 65
+                                                           instead of: 32
+--------------------------------------------------------------------------------
+64.0            717             100.00                     Input: 65
+                                                           Found: 129
+                                                           instead of: 64
+--------------------------------------------------------------------------------
+test.cpp[9] - !!SUCCESS!! - Expecting: ajar_x similar to ok_x within 128 ULP and found: 49.50 ULP
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
