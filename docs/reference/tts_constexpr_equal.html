@@ -13,7 +13,7 @@ TTS_CONSTEXPR_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_CONSTEXPR_EQUAL(LHS,RHS)
+#define TTS_CONSTEXPR_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -25,6 +25,7 @@ performed by using the proper `operator==` overload or by a [custom comparison](
 **Parameters:**
 :
   - `LHS`, `RHS`:  Expressions to compare
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

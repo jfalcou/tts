@@ -13,7 +13,7 @@ TTS_GREATER_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_GREATER_EQUAL(LHS,RHS)
+#define TTS_GREATER_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -24,7 +24,8 @@ the proper `operator<` and `operator==` overloads or by a [custom comparison](ex
 
 **Parameters:**
 :
-    - `LHS`, `RHS`:  Expressions to compare
+  - `LHS`, `RHS`:  Expressions to compare
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

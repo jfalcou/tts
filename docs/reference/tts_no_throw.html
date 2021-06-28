@@ -13,7 +13,7 @@ TTS_NO_THROW
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_NO_THROW(Expression)
+#define TTS_NO_THROW(Expression, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -23,7 +23,8 @@ Checks if a given `Expression` throws no exception.
 
 **Parameters:**
 :
-    - `Expression`: Expression to evaluate.
+  - `Expression`: Expression to evaluate.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

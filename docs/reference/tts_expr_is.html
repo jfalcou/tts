@@ -13,7 +13,7 @@ TTS_EXPR_IS
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_EXPR_IS(Expression, Type)
+#define TTS_EXPR_IS(Expression, Type, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -23,8 +23,9 @@ Checks if an `Expression` evaluates to a value of a given `Type`.
 
 **Parameters:**
 :
-    - `Expression`: Expression to evaluate.
-    - `Type`: Expected type.
+  - `Expression`: Expression to evaluate.
+  - `Type`: Expected type.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

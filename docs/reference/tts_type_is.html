@@ -13,7 +13,7 @@ TTS_TYPE_IS
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_TYPE_IS(T1, T2)
+#define TTS_TYPE_IS(T1, T2, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -23,8 +23,9 @@ Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
 
 **Parameters:**
 :
-    - `Type`: Type to compare.
-    - `Target`: Expected type.
+  - `Type`: Type to compare.
+  - `Target`: Expected type.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

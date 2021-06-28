@@ -13,7 +13,7 @@ TTS_EXPECT_NOT
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_EXPECT_NOT(Expression)
+#define TTS_EXPECT_NOT(Expression,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -23,7 +23,8 @@ Checks if a given expression evaluates to `false`.
 
 **Parameters:**
 :
-    - `Expression`: Expression to evaluate and compare to `false`.
+  - `Expression`: Expression to evaluate and compare to `false`.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

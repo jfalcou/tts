@@ -13,7 +13,7 @@ TTS_CONSTEXPR_LESS
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_CONSTEXPR_LESS(LHS,RHS)
+#define TTS_CONSTEXPR_LESS(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -26,6 +26,7 @@ by a [custom comparison](extensions.htm#customizationpoints).
 **Parameters:**
 :
   - `LHS`, `RHS`:  Expressions to compare
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

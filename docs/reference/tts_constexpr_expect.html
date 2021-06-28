@@ -13,7 +13,7 @@ TTS_CONSTEXPR_EXPECT
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_CONSTEXPR_EXPECT(Expression)
+#define TTS_CONSTEXPR_EXPECT(Expression,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -23,7 +23,8 @@ Checks if a given expression evaluates to `true` in a `constexpr` context.
 
 **Parameters:**
 :
-    - `Expression`: Constexpr expression to evaluate and compare to `true`.
+  - `Expression`: Constexpr expression to evaluate and compare to `true`.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

@@ -13,7 +13,7 @@ TTS_NOT_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_NOT_EQUAL(LHS,RHS)
+#define TTS_NOT_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -24,7 +24,8 @@ using the proper `operator==` overload or by a [custom comparison](extensions.ht
 
 **Parameters:**
 :
-    - `LHS`, `RHS`:  Expressions to compare
+  - `LHS`, `RHS`:  Expressions to compare
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
