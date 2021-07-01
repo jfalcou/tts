@@ -40,7 +40,7 @@ namespace tts::detail
 //==================================================================================================
 // Test case registration macros
 //==================================================================================================
-#define TTS_CASE_TPL(DESCRIPTION,TYPES)                                                             \
+#define TTS_CASE_TPL(DESCRIPTION,...)                                                               \
 inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
 [](auto tests)                                                                                      \
   {                                                                                                 \
@@ -56,7 +56,7 @@ inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{
     [&]<template<class...> class L,typename... Ts>(L<Ts...>)                                        \
     {                                                                                               \
       (single_test( ::tts::type<Ts>() ),...);                                                       \
-    }( TYPES );                                                                                     \
+    }( ::tts::types<__VA_ARGS__>{} );                                                               \
                                                                                                     \
     return true;                                                                                    \
   }} + []                                                                                           \
