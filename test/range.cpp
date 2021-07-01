@@ -1,9 +1,7 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
@@ -51,7 +49,7 @@ namespace tts
     {
       os << "[";
       for(auto const& e : v)
-        std::cout << e << " ";
+        std::cout << tts::as_string(e) << " ";
       os << "]";
     }
   };
@@ -64,7 +62,7 @@ TTS_CASE( "Test stateless range check" )
                       ,  ok_x, ajar_ax
                       , 128
                       );
-}
+};
 
 TTS_CASE( "Test stateful range check" )
 {
@@ -73,4 +71,4 @@ TTS_CASE( "Test stateful range check" )
                       ,  ok_x, ajar_ax
                       , 128
                       );
-}
+};

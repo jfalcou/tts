@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_IEEE_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_IEEE_EQUAL(LHS,RHS)
+#define TTS_IEEE_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -28,7 +26,8 @@ or are both $NaN$. This comparison is performed by using the proper `tts::ulp_di
 
 **Parameters:**
 :
-    - `LHS`, `RHS`:  Expressions to compare
+  - `LHS`, `RHS`:  Expressions to compare
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

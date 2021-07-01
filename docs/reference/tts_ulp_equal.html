@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_ULP_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_ULP_EQUAL(LHS,RHS,X)
+#define TTS_ULP_EQUAL(LHS,RHS,X,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -28,6 +26,7 @@ This comparison is performed by using the proper `tts::ulp_distance` overload (s
 :
     - `LHS`, `RHS`:  Expressions to compare
     - `X`:  Maximal ULPs acceptable for passing the test
+    - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
@@ -54,7 +53,7 @@ TTS_CASE( "ULP distance")
 
   TTS_ULP_EQUAL(a, a-eps   , 1   );
   TTS_ULP_EQUAL(a, a+eps   , 0.5 );
-  TTS_ULP_EQUAL(a, a+3*eps , 1.5 );
+  TTS_ULP_EQUAL(a, a+3*eps , 1.5, REQUIRED );
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

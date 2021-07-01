@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_CONSTEXPR_EXPECT_NOT
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_CONSTEXPR_EXPECT_NOT(Expression)
+#define TTS_CONSTEXPR_EXPECT_NOT(Expression,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -25,7 +23,8 @@ Checks if a given expression evaluates to `false`.
 
 **Parameters:**
 :
-    - `Expression`: Expression to evaluate and compare to `false`.
+  - `Expression`: Expression to evaluate and compare to `false`.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 

@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 <meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
@@ -19,30 +17,40 @@ Command line Interface
 ====================================================================================================
 
 TTS supports options that can be passed as command line arguments of the test binary. Those
-options modify how the tests are run.
+options modify how the tests are run and the results displayed.
 
- Options            | Shortcut    | Description
-------------------- | ----------- | ---------------------------------------------------------------
-`--help`            | `-h`        | Display the list of supported options <br>`./my_test --help`
-`--no-color`        | `-n`        | Disable the colored output of test results. <br>`./my_test --no-color`
-`--pass`            | `-p`        | Display both failing and passing tests. <br>`./my_test --pass`
-`--repeat=N`        | `-r=N`      | Repeat each tests `N` times <br>`./my_test --repeat=42`
-`--filter="str" `   | -f="str"    | Only run tests containing `str` in their title
+ Options        | Shortcut | Description
+--------------- | -------- | ---------------------------------------------------------------
+`--help`        | `-h`     | Display the list of supported options <br>`./my_test --help`
+`--no-color`    | `-n`     | Disable the colored output of test results. <br>`./my_test --no-color`
+`--pass`        | `-p`     | Display both failing and passing tests. <br>`./my_test --pass`
+`--hex`         | `-x`     | Display floating point values as hexadecimal. <br>`./my_test --hex`
+`--scientific`  | `-s`     | Display floating point values as hexadecimal. <br>`./my_test --scientific`
 
-Another set of options is provided to control the specifics of the range check tests.
+Another set of options is provided to control the specifics of the tests parameters. Those
+options require a value and have no short form.
 
- Options     | Shortcut | Description
------------- | -------- | -----------------------------------------------------------------------
-`--hex`      | `-x`     | Display floating point values as hexadecimal. <br>`./my_test --hex`
-`--loop=N`   | `-l=N`   | Repeat each range checks `N` times <br>`./my_test --loop=100`
-`--block=N`  | `-b=N`   | Set size of range checks samples to `N`<br>`./my_test --block=4096`
-`--ulpmax=N` | `-u=N`   | Set global failure ulp threshold for range tests to `N`<br>`./my_test --ulpmax=4`
-`--valmin=N` | `-v=N`   | Set minimal value for range tests to `N`<br>`./my_test --valmin=-100`
-`--valmax=N` | `-w=N`   | Set maximal value for range tests to `N`<br>`./my_test --valmax=1000`
+ Options         | Description
+---------------- | -----------------------------------------------------------------------
+`--filter="str"` | Only run tests with `str` in their description<br>`./my_test --filter="float"`
+`--precision=N`  | Set the precision for displaying floating point values<br>`./my_test --precision=12`
+`--repeat=N`     | Repeat each tests `N` times<br>`./my_test --ulpmax=4`
+`--seed=N`       | Set the PRNG seeds (default is time-based)<br>`./my_test --valmin=-100`
 
-Values of command-line options can be used directly in a test via the `arguments` object available
-to each test case automatically. Command line arguments are detected and parsed on-demand, which
-means that one can define a test-specific command-line argument by just requesting its value.
+Another set of options is provided to control the specifics of the range check tests. Those
+options require a value and have no short form.
+
+ Options     | Description
+------------ | -----------------------------------------------------------------------
+`--block=N`  | Set size of range checks samples to `N`<br>`./my_test --block=4096`
+`--loop=N`   | Repeat each range checks `N` times <br>`./my_test --loop=100`
+`--ulpmax=N` | Set global failure ulp threshold for range tests to `N`<br>`./my_test --ulpmax=4`
+`--valmin=N` | Set minimal value for range tests to `N`<br>`./my_test --valmin=-100`
+`--valmax=N` | Set maximal value for range tests to `N`<br>`./my_test --valmax=1000`
+
+Values of command-line options can be used directly in a test via the `tts::arguments` global object.
+Command line arguments are detected and parsed on-demand, which means that one can define a
+test-specific command-line argument by just requesting its value.
 
 <a name="options"> The `arguments` object is an instance of the `tts::options` type that provides the
 following members functions.
@@ -53,7 +61,8 @@ following members functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 struct options
 {
-  template<typename... Flags> bool is_set(Flags const&... flags ) const;
+  bool operator[](std::initializer_list<const char*> flags ) const;
+  bool operator[](const char*  flag ) const;
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
@@ -61,7 +70,7 @@ struct options
 **Parameters**:
 <div class="smallskip"></div>
 
-  - `flags` : string containing the flag to check for
+  - `flags` : string or list of strings containing the flag(s) to check for
 
 **Returns:** `true` if any of the flag passed as an argument is set, `false` otherwise.
 
@@ -71,7 +80,8 @@ struct options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 struct options
 {
-  template<typename T, typename... Flags> T value_or(T const& def,  Flags const&... flags ) const
+  template<typename T> T value(std::initializer_list<const char*> flags, T def = {}) const
+  template<typename T> T value(const char* flags, T def = {}) const
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
@@ -79,10 +89,10 @@ struct options
 **Parameters**:
 <div class="smallskip"></div>
 
-  - `def` : default value if no flag are set
+  - `def`   : default value if no flag are set
   - `flags` : string containing the flag to check for
 
-**Returns:** the value associated to the flag if any falg is set, `def` otherwise.
+**Returns:** the value associated to the flag if any flag is set, `def` otherwise.
 
 <hr>
 
@@ -96,13 +106,13 @@ struct options
 TTS_CASE( "CLI test - flag" )
 {
   // Will fail if the test is not called via ./mytest.exe --pass--the-test
-  TTS_EXPECT( arguments.is_set("--pass--the-test") );
+  TTS_EXPECT( tts::arguments["--pass--the-test"] );
 }
 
 TTS_CASE( "CLI test - setting" )
 {
   // Will fail if the test is not called via ./mytest.exe --xxx=13.37
-  TTS_EQUAL( arguments.value_or(0., "--xxx"), 13.37);
+  TTS_EQUAL( tts::arguments.value(0., "--xxx"), 13.37);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

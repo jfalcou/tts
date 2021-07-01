@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_ALL_ABSOLUTE_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_ALL_ABSOLUTE_EQUAL(LHS,RHS,X)
+#define TTS_ALL_ABSOLUTE_EQUAL(LHS,RHS,X,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -29,6 +27,7 @@ case the test will check the container parameter's size is 1.
 :
     - `LHS`, `RHS`:  Sequences to compare
     - `X`:  Maximal absolute distance acceptable for passing the test
+    - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
@@ -44,7 +43,7 @@ TTS_CASE("Absolute distance between sequences")
   std::vector<float> b{1.f,1.f,1.f,1.f};
   std::vector<float> s{1.1f};
 
-  TTS_ALL_ABSOLUTE_EQUAL(a  , b   , .4);
+  TTS_ALL_ABSOLUTE_EQUAL(a  , b   , .4, REQUIRED);
   TTS_ALL_ABSOLUTE_EQUAL(s  , 1.f , .15);
   TTS_ALL_ABSOLUTE_EQUAL(1.f, s   , .15);
 }

@@ -1,40 +1,171 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2020 Joel FALCOU
+##  Copyright 2020-2021 Joel FALCOU
 ##
 ##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
 version: 2.1
 
-jobs:
-  clang:
-    docker:
-      - image: compilaction/clang-dev:latest
+commands:
+  run_test:
+    description: "Configure and run tests from a CMake Toolchain"
+    parameters:
+      desc:
+        type: string
+      tool:
+        type: string
+      proc:
+        type: integer
+        default: 4
     steps:
-      - checkout
       - run:
-          name: Running Release tests
-          command: . .circleci/run.sh clang++ Release
-      - run:
-          name: Running Debug tests
-          command: . .circleci/run.sh clang++ Debug
+          name: << parameters.desc >>
+          command:                                                                  |
+            mkdir -p build && cd build                                              &&
+            cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>          &&
+            ninja unit -j << parameters.proc >> && ctest  -j << parameters.proc >>
 
-  gcc:
+jobs:
+  x86_clang_debug:
     docker:
-      - image: compilaction/gcc-dev:latest
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/clang.x86.debug.cmake"
+
+  x86_clang_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/clang.x86.release.cmake"
+
+  x86_gcc_debug:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.x86.debug.cmake"
+
+  x86_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.x86.release.cmake"
+
+  ppc64_gcc_debug:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.ppc64.debug.cmake"
+
+  ppc64_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.ppc64.release.cmake"
+
+  ppc_gcc_debug:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.ppc.debug.cmake"
+
+  ppc_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.ppc.release.cmake"
+
+  arm_gcc_debug:
+    docker:
+      - image: jfalcou/compilers:latest
     steps:
       - checkout
       - run:
-          name: Running Release tests
-          command: . .circleci/run.sh g++ Release
+          name: Update ARM processor model to emulate
+          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.arm.debug.cmake"
+
+  arm_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
       - run:
-          name: Running Debug tests
-          command: . .circleci/run.sh g++ Debug
+          name: Update ARM processor model to emulate
+          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.arm.release.cmake"
+
+  aarch64_gcc_debug:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Debug tests
+          tool: "../cmake/toolchain/gcc.aarch64.debug.cmake"
+
+  aarch64_gcc_release:
+    docker:
+      - image: jfalcou/compilers:latest
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          tool: "../cmake/toolchain/gcc.aarch64.release.cmake"
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - gcc
-      - clang
+      - x86_clang_debug
+      - x86_gcc_debug
+      - ppc64_gcc_debug
+      - ppc_gcc_debug
+      - arm_gcc_debug
+      - aarch64_gcc_debug
+      - x86_clang_release:
+          requires:
+            - x86_clang_debug
+      - x86_gcc_release:
+          requires:
+            - x86_gcc_debug
+      - ppc64_gcc_release:
+          requires:
+            - ppc64_gcc_debug
+      - ppc_gcc_release:
+          requires:
+            - ppc_gcc_debug
+      - arm_gcc_release:
+          requires:
+            - arm_gcc_debug
+      - aarch64_gcc_release:
+          requires:
+            - aarch64_gcc_debug

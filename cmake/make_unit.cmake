@@ -41,9 +41,17 @@ function(make_unit root)
                                 ${PROJECT_SOURCE_DIR}/test
                             )
 
-  add_test( NAME ${test}
-            WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/${location}"
-            COMMAND $<TARGET_FILE:${test}>
-          )
+
+  if (CMAKE_CROSSCOMPILING_CMD)
+    add_test( NAME ${test}
+              WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/${location}"
+              COMMAND ${CMAKE_CROSSCOMPILING_CMD} $<TARGET_FILE:${test}> --no-color --pass
+            )
+  else()
+    add_test( NAME ${test}
+              WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/${location}"
+              COMMAND $<TARGET_FILE:${test}>
+            )
+  endif()
 
 endfunction()

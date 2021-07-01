@@ -39,3 +39,4 @@
 # Potential local build repository
 *build*/
 Testing/
+.vscode/settings.json

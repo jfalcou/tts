@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_THROW
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_THROW(Expression, Exception)
+#define TTS_THROW(Expression, Exception, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -25,8 +23,9 @@ Checks if a given `Expression` throws an exception of type `Exception`.
 
 **Parameters:**
 :
-    - `Expression`: Expression to evaluate.
-    - `Exception`: Expected exception type to be thrown.
+  - `Expression`: Expression to evaluate.
+  - `Exception`: Expected exception type to be thrown.
+  - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
