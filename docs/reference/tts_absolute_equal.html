@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_ABSOLUTE_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_ABSOLUTE_EQUAL(LHS,RHS,X)
+#define TTS_ABSOLUTE_EQUAL(LHS,RHS,X, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -28,6 +26,7 @@ This comparison is performed by using the proper `tts::absolute_distance` overlo
 :
     - `LHS`, `RHS`:  Expressions to compare
     - `X`:  Maximal absolute distance acceptable for passing the test
+    - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
@@ -39,7 +38,7 @@ This comparison is performed by using the proper `tts::absolute_distance` overlo
 TTS_CASE("Absolute distance")
 {
   TTS_ABSOLUTE_EQUAL(-2.  , 2.f  , 4.);
-  TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15);
+  TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15, REQUIRED);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

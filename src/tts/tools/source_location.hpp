@@ -1,0 +1,49 @@
+//==================================================================================================
+/**
+  TTS - Tiny Test System
+  Copyright : TTS Contributors & Maintainers
+  SPDX-License-Identifier: MIT
+**/
+//==================================================================================================
+#pragma once
+
+#include <string_view>
+#include <ostream>
+#include <sstream>
+#include <tts/tools/color.hpp>
+
+namespace tts
+{
+  class source_location
+  {
+    public:
+    [[nodiscard]] static constexpr auto current ( const char* file  = __builtin_FILE()
+                                                , int line          = __builtin_LINE()
+                                                ) noexcept
+    {
+      source_location sl{};
+      sl.file_ = file;
+      sl.line_ = line;
+      return sl;
+    }
+
+    [[nodiscard]] constexpr auto filename() const noexcept
+    {
+      std::string_view f(file_);
+      return f.substr(f.find_last_of('/')+1);
+    }
+
+    [[nodiscard]] constexpr auto line() const noexcept { return line_; }
+
+    friend std::ostream& operator<<(std::ostream& os, source_location const& s)
+    {
+      return os << tts::bold << tts::blue << s.filename()
+                << tts::white << "[" << tts::blue << s.line() << tts::white << "]"
+                << tts::reset;
+    }
+
+    private:
+    const char* file_{"unknown"};
+    int         line_{};
+  };
+}

@@ -1,0 +1,513 @@
+<!--
+  **TTS** - Tiny Test System
+  Copyright 2020 Joel FALCOU
+
+  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  SPDX-License-Identifier: MIT
+ -->
+<meta charset="utf-8" lang="en"><style class="fallback">body{visibility:hidden;}</style>
+                       **Tiny Test System**
+                          Tutorial
+
+Unit Test are usually gathered into **scenarios** in which a specific behavior of a software
+component is tested. Such scenario are usually isolated into different executable. Each scenario
+is decomposed into **test suites**, i.e a group of related test verifying that the current scenario
+is correctly serviced by the software component. Test suites are themselves composed of at least one test case.
+
+With **TTS**, this decomposition (scenario/suite/test) is supported by various macro.
+Let's dive into the detail and how **TTS** manage and report tests.
+
+  (insert crumbs.html here)
+
+Specify a Test Case
+====================================================================================================
+
+Test cases are function performing repeatable, minimal operations able to unambiguously
+capture a function or class behavior and assess its correctness. In **TTS**, a test case can be
+defined either as:
+
+  * a single function defined by the [`TTS_CASE`](reference.html#scenariodefinition/tts_case) macro.
+    In this case, the test function will be run and proceed to every tests it contains.
+
+  * a family of functions generated from a template function and a sequence of types
+    via the [`TTS_CASE_TPL`](reference.html#scenariodefinition/tts_case_tpl) macro. Inside the test case itself, the template
+    type is accessible through the template parameter `T`.
+
+In both case, the test case is defined with an unique string description. Additionally, good
+testing practices recommend to have fine grain test cases to simplify test management.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+TTS_CASE( "Make a simple test suite" )
+{
+  // This test case is empty and thus will be reported as invalid
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+Notice the `#define TTS_MAIN` line. This is used to notify **TTS** that the current translation unit
+will contains the **TTS** main entry point. You can use **TTS** in multiple translation units
+but only one of them must have the `TTS_MAIN` macro enabled.
+
+After compiling and launching the test, you should end up with the following output:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+Results: 1 test - 0/1 success - 0/0 failure - 1/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The unit test reports the total number of tests performed, the number of passing tests, the number
+of failing tests and the number of invalid tests. Depending on your terminal's settings, this
+outputs may be colored[^f1].
+
+In this case, unsurprisingly, our empty test is reported as invalid as we consider an empty test
+case as erroneous in itself. **TTS** enforces a **"Empty Suite Is An Error"** rule that applies at
+the test case level. Any test case with no actual testing will be considered as a failure and
+reported as an invalid test. Every test functions then require at least one call to any Testing Macros.
+
+Testing Macros
+====================================================================================================
+
+**TTS** provides a set of macros to perform usual tests operations and reporting their success or
+failure to the test suite manager directly from within a test case.
+
+## Information Tests
+Those macros provide a way to force a test as a failure or success.
+
+Macro                                                 | Description
+----------------------------------------------------- | --------------------------------------------
+[**`TTS_PASS`**](reference.html#tts_pass)             | Forces a success and displays a message
+[**`TTS_FAIL`**](reference.html#tts_fail)             | Forces a failure and displays a message
+[**`TTS_INVALID`**](reference.html#tts_invalid)       | Forces a failure and displays a message
+[**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
+[**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
+
+Let's amend our initial test by adding a single call to [**`TTS_PASS`**](reference.html#tts_pass):
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Make a simple test suite" )
+  {
+    TTS_PASS("This one's a success");
+  };
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+and run it again:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test
+[SCENARIO] - Make a simple test suite
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+One may notice that no other information are displayed. This is the default behavior. One can
+activate a more verbose output by passing the `--pass` through the
+[**TTS** command line interface](extensions.html#commandlineinterface).
+
+The output now includes all the informations gathered by the testing macros, including the source
+file location of each tests and the current scenario being tested.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - Make a simple test suite
+test.cpp[6] - !!SUCCESS!! - This one's a success
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's have a look at more complex checks and tests.
+
+## Basic Tests
+Those macros provide a way to test how an arbitrary expression evaluates.
+
+Macro                                                 | Description
+----------------------------------------------------- | --------------------------------------------
+[**`TTS_EXPECT`**](reference.html#tts_expect)         | Checks if an expression evaluates to `true`
+[**`TTS_EXPECT_NOT`**](reference.html#tts_expect_not) | Checks if an expression evaluates to `false`
+
+These macros are accessible in the `tts/tts.hpp` header file.
+
+Let's see the effect of [**`TTS_EXPECT`**](reference.html#tts_expect):
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+TTS_CASE( "Make a simple test suite" )
+{
+  TTS_EXPECT((1+1) == 2);
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+and run it again:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - Make a simple test suite
+test.cpp[6] - !!SUCCESS!! - (1+1) == 2 evaluates as 2 == 2 as expected.
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## Relational Tests
+Relational tests compares the equality or ordering of values. Test is considered
+successful if values are properly ordered with respect to each other:
+
+Macro                                                       | Description
+----------------------------------------------------------- | --------------------------------------------
+[**`TTS_EQUAL`**](reference.html#tts_equal)                 | Checks if values are equal than each other
+[**`TTS_NOT_EQUAL`**](reference.html#tts_not_equal)         | Checks if values are not equal than each other
+[**`TTS_LESS`**](reference.html#tts_less)                   | Checks if values are lesser or equal than each other
+[**`TTS_GREATER`**](reference.html#tts_greater)             | Checks if values are greater  than each other
+[**`TTS_LESS_EQUAL`**](reference.html#tts_less_equal)       | Checks if values are lesser or equal than each other
+[**`TTS_GREATER_EQUAL`**](reference.html#tts_greater_equal) | Checks if values are greater or equal than each other
+
+These macros are accessible in the `tts/tts.hpp` header file.
+
+Note that all those relational tests are performed using either the default `==` and `&lt;`
+operators. One can customize this behavior by providing [customized equality comparator](extensions.html#customizationpoints/customequalitycomparison) or [customized ordering comparator](extensions.html#customizationpoints/customordering).
+
+Let's see how those tests integrates in our small test suite:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+#include <vector>
+
+TTS_CASE( "Verify basic relations" )
+{
+  std::vector<float> a{1,2,3}, b{1,2,3};
+
+  TTS_EQUAL(a, b);
+  TTS_NOT_EQUAL( true, false );
+  TTS_LESS( -1.f, 0.5 );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - Verify basic relations
+test.cpp[9] - !!SUCCESS!! - a == b evaluates as { 1 2 3 } == { 1 2 3 } as expected.
+test.cpp[10] - !!SUCCESS!! - true != false evaluates as true != false as expected.
+test.cpp[11] - !!SUCCESS!! - -1.f < 0.5 evaluates as -1 < 0.5 as expected.
+--------------------------------------------------------------------------------
+Results: 3 tests - 3/3 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## Precision Tests
+These tests are intended to compare floating points results, allowing a third parameter to
+state the admitted possible difference between the two quantities. This difference can be expressed
+in:
+
+  * ULPs --or units in the last place-- which is an indication of the number of floating
+    points values that are representable between the compared quantities (see the
+    [Precision testing](rationale.html#precisiontesting) section).
+  * A relative tolerance, that is a percentage of the reference quantity which defines a validity
+    interval around the expected value.
+  * A absolute tolerance, that is a fixed quantity which defines a validity interval around the
+    expected value.
+
+Macro                                                          | Description
+-------------------------------------------------------------- | --------------------------------------------
+[**`TTS_ULP_EQUAL`**](reference.html#tts_ulp_equal)            | Checks if two values are equal within some ULPs
+[**`TTS_IEEE_EQUAL`**](reference.html#tts_ieee_equal)          | Checks if two values are equal as IEEE 754 values[^f2]
+[**`TTS_RELATIVE_EQUAL`**](reference.html#tts_relative_equal)  | Checks if one value is not equal to another
+[**`TTS_ABSOLUTE_EQUAL`**](reference.html#tts_absolute_equal)  | Checks if one value is lesser or equal than another
+
+These macros are accessible in the `tts/tts.hpp` header file.
+
+As for the relational comparison macros, the behavior of this set of test comparison can
+customized through [a set of specific function](extensions.html#customprecisioncomparison).
+
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+TTS_CASE("ULP distance")
+{
+  auto pi   = 3.14159265358979323846;
+  auto eps  = std::numeric_limits<float>::epsilon();
+
+  TTS_ULP_EQUAL('A'  , 80LL                   , 15.         );
+  TTS_ULP_EQUAL( 1.f , 1.f+eps                , 0.5         );
+  TTS_ULP_EQUAL( pi  , static_cast<float>(pi) , 9.84293e+07 );
+  TTS_ULP_EQUAL( 1.  , short{1}               , 0.          );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - ULP distance
+test.cpp[9] - !!SUCCESS!! - 'A' == 80LL evaluates as 65 == 80 within 7.5 ULP when 15 ULP was expected.
+test.cpp[10] - !!SUCCESS!! - 1.f == 1.f+eps evaluates as 1 == 1 within 0.5 ULP when 0.5 ULP was expected.
+test.cpp[11] - !!SUCCESS!! - pi == static_cast<float>(pi) evaluates as 3.1 == 3.1 within 9.84e+07 ULP when 9.84e+07 ULP was expected.
+test.cpp[12] - !!SUCCESS!! - 1. == short{1} evaluates as 1 == 1 within 0 ULP when 0 ULP was expected.
+--------------------------------------------------------------------------------
+Results: 4 tests - 4/4 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## Sequence Tests
+Another common use-case often consists in comparing two series of values. Additional macros are
+provided for these use-cases. They perform element-wise comparison of values and also detects size
+mismatch in the series. If an error occurs, a summary of incorrect values with their position and
+source of error is reported.
+
+Macro                                                                 | Description
+--------------------------------------------------------------------- | ----------------------------------------------------------
+[**`TTS_ALL_ULP_EQUAL`**](reference.html#tts_all_ulp_equal)           | Checks if two sequences are equal within an ULP distance
+[**`TTS_ALL_IEEE_EQUAL`**](reference.html#tts_all_ieee_equal)         | Checks if two sequences are equal within 0 ULP
+[**`TTS_ALL_RELATIVE_EQUAL`**](reference.html#tts_all_relative_equal) | Checks if two sequences are equal within a percentage
+[**`TTS_ALL_EQUAL`**](reference.html#tts_all_equal)                   | Checks if two sequences are equal
+[**`TTS_ALL_ABSOLUTE_EQUAL`**](reference.html#tts_all_absolute_equal) | Checks if two sequences are equal within an absolute value
+
+These macros are accessible in the `tts/tts.hpp` header file.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+TTS_CASE("Absolute distance between sequences")
+{
+  std::vector<float> a{1.f,1.1f,0.9f,1.3f};
+  std::vector<float> b{1.f,1.f,1.f,1.f};
+
+  TTS_ALL_ABSOLUTE_EQUAL(a, b, .4);
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - Absolute distance between sequences
+test.cpp[9] - !!SUCCESS!! - a == b evaluates within 0.4 unit for all values.
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+## Runtime Error Tests
+Those tests check if a given expression exhibit a given runtime behavior with respect
+to exceptions. Expression can be tested for being able to throw or not. Note that those
+test macros requires the exception to be detected to inherits from `std::exception`.
+
+Macro                                             | Description
+------------------------------------------------  | ------------------------------------------------------------------
+[**`TTS_THROW`**](reference.html#tts_throw)       | Checks if a given expression throws an exception of a given type
+[**`TTS_NO_THROW`**](reference.html#tts_no_throw) | Checks if a given expression does not throw
+
+These macros are accessible in the `tts/tts.hpp` file.
+
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+struct some_exception_type : std::exception {};
+
+void foo() { throw some_exception_type(); }
+void bar() noexcept { }
+
+TTS_CASE( "Check that we can handle exceptions" )
+{
+  TTS_THROW( foo(), some_exception_type );
+  TTS_NO_THROW( bar() );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - Check that we can handle exceptions
+test.cpp[11] - !!SUCCESS!! - foo() throws: some_exception_type as expected.
+test.cpp[12] - !!SUCCESS!! - bar() does not throw as expected.
+--------------------------------------------------------------------------------
+Results: 2 tests - 2/2 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+## Type Related Tests
+Those tests check if a given type or type of expression is verify some relation with another types
+or some general types requirements.
+
+Macro                                            | Description
+------------------------------------------------ | -----------------------------------------------------------------
+[**`TTS_TYPE_IS`**](reference.html#tts_type_is)  | Checks if two types are the same
+[**`TTS_EXPR_IS`**](reference.html#tts_expr_is)  | Checks if a given expression evaluates to a result of a given type
+
+These macros are accessible in the `tts/tts.hpp` file.
+
+Let's have a look at the expected output of such macros
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+#include <memory>
+
+TTS_CASE( "Check that types can be tested for equality" )
+{
+  TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
+};
+
+TTS_CASE( "Check that expression types can be tested for equality" )
+{
+  TTS_EXPR_IS( std::make_unique<float>(3.1415f), std::unique_ptr<float> );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ bash
+$ ./my_test --pass
+[SCENARIO] - Check that types can be tested for equality
+test.cpp[7] - !!SUCCESS!! - std::add_pointer<float const>::type evaluates as const float* as expected.
+[SCENARIO] - Check that expression types can be tested for equality
+test.cpp[12] - !!SUCCESS!! - decltype(std::make_unique<float>(3.1415f)) evaluates as std::unique_ptr<float> as expected.
+--------------------------------------------------------------------------------
+Results: 2 tests - 2/2 successes - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+## Data-set Testing
+Those tests compares the behavior of two function objects ran over data generated by Producers.
+The macro generate an histogram of ULP distance and display a summary of which values generates
+discrepancies between the two functions. The test is considered as passed if the maximum
+ULP distance measured is below a given threshold specified either at runtime or in the test
+setup.
+
+Macro                                                           | Description
+--------------------------------------------------------------- | -----------------------------------------------------------------
+[**`TTS_ULP_RANGE_CHECK`**](reference.html#tts_ulp_range_check) | Checks if two functions never differs from at most a given ULP distance.
+
+This macro is accessible in the `tts/ranges.hpp` file.
+
+Let's have a look at the expected output of this macro.
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/ranges.hpp>
+
+int ok_x  (float x) { return static_cast<int>(x); }
+int ajar_x(float x) { return static_cast<int>((int(x) % 2 == 1) ? x : x+x); }
+
+TTS_CASE( "Test simple range check" )
+{
+  TTS_ULP_RANGE_CHECK ( [](auto i, auto c) { return (100.f*i)/c; }
+                      , float, float
+                      ,  ok_x, ajar_x
+                      , 128
+                      );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+If everything goes right, the following output is to be expected:
+
+<script type="preformatted">
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+$ ./my_test --pass
+[SCENARIO] - Test simple range check
+Comparing: ok_x<float> with ajar_x<float> using [](auto i, auto c) { return (100.f*i)/c; }
+Max ULP         Count (#)       Cum. Ratio (%)  Samples
+--------------------------------------------------------------------------------
+0               2069            50.51                      Input: 0
+                                                           Found: 0
+                                                           instead of: 0
+--------------------------------------------------------------------------------
+0.5             20              51.00                      Input: 0.51
+                                                           Found: 1
+                                                           instead of: 0
+--------------------------------------------------------------------------------
+1.0             21              51.51                      Input: 2
+                                                           Found: 4
+                                                           instead of: 2
+--------------------------------------------------------------------------------
+1.5             20              52.00                      Input: 2.5
+                                                           Found: 5
+                                                           instead of: 2
+--------------------------------------------------------------------------------
+2.0             21              52.51                      Input: 4
+                                                           Found: 8
+                                                           instead of: 4
+--------------------------------------------------------------------------------
+4.0             82              54.52                      Input: 4.5
+                                                           Found: 9
+                                                           instead of: 4
+--------------------------------------------------------------------------------
+8.0             163             58.50                      Input: 8.5
+                                                           Found: 17
+                                                           instead of: 8
+--------------------------------------------------------------------------------
+16.0            328             66.50                      Input: 17
+                                                           Found: 33
+                                                           instead of: 16
+--------------------------------------------------------------------------------
+32.0            655             82.50                      Input: 33
+                                                           Found: 65
+                                                           instead of: 32
+--------------------------------------------------------------------------------
+64.0            717             100.00                     Input: 65
+                                                           Found: 129
+                                                           instead of: 64
+--------------------------------------------------------------------------------
+test.cpp[9] - !!SUCCESS!! - Expecting: ajar_x similar to ok_x within 128 ULP and found: 49.50 ULP
+--------------------------------------------------------------------------------
+Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+A full histogram of ULPs distance is displayed along with samples value for each ULP buckets.
+This test is usually interesting to map the properties of functions over an arbitrarily constructed
+range of values.
+
+----------------------------------------------------------------------------------------------------
+<!-- Shortcuts -->
+[lest]: https://github.com/martinmoene/lest
+[dawson]: https://randomascii.wordpress.com/2014/01/27/theres-only-four-billion-floatsso-test-them-all/
+
+<!-- Footnotes -->
+[^f1]: Passing `--no-color` through the [**TTS** command line interface](extensions.html#commandlineinterface) remove said colors.
+
+[^f2]: Values are IEEE equal if they're separated by exactly 0 ULP.
+
+<!-- End of Document -->
+<style class="fallback">body{visibility:hidden}</style><script>markdeepOptions={tocStyle:'none'};</script>
+<link rel="stylesheet" href="tts.css">
+<!-- Markdeep: -->
+<script src="markdeep.min.js"></script>
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>

@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_ALL_ULP_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_ALL_ULP_EQUAL(LHS,RHS,X)
+#define TTS_ALL_ULP_EQUAL(LHS,RHS,X,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -29,6 +27,7 @@ Checks if all values of two containers are within a given [ULP distance](rationa
 :
     - `LHS`, `RHS`:  Sequences to compare
     - `X`:  Maximal ULPs acceptable for passing the test
+    - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
@@ -48,7 +47,7 @@ TTS_CASE("ULP distance between sequences")
 
   TTS_ALL_ULP_EQUAL(a  , b   , 1.5);
   TTS_ALL_ULP_EQUAL(s  , 1.f , 1.5);
-  TTS_ALL_ULP_EQUAL(1.f, s   , 1.5);
+  TTS_ALL_ULP_EQUAL(1.f, s   , 1.5, REQUIRED);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

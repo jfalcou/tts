@@ -1,8 +1,6 @@
 <!--
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
  -->
 
@@ -15,7 +13,7 @@ TTS_ALL_RELATIVE_EQUAL
 
 <script type="preformatted">
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
-#define TTS_ALL_RELATIVE_EQUAL(LHS,RHS,X)
+#define TTS_ALL_RELATIVE_EQUAL(LHS,RHS,X,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>
 
@@ -29,6 +27,7 @@ case the test will check the container parameter's size is 1.
 :
     - `LHS`, `RHS`:  Sequences to compare
     - `X`:  Maximal percentage acceptable for passing the test
+    - `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
 **Example:**
 
@@ -46,7 +45,7 @@ TTS_CASE("Relative distance between sequences")
 
   TTS_ALL_RELATIVE_EQUAL(a  , b   , 25);
   TTS_ALL_RELATIVE_EQUAL(s  , 1.f , 25);
-  TTS_ALL_RELATIVE_EQUAL(1.f, s   , 25);
+  TTS_ALL_RELATIVE_EQUAL(1.f, s   , 25, REQUIRED);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </script>

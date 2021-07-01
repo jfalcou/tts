@@ -1,9 +1,7 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
@@ -15,4 +13,4 @@ TTS_CASE("Absolute distance between sequences")
   std::vector<float> b{1.f,1.f,1.f,1.f};
 
   TTS_ALL_ABSOLUTE_EQUAL(a, b, .4);
-}
+};

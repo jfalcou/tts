@@ -1,9 +1,7 @@
 //==================================================================================================
 /**
   TTS - Tiny Test System
-  Copyright 2020 Joel FALCOU
-
-  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+  Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: MIT
 **/
 //==================================================================================================
@@ -16,4 +14,4 @@ TTS_CASE("IEEE equality for sequences")
   std::vector<float> vx{x,x,x,x};
 
   TTS_ALL_IEEE_EQUAL(vx,vx);
-}
+};
