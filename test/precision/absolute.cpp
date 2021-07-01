@@ -14,7 +14,7 @@ TTS_CASE("Absolute distance")
 };
 
 TTS_CASE_TPL(  "Absolute distance between floating point"
-            , (tts::types<double,float>{})
+            , double, float
             )
 <typename T>(::tts::type<T>)
 {
@@ -55,9 +55,8 @@ TTS_CASE( "Absolute distance between boolean" )
 };
 
 TTS_CASE_TPL(  "Absolute distance between integers"
-            , (tts::types < std::uint8_t,std::uint16_t,std::uint32_t,std::uint64_t
-                          , std::int8_t ,std::int16_t ,std::int32_t ,std::int64_t
-                          >{})
+            , std::uint8_t,std::uint16_t,std::uint32_t,std::uint64_t
+            , std::int8_t ,std::int16_t ,std::int32_t ,std::int64_t
             )
 <typename T>(::tts::type<T>)
 {

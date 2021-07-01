@@ -29,9 +29,8 @@ TTS_CASE( "ULP distance between boolean" )
 };
 
 TTS_CASE_TPL(  "ULP distance between integers"
-            , (tts::types < std::uint8_t,std::uint16_t,std::uint32_t,std::uint64_t
-                          , std::int8_t ,std::int16_t ,std::int32_t ,std::int64_t
-                          >{})
+            , std::uint8_t,std::uint16_t,std::uint32_t,std::uint64_t
+            , std::int8_t ,std::int16_t ,std::int32_t ,std::int64_t
             )
 <typename T>(::tts::type<T>)
 {
@@ -42,7 +41,7 @@ TTS_CASE_TPL(  "ULP distance between integers"
   TTS_ULP_EQUAL(b, a, 5.);
 };
 
-TTS_CASE_TPL(  "ULP distance between floating points" , (tts::types<double, float>{}) )
+TTS_CASE_TPL(  "ULP distance between floating points" , double, float )
 <typename T>(::tts::type<T>)
 {
   T a{1};
