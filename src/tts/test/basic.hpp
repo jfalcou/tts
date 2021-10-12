@@ -13,50 +13,48 @@
 #include <tts/engine/logger.hpp>
 
 #define TTS_EXPECT_IMPL(EXPR,FAILURE)                                                               \
-[&]()                                                                                               \
-{                                                                                                   \
-  ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                    \
-  if(tts_var_d)                                                                                     \
+::tts::logger{}.check                                                                               \
+( TTS_DECOMPOSE(EXPR)                                                                               \
+, [](tts::result const& res)                                                                        \
   {                                                                                                 \
     TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
                             << " evaluates as " << ::tts::green                                     \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " as expected.");                                    \
-    return ::tts::logger{false};                                                                    \
+    return false;                                                                                   \
   }                                                                                                 \
-  else                                                                                              \
+, [](tts::result const& res)                                                                        \
   {                                                                                                 \
     FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR)  << tts::reset                      \
                             << " but " << ::tts::red                                                \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " occured instead.");                                \
-    return ::tts::logger{::tts::verbose_status};                                                    \
+    return ::tts::verbose_status;                                                                   \
   }                                                                                                 \
-}()
+)                                                                                                   \
 /**/
 
 #define TTS_CONSTEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                     \
-[&]()                                                                                               \
-{                                                                                                   \
-  ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                    \
-  constexpr auto evaluation = std::bool_constant<(EXPR)>::value;                                    \
-  if(evaluation)                                                                                    \
+::tts::logger{}.check                                                                               \
+( TTS_DECOMPOSE(EXPR)                                                                               \
+, [](auto const&) { return std::bool_constant<(EXPR)>::value; }                                     \
+, [](::tts::result const& res)                                                                      \
   {                                                                                                 \
     TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
                             << " evaluates as " << ::tts::green                                     \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " at compile-time as expected.");                    \
-    return ::tts::logger{false};                                                                    \
+    return false;                                                                                   \
   }                                                                                                 \
-  else                                                                                              \
+, [](tts::result const& res)                                                                        \
   {                                                                                                 \
     FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR)  << tts::reset                      \
                             << " but " << ::tts::red                                                \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " occured at compile-time instead.");                \
-    return ::tts::logger{::tts::verbose_status};                                                    \
+    return ::tts::verbose_status;                                                                   \
   }                                                                                                 \
-}()
+)                                                                                                   \
 /**/
 
 #define TTS_EXPECT(EXPR, ...)     TTS_EXPECT_ ## __VA_ARGS__ ( EXPR )
@@ -68,52 +66,50 @@
 #define TTS_CONSTEXPR_EXPECT_REQUIRED(EXPR) TTS_CONSTEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 
 #define TTS_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                           \
-[&]()                                                                                               \
-{                                                                                                   \
-  ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                    \
-  if(tts_var_d)                                                                                     \
+::tts::logger{}.check                                                                               \
+( TTS_DECOMPOSE(EXPR)                                                                               \
+, [](::tts::result res)                                                                             \
   {                                                                                                 \
     FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR) << tts::reset                       \
                             << " to not evaluate to " << ::tts::red                                 \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " but occured anyway."                               \
                             );                                                                      \
-    return ::tts::logger{::tts::verbose_status};                                                    \
+    return ::tts::verbose_status;                                                                   \
   }                                                                                                 \
-  else                                                                                              \
+, [](::tts::result res)                                                                             \
   {                                                                                                 \
     TTS_PASS ( ::tts::green << TTS_STRING(EXPR) << tts::reset                                       \
                             << " does not evaluate to " << ::tts::green                             \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " as expected.");                                    \
-    return ::tts::logger{false};                                                                    \
+    return false;                                                                                   \
   }                                                                                                 \
-}()
+)                                                                                                   \
 /**/
 
 #define TTS_CONSTEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                 \
-[&]()                                                                                               \
-{                                                                                                   \
-  ::tts::result tts_var_d = TTS_DECOMPOSE(EXPR);                                                    \
-  constexpr auto evaluation = std::bool_constant<(EXPR)>::value;                                    \
-  if(evaluation)                                                                                    \
+::tts::logger{}.check                                                                               \
+( TTS_DECOMPOSE(EXPR)                                                                               \
+, [](auto const&) { return std::bool_constant<(EXPR)>::value; }                                     \
+, [](tts::result const& res)                                                                        \
   {                                                                                                 \
     FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR) << tts::reset                       \
                             << " to not evaluate to " << ::tts::red                                 \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " at compile-time but occured anyway."               \
                             );                                                                      \
-    return ::tts::logger{::tts::verbose_status};                                                    \
+    return ::tts::verbose_status;                                                                   \
   }                                                                                                 \
-  else                                                                                              \
+, [](tts::result const& res)                                                                        \
   {                                                                                                 \
     TTS_PASS ( ::tts::green << TTS_STRING(EXPR) << tts::reset                                       \
                             << " does not evaluate to " << ::tts::green                             \
-                            << tts_var_d.lhs << " " << tts_var_d.op << " " << tts_var_d.rhs         \
+                            << res.lhs << " " << res.op << " " << res.rhs                           \
                             << ::tts::reset << " at compile-time as expected.");                    \
-    return ::tts::logger{false};                                                                    \
+    return false;                                                                                   \
   }                                                                                                 \
-}()
+)                                                                                                   \
 /**/
 
 #define TTS_EXPECT_NOT(EXPR, ...)     TTS_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
