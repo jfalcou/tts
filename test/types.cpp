@@ -28,7 +28,7 @@ TTS_CASE( "Check that expression types can be tested for equality" )
 };
 
 TTS_CASE_TPL( "Check interaction with templates"
-            , int,float,char,void*
+            , TTS_NUMERIC_TYPES, void*
             )
 <typename Type>(::tts::type<Type>)
 {
