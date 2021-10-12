@@ -9,8 +9,9 @@
 
 TTS_CASE( "Check that expectation can be met" )
 {
-  int a = 43, b = 69;
+  auto[a,b] = std::make_pair(43,69);
 
+  TTS_EXPECT(a);
   TTS_EXPECT(a == a);
   TTS_EXPECT(a != b);
   TTS_EXPECT(a <  b);
@@ -20,6 +21,7 @@ TTS_CASE( "Check that expectation can be met" )
   TTS_EXPECT(a && b);
   TTS_EXPECT(a || b);
 
+  TTS_EXPECT(a     , REQUIRED);
   TTS_EXPECT(a == a, REQUIRED);
   TTS_EXPECT(a != b, REQUIRED);
   TTS_EXPECT(a <  b, REQUIRED);

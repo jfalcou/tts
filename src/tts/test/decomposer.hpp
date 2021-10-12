@@ -22,7 +22,7 @@ namespace tts
   {
     bool        status;
     std::string lhs,op,rhs;
-    explicit operator bool() { return status; }
+    explicit operator bool() const { return status; }
   };
 
   // Carry value around up to display point inside test macro
@@ -33,7 +33,8 @@ namespace tts
     lhs_expr(lhs_expr const &)            = delete;
     lhs_expr &operator=(lhs_expr const &) = delete;
 
-    operator result() { return result {bool(lhs),as_string(bool(lhs)),"",""}; }
+    operator result() const { return result {bool(lhs),as_string(bool(lhs)),"",""}; }
+    explicit operator bool() const { return bool(lhs); }
 
     template<typename R> result operator &&(R const &rhs)
     {

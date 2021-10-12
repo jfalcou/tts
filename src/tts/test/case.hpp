@@ -41,7 +41,7 @@ namespace tts::detail
 // Test case registration macros
 //==================================================================================================
 #define TTS_CASE_TPL(DESCRIPTION,...)                                                               \
-inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
+static bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
 [](auto tests)                                                                                      \
   {                                                                                                 \
     auto const single_test = [=]<typename T>( ::tts::type<T> )                                      \
@@ -66,7 +66,7 @@ inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{
 // Test case registration macros
 //==================================================================================================
 #define TTS_CASE(...)                                                                               \
-inline bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
+static bool const TTS_CAT(register_,TTS_FUNCTION) =  ::tts::detail::lambda_test{                    \
 [](auto tests)                                                                                      \
   {                                                                                                 \
     std::ostringstream title;                                                                       \
