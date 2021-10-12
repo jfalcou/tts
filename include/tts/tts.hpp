@@ -459,6 +459,15 @@ namespace tts::detail
     for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                  \
 
 #define TTS_AND_THEN(...) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), __VA_ARGS__)
+#include <cstdint>
+#define TTS_SIGNED_INTEGRAL_TYPES   std::int8_t , std::int16_t , std::int32_t , std::int64_t
+#define TTS_UNSIGNED_INTEGRAL_TYPES std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t
+#define TTS_INTEGRAL_TYPES TTS_SIGNED_INTEGRAL_TYPES, TTS_UNSIGNED_INTEGRAL_TYPES
+#define TTS_IEEE_TYPES              float, double
+#define TTS_SIGNED_NUMERIC_TYPES    TTS_IEEE_TYPES, TTS_SIGNED_INTEGRAL_TYPES
+#define TTS_UNSIGNED_NUMERIC_TYPES  TTS_UNSIGNED_INTEGRAL_TYPES
+#define TTS_NUMERIC_TYPES           TTS_IEEE_TYPES, TTS_INTEGRAL_TYPES
+#define TTS_ALL_TYPES               TTS_NUMERIC_TYPES, char, bool
 #include <string_view>
 #include <ostream>
 #include <sstream>
