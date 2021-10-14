@@ -12,25 +12,36 @@
 #include <tts/tools/preprocessor.hpp>
 #include <tts/engine/logger.hpp>
 
+namespace tts
+{
+  template<typename Type, typename Expected>
+  struct type_result
+  {
+    std::string expr, type, expected;
+    explicit operator bool() const { return std::is_same_v<Type, Expected>; }
+  };
+}
+
 #define TTS_TYPE_IS_IMPL(T, TYPE, FAILURE)                                                          \
 ::tts::logger{}.check                                                                               \
-( ::tts::result{}                                                                                   \
-, [](auto const&) { return std::is_same_v<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(T)>; }         \
+( ::tts::type_result<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(T)>                                 \
+  { TTS_STRING(TTS_REMOVE_PARENS(T))                                                                \
+  , std::string{tts::typename_<TTS_REMOVE_PARENS(T)>}                                               \
+  , std::string{tts::typename_<TTS_REMOVE_PARENS(TYPE)>}                                            \
+  }                                                                                                 \
 , [](auto const& res)                                                                               \
   {                                                                                                 \
-    TTS_PASS( ::tts::green  << TTS_STRING(TTS_REMOVE_PARENS(T)) << tts::reset                       \
-                            << " evaluates as " << ::tts::green                                     \
-                            << tts::typename_<TTS_REMOVE_PARENS(TYPE)>                              \
+    TTS_PASS( ::tts::green  << res.expr << tts::reset                                               \
+                            << " evaluates as " << ::tts::green << res.type                         \
                             << ::tts::reset << " as expected.");                                    \
     return false;                                                                                   \
   }                                                                                                 \
 , [](auto const& res)                                                                               \
   {                                                                                                 \
-    FAILURE( ::tts::green  << TTS_STRING(TTS_REMOVE_PARENS(T)) << tts::reset                        \
-                            << " evaluates as " << ::tts::red                                       \
-                            << tts::typename_<TTS_REMOVE_PARENS(T)>                                 \
+    FAILURE( ::tts::green  << res.expr << tts::reset                                                \
+                            << " evaluates as " << ::tts::red << res.type                           \
                             << ::tts::reset << " instead of "                                       \
-                            << ::tts::green << tts::typename_<TTS_REMOVE_PARENS(TYPE)>              \
+                            << ::tts::green << res.expected                                         \
             );                                                                                      \
     return ::tts::verbose_status;                                                                   \
   }                                                                                                 \

@@ -36,8 +36,7 @@
 
 #define TTS_CONSTEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                     \
 ::tts::logger{}.check                                                                               \
-( TTS_DECOMPOSE(EXPR)                                                                               \
-, [](auto const&) { return std::bool_constant<(EXPR)>::value; }                                     \
+( ((void)(std::bool_constant<(EXPR)>::value), TTS_DECOMPOSE(EXPR))                                  \
 , [](::tts::result const& res)                                                                      \
   {                                                                                                 \
     TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
@@ -90,8 +89,7 @@
 
 #define TTS_CONSTEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                 \
 ::tts::logger{}.check                                                                               \
-( TTS_DECOMPOSE(EXPR)                                                                               \
-, [](auto const&) { return std::bool_constant<(EXPR)>::value; }                                     \
+( ((void)(std::bool_constant<(EXPR)>::value), TTS_DECOMPOSE(EXPR))                                  \
 , [](tts::result const& res)                                                                        \
   {                                                                                                 \
     FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR) << tts::reset                       \
