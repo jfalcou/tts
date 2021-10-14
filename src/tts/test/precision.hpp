@@ -27,10 +27,10 @@ namespace tts
 }
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, FAILURE)                                        \
 ::tts::logger{}.check                                                                               \
-( []<typename M>(auto eval_a, auto eval_b, M maxi)                                                  \
+( []<typename TTS_MAXI>(auto eval_a, auto eval_b, TTS_MAXI maxi)                                    \
   {                                                                                                 \
     auto r = FUNC(eval_a,eval_b);                                                                   \
-    return  ::tts::precision_result<decltype(r),decltype(maxi)>                                     \
+    return  ::tts::precision_result<decltype(r),TTS_MAXI>                                           \
             { TTS_STRING(LHS), TTS_STRING(RHS), ::tts::as_string(eval_a), ::tts::as_string(eval_b)  \
             , r, maxi, r <= maxi                                                                    \
             };                                                                                      \
