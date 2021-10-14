@@ -17,12 +17,12 @@ TTS_CASE( "Check correctness of less-equal comparison tests" )
   TTS_LESS_EQUAL(a,a);
 };
 
-constexpr int f() { return 45; }
+constexpr int f_less_equal() { return 45; }
 
 TTS_CASE( "Check correctness of constexpr less or equal than comparison tests" )
 {
-  TTS_CONSTEXPR_LESS_EQUAL(17,f());
-  TTS_CONSTEXPR_LESS_EQUAL(45,f());
+  TTS_CONSTEXPR_LESS_EQUAL(17,f_less_equal());
+  TTS_CONSTEXPR_LESS_EQUAL(45,f_less_equal());
 };
 
 #include "foo.hpp"

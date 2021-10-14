@@ -15,11 +15,11 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
   TTS_LESS(a,b);
 };
 
-constexpr int f() { return 45; }
+constexpr int f_lesser() { return 45; }
 
 TTS_CASE( "Check correctness of constexpr less-than comparison tests" )
 {
-  TTS_CONSTEXPR_LESS(17,f());
+  TTS_CONSTEXPR_LESS(17,f_lesser());
 };
 
 #include "foo.hpp"
