@@ -9,8 +9,6 @@
 
 #include <string_view>
 #include <ostream>
-#include <sstream>
-#include <tts/tools/color.hpp>
 
 namespace tts
 {
@@ -37,9 +35,7 @@ namespace tts
 
     friend std::ostream& operator<<(std::ostream& os, source_location const& s)
     {
-      return os << tts::bold << tts::blue << s.filename()
-                << tts::white << "[" << tts::blue << s.line() << tts::white << "]"
-                << tts::reset;
+      return os << "[" << s.filename() << ":" << s.line() << "]";
     }
 
     private:

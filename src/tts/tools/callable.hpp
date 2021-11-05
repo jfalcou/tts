@@ -11,18 +11,14 @@
 
 namespace tts
 {
-  template <typename> struct callable;
-
-  template <typename Return, typename... Params>
-  struct callable<Return(Params...)>
+  struct callable
   {
-  public:
+    public:
 
-    using signature_t = Return(*)(void*, Params...);
-    using deleter_t   = void(*)(void*);
+    using signature_t = void(*)(void*);
 
     signature_t invoker = {}; // Type erased invoke call functions
-    deleter_t   cleanup = {}; // Type erased cleanup of payload
+    signature_t cleanup = {}; // Type erased cleanup of payload
     void*       payload = {}; // Function + function state
 
     constexpr callable() = default;
@@ -50,13 +46,15 @@ namespace tts
     constexpr callable& operator=(const callable&)  = delete;
     constexpr callable& operator=(callable&&)       = delete;
 
-    constexpr Return operator()(Params... args)       { return invoker(payload, args...); }
-    constexpr Return operator()(Params... args) const { return invoker(payload, args...); }
+    constexpr void operator()()       { return invoker(payload); }
+    constexpr void operator()() const { return invoker(payload); }
+
+    explicit constexpr operator bool() const { return payload != nullptr; }
 
     private:
 
     template <typename T>
-    static Return invoke(void* data, Params... args) { return (*static_cast<T*>(data))(args...); }
+    static void invoke(void* data) { return (*static_cast<T*>(data))(); }
 
     template <typename T>
     static void destroy(void* data) { delete static_cast<T*>(data); }

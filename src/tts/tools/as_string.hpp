@@ -45,14 +45,15 @@ namespace tts
     }
     else if constexpr( std::floating_point<T> )
     {
-      auto precision = ::tts::arguments.value({"--precision"}, 2);
+      auto precision = ::tts::arguments.value({"--precision"}, -1);
       bool hexmode   = ::tts::arguments[{"-x","--hex"}];
       bool scimode   = ::tts::arguments[{"-s","--scientific"}];
 
       std::ostringstream os;
 
-      os << std::setprecision(precision);
-            if(hexmode) os << std::hexfloat << e << std::defaultfloat;
+      if(precision != -1 ) os << std::setprecision(precision);
+
+            if(hexmode) os << std::hexfloat   << e << std::defaultfloat;
       else  if(scimode) os << std::scientific << e << std::defaultfloat;
       else              os << e;
 

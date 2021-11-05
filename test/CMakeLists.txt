@@ -29,20 +29,10 @@ make_unit ( "relation"      relation/main.cpp
                             relation/less_equal.cpp
                             relation/not_equal.cpp
           )
-make_unit ( "sequence"      sequence/main.cpp
-                            sequence/absolute.cpp
-                            sequence/equal.cpp
-                            sequence/ieee.cpp
-                            sequence/relative.cpp
-                            sequence/ulp.cpp
-)
 
-make_unit ( "display"       display.cpp       )
-make_unit ( "exceptions"    exceptions.cpp    )
-make_unit ( "failure"       failure.cpp       )
-make_unit ( "infos.fail"    infos/fail.cpp    )
-make_unit ( "infos.invalid" infos/invalid.cpp )
-make_unit ( "infos.pass"    infos/pass.cpp    )
-make_unit ( "range"         range.cpp         )
-make_unit ( "sections"      sections.cpp      )
-make_unit ( "types"         types.cpp         )
+make_unit ( "display"       display.cpp     )
+make_unit ( "exceptions"    exceptions.cpp  )
+make_unit ( "failure"       failure.cpp     )
+make_unit ( "infos"         infos.cpp       )
+make_unit ( "range"         range.cpp       )
+make_unit ( "types"         types.cpp       )

@@ -8,66 +8,38 @@
 #pragma once
 
 #include <tts/test/info.hpp>
-#include <tts/test/decomposer.hpp>
 #include <tts/tools/preprocessor.hpp>
-#include <tts/engine/logger.hpp>
 #include <tts/engine/precision.hpp>
+#include <tts/engine/logger.hpp>
 
-namespace tts
-{
-  template<typename T, typename U> struct precision_result
-  {
-    std::string lhs,rhs;
-    std::string lhs_val,rhs_val;
-    T           value;
-    U           maxi;
-    bool        status;
-    explicit operator bool() const { return status; }
-  };
-}
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, FAILURE)                                        \
-::tts::logger{}.check                                                                               \
-( []<typename TTS_MAXI>(auto eval_a, auto eval_b, TTS_MAXI maxi)                                    \
+[&]()                                                                                               \
+{                                                                                                   \
+  auto eval_a = (LHS);                                                                              \
+  auto eval_b = (RHS);                                                                              \
+  auto r      = FUNC (eval_a,eval_b);                                                               \
+  auto& fmt_n = N<1000 ? std::defaultfloat : std::scientific;                                       \
+  auto& fmt_r = r<1000 ? std::defaultfloat : std::scientific;                                       \
+                                                                                                    \
+  if(r <= N)                                                                                        \
   {                                                                                                 \
-    auto r = FUNC(eval_a,eval_b);                                                                   \
-    return  ::tts::precision_result<decltype(r),TTS_MAXI>                                           \
-            { TTS_STRING(LHS), TTS_STRING(RHS), ::tts::as_string(eval_a), ::tts::as_string(eval_b)  \
-            , r, maxi, r <= maxi                                                                    \
-            };                                                                                      \
-  }(LHS,RHS,N)                                                                                      \
-, [](auto const& res)                                                                               \
-  {                                                                                                 \
-    auto& fmt_n = res.maxi  < 1000  ? std::defaultfloat : std::scientific;                          \
-    auto& fmt_r = res.value < 1000  ? std::defaultfloat : std::scientific;                          \
-    TTS_PASS( ::tts::green  << res.lhs << " == " << res.rhs << tts::reset                           \
-                            << " evaluates as " << ::tts::green                                     \
-                            << res.lhs_val << " == " << res.rhs_val                                 \
-                            << " within " << std::setprecision(2) << fmt_r                          \
-                            << ::tts::green  << res.value << ::tts::reset << std::defaultfloat      \
-                            << " " << UNIT << ::tts::reset << " when "                              \
-                            << std::setprecision(2) << fmt_n                                        \
-                            << ::tts::green  << res.maxi << ::tts::reset << std::defaultfloat       \
-                            << " " << UNIT << " was expected."                                      \
-                            );                                                                      \
-    return false;                                                                                   \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
   }                                                                                                 \
-, [](auto const& res)                                                                               \
+  else                                                                                              \
   {                                                                                                 \
-    auto& fmt_n = res.maxi  < 1000  ? std::defaultfloat : std::scientific;                          \
-    auto& fmt_r = res.value < 1000  ? std::defaultfloat : std::scientific;                          \
-    FAILURE ( "Expected: "  << ::tts::green << res.lhs << " == " << res.rhs                         \
-                            << tts::reset << " but " << ::tts::red                                  \
-                            << res.lhs_val << " == " << res.rhs_val                                 \
+    FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
+                            << " but "                                                              \
+                            << ::tts::as_string(eval_a) << " == " << ::tts::as_string(eval_b)       \
                             << " within " << std::setprecision(2) << fmt_r                          \
-                            << ::tts::red  << res.value << ::tts::reset << std::defaultfloat        \
-                            << " " << UNIT << ::tts::reset << " when "                              \
+                            << r << std::defaultfloat                                               \
+                            << " " << UNIT << " when "                                              \
                             << std::setprecision(2) << fmt_n                                        \
-                            << ::tts::green  << res.maxi << ::tts::reset << std::defaultfloat       \
+                            << N << std::defaultfloat                                               \
                             << " " << UNIT << " was expected."                                      \
             );                                                                                      \
-    return ::tts::verbose_status;                                                                   \
+    return ::tts::logger{};                                                                         \
   }                                                                                                 \
-)                                                                                                   \
+}()
 /**/
 
 #define TTS_PRECISION(L,R,N,U,F, ...)     TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F)

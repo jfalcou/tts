@@ -7,42 +7,31 @@
 //==================================================================================================
 #pragma once
 
-#include <tts/tools/color.hpp>
 #include <iostream>
 
 namespace tts
 {
   struct logger
   {
-    logger(bool d = false) : display(d), done(false) {}
+    logger(bool status = true) : display(status), done(false) {}
 
-    template<typename Result, typename Validator>
-    logger& check(Result const& res, Validator validate, auto pass, auto fail)
-    {
-      display = validate(res) ? pass(res) : fail(res);
-      return *this;
-    }
-
-    template<typename Result>
-    logger& check(Result const& res, auto pass, auto fail)
-    {
-      return check(res, [](auto const& r) { return static_cast<bool>(r); }, pass, fail);
-    }
-
-    template<typename Data>
-    logger& operator<<(Data const& d)
+    template<typename Data> logger& operator<<(Data const& d)
     {
       if(display)
       {
         if(!done)
         {
-          std::cout << tts::yellow << ">> Additonnal information: " << ::tts::reset << "\n";
+          std::cout << ">> Additionnal information: \n";
           done = true;
         }
+
         std::cout << d;
       }
       return *this;
     }
+
+    ~logger() { if(display && done) std::cout << "\n"; }
+
     bool display, done;
   };
 }

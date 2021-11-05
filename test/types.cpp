@@ -21,14 +21,10 @@ TTS_CASE( "Check that expression types can be tested for equality" )
   TTS_EXPR_IS( &d + 5 , double*   );
   TTS_EXPR_IS( std::move(d)  , double&&  );
   TTS_EXPR_IS( std::swap(d,d), void      );
-
-  TTS_EXPR_IS( &d + 5         , double* , REQUIRED);
-  TTS_EXPR_IS( std::move(d)   , double&&, REQUIRED);
-  TTS_EXPR_IS( std::swap(d,d) , void    , REQUIRED);
 };
 
 TTS_CASE_TPL( "Check interaction with templates"
-            , TTS_NUMERIC_TYPES, void*
+            , int,float,char,void*
             )
 <typename Type>(::tts::type<Type>)
 {

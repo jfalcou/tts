@@ -8,32 +8,28 @@
 #pragma once
 
 #include <tts/test/info.hpp>
-#include <tts/test/decomposer.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/engine/logger.hpp>
 
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                    \
-::tts::logger{}.check                                                                               \
-( ::tts::result{}                                                                                   \
-, [&](auto const&) { try { EXPR; } catch(EXCEPTION&) { return true; } catch(...) {} return false; } \
-, [](auto const& res)                                                                               \
+[&]()                                                                                               \
+{                                                                                                   \
+  bool tts_caught = false;                                                                          \
+                                                                                                    \
+  try                 { EXPR; }                                                                     \
+  catch(EXCEPTION&  ) { tts_caught = true; }                                                        \
+  catch(...)          { }                                                                           \
+                                                                                                    \
+  if(tts_caught)                                                                                    \
   {                                                                                                 \
-    TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
-                            << " throws: " << ::tts::green                                          \
-                            << TTS_STRING(EXCEPTION)                                                \
-                            << ::tts::reset << " as expected."                                      \
-            );                                                                                      \
-    return false;                                                                                   \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
   }                                                                                                 \
-, [](auto const& res)                                                                               \
+  else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR)  << tts::reset                      \
-                            << " failed to throw " << ::tts::red                                    \
-                            << TTS_STRING(EXCEPTION)                                                \
-            );                                                                                      \
-    return ::tts::verbose_status;                                                                   \
+    FAILURE ( "Expected: " << TTS_STRING(EXPR) << " failed to throw " << TTS_STRING(EXCEPTION) );   \
+    return ::tts::logger{};                                                                         \
   }                                                                                                 \
-)                                                                                                   \
+}()
 /**/
 
 #define TTS_THROW(EXPR, EXCEPTION, ...)     TTS_THROW_ ## __VA_ARGS__ ( EXPR, EXCEPTION )
@@ -41,24 +37,23 @@
 #define TTS_THROW_REQUIRED(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION,TTS_FATAL)
 
 #define TTS_NO_THROW_IMPL(EXPR,FAILURE)                                                             \
-::tts::logger{}.check                                                                               \
-( ::tts::result{}                                                                                   \
-, [&](auto const&) { try { EXPR; } catch(...) { return false; } return true; }                      \
-, [](auto const& res)                                                                               \
+[&]()                                                                                               \
+{                                                                                                   \
+  bool tts_caught = false;                                                                          \
+                                                                                                    \
+  try        { EXPR; }                                                                              \
+  catch(...) { tts_caught = true; }                                                                 \
+                                                                                                    \
+  if(!tts_caught)                                                                                   \
   {                                                                                                 \
-    TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
-                            << " does not throw as expected."                                       \
-            );                                                                                      \
-    return false;                                                                                   \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
   }                                                                                                 \
-, [](auto const& res)                                                                               \
+  else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expected: "  << ::tts::red << TTS_STRING(EXPR)  << tts::reset                        \
-                            << " throws unexpectedly."                                              \
-            );                                                                                      \
-    return ::tts::verbose_status;                                                                   \
+    FAILURE ( "Expected: "  << TTS_STRING(EXPR) << " throws unexpectedly." );                       \
+    return ::tts::logger{};                                                                         \
   }                                                                                                 \
-)                                                                                                   \
+}()
 /**/
 
 #define TTS_NO_THROW(EXPR, ...)     TTS_NO_THROW_ ## __VA_ARGS__ ( EXPR )

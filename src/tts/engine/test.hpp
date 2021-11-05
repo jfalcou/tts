@@ -8,21 +8,24 @@
 #pragma once
 
 #include <tts/tools/callable.hpp>
-#include <string>
 #include <vector>
+#include <string>
 
 namespace tts::detail
 {
+  inline std::string current_test = "";
+
   struct test
   {
-    using behavior_t = tts::callable<void()>;
-
-    void operator()()  { behaviour(); }
-
+    void operator()()
+    {
+      current_test = name;
+      behaviour();
+    }
     static inline bool acknowledge(test&& f);
 
-    std::string name;
-    behavior_t  behaviour;
+    std::string     name;
+    tts::callable   behaviour;
   };
 
   // Global tests suite

@@ -8,9 +8,9 @@
 #pragma once
 
 #include <tts/tools/bitcast.hpp>
-#include <cmath>
-#include <limits>
 #include <type_traits>
+#include <limits>
+#include <cmath>
 
 //==================================================================================================
 // Numerical precision tests
