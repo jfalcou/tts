@@ -40,13 +40,12 @@
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
 
 #define TTS_CONSTEXPR_RELATION(A, B, OP, T, F)                                                      \
-[&]()                                                                                               \
 {                                                                                                   \
   static_assert ( std::bool_constant<::tts::detail::OP(A,B)>::value                                 \
                 , "[TTS] - ** FAILURE** : " TTS_STRING(A) " " T " " TTS_STRING(B) " is false."      \
                 );                                                                                  \
   ::tts::global_runtime.pass();                                                                     \
-}()                                                                                                 \
+}                                                                                                   \
 /**/
 
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS)          TTS_CONSTEXPR_RELATION(LHS,RHS, eq , "==" , "!=")

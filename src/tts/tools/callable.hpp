@@ -46,15 +46,15 @@ namespace tts
     constexpr callable& operator=(const callable&)  = delete;
     constexpr callable& operator=(callable&&)       = delete;
 
-    constexpr void operator()()       { return invoker(payload); }
-    constexpr void operator()() const { return invoker(payload); }
+    constexpr void operator()()       { invoker(payload); }
+    constexpr void operator()() const { invoker(payload); }
 
     explicit constexpr operator bool() const { return payload != nullptr; }
 
     private:
 
     template <typename T>
-    static void invoke(void* data) { return (*static_cast<T*>(data))(); }
+    static void invoke(void* data) { (*static_cast<T*>(data))(); }
 
     template <typename T>
     static void destroy(void* data) { delete static_cast<T*>(data); }

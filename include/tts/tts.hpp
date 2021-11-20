@@ -63,12 +63,12 @@ namespace tts
     constexpr callable(const callable&)             = delete;
     constexpr callable& operator=(const callable&)  = delete;
     constexpr callable& operator=(callable&&)       = delete;
-    constexpr void operator()()       { return invoker(payload); }
-    constexpr void operator()() const { return invoker(payload); }
+    constexpr void operator()()       { invoker(payload); }
+    constexpr void operator()() const { invoker(payload); }
     explicit constexpr operator bool() const { return payload != nullptr; }
     private:
     template <typename T>
-    static void invoke(void* data) { return (*static_cast<T*>(data))(); }
+    static void invoke(void* data) { (*static_cast<T*>(data))(); }
     template <typename T>
     static void destroy(void* data) { delete static_cast<T*>(data); }
   };
@@ -629,13 +629,12 @@ namespace tts
 #define TTS_LESS_EQUAL(LHS, RHS, ...)     TTS_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
 #define TTS_CONSTEXPR_RELATION(A, B, OP, T, F)                                                      \
-[&]()                                                                                               \
 {                                                                                                   \
   static_assert ( std::bool_constant<::tts::detail::OP(A,B)>::value                                 \
                 , "[TTS] - ** FAILURE** : " TTS_STRING(A) " " T " " TTS_STRING(B) " is false."      \
                 );                                                                                  \
   ::tts::global_runtime.pass();                                                                     \
-}()                                                                                                 \
+}                                                                                                   \
 
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS)          TTS_CONSTEXPR_RELATION(LHS,RHS, eq , "==" , "!=")
 #define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS)      TTS_CONSTEXPR_RELATION(LHS,RHS, neq, "!=" , "==")
@@ -643,49 +642,22 @@ namespace tts
 #define TTS_CONSTEXPR_GREATER(LHS, RHS)        TTS_CONSTEXPR_RELATION(LHS,RHS, gt , ">"  , "<=")
 #define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS)     TTS_CONSTEXPR_RELATION(LHS,RHS, le , "<=" , ">" )
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS)  TTS_CONSTEXPR_RELATION(LHS,RHS, ge , ">=" , "<=")
-#define TTS_TYPE_IS_IMPL(T, TYPE, FAILURE)                                                          \
-[&]()                                                                                               \
-{                                                                                                   \
-  constexpr auto check = std::is_same_v<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(T)>;             \
-                                                                                                    \
-  if constexpr(check)                                                                               \
-  {                                                                                                 \
-    TTS_PASS( ::tts::green  << TTS_STRING(TTS_REMOVE_PARENS(T)) << tts::reset                       \
-                            << " evaluates as " << ::tts::green                                     \
-                            << tts::typename_<TTS_REMOVE_PARENS(TYPE)>                              \
-                            << ::tts::reset << " as expected.");                                    \
-    return ::tts::logger{false};                                                                    \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    FAILURE( ::tts::green  << TTS_STRING(TTS_REMOVE_PARENS(T)) << tts::reset                        \
-                            << " evaluates as " << ::tts::red                                       \
-                            << tts::typename_<TTS_REMOVE_PARENS(T)>                                 \
-                            << ::tts::reset << " instead of "                                       \
-                            << ::tts::green << tts::typename_<TTS_REMOVE_PARENS(TYPE)>              \
-            );                                                                                      \
-    return ::tts::logger{::tts::verbose_status};                                                    \
-  }                                                                                                 \
-}()
 #define TTS_TYPE_IS(TYPE, REF)                                                                      \
-[&]()                                                                                               \
 {                                                                                                   \
   static_assert ( std::is_same_v<TTS_REMOVE_PARENS(TYPE),TTS_REMOVE_PARENS(REF)>                    \
                 , "[TTS] - ** FAILURE** : " TTS_STRING(TTS_REMOVE_PARENS(TYPE))                     \
                   " is not the same as " TTS_STRING(TTS_REMOVE_PARENS(REF)) "."                     \
                 );                                                                                  \
   ::tts::global_runtime.pass();                                                                     \
-}()
+}
 #define TTS_EXPR_IS(EXPR, TYPE)                                                                     \
-[&]()                                                                                               \
 {                                                                                                   \
   static_assert ( std::is_same_v<decltype(TTS_REMOVE_PARENS(EXPR)),TTS_REMOVE_PARENS(TYPE)>         \
                 , "[TTS] - ** FAILURE** : " TTS_STRING(TTS_REMOVE_PARENS(EXPR))                     \
                   " does not evaluates to an instance of " TTS_STRING(TTS_REMOVE_PARENS(TYPE)) "."  \
                 );                                                                                  \
   ::tts::global_runtime.pass();                                                                     \
-}()                                                                                                 \
-
+}
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                    \
 [&]()                                                                                               \
 {                                                                                                   \
