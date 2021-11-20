@@ -22,7 +22,7 @@ namespace tts::detail
     void fatal()    { test_count++; failure_count++; fatal_count++; }
     void invalid()  { test_count++; invalid_count++; }
 
-    int report(int fails, int invalids) const
+    int report(std::ptrdiff_t fails, std::ptrdiff_t invalids) const
     {
       auto test_txt = test_count    > 1 ? "tests" : "test";
       auto pass_txt = success_count > 1 ? "successes" : "success";
