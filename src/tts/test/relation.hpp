@@ -16,20 +16,20 @@
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                  \
-[&]()                                                                                               \
+[&](auto&& a, auto&& b)                                                                             \
 {                                                                                                   \
-  if( ::tts::detail::OP(A,B) )                                                                      \
+  if( ::tts::detail::OP(a,b) )                                                                      \
   {                                                                                                 \
     ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                      \
-            <<  " is false because: " << ::tts::as_string(A) << " " F " " << ::tts::as_string(B)    \
+            <<  " is false because: " << ::tts::as_string(a) << " " F " " << ::tts::as_string(b)    \
             );                                                                                      \
     return ::tts::logger{};                                                                         \
   }                                                                                                 \
-}()                                                                                                 \
+}(A,B)                                                                                              \
 /**/
 
 #define TTS_EQUAL(LHS, RHS, ...)          TTS_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)

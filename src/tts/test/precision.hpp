@@ -13,10 +13,10 @@
 #include <tts/engine/logger.hpp>
 
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, FAILURE)                                        \
-[&]()                                                                                               \
+[&](auto&& lhs, auto&& rhs)                                                                         \
 {                                                                                                   \
-  auto eval_a = (LHS);                                                                              \
-  auto eval_b = (RHS);                                                                              \
+  auto eval_a = (lhs);                                                                              \
+  auto eval_b = (rhs);                                                                              \
   auto r      = FUNC (eval_a,eval_b);                                                               \
   auto& fmt_n = N<1000 ? std::defaultfloat : std::scientific;                                       \
   auto& fmt_r = r<1000 ? std::defaultfloat : std::scientific;                                       \
@@ -39,7 +39,7 @@
             );                                                                                      \
     return ::tts::logger{};                                                                         \
   }                                                                                                 \
-}()
+}(LHS,RHS)                                                                                          \
 /**/
 
 #define TTS_PRECISION(L,R,N,U,F, ...)     TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F)
