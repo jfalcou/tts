@@ -7,22 +7,21 @@
 //==================================================================================================
 #pragma once
 
-#include <tts/tools/color.hpp>
 #include <iostream>
 
 namespace tts
 {
   struct logger
   {
-    logger(bool status) : display(status), done(false) {}
+    logger(bool status = true) : display(status), done(false) {}
 
-    template<typename Data> logger& operator<<(Data&& d)
+    template<typename Data> logger& operator<<(Data const& d)
     {
       if(display)
       {
         if(!done)
         {
-          std::cout << tts::yellow << ">> Additonnal information: " << ::tts::reset << "\n";
+          std::cout << ">> Additionnal information: \n";
           done = true;
         }
 
@@ -30,6 +29,8 @@ namespace tts
       }
       return *this;
     }
+
+    ~logger() { if(display && done) std::cout << "\n"; }
 
     bool display, done;
   };

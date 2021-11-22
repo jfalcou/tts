@@ -8,7 +8,6 @@
 #pragma once
 
 #include <tts/test/info.hpp>
-#include <tts/test/decomposer.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/engine/logger.hpp>
 
@@ -23,20 +22,12 @@
                                                                                                     \
   if(tts_caught)                                                                                    \
   {                                                                                                 \
-    TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
-                            << " throws: " << ::tts::green                                          \
-                            << TTS_STRING(EXCEPTION)                                                \
-                            << ::tts::reset << " as expected."                                      \
-            );                                                                                      \
-    return ::tts::logger{false};                                                                    \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expected: "  << ::tts::green << TTS_STRING(EXPR)  << tts::reset                      \
-                            << " failed to throw " << ::tts::red                                    \
-                            << TTS_STRING(EXCEPTION)                                                \
-            );                                                                                      \
-    return ::tts::logger{::tts::verbose_status};                                                    \
+    FAILURE ( "Expected: " << TTS_STRING(EXPR) << " failed to throw " << TTS_STRING(EXCEPTION) );   \
+    return ::tts::logger{};                                                                         \
   }                                                                                                 \
 }()
 /**/
@@ -55,17 +46,12 @@
                                                                                                     \
   if(!tts_caught)                                                                                   \
   {                                                                                                 \
-    TTS_PASS( ::tts::green  << TTS_STRING(EXPR) << tts::reset                                       \
-                            << " does not throw as expected."                                       \
-            );                                                                                      \
-    return ::tts::logger{false};                                                                    \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expected: "  << ::tts::red << TTS_STRING(EXPR)  << tts::reset                        \
-                            << " throws unexpectedly."                                              \
-            );                                                                                      \
-    return ::tts::logger{::tts::verbose_status};                                                    \
+    FAILURE ( "Expected: "  << TTS_STRING(EXPR) << " throws unexpectedly." );                       \
+    return ::tts::logger{};                                                                         \
   }                                                                                                 \
 }()
 /**/
