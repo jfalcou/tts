@@ -15,8 +15,7 @@
 #include <tts/test/case.hpp>
 #include <tts/test/info.hpp>
 #include <tts/test/basic.hpp>
+#include <tts/test/relation.hpp>
+#include <tts/test/types.hpp>
 #include <tts/test/exceptions.hpp>
 #include <tts/test/precision.hpp>
-#include <tts/test/relation.hpp>
-#include <tts/test/sequence.hpp>
-#include <tts/test/types.hpp>

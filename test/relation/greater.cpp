@@ -15,11 +15,11 @@ TTS_CASE( "Check correctness of greater-than comparison tests" )
   TTS_GREATER(a,b);
 };
 
-constexpr int f_greater() { return 9; }
+constexpr int f() { return 9; }
 
 TTS_CASE( "Check correctness of constexpr greater-than comparison tests" )
 {
-  TTS_CONSTEXPR_GREATER(17,f_greater());
+  TTS_CONSTEXPR_GREATER(17,f());
 };
 
 #include "foo.hpp"

@@ -17,12 +17,12 @@ TTS_CASE( "Check correctness of greater-equal comparison tests" )
   TTS_GREATER_EQUAL(a,a);
 };
 
-constexpr int f_greater_equal() { return 9; }
+constexpr int f() { return 9; }
 
 TTS_CASE( "Check correctness of constexpr greater or equal than comparison tests" )
 {
-  TTS_CONSTEXPR_GREATER_EQUAL(17,f_greater_equal());
-  TTS_CONSTEXPR_GREATER_EQUAL(9,f_greater_equal());
+  TTS_CONSTEXPR_GREATER_EQUAL(17,f());
+  TTS_CONSTEXPR_GREATER_EQUAL(9,f());
 };
 
 #include "foo.hpp"

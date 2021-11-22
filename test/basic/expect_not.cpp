@@ -9,9 +9,8 @@
 
 TTS_CASE( "Check that counter-expectation can be met" )
 {
-  int a = 42, b = 69, v = 0;
+  int a = 42, b = 69;
 
-  TTS_EXPECT_NOT(v);
   TTS_EXPECT_NOT(a == b);
   TTS_EXPECT_NOT(a != a);
   TTS_EXPECT_NOT(a >  b);
@@ -21,7 +20,6 @@ TTS_CASE( "Check that counter-expectation can be met" )
   TTS_EXPECT_NOT(b && 0);
   TTS_EXPECT_NOT(0 || 0);
 
-  TTS_EXPECT_NOT(v     , REQUIRED);
   TTS_EXPECT_NOT(a != a, REQUIRED);
   TTS_EXPECT_NOT(a == b, REQUIRED);
   TTS_EXPECT_NOT(a >  b, REQUIRED);

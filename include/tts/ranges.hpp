@@ -86,9 +86,8 @@ namespace tts::detail
     os  << detail::text_field(16,1)   << ulp
         << detail::text_field(16)     << count
         << detail::value_field(16)    << ratio
-        << detail::value_field(16,7)
-        << ::tts::white << tts::bold << desc << tts::reset;
-    os  << std::showpos;
+        << detail::value_field(16,7)  << desc
+        << std::showpos;
     adapter<V>::display(v,os);
     os << std::fixed << std::endl;
   }
@@ -210,16 +209,9 @@ namespace tts
         else if(i == nb_buckets-1 ) ulps = std::numeric_limits<double>::infinity();
         else                        ulps = 1<<(i-4);
 
-        detail::results ( std::cout, ulps , ulp_map[i], ratio
-                        , "Input: " , std::get<1>( samples[ i ] )
-                        );
-        detail::results ( std::cout, ""   , ""        , ""
-                        , "Found: " , std::get<2>( samples[ i ] )
-                        );
-        detail::results ( std::cout, ""   , ""        , ""
-                        , "instead of: " , std::get<3>( samples[ i ] )
-                        );
-
+        detail::results ( std::cout, ulps , ulp_map[i], ratio, "Input: ", std::get<1>(samples[i]) );
+        detail::results ( std::cout, "" , "" , "", "Found: " , std::get<2>( samples[i]) );
+        detail::results ( std::cout, "" , "" , "", "instead of: " , std::get<3>( samples[i]) );
         std::cout << std::string(80,'-') << std::endl << std::noshowpos;
       }
     }
@@ -235,11 +227,11 @@ namespace tts
                 ||  tts::support_to_string<P>
                 )
     {
-      std::cout << ::tts::cyan << ::tts::as_string(producer) << ::tts::reset << "\n";
+      std::cout << ::tts::as_string(producer) << "\n";
     }
     else
     {
-      std::cout << ::tts::cyan << alt << ::tts::reset << "\n";
+      std::cout << alt << "\n";
     }
   }
 
@@ -259,13 +251,11 @@ namespace tts
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                   \
   [&]()                                                                                             \
   {                                                                                                 \
-    std::cout << ::tts::magenta << "Comparing: " << ::tts::cyan << TTS_STRING(RefFunc)              \
-              << ::tts::reset << "<"                                                                \
-              << ::tts::cyan << TTS_STRING(TTS_REMOVE_PARENS(RefType))                              \
-              << ::tts::reset << ">"                                                                \
-              << " with " << ::tts::cyan << TTS_STRING(NewFunc) << ::tts::reset                     \
-              << "<" << ::tts::cyan << TTS_STRING(TTS_REMOVE_PARENS(NewType))                       \
-              << ::tts::reset << "> using ";                                                        \
+    std::cout << "Comparing: " << TTS_STRING(RefFunc)                                               \
+              << "<" << TTS_STRING(TTS_REMOVE_PARENS(RefType)) << ">"                               \
+              << " with " << TTS_STRING(NewFunc)                                                    \
+              << "<" << TTS_STRING(TTS_REMOVE_PARENS(NewType))                                      \
+              << "> using ";                                                                        \
                                                                                                     \
     auto generator = TTS_REMOVE_PARENS(Producer);                                                   \
     tts::init_producer(generator,::tts::arguments);                                                 \
@@ -281,22 +271,16 @@ namespace tts
                                                                                                     \
     if(local_tts_max_ulp <= local_tts_threshold)                                                    \
     {                                                                                               \
-      TTS_PASS(     "Expecting: "   << ::tts::green << TTS_STRING(NewFunc)                          \
-                <<  " similar to "  << ::tts::green << TTS_STRING(RefFunc)                          \
-                <<  " within "      << std::setprecision(2) << ::tts::green                         \
-                                    << local_tts_threshold  << ::tts::reset << " ULP"               \
-                <<  " and found: "  << std::setprecision(2) << ::tts::green                         \
-                                    << local_tts_max_ulp    << ::tts::reset << " ULP"               \
-              );                                                                                    \
+      ::tts::global_runtime.pass();                                                                 \
     }                                                                                               \
     else                                                                                            \
     {                                                                                               \
-      TTS_FAIL(     "Expecting: "   << ::tts::green << TTS_STRING(NewFunc)                          \
-                <<  " similar to "  << ::tts::green << TTS_STRING(RefFunc)                          \
-                <<  " within "      << std::setprecision(2) << ::tts::green                         \
-                                    << local_tts_threshold  << ::tts::reset << " ULP"               \
-                <<  " but found: "  << std::setprecision(2) << ::tts::red                           \
-                                    << local_tts_max_ulp    << ::tts::reset << " ULP instead"       \
+      TTS_FAIL(     "Expecting: "   << TTS_STRING(NewFunc)                                          \
+                <<  " similar to "  << TTS_STRING(RefFunc)                                          \
+                <<  " within "      << std::setprecision(2)                                         \
+                                    << local_tts_threshold  << " ULP"                               \
+                <<  " but found: "  << std::setprecision(2)                                         \
+                                    << local_tts_max_ulp    << " ULP instead"                       \
               );                                                                                    \
     }                                                                                               \
   }()
