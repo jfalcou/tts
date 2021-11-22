@@ -1,9 +1,9 @@
-<img src="https://github.com/jfalcou/tts/raw/develop/docs/logo.png" alt="" data-canonical-src="https://github.com/jfalcou/tts/raw/develop/docs/logo.png" align="left"  width="15%" height="15%" />
+<img src="https://github.com/jfalcou/tts/raw/develop/logo.png" alt="" data-canonical-src="https://github.com/jfalcou/tts/raw/develop/logo.png" align="left"  width="15%" height="15%" />
 
 # TTS
 
-[![Licence](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)](https://img.shields.io/github/license/jfalcou/ofw?style=plastic) 
-[![Discord](https://img.shields.io/discord/692734675726237696?style=plastic)](https://discord.com/channels/692734675726237696/692735300522344468) 
+[![Licence](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)
+[![Discord](https://img.shields.io/discord/692734675726237696?style=plastic)](https://discord.com/channels/692734675726237696/692735300522344468)
 
 ## Overview
 
@@ -28,10 +28,6 @@ CircleCI :
 AppVeyo :
 [![Build status](https://ci.appveyor.com/api/projects/status/020yd3e6dwhu4dae/branch/master?svg=true)](https://ci.appveyor.com/project/jfalcou/tts/branch/master)
 
-## Acknowledgment
-
-Thanks to Ihor Kalnytskyi for [Termcolor](https://termcolor.readthedocs.io/).
-
 ## License
 
 This library is licensed under the [MIT License](http://opensource.org/licenses/MIT):
@@ -50,4 +46,3 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.```
-
