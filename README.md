@@ -1,48 +1,86 @@
-<img src="https://github.com/jfalcou/tts/raw/develop/logo.png" alt="" data-canonical-src="https://github.com/jfalcou/tts/raw/develop/logo.png" align="left"  width="15%" height="15%" />
-
-# TTS
+# The TTS Library
 
 [![Licence](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)
 [![Discord](https://img.shields.io/discord/692734675726237696?style=plastic)](https://discord.com/channels/692734675726237696/692735300522344468)
-
-## Overview
-
-Tiny Test System is a C++ open-source Unit Test library designed following
-the ideas of libraries like CATCH or LEST.
-
-Its main goal is to provide, in addition to classical TDD features, a set of
-tests for :
-
-- IEEE precision-related testing: ULP and relative error
-- Testing over arrays of data
-- Exhaustive and sampling test over data sets
-- A few customization points for 3rd party types
-
-making TTS suitable for numerical-heavy testing.
-
-## Status
-
-CircleCI :
 [![CircleCI](https://circleci.com/gh/jfalcou/tts.svg?style=svg&circle-token=8482adcf5f6785a67d19cf73b6fd4959d53e0e25)](https://circleci.com/gh/jfalcou/tts)
-
-AppVeyo :
 [![Build status](https://ci.appveyor.com/api/projects/status/020yd3e6dwhu4dae/branch/master?svg=true)](https://ci.appveyor.com/project/jfalcou/tts/branch/master)
 
-## License
+**Tiny Test System** is a C++20 open-source Unit Test library designed following the ideas of
+libraries like CATCH or LEST.
+
+In addition to classical TDD features, its main goal is to provide:
+
+- Test over data sets
+- Support for template test cases generation
+- IEEE precision-related tests: ULP, absolute and relative error
+- Customization points for 3rd party types
+- Streamlined behavior for interaction with post-processing scripts
+
+TTS is thus suitable for numerical-heavy testing.
+
+# A Short Example
+
+[See it live on Compiler Explorer](https://godbolt.org/z/cM5sxMxjo)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+TTS_CASE( "Check expectations" )
+{
+  TTS_EXPECT(true == true);
+  TTS_EXPECT_NOT(1+1 == 3);
+};
+
+TTS_CASE( "Check relationship between values" )
+{
+  int x = 12.34;
+  TTS_EQUAL( 12.34f, x );
+  TTS_NOT_EQUAL( 17.65, x );
+  TTS_LESS(1.95f, x);
+  TTS_GREATER(2*x, x);
+  TTS_LESS_EQUAL(x,12.35);
+  TTS_GREATER_EQUAL(x,3.5f);
+};
+
+void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
+
+TTS_CASE( "Check runtime exceptions" )
+{
+  TTS_THROW(foo(true), std::runtime_error);
+  TTS_NO_THROW(foo(false));
+};
+
+TTS_CASE( "Check precision tests" )
+{
+  double x = 1.;
+
+  TTS_ABSOLUTE_EQUAL(x ,1.001, 1e-3 );
+  TTS_RELATIVE_EQUAL(1,1.1,10);
+  TTS_ULP_EQUAL(1. + 1e-16, x, 0.5 );
+  TTS_IEEE_EQUAL(1., x );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Licence
 
 This library is licensed under the [MIT License](http://opensource.org/licenses/MIT):
 
-```Copyright (c) 2018 Joel FALCOU
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+Copyright : TTS Contributors & Maintainers
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
-files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy,
-modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the “Software”), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.```
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -2,14 +2,59 @@
 
 Tiny Test System is a C++ open-source Unit Test library designed following the ideas of libraries like CATCH or LEST.
 
-Its main goal is to provide, in addition to classical TDD features, a set of tests for :
+In addition to classical TDD features, its main goal is to provide:
 
-- IEEE precision-related testing: ULP and relative error
-- Testing over arrays of data
-- Exhaustive and sampling test over data sets
-- A few customization points for 3rd party types
+- Test over data sets
+- Support for template test cases generation
+- IEEE precision-related tests: ULP, absolute and relative error
+- Customization points for 3rd party types
+- Streamlined behavior for interaction with post-processing scripts
 
-thus making TTS suitable for numerical-heavy testing.
+TTS is thus suitable for numerical-heavy testing.
+
+# A Short Example
+
+[See it live on Compiler Explorer](https://godbolt.org/z/cM5sxMxjo)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+
+TTS_CASE( "Check expectations" )
+{
+  TTS_EXPECT(true == true);
+  TTS_EXPECT_NOT(1+1 == 3);
+};
+
+TTS_CASE( "Check relationship between values" )
+{
+  int x = 12.34;
+  TTS_EQUAL( 12.34f, x );
+  TTS_NOT_EQUAL( 17.65, x );
+  TTS_LESS(1.95f, x);
+  TTS_GREATER(2*x, x);
+  TTS_LESS_EQUAL(x,12.35);
+  TTS_GREATER_EQUAL(x,3.5f);
+};
+
+void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
+
+TTS_CASE( "Check runtime exceptions" )
+{
+  TTS_THROW(foo(true), std::runtime_error);
+  TTS_NO_THROW(foo(false));
+};
+
+TTS_CASE( "Check precision tests" )
+{
+  double x = 1.;
+
+  TTS_ABSOLUTE_EQUAL(x ,1.001, 1e-3 );
+  TTS_RELATIVE_EQUAL(1,1.1,10);
+  TTS_ULP_EQUAL(1. + 1e-16, x, 0.5 );
+  TTS_IEEE_EQUAL(1., x );
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Licence
 
