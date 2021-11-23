@@ -19,7 +19,7 @@ To use those macros, include the `tts/tts.hpp` file.
 
 Checks if the absolute distance between `LHS` and `RHS` is less or equal to `X`.
 This comparison is performed by using the proper `tts::absolute_distance` overload
-[customizable per the following protocol](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-absolute-comparison).
+[customizable per the following protocol](customisation.html#absolute).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -50,7 +50,7 @@ TTS_CASE("Absolute distance")
 
 Checks if two values are within a given percentage. This comparison is performed by using
 the proper `tts::relative_distance` overload
-[customizable per the following protocol](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-relative-comparison).
+[customizable per the following protocol](customisation.html#relative).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -82,9 +82,9 @@ TTS_CASE("Relative distance")
 
 ### Definition
 
-Checks if two values are within a given [ULP distance](https://github.com/jfalcou/tts/wiki/Rationale#precision-testing).
+Checks if two values are within a given [ULP distance](rationale.html#ulp).
 This comparison is performed by using the proper `tts::ulp_distance` overload
-[customizable per the following protocol](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ulp-comparison).
+[customizable per the following protocol](customisation.html#ulp).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -129,10 +129,10 @@ TTS_CASE( "ULP distance")
 
 ### Definition
 
-Checks if two values are exactly within a 0 [ULP](https://github.com/jfalcou/tts/wiki/Rationale#precision-testing)
+Checks if two values are exactly within a 0 [ULP](rationale.html#ulp)
 from each other. This also allow for infinites and NaNs to be compared equal if both values are the
 same infinites or are both $NaN$. This comparison is performed by using the proper `tts::ulp_distance` overload
-[customizable per the following protocol](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ulp-comparison).
+[customizable per the following protocol](customisation.html#ulp).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.

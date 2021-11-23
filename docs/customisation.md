@@ -77,7 +77,9 @@ namespace sample
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## <a name="equality"></a> Custom Equality Comparison
+<a name="equality"></a>
+
+## Custom Equality Comparison
 
 **TTS** uses `operator==` to build all its equality-based checks. If needed, one can specialize a
 `compare_equal` function in a type's namespace to let **TTS** use special comparison scheme.
@@ -95,6 +97,8 @@ namespace sample
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+<a name="ordering"></a>
+
 ## Custom Ordering
 **TTS** uses `operator<` to build all its ordering-based checks. If needed, one can specialize a
 `compare_less` function in a type's namespace to let **TTS** use special comparison scheme.
@@ -111,6 +115,8 @@ namespace sample
   }
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+<a name="ulp"></a>
 
 ## Custom ULP Comparison
 **TTS** uses its `ulp_distance` function to perform all ULP checks. If needed, one can specialize
@@ -135,6 +141,7 @@ namespace tts
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+<a name="relative"></a>
 ## Custom Relative Comparison
 **TTS** uses its `relative_distance` function to perform all relative precision checks. If needed,
 one can specialize this function in the `tts` namespace to let **TTS** use special relative precision
@@ -155,6 +162,8 @@ namespace tts
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+<a name="absolute"></a>
+
 ## Custom Absolute Comparison
 **TTS** uses its `absolute_distance` function to perform all absolute precision checks. If needed,
 one can specialize this function in the `tts` namespace to let **TTS** use special absolute precision
@@ -174,6 +183,8 @@ namespace tts
   }
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+<a href="dataset></a>
 
 ## Custom Data Generator
 

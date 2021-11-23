@@ -85,7 +85,7 @@ TTS_CASE( "Check correctness of inequality tests" )
 
 ### Definition
 Performs less-than comparison between two values. This comparison is performed by using
-the proper `operator<` overload or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+the proper `operator<` overload or by a [custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -120,7 +120,7 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 
 ### Definition
 Performs greater-than comparison between two values. This comparison is performed by using
-the proper `operator<` overload or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+the proper `operator<` overload or by a [custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -155,7 +155,7 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 
 ### Definition
 Performs less-than-or-equal comparison between two values. This comparison is performed by using
-the proper `operator<` and `operator==` overloads or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+the proper `operator<` and `operator==` overloads or by a [custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -193,7 +193,7 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 
 ### Definition
 Performs greater-than-or-equal comparison between two values. This comparison is performed by using
-the proper `operator<` and `operator==` overloads or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+the proper `operator<` and `operator==` overloads or by a [custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.

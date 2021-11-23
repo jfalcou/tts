@@ -10,11 +10,11 @@ Let's dive into the detail and how **TTS** manage and report tests.
 
 Test cases are functions performing repeatable, minimal operations able to unambiguously capture a function or class behavior and assess its correctness. In **TTS**, a test case can be defined either as:
 
-  * a single function defined by the [`TTS_CASE`](https://github.com/jfalcou/tts/wiki/Scenario-Definition#tts_case) macro.
+  * a single function defined by the [`TTS_CASE`](scenario.html) macro.
     In this case, the test function will be run and proceed to every test it contains.
 
   * a family of functions generated from a template function and a sequence of types
-    via the [`TTS_CASE_TPL`](https://github.com/jfalcou/tts/wiki/Scenario-Definition#tts_case_tpl) macro. Inside the test case itself, the template
+    via the [`TTS_CASE_TPL`](scenario.html) macro. Inside the test case itself, the template
     type is accessible through the template parameter `T`.
 
 In both cases, the test case is defined with a unique string description. Additionally, good
@@ -51,7 +51,7 @@ Every test functions then require at least one call to any Testing Macros.
 ## Testing Macros
 
 **TTS** provides a set of macros to perform usual tests operations and to report their successes or failures to the test suite manager directly from within a test case. Let's amend our initial test by adding a single call to
-[**`TTS_EXPECT`**](https://github.com/jfalcou/tts/wiki/Basic-Tests#tts_expect):
+[**`TTS_EXPECT`**](basic.html):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_MAIN

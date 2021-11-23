@@ -15,11 +15,11 @@ To use those components, include the `tts/ranges.hpp` file.
 
 ### Definition
 Evaluates the histogram of ULP difference between two functions run on the same data set and that
-they lie in a given [ULP distance](https://github.com/jfalcou/tts/wiki/Rationale#precision-testing).
-This comparison is performed by using the proper `tts::ulp_distance` [overload](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ulp-comparison).).
+they lie in a given [ULP distance](rationale.html#ulp).
+This comparison is performed by using the proper `tts::ulp_distance` [overload](customisation.html#ulp).).
 
 **Parameters:**
-  + `Producer`: [Data set generator](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-data-generator) to use.
+  + `Producer`: [Data set generator](customization.html#dataset) to use.
   + `RefType` : Type to use as reference function input.
   + `NewType` : Type to use as challenger function input.
   + `RefFunc` : Reference function to compare to.
