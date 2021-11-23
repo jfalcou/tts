@@ -77,8 +77,7 @@ namespace sample
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Custom Equality Comparison
-<a name="equality">
+## <a name="equality"></a> Custom Equality Comparison
 
 **TTS** uses `operator==` to build all its equality-based checks. If needed, one can specialize a
 `compare_equal` function in a type's namespace to let **TTS** use special comparison scheme.
