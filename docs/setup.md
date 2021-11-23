@@ -1,4 +1,6 @@
-# Retrieving the source
+# Setup
+
+## Retrieving the source
 
 **TTS** is available on GitHub and can be retrieved via the following command:
 
@@ -17,7 +19,7 @@ Once retrieved, you should have a `tts` folder which contains the whole source c
 
 If you want to develop new features for **TTS**, you can also checkout the `develop` version.
 
-# Installation
+## Installation
 
 Create a `build` directory here and enter it. Once in the `build` directory,
 you can use  **CMake** to generate the build system for **TTS**. We recommend using

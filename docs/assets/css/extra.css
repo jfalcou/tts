@@ -16,3 +16,7 @@
   text-align: justify;
   text-justify: inter-word;
 }
+
+.inner {
+  max-width: 1024px;
+}

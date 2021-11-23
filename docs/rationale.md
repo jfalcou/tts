@@ -1,6 +1,8 @@
+# Rationale
+
 This section explains some of the design choices made by TTS on how to implement some of its components and how the usage of its macros was envisioned.
 
-# Precision testing
+## Precision testing
 
 > Are these two floating computations results similar enough?
 
@@ -8,15 +10,15 @@ This is maybe the most difficult question to answer when implementing and valida
 
 In the rest of this section, we take for granted that the basic notions of floating-point computations and their related problems are known by the reader. If not, we strongly recommend having a deep look at [Goldberg's paper on the subject](http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) or a [simplified version](http://floating-point-gui.de/).
 
-## Metric for precision measurement
+### Metric for precision measurement
 
 The first thing people learn (and often they learn it the hard way) is that strict equality for floating points numbers is often meaningless or very hard to achieve. Once this state of fact is integrated, people often go to use a simple absolute difference with an arbitrary threshold. If this method looks sound, it's easy to fold and may lead to false positives. The proper way to compare non-zero or non-invalid floating-point numbers is to use the **Unit in the Last Place** metric.
 
-Let us define ε -- the machine epsilon<sup>[1](#myfootnote1)</sup> -- as being the smallest positive floating-point number such that 1+ε is different from 1. In fact, 1+ε and 1 only differ by one bit in the least significant digit: the unit in the last place (ULP). 
+Let us define ε -- the machine epsilon<sup>[1](#myfootnote1)</sup> -- as being the smallest positive floating-point number such that 1+ε is different from 1. In fact, 1+ε and 1 only differ by one bit in the least significant digit: the unit in the last place (ULP).
 
 Generally, the ULP between a floating-point number $x$ and its immediate successor is 2<sup>E</sup> x ε where E is the exponent of x.
 
-## Computing ULP Distance
+### Computing ULP Distance
 
 The ULP distance (or `ulpdist`) is a way to compare floating-point numbers by estimating the number of significant bits between their respective representations.
 
