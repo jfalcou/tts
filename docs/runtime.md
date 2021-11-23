@@ -1,17 +1,19 @@
+# Exception Tests
+
 The following component provides macros to perform basic tests on the throwing or
 absence of runtime exceptions.
 
 To use those macros, include the `tts/tts.hpp` file.
 
-# TTS_THROW
+## TTS_THROW
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_THROW(Expression, Exception, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Checks if a given `Expression` throws an exception of type `Exception`.
 
 **Parameters:**
@@ -35,15 +37,15 @@ TTS_CASE( "Check that we can capture thrown exceptions" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_NO_THROW
+## TTS_NO_THROW
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_NO_THROW(Expression, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Checks if a given `Expression` throws no exception.
 
 **Parameters:**

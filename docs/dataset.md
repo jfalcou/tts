@@ -1,17 +1,19 @@
+# Dataset Tests
+
 **TTS provides** a macros to test and compare functions over a set of data. It also provides
 classes to use as a base for new dataset generations.
 
 To use those components, include the `tts/ranges.hpp` file.
 
-# TTS_ULP_RANGE_CHECK
+## TTS_ULP_RANGE_CHECK
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/ranges.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Evaluates the histogram of ULP difference between two functions run on the same data set and that
 they lie in a given [ULP distance](https://github.com/jfalcou/tts/wiki/Rationale#precision-testing).
 This comparison is performed by using the proper `tts::ulp_distance` [overload](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ulp-comparison).).
@@ -42,9 +44,9 @@ TTS_CASE( "Test range check" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# tts::prng_generator
+## tts::prng_generator
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/ranges.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 namespace tts
@@ -59,7 +61,7 @@ namespace tts
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 `tts::prng_generator` wraps any standard [random distribution](https://en.cppreference.com/w/cpp/named_req/RandomNumberDistribution) to be used as Data Generator by TTS_ULP_RANGE_CHECK.
 
 **Template Parameters:**
@@ -85,7 +87,7 @@ TTS_CASE( "Test range check" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Constructor
+### Constructor
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 template<typename... Args> prng_generator(Args... args);
@@ -96,7 +98,7 @@ Construct an instance of `tts::prng_generator` with parameters for the internal 
 **Parameters:**
   + `args`: Arguments to be forwarded to the internal `Distribution`.
 
-## Member functions
+### Member functions
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 void init( options const& args );
@@ -118,9 +120,9 @@ Return a the `Idx` value out of `Count`.
   + `index`:
   + `count`:
 
-# tts::uniform_prng_generator
+## tts::uniform_prng_generator
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/ranges.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 namespace tts
@@ -135,7 +137,7 @@ namespace tts
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 `tts::uniform_prng_generator` is a convenience type alias that wraps standard uniform distribution
 as a Data Generator.
 

@@ -1,17 +1,19 @@
+# Type Tests
+
 The following component provides macros to perform tests over expression type equivalence or properties.
 All those macros generate tests that fails **at  compile-time**.
 
 To use those macros, include the `tts/tts.hpp` file.
 
-# TTS_TYPE_IS
+## TTS_TYPE_IS
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_TYPE_IS(Type, Target)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
 
 **Parameters:**
@@ -31,15 +33,15 @@ TTS_CASE( "Check that types can be tested for equality" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_EXPR_IS
+## TTS_EXPR_IS
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_EXPR_IS(Expression, Type)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Checks if an `Expression` evaluates to a value of a given `Type`.
 
 **Parameters:**

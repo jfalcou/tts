@@ -1,3 +1,5 @@
+# Precision Tests
+
 The following component provides macros to perform precision tests between floating-point values.
 
 Precision comparisons are, by default, handled by the `tts::ulp_distance`, `tts::relative_distance`
@@ -5,15 +7,15 @@ or `tts::absolute_distance` overloads.
 
 To use those macros, include the `tts/tts.hpp` file.
 
-# TTS_ABSOLUTE_EQUAL
+## TTS_ABSOLUTE_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_ABSOLUTE_EQUAL(LHS,RHS,X, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 
 Checks if the absolute distance between `LHS` and `RHS` is less or equal to `X`.
 This comparison is performed by using the proper `tts::absolute_distance` overload
@@ -36,15 +38,15 @@ TTS_CASE("Absolute distance")
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_RELATIVE_EQUAL
+## TTS_RELATIVE_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_RELATIVE_EQUAL(LHS,RHS,X, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 
 Checks if two values are within a given percentage. This comparison is performed by using
 the proper `tts::relative_distance` overload
@@ -70,15 +72,15 @@ TTS_CASE("Relative distance")
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_ULP_EQUAL
+## TTS_ULP_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_ULP_EQUAL(LHS,RHS,X, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 
 Checks if two values are within a given [ULP distance](https://github.com/jfalcou/tts/wiki/Rationale#precision-testing).
 This comparison is performed by using the proper `tts::ulp_distance` overload
@@ -117,15 +119,15 @@ TTS_CASE( "ULP distance")
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-# TTS_IEEE_EQUAL
+## TTS_IEEE_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_IEEE_EQUAL(LHS,RHS,X, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 
 Checks if two values are exactly within a 0 [ULP](https://github.com/jfalcou/tts/wiki/Rationale#precision-testing)
 from each other. This also allow for infinites and NaNs to be compared equal if both values are the
