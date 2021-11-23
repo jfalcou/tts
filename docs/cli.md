@@ -36,7 +36,64 @@ Command line arguments are detected and parsed on-demand, which means that one c
 test-specific command-line argument by just retrieving its value from one or multiple expected
 arguments string.
 
-**Examples:**
+### `tts::options`
+`tts::arguments` object is an instance of the `tts::options` type that provides the
+following members functions:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace tts
+{
+  struct options
+  {
+    bool operator[](std::initializer_list<const char*> flags ) const;
+    bool operator[](const char*  flag ) const;
+    template<typename T> T value(std::initializer_list<const char*> flags, T def = {}) const
+    template<typename T> T value(const char* flags, T def = {}) const
+  };
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#### options::operator[]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+bool operator[](std::initializer_list<const char*> flags ) const;
+bool operator[](const char*  flag ) const;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Parameters**:
+  - `flags` : string or list of strings containing the flag(s) to check for
+
+**Returns:** `true` if any of the flag passed as an argument is set, `false` otherwise.
+
+#### options::value
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `def`   : default value if no flag are set
+  - `flags` : string containing the flag to check for
+
+**Returns:** the value associated to the flag if any flag is set, `def` otherwise.
+
+#### options::value
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+struct options
+{
+  template<typename T> T value(std::initializer_list<const char*> flags, T def = {}) const
+  template<typename T> T value(const char* flags, T def = {}) const
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Parameters**:
+<div class="smallskip"></div>
+
+  - `def`   : default value if no flag are set
+  - `flags` : string containing the flag to check for
+
+**Returns:** the value associated to the flag if any flag is set, `def` otherwise.
+
+### Example
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_MAIN

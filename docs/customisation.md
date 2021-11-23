@@ -1,6 +1,5 @@
 # Customization Point
 
-
 ## Tests Driver
 By default, **TTS** provides an entry point function for the listed tests. However, it may be
 required to handle such an entry point. In this case, one can define the `TTS_CUSTOM_DRIVER_FUNCTION`
@@ -79,6 +78,8 @@ namespace sample
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ## Custom Equality Comparison
+<a name="equality">
+
 **TTS** uses `operator==` to build all its equality-based checks. If needed, one can specialize a
 `compare_equal` function in a type's namespace to let **TTS** use special comparison scheme.
 

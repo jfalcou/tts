@@ -3,7 +3,7 @@
 The following component provides macros to perform basic and relational tests in a `constexpr` context.
 All those macros generate tests that fails **at  compile-time**. Ordering and equality comparisons are,
 by default, handled by the `operator==` or `operator<` overloads. If one needs to perform a custom
-comparison, see the [custom comparisons](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-equality-comparison) section.
+comparison, see the [custom comparisons](customisation.html#equality) section.
 
 To use those macros, include the `tts/tts.hpp` file.
 
@@ -82,7 +82,7 @@ TTS_CASE( "Check that counter-expectation can be met" )
 ### Definition
 Performs equality comparison between two constexpr expressions.
 This comparison is performed at compile-time by using the proper `operator==` overload or by a
-[custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-equality-comparison).
+[custom comparison](customisation.html#equality).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -113,7 +113,7 @@ TTS_CASE( "Check correctness of constexpr equality tests" )
 ### Definition
 Performs inequality comparison between two constexpr expressions.
 This comparison is performed at compile-time by using the proper `operator==` overload or by a
-[custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-equality-comparison).
+[custom comparison](customisation.html#equality).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
