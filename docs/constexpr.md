@@ -43,7 +43,8 @@ TTS_CASE( "Check that expectation can be met" )
 
 ### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
-TTS_CONSTEXPR_EXPECT_NOT c++
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_CONSTEXPR_EXPECT(Expression)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -144,7 +145,7 @@ TTS_CASE( "Check correctness of constexpr equality tests" )
 ### Definition
 Performs less-than comparison between two constexpr expressions.
 This comparison is performed at compile-time by usingthe proper `operator<` overload or by a
-[custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+[custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -172,7 +173,7 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 ### Definition
 Performs greater-than comparison between two constexpr expressions.
 This comparison is performed at compile-time by usingthe proper `operator<` overload or by a
-[custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+[custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -200,7 +201,7 @@ TTS_CASE( "Check correctness of greater-than comparison tests" )
 ### Definition
 Performs less-than-or-equal comparison between two constexpr expressions.
 This comparison is performed at compile-time by usingthe proper `operator<` and `operator==` overloads or by a
-[custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+[custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
@@ -229,7 +230,7 @@ TTS_CASE( "Check correctness of less-equal comparison tests" )
 ### Definition
 Performs greater-than-or-equal comparison between two constexpr expressions.
 This comparison is performed at compile-time by usingthe proper `operator<` and `operator==` overloads or by a
-[custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
+[custom comparison](customisation.html#ordering).
 
 **Parameters:**
   + `LHS`, `RHS`:  Expressions to compare.
