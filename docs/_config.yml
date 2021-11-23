@@ -3,7 +3,4 @@ plugins:
 relative_links:
   enabled: true
   collections: true
-include:
-  - Home.md
-
 theme: jekyll-theme-slate
