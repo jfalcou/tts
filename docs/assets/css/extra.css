@@ -12,3 +12,8 @@
   font-weight: bolder;
   padding: 1em;
 }
+
+#main_content_wrap {
+  text-align: justify;
+  text-justify: inter-word;
+}
