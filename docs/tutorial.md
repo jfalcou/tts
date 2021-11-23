@@ -1,10 +1,12 @@
+# Getting Started
+
 Unit Tests are usually gathered into **scenarios** in which a specific behavior of a software component is tested. Such scenarios are usually isolated into different executables. Each scenario is decomposed into **test suites**, i.e a group of related tests verifying that the current scenario is correctly serviced by the software component. Test suites are themselves composed of at least one test case.
 
 With **TTS**, this decomposition (scenario/suite/test) is supported by various macro.
 
 Let's dive into the detail and how **TTS** manage and report tests.
 
-# Specify a Test Case
+## Specify a Test Case
 
 Test cases are functions performing repeatable, minimal operations able to unambiguously capture a function or class behavior and assess its correctness. In **TTS**, a test case can be defined either as:
 
@@ -46,7 +48,7 @@ In this case, unsurprisingly, our empty test is reported as invalid as we consid
 
 Every test functions then require at least one call to any Testing Macros.
 
-# Testing Macros
+## Testing Macros
 
 **TTS** provides a set of macros to perform usual tests operations and to report their successes or failures to the test suite manager directly from within a test case. Let's amend our initial test by adding a single call to
 [**`TTS_EXPECT`**](https://github.com/jfalcou/tts/wiki/Basic-Tests#tts_expect):
