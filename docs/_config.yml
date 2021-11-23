@@ -4,5 +4,5 @@ relative_links:
   enabled: true
   collections: true
 theme: jekyll-theme-slate
-title: [TTS]
-description: [Tiny TEst System - A C++20 Lightweight Unit Test Framework]
+title: TTS
+description: Tiny Test System - A C++20 Lightweight Unit Test Framework
