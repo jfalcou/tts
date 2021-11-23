@@ -1,4 +1,54 @@
-# Custom Display
+# Customization Point
+
+
+## Tests Driver
+By default, **TTS** provides an entry point function for the listed tests. However, it may be
+required to handle such an entry point. In this case, one can define the `TTS_CUSTOM_DRIVER_FUNCTION`
+preprocessor symbol to a name of their own entry-point function as shown below.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#define TTS_CUSTOM_DRIVER_FUNCTION custom_entry_point
+#include <tts/tts.hpp>
+
+TTS_CASE( "Tautological test" )
+{
+  TTS_EXPECT_NOT(false == true);
+};
+
+int main(int argc, char const** argv)
+{
+  custom_entry_point(argc, argv);
+  return tts::report(0,0);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As usual, at most one translation unit mush use `#define TTS_MAIN`.
+
+After defining the `TTS_CUSTOM_DRIVER_FUNCTION` symbol, tests can be added as usual.
+Then, a regular `main` function is to be defined. This function will then performs any
+special operations required then calls the aforementioned entry point function.
+
+Finally, the `main` function will call `tts::report`.
+
+`tts::report` is in charge of aggregating test results and validate the whole tests
+with respect to expect number of failures and invalid tests.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+namespace tts
+{
+  int report(std::ptrdiff_t fails, std::ptrdiff_t invalids);
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</script>
+
+**Parameters**:
+  + `fails` : Number of expected failures.
+  + `invalids` : Number of expected invalid tests.
+
+**Returns:** `0` is the tests all passed as expecte, `1` otherwise.
+
+## Custom Display
 By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string` or, in
 the case of sequence-like types, a sequence of calls to `std::to_string`. In case no overload
 for `std::to_string` exists for a given type, a string will be built from the type name and its
@@ -28,7 +78,7 @@ namespace sample
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Custom Equality Comparison
+## Custom Equality Comparison
 **TTS** uses `operator==` to build all its equality-based checks. If needed, one can specialize a
 `compare_equal` function in a type's namespace to let **TTS** use special comparison scheme.
 
@@ -45,7 +95,7 @@ namespace sample
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Custom Ordering
+## Custom Ordering
 **TTS** uses `operator<` to build all its ordering-based checks. If needed, one can specialize a
 `compare_less` function in a type's namespace to let **TTS** use special comparison scheme.
 
@@ -62,7 +112,7 @@ namespace sample
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Custom ULP Comparison
+## Custom ULP Comparison
 **TTS** uses its `ulp_distance` function to perform all ULP checks. If needed, one can specialize
 this function in the `tts` namespace to let **TTS** use special ULP comparison scheme. As usual,
 one can also reuse the pre-existing `tts::ulp_distance` to implement their own.
@@ -85,7 +135,7 @@ namespace tts
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Custom Relative Comparison
+## Custom Relative Comparison
 **TTS** uses its `relative_distance` function to perform all relative precision checks. If needed,
 one can specialize this function in the `tts` namespace to let **TTS** use special relative precision
  scheme. As usual, one can also reuse the pre-existing `tts::relative_distance` to implement their own.
@@ -105,7 +155,7 @@ namespace tts
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Custom Absolute Comparison
+## Custom Absolute Comparison
 **TTS** uses its `absolute_distance` function to perform all absolute precision checks. If needed,
 one can specialize this function in the `tts` namespace to let **TTS** use special absolute precision
  scheme. As usual, one can also reuse the pre-existing `tts::absolute_distance` to implement their own.
@@ -125,7 +175,7 @@ namespace tts
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Custom Data Generator
+## Custom Data Generator
 
 Range checks require a data generator to fill their tests. Outside the provided PRNG generators, one
 can build their own generator.
