@@ -9,12 +9,7 @@ Its main goal is to provide, in addition to classical TDD features, a set of tes
 - Exhaustive and sampling test over data sets
 - A few customization points for 3rd party types
 
-making TTS suitable for numerical-heavy testing.
-
-# Want to know more ?
-  + [Setup the library](setup.html)
-  + Follow our [Tutorial](tutorial.html) to get started
-  + Browse the [Reference Documentation](reference.html)
+thus making TTS suitable for numerical-heavy testing.
 
 # Licence
 

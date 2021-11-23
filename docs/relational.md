@@ -1,16 +1,18 @@
+# Relational Tests
+
 The following component provides macros to perform ordering tests between values. Ordering and equality comparisons are, by default, handled by the `operator==` or `operator<` overloads. If one needs to perform a custom comparison, see the [custom comparisons](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-equality-comparison) section.
 
 To use those macros, include the `tts/tts.hpp` file.
 
-# TTS_EQUAL
+## TTS_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Performs equality comparison between two values. This comparison is performed by using
 the proper `operator==` overload or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-equality-comparison).
 
@@ -37,15 +39,15 @@ TTS_CASE( "Check correctness of equality tests" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_NOT_EQUAL
+## TTS_NOT_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_NOT_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Performs inequality comparison between two values. This comparison is performed by using
 the proper `operator==` overload or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-equality-comparison).
 
@@ -73,15 +75,15 @@ TTS_CASE( "Check correctness of inequality tests" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-# TTS_LESS
+## TTS_LESS
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_LESS(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Performs less-than comparison between two values. This comparison is performed by using
 the proper `operator<` overload or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
 
@@ -108,15 +110,15 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_GREATER
+## TTS_GREATER
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_GREATER(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Performs greater-than comparison between two values. This comparison is performed by using
 the proper `operator<` overload or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
 
@@ -143,15 +145,15 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_LESS_EQUAL
+## TTS_LESS_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_LESS_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Performs less-than-or-equal comparison between two values. This comparison is performed by using
 the proper `operator<` and `operator==` overloads or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
 
@@ -181,15 +183,15 @@ TTS_CASE( "Check correctness of less-than comparison tests" )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-# TTS_GREATER_EQUAL
+## TTS_GREATER_EQUAL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_GREATER_EQUAL(LHS,RHS,...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Performs greater-than-or-equal comparison between two values. This comparison is performed by using
 the proper `operator<` and `operator==` overloads or by a [custom comparison](https://github.com/jfalcou/tts/wiki/Customization-Points#custom-ordering).
 

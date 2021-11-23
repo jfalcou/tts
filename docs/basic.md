@@ -1,16 +1,17 @@
-The following component provides macros to perform basic tests that simply evaluate as a boolean value or to force the status of a given test to a failed state. 
+# Basic Tests
+The following component provides macros to perform basic tests that simply evaluate as a boolean value or to force the status of a given test to a failed state.
 
 To use those macros, include the `tts/tts.hpp` file.
 
-# TTS_EXPECT
+## TTS_EXPECT
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_EXPECT(Expression, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Checks if a given expression evaluates to `true`.
 
 **Parameters:**
@@ -39,15 +40,15 @@ TTS_CASE( "Check that expectation can be met" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_EXPECT_NOT
+## TTS_EXPECT_NOT
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_EXPECT_NOT(Expression, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Checks if a given expression evaluates to `true`.
 
 **Parameters:**
@@ -75,15 +76,15 @@ TTS_CASE( "Check that expectation can be met" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_FAIL
+## TTS_FAIL
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_FAIL(Message)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Register a test that always fails and displays a custom `Message`.
 
 **Parameters:**
@@ -101,15 +102,15 @@ TTS_CASE( "Check that forced pass passes" )
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# TTS_INVALID
+## TTS_INVALID
 
-## Synopsis:
+### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_INVALID((Message)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## Definition
+### Definition
 Register a test that is always considered invalid and displays a custom `Message`.
 
 **Parameters:**
