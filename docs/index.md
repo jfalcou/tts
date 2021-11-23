@@ -12,7 +12,9 @@ Its main goal is to provide, in addition to classical TDD features, a set of tes
 making TTS suitable for numerical-heavy testing.
 
 # Want to know more ?
+  + [Setup the library](setup.html)
   + Follow our [Tutorial](tutorial.html) to get started
+  + Browse the [Reference Documentation](reference.html)
 
 # Licence
 

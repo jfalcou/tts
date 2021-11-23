@@ -1,7 +1,9 @@
+# Command Line Interface
+
 TTS supports options that can be passed as command line arguments of the test binary. Those
 options modify how the tests are run and the results displayed.
 
-# Existing Commands
+## Existing Commands
 
  Options        | Shortcut | Description
 --------------- | -------- | ---------------------------------------------------------------
@@ -28,7 +30,7 @@ options require a value and have no short form.
 `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
 `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
 
-# Exploiting Command Line Arguments
+## Exploiting Command Line Arguments
 Values of command-line options can be used directly in a test via the `tts::arguments` global object.
 Command line arguments are detected and parsed on-demand, which means that one can define a
 test-specific command-line argument by just retrieving its value from one or multiple expected
