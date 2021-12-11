@@ -36,6 +36,15 @@ install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/
 
 export(PACKAGE tts)
 
+## =================================================================================================
+## Exporting target for external use
+## =================================================================================================
+add_library(tts_lib INTERFACE)
+target_include_directories(tts_lib INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
+
+target_compile_features(tts_lib INTERFACE cxx_std_20)
+add_library(tts::tts ALIAS tts_lib)
+
 ##==================================================================================================
 ## Standalone generation
 ##==================================================================================================
