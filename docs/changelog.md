@@ -1,0 +1,45 @@
+# Version 1.0 - Phoebe Daring
+
+This version is a **Major Release With API Changes** release:
+
+**Breaking API Changes**:
+
+To support some of the new feature and simplify some macros, **TTS** API is now based on a
+lambda system. If this doesn't change the way tests are performed, it now requires to end all
+tests cases by a `;`.
+
+**Bug Fixes:**
+
+  * Fix #3  - `TTS_TPL_CASES` now use meta-function based system for types generation
+  * Fix #32 - Provide a way to log arbitrary data when failures occur
+  * Fix #33 - Provide the `REQUIRED` option on tests to halt tests at first failure
+  * Fix #34 - Provide a command-line option to fix precision when displaying floating points
+  * Fix #37 - Stop displaying `char const*` as a string.
+
+## Detective who?
+[Phoebe Daring](https://en.wikipedia.org/wiki/Phoebe_Daring), the first half of the Daring Twins since 1912.
+
+# Version 0.2 - Kate Fansler
+
+This version is a fix+features release:
+
+  * Fix #20 - Make string and pointers display in a more intuitive way
+  * Fix #23 - Add proper parens in `EXPECT` macro
+  * Add support for `constexpr` expectation and relational tests
+  * `TTS_CASE_TPL` now generates one scenario per type
+  * Fix #21 - Add runtime filtering for tests based on description string
+
+## Detective who?
+[Kate Fansler](https://en.wikipedia.org/wiki/Kate_Fansler), solving academic crimes since 1964.
+
+# Version 0.1 - Cadfael
+
+## First public release.
+
+**TTS** first complete release enables numerically oriented TDD including:
+  - precision testing
+  - checks over the data set
+  - easy to customize the use of user-defined types.
+
+## Detective who?
+[Cadfael](https://en.wikipedia.org/wiki/Cadfael) is probably the eldest of all amateur detectives in history.
