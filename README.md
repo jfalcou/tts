@@ -1,6 +1,6 @@
 # The TTS Library
 
-[![Licence](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)](https://img.shields.io/github/license/jfalcou/ofw?style=plastic)
+[![Licence](https://img.shields.io/github/license/jfalcou/tts?style=plastic)](https://img.shields.io/github/license/jfalcou/tts?style=plastic)
 [![Discord](https://img.shields.io/discord/692734675726237696?style=plastic)](https://discord.com/channels/692734675726237696/692735300522344468)
 [![CircleCI](https://circleci.com/gh/jfalcou/tts.svg?style=svg&circle-token=8482adcf5f6785a67d19cf73b6fd4959d53e0e25)](https://circleci.com/gh/jfalcou/tts)
 [![Build status](https://ci.appveyor.com/api/projects/status/020yd3e6dwhu4dae/branch/master?svg=true)](https://ci.appveyor.com/project/jfalcou/tts/branch/master)
