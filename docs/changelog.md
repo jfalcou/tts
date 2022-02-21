@@ -1,3 +1,34 @@
+# Version 2.1 - Cordelia Gray
+
+## What's Changed
+  * Fix #42 - Proper FetchContent support
+  * Better compatibility
+  * Enable EMSCRIPTEN tests and supports
+  * Add tests over sequences
+
+## Detective who?
+[Cordelia Gray](https://en.wikipedia.org/wiki/Cordelia_Gray), a very suitable detective
+
+# Version 2.0 - Kay Scarpetta
+
+**TTS** version 2.0 is taking a major break from an earlier version. Compile-time was creeping upward
+and some features were not that useful. So the code base got streamlined and simplified.
+
+This version is a **Major Release With API Changes** release:
+
+**Breaking API Changes**:
+ + Removal of support for colors
+ + Removal of support for sub-scenario
+ + Silent mode for tests is the default. The only information displayed concerns failures
+
+**Features:**
+  + Improved compile-times
+  + Output streamlined to fit machine processing in CI context or scripts
+  + Better handling of template test cases: less generated symbol, better flexibility in inputs (list of types or types list generator)
+
+## Detective who?
+[Kay Scarpetta](https://en.wikipedia.org/wiki/Kay_Scarpetta), the private forensic consultant.
+
 # Version 1.0 - Phoebe Daring
 
 This version is a **Major Release With API Changes** release:
