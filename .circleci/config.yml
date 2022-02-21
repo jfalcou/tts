@@ -1,8 +1,6 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2020-2021 Joel FALCOU
-##
-##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
 version: 2.1
@@ -18,18 +16,21 @@ commands:
       proc:
         type: integer
         default: 4
+      wrapper:
+        type: string
+        default: "cmake"
     steps:
       - run:
           name: << parameters.desc >>
-          command:                                                                  |
-            mkdir -p build && cd build                                              &&
-            cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >>          &&
+          command:                                                                            |
+            mkdir -p build && cd build                                                        &&
+            << parameters.wrapper >> .. -G Ninja -DCMAKE_TOOLCHAIN_FILE=<< parameters.tool >> &&
             ninja unit -j << parameters.proc >> && ctest  -j << parameters.proc >>
 
 jobs:
   x86_clang_debug:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
@@ -38,7 +39,7 @@ jobs:
 
   x86_clang_release:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
@@ -47,7 +48,7 @@ jobs:
 
   x86_gcc_debug:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
@@ -56,7 +57,7 @@ jobs:
 
   x86_gcc_release:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
@@ -65,7 +66,7 @@ jobs:
 
   ppc64_gcc_debug:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
@@ -74,58 +75,16 @@ jobs:
 
   ppc64_gcc_release:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
           desc: Running Release tests
           tool: "../cmake/toolchain/gcc.ppc64.release.cmake"
 
-  ppc_gcc_debug:
-    docker:
-      - image: jfalcou/compilers:latest
-    steps:
-      - checkout
-      - run_test:
-          desc: Running Debug tests
-          tool: "../cmake/toolchain/gcc.ppc.debug.cmake"
-
-  ppc_gcc_release:
-    docker:
-      - image: jfalcou/compilers:latest
-    steps:
-      - checkout
-      - run_test:
-          desc: Running Release tests
-          tool: "../cmake/toolchain/gcc.ppc.release.cmake"
-
-  arm_gcc_debug:
-    docker:
-      - image: jfalcou/compilers:latest
-    steps:
-      - checkout
-      - run:
-          name: Update ARM processor model to emulate
-          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
-      - run_test:
-          desc: Running Debug tests
-          tool: "../cmake/toolchain/gcc.arm.debug.cmake"
-
-  arm_gcc_release:
-    docker:
-      - image: jfalcou/compilers:latest
-    steps:
-      - checkout
-      - run:
-          name: Update ARM processor model to emulate
-          command: echo "qemu-arm -cpu cortex-a15 \$@" >> run_arm && chmod +x run_arm
-      - run_test:
-          desc: Running Release tests
-          tool: "../cmake/toolchain/gcc.arm.release.cmake"
-
   aarch64_gcc_debug:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
@@ -134,22 +93,31 @@ jobs:
 
   aarch64_gcc_release:
     docker:
-      - image: jfalcou/compilers:latest
+      - image: jfalcou/compilers:v4
     steps:
       - checkout
       - run_test:
           desc: Running Release tests
           tool: "../cmake/toolchain/gcc.aarch64.release.cmake"
 
+  emscripten:
+    docker:
+      - image: jfalcou/compilers:v4
+    steps:
+      - checkout
+      - run_test:
+          desc: Running Release tests
+          wrapper: "emcmake cmake"
+          tool: "../cmake/toolchain/emcc.cmake"
+
 workflows:
   version: 2
   build_and_test:
     jobs:
+      - emscripten
       - x86_clang_debug
       - x86_gcc_debug
       - ppc64_gcc_debug
-      - ppc_gcc_debug
-      - arm_gcc_debug
       - aarch64_gcc_debug
       - x86_clang_release:
           requires:
@@ -160,12 +128,6 @@ workflows:
       - ppc64_gcc_release:
           requires:
             - ppc64_gcc_debug
-      - ppc_gcc_release:
-          requires:
-            - ppc_gcc_debug
-      - arm_gcc_release:
-          requires:
-            - arm_gcc_debug
       - aarch64_gcc_release:
           requires:
             - aarch64_gcc_debug
