@@ -39,4 +39,6 @@
 # Potential local build repository
 *build*/
 Testing/
-.vscode/settings.json
+.vscode/*
+compile_commands.json
+.cache/*

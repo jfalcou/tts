@@ -21,6 +21,15 @@ TTS_CASE("Equality over sequence")
   TTS_ALL_ABSOLUTE_EQUAL(v,z,3);
 };
 
+TTS_CASE("Exact equality over sequence")
+{
+  std::vector v{1.f,2.f,3.f,-5.f};
+  std::list   w{1.f,2.f,3.f,-5.f};
+
+  TTS_ALL_EQUAL(v,v);
+  TTS_ALL_EQUAL(v,w);
+};
+
 TTS_CASE("Relative equality over sequence")
 {
   std::vector v{1.f,2.f,3.f,-5.f};

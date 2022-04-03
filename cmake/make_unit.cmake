@@ -13,6 +13,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   target_compile_options( tts_test INTERFACE /W3 /EHsc)
 else()
   target_compile_options( tts_test INTERFACE -Wall -Werror)
+  set(TTS_FORCE_STANDALONE 1)
 endif()
 
 ##===================================================================================================
@@ -23,6 +24,10 @@ function(make_unit root)
   set(test "${root}.exe")
   add_executable(${test} ${ARGN})
   add_dependencies(unit ${test})
+
+  if(TTS_FORCE_STANDALONE)
+    add_dependencies(${test} standalone)
+  endif()
 
   set_property( TARGET ${test}
                 PROPERTY RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/unit"
