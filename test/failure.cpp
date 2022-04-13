@@ -11,8 +11,8 @@
 #include <vector>
 #include <list>
 
-TTS_CASE( "Invalid test" )                                                    {};
-TTS_CASE_TPL( "EmpInvalidty template tests", ::tts::arithmetic_types )(auto)  {};
+TTS_CASE( "Invalid test" )                                                     {};
+TTS_CASE_TPL( "Empty invalid template tests", ::tts::arithmetic_types )(auto)  {};
 
 TTS_CASE( "Check that forced broken expectation fails" )
 {
