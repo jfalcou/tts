@@ -3,13 +3,13 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: MIT
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.2)
 
 ##==================================================================================================
 ## Setup project
 ##==================================================================================================
 project(TTS VERSION 0.1 LANGUAGES CXX)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/tts")
 
 ##==================================================================================================
 ## Prevent in-source build
@@ -39,7 +39,6 @@ export(PACKAGE tts)
 ## =================================================================================================
 add_library(tts_lib INTERFACE)
 target_include_directories(tts_lib INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
-
 target_compile_features(tts_lib INTERFACE cxx_std_20)
 add_library(tts::tts ALIAS tts_lib)
 
