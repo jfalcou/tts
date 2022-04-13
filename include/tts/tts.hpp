@@ -292,6 +292,7 @@ namespace tts
   template<typename T> inline auto const typename_ = detail::typename_impl<T>::value();
   template<typename T> constexpr auto name(T const&){ return typename_<T>; }
 }
+#include <cstdint>
 namespace tts
 {
   template<typename... Ts>
