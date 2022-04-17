@@ -133,7 +133,10 @@ namespace tts
     return global_runtime.report(fails,invalids);
   }
 }
+#include <chrono>
+#include <cmath>
 #include <initializer_list>
+#include <random>
 #include <sstream>
 #include <string>
 namespace tts
@@ -186,11 +189,38 @@ namespace tts
     {
       return value({f},that);
     }
+    bool is_valid() { return argc && argv != nullptr; }
     int argc;
     char const** argv;
   };
-  inline ::tts::options arguments;
-  inline bool           verbose_status;
+  namespace detail
+  {
+    inline ::tts::options current_arguments = {0,nullptr};
+    inline std::int32_t   current_seed      = -1;
+  }
+  inline void initialize(int argc, const char** argv)
+  {
+    if(!detail::current_arguments.is_valid())
+      detail::current_arguments = ::tts::options{argc,argv};
+  }
+  inline ::tts::options const& arguments()
+  {
+    return detail::current_arguments;
+  }
+  inline std::int32_t random_seed(int base_seed = -1)
+  {
+    if(detail::current_seed == -1)
+    {
+      auto s = ::tts::arguments().value( "--seed", base_seed );
+      if(s == -1 )
+      {
+        auto now = std::chrono::high_resolution_clock::now();
+        s        = static_cast<std::int32_t>(now.time_since_epoch().count());
+      }
+      detail::current_seed = s;
+    }
+    return detail::current_seed;
+  }
 }
 #if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
 #  define TTS_CUSTOM_DRIVER_FUNCTION main
@@ -202,10 +232,9 @@ namespace tts::detail { struct fatal_signal {}; }
 #if defined(TTS_MAIN)
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
-  ::tts::arguments = ::tts::options{argc,argv};
-  if( ::tts::arguments[{"-h","--help"}] )
+  ::tts::initialize(argc,argv);
+  if( ::tts::arguments()[{"-h","--help"}] )
     return ::tts::usage(argv[0]);
-  ::tts::verbose_status =  ::tts::arguments[{"-p","--pass"}];
   auto nb_tests = ::tts::detail::suite.size();
   std::size_t done_tests = 0;
   try
@@ -549,9 +578,9 @@ namespace tts
     }
     else if constexpr( std::floating_point<T> )
     {
-      auto precision = ::tts::arguments.value({"--precision"}, -1);
-      bool hexmode   = ::tts::arguments[{"-x","--hex"}];
-      bool scimode   = ::tts::arguments[{"-s","--scientific"}];
+      auto precision = ::tts::arguments().value({"--precision"}, -1);
+      bool hexmode   = ::tts::arguments()[{"-x","--hex"}];
+      bool scimode   = ::tts::arguments()[{"-s","--scientific"}];
       std::ostringstream os;
       if(precision != -1 ) os << std::setprecision(precision);
             if(hexmode) os << std::hexfloat   << e << std::defaultfloat;
@@ -1146,8 +1175,16 @@ namespace tts
     };
   }
   template<typename T>
-  using realistic_distribution =  std::conditional_t< std::is_floating_point_v<T>
-                                                    , tts::detail::fp_realistic_distribution<T>
-                                                    , tts::detail::integral_realistic_distribution<T>
-                                                    >;
+  struct realistic_distribution : tts::detail::integral_realistic_distribution<T>
+  {
+    using parent = tts::detail::integral_realistic_distribution<T>;
+    using parent::parent;
+  };
+  template<typename T>
+  requires(std::is_floating_point_v<T>)
+  struct realistic_distribution<T>  : tts::detail::fp_realistic_distribution<T>
+  {
+    using parent = tts::detail::fp_realistic_distribution<T>;
+    using parent::parent;
+  };
 }

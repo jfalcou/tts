@@ -63,6 +63,8 @@ TTS_CASE("Check broken sequence comparisons")
 
 int main(int argc, char const** argv)
 {
+  ::tts::initialize(argc,argv);
   fail_main(argc, argv);
+  std::cout << "Setup seed: " << ::tts::random_seed() << "\n";
   return ::tts::report(19,2);
 }

@@ -252,8 +252,17 @@ namespace tts
   }
 
   template<typename T>
-  using realistic_distribution =  std::conditional_t< std::is_floating_point_v<T>
-                                                    , tts::detail::fp_realistic_distribution<T>
-                                                    , tts::detail::integral_realistic_distribution<T>
-                                                    >;
+  struct realistic_distribution : tts::detail::integral_realistic_distribution<T>
+  {
+    using parent = tts::detail::integral_realistic_distribution<T>;
+    using parent::parent;
+  };
+
+  template<typename T>
+  requires(std::is_floating_point_v<T>)
+  struct realistic_distribution<T>  : tts::detail::fp_realistic_distribution<T>
+  {
+    using parent = tts::detail::fp_realistic_distribution<T>;
+    using parent::parent;
+  };
 }
