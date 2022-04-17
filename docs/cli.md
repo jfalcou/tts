@@ -31,13 +31,13 @@ options require a value and have no short form.
 `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
 
 ## Exploiting Command Line Arguments
-Values of command-line options can be used directly in a test via the `tts::arguments` global object.
+Values of command-line options can be used directly in a test via the `tts::arguments()` function.
 Command line arguments are detected and parsed on-demand, which means that one can define a
 test-specific command-line argument by just retrieving its value from one or multiple expected
 arguments string.
 
 ### `tts::options`
-`tts::arguments` object is an instance of the `tts::options` type that provides the
+`tts::arguments()` returns an instance of the `tts::options` type that provides the
 following members functions:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
