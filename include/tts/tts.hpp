@@ -963,10 +963,11 @@ namespace tts::detail
 #define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_distance     ,N,"ULP" , __VA_ARGS__ )
 #define TTS_ALL_IEEE_EQUAL(S1,S2,...)     TTS_ALL_ULP_EQUAL(S1,S2,0, __VA_ARGS__)
 #define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
-#include <type_traits>
-#include <random>
 #include <cmath>
 #include <limits>
+#include <numeric>
+#include <random>
+#include <type_traits>
 namespace tts
 {
   namespace detail

@@ -7,10 +7,11 @@
 //==================================================================================================
 #pragma once
 
-#include <type_traits>
-#include <random>
 #include <cmath>
 #include <limits>
+#include <numeric>
+#include <random>
+#include <type_traits>
 
 namespace tts
 {
