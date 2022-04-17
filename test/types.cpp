@@ -30,3 +30,22 @@ TTS_CASE_TPL( "Check interaction with templates"
 {
   TTS_TYPE_IS( std::add_const_t<Type>, Type const);
 };
+
+TTS_CASE_TPL( "Check interaction with pre-made type lists", ::tts::arithmetic_types )
+<typename Type>(::tts::type<Type>)
+{
+  TTS_TYPE_IS( std::add_const_t<Type>, Type const);
+};
+
+template<int N, typename Indexes = std::make_index_sequence<N>>  struct sizes;
+
+template<int N, std::size_t... I> struct sizes<N, std::index_sequence<I...>>
+{
+  using types_list = tts::types<std::array<std::byte,I+1>...>;
+};
+
+TTS_CASE_TPL( "Check interaction with type list generator", sizes<5> )
+<typename Type>( tts::type<Type> )
+{
+  TTS_TYPE_IS( std::add_const_t<Type>, Type const);
+};
