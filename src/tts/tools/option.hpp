@@ -7,7 +7,10 @@
 //==================================================================================================
 #pragma once
 
+#include <chrono>
+#include <cmath>
 #include <initializer_list>
+#include <random>
 #include <sstream>
 #include <string>
 
@@ -72,10 +75,43 @@ namespace tts
       return value({f},that);
     }
 
+    bool is_valid() { return argc && argv != nullptr; }
+
     int argc;
     char const** argv;
   };
 
-  inline ::tts::options arguments;
-  inline bool           verbose_status;
+  namespace detail
+  {
+    inline ::tts::options current_arguments = {0,nullptr};
+    inline std::int32_t   current_seed      = -1;
+  }
+
+  inline void initialize(int argc, const char** argv)
+  {
+    if(!detail::current_arguments.is_valid())
+      detail::current_arguments = ::tts::options{argc,argv};
+  }
+
+  inline ::tts::options const& arguments()
+  {
+    return detail::current_arguments;
+  }
+
+  inline std::int32_t random_seed(int base_seed = -1)
+  {
+    if(detail::current_seed == -1)
+    {
+      auto s = ::tts::arguments().value( "--seed", base_seed );
+      if(s == -1 )
+      {
+        auto now = std::chrono::high_resolution_clock::now();
+        s        = static_cast<std::int32_t>(now.time_since_epoch().count());
+      }
+
+      detail::current_seed = s;
+    }
+
+    return detail::current_seed;
+  }
 }

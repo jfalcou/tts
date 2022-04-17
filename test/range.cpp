@@ -66,7 +66,7 @@ TTS_CASE( "Test stateless range check" )
 
 TTS_CASE( "Test stateful range check" )
 {
-  TTS_ULP_RANGE_CHECK ( tts::uniform_prng<float>(-10,10)
+  TTS_ULP_RANGE_CHECK ( tts::realistic_generator<float>(-10,10)
                       , float, (std::array<float,4>)
                       ,  ok_x, ajar_ax
                       , 128

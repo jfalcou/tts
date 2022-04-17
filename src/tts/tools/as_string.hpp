@@ -45,9 +45,9 @@ namespace tts
     }
     else if constexpr( std::floating_point<T> )
     {
-      auto precision = ::tts::arguments.value({"--precision"}, -1);
-      bool hexmode   = ::tts::arguments[{"-x","--hex"}];
-      bool scimode   = ::tts::arguments[{"-s","--scientific"}];
+      auto precision = ::tts::arguments().value({"--precision"}, -1);
+      bool hexmode   = ::tts::arguments()[{"-x","--hex"}];
+      bool scimode   = ::tts::arguments()[{"-s","--scientific"}];
 
       std::ostringstream os;
 

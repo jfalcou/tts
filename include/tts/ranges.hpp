@@ -144,7 +144,7 @@ namespace tts
     using nout_type = std::decay_t<decltype( challenger( std::declval<NewType>() ))>;
 
     //-- Find how many elements in a block
-    std::size_t count = ::tts::arguments.value( "--block", 4096ULL);
+    std::size_t count = ::tts::arguments().value( "--block", 4096ULL);
 
     //-- Prepare blocks
     std::vector<out_type> ref_out(count), new_out(count);
@@ -153,7 +153,7 @@ namespace tts
     for(std::size_t i=0;i<inputs.size();++i)
       inputs[i] = g(i,count);
 
-    std::size_t repetition  = ::tts::arguments.value( "--loop", 1ULL);
+    std::size_t repetition  = ::tts::arguments().value( "--loop", 1ULL);
 
     double max_ulp = 0.;
     std::size_t nb_buckets  = 2+1+16;
@@ -234,15 +234,6 @@ namespace tts
       std::cout << alt << "\n";
     }
   }
-
-  template<typename P>
-  void init_producer(P& producer,  options const& args )
-  {
-    if constexpr( initializable<P,options> )
-    {
-      producer.init(args);
-    }
-  }
 }
 
 //==================================================================================================
@@ -258,10 +249,9 @@ namespace tts
               << "> using ";                                                                        \
                                                                                                     \
     auto generator = TTS_REMOVE_PARENS(Producer);                                                   \
-    tts::init_producer(generator,::tts::arguments);                                                 \
     tts::print_producer(generator, TTS_STRING(Producer) );                                          \
                                                                                                     \
-    auto local_tts_threshold  = ::tts::arguments.value( "--ulpmax", Ulpmax );                       \
+    auto local_tts_threshold  = ::tts::arguments().value( "--ulpmax", Ulpmax );                     \
     auto local_tts_max_ulp    = ::tts::ulp_histogram< TTS_REMOVE_PARENS(RefType)                    \
                                                     , TTS_REMOVE_PARENS(NewType)                    \
                                                     >                                               \
@@ -300,22 +290,13 @@ namespace tts
     using param_type = typename Distribution::param_type;
 
     template<typename... Args>
-    prng_generator(Args... args) : distribution_(std::forward<Args>(args)...) {}
-
-    void init( options const& args )
+    prng_generator(Args... args) : distribution_(std::forward<Args>(args)...)
     {
-      std::mt19937::result_type no_seed(-1);
-      seed_ = ::tts::arguments.value( "--seed", no_seed );
-
-      if(seed_ == no_seed )
-      {
-        auto now  = std::chrono::high_resolution_clock::now();
-        seed_      = static_cast<unsigned int>(now.time_since_epoch().count());
-      }
+      seed_ = random_seed();
       generator_.seed(seed_);
 
-      auto mn = ::tts::arguments.value( "--valmin", distribution_.min() );
-      auto mx = ::tts::arguments.value( "--valmax", distribution_.max() );
+      auto mn = ::tts::arguments().value( "--valmin", distribution_.min() );
+      auto mx = ::tts::arguments().value( "--valmax", distribution_.max() );
 
       distribution_.param(param_type(mn, mx));
     }
@@ -344,10 +325,5 @@ namespace tts
   // Uniform PRNG generator
   //================================================================================================
   template<typename T>
-  using uniform_prng = prng_generator < T
-                                      , std::conditional_t< std::is_floating_point_v<T>
-                                                          , std::uniform_real_distribution<T>
-                                                          , std::uniform_int_distribution<T>
-                                                          >
-                                      >;
+  using realistic_generator = prng_generator<T, ::tts::realistic_distribution<T>>;
 }

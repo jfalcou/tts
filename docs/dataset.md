@@ -55,7 +55,6 @@ namespace tts
   struct prng_generator
   {
     template<typename... Args> prng_generator(Args... args);
-    void init( options const& args );
     template<typename Idx, typename Count> T operator()(Idx, Count);
   };
 }
@@ -120,7 +119,7 @@ Return a the `Idx` value out of `Count`.
   + `index`:
   + `count`:
 
-## tts::uniform_prng_generator
+## tts::realistic_generator
 
 ### Synopsis:
 **Required header:** `#include <tts/ranges.hpp>`
@@ -128,18 +127,18 @@ Return a the `Idx` value out of `Count`.
 namespace tts
 {
   template<typename T, typename Distribution>
-  struct prng_generator
+  struct realistic_generator
   {
-    template<typename... Args> prng_generator(Args... args);
-    void init( options const& args );
+    template<typename... Args> realistic_generator(Args... args);
     template<typename Idx, typename Count> T operator()(Idx, Count);
   };
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Definition
-`tts::uniform_prng_generator` is a convenience type alias that wraps standard uniform distribution
-as a Data Generator.
+`tts::realistic_generator` is a convenience type alias that wraps the `tts::realistic_distribution`
+as a Data Generator. This distribution behaves as a uniform distribution that favors "everyday"
+numbers.
 
 **Template Parameters:**
   + `T`: Type of values to generate.
