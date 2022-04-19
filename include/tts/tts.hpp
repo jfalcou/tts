@@ -375,11 +375,76 @@ namespace tts::detail
   struct test_captures<Generator> : test_captures<typename Generator::types_list>
   {};
 }
+#include <iomanip>
+#include <sstream>
+#include <type_traits>
+namespace tts
+{
+  template<typename T>
+  concept support_std_to_string = requires(T e) { std::to_string(e); };
+  template<typename T>
+  concept support_to_string = requires(T e) { to_string(e); };
+  template<typename T>
+  concept has_to_string = requires(T e) { e.to_string(); };
+  template<typename T>
+  concept sequence = requires(T e) {std::begin(e); std::end(e); };
+  template<typename T>
+  concept streamable = requires(T e, std::ostream& o) { o << e; };
+}
+#include <tuple>
+namespace tts::detail
+{
+  template<typename Generator, typename... Types> struct test_generators
+  {
+    test_generators(const char* id, Generator g, Types...) : name(id), generator(g) {}
+    auto operator+(auto body)
+    {
+      std::mt19937 gen(::tts::random_seed());
+      return test::acknowledge( { name
+                                , [*this,body,gen]() mutable
+                                  {
+                                    ( ( (current_type = " with [T = " + typename_<Types> + "]")
+                                      , std::apply(body, generator(type<Types>{}, gen))
+                                      ), ...
+                                    );
+                                    current_type.clear();
+                                  }
+                                }
+                              );
+    }
+    std::string name;
+    Generator   generator;
+  };
+  template<typename Generator, typename... Types>
+  test_generators(const char*,Generator,Types...) -> test_generators<Generator,Types...>;
+  template<typename Generator, typename... Types>
+  struct  test_generators<Generator, types<Types...>>
+        : test_generators<Generator,Types...>
+  {
+    using parent = test_generators<Generator,Types...>;
+    test_generators(const char* id, Generator g, types<Types...>) : parent(id,g,Types{}...) {}
+  };
+  template<typename Generator, typename TypeGenerator>
+  requires requires(TypeGenerator g) { typename TypeGenerator::types_list; }
+  struct  test_generators<Generator,TypeGenerator>
+        : test_generators<Generator,typename TypeGenerator::types_list>
+  {
+    using parent = test_generators<Generator,typename TypeGenerator::types_list>;
+    test_generators ( const char* id, Generator g, TypeGenerator )
+                    : parent(id,g,typename TypeGenerator::types_list{}) {}
+  };
+}
+#define TTS_PROTOTYPE(...) []__VA_ARGS__
 #define TTS_CASE(ID)                                                                                \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + []()              \
+static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(()) \
 
 #define TTS_CASE_TPL(ID,...)                                                                        \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID} + []  \
+static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID}       \
+                                              + TTS_PROTOTYPE()                                     \
+
+#define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                         \
+static bool const TTS_CAT(case_,TTS_FUNCTION)                                                       \
+                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} + TTS_PROTOTYPE()          \
 
 #include <string_view>
 #include <ostream>
@@ -520,6 +585,340 @@ namespace tts
   ::tts::global_runtime.pass();                                                                     \
 }(std::bool_constant<EXPR>{})                                                                       \
 
+#include <cmath>
+#include <limits>
+#include <numeric>
+#include <random>
+#include <type_traits>
+namespace tts
+{
+  namespace detail
+  {
+    template<typename T> auto dec(T x)  { return x-T(1); }
+    template<typename T> auto inc(T x)  { return x+T(1); }
+    template<typename T> T    abs_s(T x)
+    {
+      if constexpr( std::is_unsigned_v<T>) return x;
+      else
+      {
+        return x == std::numeric_limits<T>::min() ? std::numeric_limits<T>::max()
+                                                  : (x<0 ? -x : x);
+      }
+    }
+    template< typename T = double > struct fp_realistic_distribution
+    {
+      using result_type = T;
+      struct param_type
+      {
+        T a, b;
+        param_type(T aa, T bb) : a(aa),  b(bb) {};
+      };
+      fp_realistic_distribution() : fp_realistic_distribution(0.0, 0.1, 300) { }
+      fp_realistic_distribution(T aa, T bb)
+        : a(std::min(aa, bb)),
+          b(std::max(aa, bb)),
+          nb(300),
+          sd(T(0),T(1)),
+          ird(1, nb-1){
+      };
+      explicit fp_realistic_distribution( const param_type& params )
+        : a(params.a),
+          b(params.b),
+          nb(300),
+          sd(T(0),T(1)),
+          ird(1, nb-1){};
+      void reset(){
+        sd.reset();
+        ird.reset();
+      };
+      template< class Generator > result_type operator()( Generator& gen )
+      {
+        return (*this)(gen, a, b);
+      }
+      template< class Generator > result_type operator()( Generator& gen, result_type aa, result_type bb)
+      {
+        result_type res;
+        if(aa == bb) res = aa;
+        else if(bb <= aa+result_type(0.5)) res = aa+(bb-aa)*sd(gen);
+        else if((aa >= 0 && bb <= 1) || (bb <= 0 && aa >= -1)) res = aa+(bb-aa)*sd(gen);
+        else if(aa >= -1 && bb <= 1) res =((sd(gen)*(bb-aa) > -aa) ? aa : bb)*sd(gen);
+        else
+        {
+          auto i = ird(gen);
+          if (aa >= 1)
+          {
+            auto la =  std::log2(aa);
+            auto f =  std::log2(bb)-la;
+            auto rand = sd(gen);
+            auto x = la+f*(i-1+rand)/nb;
+            res = std::min(std::exp2(x), bb);
+          }
+          else if (bb <= -1)
+          {
+            res = -(*this)(gen, std::abs(bb), std::abs(aa));
+          }
+          else if (aa >= 0)
+          {
+            if(i == 1)
+            {
+              auto r = sd(gen);
+              if (r> aa) res =r;
+              else {i = 2;res = 0; }
+            }
+            else res = (*this)(gen, result_type(1), bb);
+          }
+          else if (bb <= 0)
+          {
+            if(i == 1)
+            {
+              auto r = sd(gen);
+              if (r> -bb) res =-r;
+              else { i = 2; res = 0;}
+            }
+            else res = (*this)(gen, result_type(-1), aa);
+          }
+          else
+          {
+            auto z = result_type(0);
+            auto choice = sd(gen)*std::midpoint(bb, -aa) <  bb/2;
+            if (choice)
+            {
+              res = (*this)(gen, z, bb);
+            }
+            else
+            {
+              res = (*this)(gen, aa, z);
+            }
+          }
+        }
+        return res;
+      }
+      template< class Generator > result_type operator()( Generator& g, const param_type& params );
+      param_type  param() const noexcept { return {a, b}; }
+      void        param( const param_type& params ) noexcept
+      {
+        a = params.a;
+        b = params.b;
+      }
+      result_type min()  const noexcept {return a; };
+      result_type max()  const noexcept {return b; };
+    private:
+      T a;
+      T b;
+      int nb;
+      std::uniform_real_distribution<T> sd;
+      std::uniform_int_distribution<int> ird;
+    };
+    template< typename T = int32_t > struct integral_realistic_distribution
+    {
+      using result_type = T;
+      struct param_type
+      {
+        T a;
+        T b;
+        param_type(T aa, T bb) : a(aa),  b(bb){};
+      };
+      integral_realistic_distribution() : integral_realistic_distribution(std::numeric_limits<T>::min(), std::numeric_limits<T>::max()) { }
+      integral_realistic_distribution( T aa, T bb, int nbb = 300)
+        : a(std::min(aa, bb)),
+          b(std::max(aa, bb)),
+          nb(nbb),
+          sd(0.0, 1.0),
+          ird(a, b),
+          ird2(1, nb) {};
+      explicit integral_realistic_distribution( const param_type& params )
+        : a(params.a),
+          b(params.b),
+          nb(params.nb),
+          sd(0.0, 1.0),
+          ird(a, b),
+          ird2(1, nb) {};
+      void reset(){
+        ird.reset();
+        ird2.reset();
+      };
+      template< class Generator > result_type operator()( Generator& gen )
+      {
+        return (*this)(gen, a, b);
+      }
+      template< class Generator > result_type operator()( Generator& gen, result_type aa, result_type bb)
+      {
+        result_type res(0);
+        if(detail::abs_s(aa) < 256 && detail::abs_s(bb) < 256)
+        {
+          res = ird(gen);
+        }
+        auto l2 = [](auto x){return std::log2(detail::inc(double(x)));   };
+        auto e2 = [](auto x){return detail::dec(T(std::round(std::exp2(x)))); };
+        if(aa == bb) res = aa;
+        else
+        {
+          auto i = ird2(gen);
+          if (aa >= 0)
+          {
+            auto la =  l2(aa);
+            auto lb =  l2(bb);
+            auto f =   lb-la;
+            auto rand = sd(gen);
+            auto x = la+f*(i-1+rand)/nb;
+            res = e2(x);
+          }
+          else if (bb <= 0)
+          {
+            res = -(*this)(gen, detail::abs_s(bb), detail::abs_s(aa));
+          }
+          else
+          {
+            auto z = result_type(0);
+            auto choice = sd(gen)*std::midpoint(detail::abs_s(bb), detail::abs_s(aa)) <  bb/2;
+            if (choice)
+            {
+              res = (*this)(gen, z,detail::abs_s(bb));
+            }
+            else
+            {
+              res = -(*this)(gen, z, detail::abs_s(aa));
+            }
+          }
+        }
+        return res;
+      }
+      template< class Generator > result_type operator()( Generator& g, const param_type& params );
+      param_type param() const noexcept { return {a, b}; }
+      void param( const param_type& params ) noexcept
+      {
+        a = params.a;
+        b = params.b;
+      }
+      result_type min()  const noexcept { return a; };
+      result_type max()  const noexcept { return b; };
+    private:
+      T a;
+      T b;
+      int nb;
+      std::uniform_real_distribution<float> sd;
+      std::uniform_int_distribution<int> ird;
+      std::uniform_int_distribution<int> ird2;
+    };
+  }
+  template<typename T>
+  struct realistic_distribution : tts::detail::integral_realistic_distribution<T>
+  {
+    using parent = tts::detail::integral_realistic_distribution<T>;
+    using parent::parent;
+  };
+  template<typename T>
+  requires(std::is_floating_point_v<T>)
+  struct realistic_distribution<T>  : tts::detail::fp_realistic_distribution<T>
+  {
+    using parent = tts::detail::fp_realistic_distribution<T>;
+    using parent::parent;
+  };
+}
+#include <tuple>
+namespace tts
+{
+  template<typename... G> inline auto generate(G... g)
+  {
+    return [=](auto const& t, auto& rng, auto... others)
+    {
+      return std::make_tuple(produce(t,g,rng,others...)...);
+    };
+  }
+  template<tts::sequence T>
+  auto produce(type<T> const& t, auto g, auto& rng, auto... args)
+  {
+    using value_type = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
+    T that;
+    auto b = std::begin(that);
+    auto e = std::end(that);
+    std::size_t sz = e - b;
+    for(std::size_t i=0;i<sz;++i)
+    {
+      *b++ = g(tts::type<value_type>{},rng,i,sz,args...);
+    }
+    return that;
+  }
+  template<typename T> struct value
+  {
+    value(T v) : seed(v) {}
+    template<typename U>
+    auto operator()(tts::type<U>, auto&, auto...) const
+    {
+      return as_value<U>(seed);
+    }
+    T seed;
+  };
+  template<typename T, typename U = T> struct ramp
+  {
+    ramp(T s)       : start(s), step(1)   {}
+    ramp(T s, U st) : start(s), step(st)  {}
+    template<typename D>
+    auto operator()(tts::type<D>, auto&) const { return as_value<D>(start); }
+    template<typename D>
+    auto operator()(tts::type<D>, auto&, auto idx, auto...) const
+    {
+      return as_value<D>(start)+idx*as_value<D>(step);
+    }
+    T start;
+    U step;
+  };
+  template<typename T, typename U = T> struct reverse_ramp
+  {
+    reverse_ramp(T s)       : start(s), step(1)   {}
+    reverse_ramp(T s, U st) : start(s), step(st)  {}
+    template<typename D>
+    auto operator()(tts::type<D>, auto&) const { return as_value<D>(start); }
+    template<typename D>
+    auto operator()(tts::type<D>, auto&, auto idx, auto sz, auto...) const
+    {
+      return as_value<D>(start)+(sz-1-idx)*as_value<D>(step);
+    }
+    T start;
+    U step;
+  };
+  template<typename T, typename U = T> struct between
+  {
+     between(T s, U st) : first(s), last(st)  {}
+    template<typename D>
+    auto operator()(tts::type<D>, auto&) const { return as_value<D>(first); }
+    template<typename D>
+    auto operator()(tts::type<D>, auto&, auto idx, auto sz, auto...) const
+    {
+      auto w1   = as_value<D>(first);
+      auto w2   = as_value<D>(last);
+      auto step = (sz-1) ? (w2-w1)/(sz-1) : 0;
+      return std::min( as_value<D>(w1 + idx*step), w2);
+    }
+    T first;
+    U last;
+  };
+  template<typename Distribution> struct sample
+  {
+    sample(Distribution d)  : dist(std::move(d))  {}
+    template<typename D> auto operator()(tts::type<D>, auto& rng, auto...)
+    {
+      return as_value<D>(dist(rng));
+    }
+    Distribution dist;
+  };
+  template<typename Mx, typename Mn> struct randoms
+  {
+    randoms(Mn mn, Mx mx)  : mini(mn), maxi(mx)  {}
+    template<typename D> auto operator()(tts::type<D>, auto& rng, auto...)
+    {
+      static tts::realistic_distribution<D> dist(as_value<D>(mini), as_value<D>(maxi));
+      return dist(rng);
+    }
+    Mn mini;
+    Mx maxi;
+  };
+  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
+  {
+    return g(t,rng, others...);
+  }
+}
 namespace tts::detail
 {
   template<typename L, typename R>
@@ -558,16 +957,6 @@ namespace tts::detail
 #include <type_traits>
 namespace tts
 {
-  template<typename T>
-  concept support_std_to_string = requires(T e) { std::to_string(e); };
-  template<typename T>
-  concept support_to_string = requires(T e) { to_string(e); };
-  template<typename T>
-  concept has_to_string = requires(T e) { e.to_string(); };
-  template<typename T>
-  concept sequence = requires(T e) {std::begin(e); std::end(e); };
-  template<typename T>
-  concept streamable = requires(T e, std::ostream& o) { o << e; };
   template<typename T> std::string as_string(T const& e)
   {
     if constexpr( std::is_pointer_v<T> )
@@ -963,228 +1352,3 @@ namespace tts::detail
 #define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_distance     ,N,"ULP" , __VA_ARGS__ )
 #define TTS_ALL_IEEE_EQUAL(S1,S2,...)     TTS_ALL_ULP_EQUAL(S1,S2,0, __VA_ARGS__)
 #define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
-#include <cmath>
-#include <limits>
-#include <numeric>
-#include <random>
-#include <type_traits>
-namespace tts
-{
-  namespace detail
-  {
-    template<typename T> auto dec(T x)  { return x-T(1); }
-    template<typename T> auto inc(T x)  { return x+T(1); }
-    template<typename T> T    abs_s(T x)
-    {
-      return x == std::numeric_limits<T>::min() ? std::numeric_limits<T>::max() : std::abs(x);
-    }
-    template< typename T = double > struct fp_realistic_distribution
-    {
-      using result_type = T;
-      struct param_type
-      {
-        T a, b;
-        param_type(T aa, T bb) : a(aa),  b(bb) {};
-      };
-      fp_realistic_distribution() : fp_realistic_distribution(0.0, 0.1, 300) { }
-      fp_realistic_distribution(T aa, T bb)
-        : a(std::min(aa, bb)),
-          b(std::max(aa, bb)),
-          nb(300),
-          sd(T(0),T(1)),
-          ird(1, nb-1){
-      };
-      explicit fp_realistic_distribution( const param_type& params )
-        : a(params.a),
-          b(params.b),
-          nb(300),
-          sd(T(0),T(1)),
-          ird(1, nb-1){};
-      void reset(){
-        sd.reset();
-        ird.reset();
-      };
-      template< class Generator > result_type operator()( Generator& gen )
-      {
-        return (*this)(gen, a, b);
-      }
-      template< class Generator > result_type operator()( Generator& gen, result_type aa, result_type bb)
-      {
-        result_type res;
-        if(aa == bb) res = aa;
-        else if(bb <= aa+result_type(0.5)) res = aa+(bb-aa)*sd(gen);
-        else if((aa >= 0 && bb <= 1) || (bb <= 0 && aa >= -1)) res = aa+(bb-aa)*sd(gen);
-        else if(aa >= -1 && bb <= 1) res =((sd(gen)*(bb-aa) > -aa) ? aa : bb)*sd(gen);
-        else
-        {
-          auto i = ird(gen);
-          if (aa >= 1)
-          {
-            auto la =  std::log2(aa);
-            auto f =  std::log2(bb)-la;
-            auto rand = sd(gen);
-            auto x = la+f*(i-1+rand)/nb;
-            res = std::min(std::exp2(x), bb);
-          }
-          else if (bb <= -1)
-          {
-            res = -(*this)(gen, std::abs(bb), std::abs(aa));
-          }
-          else if (aa >= 0)
-          {
-            if(i == 1)
-            {
-              auto r = sd(gen);
-              if (r> aa) res =r;
-              else {i = 2;res = 0; }
-            }
-            else res = (*this)(gen, result_type(1), bb);
-          }
-          else if (bb <= 0)
-          {
-            if(i == 1)
-            {
-              auto r = sd(gen);
-              if (r> -bb) res =-r;
-              else { i = 2; res = 0;}
-            }
-            else res = (*this)(gen, result_type(-1), aa);
-          }
-          else
-          {
-            auto z = result_type(0);
-            auto choice = sd(gen)*std::midpoint(bb, -aa) <  bb/2;
-            if (choice)
-            {
-              res = (*this)(gen, z, bb);
-            }
-            else
-            {
-              res = (*this)(gen, aa, z);
-            }
-          }
-        }
-        return res;
-      }
-      template< class Generator > result_type operator()( Generator& g, const param_type& params );
-      param_type  param() const noexcept { return {a, b}; }
-      void        param( const param_type& params ) noexcept
-      {
-        a = params.a;
-        b = params.b;
-      }
-      result_type min()  const noexcept {return a; };
-      result_type max()  const noexcept {return b; };
-    private:
-      T a;
-      T b;
-      int nb;
-      std::uniform_real_distribution<T> sd;
-      std::uniform_int_distribution<int> ird;
-    };
-    template< typename T = int32_t > struct integral_realistic_distribution
-    {
-      using result_type = T;
-      struct param_type
-      {
-        T a;
-        T b;
-        param_type(T aa, T bb) : a(aa),  b(bb){};
-      };
-      integral_realistic_distribution() : integral_realistic_distribution(std::numeric_limits<T>::min(), std::numeric_limits<T>::max()) { }
-      integral_realistic_distribution( T aa, T bb, int nbb = 300)
-        : a(std::min(aa, bb)),
-          b(std::max(aa, bb)),
-          nb(nbb),
-          sd(0.0, 1.0),
-          ird(a, b),
-          ird2(1, nb) {};
-      explicit integral_realistic_distribution( const param_type& params )
-        : a(params.a),
-          b(params.b),
-          nb(params.nb),
-          sd(0.0, 1.0),
-          ird(a, b),
-          ird2(1, nb) {};
-      void reset(){
-        ird.reset();
-        ird2.reset();
-      };
-      template< class Generator > result_type operator()( Generator& gen )
-      {
-        return (*this)(gen, a, b);
-      }
-      template< class Generator > result_type operator()( Generator& gen, result_type aa, result_type bb)
-      {
-        result_type res(0);
-        if(detail::abs_s(aa) < 256 && detail::abs_s(bb) < 256)
-        {
-          res = ird(gen);
-        }
-        auto l2 = [](auto x){return std::log2(detail::inc(double(x)));   };
-        auto e2 = [](auto x){return detail::dec(T(std::round(std::exp2(x)))); };
-        if(aa == bb) res = aa;
-        else
-        {
-          auto i = ird2(gen);
-          if (aa >= 0)
-          {
-            auto la =  l2(aa);
-            auto lb =  l2(bb);
-            auto f =   lb-la;
-            auto rand = sd(gen);
-            auto x = la+f*(i-1+rand)/nb;
-            res = e2(x);
-          }
-          else if (bb <= 0)
-          {
-            res = -(*this)(gen, detail::abs_s(bb), detail::abs_s(aa));
-          }
-          else
-          {
-            auto z = result_type(0);
-            auto choice = sd(gen)*std::midpoint(detail::abs_s(bb), detail::abs_s(aa)) <  bb/2;
-            if (choice)
-            {
-              res = (*this)(gen, z,detail::abs_s(bb));
-            }
-            else
-            {
-              res = -(*this)(gen, z, detail::abs_s(aa));
-            }
-          }
-        }
-        return res;
-      }
-      template< class Generator > result_type operator()( Generator& g, const param_type& params );
-      param_type param() const noexcept { return {a, b}; }
-      void param( const param_type& params ) noexcept
-      {
-        a = params.a;
-        b = params.b;
-      }
-      result_type min()  const noexcept { return a; };
-      result_type max()  const noexcept { return b; };
-    private:
-      T a;
-      T b;
-      int nb;
-      std::uniform_real_distribution<float> sd;
-      std::uniform_int_distribution<int> ird;
-      std::uniform_int_distribution<int> ird2;
-    };
-  }
-  template<typename T>
-  struct realistic_distribution : tts::detail::integral_realistic_distribution<T>
-  {
-    using parent = tts::detail::integral_realistic_distribution<T>;
-    using parent::parent;
-  };
-  template<typename T>
-  requires(std::is_floating_point_v<T>)
-  struct realistic_distribution<T>  : tts::detail::fp_realistic_distribution<T>
-  {
-    using parent = tts::detail::fp_realistic_distribution<T>;
-    using parent::parent;
-  };
-}
