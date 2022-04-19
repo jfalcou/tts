@@ -266,6 +266,22 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   else                                      return 0;
 }
 #endif
+#include <iomanip>
+#include <sstream>
+#include <type_traits>
+namespace tts
+{
+  template<typename T>
+  concept support_std_to_string = requires(T e) { std::to_string(e); };
+  template<typename T>
+  concept support_to_string = requires(T e) { to_string(e); };
+  template<typename T>
+  concept has_to_string = requires(T e) { e.to_string(); };
+  template<typename T>
+  concept sequence = requires(T e) {std::begin(e); std::end(e); };
+  template<typename T>
+  concept streamable = requires(T e, std::ostream& o) { o << e; };
+}
 #ifndef TTS_FUNCTION
 #define TTS_FUNCTION TTS_UNIQUE(tts_function)
 #endif
@@ -375,23 +391,6 @@ namespace tts::detail
   struct test_captures<Generator> : test_captures<typename Generator::types_list>
   {};
 }
-#include <iomanip>
-#include <sstream>
-#include <type_traits>
-namespace tts
-{
-  template<typename T>
-  concept support_std_to_string = requires(T e) { std::to_string(e); };
-  template<typename T>
-  concept support_to_string = requires(T e) { to_string(e); };
-  template<typename T>
-  concept has_to_string = requires(T e) { e.to_string(); };
-  template<typename T>
-  concept sequence = requires(T e) {std::begin(e); std::end(e); };
-  template<typename T>
-  concept streamable = requires(T e, std::ostream& o) { o << e; };
-}
-#include <tuple>
 namespace tts::detail
 {
   template<typename Generator, typename... Types> struct test_generators

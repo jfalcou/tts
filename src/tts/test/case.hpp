@@ -7,6 +7,7 @@
 //==================================================================================================
 #pragma once
 
+#include <tts/tools/concepts.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/typename.hpp>
 #include <tts/tools/types.hpp>
@@ -63,19 +64,6 @@ namespace tts::detail
   struct test_captures<Generator> : test_captures<typename Generator::types_list>
   {};
 }
-
-//==================================================================================================
-/**
-  TTS - Tiny Test System
-  Copyright : TTS Contributors & Maintainers
-  SPDX-License-Identifier: MIT
-**/
-//==================================================================================================
-#pragma once
-
-#include <tts/tools/types.hpp>
-#include <tts/tools/concepts.hpp>
-#include <tuple>
 
 //==================================================================================================
 // Generator-based tests aggregator
