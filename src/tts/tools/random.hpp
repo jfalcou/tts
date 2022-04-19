@@ -21,7 +21,12 @@ namespace tts
     template<typename T> auto inc(T x)  { return x+T(1); }
     template<typename T> T    abs_s(T x)
     {
-      return x == std::numeric_limits<T>::min() ? std::numeric_limits<T>::max() : std::abs(x);
+      if constexpr( std::is_unsigned_v<T>) return x;
+      else
+      {
+        return x == std::numeric_limits<T>::min() ? std::numeric_limits<T>::max()
+                                                  : (x<0 ? -x : x);
+      }
     }
 
     template< typename T = double > struct fp_realistic_distribution
