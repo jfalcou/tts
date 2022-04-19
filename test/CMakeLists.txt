@@ -31,6 +31,7 @@ make_unit ( "relation"      relation/main.cpp
 make_unit ( "display"       display.cpp     )
 make_unit ( "exceptions"    exceptions.cpp  )
 make_unit ( "failure"       failure.cpp     )
+make_unit ( "generator"     generator.cpp   )
 make_unit ( "infos"         infos.cpp       )
 make_unit ( "range"         range.cpp       )
 make_unit ( "random"        random.cpp      )
