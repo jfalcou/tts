@@ -7,6 +7,7 @@
 //==================================================================================================
 #define TTS_MAIN
 #include <tts/tts.hpp>
+#include <array>
 
 template<typename T> struct array_of
 {

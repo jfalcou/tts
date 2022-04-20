@@ -50,11 +50,11 @@ namespace tts
 
     auto b = std::begin(that);
     auto e = std::end(that);
-    std::size_t sz = e - b;
+    auto sz = e - b;
 
-    for(std::size_t i=0;i<sz;++i)
+    for(std::ptrdiff_t i=0;i<sz;++i)
     {
-      *b++ = g(tts::type<value_type>{},rng,i,sz,args...);
+      *b++ = as_value<value_type>(g(tts::type<value_type>{},rng,i,sz,args...));
     }
 
     return that;
