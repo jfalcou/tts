@@ -7,6 +7,7 @@
 //==================================================================================================
 #pragma once
 
+#include <tts/tools/concepts.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/typename.hpp>
 #include <tts/tools/types.hpp>
@@ -65,15 +66,78 @@ namespace tts::detail
 }
 
 //==================================================================================================
-// Test case registration macros
+// Generator-based tests aggregator
 //==================================================================================================
-#define TTS_CASE(ID)                                                                                \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + []()              \
-/**/
+namespace tts::detail
+{
+  template<typename Generator, typename... Types> struct test_generators
+  {
+    test_generators(const char* id, Generator g, Types...) : name(id), generator(g) {}
+    auto operator+(auto body)
+    {
+      std::mt19937 gen(::tts::random_seed());
+      return test::acknowledge( { name
+                                , [*this,body,gen]() mutable
+                                  {
+                                    ( ( (current_type = " with [T = " + typename_<Types> + "]")
+                                      , std::apply(body, generator(type<Types>{}, gen))
+                                      ), ...
+                                    );
+
+                                    current_type.clear();
+                                  }
+                                }
+                              );
+    }
+    std::string name;
+    Generator   generator;
+  };
+
+  template<typename Generator, typename... Types>
+  test_generators(const char*,Generator,Types...) -> test_generators<Generator,Types...>;
+
+  // Specialization for types lists
+  template<typename Generator, typename... Types>
+  struct  test_generators<Generator, types<Types...>>
+        : test_generators<Generator,Types...>
+  {
+    using parent = test_generators<Generator,Types...>;
+    test_generators(const char* id, Generator g, types<Types...>) : parent(id,g,Types{}...) {}
+  };
+
+  // Specialization for types list generator
+  template<typename Generator, typename TypeGenerator>
+  requires requires(TypeGenerator g) { typename TypeGenerator::types_list; }
+  struct  test_generators<Generator,TypeGenerator>
+        : test_generators<Generator,typename TypeGenerator::types_list>
+  {
+    using parent = test_generators<Generator,typename TypeGenerator::types_list>;
+    test_generators ( const char* id, Generator g, TypeGenerator )
+                    : parent(id,g,typename TypeGenerator::types_list{}) {}
+  };
+}
+
+#define TTS_PROTOTYPE(...) []__VA_ARGS__
 
 //==================================================================================================
 // Test case registration macros
 //==================================================================================================
+#define TTS_CASE(ID)                                                                                \
+static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(()) \
+/**/
+
+//==================================================================================================
+// Test case registration macro from template
+//==================================================================================================
 #define TTS_CASE_TPL(ID,...)                                                                        \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID} + []  \
+static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID}       \
+                                              + TTS_PROTOTYPE()                                     \
+/**/
+
+//==================================================================================================
+// Test case registration macro from generators
+//==================================================================================================
+#define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                         \
+static bool const TTS_CAT(case_,TTS_FUNCTION)                                                       \
+                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} + TTS_PROTOTYPE()          \
 /**/

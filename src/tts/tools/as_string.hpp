@@ -10,28 +10,11 @@
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
+#include <tts/tools/concepts.hpp>
 #include <tts/tools/typename.hpp>
 
 namespace tts
 {
-  //================================================================================================
-  // as_string concepts
-  //================================================================================================
-  template<typename T>
-  concept support_std_to_string = requires(T e) { std::to_string(e); };
-
-  template<typename T>
-  concept support_to_string = requires(T e) { to_string(e); };
-
-  template<typename T>
-  concept has_to_string = requires(T e) { e.to_string(); };
-
-  template<typename T>
-  concept sequence = requires(T e) {std::begin(e); std::end(e); };
-
-  template<typename T>
-  concept streamable = requires(T e, std::ostream& o) { o << e; };
-
   //================================================================================================
   // Display a result
   //================================================================================================
