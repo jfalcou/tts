@@ -817,6 +817,11 @@ namespace tts
 #include <tuple>
 namespace tts
 {
+  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
+  {
+    return g(t,rng, others...);
+  }
   template<typename... G> inline auto generate(G... g)
   {
     return [=](auto const& t, auto& rng, auto... others)
@@ -912,11 +917,6 @@ namespace tts
     Mn mini;
     Mx maxi;
   };
-  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
-  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
-  {
-    return g(t,rng, others...);
-  }
 }
 namespace tts::detail
 {

@@ -15,6 +15,19 @@
 namespace tts
 {
   //================================================================================================
+  // Single evaluation of value extension point
+  //================================================================================================
+  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+
+  //================================================================================================
+  // Generator extension point
+  //================================================================================================
+  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
+  {
+    return g(t,rng, others...);
+  }
+
+  //================================================================================================
   // Generators combinator
   //================================================================================================
   template<typename... G> inline auto generate(G... g)
@@ -159,17 +172,4 @@ namespace tts
     Mn mini;
     Mx maxi;
   };
-
-  //================================================================================================
-  // Single evaluation of value extension point
-  //================================================================================================
-  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
-
-  //================================================================================================
-  // Generator extension point
-  //================================================================================================
-  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
-  {
-    return g(t,rng, others...);
-  }
 }
