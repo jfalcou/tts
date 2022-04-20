@@ -26,7 +26,7 @@ TTS_CASE_WITH ( "Check behavior of add on wide"
                                 , tts::ramp{65}, tts::ramp{1,2}
                                 , tts::reverse_ramp{10}, tts::reverse_ramp{100,2}
                                 , tts::between{0,100}
-                                , tts::randoms{-100.,+100.}
+                                , tts::randoms{0.,100.}
                                 , tts::sample{ std::uniform_real_distribution{0.,10.} }
                                 )
               )
