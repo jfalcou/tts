@@ -31,6 +31,17 @@ TTS_CASE( "Check that forced broken relation tests fails" )
   TTS_GREATER_EQUAL(x,3.5f);
 };
 
+TTS_CASE( "Check that forced broken type tests fails" )
+{
+  TTS_TYPE_IS(std::add_pointer<float>::type, double**);
+  TTS_EXPR_IS( 4.f * 3, (std::list<int[4]>) );
+
+  int x{}, y{};
+  TTS_EXPECT_COMPILES(x, { x.foo(); });
+  TTS_EXPECT_NOT_COMPILES(x, y, { x +=y; }) ;
+};
+
+
 void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
 
 TTS_CASE( "Check that forced broken exceptions tests fails" )
@@ -66,5 +77,5 @@ int main(int argc, char const** argv)
   ::tts::initialize(argc,argv);
   fail_main(argc, argv);
   std::cout << "Setup seed: " << ::tts::random_seed() << "\n";
-  return ::tts::report(19,2);
+  return ::tts::report(23,2);
 }

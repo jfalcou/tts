@@ -25,8 +25,8 @@
 //==================================================================================================
 // Proper Macro concatenation of tokens
 //==================================================================================================
-#define TTS_CAT(x, y)                     TTS_CAT_I(x, y)
-#define TTS_CAT_I(x, y)                   x##y
+#define TTS_CAT(x, y)   TTS_CAT_I(x, y)
+#define TTS_CAT_I(x, y) x##y
 
 //==================================================================================================
 // Proper Macro token -> string conversion
@@ -34,6 +34,42 @@
 #define TTS_STRING(...)   TTS_STRING_((__VA_ARGS__))
 #define TTS_STRING__(...) #__VA_ARGS__
 #define TTS_STRING_(TXT)  TTS_STRING__ TXT
+
+//==================================================================================================
+// Count amount of variadic tokens
+//==================================================================================================
+#define TTS_COUNT(...) TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
+#define TTS_COUNT_(A0, A1, A2, A3, A4, A5, A6, A7, ...) A7
+
+//==================================================================================================
+// Turns a,b,c into auto a, auto b, auto c
+//==================================================================================================
+#define TTS_ARG0()
+#define TTS_ARG1(A0)                          auto A0
+#define TTS_ARG2(A0, A1)                      auto A0, auto A1
+#define TTS_ARG3(A0, A1, A2)                  TTS_ARG2(A0, A1)                , auto A2
+#define TTS_ARG4(A0, A1, A2, A3)              TTS_ARG3(A0, A1, A2)            , auto A3
+#define TTS_ARG5(A0, A1, A2, A3, A4)          TTS_ARG4(A0, A1, A2, A3)        , auto A4
+#define TTS_ARG6(A0, A1, A2, A3, A4, A5)      TTS_ARG5(A0, A1, A2, A3, A4)    , auto A5
+#define TTS_ARG7(A0, A1, A2, A3, A4, A5, A6)  TTS_ARG6(A0, A1, A2, A3, A4, A5), auto A6
+
+#define TTS_ARG(...) TTS_CAT(TTS_ARG, TTS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+
+//==================================================================================================
+// Revert a VA_ARGS
+//==================================================================================================
+#define TTS_VAL(x)                    x
+#define TTS_REVERSE_1(a)              (a)
+#define TTS_REVERSE_2(a,b)            (b, a)
+#define TTS_REVERSE_3(a,b,c)          (c, b, a)
+#define TTS_REVERSE_4(a,b,c,d)        (d, c, b, a)
+#define TTS_REVERSE_5(a,b,c,d,e)      (e, d, c, b, a)
+#define TTS_REVERSE_6(a,b,c,d,e,f)    (f, e, d, c, b, a)
+#define TTS_REVERSE_7(a,b,c,d,e,f,g)  (g, f, e, d, c, b, a)
+
+#define TTS_REVERSE_IMPL(N,...) TTS_VAL(TTS_REVERSE_ ## N(__VA_ARGS__))
+#define TTS_REVERSE_(N,...)     TTS_REVERSE_IMPL( N, __VA_ARGS__)
+#define TTS_REVERSE(...)        TTS_REVERSE_( TTS_COUNT(__VA_ARGS__), __VA_ARGS__)
 
 //==================================================================================================
 // Remove parens around macro token if any are present -- NON TRIVIAL SHIT

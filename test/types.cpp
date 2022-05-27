@@ -23,6 +23,13 @@ TTS_CASE( "Check that expression types can be tested for equality" )
   TTS_EXPR_IS( std::swap(d,d), void      );
 };
 
+TTS_CASE( "Check that expression types can be tested for compilation status" )
+{
+  int x{}, y{};
+  TTS_EXPECT_COMPILES(x, y,  { x +=y;   } );
+  TTS_EXPECT_NOT_COMPILES(x, { x.foo(); } );
+};
+
 TTS_CASE_TPL( "Check interaction with templates"
             , int,float,char,void*
             )

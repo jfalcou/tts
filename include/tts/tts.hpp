@@ -291,11 +291,33 @@ namespace tts
 #define TTS_UNIQUE3(ID, LINE) ID##LINE
 #define TTS_UNIQUE2(ID, LINE) TTS_UNIQUE3(ID, LINE)
 #define TTS_UNIQUE(ID)        TTS_UNIQUE2(ID, __COUNTER__)
-#define TTS_CAT(x, y)                     TTS_CAT_I(x, y)
-#define TTS_CAT_I(x, y)                   x##y
+#define TTS_CAT(x, y)   TTS_CAT_I(x, y)
+#define TTS_CAT_I(x, y) x##y
 #define TTS_STRING(...)   TTS_STRING_((__VA_ARGS__))
 #define TTS_STRING__(...) #__VA_ARGS__
 #define TTS_STRING_(TXT)  TTS_STRING__ TXT
+#define TTS_COUNT(...) TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
+#define TTS_COUNT_(A0, A1, A2, A3, A4, A5, A6, A7, ...) A7
+#define TTS_ARG0()
+#define TTS_ARG1(A0)                          auto A0
+#define TTS_ARG2(A0, A1)                      auto A0, auto A1
+#define TTS_ARG3(A0, A1, A2)                  TTS_ARG2(A0, A1)                , auto A2
+#define TTS_ARG4(A0, A1, A2, A3)              TTS_ARG3(A0, A1, A2)            , auto A3
+#define TTS_ARG5(A0, A1, A2, A3, A4)          TTS_ARG4(A0, A1, A2, A3)        , auto A4
+#define TTS_ARG6(A0, A1, A2, A3, A4, A5)      TTS_ARG5(A0, A1, A2, A3, A4)    , auto A5
+#define TTS_ARG7(A0, A1, A2, A3, A4, A5, A6)  TTS_ARG6(A0, A1, A2, A3, A4, A5), auto A6
+#define TTS_ARG(...) TTS_CAT(TTS_ARG, TTS_COUNT(__VA_ARGS__))(__VA_ARGS__)
+#define TTS_VAL(x)                    x
+#define TTS_REVERSE_1(a)              (a)
+#define TTS_REVERSE_2(a,b)            (b, a)
+#define TTS_REVERSE_3(a,b,c)          (c, b, a)
+#define TTS_REVERSE_4(a,b,c,d)        (d, c, b, a)
+#define TTS_REVERSE_5(a,b,c,d,e)      (e, d, c, b, a)
+#define TTS_REVERSE_6(a,b,c,d,e,f)    (f, e, d, c, b, a)
+#define TTS_REVERSE_7(a,b,c,d,e,f,g)  (g, f, e, d, c, b, a)
+#define TTS_REVERSE_IMPL(N,...) TTS_VAL(TTS_REVERSE_ ## N(__VA_ARGS__))
+#define TTS_REVERSE_(N,...)     TTS_REVERSE_IMPL( N, __VA_ARGS__)
+#define TTS_REVERSE(...)        TTS_REVERSE_( TTS_COUNT(__VA_ARGS__), __VA_ARGS__)
 #define TTS_REMOVE_PARENS(x)              TTS_EVAL((TTS_REMOVE_PARENS_I x), x)
 #define TTS_REMOVE_PARENS_I(...)          1, 1
 #define TTS_APPLY(macro, args)            TTS_APPLY_I(macro, args)
@@ -1060,22 +1082,78 @@ namespace tts
 #define TTS_CONSTEXPR_GREATER(LHS, RHS)        TTS_CONSTEXPR_RELATION(LHS,RHS, gt , ">"  , "<=")
 #define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS)     TTS_CONSTEXPR_RELATION(LHS,RHS, le , "<=" , ">" )
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS)  TTS_CONSTEXPR_RELATION(LHS,RHS, ge , ">=" , "<=")
-#define TTS_TYPE_IS(TYPE, REF)                                                                      \
+#define TTS_TYPE_IS(TYPE, REF, ...)     TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FAIL)
+#define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FATAL)
+#define TTS_TYPE_IS_IMPL(TYPE, REF, FAILURE)                                                        \
+[&]<typename T, typename R>(::tts::type<T>, ::tts::type<R>)                                         \
 {                                                                                                   \
-  static_assert ( std::is_same_v<TTS_REMOVE_PARENS(TYPE),TTS_REMOVE_PARENS(REF)>                    \
-                , "[TTS] - ** FAILURE** : " TTS_STRING(TTS_REMOVE_PARENS(TYPE))                     \
-                  " is not the same as " TTS_STRING(TTS_REMOVE_PARENS(REF)) "."                     \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}
-#define TTS_EXPR_IS(EXPR, TYPE)                                                                     \
+  if constexpr( std::is_same_v<T,R> )                                                               \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE ( "Type: "  << TTS_STRING(TTS_REMOVE_PARENS(TYPE)) << " is not the same as "            \
+                        << TTS_STRING(TTS_REMOVE_PARENS(REF))  << " because "                       \
+                        << ::tts::typename_<T> << " is not " << ::tts::typename_<R>                 \
+            );                                                                                      \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(::tts::type<TTS_REMOVE_PARENS(TYPE)>{}, ::tts::type<TTS_REMOVE_PARENS(REF)>{})                    \
+
+#define TTS_EXPR_IS(EXPR, TYPE, ...)     TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#define TTS_EXPR_IS_(EXPR, TYPE)         TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FAIL)
+#define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FATAL)
+#define TTS_EXPR_IS_IMPL(EXPR, TYPE, FAILURE)                                                       \
+[&]<typename T, typename R>(::tts::type<T>, ::tts::type<R>)                                         \
 {                                                                                                   \
-  static_assert ( std::is_same_v<decltype(TTS_REMOVE_PARENS(EXPR)),TTS_REMOVE_PARENS(TYPE)>         \
-                , "[TTS] - ** FAILURE** : " TTS_STRING(TTS_REMOVE_PARENS(EXPR))                     \
-                  " does not evaluates to an instance of " TTS_STRING(TTS_REMOVE_PARENS(TYPE)) "."  \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}
+  if constexpr( std::is_same_v<T,R> )                                                               \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE (   "Type: "  << TTS_STRING(TTS_REMOVE_PARENS(EXPR))  << " is not the same as "         \
+                          << TTS_STRING(TTS_REMOVE_PARENS(TYPE)) << " because "                     \
+                          << ::tts::typename_<T> << " is not " << ::tts::typename_<R>               \
+            );                                                                                      \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(::tts::type<decltype(TTS_REMOVE_PARENS(EXPR))>{}, ::tts::type<TTS_REMOVE_PARENS(TYPE)>{})         \
+
+#define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                             \
+[&]( TTS_ARG(__VA_ARGS__) )                                                                           \
+{                                                                                                     \
+  if constexpr( requires TTS_REMOVE_PARENS(EXPR) )                                                    \
+  {                                                                                                   \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                        \
+  }                                                                                                   \
+  else                                                                                                \
+  {                                                                                                   \
+    TTS_FAIL(     "Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR))                               \
+              <<  " does not compile as expected."                                                    \
+            );                                                                                        \
+    return ::tts::logger{};                                                                           \
+  }                                                                                                   \
+}(__VA_ARGS__)                                                                                        \
+
+#define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__) )
+#define TTS_EXPECT_NOT_COMPILES_IMPL(EXPR, ...)                                                       \
+[&]( TTS_ARG(__VA_ARGS__) )                                                                           \
+{                                                                                                     \
+  if constexpr( !(requires TTS_REMOVE_PARENS(EXPR)) )                                                 \
+  {                                                                                                   \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                        \
+  }                                                                                                   \
+  else                                                                                                \
+  {                                                                                                   \
+    TTS_FAIL("Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " compiles unexpectedly." );    \
+    return ::tts::logger{};                                                                           \
+  }                                                                                                   \
+}(__VA_ARGS__)                                                                                        \
+
+#define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                    \
 [&]()                                                                                               \
 {                                                                                                   \
