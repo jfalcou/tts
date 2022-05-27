@@ -10,7 +10,7 @@
 add_library(tts_test INTERFACE)
 target_compile_features ( tts_test INTERFACE  cxx_std_20 )
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  target_compile_options( tts_test INTERFACE /W3 /EHsc)
+  target_compile_options( tts_test INTERFACE /W3 /EHsc /Zc:preprocessor )
 else()
   target_compile_options( tts_test INTERFACE -Wall -Werror)
   set(TTS_FORCE_STANDALONE 1)
