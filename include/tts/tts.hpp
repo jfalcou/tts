@@ -588,23 +588,41 @@ namespace tts
   }                                                                                                 \
 }(EXPR)                                                                                             \
 
-#define TTS_CONSTEXPR_EXPECT(EXPR)                                                                  \
-[]<typename C>(C )                                                                                  \
+#define TTS_CONSTEXPR_EXPECT(EXPR, ...) TTS_CEXPR_EXPECT_ ## __VA_ARGS__ ( EXPR )
+#define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
+#define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
+#define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
+[&](auto&& expr)                                                                                    \
 {                                                                                                   \
-  static_assert ( C::value                                                                          \
-                , "[TTS] - Error: " TTS_STRING(EXPR) " evaluates to false at compile-time."         \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}(std::bool_constant<EXPR>{})                                                                       \
+  using result_tts = std::bool_constant<EXPR>;                                                      \
+  if constexpr( result_tts::value )                                                                 \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(EXPR)                                                                                             \
 
-#define TTS_CONSTEXPR_EXPECT_NOT(EXPR)                                                              \
-[]<typename C>(C )                                                                                  \
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
+#define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
+#define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
+#define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
+[&](auto&& expr)                                                                                    \
 {                                                                                                   \
-  static_assert ( !C::value                                                                         \
-                , "[TTS] - Error: " TTS_STRING(EXPR) " evaluates to true at compile-time."          \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}(std::bool_constant<EXPR>{})                                                                       \
+  using result_tts = std::bool_constant<EXPR>;                                                      \
+  if constexpr( !result_tts::value )                                                                \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(EXPR)                                                                                             \
 
 #include <cmath>
 #include <limits>
@@ -1031,7 +1049,7 @@ namespace tts
   inline std::string as_string(std::string_view const& e) { return  std::string(e);             }
   inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr");     }
 }
-#define TTS_RELATION(A, B, OP, T, F, ...)    TTS_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
+#define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
 #define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                  \
@@ -1056,20 +1074,33 @@ namespace tts
 #define TTS_GREATER(LHS, RHS, ...)        TTS_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
 #define TTS_LESS_EQUAL(LHS, RHS, ...)     TTS_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
-#define TTS_CONSTEXPR_RELATION(A, B, OP, T, F)                                                      \
+#define TTS_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
+#define TTS_CEXPR_RELATION_(A, B, OP, T, F)         TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
+#define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
+#define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
+[&](auto&& a, auto&& b)                                                                             \
 {                                                                                                   \
-  static_assert ( std::bool_constant<::tts::detail::OP(A,B)>::value                                 \
-                , "[TTS] - ** FAILURE** : " TTS_STRING(A) " " T " " TTS_STRING(B) " is false."      \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}                                                                                                   \
+  using result_tts = std::bool_constant<::tts::detail::OP(A,B)>;                                    \
+  if constexpr( result_tts::value )                                                                 \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE (   "Expression: "  << TTS_STRING(A) << " " << T << " " << TTS_STRING(B)                \
+            <<  " is false because: "                                                               \
+            << ::tts::as_string(a) << " " << F << " " << ::tts::as_string(b)                        \
+            );                                                                                      \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(A,B)                                                                                              \
 
-#define TTS_CONSTEXPR_EQUAL(LHS, RHS)          TTS_CONSTEXPR_RELATION(LHS,RHS, eq , "==" , "!=")
-#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS)      TTS_CONSTEXPR_RELATION(LHS,RHS, neq, "!=" , "==")
-#define TTS_CONSTEXPR_LESS(LHS, RHS)           TTS_CONSTEXPR_RELATION(LHS,RHS, lt , "<"  , ">=")
-#define TTS_CONSTEXPR_GREATER(LHS, RHS)        TTS_CONSTEXPR_RELATION(LHS,RHS, gt , ">"  , "<=")
-#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS)     TTS_CONSTEXPR_RELATION(LHS,RHS, le , "<=" , ">" )
-#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS)  TTS_CONSTEXPR_RELATION(LHS,RHS, ge , ">=" , "<=")
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
+#define TTS_CONSTEXPR_LESS(LHS, RHS, ...)           TTS_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
+#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)        TTS_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)     TTS_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
 #define TTS_TYPE_IS(TYPE, REF, ...)     TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
 #define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FAIL)
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FATAL)

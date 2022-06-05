@@ -39,6 +39,7 @@ constexpr bool gte(int a, int b) { return a >= b; }
 
 TTS_CASE( "Check that constexpr expectation can be met" )
 {
+  TTS_CONSTEXPR_EXPECT(true);
   TTS_CONSTEXPR_EXPECT(eq (42, 42));
   TTS_CONSTEXPR_EXPECT(neq(69, 42));
   TTS_CONSTEXPR_EXPECT(lt (42, 69));
