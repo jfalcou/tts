@@ -499,6 +499,11 @@ namespace tts
     int         line_{};
   };
 }
+#define TTS_PASS(Message)                                                                           \
+  [&]()                                                                                             \
+  {                                                                                                 \
+    ::tts::global_runtime.pass();                                                                   \
+  }()
 #define TTS_FAIL(Message)                                                                           \
   [&]()                                                                                             \
   {                                                                                                 \
@@ -593,7 +598,7 @@ namespace tts
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
-[&](auto&& expr)                                                                                    \
+[&]()                                                                                               \
 {                                                                                                   \
   using result_tts = std::bool_constant<EXPR>;                                                      \
   if constexpr( result_tts::value )                                                                 \
@@ -605,13 +610,13 @@ namespace tts
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
     return ::tts::logger{};                                                                         \
   }                                                                                                 \
-}(EXPR)                                                                                             \
+}()                                                                                                 \
 
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
-[&](auto&& expr)                                                                                    \
+[&]()                                                                                               \
 {                                                                                                   \
   using result_tts = std::bool_constant<EXPR>;                                                      \
   if constexpr( !result_tts::value )                                                                \
@@ -623,7 +628,7 @@ namespace tts
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
     return ::tts::logger{};                                                                         \
   }                                                                                                 \
-}(EXPR)                                                                                             \
+}()                                                                                                 \
 
 #include <cmath>
 #include <limits>
