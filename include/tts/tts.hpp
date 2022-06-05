@@ -983,7 +983,7 @@ namespace tts
     if constexpr( std::is_pointer_v<T> )
     {
       std::ostringstream os;
-      os << std::string(typename_<T>) << "(" << e << ")";
+      os << typename_<T> << "(" << (void*)(e) << ")";
       return os.str();
     }
     else if constexpr( std::floating_point<T> )
@@ -1022,7 +1022,7 @@ namespace tts
     else
     {
       std::ostringstream os;
-      os << "[" << std::string(typename_<T>) << "]@(" << &e << ")";
+      os << "[" << typename_<T> << "]@(" << &e << ")";
       return os.str();
     }
   }
@@ -1030,18 +1030,6 @@ namespace tts
   inline std::string as_string(std::string const& e)      { return  e;                          }
   inline std::string as_string(std::string_view const& e) { return  std::string(e);             }
   inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr");     }
-  inline std::string as_string(const char* e)
-  {
-    std::ostringstream os;
-    os << "char*(" << (void*)e << ")";
-    return os.str();
-  }
-  inline std::string as_string(char* e )
-  {
-    std::ostringstream os;
-    os << "char*(" << (void*)e << ")";
-    return os.str();
-  }
 }
 #define TTS_RELATION(A, B, OP, T, F, ...)    TTS_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
 #define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
