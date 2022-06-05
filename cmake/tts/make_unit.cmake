@@ -23,10 +23,10 @@ function(make_unit root)
 
   set(test "${root}.exe")
   add_executable(${test} ${ARGN})
-  add_dependencies(unit ${test})
+  add_dependencies(tts-unit ${test})
 
   if(TTS_FORCE_STANDALONE)
-    add_dependencies(${test} standalone)
+    add_dependencies(${test} tts-standalone)
   endif()
 
   set_property( TARGET ${test}
@@ -44,11 +44,10 @@ function(make_unit root)
                                 ${PROJECT_SOURCE_DIR}/test
                             )
 
-
   if (CMAKE_CROSSCOMPILING_CMD)
     add_test( NAME ${test}
               WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/${location}"
-              COMMAND ${CMAKE_CROSSCOMPILING_CMD} $<TARGET_FILE:${test}> --no-color --pass
+              COMMAND ${CMAKE_CROSSCOMPILING_CMD} $<TARGET_FILE:${test}>
             )
   else()
     add_test( NAME ${test}

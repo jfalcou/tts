@@ -49,23 +49,42 @@
 }(EXPR)                                                                                             \
 /**/
 
-#define TTS_CONSTEXPR_EXPECT(EXPR)                                                                  \
-[]<typename C>(C )                                                                                  \
+#define TTS_CONSTEXPR_EXPECT(EXPR, ...) TTS_CEXPR_EXPECT_ ## __VA_ARGS__ ( EXPR )
+#define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
+#define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
+
+#define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
+[&](auto&& expr)                                                                                    \
 {                                                                                                   \
-  static_assert ( C::value                                                                          \
-                , "[TTS] - Error: " TTS_STRING(EXPR) " evaluates to false at compile-time."         \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}(std::bool_constant<EXPR>{})                                                                       \
+  using result_tts = std::bool_constant<EXPR>;                                                      \
+  if constexpr( result_tts::value )                                                                 \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(EXPR)                                                                                             \
 /**/
 
-#define TTS_CONSTEXPR_EXPECT_NOT(EXPR)                                                              \
-[]<typename C>(C )                                                                                  \
-{                                                                                                   \
-  static_assert ( !C::value                                                                         \
-                , "[TTS] - Error: " TTS_STRING(EXPR) " evaluates to true at compile-time."          \
-                );                                                                                  \
-  ::tts::global_runtime.pass();                                                                     \
-}(std::bool_constant<EXPR>{})                                                                       \
-/**/
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
+#define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
+#define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 
+#define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
+[&](auto&& expr)                                                                                    \
+{                                                                                                   \
+  using result_tts = std::bool_constant<EXPR>;                                                      \
+  if constexpr( !result_tts::value )                                                                \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
+    return ::tts::logger{};                                                                         \
+  }                                                                                                 \
+}(EXPR)                                                                                             \
+/**/

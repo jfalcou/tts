@@ -57,7 +57,7 @@ add_custom_command(OUTPUT tts.hpp
   VERBATIM
 )
 
-add_custom_target(standalone DEPENDS tts.hpp)
+add_custom_target(tts-standalone DEPENDS tts.hpp)
 
 ##==================================================================================================
 ## Setup Testing
@@ -66,8 +66,8 @@ if( TTS_BUILD_TEST )
   enable_testing()
   include(CTest)
   add_custom_target(tests)
-  add_custom_target(unit)
+  add_custom_target(tts-unit)
 
-  add_dependencies(tests unit)
+  add_dependencies(tests tts-unit)
   add_subdirectory(test)
 endif()
