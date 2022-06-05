@@ -374,6 +374,7 @@ namespace tts
   using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
   using signed_types      = concatenate_t<real_types,int_types>;
   using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
+  using integral_types    = concatenate_t<int_types,int_types>;
   using arithmetic_types  = concatenate_t<real_types,int_types,uint_types>;
 }
 namespace tts::detail
