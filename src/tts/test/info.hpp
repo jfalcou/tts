@@ -27,7 +27,7 @@
     if(!::tts::global_runtime.fail_status)                                                          \
     {                                                                                               \
       ::tts::global_runtime.fail_status = true;                                                     \
-      std::cout << "[X] - " << ::tts::detail::current_test<< "\n";                                  \
+      std::cout << "[X] - " << ::tts::detail::current_test << "\n";                                 \
     }                                                                                               \
     if( !::tts::detail::current_type.empty())                                                       \
     {                                                                                               \

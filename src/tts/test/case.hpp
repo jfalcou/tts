@@ -11,6 +11,7 @@
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/typename.hpp>
 #include <tts/tools/types.hpp>
+#include <tuple>
 
 //================================================================================================
 // "Seed" capture
