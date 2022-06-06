@@ -13,6 +13,13 @@
 //==================================================================================================
 // Tests macros - Basic information
 //==================================================================================================
+#define TTS_PASS(Message)                                                                           \
+  [&]()                                                                                             \
+  {                                                                                                 \
+    ::tts::global_runtime.pass();                                                                   \
+  }()
+/**/
+
 #define TTS_FAIL(Message)                                                                           \
   [&]()                                                                                             \
   {                                                                                                 \
@@ -20,7 +27,7 @@
     if(!::tts::global_runtime.fail_status)                                                          \
     {                                                                                               \
       ::tts::global_runtime.fail_status = true;                                                     \
-      std::cout << "[X] - " << ::tts::detail::current_test<< "\n";                                  \
+      std::cout << "[X] - " << ::tts::detail::current_test << "\n";                                 \
     }                                                                                               \
     if( !::tts::detail::current_type.empty())                                                       \
     {                                                                                               \

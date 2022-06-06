@@ -374,8 +374,10 @@ namespace tts
   using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
   using signed_types      = concatenate_t<real_types,int_types>;
   using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
+  using integral_types    = concatenate_t<int_types,int_types>;
   using arithmetic_types  = concatenate_t<real_types,int_types,uint_types>;
 }
+#include <tuple>
 namespace tts::detail
 {
   struct test_capture
@@ -498,6 +500,11 @@ namespace tts
     int         line_{};
   };
 }
+#define TTS_PASS(Message)                                                                           \
+  [&]()                                                                                             \
+  {                                                                                                 \
+    ::tts::global_runtime.pass();                                                                   \
+  }()
 #define TTS_FAIL(Message)                                                                           \
   [&]()                                                                                             \
   {                                                                                                 \
@@ -505,7 +512,7 @@ namespace tts
     if(!::tts::global_runtime.fail_status)                                                          \
     {                                                                                               \
       ::tts::global_runtime.fail_status = true;                                                     \
-      std::cout << "[X] - " << ::tts::detail::current_test<< "\n";                                  \
+      std::cout << "[X] - " << ::tts::detail::current_test << "\n";                                 \
     }                                                                                               \
     if( !::tts::detail::current_type.empty())                                                       \
     {                                                                                               \
@@ -592,7 +599,7 @@ namespace tts
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
-[&](auto&& expr)                                                                                    \
+[&]()                                                                                               \
 {                                                                                                   \
   using result_tts = std::bool_constant<EXPR>;                                                      \
   if constexpr( result_tts::value )                                                                 \
@@ -604,13 +611,13 @@ namespace tts
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
     return ::tts::logger{};                                                                         \
   }                                                                                                 \
-}(EXPR)                                                                                             \
+}()                                                                                                 \
 
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
-[&](auto&& expr)                                                                                    \
+[&]()                                                                                               \
 {                                                                                                   \
   using result_tts = std::bool_constant<EXPR>;                                                      \
   if constexpr( !result_tts::value )                                                                \
@@ -622,7 +629,7 @@ namespace tts
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
     return ::tts::logger{};                                                                         \
   }                                                                                                 \
-}(EXPR)                                                                                             \
+}()                                                                                                 \
 
 #include <cmath>
 #include <limits>
@@ -1448,3 +1455,44 @@ namespace tts::detail
 #define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_distance     ,N,"ULP" , __VA_ARGS__ )
 #define TTS_ALL_IEEE_EQUAL(S1,S2,...)     TTS_ALL_ULP_EQUAL(S1,S2,0, __VA_ARGS__)
 #define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
+#include <iostream>
+namespace tts::detail
+{
+  struct section_guard
+  {
+    int &       id;
+    int const & section;
+    section_guard(int &id_, int const &section_, int &count) : id(id_) , section(section_)
+    {
+      if(section == 0) id = count++ - 1;
+    }
+    template<typename Desc> bool check(Desc const& desc)
+    {
+      if(id == section) std::cout << "  And then: " << desc << std::endl;
+      return id == section;
+    }
+  };
+  struct only_once
+  {
+    bool once = true;
+    explicit operator bool() { bool result = once; once = false; return result; }
+  };
+}
+#define TTS_WHEN(STORY)                                                                             \
+  std::cout << "[?] - For: " << ::tts::detail::current_test << "\n";                                \
+  std::cout << "When      : " << STORY << std::endl;                                                \
+  for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++)   \
+    for( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \
+
+#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, ...)                                                        \
+  static int TTS_LOCAL_ID = 0;                                                                      \
+  std::ostringstream TTS_CAT(desc_,TTS_LOCAL_ID);                                                   \
+  if(::tts::detail::section_guard(TTS_LOCAL_ID, tts_section, tts_count )                            \
+                  .check( ((TTS_CAT(desc_,TTS_LOCAL_ID)  << __VA_ARGS__)                            \
+                          , TTS_CAT(desc_,TTS_LOCAL_ID).str())                                      \
+                        )                                                                           \
+    )                                                                                               \
+  for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )  \
+    for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                  \
+
+#define TTS_AND_THEN(...) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), __VA_ARGS__)
