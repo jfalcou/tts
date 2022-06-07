@@ -876,11 +876,17 @@ namespace tts
       return std::make_tuple(produce(t,g,rng,others...)...);
     };
   }
+  template<tts::sequence Seq, typename U> struct rebuild;
+  template<template<class,class...> class Seq, typename T, typename... S, typename U>
+  struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
+  template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
+  struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
   template<tts::sequence T>
   auto produce(type<T> const& t, auto g, auto& rng, auto... args)
   {
-    using value_type = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
-    T that;
+    using elmt_type   = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
+    using value_type  = decltype(g(tts::type<elmt_type>{},rng,0,0ULL,args...));
+    typename rebuild<T,value_type>::type that;
     auto b = std::begin(that);
     auto e = std::end(that);
     auto sz = e - b;
@@ -909,7 +915,7 @@ namespace tts
     template<typename D>
     auto operator()(tts::type<D>, auto&, auto idx, auto...) const
     {
-      return as_value<D>(start)+idx*as_value<D>(step);
+      return as_value<D>(start+idx*step);
     }
     T start;
     U step;
@@ -923,7 +929,7 @@ namespace tts
     template<typename D>
     auto operator()(tts::type<D>, auto&, auto idx, auto sz, auto...) const
     {
-      return as_value<D>(start)+(sz-1-idx)*as_value<D>(step);
+      return as_value<D>(start+(sz-1-idx)*step);
     }
     T start;
     U step;
@@ -949,7 +955,7 @@ namespace tts
     sample(Distribution d)  : dist(std::move(d))  {}
     template<typename D> auto operator()(tts::type<D>, auto& rng, auto...)
     {
-      return as_value<D>(dist(rng));
+      return dist(rng);
     }
     Distribution dist;
   };
