@@ -74,17 +74,16 @@ namespace tts::detail
   template<typename Generator, typename... Types> struct test_generators
   {
     test_generators(const char* id, Generator g, Types...) : name(id), generator(g) {}
-    auto operator+(auto body)
+    friend auto operator<<(test_generators tg, auto body)
     {
       std::mt19937 gen(::tts::random_seed());
-      return test::acknowledge( { name
-                                , [*this,body,gen]() mutable
+      return test::acknowledge( { tg.name
+                                , [tg,body,gen]() mutable
                                   {
                                     ( ( (current_type = " with [T = " + typename_<Types> + "]")
-                                      , std::apply(body, generator(type<Types>{}, gen))
+                                      , std::apply(body, tg.generator(type<Types>{}, gen))
                                       ), ...
                                     );
-
                                     current_type.clear();
                                   }
                                 }
@@ -140,5 +139,5 @@ static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__V
 //==================================================================================================
 #define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                         \
 static bool const TTS_CAT(case_,TTS_FUNCTION)                                                       \
-                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} + TTS_PROTOTYPE()          \
+                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} << TTS_PROTOTYPE()         \
 /**/
