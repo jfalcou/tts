@@ -422,10 +422,10 @@ namespace tts::detail
     test_generators(const char* id, Generator g, Types...) : name(id), generator(g) {}
     friend auto operator<<(test_generators tg, auto body)
     {
-      std::mt19937 gen(::tts::random_seed());
       return test::acknowledge( { tg.name
-                                , [tg,body,gen]() mutable
+                                , [tg,body]() mutable
                                   {
+                                    std::mt19937 gen(::tts::random_seed());
                                     ( ( (current_type = " with [T = " + typename_<Types> + "]")
                                       , std::apply(body, tg.generator(type<Types>{}, gen))
                                       ), ...
