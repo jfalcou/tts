@@ -964,8 +964,8 @@ namespace tts
     randoms(Mn mn, Mx mx)  : mini(mn), maxi(mx)  {}
     template<typename D> auto operator()(tts::type<D>, auto& rng, auto...)
     {
-      static tts::realistic_distribution<D> dist(as_value<D>(mini), as_value<D>(maxi));
-      return dist(rng);
+      tts::realistic_distribution<D> dist(as_value<D>(mini), as_value<D>(maxi));
+      return  dist(rng);
     }
     Mn mini;
     Mx maxi;

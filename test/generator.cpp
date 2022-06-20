@@ -56,6 +56,12 @@ TTS_CASE_WITH ( "Check behavior for scalar types"
   TTS_EQUAL(rrmp  , rrmp_ref  );
   TTS_EQUAL(rrmps , rrmps_ref );
   TTS_EQUAL(btw   , btw_ref   );
+
+  TTS_GREATER_EQUAL(rng, 0);
+  TTS_LESS_EQUAL(rng, 100);
+
+  TTS_GREATER_EQUAL(urng, 0.);
+  TTS_LESS_EQUAL(urng, 10.);
 };
 
 TTS_CASE_WITH ( "Check behavior for non-scalar types"
@@ -108,4 +114,16 @@ TTS_CASE_WITH ( "Check behavior for non-scalar types"
   TTS_ALL_EQUAL(rrmp  , rrmp_ref  );
   TTS_ALL_EQUAL(rrmps , rrmps_ref );
   TTS_ALL_EQUAL(btw   , btw_ref   );
+
+  for(auto e : rng)
+  {
+    TTS_GREATER_EQUAL(e, 0);
+    TTS_LESS_EQUAL(e, 100);
+  }
+
+  for(auto e : urng)
+  {
+    TTS_GREATER_EQUAL(e, 0);
+    TTS_LESS_EQUAL(e, 10);
+  }
 };
