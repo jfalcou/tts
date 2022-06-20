@@ -17,7 +17,7 @@ TTS is thus suitable for numerical-heavy testing.
   * clang 12 and superior
   * Visual Studio 17 2022 v19.30.30709.0
   * emscripten 3.1.14
-  * 
+  *
 # A Short Example
 
 [See it live on Compiler Explorer](https://godbolt.org/z/cM5sxMxjo)
@@ -34,8 +34,8 @@ TTS_CASE( "Check expectations" )
 
 TTS_CASE( "Check relationship between values" )
 {
-  int x = 12.34;
-  TTS_EQUAL( 12.34f, x );
+  double x = 12.34;
+  TTS_EQUAL( 12.34, x );
   TTS_NOT_EQUAL( 17.65, x );
   TTS_LESS(1.95f, x);
   TTS_GREATER(2*x, x);
@@ -59,6 +59,18 @@ TTS_CASE( "Check precision tests" )
   TTS_RELATIVE_EQUAL(1,1.1,10);
   TTS_ULP_EQUAL(1. + 1e-16, x, 0.5 );
   TTS_IEEE_EQUAL(1., x );
+};
+
+TTS_CASE( "Check types and expressions" )
+{
+  double d , e;
+  TTS_EXPR_IS( d + 5          , double);
+  TTS_EXPR_IS( std::swap(d,e) , void  );
+
+  TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
+
+  TTS_EXPECT_COMPILES( d, e, { d += e; } );
+  TTS_EXPECT_NOT_COMPILES(e, { e.foo();  } );
 };
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

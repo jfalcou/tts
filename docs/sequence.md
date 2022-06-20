@@ -13,6 +13,42 @@ To use those macros, include the `tts/tts.hpp` file.
 ### Synopsis:
 **Required header:** `#include <tts/tts.hpp>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_ALL_EQUAL(LHS,RHS, ...)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Definition
+
+Checks if all elements of `LHS` and `RHS` are exactly equals and that the sizes of both sequences
+are equal.
+
+This comparison is performed by using the proper `tts::absolute_distance` overload
+[customizable per the following protocol](customisation.html#absolute).
+
+**Parameters:**
+  + `LHS`, `RHS`:  Sequences to compare.
+  + `...`: Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+**Example:**
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
+#define TTS_MAIN
+#include <tts/tts.hpp>
+#include <vector>
+#include <list>
+
+TTS_CASE("Absolute distance")
+{
+  std::vector v{1.f,2.f,3.f,-5.f};
+  std::list   w{1.f,2.f,3.f,-5.f};
+
+  TTS_ALL_EQUAL(v,w);
+};
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## TTS_ALL_ABSOLUTE_EQUAL
+
+### Synopsis:
+**Required header:** `#include <tts/tts.hpp>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_ALL_ABSOLUTE_EQUAL(LHS,RHS,X, ...)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
