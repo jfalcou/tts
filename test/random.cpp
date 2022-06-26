@@ -40,7 +40,7 @@ TTS_CASE("Check realistic integral distribution")
   for(std::size_t i=1;i<output.size()-1;++i) average_variation_per_bucket += output[i];
   average_variation_per_bucket /= nb;
 
-  TTS_LESS(average_variation_per_bucket, 0.25f);
+  TTS_LESS(average_variation_per_bucket, 0.5f);
 };
 
 TTS_CASE("Check realistic float distribution")

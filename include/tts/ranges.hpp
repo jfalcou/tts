@@ -297,7 +297,6 @@ namespace tts
 
       auto mn = ::tts::arguments().value( "--valmin", distribution_.min() );
       auto mx = ::tts::arguments().value( "--valmax", distribution_.max() );
-
       distribution_.param(param_type(mn, mx));
     }
 
