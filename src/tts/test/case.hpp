@@ -117,7 +117,7 @@ namespace tts::detail
   };
 }
 
-#define TTS_PROTOTYPE(...) []__VA_ARGS__
+#define TTS_PROTOTYPE(...) [] __VA_ARGS__
 
 //==================================================================================================
 // Test case registration macros

@@ -457,7 +457,7 @@ namespace tts::detail
                     : parent(id,g,typename TypeGenerator::types_list{}) {}
   };
 }
-#define TTS_PROTOTYPE(...) []__VA_ARGS__
+#define TTS_PROTOTYPE(...) [] __VA_ARGS__
 #define TTS_CASE(ID)                                                                                \
 static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(()) \
 
@@ -832,7 +832,7 @@ namespace tts
   template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
   template<tts::sequence T>
-  auto produce(type<T> const& t, auto g, auto& rng, auto... args)
+  auto produce(type<T> const&, auto g, auto& rng, auto... args)
   {
     using elmt_type   = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
     using value_type  = decltype(g(tts::type<elmt_type>{},rng,0,0ULL,args...));
@@ -986,7 +986,14 @@ namespace tts
     else if constexpr( streamable<T> )
     {
       std::ostringstream os;
+      auto precision = ::tts::arguments().value({"--precision"}, -1);
+      bool hexmode   = ::tts::arguments()[{"-x","--hex"}];
+      bool scimode   = ::tts::arguments()[{"-s","--scientific"}];
+      if(precision != -1 ) os << std::setprecision(precision);
+            if(hexmode) os << std::hexfloat;
+      else  if(scimode) os << std::scientific << e << std::defaultfloat;
       os << e;
+      if(hexmode || scimode) os << std::defaultfloat;
       return os.str();
     }
     else if constexpr( support_to_string<T> )
@@ -1309,14 +1316,10 @@ namespace tts
     }
   }
 }
-#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, FAILURE)                                        \
-[&](auto&& lhs, auto&& rhs)                                                                         \
+#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC,FAILURE)                                   \
+[&](auto lhs, auto rhs)                                                                             \
 {                                                                                                   \
-  auto eval_a = (lhs);                                                                              \
-  auto eval_b = (rhs);                                                                              \
-  auto r      = FUNC (eval_a,eval_b);                                                               \
-  auto& fmt_n = N<1000 ? std::defaultfloat : std::scientific;                                       \
-  auto& fmt_r = r<1000 ? std::defaultfloat : std::scientific;                                       \
+  auto r = FUNC (lhs,rhs);                                                                          \
                                                                                                     \
   if(r <= N)                                                                                        \
   {                                                                                                 \
@@ -1326,11 +1329,11 @@ namespace tts
   {                                                                                                 \
     FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
                             << " but "                                                              \
-                            << ::tts::as_string(eval_a) << " == " << ::tts::as_string(eval_b)       \
-                            << " within " << std::setprecision(2) << fmt_r                          \
+                            << ::tts::as_string(lhs) << " == " << ::tts::as_string(rhs)             \
+                            << " within " << std::setprecision(PREC) << std::fixed                  \
                             << r << std::defaultfloat                                               \
                             << " " << UNIT << " when "                                              \
-                            << std::setprecision(2) << fmt_n                                        \
+                            << std::setprecision(PREC) <<  std::fixed                               \
                             << N << std::defaultfloat                                               \
                             << " " << UNIT << " was expected."                                      \
             );                                                                                      \
@@ -1338,12 +1341,12 @@ namespace tts
   }                                                                                                 \
 }(LHS,RHS)                                                                                          \
 
-#define TTS_PRECISION(L,R,N,U,F, ...)     TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F)
-#define TTS_PRECISION_(L,R,N,U,F)         TTS_PRECISION_IMPL(L,R,N,U,F,TTS_FAIL)
-#define TTS_PRECISION_REQUIRED(L,R,N,U,F) TTS_PRECISION_IMPL(L,R,N,U,F,TTS_FATAL)
-#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_distance, __VA_ARGS__ )
-#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, __VA_ARGS__ )
-#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , __VA_ARGS__ )
+#define TTS_PRECISION(L,R,N,U,F,P,...)      TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F,P)
+#define TTS_PRECISION_(L,R,N,U,F,P)         TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FAIL)
+#define TTS_PRECISION_REQUIRED(L,R,N,U,F,P) TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FATAL)
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_distance, 8, __VA_ARGS__ )
+#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, 8, __VA_ARGS__ )
+#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , 2, __VA_ARGS__ )
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_ULP_EQUAL(L, R, 0, __VA_ARGS__ )
 #include <type_traits>
 namespace tts::detail
@@ -1388,7 +1391,7 @@ namespace tts::detail
   if( !failures.empty( ) )                                                                          \
   {                                                                                                 \
     FAILURE ( "Expected: "  << TTS_STRING(SEQ1) << " == " << TTS_STRING(SEQ2)                       \
-                            << " but values differ from more than " << N << " "<< UNIT              \
+                            << " but values differ by more than " << N << " "<< UNIT                \
             );                                                                                      \
                                                                                                     \
     for(auto f : failures)                                                                          \

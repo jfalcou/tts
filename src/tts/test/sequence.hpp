@@ -56,7 +56,7 @@ namespace tts::detail
   if( !failures.empty( ) )                                                                          \
   {                                                                                                 \
     FAILURE ( "Expected: "  << TTS_STRING(SEQ1) << " == " << TTS_STRING(SEQ2)                       \
-                            << " but values differ from more than " << N << " "<< UNIT              \
+                            << " but values differ by more than " << N << " "<< UNIT                \
             );                                                                                      \
                                                                                                     \
     for(auto f : failures)                                                                          \
