@@ -68,7 +68,7 @@ namespace tts
       auto p  = selector(gen);
       auto it = std::upper_bound(sizes.begin(), sizes.end(), p) - 1;
       auto i  = std::distance(sizes.begin(),it);
-      return generate(limits[i],limits[i+1],p - *it,params.n,params.minpos);
+      return generate(limits[i],limits[i+1],p - *it,params.n);
     }
 
     tts::detail::block<T,7>                     limits;
@@ -110,7 +110,7 @@ namespace tts
       sizes.back() = t + (limits.back() == 0 ? nbzero : params.n);
     }
 
-   static T generate(T va, T vb, std::size_t p, std::size_t n, T minpos) noexcept
+   static T generate(T va, T vb, std::size_t p, std::size_t n) noexcept
     {
       const auto eval = [](double x, double y, double i, double sz) -> double
       {
