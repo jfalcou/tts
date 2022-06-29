@@ -49,7 +49,18 @@ namespace tts
     else if constexpr( streamable<T> )
     {
       std::ostringstream os;
+      auto precision = ::tts::arguments().value({"--precision"}, -1);
+      bool hexmode   = ::tts::arguments()[{"-x","--hex"}];
+      bool scimode   = ::tts::arguments()[{"-s","--scientific"}];
+
+      if(precision != -1 ) os << std::setprecision(precision);
+            if(hexmode) os << std::hexfloat;
+      else  if(scimode) os << std::scientific << e << std::defaultfloat;
+
       os << e;
+
+      if(hexmode || scimode) os << std::defaultfloat;
+
       return os.str();
     }
     else if constexpr( support_to_string<T> )

@@ -12,14 +12,10 @@
 #include <tts/engine/precision.hpp>
 #include <tts/engine/logger.hpp>
 
-#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, FAILURE)                                        \
-[&](auto&& lhs, auto&& rhs)                                                                         \
+#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC,FAILURE)                                   \
+[&](auto lhs, auto rhs)                                                                             \
 {                                                                                                   \
-  auto eval_a = (lhs);                                                                              \
-  auto eval_b = (rhs);                                                                              \
-  auto r      = FUNC (eval_a,eval_b);                                                               \
-  auto& fmt_n = N<1000 ? std::defaultfloat : std::scientific;                                       \
-  auto& fmt_r = r<1000 ? std::defaultfloat : std::scientific;                                       \
+  auto r = FUNC (lhs,rhs);                                                                          \
                                                                                                     \
   if(r <= N)                                                                                        \
   {                                                                                                 \
@@ -29,11 +25,11 @@
   {                                                                                                 \
     FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
                             << " but "                                                              \
-                            << ::tts::as_string(eval_a) << " == " << ::tts::as_string(eval_b)       \
-                            << " within " << std::setprecision(2) << fmt_r                          \
+                            << ::tts::as_string(lhs) << " == " << ::tts::as_string(rhs)             \
+                            << " within " << std::setprecision(PREC) << std::fixed                  \
                             << r << std::defaultfloat                                               \
                             << " " << UNIT << " when "                                              \
-                            << std::setprecision(2) << fmt_n                                        \
+                            << std::setprecision(PREC) <<  std::fixed                               \
                             << N << std::defaultfloat                                               \
                             << " " << UNIT << " was expected."                                      \
             );                                                                                      \
@@ -42,11 +38,11 @@
 }(LHS,RHS)                                                                                          \
 /**/
 
-#define TTS_PRECISION(L,R,N,U,F, ...)     TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F)
-#define TTS_PRECISION_(L,R,N,U,F)         TTS_PRECISION_IMPL(L,R,N,U,F,TTS_FAIL)
-#define TTS_PRECISION_REQUIRED(L,R,N,U,F) TTS_PRECISION_IMPL(L,R,N,U,F,TTS_FATAL)
+#define TTS_PRECISION(L,R,N,U,F,P,...)      TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F,P)
+#define TTS_PRECISION_(L,R,N,U,F,P)         TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FAIL)
+#define TTS_PRECISION_REQUIRED(L,R,N,U,F,P) TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FATAL)
 
-#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_distance, __VA_ARGS__ )
-#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, __VA_ARGS__ )
-#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , __VA_ARGS__ )
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_distance, 8, __VA_ARGS__ )
+#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, 8, __VA_ARGS__ )
+#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , 2, __VA_ARGS__ )
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_ULP_EQUAL(L, R, 0, __VA_ARGS__ )

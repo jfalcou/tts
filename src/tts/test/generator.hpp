@@ -50,7 +50,7 @@ namespace tts
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
 
   template<tts::sequence T>
-  auto produce(type<T> const& t, auto g, auto& rng, auto... args)
+  auto produce(type<T> const&, auto g, auto& rng, auto... args)
   {
     using elmt_type   = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
     using value_type  = decltype(g(tts::type<elmt_type>{},rng,0,0ULL,args...));
