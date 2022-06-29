@@ -56,7 +56,7 @@ namespace tts
       params = p;
       find_limits();
       find_indexes(1+params.minpos/2);
-      selector.param( std::uniform_int_distribution<std::size_t>::param_type(0, size()));
+      selector.param( std::uniform_int_distribution<std::size_t>::param_type(0, size()-1));
     }
 
     auto size() const noexcept  { return sizes.back(); }
@@ -125,9 +125,41 @@ namespace tts
   };
 
   template<typename T>
-  struct choose_distribution
+  struct  char_dist
+       : std::uniform_int_distribution < std::conditional_t< std::is_signed_v<T>
+                                                            , short
+                                                            , unsigned short
+                                        > >
+  {
+    using parent = std::uniform_int_distribution< std::conditional_t<std::is_signed_v<T>
+                                                                    , short
+                                                                    , unsigned short
+                                                                    >
+                                                >;
+    using result_type = T;
+    using parent::parent;
+
+    template< class Generator > result_type operator()( Generator& gen )
+    {
+      return static_cast<result_type>(parent::operator()(gen));
+    }
+  };
+
+  template<typename T>
+  struct choose_distribution;
+
+  template<std::integral T>
+  requires(sizeof(T) > 1)
+  struct choose_distribution<T>
   {
     using type = std::uniform_int_distribution<T>;
+  };
+
+  template<std::integral T>
+  requires(sizeof(T) == 1)
+  struct choose_distribution<T>
+  {
+    using type = char_dist<T>;
   };
 
   template<std::floating_point T>
