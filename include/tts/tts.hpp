@@ -299,13 +299,13 @@ namespace tts
 #define TTS_COUNT(...) TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
 #define TTS_COUNT_(A0, A1, A2, A3, A4, A5, A6, A7, ...) A7
 #define TTS_ARG0()
-#define TTS_ARG1(A0)                          auto A0
-#define TTS_ARG2(A0, A1)                      auto A0, auto A1
-#define TTS_ARG3(A0, A1, A2)                  TTS_ARG2(A0, A1)                , auto A2
-#define TTS_ARG4(A0, A1, A2, A3)              TTS_ARG3(A0, A1, A2)            , auto A3
-#define TTS_ARG5(A0, A1, A2, A3, A4)          TTS_ARG4(A0, A1, A2, A3)        , auto A4
-#define TTS_ARG6(A0, A1, A2, A3, A4, A5)      TTS_ARG5(A0, A1, A2, A3, A4)    , auto A5
-#define TTS_ARG7(A0, A1, A2, A3, A4, A5, A6)  TTS_ARG6(A0, A1, A2, A3, A4, A5), auto A6
+#define TTS_ARG1(A0)                          auto&& A0
+#define TTS_ARG2(A0, A1)                      auto&& A0, auto&& A1
+#define TTS_ARG3(A0, A1, A2)                  TTS_ARG2(A0, A1)                , auto&& A2
+#define TTS_ARG4(A0, A1, A2, A3)              TTS_ARG3(A0, A1, A2)            , auto&& A3
+#define TTS_ARG5(A0, A1, A2, A3, A4)          TTS_ARG4(A0, A1, A2, A3)        , auto&& A4
+#define TTS_ARG6(A0, A1, A2, A3, A4, A5)      TTS_ARG5(A0, A1, A2, A3, A4)    , auto&& A5
+#define TTS_ARG7(A0, A1, A2, A3, A4, A5, A6)  TTS_ARG6(A0, A1, A2, A3, A4, A5), auto&& A6
 #define TTS_ARG(...) TTS_CAT(TTS_ARG, TTS_COUNT(__VA_ARGS__))(__VA_ARGS__)
 #define TTS_VAL(x)                    x
 #define TTS_REVERSE_1(a)              (a)
