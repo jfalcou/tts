@@ -8,6 +8,7 @@
 #define TTS_MAIN
 #include <tts/tts.hpp>
 #include <array>
+#include <sstream>
 
 TTS_CASE( "Check that types can be tested for equality" )
 {
@@ -28,6 +29,10 @@ TTS_CASE( "Check that expression types can be tested for compilation status" )
   int x{}, y{};
   TTS_EXPECT_COMPILES(x, y,  { x +=y;   } );
   TTS_EXPECT_NOT_COMPILES(x, { x.foo(); } );
+
+  // Issue #62
+  std::stringstream s;
+  TTS_EXPECT_COMPILES(s, x, { s << x; });
 };
 
 TTS_CASE_TPL( "Check interaction with templates"
