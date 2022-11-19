@@ -45,19 +45,23 @@ add_library(tts::tts ALIAS tts_lib)
 ##==================================================================================================
 ## Standalone generation
 ##==================================================================================================
-add_custom_command(OUTPUT tts.hpp
-  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py"
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/tts/tts.hpp
-          -I src/
-          -o ${CMAKE_CURRENT_SOURCE_DIR}/include/tts/tts.hpp
-          --include-match tts/*
+find_package(Python COMPONENTS Interpreter)
 
-  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-  COMMENT "Generating standalone headers"
-  VERBATIM
-)
+if(Python_FOUND)
+  add_custom_command(OUTPUT tts.hpp
+    COMMAND "${Python_EXECUTABLE}"
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/tts/tts.hpp
+            -I src/
+            -o ${CMAKE_CURRENT_SOURCE_DIR}/include/tts/tts.hpp
+            --include-match tts/*
 
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    COMMENT "Generating standalone headers"
+    VERBATIM
+  )
 add_custom_target(tts-standalone DEPENDS tts.hpp)
+endif()
 
 ##==================================================================================================
 ## Setup Testing

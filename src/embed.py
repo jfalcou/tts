@@ -1,5 +1,3 @@
-#!/bin/env python3
-
 #==============================================================================
 # TTS - Tiny Test System
 # Copyright : TTS Contributors & Maintainers

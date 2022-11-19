@@ -43,9 +43,15 @@ TTS_CASE( "Check display of pointer types" )
   TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0000000000000000)"s  );
   TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0000000000000000)"s  );
 #elif defined(__clang__)
+#if defined(__APPLE__)
+  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0x0)"s );
+  TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0x0)"s  );
+  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0x0)"s  );
+#else
   TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0)"s );
   TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0)"s  );
   TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0)"s  );
+#endif
 #elif defined(__GNUC__)
   TTS_EQUAL(tts::as_string( (float*)(0) ) , "float*(0)"s );
   TTS_EQUAL(tts::as_string( (void*)(0)  ) , "void*(0)"s  );
