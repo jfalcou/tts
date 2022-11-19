@@ -36,26 +36,16 @@ TTS_CASE( "Check display of string types" )
 
 TTS_CASE( "Check display of pointer types" )
 {
-  TTS_EQUAL(tts::as_string( nullptr )     , "nullptr"s   );
+  TTS_EQUAL(tts::as_string( nullptr ), "nullptr"s   );
 
-#if defined(_MSC_VER)
-  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0000000000000000)"s );
-  TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0000000000000000)"s  );
-  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0000000000000000)"s  );
-#elif defined(__clang__)
-#if defined(__APPLE__)
-  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0x0)"s );
-  TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0x0)"s  );
-  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0x0)"s  );
+#if defined(__GNUC__) && !defined(__clang__)
+  TTS_EQUAL(tts::as_string( (float*)(0) ).rfind("float*(", 0) , 0ULL);
+  TTS_EQUAL(tts::as_string( (void*)(0)  ).rfind("void*(" , 0) , 0ULL);
+  TTS_EQUAL(tts::as_string( (char*)(0)  ).rfind("char*(" , 0) , 0ULL);
 #else
-  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float *(0)"s );
-  TTS_EQUAL(tts::as_string( (void*)(0) )  , "void *(0)"s  );
-  TTS_EQUAL(tts::as_string( (char*)(0) )  , "char *(0)"s  );
-#endif
-#elif defined(__GNUC__)
-  TTS_EQUAL(tts::as_string( (float*)(0) ) , "float*(0)"s );
-  TTS_EQUAL(tts::as_string( (void*)(0)  ) , "void*(0)"s  );
-  TTS_EQUAL(tts::as_string( (char*)(0)  ) , "char*(0)"s  );
+  TTS_EQUAL(tts::as_string( (float*)(0) ).rfind("float *(", 0), 0ULL);
+  TTS_EQUAL(tts::as_string( (void*)(0)  ).rfind("void *(" , 0), 0ULL);
+  TTS_EQUAL(tts::as_string( (char*)(0)  ).rfind("char *(" , 0), 0ULL);
 #endif
 };
 

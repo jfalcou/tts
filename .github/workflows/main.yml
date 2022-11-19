@@ -15,8 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-        - { opts: -O0                   }
-        - { opts: -Ofast -flto -DNDEBUG }
+        - { opts: -O0                 }
+        - { opts: "-O3 -flto -DNDEBUG"}
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v3
@@ -34,10 +34,10 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-        - { opts: -O0                                   , linker:                }
-        - { opts: "-Ofast -flto -DNDEBUG"               , linker:                }
-        - { opts: "-Ofast -flto -DNDEBUG -stdlib=libc++", linker: -stdlib=libc++ }
-        - { opts: "-O0 -stdlib=libc++"                  , linker: -stdlib=libc++ }
+        - { opts: -O0                                 , linker:                }
+        - { opts: "-O3 -flto -DNDEBUG"                , linker:                }
+        - { opts: "-O3 -flto -DNDEBUG -stdlib=libc++" , linker: -stdlib=libc++ }
+        - { opts: "-O0 -stdlib=libc++"                , linker: -stdlib=libc++ }
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v3
@@ -55,10 +55,10 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-        - { opts: -O0                                   , linker:                 }
-        - { opts: "-O0 -stdlib=libc++"                  , linker: -stdlib=libc++  }
-        - { opts: "-Ofast -flto -DNDEBUG"               , linker:                 }
-        - { opts: "-Ofast -flto -DNDEBUG -stdlib=libc++", linker: -stdlib=libc++  }
+        - { opts: -O0                                 , linker:                 }
+        - { opts: "-O0 -stdlib=libc++"                , linker: -stdlib=libc++  }
+        - { opts: "-O3 -flto -DNDEBUG"                , linker:                 }
+        - { opts: "-O3 -flto -DNDEBUG -stdlib=libc++" , linker: -stdlib=libc++  }
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v3
@@ -77,8 +77,8 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-        - { opts: -O0                   }
-        - { opts: -Ofast -flto -DNDEBUG }
+        - { opts: -O0                 }
+        - { opts: "-O3 -flto -DNDEBUG"}
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v3
@@ -97,8 +97,8 @@ jobs:
   #     fail-fast: false
   #     matrix:
   #       cfg:
-  #       - { opts: -O0                   }
-  #       - { opts: -Ofast -flto -DNDEBUG }
+  #       - { opts: -O0                 }
+  #       - { opts: "-O3 -flto -DNDEBUG"}
   #   steps:
   #     - name: Fetch current branch
   #       uses: actions/checkout@v3
