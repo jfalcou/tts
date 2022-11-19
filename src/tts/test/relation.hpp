@@ -87,7 +87,7 @@ else                                                                            
   using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
                                                                                                     \
-  if constexpr( !std::same_as<type_a, type_b> )                                                     \
+  if constexpr( !tts::same_as<type_a, type_b> )                                                     \
   {                                                                                                 \
       FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
@@ -119,7 +119,7 @@ else                                                                            
   using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
                                                                                                     \
-  if constexpr( !std::same_as<type_a, type_b> )                                                     \
+  if constexpr( !tts::same_as<type_a, type_b> )                                                     \
   {                                                                                                 \
       FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \

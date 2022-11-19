@@ -11,12 +11,24 @@
 #endif
 #if defined( __ANDROID__ )
 #include <type_traits>
-namespace std
+namespace tts
 {
   template<typename T>
   concept integral = std::is_integral_v<T>;
   template<typename T>
   concept floating_point = std::is_floating_point_v<T>;
+  template<typename T, typename U>
+  concept same_as_impl = std::is_same_v<T,U>;
+  template<typename T, typename U>
+  concept same_as = same_as_impl<T,U> && same_as_impl<U,T>;
+}
+#else
+#include <concepts>
+namespace tts
+{
+  using std::integral;
+  using std::floating_point;
+  using std::same_as;
 }
 #endif
 #include <iostream>
@@ -797,19 +809,19 @@ namespace tts
   };
   template<typename T>
   struct choose_distribution;
-  template<std::integral T>
+  template<tts::integral T>
   requires(sizeof(T) > 1)
   struct choose_distribution<T>
   {
     using type = std::uniform_int_distribution<T>;
   };
-  template<std::integral T>
+  template<tts::integral T>
   requires(sizeof(T) == 1)
   struct choose_distribution<T>
   {
     using type = char_dist<T>;
   };
-  template<std::floating_point T>
+  template<tts::floating_point T>
   struct choose_distribution<T>
   {
     using type = fp_dist<T>;
@@ -973,7 +985,7 @@ namespace tts
       os << typename_<T> << "(" << (void*)(e) << ")";
       return os.str();
     }
-    else if constexpr( std::floating_point<T> )
+    else if constexpr( tts::floating_point<T> )
     {
       auto precision = ::tts::arguments().value({"--precision"}, -1);
       bool hexmode   = ::tts::arguments()[{"-x","--hex"}];
@@ -1092,7 +1104,7 @@ else                                                                            
   using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
                                                                                                     \
-  if constexpr( !std::same_as<type_a, type_b> )                                                     \
+  if constexpr( !tts::same_as<type_a, type_b> )                                                     \
   {                                                                                                 \
       FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
@@ -1121,7 +1133,7 @@ else                                                                            
   using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
                                                                                                     \
-  if constexpr( !std::same_as<type_a, type_b> )                                                     \
+  if constexpr( !tts::same_as<type_a, type_b> )                                                     \
   {                                                                                                 \
       FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \

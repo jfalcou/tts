@@ -148,21 +148,21 @@ namespace tts
   template<typename T>
   struct choose_distribution;
 
-  template<std::integral T>
+  template<tts::integral T>
   requires(sizeof(T) > 1)
   struct choose_distribution<T>
   {
     using type = std::uniform_int_distribution<T>;
   };
 
-  template<std::integral T>
+  template<tts::integral T>
   requires(sizeof(T) == 1)
   struct choose_distribution<T>
   {
     using type = char_dist<T>;
   };
 
-  template<std::floating_point T>
+  template<tts::floating_point T>
   struct choose_distribution<T>
   {
     using type = fp_dist<T>;
