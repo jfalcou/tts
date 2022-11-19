@@ -11,6 +11,7 @@
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #endif
 
+#include <tts/tools/stdfix.hpp>
 #include <tts/engine/main.hpp>
 #include <tts/test/case.hpp>
 #include <tts/test/info.hpp>

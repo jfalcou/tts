@@ -9,6 +9,16 @@
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #endif
+#if defined( __ANDROID__ )
+#include <type_traits>
+namespace std
+{
+  template<typename T>
+  concept integral = std::is_integral_v<T>;
+  template<typename T>
+  concept floating_point = std::is_floating_point_v<T>;
+}
+#endif
 #include <iostream>
 namespace tts
 {
