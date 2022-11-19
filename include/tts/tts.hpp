@@ -720,7 +720,7 @@ namespace tts
       auto p  = selector(gen);
       auto it = std::upper_bound(sizes.begin(), sizes.end(), p) - 1;
       auto i  = std::distance(sizes.begin(),it);
-      return generate(limits[i],limits[i+1],p - *it,params.n,params.minpos);
+      return generate(limits[i],limits[i+1],p - *it,params.n);
     }
     tts::detail::block<T,7>                     limits;
     tts::detail::block<std::size_t,7>           sizes;
@@ -754,7 +754,7 @@ namespace tts
       }
       sizes.back() = t + (limits.back() == 0 ? nbzero : params.n);
     }
-   static T generate(T va, T vb, std::size_t p, std::size_t n, T minpos) noexcept
+   static T generate(T va, T vb, std::size_t p, std::size_t n) noexcept
     {
       const auto eval = [](double x, double y, double i, double sz) -> double
       {
@@ -766,10 +766,9 @@ namespace tts
       return f * eval(f * va, f * vb,p,n-1);
     }
   };
-
   template<typename T>
   struct  char_dist
-        : std::uniform_int_distribution < std::conditional_t< std::is_signed_v<T>
+       : std::uniform_int_distribution < std::conditional_t< std::is_signed_v<T>
                                                             , short
                                                             , unsigned short
                                         > >
@@ -781,36 +780,30 @@ namespace tts
                                                 >;
     using result_type = T;
     using parent::parent;
-
     template< class Generator > result_type operator()( Generator& gen )
     {
       return static_cast<result_type>(parent::operator()(gen));
     }
   };
-
   template<typename T>
   struct choose_distribution;
-
   template<std::integral T>
   requires(sizeof(T) > 1)
   struct choose_distribution<T>
   {
     using type = std::uniform_int_distribution<T>;
   };
-
   template<std::integral T>
   requires(sizeof(T) == 1)
   struct choose_distribution<T>
   {
     using type = char_dist<T>;
   };
-
   template<std::floating_point T>
   struct choose_distribution<T>
   {
     using type = fp_dist<T>;
   };
-
   template<typename T>
   using realistic_distribution = typename choose_distribution<T>::type;
 }

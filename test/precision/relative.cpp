@@ -36,7 +36,7 @@ TTS_CASE_TPL(  "Relative distance between integers"
   TTS_RELATIVE_EQUAL(b, a, 7.15);
 };
 
-TTS_CASE_TPL( "ULP distance between floating point", float, double )
+TTS_CASE_TPL( "Relative distance between floating point", float, double )
 <typename T>(::tts::type<T>)
 {
   T a{1};
