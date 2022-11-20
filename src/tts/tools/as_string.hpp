@@ -26,7 +26,7 @@ namespace tts
       os << typename_<T> << "(" << (void*)(e) << ")";
       return os.str();
     }
-    else if constexpr( std::floating_point<T> )
+    else if constexpr( tts::floating_point<T> )
     {
       auto precision = ::tts::arguments().value({"--precision"}, -1);
       bool hexmode   = ::tts::arguments()[{"-x","--hex"}];
