@@ -2,7 +2,7 @@
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
-  SPDX-License-Identifier: MIT
+  SPDX-License-Identifier: BSL-1.0
 **/
 //==================================================================================================
 #pragma once
@@ -144,7 +144,7 @@ namespace tts
     using nout_type = std::decay_t<decltype( challenger( std::declval<NewType>() ))>;
 
     //-- Find how many elements in a block
-    std::size_t count = ::tts::arguments().value( "--block", 4096ULL);
+    std::size_t count = ::tts::arguments().value( "--block", std::size_t{4096});
 
     //-- Prepare blocks
     std::vector<out_type> ref_out(count), new_out(count);
@@ -153,7 +153,7 @@ namespace tts
     for(std::size_t i=0;i<inputs.size();++i)
       inputs[i] = g(i,count);
 
-    std::size_t repetition  = ::tts::arguments().value( "--loop", 1ULL);
+    std::size_t repetition  = ::tts::arguments().value( "--loop", std::size_t{1});
 
     double max_ulp = 0.;
     std::size_t nb_buckets  = 2+1+16;
@@ -290,7 +290,7 @@ namespace tts
     using param_type = typename Distribution::param_type;
 
     template<typename... Args>
-    prng_generator(Args... args) : distribution_(std::forward<Args>(args)...)
+    prng_generator(Args... args) : distribution_(static_cast<T>(args)...)
     {
       seed_ = random_seed();
       generator_.seed(seed_);

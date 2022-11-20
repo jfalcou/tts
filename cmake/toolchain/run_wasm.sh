@@ -1,7 +1,7 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
 ##  Copyright : TTS Contributors & Maintainers
-##  SPDX-License-Identifier: MIT
+##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
 #!/bin/sh
 
