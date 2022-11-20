@@ -731,7 +731,7 @@ namespace tts
     {
       params = p;
       find_limits();
-      find_indexes(1+params.minpos/2);
+      find_indexes(static_cast<std::size_t>(1+params.minpos/2));
       selector.param( std::uniform_int_distribution<std::size_t>::param_type(0, size()-1));
     }
     auto size() const noexcept  { return sizes.back(); }
@@ -785,7 +785,7 @@ namespace tts
       };
       if(va==0 || vb==0)  return 0.;
       auto f = va<0 ? -1 : 1;
-      return f * eval(f * va, f * vb,p,n-1);
+      return static_cast<T>(f * eval(f * va, f * vb,p,n-1));
     }
   };
   template<typename T>
