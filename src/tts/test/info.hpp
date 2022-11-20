@@ -14,14 +14,14 @@
 // Tests macros - Basic information
 //==================================================================================================
 #define TTS_PASS(Message)                                                                           \
-  [&]()                                                                                             \
+  do                                                                                                \
   {                                                                                                 \
     ::tts::global_runtime.pass();                                                                   \
-  }()
+  } while(0)
 /**/
 
 #define TTS_FAIL(Message)                                                                           \
-  [&]()                                                                                             \
+  do                                                                                                \
   {                                                                                                 \
     ::tts::global_runtime.fail();                                                                   \
     if(!::tts::global_runtime.fail_status)                                                          \
@@ -35,11 +35,11 @@
     }                                                                                               \
     std::cout << "    " << ::tts::source_location::current() << " - ** FAILURE **"                  \
               << " : " << Message << std::endl;                                                     \
-  }()
+  } while(0)
 /**/
 
 #define TTS_FATAL(Message)                                                                          \
-  [&]()                                                                                             \
+  do                                                                                                \
   {                                                                                                 \
     ::tts::global_runtime.fatal();                                                                  \
     if(!::tts::global_runtime.fail_status)                                                          \
@@ -54,5 +54,5 @@
     std::cout << "    " << ::tts::source_location::current() << " - @@ FATAL @@"                    \
               << " : " << Message << std::endl;                                                     \
     throw ::tts::detail::fatal_signal();                                                            \
-  }()
+  } while(0)
 /**/

@@ -26,8 +26,8 @@ else                                                                            
 /**/
 
 #define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                           \
-using result_tts = std::bool_constant<::tts::detail::OP(A,B)>;                                      \
-if constexpr( result_tts::value )                                                                   \
+constexpr auto result_tts = ::tts::detail::OP(A,B);                                                 \
+if( result_tts )                                                                                    \
 {                                                                                                   \
   ::tts::global_runtime.pass();                                                                     \
   ::tts::global_logger_status = false;                                                              \
@@ -91,7 +91,7 @@ do                                                                              
   using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
                                                                                                     \
-  if constexpr( !tts::same_as<type_a, type_b> )                                                     \
+  if ( !tts::same_as<type_a, type_b> )                                                              \
   {                                                                                                 \
       FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
@@ -124,7 +124,7 @@ do                                                                              
   using type_a = std::remove_cvref_t<decltype(A)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(B)>;                                                  \
                                                                                                     \
-  if constexpr( !tts::same_as<type_a, type_b> )                                                     \
+  if ( !tts::same_as<type_a, type_b> )                                                              \
   {                                                                                                 \
       FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
