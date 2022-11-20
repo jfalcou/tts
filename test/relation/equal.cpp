@@ -20,7 +20,7 @@ constexpr int f() { return 45; }
 TTS_CASE( "Check correctness of constexpr equality tests" )
 {
   constexpr int value = 45;
-  TTS_CONSTEXPR_EQUAL(value,f()) << "ERROR with: " << value;
+  TTS_CONSTEXPR_EQUAL(value,f());
 };
 
 TTS_CASE( "Check correctness of typed equality tests" )

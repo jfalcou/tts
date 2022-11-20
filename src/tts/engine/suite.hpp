@@ -53,6 +53,7 @@ namespace tts::detail
 namespace tts
 {
   inline ::tts::detail::env global_runtime;
+  inline bool global_logger_status;
 
   inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
   {
