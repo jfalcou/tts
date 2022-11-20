@@ -25,20 +25,22 @@ else                                                                            
 }                                                                                                 \
 /**/
 
-#define TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                          \
-using result_tts = std::bool_constant<::tts::detail::OP(A,B)>;                                    \
-if constexpr( result_tts::value )                                                                 \
-{                                                                                                 \
-  ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
-}                                                                                                 \
-else                                                                                              \
-{                                                                                                 \
-  FAILURE (   "Expression: "  << TTS_STRING(A) << " " << T << " " << TTS_STRING(B)                \
-          <<  " is false because: "                                                               \
-          << ::tts::as_string(a) << " " << F << " " << ::tts::as_string(b)                        \
-          );                                                                                      \
-  return ::tts::logger{};                                                                         \
-}                                                                                                 \
+#define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                           \
+using result_tts = std::bool_constant<::tts::detail::OP(A,B)>;                                      \
+if constexpr( result_tts::value )                                                                   \
+{                                                                                                   \
+  ::tts::global_runtime.pass();                                                                     \
+  ::tts::global_logger_status = false;                                                              \
+}                                                                                                   \
+else                                                                                                \
+{                                                                                                   \
+  FAILURE (   "Expression: "  << TTS_STRING(A) << " " << T << " " << TTS_STRING(B)                  \
+          <<  " is false because: "                                                                 \
+          << ::tts::as_string(A) << " " << F << " " << ::tts::as_string(B)                          \
+          );                                                                                        \
+                                                                                                    \
+  ::tts::global_logger_status = true;                                                               \
+}                                                                                                   \
 /**/
 
 #define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
@@ -64,10 +66,12 @@ else                                                                            
 #define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
-[&](auto&& a, auto&& b)                                                                             \
+::tts::global_logger_status = false;                                                                \
+do                                                                                                  \
 {                                                                                                   \
   TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
-}(A,B)                                                                                              \
+}while(0);                                                                                          \
+::tts::logger{::tts::global_logger_status} \
 /**/
 
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
@@ -114,10 +118,11 @@ else                                                                            
 #define TTS_TYPED_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                      \
-[&](auto&& a, auto&& b)                                                                             \
+::tts::global_logger_status = false;                                                                \
+do                                                                                                  \
 {                                                                                                   \
-  using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
-  using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
+  using type_a = std::remove_cvref_t<decltype(A)>;                                                  \
+  using type_b = std::remove_cvref_t<decltype(B)>;                                                  \
                                                                                                     \
   if constexpr( !tts::same_as<type_a, type_b> )                                                     \
   {                                                                                                 \
@@ -125,13 +130,13 @@ else                                                                            
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
               << ::tts::typename_<type_b>                                                           \
               );                                                                                    \
-      return ::tts::logger{};                                                                       \
+                                                                                                    \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
   }                                                                                                 \
-}(A,B)                                                                                              \
+} while(0)                                                                                          \
 /**/
 
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_TYPED_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
@@ -139,4 +144,4 @@ else                                                                            
 #define TTS_TYPED_CONSTEXPR_LESS(LHS, RHS, ...)           TTS_TYPED_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_GREATER(LHS, RHS, ...)        TTS_TYPED_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)     TTS_TYPED_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
-#define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_TYPED_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __
+#define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_TYPED_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
