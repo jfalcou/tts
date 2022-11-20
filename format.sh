@@ -1,9 +1,7 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
-##  Copyright 2019 Joel FALCOU
-##
-##  Licensed under the MIT License <http://opensource.org/licenses/MIT>.
-##  SPDX-License-Identifier: MIT
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
 #!/bin/sh
 #

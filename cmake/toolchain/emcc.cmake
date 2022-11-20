@@ -1,7 +1,7 @@
 ##==================================================================================================
 ##  TTS - Tiny Test System
 ##  Copyright : TTS Contributors & Maintainers
-##  SPDX-License-Identifier: MIT
+##  SPDX-License-Identifier: BSL-1.0
 ##
 ## emcmake cmake .. -G Ninja  -DCMAKE_TOOLCHAIN_FILE='../cmake/toolchain/emcc.cmake'
 ##
