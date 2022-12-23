@@ -1,3 +1,26 @@
+# Version 2.2 - Aubrey Bradimore
+
+## What's Changed
+
+### Infrastructure
+  * **We are now under the Boost Software Licence 1.0**
+  * Enable Android tests and support
+  * Clarify some output when failures occur
+
+### New Features
+  * Implement ALL_EQUAL
+  * Test can now use configurable, automatic data generator (https://github.com/jfalcou/tts/pull/53)
+  * `TTS_EXPECT_COMPILES/COMPILE_NOT` check if a fragment of code can be compiled or not
+  * Reimplement `TTS_WHEN` and `TTS_AND_THEN` to support sub-tests
+  * Add typed tests that checks both value and exact type
+
+### Bug Fixes
+  * Fix Visual Studio interaction with constexpr tests
+  * Improve random generators and seed management
+
+## Detective who?
+[Aubrey Bradimore](https://en.wikipedia.org/wiki/Aubrey_Bradimore), this is a Christmas Release afterall
+
 # Version 2.1 - Cordelia Gray
 
 ## What's Changed
