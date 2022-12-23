@@ -40,12 +40,12 @@ TTS_CASE( "Check expectations" )
 
 TTS_CASE( "Check relationship between values" )
 {
-  int x = 12.34;
-  TTS_EQUAL( 12.34f, x );
+  double x = 12.5;
+  TTS_EQUAL( 12.5f, x );
   TTS_NOT_EQUAL( 17.65, x );
   TTS_LESS(1.95f, x);
   TTS_GREATER(2*x, x);
-  TTS_LESS_EQUAL(x,12.35);
+  TTS_LESS_EQUAL(x,13);
   TTS_GREATER_EQUAL(x,3.5f);
 };
 

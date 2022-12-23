@@ -4,12 +4,19 @@
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
 cmake_minimum_required(VERSION 3.2)
+enable_testing()
 
 ##==================================================================================================
 ## Setup project
 ##==================================================================================================
-project(TTS VERSION 2.2 LANGUAGES CXX)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/tts")
+project(tts LANGUAGES CXX)
+set(TTS_MAJOR_VERSION 2)
+set(TTS_MINOR_VERSION 2)
+set(TTS_PATCH_VERSION 0)
+set(TTS_VERSION ${TTS_MAJOR_VERSION}.${TTS_MINOR_VERSION}.${TTS_PATCH_VERSION})
+
+set(PROJECT_VERSION   ${TTS_VERSION})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
 
 ##==================================================================================================
 ## Prevent in-source build
@@ -21,26 +28,13 @@ endif()
 ##==================================================================================================
 ## Options
 ##==================================================================================================
-option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
+option( TTS_BUILD_TEST          "Build tests for tts"             ON  )
+option( TTS_BUILD_INTEGRATION   "Build intergation tests for tts" OFF )
 
 ##==================================================================================================
 ## Setup install process
 ##==================================================================================================
-include(GNUInstallDirs)
-
-install ( DIRECTORY ${PROJECT_SOURCE_DIR}/include/
-          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-        )
-
-export(PACKAGE tts)
-
-## =================================================================================================
-## Exporting target for external use
-## =================================================================================================
-add_library(tts_lib INTERFACE)
-target_include_directories(tts_lib INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
-target_compile_features(tts_lib INTERFACE cxx_std_20)
-add_library(tts::tts ALIAS tts_lib)
+include(tts-install)
 
 ##==================================================================================================
 ## Standalone generation
@@ -67,11 +61,14 @@ endif()
 ## Setup Testing
 ##==================================================================================================
 if( TTS_BUILD_TEST )
-  enable_testing()
-  include(CTest)
   add_custom_target(tests)
   add_custom_target(tts-unit)
 
   add_dependencies(tests tts-unit)
   add_subdirectory(test)
 endif()
+
+if( TTS_BUILD_INTEGRATION )
+  add_subdirectory("${PROJECT_SOURCE_DIR}/test/integration")
+endif()
+
