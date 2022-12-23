@@ -23,8 +23,8 @@ add_library(tts::tts ALIAS tts_lib)
 ## =================================================================================================
 ## Install target with versioned folder
 ## =================================================================================================
-install(TARGETS   tts_lib EXPORT tts-targets                        DESTINATION "${MAIN_DEST}"    )
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts                 DESTINATION "${INSTALL_DEST}" )
-install(FILES     ${PROJECT_SOURCE_DIR}/cmake/tts/tts-config.cmake  DESTINATION "${MAIN_DEST}"    )
-install(FILES     ${PROJECT_SOURCE_DIR}/LICENSE.md                  DESTINATION "${DOC_DEST}"     )
-install(EXPORT    tts-targets NAMESPACE "tts::"                     DESTINATION "${MAIN_DEST}"    )
+install(TARGETS   tts_lib EXPORT tts-targets DESTINATION "${MAIN_DEST}")
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/tts               DESTINATION "${INSTALL_DEST}" )
+install(FILES     ${PROJECT_SOURCE_DIR}/cmake/tts-config.cmake    DESTINATION "${MAIN_DEST}"    )
+install(FILES     ${PROJECT_SOURCE_DIR}/LICENSE.md                DESTINATION "${DOC_DEST}"     )
+install(EXPORT    tts-targets NAMESPACE "tts::" DESTINATION "${MAIN_DEST}")

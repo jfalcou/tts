@@ -8,4 +8,4 @@
 ## Reuse install.cmake to prepare package properly
 ##==================================================================================================
 include("${CMAKE_CURRENT_LIST_DIR}/tts-targets.cmake")
-set(TTS_LIBRARIES TTS::TTS)
+set(TTSLIBRARIES tts::tts)

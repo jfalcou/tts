@@ -9,6 +9,48 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+
+  install:
+    runs-on: [ubuntu-latest]
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+        - {test: Installation       , mode: 0 }
+        - {test: FetchContents      , mode: 1 }
+        - {test: CPM                , mode: 2 }
+
+    steps:
+      - name: Fetch current branch
+        uses: actions/checkout@v3
+      - name: Check TTS works with ${{ matrix.cfg.test }}
+        uses: ./.github/actions/integration
+        with:
+          branch: '${{ github.head_ref }}'
+          mode: '${{ matrix.cfg.mode }}'
+
+  msvc:
+    runs-on: [windows-2022]
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Fetch current branch
+        uses: actions/checkout@v3
+      - name: Running CMake for MSVC
+        run: |
+          mkdir build && cd build
+          cmake -G "Visual Studio 17 2022" -A x64 ..
+      - name: Compiling Unit Tests
+        run:  |
+          cd build
+          cmake --build . --target tts-unit --config Debug  --parallel 2
+          cmake --build . --target tts-unit --config Release  --parallel 2
+      - name: Running Tests
+        run: |
+          cd build
+          ctest -C Release --output-on-failure
+          ctest -C Debug   --output-on-failure
+
   gcc-linux:
     runs-on: [ubuntu-latest]
     strategy:

@@ -4,6 +4,7 @@
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
 cmake_minimum_required(VERSION 3.2)
+enable_testing()
 
 ##==================================================================================================
 ## Setup project
@@ -15,7 +16,7 @@ set(TTS_PATCH_VERSION 0)
 set(TTS_VERSION ${TTS_MAJOR_VERSION}.${TTS_MINOR_VERSION}.${TTS_PATCH_VERSION})
 
 set(PROJECT_VERSION   ${TTS_VERSION})
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake/tts )
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
 
 ##==================================================================================================
 ## Prevent in-source build
@@ -27,7 +28,8 @@ endif()
 ##==================================================================================================
 ## Options
 ##==================================================================================================
-option( TTS_BUILD_TEST    "Build tests for tts"     ON  )
+option( TTS_BUILD_TEST          "Build tests for tts"             ON  )
+option( TTS_BUILD_INTEGRATION   "Build intergation tests for tts" OFF )
 
 ##==================================================================================================
 ## Setup install process
@@ -59,11 +61,14 @@ endif()
 ## Setup Testing
 ##==================================================================================================
 if( TTS_BUILD_TEST )
-  enable_testing()
-  include(CTest)
   add_custom_target(tests)
   add_custom_target(tts-unit)
 
   add_dependencies(tests tts-unit)
   add_subdirectory(test)
 endif()
+
+if( TTS_BUILD_INTEGRATION )
+  add_subdirectory("${PROJECT_SOURCE_DIR}/test/integration")
+endif()
+

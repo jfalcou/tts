@@ -3,7 +3,7 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
-include(make_unit)
+include(tts-unit)
 
 message(STATUS "Current configuration: ${CMAKE_BUILD_TYPE} ${CMAKE_CXX_FLAGS}")
 
