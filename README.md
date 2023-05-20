@@ -22,6 +22,7 @@ TTS is thus suitable for numerical-heavy testing.
   * g++ 10.3 and superior
   * clang 12 and superior
   * Visual Studio 17 2022 v19.30.30709.0
+  * clang-CL 15.0.1 or superior
   * emscripten 3.1.14
 
 # A Short Example

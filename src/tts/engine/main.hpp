@@ -31,12 +31,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   if( ::tts::arguments()[{"-h","--help"}] )
     return ::tts::usage(argv[0]);
 
-  auto nb_tests = ::tts::detail::suite.size();
+  auto nb_tests = ::tts::detail::suite().size();
   std::size_t done_tests = 0;
 
   try
   {
-    for(auto &t: ::tts::detail::suite)
+    for(auto &t: ::tts::detail::suite())
     {
       auto test_count     = ::tts::global_runtime.test_count;
       auto failure_count  = ::tts::global_runtime.failure_count;

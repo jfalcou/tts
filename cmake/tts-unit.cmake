@@ -10,10 +10,15 @@
 add_library(tts_test INTERFACE)
 
 target_compile_features ( tts_test INTERFACE  cxx_std_20 )
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    target_compile_options( tts_test INTERFACE /W3 /EHsc )
+  else()
+    target_compile_options( tts_test INTERFACE -Werror -Wall -Wextra -Wunused-variable -Wdocumentation)
+  endif()
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   target_compile_options( tts_test INTERFACE /W3 /EHsc /Zc:preprocessor)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options( tts_test INTERFACE -Werror -Wall -Wextra -Wunused-variable -Wdocumentation)
 else()
   target_compile_options( tts_test INTERFACE -Werror -Wall -Wextra -Wunused-variable)
 endif()

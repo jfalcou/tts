@@ -29,11 +29,15 @@ namespace tts::detail
   };
 
   // Global tests suite
-  inline std::vector<test> suite = {};
+  inline std::vector<test>& suite()
+  {
+    static std::vector<test> that = {};
+    return that;
+  }
 
   bool inline test::acknowledge(test&& f)
   {
-    suite.emplace_back( std::forward<test>(f));
+    suite().emplace_back( std::forward<test>(f));
     return true;
   }
 }
