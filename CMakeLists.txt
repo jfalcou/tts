@@ -54,7 +54,10 @@ if(Python_FOUND)
     COMMENT "Generating standalone headers"
     VERBATIM
   )
-add_custom_target(tts-standalone DEPENDS tts.hpp)
+
+  add_custom_target(tts-standalone DEPENDS tts.hpp)
+  set(TTS_FORCE_STANDALONE 1)
+
 endif()
 
 ##==================================================================================================
