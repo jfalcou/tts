@@ -7,5 +7,5 @@
 ##======================================================================================================================
 ## Reuse install.cmake to preapre package properly
 ##======================================================================================================================
-include("${CMAKE_CURRENT_LIST_DIR}/tts-targets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/tts-install.cmake")
 set(TTS_LIBRARIES tts::tts)

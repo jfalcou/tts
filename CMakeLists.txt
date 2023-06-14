@@ -4,7 +4,7 @@
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
 cmake_minimum_required(VERSION 3.22)
-project(TTS LANGUAGES CXX)
+project(tts LANGUAGES CXX)
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
@@ -33,11 +33,7 @@ endif()
 ##======================================================================================================================
 ## Install Process setup
 ##======================================================================================================================
-copa_setup_install( LIBRARY tts
-                    FEATURES cxx_std_20
-                    DOC     ${PROJECT_SOURCE_DIR}/LICENSE.md
-                    INCLUDE ${PROJECT_SOURCE_DIR}/include/tts
-                  )
+include(tts-install)
 
 ##======================================================================================================================
 ## Standalone generation
