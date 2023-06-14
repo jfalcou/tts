@@ -3,75 +3,57 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.2)
-enable_testing()
+cmake_minimum_required(VERSION 3.22)
+project(TTS LANGUAGES CXX)
+include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
-##==================================================================================================
-## Setup project
-##==================================================================================================
-project(tts LANGUAGES CXX)
-set(TTS_MAJOR_VERSION 2)
-set(TTS_MINOR_VERSION 2)
-set(TTS_PATCH_VERSION 0)
-set(TTS_VERSION ${TTS_MAJOR_VERSION}.${TTS_MINOR_VERSION}.${TTS_PATCH_VERSION})
-
-set(PROJECT_VERSION   ${TTS_VERSION})
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake )
-
-##==================================================================================================
-## Prevent in-source build
-##==================================================================================================
-if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
-  message( FATAL_ERROR "[tts] Building in-source, not recommended! Build in a separate directory." )
-endif()
-
-##==================================================================================================
-## Options
-##==================================================================================================
-option( TTS_BUILD_TEST          "Build tests for tts"             ON  )
+##======================================================================================================================
+option( TTS_BUILD_TEST          "Build tests for TTS" ON              )
 option( TTS_BUILD_INTEGRATION   "Build intergation tests for tts" OFF )
 
-##==================================================================================================
-## Setup install process
-##==================================================================================================
-include(tts-install)
+##======================================================================================================================
+## Project setup via copacabana
+##======================================================================================================================
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake ${COPACABANA_SOURCE_DIR}/copacabana/cmake)
+include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
+copa_project_version(MAJOR 2 MINOR 3 PATCH 0)
 
-##==================================================================================================
-## Standalone generation
-##==================================================================================================
-find_package(Python COMPONENTS Interpreter)
-
-if(Python_FOUND)
-  add_custom_command(OUTPUT tts.hpp
-    COMMAND "${Python_EXECUTABLE}"
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/embed.py
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/tts/tts.hpp
-            -I src/
-            -o ${CMAKE_CURRENT_SOURCE_DIR}/include/tts/tts.hpp
-            --include-match tts/*
-
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    COMMENT "Generating standalone headers"
-    VERBATIM
-  )
-
-  add_custom_target(tts-standalone DEPENDS tts.hpp)
-  set(TTS_FORCE_STANDALONE 1)
-
+##======================================================================================================================
+## Summary Display
+##======================================================================================================================
+if(NOT TTS_QUIET)
+  if(CMAKE_BUILD_TYPE)
+    message(STATUS "[${PROJECT_NAME}] - Building in ${CMAKE_BUILD_TYPE} mode")
+  endif()
+  message(STATUS "[${PROJECT_NAME}] - Unit tests        : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
+  message(STATUS "[${PROJECT_NAME}] - Integration tests : ${TTS_BUILD_INTEGRATION} (via TTS_BUILD_INTEGRATION)")
 endif()
 
-##==================================================================================================
-## Setup Testing
-##==================================================================================================
-if( TTS_BUILD_TEST )
-  add_custom_target(tests)
-  add_custom_target(tts-unit)
+##======================================================================================================================
+## Install Process setup
+##======================================================================================================================
+copa_setup_install( LIBRARY tts
+                    FEATURES cxx_std_20
+                    DOC     ${PROJECT_SOURCE_DIR}/LICENSE.md
+                    INCLUDE ${PROJECT_SOURCE_DIR}/include/tts
+                  )
 
-  add_dependencies(tests tts-unit)
+##======================================================================================================================
+## Standalone generation
+##======================================================================================================================
+copa_setup_standalone(FILE tts.hpp SOURCE src DESTINATION include ROOT tts TARGET tts-standalone)
+
+##======================================================================================================================
+## Tests setup
+##======================================================================================================================
+## Unit Tests Setup
+if(TTS_BUILD_TEST)
+  enable_testing()
   add_subdirectory(test)
 endif()
 
+## Integration Tests Setup
 if( TTS_BUILD_INTEGRATION )
   add_subdirectory("${PROJECT_SOURCE_DIR}/test/integration")
 endif()
-
