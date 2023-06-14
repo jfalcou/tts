@@ -48,12 +48,12 @@ copa_setup_standalone(FILE tts.hpp SOURCE src DESTINATION include ROOT tts TARGE
 ## Tests setup
 ##======================================================================================================================
 ## Unit Tests Setup
+enable_testing()
 if(TTS_BUILD_TEST)
-  enable_testing()
   add_subdirectory(test)
 endif()
 
 ## Integration Tests Setup
 if( TTS_BUILD_INTEGRATION )
-  add_subdirectory("${PROJECT_SOURCE_DIR}/test/integration")
+  add_subdirectory(test/integration)
 endif()

@@ -19,7 +19,7 @@ CPMAddPackage ( NAME tts
                 OPTIONS "TTS_BUILD_TEST OFF"
               )
 
-# Use EVE
+# Use TTS
 add_executable(test_tts ../main.cpp)
 target_link_libraries(test_tts PUBLIC tts::tts)
 add_test(NAME test_tts COMMAND test_tts)

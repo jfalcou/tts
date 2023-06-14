@@ -12,7 +12,7 @@ message(STATUS "Testing FetchContent for commit ${tts_git_head}")
 # Enable FetchContent
 include(FetchContent)
 
-# Retrieve EVE from relative git directory
+# Retrieve TTS from relative git directory
 FetchContent_Declare(tts
   GIT_REPOSITORY "${tts_SOURCE_DIR}"
   GIT_TAG "${tts_git_head}"
