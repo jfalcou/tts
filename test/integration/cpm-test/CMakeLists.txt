@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.18)
 project(tts-cpm-test LANGUAGES CXX)
 enable_testing()
 
-message(STATUS "Testing CPM for commit ${tts_git_head}")
+message(STATUS "Testing CPM for branch ${GIT_BRANCH}")
 
 # Setup CPM
 include(cpm.cmake)
@@ -15,7 +15,7 @@ include(cpm.cmake)
 # Add dependencies
 CPMAddPackage ( NAME tts
                 GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
-                GIT_TAG "${TTS_BRANCH}"
+                GIT_TAG "${GIT_BRANCH}"
                 OPTIONS "TTS_BUILD_TEST OFF"
               )
 

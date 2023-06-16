@@ -52,7 +52,7 @@ jobs:
         run: |
           git config --global --add safe.directory /__w/tts/tts
           mkdir install && cd install
-          cmake ../test/integration/fetch-test -G Ninja -DTTS_BRANCH=${BRANCH_NAME} -DTTS_BUILD_TEST=OFF
+          cmake ../test/integration/fetch-test -G Ninja -DGIT_BRANCH=${BRANCH_NAME} -DTTS_BUILD_TEST=OFF
           ninja && ctest --verbose
 
   cpm:
@@ -71,5 +71,5 @@ jobs:
         run: |
           git config --global --add safe.directory /__w/tts/tts
           mkdir install && cd install
-          cmake ../test/integration/cpm-test -G Ninja -DTTS_BRANCH=${BRANCH_NAME}
+          cmake ../test/integration/cpm-test -G Ninja -DGIT_BRANCH=${BRANCH_NAME}
           ninja && ctest --verbose
