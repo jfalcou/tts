@@ -14,8 +14,8 @@ include(cpm.cmake)
 
 # Add dependencies
 CPMAddPackage ( NAME tts
-                GIT_REPOSITORY "${tts_SOURCE_DIR}"
-                GIT_TAG "${tts_git_head}"
+                GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+                GIT_TAG "${TTS_BRANCH}"
                 OPTIONS "TTS_BUILD_TEST OFF"
               )
 
