@@ -3,19 +3,19 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.22)
 project(tts-fetch-test LANGUAGES CXX)
 enable_testing()
 
-message(STATUS "Testing FetchContent for commit ${tts_git_head}")
+message(STATUS "Testing FetchContent for branch ${GIT_BRANCH}")
 
 # Enable FetchContent
 include(FetchContent)
 
-# Retrieve EVE from relative git directory
+# Retrieve TTS from relative git directory
 FetchContent_Declare(tts
-  GIT_REPOSITORY "${tts_SOURCE_DIR}"
-  GIT_TAG "${tts_git_head}"
+  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+  GIT_TAG ${GIT_BRANCH}
 )
 
 # make available

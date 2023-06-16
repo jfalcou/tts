@@ -107,13 +107,11 @@ namespace tts::detail
     std::string     name;
     tts::callable   behaviour;
   };
-
   inline std::vector<test>& suite()
   {
     static std::vector<test> that = {};
     return that;
   }
-
   bool inline test::acknowledge(test&& f)
   {
     suite().emplace_back( std::forward<test>(f));
