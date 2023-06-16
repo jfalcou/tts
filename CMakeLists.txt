@@ -26,7 +26,6 @@ if(NOT TTS_QUIET)
     message(STATUS "[${PROJECT_NAME}] - Building in ${CMAKE_BUILD_TYPE} mode")
   endif()
   message(STATUS "[${PROJECT_NAME}] - Unit tests        : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
-  message(STATUS "[${PROJECT_NAME}] - Integration tests : ${TTS_BUILD_INTEGRATION} (via TTS_BUILD_INTEGRATION)")
 endif()
 
 ##======================================================================================================================

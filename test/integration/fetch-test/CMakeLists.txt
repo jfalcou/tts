@@ -7,15 +7,15 @@ cmake_minimum_required(VERSION 3.18)
 project(tts-fetch-test LANGUAGES CXX)
 enable_testing()
 
-message(STATUS "Testing FetchContent for commit ${tts_git_head}")
+message(STATUS "Testing FetchContent for branch ${TTS_BRANCH}")
 
 # Enable FetchContent
 include(FetchContent)
 
 # Retrieve TTS from relative git directory
 FetchContent_Declare(tts
-  GIT_REPOSITORY "${tts_SOURCE_DIR}"
-  GIT_TAG "${tts_git_head}"
+  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+  GIT_TAG ${TTS_BRANCH}
 )
 
 # make available

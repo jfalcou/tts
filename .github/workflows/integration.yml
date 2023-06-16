@@ -35,3 +35,22 @@ jobs:
           mkdir install && cd install
           cmake ../test/integration/install-test -G Ninja
           ninja && ctest --verbose
+
+  fetch-content:
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+    runs-on: [ubuntu-latest]
+    container:
+      image: ghcr.io/jfalcou/compilers:v6
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Fetch current branch
+        uses: actions/checkout@v3
+      - name: Run Sample CMake
+        run: |
+          git config --global --add safe.directory /__w/tts/tts
+          mkdir install && cd install
+          cmake ../test/integration/fetch-test -G Ninja -DTTS_BRANCH=${BRANCH_NAME} -DTTS_BUILD_TEST=OFF
+          ninja && ctest --verbose
