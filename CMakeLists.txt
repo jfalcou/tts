@@ -9,8 +9,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
 ##======================================================================================================================
-option( TTS_BUILD_TEST          "Build tests for TTS" ON              )
-option( TTS_BUILD_INTEGRATION   "Build intergation tests for tts" OFF )
+option( TTS_BUILD_TEST "Build tests for TTS" ON )
 
 ##======================================================================================================================
 ## Project setup via copacabana
@@ -43,16 +42,9 @@ copa_setup_standalone(FILE tts.hpp SOURCE src DESTINATION include ROOT tts TARGE
 ##======================================================================================================================
 ## Tests setup
 ##======================================================================================================================
-## Unit Tests Setup
-enable_testing()
-
 if(TTS_BUILD_TEST)
+  enable_testing()
   add_custom_target(tts-unit    )
   add_dependencies(tts-unit unit)
   add_subdirectory(test)
-endif()
-
-## Integration Tests Setup
-if( TTS_BUILD_INTEGRATION )
-  add_subdirectory(test/integration)
 endif()

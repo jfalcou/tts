@@ -3,7 +3,7 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##======================================================================================================================
-name: TTS CI
+name: TTS Integration Tests
 on:
   pull_request:
     branches:
@@ -17,19 +17,21 @@ jobs:
 
   install:
     runs-on: [ubuntu-latest]
+    container:
+      image: ghcr.io/jfalcou/compilers:v6
     strategy:
       fail-fast: false
-      matrix:
-        cfg:
-        - {test: Installation       , mode: 0 }
-        - {test: FetchContents      , mode: 1 }
-        - {test: CPM                , mode: 2 }
 
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v3
-      - name: Check TTS works with ${{ matrix.cfg.test }}
-        uses: ./.github/actions/integration
-        with:
-          branch: '${{ github.head_ref }}'
-          mode: '${{ matrix.cfg.mode }}'
+      - name: Install TTS from checkout
+        run: |
+          mkdir build && cd build
+          cmake -G Ninja .. -DTTS_BUILD_TEST=OFF
+          ninja install
+      - name: Run Sample CMake
+        run: |
+          mkdir install && cd install
+          cmake ../test/integration/install-test -G Ninja
+          ninja && ctest --verbose
