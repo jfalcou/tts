@@ -40,7 +40,7 @@ copa_setup_install( LIBRARY tts
 ##======================================================================================================================
 ## Standalone generation
 ##======================================================================================================================
-copa_setup_standalone(FILE tts.hpp SOURCE src DESTINATION standalone ROOT tts TARGET tts-standalone)
+copa_setup_standalone(FILE tts.hpp SOURCE include DESTINATION standalone ROOT tts TARGET tts-standalone)
 
 ##======================================================================================================================
 ## Tests setup

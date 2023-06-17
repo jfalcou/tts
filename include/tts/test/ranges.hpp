@@ -104,7 +104,7 @@ namespace tts::detail
 //==================================================================================================
 namespace tts::detail
 {
-  std::size_t next2( double x ) noexcept
+  inline std::size_t next2( double x ) noexcept
   {
     auto v = static_cast<std::size_t>(std::ceil(x));
     v--;
@@ -114,7 +114,7 @@ namespace tts::detail
     return v;
   }
 
-  std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
+  inline std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
   {
     std::size_t bucket;
     if     (ulp <= 1.5     ) bucket = static_cast<std::size_t>(std::ceil(ulp*2));
