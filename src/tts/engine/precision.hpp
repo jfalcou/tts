@@ -39,6 +39,13 @@ namespace tts
         auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
         return absolute_distance(d0, d1);
       }
+      else
+      {
+        static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
+                      , "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
+                        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_distance ?"
+                      );
+      }
     }
     else
     {
@@ -66,6 +73,13 @@ namespace tts
       {
         auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
         return relative_distance(d0, d1);
+      }
+      else
+      {
+        static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
+                      , "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
+                        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_distance ?"
+                      );
       }
     }
     else
@@ -114,6 +128,13 @@ namespace tts
 
         // TODO: Fix overflow in case of very huge integral value
         return ((a < b) ? u_t(b - a) : u_t(a - b))/2.;
+      }
+      else
+      {
+        static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
+                      , "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
+                        "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_distance ?"
+                      );
       }
     }
     else
