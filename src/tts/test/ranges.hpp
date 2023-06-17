@@ -10,7 +10,13 @@
 //==================================================================================================
 // Dependencies
 //==================================================================================================
-#include <tts/tts.hpp>
+#include <tts/engine/precision.hpp>
+#include <tts/tools/as_string.hpp>
+#include <tts/tools/concepts.hpp>
+#include <tts/tools/option.hpp>
+#include <tts/tools/preprocessor.hpp>
+#include <tts/tools/random.hpp>
+
 #include <random>
 #include <chrono>
 
