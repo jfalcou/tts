@@ -41,7 +41,6 @@ option at configuration time.
 Once completed, the following files and folders are installed:
 
 - `$CMAKE_INSTALL_PREFIX/include/tts/tts.hpp`
-- `$CMAKE_INSTALL_PREFIX/include/tts/ranges.hpp`
 
 Once installed, **TTS** is usable directly by providing the path to its installed files.
 
@@ -76,3 +75,16 @@ FetchContent_MakeAvailable(tts)
 add_executable( my_app my_app.cpp)
 target_link_libraries(my_app tts::tts)
 ```
+
+## Standalone setup
+
+**TTS** also provides a standalone file that can be used to be vendored in your own project without
+having to deal with **TTS** as a dependecy.
+
+Simply use `wget` to fetch the latest version and place it where you want:
+
+```bash
+wget https://raw.githubusercontent.com/jfalcou/tts/main/stanalone/tts/tts.hpp
+```
+
+Use **TTS** by just compiling your code with the include path pointing to the location of this single file.
