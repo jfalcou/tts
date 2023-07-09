@@ -1,4 +1,5 @@
-# Getting Started
+Getting Started {#tts101}
+===============
 
 Unit Tests are usually gathered into **scenarios** in which a specific behavior of a software component is tested. Such scenarios are usually isolated into different executables. Each scenario is decomposed into **test suites**, i.e a group of related tests verifying that the current scenario is correctly serviced by the software component. Test suites are themselves composed of at least one test case.
 

@@ -1,4 +1,5 @@
-# Rationale
+Rationale {#rationale}
+=========
 
 This section explains some of the design choices made by TTS on how to implement some of its components and how the usage of its macros was envisioned.
 
@@ -58,12 +59,15 @@ template<class T> double ulpdist(T a0, T a1)
 
 Put in another way, one can estimate the `ulpdist` between two floating point numbers as the number of representable floating points values between them. This estimation leads to the following properties:
 
-* The `ulpdist` between N and N x ε is equal to 0.5
-* The `ulpdist` between N and N+N\times\frac{ε}{2}$ is equal to $0$
-* If a `double` is compared to the double representation of its single precision
-  conversion (they are exceptions as for fully representable reals), their
-  `ulpdist` will be around $2^{26.5}$ (or $10^8$).
+\f[
+\begin{align}
+ulpdist(N,N \times ε) & = 0.5 \\
+ulpdist(N,N+N \times \frac{ε}{2}) & = 0 \\
+\end{align}
+\f]
 
+Note that if a `double` is compared to the double representation of its single precision
+conversion (they are exceptions as for fully representable reals), their `ulpdist` will be around \f$\f$ (or \f$10^8\f$).
 For example: `ulpdist( double(float(M_PI)), double(M_PI) ) == 9.84293e+07`
 
 Taking ULP in consideration in your tests

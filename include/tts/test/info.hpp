@@ -1,18 +1,36 @@
-//==================================================================================================
+//======================================================================================================================
+//! @file
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/engine/suite.hpp>
 #include <tts/tools/source_location.hpp>
 
-//==================================================================================================
-// Tests macros - Basic information
-//==================================================================================================
+//======================================================================================================================
+/**
+  @def TTS_PASS
+  @brief Force a passing test and display a message.
+
+  @param Message A literal string to display as additional informations
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check that forced pass passes" )
+  {
+    TTS_PASS("Forced success!!");
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_PASS(Message)                                                                           \
   do                                                                                                \
   {                                                                                                 \
@@ -20,6 +38,27 @@
   } while(0)
 /**/
 
+//======================================================================================================================
+/**
+  @def TTS_FAIL
+  @brief Force a failing test and display a message.
+
+  @param Message A literal string to display as additional informations
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check that forced failure fails" )
+  {
+    TTS_FAIL("Forced failure!!");
+    TTS_PASS("This will pass though");
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_FAIL(Message)                                                                           \
   do                                                                                                \
   {                                                                                                 \
@@ -38,6 +77,27 @@
   } while(0)
 /**/
 
+//======================================================================================================================
+/**
+  @def TTS_FATAL
+  @brief Force a failing test, display a message and halt the test suite.
+
+  @param Message A literal string to display as additional informations
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check that forced major failure fails" )
+  {
+    TTS_FATAL("Forced major failure!!");
+    TTS_PASS("This won't pass");
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_FATAL(Message)                                                                          \
   do                                                                                                \
   {                                                                                                 \

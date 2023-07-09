@@ -1,10 +1,11 @@
-//==================================================================================================
+//======================================================================================================================
+//! @file
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/engine/comparators.hpp>
@@ -54,11 +55,201 @@ else                                                                            
 }(A,B)                                                                                              \
 /**/
 
+//======================================================================================================================
+/**
+  @def TTS_EQUAL
+  @brief Performs equality comparison between two expressions
+
+  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+  #include <vector>
+
+  TTS_CASE( "Check correctness of equality tests" )
+  {
+    TTS_EQUAL(45,45.f);
+
+    std::vector<float> a{1,2,3}, b{1,2,3};
+    TTS_EQUAL(a,b);
+
+    // This test would cause the program to stop with a failure.
+    // TTS_EQUAL(12, 21, REQUIRED);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_EQUAL(LHS, RHS, ...)          TTS_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_NOT_EQUAL
+  @brief Performs inequality comparison between two expressions
+
+  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+  #include <vector>
+
+  TTS_CASE( "Check correctness of inequality tests" )
+  {
+    TTS_NOT_EQUAL(42,69.f);
+
+    std::vector<float> a{1,2,3}, b{7,9};
+    TTS_NOT_EQUAL(a,b);
+
+    // This test would cause the program to stop with a failure
+    // TTS_NOT_EQUAL('A', 65, REQUIRED);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_NOT_EQUAL(LHS, RHS, ...)      TTS_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_LESS
+  @brief Performs less-than comparison between two expressions
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+  #include <vector>
+
+  TTS_CASE( "Check correctness of less-than comparison tests" )
+  {
+    TTS_LESS(42., 69);
+
+    std::vector<float> a{1,2,3}, b{12,3};
+    TTS_LESS(a,b);
+
+    // This test would cause the program to stop with a failure
+    // TTS_LESS(69, 42, REQUIRED);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_LESS(LHS, RHS, ...)           TTS_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_GREATER
+  @brief Performs greater-than comparison between two expressions
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+  #include <vector>
+
+  TTS_CASE( "Check correctness of less-than comparison tests" )
+  {
+    TTS_GREATER(69., 42ULL);
+
+    std::vector<float> a{13,5}, b{2,4,6};
+    TTS_GREATER(a,b);
+
+    // This test will cause the program to stop with a failure
+    TTS_GREATER(1., 10., REQUIRED);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_GREATER(LHS, RHS, ...)        TTS_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_LESS_EQUAL
+  @brief Performs less-or-equal-than comparison between two expressions
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+  #include <vector>
+
+  TTS_CASE( "Check correctness of less-than comparison tests" )
+  {
+    TTS_LESS_EQUAL(42., 69);
+    TTS_LESS_EQUAL(69., 69);
+
+    std::vector<float> a{1,2,3}, b{7,9};
+    TTS_LESS_EQUAL(a,b);
+    TTS_LESS_EQUAL(a,a);
+
+    // This test would cause the program to stop with a failure
+    // TTS_LESS_EQUAL(10., 1., REQUIRED);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_LESS_EQUAL(LHS, RHS, ...)     TTS_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_GREATER_EQUAL
+  @brief Performs greater-or-equal-than comparison between two expressions
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+  #include <vector>
+
+  TTS_CASE( "Check correctness of less-than comparison tests" )
+  {
+    TTS_GREATER_EQUAL(69LL, 42.f);
+    TTS_GREATER_EQUAL(69., 69);
+
+    std::vector<float> a{12,3}, b{7,9,11};
+    TTS_GREATER_EQUAL(a,b);
+    TTS_GREATER_EQUAL(a,a);
+
+    // This test would cause the program to stop with a failure
+    // TTS_GREATER_EQUAL(1., 10., REQUIRED);
+  };
+
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
 
 #define TTS_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
@@ -74,11 +265,162 @@ do                                                                              
 ::tts::logger{::tts::global_logger_status} \
 /**/
 
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR_EQUAL
+  @brief Performs equality comparison between two expressions at compile-time
+
+  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check correctness of constexpr equality tests" )
+  {
+    constexpr float a = 45.f;
+    constexpr int   b = 45;
+
+    TTS_CONSTEXPR_EQUAL(a, b);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR_NOT_EQUAL
+  @brief Performs inequality comparison between two expressions at compile-time
+
+  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check correctness of constexpr equality tests" )
+  {
+    constexpr float a = 4.5f;
+    constexpr int   b = 45;
+
+    TTS_CONSTEXPR_NOT_EQUAL(a, b);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR_LESS
+  @brief Performs less-than comparison between two expressions at compile-time.
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check correctness of less-than comparison tests" )
+  {
+    TTS_CONSTEXPR_LESS(42LL, 69.f);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_CONSTEXPR_LESS(LHS, RHS, ...)           TTS_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR_GREATER
+  @brief Performs greater-than comparison between two expressions at compile-time.
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check correctness of greater-than comparison tests" )
+  {
+    TTS_CONSTEXPR_GREATER(69LL, 42.f);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)        TTS_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR_LESS_EQUAL
+  @brief Performs less-or-equal-than comparison between two expressions at compile-time
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check correctness of less-equal comparison tests" )
+  {
+    TTS_CONSTEXPR_LESS_EQUAL(42LL, 69.f);
+    TTS_CONSTEXPR_LESS_EQUAL('A' , 65. );
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)     TTS_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR_GREATER_EQUAL
+  @brief Performs greater-or-equal-than comparison between two expressions at compile-time
+
+  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "Check correctness of greater-equal comparison tests" )
+  {
+    TTS_CONSTEXPR_GREATER_EQUAL(69LL, 42.f);
+    TTS_CONSTEXPR_GREATER_EQUAL(69., 69);
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
 
 #define TTS_TYPED_RELATION(A, B, OP, T, F, ...)     TTS_TYPED_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)

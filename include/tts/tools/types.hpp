@@ -1,19 +1,22 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 #include <cstdint>
 
-//==================================================================================================
-// Type wrapping helpers
-//==================================================================================================
 namespace tts
 {
-  // Types list wrapper
+  //====================================================================================================================
+  //! @brief Type list structure
+  //!
+  //! Encapsulates a variadic list of types to be processed by scenarios.
+  //!
+  //! @tparam Ts List of types to embed into a type list
+  //====================================================================================================================
   template<typename... Ts>
   struct types
   {
@@ -24,8 +27,14 @@ namespace tts
   template<typename... Ls> struct concatenate { using type = decltype( (Ls{} + ...) ); };
   template<typename... Ls> using concatenate_t = typename concatenate<Ls...>::type;
 
-  // Single type wrapper
-  template<typename... T> struct type {};
+  //====================================================================================================================
+  //! @brief Type wrapper
+  //!
+  //! Encapsulates a type to be processed by scenarios.
+  //!
+  //! @tparam T Type to embed
+  //====================================================================================================================
+  template<typename T> struct type {};
 
   // Reusable pre-made types lists
   using real_types        = types < double,float>;

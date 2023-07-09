@@ -1,4 +1,5 @@
-# Command Line Interface
+Command Line Interface {#cli}
+======================
 
 TTS supports options that can be passed as command line arguments of the test binary. Those
 options modify how the tests are run and the results displayed.

@@ -1,6 +1,7 @@
-# Setup
+Setup {#setup}
+=====
 
-## Retrieving the source
+## Install from the source
 
 **TTS** is available on GitHub and can be retrieved via the following command:
 
@@ -9,8 +10,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once retrieved, you should have a `tts` folder which contains the whole source code.
-
-## Installation
 
 Create a `build` directory here and enter it. Once in the `build` directory,
 you can use  **CMake** to generate the build system for **TTS**. We recommend using
@@ -44,7 +43,7 @@ Once completed, the following files and folders are installed:
 
 Once installed, **TTS** is usable directly by providing the path to its installed files.
 
-## CMake `FetchContent`
+## CMake FetchContent
 
 You can also use CMake FetchContent operation and use the `tts::tts` library
 target that our CMake exports.
@@ -53,27 +52,19 @@ target that our CMake exports.
 ##==================================================================================================
 ## Your project setup
 ##==================================================================================================
-cmake_minimum_required(VERSION 3.2)
-project(test_tts LANGUAGES CXX)
-
+cmake_minimum_required(VERSION 3.22)
+project(tts-fetch-test LANGUAGES CXX)
 include(FetchContent)
 
-##==================================================================================================
-## Fetch tts and disable its test targets
-##==================================================================================================
-set(tts_BUILD_TEST    OFF CACHE INTERNAL "OFF")
-FetchContent_Declare( tts
-                      GIT_REPOSITORY https://github.com/jfalcou/tts.git
-                      GIT_TAG main
-                    )
+# Retrieve TTS from relative git directory
+FetchContent_Declare(tts
+  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+)
 
 FetchContent_MakeAvailable(tts)
 
-##==================================================================================================
-## Using tts
-##==================================================================================================
-add_executable( my_app my_app.cpp)
-target_link_libraries(my_app tts::tts)
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PUBLIC tts::tts)
 ```
 
 ## Standalone setup

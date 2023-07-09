@@ -1,3 +1,6 @@
+Change Log {#changelog}
+==========
+
 # Version 2.2 - Aubrey Bradimore
 
 ## What's Changed
