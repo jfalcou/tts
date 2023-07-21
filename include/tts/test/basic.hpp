@@ -52,12 +52,12 @@
 {                                                                                                   \
   if( expr )                                                                                        \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expression: "  << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " evaluates to false." );   \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 /**/
@@ -101,12 +101,12 @@
 {                                                                                                   \
   if( !expr )                                                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 /**/
@@ -158,7 +158,7 @@ do                                                                              
     ::tts::global_logger_status = true;                                                             \
   }                                                                                                 \
 }while(0);                                                                                          \
-::tts::logger{::tts::global_logger_status}                                                          \
+::tts::detail::logger{::tts::global_logger_status}                                                  \
 /**/
 
 
@@ -209,5 +209,5 @@ do                                                                              
     ::tts::global_logger_status = true;                                                             \
   }                                                                                                 \
 }while(0);                                                                                          \
-::tts::logger{::tts::global_logger_status}                                                          \
+::tts::detail::logger{::tts::global_logger_status}                                                  \
 /**/

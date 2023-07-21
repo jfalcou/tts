@@ -32,7 +32,7 @@ namespace tts
 }
 #endif
 #include <iostream>
-namespace tts
+namespace tts::detail
 {
   inline int usage(const char* name)
   {
@@ -56,7 +56,7 @@ namespace tts
   }
 }
 #include <utility>
-namespace tts
+namespace tts::detail
 {
   struct callable
   {
@@ -105,7 +105,7 @@ namespace tts::detail
     }
     static inline bool acknowledge(test&& f);
     std::string     name;
-    tts::callable   behaviour;
+    tts::detail::callable   behaviour;
   };
   inline std::vector<test>& suite()
   {
@@ -194,17 +194,6 @@ namespace tts
   struct options
   {
     using params_t = std::initializer_list<const char*>;
-    option find(const char* f ) const { return find({f}); }
-    option find(params_t    fs) const
-    {
-      for(int i=1;i<argc;++i)
-      {
-        option o(argv[i]);
-        for(auto f : fs)
-          if( o.flag() == f ) return o;
-      }
-      return option{};
-    }
     bool operator[](params_t    fs) const { return find(fs).is_valid(); }
     bool operator[](const char* f ) const { return operator[]({f}); }
     template<typename T> T value(params_t fs, T that = {}) const
@@ -219,6 +208,18 @@ namespace tts
     bool is_valid() { return argc && argv != nullptr; }
     int argc;
     char const** argv;
+    private:
+    option find(const char* f ) const { return find({f}); }
+    option find(params_t    fs) const
+    {
+      for(int i=1;i<argc;++i)
+      {
+        option o(argv[i]);
+        for(auto f : fs)
+          if( o.flag() == f ) return o;
+      }
+      return option{};
+    }
   };
   namespace detail
   {
@@ -249,6 +250,10 @@ namespace tts
     return detail::current_seed;
   }
 }
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CUSTOM_DRIVER_FUNCTION
+#define TTS_MAIN
+#endif
 #if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
 #  define TTS_CUSTOM_DRIVER_FUNCTION main
 namespace tts::detail { constexpr bool use_main = true; }
@@ -261,7 +266,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
 {
   ::tts::initialize(argc,argv);
   if( ::tts::arguments()[{"-h","--help"}] )
-    return ::tts::usage(argv[0]);
+    return ::tts::detail::usage(argv[0]);
   auto nb_tests = ::tts::detail::suite().size();
   std::size_t done_tests = 0;
   try
@@ -296,14 +301,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
 #include <iomanip>
 #include <sstream>
 #include <type_traits>
-namespace tts
+namespace tts::detail
 {
   template<typename T>
   concept support_std_to_string = requires(T e) { std::to_string(e); };
   template<typename T>
   concept support_to_string = requires(T e) { to_string(e); };
-  template<typename T>
-  concept has_to_string = requires(T e) { e.to_string(); };
   template<typename T>
   concept sequence = requires(T e) {std::begin(e); std::end(e); };
   template<typename T>
@@ -396,7 +399,7 @@ namespace tts
   };
   template<typename... Ls> struct concatenate { using type = decltype( (Ls{} + ...) ); };
   template<typename... Ls> using concatenate_t = typename concatenate<Ls...>::type;
-  template<typename... T> struct type {};
+  template<typename T> struct type {};
   using real_types        = types < double,float>;
   using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
   using signed_types      = concatenate_t<real_types,int_types>;
@@ -567,7 +570,7 @@ namespace tts
     throw ::tts::detail::fatal_signal();                                                            \
   } while(0)
 #include <iostream>
-namespace tts
+namespace tts::detail
 {
   struct logger
   {
@@ -597,12 +600,12 @@ namespace tts
 {                                                                                                   \
   if( expr )                                                                                        \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expression: "  << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " evaluates to false." );   \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 
@@ -614,12 +617,12 @@ namespace tts
 {                                                                                                   \
   if( !expr )                                                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 
@@ -642,7 +645,7 @@ do                                                                              
     ::tts::global_logger_status = true;                                                             \
   }                                                                                                 \
 }while(0);                                                                                          \
-::tts::logger{::tts::global_logger_status}                                                          \
+::tts::detail::logger{::tts::global_logger_status}                                                  \
 
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
@@ -663,7 +666,7 @@ do                                                                              
     ::tts::global_logger_status = true;                                                             \
   }                                                                                                 \
 }while(0);                                                                                          \
-::tts::logger{::tts::global_logger_status}                                                          \
+::tts::detail::logger{::tts::global_logger_status}                                                  \
 
 #include <cstring>
 #include <array>
@@ -856,12 +859,12 @@ namespace tts
       return std::make_tuple(produce(t,g,rng,others...)...);
     };
   }
-  template<tts::sequence Seq, typename U> struct rebuild;
+  template<tts::detail::sequence Seq, typename U> struct rebuild;
   template<template<class,class...> class Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
   template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
-  template<tts::sequence T>
+  template<tts::detail::sequence T>
   auto produce(type<T> const&, auto g, auto& rng, auto... args)
   {
     using elmt_type   = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
@@ -1009,11 +1012,11 @@ namespace tts
       else              os << e;
       return os.str();
     }
-    else if constexpr( support_std_to_string<T> )
+    else if constexpr( detail::support_std_to_string<T> )
     {
       return std::to_string(e);
     }
-    else if constexpr( streamable<T> )
+    else if constexpr( detail::streamable<T> )
     {
       std::ostringstream os;
       auto precision = ::tts::arguments().value({"--precision"}, -1);
@@ -1026,11 +1029,11 @@ namespace tts
       if(hexmode || scimode) os << std::defaultfloat;
       return os.str();
     }
-    else if constexpr( support_to_string<T> )
+    else if constexpr( detail::support_to_string<T> )
     {
       return to_string(e);
     }
-    else if constexpr( sequence<T> )
+    else if constexpr( detail::sequence<T> )
     {
       std::string that = "{ ";
       for(auto const& v : e) that += as_string(v) + " ";
@@ -1052,14 +1055,14 @@ namespace tts
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
 if( ::tts::detail::OP(a,b) )                                                                      \
 {                                                                                                 \
-  ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
   FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                      \
           <<  " is false because: " << ::tts::as_string(a) << " " F " " << ::tts::as_string(b)    \
           );                                                                                      \
-  return ::tts::logger{};                                                                         \
+  return ::tts::detail::logger{};                                                                 \
 }                                                                                                 \
 
 #define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                           \
@@ -1103,7 +1106,7 @@ do                                                                              
 {                                                                                                   \
   TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
 }while(0);                                                                                          \
-::tts::logger{::tts::global_logger_status} \
+::tts::detail::logger{::tts::global_logger_status}                                                  \
 
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
 #define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
@@ -1126,7 +1129,7 @@ do                                                                              
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
               << ::tts::typename_<type_b>                                                           \
               );                                                                                    \
-      return ::tts::logger{};                                                                       \
+      return ::tts::detail::logger{};                                                               \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -1178,7 +1181,7 @@ do                                                                              
 {                                                                                                   \
   if constexpr( std::is_same_v<TTS_T,TTS_R> )                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -1186,7 +1189,7 @@ do                                                                              
                         << TTS_STRING(TTS_REMOVE_PARENS(REF))  << " because "                       \
                         << ::tts::typename_<TTS_T> << " is not " << ::tts::typename_<TTS_R>         \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(::tts::type<TTS_REMOVE_PARENS(TYPE)>{}, ::tts::type<TTS_REMOVE_PARENS(REF)>{})                    \
 
@@ -1198,7 +1201,7 @@ do                                                                              
 {                                                                                                   \
   if constexpr( std::is_same_v<TTS_T,TTS_R> )                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -1206,7 +1209,7 @@ do                                                                              
                           << TTS_STRING(TTS_REMOVE_PARENS(TYPE)) << " because "                     \
                           << ::tts::typename_<TTS_T> << " is not " << ::tts::typename_<TTS_R>       \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(::tts::type<decltype(TTS_REMOVE_PARENS(EXPR))>{}, ::tts::type<TTS_REMOVE_PARENS(TYPE)>{})         \
 
@@ -1215,33 +1218,41 @@ do                                                                              
 {                                                                                                   \
   if constexpr( requires TTS_REMOVE_PARENS(EXPR) )                                                  \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     TTS_FAIL(     "Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR))                             \
               <<  " does not compile as expected."                                                  \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(__VA_ARGS__)                                                                                      \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPECT_COMPILES(Symbols..., Expression, ...)
+#else
 #define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__) )
+#endif
 #define TTS_EXPECT_NOT_COMPILES_IMPL(EXPR, ...)                                                     \
 [&]( TTS_ARG(__VA_ARGS__) )                                                                         \
 {                                                                                                   \
   if constexpr( !(requires TTS_REMOVE_PARENS(EXPR)) )                                               \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     TTS_FAIL("Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " compiles unexpectedly." );  \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(__VA_ARGS__)                                                                                      \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPECT_NOT_COMPILES(Symbols..., Expression, ...)
+#else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
+#endif
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                    \
 [&]()                                                                                               \
 {                                                                                                   \
@@ -1253,12 +1264,12 @@ do                                                                              
                                                                                                     \
   if(tts_caught)                                                                                    \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expected: " << TTS_STRING(EXPR) << " failed to throw " << TTS_STRING(EXCEPTION) );   \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }()
 #define TTS_THROW(EXPR, EXCEPTION, ...)     TTS_THROW_ ## __VA_ARGS__ ( EXPR, EXCEPTION )
@@ -1274,12 +1285,12 @@ do                                                                              
                                                                                                     \
   if(!tts_caught)                                                                                   \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expected: "  << TTS_STRING(EXPR) << " throws unexpectedly." );                       \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }()
 #define TTS_NO_THROW(EXPR, ...)     TTS_NO_THROW_ ## __VA_ARGS__ ( EXPR )
@@ -1443,7 +1454,7 @@ namespace tts
                                                                                                     \
   if(r <= N)                                                                                        \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -1457,7 +1468,7 @@ namespace tts
                             << N << std::defaultfloat                                               \
                             << " " << UNIT << " was expected."                                      \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(LHS,RHS)                                                                                          \
 
@@ -1628,9 +1639,9 @@ namespace tts
   template<typename P>
   void print_producer(P const& producer, const char* alt)
   {
-    if constexpr(   tts::support_std_to_string<P>
-                ||  tts::streamable<P>
-                ||  tts::support_to_string<P>
+    if constexpr(   tts::detail::support_std_to_string<P>
+                ||  tts::detail::streamable<P>
+                ||  tts::detail::support_to_string<P>
                 )
     {
       std::cout << ::tts::as_string(producer) << "\n";
@@ -1731,7 +1742,7 @@ namespace tts::detail
                             << "size(" TTS_STRING(SEQ1) ") = " << std::size(a)                      \
                             << " while size(" TTS_STRING(SEQ2) ") = " << std::size(b)               \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
                                                                                                     \
   auto ba = std::begin(a);                                                                          \
@@ -1762,11 +1773,11 @@ namespace tts::detail
                 << " differ by " << OP(f.original,f.other) << " " << UNIT << "\n";                  \
                                                                                                     \
     std::cout << "\n";                                                                              \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
                                                                                                     \
   ::tts::global_runtime.pass();                                                                     \
-  return ::tts::logger{false};                                                                      \
+  return ::tts::detail::logger{false};                                                              \
 }(SEQ1, SEQ2)                                                                                       \
 
 #define TTS_ALL(L,R,F,N,U, ...)     TTS_ALL_ ## __VA_ARGS__ (L,R,F,N,U)
@@ -1775,7 +1786,7 @@ namespace tts::detail
 #define TTS_ALL_ABSOLUTE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::absolute_distance,N,"unit", __VA_ARGS__ )
 #define TTS_ALL_RELATIVE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::relative_distance,N,"%"   , __VA_ARGS__ )
 #define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_distance     ,N,"ULP" , __VA_ARGS__ )
-#define TTS_ALL_IEEE_EQUAL(S1,S2,...)     TTS_ALL_ULP_EQUAL(S1,S2,0, __VA_ARGS__)
+#define TTS_ALL_IEEE_EQUAL(L,R,...)     TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
 #define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
 #include <iostream>
 namespace tts::detail
@@ -1801,7 +1812,7 @@ namespace tts::detail
   };
 }
 #define TTS_WHEN(STORY)                                                                             \
-  std::cout << "[?] - For: " << ::tts::detail::current_test << "\n";                                \
+  std::cout << "[^] - For: " << ::tts::detail::current_test << "\n";                                \
   std::cout << "When      : " << STORY << std::endl;                                                \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++)   \
     for( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \

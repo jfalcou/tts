@@ -2,7 +2,7 @@
 
 //==================================================================================================
 /**
-  \mainpage About TTS
+  \mainpage The Tiny Test System
 
   The **TTS** (Tiny Test System) library is a C++ open-source Unit Test library designed following
   the ideas of libraries like CATCH or LEST.

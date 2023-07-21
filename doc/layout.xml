@@ -4,16 +4,20 @@
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="usergroup" visible="yes" title="How-Tos">
-       <tab type="user" url="@ref tts101" title="Getting Started"/>
-       <tab type="user" url="@ref cli" title="Command Line Interface"/>
-       <tab type="user" url="@ref customize" title="Customization Points"/>
+      <tab type="user" url="@ref setup" title="Setup"/>
+      <tab type="user" url="@ref tts101" title="Getting Started"/>
+      <tab type="user" url="@ref cli" title="Command Line Interface"/>
+      <tab type="user" url="@ref customize" title="Customization Points"/>
     </tab>
     <tab type="usergroup" visible="yes" title="Reference Documentation">
+      <tab type="user" url="@ref tts"       title="TTS Namespace"/>
       <tab type="usergroup" visible="yes" title="Macros">
         <tab type="usergroup" title="Scenario Definition">
           <tab type="user" url="@ref TTS_CASE"         title="TTS_CASE"/>
           <tab type="user" url="@ref TTS_CASE_TPL"     title="TTS_CASE_TPL"/>
           <tab type="user" url="@ref TTS_CASE_WITH"    title="TTS_CASE_WITH"/>
+          <tab type="user" url="@ref TTS_WHEN"         title="TTS_WHEN"/>
+          <tab type="user" url="@ref TTS_AND_THEN"     title="TTS_AND_THEN"/>
         </tab>
         <tab type="usergroup" title="Basic Tests">
           <tab type="user" url="@ref TTS_EXPECT"      title="TTS_EXPECT"/>
@@ -31,8 +35,22 @@
           <tab type="user" url="@ref TTS_GREATER_EQUAL" title="TTS_GREATER_EQUAL"/>
         </tab>
         <tab type="usergroup" title="Precision Tests">
-          <tab type="user" url="@ref TTS_ABSOLUTE_EQUAL"   title="TTS_ABSOLUTE_EQUAL"/>
-          <tab type="user" url="@ref TTS_RELATIVE_EQUAL"   title="TTS_RELATIVE_EQUAL"/>
+          <tab type="user" url="@ref TTS_ABSOLUTE_EQUAL"  title="TTS_ABSOLUTE_EQUAL"/>
+          <tab type="user" url="@ref TTS_RELATIVE_EQUAL"  title="TTS_RELATIVE_EQUAL"/>
+          <tab type="user" url="@ref TTS_ULP_EQUAL"       title="TTS_ULP_EQUAL"/>
+          <tab type="user" url="@ref TTS_IEEE_EQUAL"      title="TTS_IEEE_EQUAL"/>
+          <tab type="user" url="@ref TTS_ULP_RANGE_CHECK" title="TTS_ULP_RANGE_CHECK"/>
+        </tab>
+        <tab type="usergroup" title="Sequence Tests">
+          <tab type="user" url="@ref TTS_ALL_EQUAL"          title="TTS_ALL_EQUAL"/>
+          <tab type="user" url="@ref TTS_ALL_ABSOLUTE_EQUAL" title="TTS_ALL_ABSOLUTE_EQUAL"/>
+          <tab type="user" url="@ref TTS_ALL_RELATIVE_EQUAL" title="TTS_ALL_RELATIVE_EQUAL"/>
+          <tab type="user" url="@ref TTS_ALL_ULP_EQUAL"      title="TTS_ALL_ULP_EQUAL"/>
+          <tab type="user" url="@ref TTS_ALL_IEEE_EQUAL"     title="TTS_ALL_IEEE_EQUAL"/>
+        </tab>
+        <tab type="usergroup" title="Exceptions Tests">
+          <tab type="user" url="@ref TTS_THROW"     title="TTS_THROW"/>
+          <tab type="user" url="@ref TTS_NO_THROW"  title="TTS_NO_THROW"/>
         </tab>
         <tab type="usergroup" title="Constexpr Tests">
           <tab type="user" url="@ref TTS_CONSTEXPR_EXPECT"        title="TTS_CONSTEXPR_EXPECT"/>
@@ -43,7 +61,6 @@
           <tab type="user" url="@ref TTS_CONSTEXPR_GREATER"       title="TTS_CONSTEXPR_GREATER"/>
           <tab type="user" url="@ref TTS_CONSTEXPR_LESS_EQUAL"    title="TTS_CONSTEXPR_LESS_EQUAL"/>
           <tab type="user" url="@ref TTS_CONSTEXPR_GREATER_EQUAL" title="TTS_CONSTEXPR_GREATER_EQUAL"/>
-
         </tab>
         <tab type="usergroup" title="Type Tests">
           <tab type="user" url="@ref TTS_TYPE_IS"             title="TTS_TYPE_IS"/>
@@ -51,33 +68,47 @@
           <tab type="user" url="@ref TTS_EXPECT_COMPILES"     title="TTS_EXPECT_COMPILES"/>
           <tab type="user" url="@ref TTS_EXPECT_NOT_COMPILES" title="TTS_EXPECT_NOT_COMPILES"/>
         </tab>
+        <tab type="usergroup" title="Customization Points">
+          <tab type="user" url="@ref TTS_CUSTOM_DRIVER_FUNCTION"  title="TTS_CUSTOM_DRIVER_FUNCTION"/>
+          <tab type="user" url="@ref TTS_MAIN"                    title="TTS_MAIN"/>
+        </tab>
       </tab>
-      <tab type="concepts" visible="yes" title="">
-      <tab type="modules" visible="yes" title="" intro=""/>
-      <tab type="namespaces" visible="yes" title="">
-        <tab type="namespacelist" visible="yes" title="" intro=""/>
-        <tab type="namespacemembers" visible="yes" title="" intro=""/>
+      <tab type="usergroup" visible="yes" title="Classes, Aliases and Objects" intro="">
+        <tab type="usergroup" title="Type Helpers">
+          <tab type="user" url="@ref tts::type"             title="type"/>
+          <tab type="user" url="@ref tts::types"            title="types"/>
+          <tab type="user" url="@ref tts::real_types"       title="real_types" />
+          <tab type="user" url="@ref tts::int_types"        title="int_types" />
+          <tab type="user" url="@ref tts::signed_types"     title="signed_types" />
+          <tab type="user" url="@ref tts::uint_types"       title="uint_types" />
+          <tab type="user" url="@ref tts::integral_types"   title="integral_types" />
+          <tab type="user" url="@ref tts::arithmetic_types" title="arithmetic_types" />
+          <tab type="user" url="@ref tts::typename_"        title="typename_"/>
+        </tab>
+        <tab type="usergroup" title="Runtime Helpers">
+          <tab type="user" url="@ref tts::options"  title="options"/>
+          <tab type="user" url="@ref tts::realistic_distribution"  title="realistic_distribution"/>
+        </tab>
       </tab>
-      </tab>
-      <tab type="classes" visible="yes" title="">
-        <tab type="classlist" visible="yes" title="" intro=""/>
-        <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/>
-        <tab type="hierarchy" visible="yes" title="" intro=""/>
-        <tab type="classmembers" visible="yes" title="" intro=""/>
-      </tab>
-      <tab type="structs" visible="yes" title="">
-        <tab type="structlist" visible="yes" title="" intro=""/>
-        <tab type="structindex" visible="$ALPHABETICAL_INDEX" title=""/>
+      <tab type="usergroup" visible="yes" title="Functions">
+        <tab type="usergroup" title="Helpers">
+          <tab type="user" url="@ref tts::arguments"    title="arguments"/>
+          <tab type="user" url="@ref tts::as_string"    title="as_string"/>
+          <tab type="user" url="@ref tts::name"         title="name"/>
+          <tab type="user" url="@ref tts::random_seed"  title="random_seed"/>
+        </tab>
+        <tab type="usergroup" title="Customization Points">
+          <tab type="user" url="@ref tts::absolute_distance" title="absolute_distance"/>
+          <tab type="user" url="@ref tts::relative_distance" title="relative_distance"/>
+          <tab type="user" url="@ref tts::ulp_distance"      title="ulp_distance"/>
+        </tab>
       </tab>
     </tab>
     <tab type="usergroup" visible="yes" title="Informations">
-       <tab type="user" url="@ref setup" title="Setup"/>
        <tab type="user" url="@ref rationale" title="Rationale"/>
        <tab type="user" url="@ref changelog" title="Changelog"/>
        <tab type="user" url="@ref licence" title="Licence"/>
     </tab>
-
-    <tab type="examples" visible="yes" title="" intro=""/>
   </navindex>
 
   <!-- Layout definition for a class page -->

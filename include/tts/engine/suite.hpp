@@ -1,18 +1,18 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <cstddef>
 #include <iostream>
 
-//==================================================================================================
+//======================================================================================================================
 // Test environment
-//==================================================================================================
+//======================================================================================================================
 namespace tts::detail
 {
   struct env
@@ -55,6 +55,18 @@ namespace tts
   inline ::tts::detail::env global_runtime;
   inline bool global_logger_status;
 
+  //====================================================================================================================
+  /**
+    @brief Final tests handler customization point
+
+    Aggregates test results and validate the whole test with respect to expect number of failures and invalid tests.
+
+    @param fails    Number of expected failures.
+    @param invalids Number of expected invalid tests.
+
+    @return 0 if all tests passed and 1 otherwise.
+  **/
+  //====================================================================================================================
   inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
   {
     return global_runtime.report(fails,invalids);

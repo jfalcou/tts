@@ -1,10 +1,10 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/tools/block.hpp>
@@ -14,7 +14,7 @@
 #include <random>
 #include <type_traits>
 
-namespace tts
+namespace tts::detail
 {
   template<typename T>
   struct fp_dist
@@ -167,7 +167,17 @@ namespace tts
   {
     using type = fp_dist<T>;
   };
+}
 
+namespace tts
+{
+  //====================================================================================================================
+  /*! @brief Realistic standard random distribution
+
+    Provides a standard compatible random distribution that works for any arithmetic types T and have a "realistic"
+    distribution, i.e where most natural and expected values are favored.
+  **/
+  //====================================================================================================================
   template<typename T>
-  using realistic_distribution = typename choose_distribution<T>::type;
+  using realistic_distribution = typename detail::choose_distribution<T>::type;
 }

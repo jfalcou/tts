@@ -1,10 +1,10 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 #include <string_view>
 #include <string>
@@ -33,6 +33,9 @@ namespace tts::detail
 
 namespace tts
 {
+  /// Provide a string containing the name of the type `T` in readable form.
   template<typename T> inline auto const typename_ = detail::typename_impl<T>::value();
+
+  /// Provide a string containing the name of the type of its parameter in readable form.
   template<typename T> constexpr auto name(T const&){ return typename_<T>; }
 }

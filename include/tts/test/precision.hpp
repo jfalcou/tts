@@ -1,11 +1,11 @@
-//==================================================================================================
+//======================================================================================================================
 //! @file
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/test/info.hpp>
@@ -20,7 +20,7 @@
                                                                                                     \
   if(r <= N)                                                                                        \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -34,7 +34,7 @@
                             << N << std::defaultfloat                                               \
                             << " " << UNIT << " was expected."                                      \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(LHS,RHS)                                                                                          \
 /**/
@@ -100,7 +100,6 @@
 //======================================================================================================================
 #define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, 8, __VA_ARGS__ )
 
-
 //======================================================================================================================
 /**
   @def TTS_ULP_EQUAL
@@ -143,4 +142,33 @@
 //======================================================================================================================
 #define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , 2, __VA_ARGS__ )
 
+//======================================================================================================================
+/**
+  @def TTS_IEEE_EQUAL
+  @brief Checks if two values are exactly within a 0 ULP.
+
+  This also allow for infinites and NaNs to be compared equal if both values are the
+  same infinites or are both $NaN$. This comparison is performed by using the proper tts::ulp_distance overload.
+
+  @param L, R Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE( "ULP distance")
+  {
+    float x = std::numeric_limits<float>::quiet_NaN();
+    TTS_IEEE_EQUAL(x,x);
+
+    TTS_IEEE_EQUAL(1.f, 1.f);
+    TTS_IEEE_EQUAL(2. , 2. );
+    TTS_IEEE_EQUAL(65 , 'A');
+  };
+  @endcode
+**/
+//======================================================================================================================
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_ULP_EQUAL(L, R, 0, __VA_ARGS__ )

@@ -1,10 +1,10 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/tools/bitcast.hpp>
@@ -12,11 +12,19 @@
 #include <limits>
 #include <cmath>
 
-//==================================================================================================
-// Numerical precision tests
-//==================================================================================================
 namespace tts
 {
+  //====================================================================================================================
+  /*!
+    @brief Compute the absolute distance between two values
+
+    This function can be overloaded in the @ref tts namespace to compute the  distance for external types.
+
+    @param  a Value to compare
+    @param  b Value to compare
+    @return The distance between a and b
+  **/
+  //====================================================================================================================
   template<typename T, typename U> inline double absolute_distance(T const &a, U const &b)
   {
     if constexpr(std::is_same_v<T, U>)
@@ -54,6 +62,17 @@ namespace tts
     }
   }
 
+  //====================================================================================================================
+  /*!
+    @brief Compute the relative distance between two values
+
+    This function can be overloaded in the @ref tts namespace to compute the relative distance for external types.
+
+    @param  a Value to compare
+    @param  b Value to compare
+    @return The relative distance between a and b
+  **/
+  //====================================================================================================================
   template<typename T, typename U> inline double relative_distance(T const &a, U const &b)
   {
     if constexpr(std::is_same_v<T, U>)
@@ -89,6 +108,17 @@ namespace tts
     }
   }
 
+  //====================================================================================================================
+  /*!
+    @brief Compute the distance in ULP between two values
+
+    This function can be overloaded in the @ref tts namespace to compute the distance in ULP for external types.
+
+    @param  a Value to compare
+    @param  b Value to compare
+    @return The distance in ULP  between a and b
+  **/
+  //====================================================================================================================
   template<typename T, typename U> inline double ulp_distance(T const &a, U const &b)
   {
     if constexpr(std::is_same_v<T, U>)

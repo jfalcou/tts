@@ -11,16 +11,13 @@
 #include <sstream>
 #include <type_traits>
 
-namespace tts
+namespace tts::detail
 {
   template<typename T>
   concept support_std_to_string = requires(T e) { std::to_string(e); };
 
   template<typename T>
   concept support_to_string = requires(T e) { to_string(e); };
-
-  template<typename T>
-  concept has_to_string = requires(T e) { e.to_string(); };
 
   template<typename T>
   concept sequence = requires(T e) {std::begin(e); std::end(e); };

@@ -37,10 +37,17 @@ namespace tts
   template<typename T> struct type {};
 
   // Reusable pre-made types lists
+
+  /// List of all standard floating point types.
   using real_types        = types < double,float>;
+  /// List of all standard signed integer types.
   using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
+  /// List of all standard signed types.
   using signed_types      = concatenate_t<real_types,int_types>;
+  /// List of all standard unsigned types.
   using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
+  /// List of all standard integer types.
   using integral_types    = concatenate_t<int_types,int_types>;
+  /// List of all standard arithmetic types.
   using arithmetic_types  = concatenate_t<real_types,int_types,uint_types>;
 }

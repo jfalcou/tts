@@ -6,7 +6,7 @@
 
   @tableofcontents
 
-  ## Tests Driver
+  @section customize-driver Tests Driver
   By default, **TTS** provides an entry point function for the listed tests. However, it may be
   required to handle such an entry point. In this case, one can define the `TTS_CUSTOM_DRIVER_FUNCTION`
   preprocessor symbol to a name of their own entry-point function as shown below.
@@ -34,25 +34,10 @@
   Then, a regular `main` function is to be defined. This function will then performs any
   special operations required then calls the aforementioned entry point function.
 
-  Finally, the `main` function will call `tts::report`.
-
-  `tts::report` is in charge of aggregating test results and validate the whole tests
+  Finally, the `main` function will call tts::report which will aggregate test results and validate the whole tests
   with respect to expect number of failures and invalid tests.
 
-  @code
-  namespace tts
-  {
-    int report(std::ptrdiff_t fails, std::ptrdiff_t invalids);
-  }
-  @endcode
-
-  With:
-    + `fails` : Number of expected failures.
-    + `invalids` : Number of expected invalid tests.
-
-  `tts::report` then returns `0` is the tests all passed as expected and `1` otherwise.
-
-  ## Data Display
+  @section  customize-display Data display
   By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string` or, in
   the case of sequence-like types, a sequence of calls to `std::to_string`. In case no overload
   for `std::to_string` exists for a given type, a string will be built from the type name and its
@@ -83,8 +68,8 @@
   };
   @endcode
 
-  ## Equality and Ordering
 
+  @section  customize-comparison Equality and Ordering
   All equality-based checks in **TTS** uses the compared value `operator==`. If needed, one can
   specialize the `compare_equal` function in a type's namespace to let **TTS** use a special comparison
   scheme.
@@ -211,7 +196,7 @@
   @endcode
 
   **Parameters**:
-    + `args` : an instance of [**`tts::options`**](#options) containing current command line arguments.
+    + `args` : an instance of tts::options containing current command line arguments.
 
   **Examples:**
 

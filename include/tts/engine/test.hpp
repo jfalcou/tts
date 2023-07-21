@@ -1,10 +1,10 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/tools/callable.hpp>
@@ -25,7 +25,7 @@ namespace tts::detail
     static inline bool acknowledge(test&& f);
 
     std::string     name;
-    tts::callable   behaviour;
+    tts::detail::callable   behaviour;
   };
 
   // Global tests suite

@@ -15,14 +15,14 @@
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
 if( ::tts::detail::OP(a,b) )                                                                      \
 {                                                                                                 \
-  ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+  ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
   FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                      \
           <<  " is false because: " << ::tts::as_string(a) << " " F " " << ::tts::as_string(b)    \
           );                                                                                      \
-  return ::tts::logger{};                                                                         \
+  return ::tts::detail::logger{};                                                                 \
 }                                                                                                 \
 /**/
 
@@ -60,7 +60,8 @@ else                                                                            
   @def TTS_EQUAL
   @brief Performs equality comparison between two expressions
 
-  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator==` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -92,7 +93,8 @@ else                                                                            
   @def TTS_NOT_EQUAL
   @brief Performs inequality comparison between two expressions
 
-  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator==` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -124,7 +126,8 @@ else                                                                            
   @def TTS_LESS
   @brief Performs less-than comparison between two expressions
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -156,7 +159,8 @@ else                                                                            
   @def TTS_GREATER
   @brief Performs greater-than comparison between two expressions
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -188,7 +192,8 @@ else                                                                            
   @def TTS_LESS_EQUAL
   @brief Performs less-or-equal-than comparison between two expressions
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -222,7 +227,8 @@ else                                                                            
   @def TTS_GREATER_EQUAL
   @brief Performs greater-or-equal-than comparison between two expressions
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -262,7 +268,7 @@ do                                                                              
 {                                                                                                   \
   TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
 }while(0);                                                                                          \
-::tts::logger{::tts::global_logger_status} \
+::tts::detail::logger{::tts::global_logger_status}                                                  \
 /**/
 
 //======================================================================================================================
@@ -270,7 +276,8 @@ do                                                                              
   @def TTS_CONSTEXPR_EQUAL
   @brief Performs equality comparison between two expressions at compile-time
 
-  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator==` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -298,7 +305,8 @@ do                                                                              
   @def TTS_CONSTEXPR_NOT_EQUAL
   @brief Performs inequality comparison between two expressions at compile-time
 
-  This comparison is performed by using the proper `operator==` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator==` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -326,7 +334,8 @@ do                                                                              
   @def TTS_CONSTEXPR_LESS
   @brief Performs less-than comparison between two expressions at compile-time.
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -351,7 +360,8 @@ do                                                                              
   @def TTS_CONSTEXPR_GREATER
   @brief Performs greater-than comparison between two expressions at compile-time.
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -376,7 +386,8 @@ do                                                                              
   @def TTS_CONSTEXPR_LESS_EQUAL
   @brief Performs less-or-equal-than comparison between two expressions at compile-time
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -402,7 +413,8 @@ do                                                                              
   @def TTS_CONSTEXPR_GREATER_EQUAL
   @brief Performs greater-or-equal-than comparison between two expressions at compile-time
 
-  This comparison is performed by using the proper `operator<` overload or by a [custom comparison](@ref customize).
+  This comparison is performed by using the proper `operator<` overload or by a
+  [custom comparison](@ref customize-comparison).
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -439,7 +451,7 @@ do                                                                              
               <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
               << ::tts::typename_<type_b>                                                           \
               );                                                                                    \
-      return ::tts::logger{};                                                                       \
+      return ::tts::detail::logger{};                                                               \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \

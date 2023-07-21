@@ -1,10 +1,10 @@
-//==================================================================================================
+//======================================================================================================================
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <iomanip>
@@ -15,9 +15,48 @@
 
 namespace tts
 {
-  //================================================================================================
-  // Display a result
-  //================================================================================================
+  //====================================================================================================================
+  /*!
+    @brief Value-to-string conversion
+
+    When displaying the data required to understand a test's failures, TTS may need to print out value of various
+    types. @ref as_string provides a centralized way to perform such a task by handling most common types including:
+      + types supporting std::to_string
+      + types supporting stream insertion
+      + types supporting unqualified call to to_string
+      + sequences of such types
+
+    @ref as_string takes care of applying any command-line options related to formatting to the value printed.
+
+    @groupheader{Examples}
+    @code
+    #define TTS_MAIN
+    #include <tts/tts.hpp>
+
+    namespace space
+    {
+      struct some_type { int i; };
+      struct some_other_type { int i; };
+
+      std::ostream& operator<<(std::ostream& os, some_other_type const& s)
+      {
+        return os << "[[" << s.i << "]]";
+      }
+
+      std::string to_string( some_type const& s ) { return "some_type[" + tts::as_string(s.i) + "]"; }
+    }
+
+    TTS_CASE( "Check display of type with specific to_string" )
+    {
+      TTS_EQUAL(tts::as_string( space::some_type{42} )      , "some_type[42]" );
+      TTS_EQUAL(tts::as_string( space::some_other_type{63} ), "[[63]]"        );
+    };
+    @endcode
+
+    @param e Value to convert to a string
+    @return the formatted string containing a representation of the value of e
+  **/
+  //====================================================================================================================
   template<typename T> std::string as_string(T const& e)
   {
     if constexpr( std::is_pointer_v<T> )
@@ -42,11 +81,11 @@ namespace tts
 
       return os.str();
     }
-    else if constexpr( support_std_to_string<T> )
+    else if constexpr( detail::support_std_to_string<T> )
     {
       return std::to_string(e);
     }
-    else if constexpr( streamable<T> )
+    else if constexpr( detail::streamable<T> )
     {
       std::ostringstream os;
       auto precision = ::tts::arguments().value({"--precision"}, -1);
@@ -63,11 +102,11 @@ namespace tts
 
       return os.str();
     }
-    else if constexpr( support_to_string<T> )
+    else if constexpr( detail::support_to_string<T> )
     {
       return to_string(e);
     }
-    else if constexpr( sequence<T> )
+    else if constexpr( detail::sequence<T> )
     {
       std::string that = "{ ";
       for(auto const& v : e) that += as_string(v) + " ";

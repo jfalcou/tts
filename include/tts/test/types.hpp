@@ -1,11 +1,11 @@
-//==================================================================================================
+//======================================================================================================================
 //! @file
 /**
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
 **/
-//==================================================================================================
+//======================================================================================================================
 #pragma once
 
 #include <tts/test/info.hpp>
@@ -45,7 +45,7 @@
 {                                                                                                   \
   if constexpr( std::is_same_v<TTS_T,TTS_R> )                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -53,7 +53,7 @@
                         << TTS_STRING(TTS_REMOVE_PARENS(REF))  << " because "                       \
                         << ::tts::typename_<TTS_T> << " is not " << ::tts::typename_<TTS_R>         \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(::tts::type<TTS_REMOVE_PARENS(TYPE)>{}, ::tts::type<TTS_REMOVE_PARENS(REF)>{})                    \
 /**/
@@ -93,7 +93,7 @@
 {                                                                                                   \
   if constexpr( std::is_same_v<TTS_T,TTS_R> )                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -101,7 +101,7 @@
                           << TTS_STRING(TTS_REMOVE_PARENS(TYPE)) << " because "                     \
                           << ::tts::typename_<TTS_T> << " is not " << ::tts::typename_<TTS_R>       \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(::tts::type<decltype(TTS_REMOVE_PARENS(EXPR))>{}, ::tts::type<TTS_REMOVE_PARENS(TYPE)>{})         \
 /**/
@@ -111,14 +111,14 @@
 {                                                                                                   \
   if constexpr( requires TTS_REMOVE_PARENS(EXPR) )                                                  \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     TTS_FAIL(     "Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR))                             \
               <<  " does not compile as expected."                                                  \
             );                                                                                      \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(__VA_ARGS__)                                                                                      \
 /**/
@@ -158,12 +158,12 @@
 {                                                                                                   \
   if constexpr( !(requires TTS_REMOVE_PARENS(EXPR)) )                                               \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::logger{false};                                      \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     TTS_FAIL("Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " compiles unexpectedly." );  \
-    return ::tts::logger{};                                                                         \
+    return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
 }(__VA_ARGS__)                                                                                      \
 /**/

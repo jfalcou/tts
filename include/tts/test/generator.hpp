@@ -46,7 +46,7 @@ namespace tts
   //====================================================================================================================
   // Generator extension point for sequence
   //====================================================================================================================
-  template<tts::sequence Seq, typename U> struct rebuild;
+  template<tts::detail::sequence Seq, typename U> struct rebuild;
 
   template<template<class,class...> class Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
@@ -54,7 +54,7 @@ namespace tts
   template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
 
-  template<tts::sequence T>
+  template<tts::detail::sequence T>
   auto produce(type<T> const&, auto g, auto& rng, auto... args)
   {
     using elmt_type   = std::remove_cvref_t<decltype(*std::begin(std::declval<T>()))>;
