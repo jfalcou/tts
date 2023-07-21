@@ -36,9 +36,9 @@
         </tab>
         <tab type="usergroup" title="Precision Tests">
           <tab type="user" url="@ref TTS_ABSOLUTE_EQUAL"  title="TTS_ABSOLUTE_EQUAL"/>
+          <tab type="user" url="@ref TTS_IEEE_EQUAL"      title="TTS_IEEE_EQUAL"/>
           <tab type="user" url="@ref TTS_RELATIVE_EQUAL"  title="TTS_RELATIVE_EQUAL"/>
           <tab type="user" url="@ref TTS_ULP_EQUAL"       title="TTS_ULP_EQUAL"/>
-          <tab type="user" url="@ref TTS_IEEE_EQUAL"      title="TTS_IEEE_EQUAL"/>
           <tab type="user" url="@ref TTS_ULP_RANGE_CHECK" title="TTS_ULP_RANGE_CHECK"/>
         </tab>
         <tab type="usergroup" title="Sequence Tests">
@@ -86,8 +86,10 @@
           <tab type="user" url="@ref tts::typename_"        title="typename_"/>
         </tab>
         <tab type="usergroup" title="Runtime Helpers">
-          <tab type="user" url="@ref tts::options"  title="options"/>
-          <tab type="user" url="@ref tts::realistic_distribution"  title="realistic_distribution"/>
+          <tab type="user" url="@ref tts::options"                title="options"/>
+          <tab type="user" url="@ref tts::prng_generator"         title="prng_generator"/>
+          <tab type="user" url="@ref tts::realistic_generator"    title="realistic_generator"/>
+          <tab type="user" url="@ref tts::realistic_distribution" title="realistic_distribution"/>
         </tab>
       </tab>
       <tab type="usergroup" visible="yes" title="Functions">

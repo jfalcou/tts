@@ -94,7 +94,7 @@ INPUT                  = ../include \
                          .
 
 RECURSIVE              = YES
-EXCLUDE_SYMBOLS        =
+EXCLUDE_SYMBOLS        = detail*
 SOURCE_BROWSER         = NO
 VERBATIM_HEADERS       = NO
 

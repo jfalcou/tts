@@ -240,7 +240,35 @@ namespace tts
 //======================================================================================================================
 /*!
   @def TTS_ULP_RANGE_CHECK
-  Generate a range based test between two functions
+  @brief Generate a range based test between two functions
+
+  Evaluates the histogram of ULP difference between two functions run on the same data set and that
+  they lie in a given [ULP distance](rationale.html#ulp).
+  This comparison is performed by using the proper @ref tts::ulp_distance overload.
+
+  @param Producer Data set generator to use.
+  @param RefType  Type to use as reference function input.
+  @param NewType  Type to use as challenger function input.
+  @param RefFunc  Reference function to compare to.
+  @param NewFunc  Challenger function to be compared to the reference one.
+  @param Ulpmax   Maximal ULPs acceptable for passing the test.
+
+  @groupheader{Example}
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  float ok_x (float x) { return x; }
+  float bad_x(float x) { return x + x*1e-7f; }
+
+  TTS_CASE( "Test range check" )
+  {
+    TTS_ULP_RANGE_CHECK ( [] (auto i, auto c) { return (100.f*i)/c; }
+                        , float, float , ok_x, bad_x
+                        , 2.
+                        );
+  };
+  @endcode
 **/
 //======================================================================================================================
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                   \
@@ -280,14 +308,38 @@ namespace tts
   }()
 /**/
 
-//==================================================================================================
+//======================================================================================================================
 // Ready-to-use PRNGs
-//==================================================================================================
+//======================================================================================================================
 namespace tts
 {
-  //================================================================================================
-  // Standard random distribution generator wrapper
-  //================================================================================================
+  //====================================================================================================================
+  /*!
+    @brief Wraps any standard random distribution to be used as a Data Generator by @ref TTS_ULP_RANGE_CHECK
+
+    @groupheader{Example}
+    @code
+    #define TTS_MAIN
+    #include <tts/tts.hpp>
+    #include <random>
+
+    float ok_x (float x) { return x; }
+    float bad_x(float x) { return x + x*1e-7f; }
+
+    TTS_CASE( "Test range check" )
+    {
+      TTS_ULP_RANGE_CHECK ( (tts::prng_generator<float, std::normal_distribution<float>>(10.f,2.f))
+                          , float, float , ok_x, bad_x
+                          , 2.
+                          );
+    };
+    @endcode
+
+    @tparam T             Type of data to generate
+    @tparam Distribution  [Standard random distribution](https://en.cppreference.com/w/cpp/named_req/RandomNumberDistribution)
+                          to adapt.
+  **/
+  //====================================================================================================================
   template<typename T, typename Distribution>
   struct prng_generator
   {
@@ -324,9 +376,32 @@ namespace tts
     std::mt19937::result_type seed_;
   };
 
-  //================================================================================================
-  // Uniform PRNG generator
-  //================================================================================================
+
+  //====================================================================================================================
+  /*!
+    @brief Data generator using the @ref tts::realistic_distribution random distribution
+
+    @groupheader{Example}
+    @code
+    #define TTS_MAIN
+    #include <tts/tts.hpp>
+
+    float ok_x (float x) { return x; }
+    float bad_x(float x) { return x + x*1e-7f; }
+
+    TTS_CASE( "Test range check" )
+    {
+      TTS_ULP_RANGE_CHECK ( tts::realistic_generator<float>(-100.f,+100.f)
+                          , float, float , ok_x, bad_x
+                          , 2.
+                          );
+    };
+    @endcode
+
+    @see realistic_distribution
+    @tparam T Type of data to generate
+  **/
+  //====================================================================================================================
   template<typename T>
   using realistic_generator = prng_generator<T, ::tts::realistic_distribution<T>>;
 }

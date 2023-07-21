@@ -8,8 +8,14 @@
 
   @section customize-driver Tests Driver
   By default, **TTS** provides an entry point function for the listed tests. However, it may be
-  required to handle such an entry point. In this case, one can define the `TTS_CUSTOM_DRIVER_FUNCTION`
+  required to handle such an entry point. In this case, one can define the @ref TTS_CUSTOM_DRIVER_FUNCTION
   preprocessor symbol to a name of their own entry-point function as shown below.
+
+  After defining the @ref TTS_CUSTOM_DRIVER_FUNCTION symbol, tests can be added as usual.
+  Then, a regular `main` function is to be defined. This function will then performs any
+  special operations required then calls the aforementioned entry point function. Finally,
+  the `main` function will call tts::report which will aggregate test results and validate the whole tests
+  with respect to expect number of failures and invalid tests.
 
   @code
   #define TTS_MAIN
@@ -27,15 +33,6 @@
     return tts::report(0,0);
   }
   @endcode
-
-  As usual, at most one translation unit mush use `#define TTS_MAIN`.
-
-  After defining the `TTS_CUSTOM_DRIVER_FUNCTION` symbol, tests can be added as usual.
-  Then, a regular `main` function is to be defined. This function will then performs any
-  special operations required then calls the aforementioned entry point function.
-
-  Finally, the `main` function will call tts::report which will aggregate test results and validate the whole tests
-  with respect to expect number of failures and invalid tests.
 
   @section  customize-display Data display
   By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string` or, in
@@ -67,7 +64,6 @@
     std::string to_string(box<T> const& b) { return "box<" + tts::as_string(b.value) + ">"; }
   };
   @endcode
-
 
   @section  customize-comparison Equality and Ordering
   All equality-based checks in **TTS** uses the compared value `operator==`. If needed, one can
@@ -105,9 +101,9 @@
   @endcode
 
   ## Precision Measurement
-  **TTS** uses its `ulp_distance` function to perform all ULP checks. If needed, one can specialize
-  this function in the `tts` namespace to let **TTS** use special ULP comparison scheme. As usual,
-  one can also reuse the pre-existing `tts::ulp_distance` to implement their own.
+  When dealing with floating point values, **TTS** uses its `ulp_distance` function to perform all ULP checks.
+  If needed, one can specialize this function in the `tts` namespace to let **TTS** use special ULP comparison scheme.
+  As usual, one can also reuse the pre-existing `tts::ulp_distance` to implement their own.
 
   @code
   namespace sample
@@ -126,8 +122,9 @@
     }
   };
   @endcode
+
   ## Relative Comparison
-  **TTS** uses its `relative_distance` function to perform all relative precision checks. If needed,
+  Relative precision checks within **TTS** are doen through the `relative_distance` function. If needed,
   one can specialize this function in the `tts` namespace to let **TTS** use special relative precision
   scheme. As usual, one can also reuse the pre-existing `tts::relative_distance` to implement their own.
 
@@ -187,45 +184,69 @@
   This makes defining local generator trivial as it doesn't requires an actual callable object
   to be defined.
 
-  A data generator can optionally provide a `init` member function that will allow the generator to
-  prepare some internal states and, potentially use the command line arguments to do so. This
-  member function has the following interface.
-
-  @code
-  void init( tts::options const& args );
-  @endcode
-
-  **Parameters**:
-    + `args` : an instance of tts::options containing current command line arguments.
-
   **Examples:**
 
+  This code defines a generator that will generate `double` between `0` and `value`, each generation returning the
+  `i`th portion of the full value.
+
   @code
+  #define TTS_MAIN
+  #include <tts/ranges.hpp>
+
   struct cli_generator
   {
-    void init( options const& args )
+    cli_generator()
     {
-      value_ = args.value_or(1., "--gen-value");
+      value_ = ::tts::arguments().value("--gen-value", 1.f);
     }
 
-    template<typename Idx, typename Count> double operator()(Idx i, Count c)
+    template<typename Idx, typename Count> float operator()(Idx i, Count c)
     {
       return (value_ * i)/c;
     }
 
+    friend std::string to_string(cli_generator const& p)
+    {
+      return "cli_generator(" + tts::as_string(p.value_) + ")";
+    }
+
     private:
-    double value_;
+    float value_;
+  };
+
+  float f (float x) { return x; }
+  float g(float x)  { return x + x*1e-7f; }
+
+  TTS_CASE( "Test stateless range check" )
+  {
+    TTS_ULP_RANGE_CHECK ( cli_generator{}
+                      , float, float, f, g
+                      , 2.
+                      );
   };
   @endcode
 
-  This generator will generate `double` between `0` and `value`, each generation returning the `i`th
-  portion of the full value. It can then be used this way:
+  Run with `./my_test.exe --gen-value=99`, it produces the following output:
 
   @code
-  TTS_CASE( "Test stateless range check" )
-  {
-    TTS_ULP_RANGE_CHECK ( cli_generator{}, double, double, f, g , 1. );
-  };
+  Comparing: f<float> with g<float> using cli_generator(99)
+  Max ULP         Count (#)       Cum. Ratio (%)  Samples
+  --------------------------------------------------------------------------------
+  0               1               0.02            Input:          0
+                                                  Found:          0
+                                                  instead of:     0
+  --------------------------------------------------------------------------------
+  0.5             3534            86.30           Input:          0.0241699
+                                                  Found:          0.0241699
+                                                  instead of:     0.0241699
+  --------------------------------------------------------------------------------
+  1.0             561             100.00          Input:          0.12085
+                                                  Found:          0.12085
+                                                  instead of:     0.12085
+  --------------------------------------------------------------------------------
+  [V] - Test stateless range check
+  ----------------------------------------------------------------
+  Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
   @endcode
 **/
 //==================================================================================================

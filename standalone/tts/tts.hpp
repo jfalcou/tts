@@ -9,6 +9,8 @@
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #endif
+/// Main TTS namespace
+namespace tts {}
 #if defined( __ANDROID__ )
 #include <type_traits>
 namespace tts
@@ -168,29 +170,32 @@ namespace tts
 #include <string>
 namespace tts
 {
-  struct option
+  namespace detail
   {
-    option() = default;
-    option( std::string arg ) : token(std::move(arg)), position(token.rfind( '=' )) {}
-    auto flag()     const { return token.substr(0, position); }
-    bool is_valid() const { return !flag().empty(); }
-    template<typename T> T get(T const& def = T{}) const
+    struct option
     {
-      T that;
-      if(is_valid())
+      option() = default;
+      option( std::string arg ) : token(std::move(arg)), position(token.rfind( '=' )) {}
+      auto flag()     const { return token.substr(0, position); }
+      bool is_valid() const { return !flag().empty(); }
+      template<typename T> T get(T const& def = T{}) const
       {
-        std::istringstream os(token.substr(position+1));
-        if(os >> that) return that;
-        else           return def;
+        T that;
+        if(is_valid())
+        {
+          std::istringstream os(token.substr(position+1));
+          if(os >> that) return that;
+          else           return def;
+        }
+        else
+        {
+          return def;
+        }
       }
-      else
-      {
-        return def;
-      }
-    }
-    std::string token     = "";
-    size_t      position  = std::string::npos;
-  };
+      std::string token     = "";
+      size_t      position  = std::string::npos;
+    };
+  }
   struct options
   {
     using params_t = std::initializer_list<const char*>;
@@ -209,16 +214,16 @@ namespace tts
     int argc;
     char const** argv;
     private:
-    option find(const char* f ) const { return find({f}); }
-    option find(params_t    fs) const
+    detail::option find(const char* f ) const { return find({f}); }
+    detail::option find(params_t    fs) const
     {
       for(int i=1;i<argc;++i)
       {
-        option o(argv[i]);
+        detail::option o(argv[i]);
         for(auto f : fs)
           if( o.flag() == f ) return o;
       }
-      return option{};
+      return detail::option{};
     }
   };
   namespace detail
@@ -710,7 +715,7 @@ namespace tts::detail
 #include <limits>
 #include <random>
 #include <type_traits>
-namespace tts
+namespace tts::detail
 {
   template<typename T>
   struct fp_dist
@@ -841,8 +846,11 @@ namespace tts
   {
     using type = fp_dist<T>;
   };
+}
+namespace tts
+{
   template<typename T>
-  using realistic_distribution = typename choose_distribution<T>::type;
+  using realistic_distribution = typename detail::choose_distribution<T>::type;
 }
 #include <tuple>
 namespace tts

@@ -176,6 +176,8 @@ namespace tts
 
     Provides a standard compatible random distribution that works for any arithmetic types T and have a "realistic"
     distribution, i.e where most natural and expected values are favored.
+
+    @see realistic_generator
   **/
   //====================================================================================================================
   template<typename T>
