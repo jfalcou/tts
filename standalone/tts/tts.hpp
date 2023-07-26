@@ -856,22 +856,15 @@ namespace tts
 namespace tts
 {
   template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
-  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
-  {
-    return g(t,rng, others...);
-  }
-  template<typename... G> inline auto generate(G... g)
-  {
-    return [=](auto const& t, auto& rng, auto... others)
-    {
-      return std::make_tuple(produce(t,g,rng,others...)...);
-    };
-  }
   template<tts::detail::sequence Seq, typename U> struct rebuild;
   template<template<class,class...> class Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
   template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
+  template<typename T> auto produce(type<T> const& t, auto g, auto& rng, auto... others)
+  {
+    return g(t,rng, others...);
+  }
   template<tts::detail::sequence T>
   auto produce(type<T> const&, auto g, auto& rng, auto... args)
   {
@@ -887,14 +880,18 @@ namespace tts
     }
     return that;
   }
+  template<typename... G> inline auto generate(G... g)
+  {
+    return [=](auto const& t, auto& rng, auto... others)
+    {
+      return std::make_tuple(produce(t,g,rng,others...)...);
+    };
+  }
   template<typename T> struct value
   {
     value(T v) : seed(v) {}
     template<typename U>
-    auto operator()(tts::type<U>, auto&, auto...) const
-    {
-      return as_value<U>(seed);
-    }
+    auto operator()(tts::type<U>, auto&, auto...) const { return as_value<U>(seed); }
     T seed;
   };
   template<typename T, typename U = T> struct ramp
@@ -904,10 +901,7 @@ namespace tts
     template<typename D>
     auto operator()(tts::type<D>, auto&) const { return as_value<D>(start); }
     template<typename D>
-    auto operator()(tts::type<D>, auto&, auto idx, auto...) const
-    {
-      return as_value<D>(start+idx*step);
-    }
+    auto operator()(tts::type<D>, auto&, auto idx, auto...) const { return as_value<D>(start+idx*step); }
     T start;
     U step;
   };
@@ -918,10 +912,7 @@ namespace tts
     template<typename D>
     auto operator()(tts::type<D>, auto&) const { return as_value<D>(start); }
     template<typename D>
-    auto operator()(tts::type<D>, auto&, auto idx, auto sz, auto...) const
-    {
-      return as_value<D>(start+(sz-1-idx)*step);
-    }
+    auto operator()(tts::type<D>, auto&, auto idx, auto sz, auto...) const { return as_value<D>(start+(sz-1-idx)*step); }
     T start;
     U step;
   };
@@ -944,10 +935,7 @@ namespace tts
   template<typename Distribution> struct sample
   {
     sample(Distribution d)  : dist(std::move(d))  {}
-    template<typename D> auto operator()(tts::type<D>, auto& rng, auto...)
-    {
-      return dist(rng);
-    }
+    template<typename D> auto operator()(tts::type<D>, auto& rng, auto...) { return dist(rng); }
     Distribution dist;
   };
   template<typename Mx, typename Mn> struct randoms
