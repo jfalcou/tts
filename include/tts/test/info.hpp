@@ -113,6 +113,6 @@
     }                                                                                               \
     std::cout << "    " << ::tts::source_location::current() << " - @@ FATAL @@"                    \
               << " : " << Message << std::endl;                                                     \
-    throw ::tts::detail::fatal_signal();                                                            \
+    ::tts::fatal_error_status = true;                                                               \
   } while(0)
 /**/

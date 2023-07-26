@@ -7,10 +7,13 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/engine/suite.hpp>
 #include <iostream>
 
 namespace tts::detail
 {
+  struct fatal_signal {};
+
   struct logger
   {
     logger(bool status = true) : display(status), done(false) {}
@@ -21,7 +24,7 @@ namespace tts::detail
       {
         if(!done)
         {
-          std::cout << ">> Additionnal information: \n";
+          std::cout << ">> Additional information: \n";
           done = true;
         }
 
@@ -30,7 +33,11 @@ namespace tts::detail
       return *this;
     }
 
-    ~logger() { if(display && done) std::cout << "\n"; }
+    ~logger() noexcept(false)
+    {
+      if(display && done) std::cout << "\n";
+      if(::tts::fatal_error_status) throw ::tts::detail::fatal_signal();
+    }
 
     bool display, done;
   };
