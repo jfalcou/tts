@@ -60,7 +60,7 @@
 
   Most of **TTS** components are available as macros that perform usual tests operations and to report their successes
   or failures to the test suite manager directly from within a test case. Let's amend our initial test by adding a single
-  call to @ref TTS_EXPECT:
+  call to @ref TTS_EXPECT :
 
   @code
   #define TTS_MAIN

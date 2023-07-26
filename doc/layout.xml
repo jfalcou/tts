@@ -74,6 +74,14 @@
         </tab>
       </tab>
       <tab type="usergroup" visible="yes" title="Classes, Aliases and Objects" intro="">
+        <tab type="usergroup" title="Data Generators">
+          <tab type="user" url="@ref tts::between"        title="between"/>
+          <tab type="user" url="@ref tts::ramp"           title="ramp"/>
+          <tab type="user" url="@ref tts::reverse_ramp"   title="reverse_ramp"/>
+          <tab type="user" url="@ref tts::sample"         title="sample"/>
+          <tab type="user" url="@ref tts::value"          title="value"/>
+        </tab>
+
         <tab type="usergroup" title="Type Helpers">
           <tab type="user" url="@ref tts::type"             title="type"/>
           <tab type="user" url="@ref tts::types"            title="types"/>
@@ -100,6 +108,7 @@
           <tab type="user" url="@ref tts::random_seed"  title="random_seed"/>
         </tab>
         <tab type="usergroup" title="Customization Points">
+          <tab type="user" url="@ref tts::as_value" title="as_value"/>
           <tab type="user" url="@ref tts::absolute_distance" title="absolute_distance"/>
           <tab type="user" url="@ref tts::relative_distance" title="relative_distance"/>
           <tab type="user" url="@ref tts::ulp_distance"      title="ulp_distance"/>
