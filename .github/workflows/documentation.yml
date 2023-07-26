@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v3
-      - name: Prepare TTS
+      - name: Prepare TTS for documentation
         run: |
           mkdir build && cd build
           cmake .. -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=ON
