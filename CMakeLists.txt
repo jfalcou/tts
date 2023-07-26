@@ -9,7 +9,8 @@ include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
 ##======================================================================================================================
-option( TTS_BUILD_TEST "Build tests for TTS" ON )
+option( TTS_BUILD_TEST          "Build tests for TTS"   ON  )
+option( TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF )
 
 ##======================================================================================================================
 ## Project setup via copacabana
@@ -25,7 +26,8 @@ if(NOT TTS_QUIET)
   if(CMAKE_BUILD_TYPE)
     message(STATUS "[${PROJECT_NAME}] - Building in ${CMAKE_BUILD_TYPE} mode")
   endif()
-  message(STATUS "[${PROJECT_NAME}] - Unit tests        : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
+  message(STATUS "[${PROJECT_NAME}] - Unit tests : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
+  message(STATUS "[${PROJECT_NAME}] - Doxygen    : ${TTS_BUILD_DOCUMENTATION} (via TTS_BUILD_DOCUMENTATION)")
 endif()
 
 ##======================================================================================================================
@@ -45,14 +47,15 @@ copa_setup_standalone(FILE tts.hpp SOURCE include DESTINATION standalone ROOT tt
 ##======================================================================================================================
 ## Setup doxygen
 ##======================================================================================================================
-copa_setup_doxygen(QUIET DESTINATION "${PROJECT_BINARY_DIR}/doc")
+if(TTS_BUILD_DOCUMENATION)
+  copa_setup_doxygen(QUIET TARGET tts-doxygen DESTINATION "${PROJECT_BINARY_DIR}/doc")
+endif()
 
 ##======================================================================================================================
 ## Tests setup
 ##======================================================================================================================
 if(TTS_BUILD_TEST)
   enable_testing()
-  add_custom_target(tts-unit    )
-  add_dependencies(tts-unit unit)
+  add_custom_target(tts-unit)
   add_subdirectory(test)
 endif()
