@@ -6,7 +6,7 @@
 **/
 //==================================================================================================
 #define TTS_MAIN
-#include <tts/ranges.hpp>
+#include <tts/tts.hpp>
 #include <array>
 
 int ok_x  (float x) { return static_cast<int>(x); }
