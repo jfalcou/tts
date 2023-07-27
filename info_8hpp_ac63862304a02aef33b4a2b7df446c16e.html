@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('info_8hpp_ac63862304a02aef33b4a2b7df44
 <div class="line">    }                                                                                               \</div>
 <div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;    &quot;</span> &lt;&lt; ::tts::source_location::current() &lt;&lt; <span class="stringliteral">&quot; - @@ FATAL @@&quot;</span>                    \</div>
 <div class="line">              &lt;&lt; <span class="stringliteral">&quot; : &quot;</span> &lt;&lt; Message &lt;&lt; std::endl;                                                     \</div>
-<div class="line">    throw ::tts::detail::fatal_signal();                                                            \</div>
+<div class="line">    ::tts::fatal_error_status = <span class="keyword">true</span>;                                                               \</div>
 <div class="line">  } <span class="keywordflow">while</span>(0)</div>
 </div><!-- fragment -->
 <p>Force a failing test, display a message and halt the test suite. </p>
