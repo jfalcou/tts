@@ -28,6 +28,9 @@ if(NOT TTS_QUIET)
   endif()
   message(STATUS "[${PROJECT_NAME}] - Unit tests : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
   message(STATUS "[${PROJECT_NAME}] - Doxygen    : ${TTS_BUILD_DOCUMENTATION} (via TTS_BUILD_DOCUMENTATION)")
+  set(QUIET_OPTION "")
+else()
+  set(QUIET_OPTION "QUIET")
 endif()
 
 ##======================================================================================================================
@@ -42,13 +45,13 @@ copa_setup_install( LIBRARY tts
 ##======================================================================================================================
 ## Standalone generation
 ##======================================================================================================================
-copa_setup_standalone(FILE tts.hpp SOURCE include DESTINATION standalone ROOT tts TARGET tts-standalone)
+copa_setup_standalone(${QUIET_OPTION} FILE tts.hpp SOURCE include DESTINATION standalone ROOT tts TARGET tts-standalone)
 
 ##======================================================================================================================
 ## Setup doxygen
 ##======================================================================================================================
-if(TTS_BUILD_DOCUMENATION)
-  copa_setup_doxygen(QUIET TARGET tts-doxygen DESTINATION "${PROJECT_BINARY_DIR}/doc")
+if(TTS_BUILD_DOCUMENTATION)
+  copa_setup_doxygen(${QUIET_OPTION} TARGET tts-doxygen DESTINATION "${PROJECT_BINARY_DIR}/doc")
 endif()
 
 ##======================================================================================================================
