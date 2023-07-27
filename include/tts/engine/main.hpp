@@ -9,6 +9,7 @@
 #pragma once
 
 #include <tts/engine/help.hpp>
+#include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/suite.hpp>
 #include <tts/tools/option.hpp>
@@ -64,8 +65,6 @@ namespace tts::detail { constexpr bool use_main = true; }
 #else
 namespace tts::detail { constexpr bool use_main = false; }
 #endif
-
-namespace tts::detail { struct fatal_signal {}; }
 
 #if defined(TTS_MAIN)
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)

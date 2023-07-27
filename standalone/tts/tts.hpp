@@ -57,6 +57,77 @@ namespace tts::detail
     return 0;
   }
 }
+#include <cstddef>
+#include <iostream>
+namespace tts::detail
+{
+  struct env
+  {
+    void pass()     { test_count++; success_count++; }
+    void fail()     { test_count++; failure_count++; }
+    void fatal()    { test_count++; failure_count++; fatal_count++; }
+    void invalid()  { test_count++; invalid_count++; }
+    int report(std::ptrdiff_t fails, std::ptrdiff_t invalids) const
+    {
+      auto test_txt = test_count    > 1 ? "tests" : "test";
+      auto pass_txt = success_count > 1 ? "successes" : "success";
+      auto fail_txt = failure_count > 1 ? "failures" : "failure";
+      auto inv_txt  = invalid_count > 1 ? "invalids" : "invalid";
+      auto passes   = (fails || invalids) ?  0 : test_count;
+      std::cout << "----------------------------------------------------------------\n";
+      std::cout << "Results: " << test_count << " " << test_txt << " - "
+                << success_count << "/" << passes << " " << pass_txt << " - "
+                << failure_count << "/" << fails << " " << fail_txt << " - "
+                << invalid_count << "/" << invalids << " " << inv_txt << "\n";
+      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
+      else                    return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
+    }
+    int test_count    = 0,
+        success_count = 0,
+        failure_count = 0,
+        fatal_count   = 0,
+        invalid_count = 0;
+    bool fail_status = false;
+  };
+}
+namespace tts
+{
+  inline ::tts::detail::env global_runtime;
+  inline bool global_logger_status  = false;
+  inline bool fatal_error_status    = false;
+  inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
+  {
+    return global_runtime.report(fails,invalids);
+  }
+}
+#include <iostream>
+namespace tts::detail
+{
+  struct fatal_signal {};
+  struct logger
+  {
+    logger(bool status = true) : display(status), done(false) {}
+    template<typename Data> logger& operator<<(Data const& d)
+    {
+      if(display)
+      {
+        if(!done)
+        {
+          std::cout << ">> Additional information: \n";
+          done = true;
+        }
+        std::cout << d;
+      }
+      return *this;
+    }
+    ~logger() noexcept(false)
+    {
+      if(display && done) std::cout << "\n";
+      if(::tts::fatal_error_status) throw ::tts::detail::fatal_signal();
+    }
+    bool display, done;
+  };
+}
 #include <utility>
 namespace tts::detail
 {
@@ -118,48 +189,6 @@ namespace tts::detail
   {
     suite().emplace_back( std::forward<test>(f));
     return true;
-  }
-}
-#include <cstddef>
-#include <iostream>
-namespace tts::detail
-{
-  struct env
-  {
-    void pass()     { test_count++; success_count++; }
-    void fail()     { test_count++; failure_count++; }
-    void fatal()    { test_count++; failure_count++; fatal_count++; }
-    void invalid()  { test_count++; invalid_count++; }
-    int report(std::ptrdiff_t fails, std::ptrdiff_t invalids) const
-    {
-      auto test_txt = test_count    > 1 ? "tests" : "test";
-      auto pass_txt = success_count > 1 ? "successes" : "success";
-      auto fail_txt = failure_count > 1 ? "failures" : "failure";
-      auto inv_txt  = invalid_count > 1 ? "invalids" : "invalid";
-      auto passes   = (fails || invalids) ?  0 : test_count;
-      std::cout << "----------------------------------------------------------------\n";
-      std::cout << "Results: " << test_count << " " << test_txt << " - "
-                << success_count << "/" << passes << " " << pass_txt << " - "
-                << failure_count << "/" << fails << " " << fail_txt << " - "
-                << invalid_count << "/" << invalids << " " << inv_txt << "\n";
-      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
-      else                    return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
-    }
-    int test_count    = 0,
-        success_count = 0,
-        failure_count = 0,
-        fatal_count   = 0,
-        invalid_count = 0;
-    bool fail_status = false;
-  };
-}
-namespace tts
-{
-  inline ::tts::detail::env global_runtime;
-  inline bool global_logger_status;
-  inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
-  {
-    return global_runtime.report(fails,invalids);
   }
 }
 #include <chrono>
@@ -265,7 +294,6 @@ namespace tts::detail { constexpr bool use_main = true; }
 #else
 namespace tts::detail { constexpr bool use_main = false; }
 #endif
-namespace tts::detail { struct fatal_signal {}; }
 #if defined(TTS_MAIN)
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
@@ -572,31 +600,8 @@ namespace tts
     }                                                                                               \
     std::cout << "    " << ::tts::source_location::current() << " - @@ FATAL @@"                    \
               << " : " << Message << std::endl;                                                     \
-    throw ::tts::detail::fatal_signal();                                                            \
+    ::tts::fatal_error_status = true;                                                               \
   } while(0)
-#include <iostream>
-namespace tts::detail
-{
-  struct logger
-  {
-    logger(bool status = true) : display(status), done(false) {}
-    template<typename Data> logger& operator<<(Data const& d)
-    {
-      if(display)
-      {
-        if(!done)
-        {
-          std::cout << ">> Additionnal information: \n";
-          done = true;
-        }
-        std::cout << d;
-      }
-      return *this;
-    }
-    ~logger() { if(display && done) std::cout << "\n"; }
-    bool display, done;
-  };
-}
 #define TTS_EXPECT(EXPR, ...)     TTS_EXPECT_ ## __VA_ARGS__ ( EXPR )
 #define TTS_EXPECT_(EXPR)         TTS_EXPECT_IMPL((EXPR),TTS_FAIL)
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR),TTS_FATAL)

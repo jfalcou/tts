@@ -53,7 +53,8 @@ namespace tts::detail
 namespace tts
 {
   inline ::tts::detail::env global_runtime;
-  inline bool global_logger_status;
+  inline bool global_logger_status  = false;
+  inline bool fatal_error_status    = false;
 
   //====================================================================================================================
   /**
