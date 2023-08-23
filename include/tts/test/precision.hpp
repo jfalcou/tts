@@ -142,6 +142,28 @@
 //======================================================================================================================
 #define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , 2, __VA_ARGS__ )
 
+
+#define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                   \
+[&](auto lhs, auto rhs)                                                                             \
+{                                                                                                   \
+  if(::tts::is_ieee_equal(lhs,rhs))                                                                 \
+  {                                                                                                 \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+  }                                                                                                 \
+  else                                                                                              \
+  {                                                                                                 \
+    FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
+                            << " but "                                                              \
+                            << ::tts::as_string(lhs) << " != " << ::tts::as_string(rhs)             \
+            );                                                                                      \
+    return ::tts::detail::logger{};                                                                 \
+  }                                                                                                 \
+}(LHS,RHS)                                                                                          \
+/**/
+
+#define TTS_DO_IEEE_EQUAL(L,R,F,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
+#define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
+#define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
 //======================================================================================================================
 /**
   @def TTS_IEEE_EQUAL
@@ -171,4 +193,4 @@
   @endcode
 **/
 //======================================================================================================================
-#define TTS_IEEE_EQUAL(L,R,...)       TTS_ULP_EQUAL(L, R, 0, __VA_ARGS__ )
+#define TTS_IEEE_EQUAL(L,R,...)       TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__ )

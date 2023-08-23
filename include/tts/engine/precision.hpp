@@ -173,4 +173,28 @@ namespace tts
       return ulp_distance(static_cast<common_t>(a), static_cast<common_t>(b));
     }
   }
+
+
+  //====================================================================================================================
+  /*!
+    @brief Compute if values are exactly equals or all NaNs/Invalids
+
+    This function can be overloaded in the @ref tts namespace to compute the strict equality for external types.
+
+    @param  a Value to compare
+    @param  b Value to compare
+    @return Is `a == b` or `std::isnan(a) && std::isnan(b)`
+  **/
+  //====================================================================================================================
+  template<typename T, typename U> inline bool is_ieee_equal(T const &a, U const &b)
+  {
+    if constexpr(std::is_floating_point_v<T>) // IEEE cases
+    {
+      return (a==b) || (std::isnan(a) && std::isnan(b));
+    }
+    else
+    {
+      return a == b;
+    }
+  }
 }

@@ -22,6 +22,11 @@ namespace tts
     return a.x/b.x;
   }
 
+  inline bool is_ieee_equal(n1::my_real const &a, n1::my_real const &b)
+  {
+    return a.x == b.x || (a.x >= 0.f && b.x >= 0.f);
+  }
+
   inline double relative_distance(n1::my_real const &a, n1::my_real const &b)
   {
     return a.x/b.x;
