@@ -161,9 +161,10 @@
 }(LHS,RHS)                                                                                          \
 /**/
 
-#define TTS_DO_IEEE_EQUAL(L,R,F,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
+#define TTS_DO_IEEE_EQUAL(L,R,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
 #define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
+
 //======================================================================================================================
 /**
   @def TTS_IEEE_EQUAL
