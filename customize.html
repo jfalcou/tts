@@ -175,7 +175,7 @@ Data display</h1>
 <div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line">  std::string to_string(box&lt;T&gt; <span class="keyword">const</span>&amp; b) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;box&lt;&quot;</span> + <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">tts::as_string</a>(b.value) + <span class="stringliteral">&quot;&gt;&quot;</span>; }</div>
 <div class="line">};</div>
-<div class="ttc" id="anamespacetts_abcc9d7819f7c21822954a11349d9b0e2_html_abcc9d7819f7c21822954a11349d9b0e2"><div class="ttname"><a href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">tts::as_string</a></div><div class="ttdeci">std::string as_string(T const &amp;e)</div><div class="ttdoc">Value-to-string conversion.</div><div class="ttdef"><b>Definition:</b> as_string.hpp:60</div></div>
+<div class="ttc" id="anamespacetts_abcc9d7819f7c21822954a11349d9b0e2_html_abcc9d7819f7c21822954a11349d9b0e2"><div class="ttname"><a href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">tts::as_string</a></div><div class="ttdeci">std::string as_string(T const &amp;e)</div><div class="ttdoc">Value-to-string conversion.</div><div class="ttdef"><b>Definition:</b> as_string.hpp:61</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="customize-comparison"></a>
 Equality and Ordering</h1>
 <p>All equality-based checks in <b>TTS</b> uses the compared value <code>operator==</code>. If needed, one can specialize the <code>compare_equal</code> function in a type's namespace to let <b>TTS</b> use a special comparison scheme.</p>
