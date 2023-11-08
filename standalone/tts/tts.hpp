@@ -522,16 +522,16 @@ namespace tts::detail
   };
 }
 #define TTS_PROTOTYPE(...) [] __VA_ARGS__
-#define TTS_CASE(ID)                                                                                \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(()) \
+#define TTS_CASE(ID)                                                                                                  \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(())  \
 
-#define TTS_CASE_TPL(ID,...)                                                                        \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID}       \
-                                              + TTS_PROTOTYPE()                                     \
+#define TTS_CASE_TPL(ID,...)                                                                                          \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID}        \
+                                              + TTS_PROTOTYPE()                                                       \
 
-#define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                         \
-static bool const TTS_CAT(case_,TTS_FUNCTION)                                                       \
-                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} << TTS_PROTOTYPE()         \
+#define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                                           \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                        \
+                                 = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} << TTS_PROTOTYPE()            \
 
 #include <string_view>
 #include <ostream>
@@ -1507,7 +1507,7 @@ namespace tts
   }                                                                                                 \
 }(LHS,RHS)                                                                                          \
 
-#define TTS_DO_IEEE_EQUAL(L,R,F,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
+#define TTS_DO_IEEE_EQUAL(L,R,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
 #define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__ )
