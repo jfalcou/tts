@@ -78,3 +78,10 @@ TTS_CASE( "Check display of sequence type" )
             , "{ some_type[13] some_type[34] }"s
             );
 };
+
+
+TTS_CASE( "Check display of std::optional" )
+{
+  TTS_EQUAL(tts::as_string( std::optional{42} )   , "optional<int>{42}"s );
+  TTS_EQUAL(tts::as_string( std::optional<int>{} ), "optional<int>{}"s   );
+};

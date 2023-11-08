@@ -990,6 +990,7 @@ namespace tts::detail
 }
 #include <iomanip>
 #include <sstream>
+#include <optional>
 #include <type_traits>
 namespace tts
 {
@@ -1052,6 +1053,12 @@ namespace tts
   inline std::string as_string(std::string const& e)      { return  e;                          }
   inline std::string as_string(std::string_view const& e) { return  std::string(e);             }
   inline std::string as_string(std::nullptr_t)            { return  std::string("nullptr");     }
+  template<typename T>
+  std::string as_string(std::optional<T> const& o)
+  {
+    if(o) return  std::string("optional<") + typename_<T> +">{" + as_string(*o) + "}";
+    else  return  std::string("optional<") + typename_<T> + ">{}";
+  }
 }
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
 if( ::tts::detail::OP(a,b) )                                                                      \
