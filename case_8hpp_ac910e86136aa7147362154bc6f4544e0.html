@@ -153,8 +153,8 @@ $(document).ready(function(){initNavTree('case_8hpp_ac910e86136aa7147362154bc6f4
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keywordtype">bool</span> <span class="keyword">const</span> TTS_CAT(case_,TTS_FUNCTION)                                                       \</div>
-<div class="line">                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} &lt;&lt; TTS_PROTOTYPE()         \</div>
+<b>Value:</b><div class="fragment"><div class="line">[[maybe_unused]] <span class="keyword">static</span> <span class="keywordtype">bool</span> <span class="keyword">const</span> TTS_CAT(case_,TTS_FUNCTION)                                                        \</div>
+<div class="line">                                 = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} &lt;&lt; TTS_PROTOTYPE()            \</div>
 </div><!-- fragment -->
 <p>Introduces a template test case providing dynamically generated data to the test code. </p>
 <p>The following code block will contain tests parametrized by a template type of your choice passed as lambda function parameters and generated for each type in the types list.</p>

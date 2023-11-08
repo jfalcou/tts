@@ -147,8 +147,8 @@ $(document).ready(function(){initNavTree('case_8hpp_a00d91e3b8e2f57672cd95ee4899
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keywordtype">bool</span> <span class="keyword">const</span> TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures&lt;__VA_ARGS__&gt;{ID}       \</div>
-<div class="line">                                              + TTS_PROTOTYPE()                                     \</div>
+<b>Value:</b><div class="fragment"><div class="line">[[maybe_unused]] <span class="keyword">static</span> <span class="keywordtype">bool</span> <span class="keyword">const</span> TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures&lt;__VA_ARGS__&gt;{ID}        \</div>
+<div class="line">                                              + TTS_PROTOTYPE()                                                       \</div>
 </div><!-- fragment -->
 <p>Introduces a template test case and registers it into the current test driver. </p>
 <p>The code block following TTS_CASE contains user-defined code for a given test case. Those tests are parametrized by a template type of your choice passed as lambda function parameters of the template type <code><a class="el" href="structtts_1_1type.html" title="Type wrapper.">tts::type</a></code> and instantiated for each type in the types list.</p>
