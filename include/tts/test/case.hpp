@@ -144,8 +144,8 @@ namespace tts::detail
   @endcode
 **/
 //======================================================================================================================
-#define TTS_CASE(ID)                                                                                \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(()) \
+#define TTS_CASE(ID)                                                                                                  \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} + TTS_PROTOTYPE(())  \
 /**/
 
 //======================================================================================================================
@@ -207,9 +207,9 @@ static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_capture{ID} 
   @endcode
 **/
 //======================================================================================================================
-#define TTS_CASE_TPL(ID,...)                                                                        \
-static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID}       \
-                                              + TTS_PROTOTYPE()                                     \
+#define TTS_CASE_TPL(ID,...)                                                                                          \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__VA_ARGS__>{ID}        \
+                                              + TTS_PROTOTYPE()                                                       \
 /**/
 
 //======================================================================================================================
@@ -255,7 +255,7 @@ static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::detail::test_captures<__V
 
 **/
 //======================================================================================================================
-#define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                         \
-static bool const TTS_CAT(case_,TTS_FUNCTION)                                                       \
-                  = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} << TTS_PROTOTYPE()         \
+#define TTS_CASE_WITH(ID, TYPES, GENERATOR)                                                                           \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                        \
+                                 = ::tts::detail::test_generators{ID,GENERATOR,TYPES{}} << TTS_PROTOTYPE()            \
 /**/
