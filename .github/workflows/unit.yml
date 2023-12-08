@@ -45,15 +45,15 @@ jobs:
   linux:
     runs-on: [ubuntu-latest]
     container:
-      image: ghcr.io/jfalcou/compilers:v6
+      image: ghcr.io/jfalcou/compilers:v7
     strategy:
       fail-fast: false
       matrix:
         cfg:
-        - { compiler: g++-12  , opts: -O0                                 , linker:                 }
+        - { compiler: g++     , opts: -O0                                 , linker:                 }
         - { compiler: clang++ , opts: -O0                                 , linker:                 }
         - { compiler: clang++ , opts: "-O3 -flto -DNDEBUG"                , linker:                 }
-        - { compiler: g++-12  , opts: "-O3 -flto -DNDEBUG"                , linker:                 }
+        - { compiler: g++     , opts: "-O3 -flto -DNDEBUG"                , linker:                 }
         - { compiler: clang++ , opts: "-O3 -flto -DNDEBUG -stdlib=libc++" , linker: -stdlib=libc++  }
         - { compiler: clang++ , opts: "-O0 -stdlib=libc++"                , linker: -stdlib=libc++  }
     steps:
@@ -105,3 +105,26 @@ jobs:
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm64-v8a
       - name: Compiling Unit Tests
         run:  cd build && make tts-test -j 2
+
+  wasm:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/jfalcou/compilers:v7
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+        - { opts: "-sNO_DISABLE_EXCEPTION_CATCHING -O0"                }
+        - { opts: "-sNO_DISABLE_EXCEPTION_CATCHING -O3 -flto -DNDEBUG" }
+    steps:
+      - name: Fetch current branch
+        uses: actions/checkout@v3
+      - name: Running CMake for em++ with ${{ matrix.cfg.opts }}
+        run:  |
+          mkdir build
+          cd build
+          emcmake cmake ..  -G Ninja -DCMAKE_CXX_COMPILER=em++ -DCMAKE_CXX_FLAGS="${{ matrix.cfg.opts }}" -DCMAKE_CROSSCOMPILING_CMD="`pwd`/../cmake/run_wasm.sh"
+      - name: Running Unit Tests
+        run:  |
+          cd build
+          ninja tts-test -j 2 && ctest --output-on-failure -j 2
