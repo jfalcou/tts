@@ -12,8 +12,19 @@
 #include <limits>
 #include <cmath>
 
+
 namespace tts
 {
+namespace detail
+{
+  #if defined(__FAST_MATH__)
+    inline constexpr auto isinf = [](auto) { return false; };
+    inline constexpr auto isnan = [](auto) { return false; };
+  #else
+    inline constexpr auto isinf = [](auto x) { return std::isinf(x); };
+    inline constexpr auto isnan = [](auto x) { return std::isnan(x); };
+  #endif
+}
   //====================================================================================================================
   /*!
     @brief Compute the absolute distance between two values
@@ -35,9 +46,9 @@ namespace tts
       }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (std::isnan(a) && std::isnan(b))) return 0.;
+        if((a == b) || (detail::isnan(a) && detail::isnan(b))) return 0.;
 
-        if(std::isinf(a) || std::isinf(b) || std::isnan(a) || std::isnan(b))
+        if(detail::isinf(a) || detail::isinf(b) || detail::isnan(a) || detail::isnan(b))
           return std::numeric_limits<double>::infinity();
 
         return std::abs(a - b);
@@ -81,9 +92,9 @@ namespace tts
       { return a == b ? 0. : 100.; }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (std::isnan(a) && std::isnan(b))) return 0.;
+        if((a == b) || (detail::isnan(a) && detail::isnan(b))) return 0.;
 
-        if(std::isinf(a) || std::isinf(b) || std::isnan(a) || std::isnan(b))
+        if(detail::isinf(a) || detail::isinf(b) || detail::isnan(a) || detail::isnan(b))
           return std::numeric_limits<double>::infinity();
 
         return 100. * (std::abs(a - b) / std::max(T(1), std::max(std::abs(a), std::abs(b))));
@@ -131,7 +142,7 @@ namespace tts
       {
         using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
 
-        if((a == b) || (std::isnan(a) && std::isnan(b)))
+        if((a == b) || (detail::isnan(a) && detail::isnan(b)))
         {
           return 0.;
         }
@@ -183,14 +194,14 @@ namespace tts
 
     @param  a Value to compare
     @param  b Value to compare
-    @return Is `a == b` or `std::isnan(a) && std::isnan(b)`
+    @return Is `a == b` or `detail::isnan(a) && detail::isnan(b)`
   **/
   //====================================================================================================================
   template<typename T, typename U> inline bool is_ieee_equal(T const &a, U const &b)
   {
     if constexpr(std::is_floating_point_v<T>) // IEEE cases
     {
-      return (a==b) || (std::isnan(a) && std::isnan(b));
+      return (a==b) || (detail::isnan(a) && detail::isnan(b));
     }
     else
     {

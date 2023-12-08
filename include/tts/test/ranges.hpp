@@ -112,11 +112,11 @@ namespace tts::detail
   inline std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
   {
     std::size_t bucket;
-    if     (ulp <= 1.5     ) bucket = static_cast<std::size_t>(std::ceil(ulp*2));
-    else if(std::isinf(ulp)) bucket = nb_buckets-1;
-    else                     bucket = std::min( nb_buckets-2
-                                              , static_cast<std::size_t>(std::log2(next2(ulp))+4)
-                                              );
+    if     (ulp <= 1.5        ) bucket = static_cast<std::size_t>(std::ceil(ulp*2));
+    else if(detail::isinf(ulp)) bucket = nb_buckets-1;
+    else                        bucket = std::min ( nb_buckets-2
+                                                  , static_cast<std::size_t>(std::log2(next2(ulp))+4)
+                                                  );
     return bucket;
   }
 

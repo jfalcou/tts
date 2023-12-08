@@ -40,11 +40,22 @@ TTS_CASE_TPL( "Relative distance between floating point", float, double )
 <typename T>(::tts::type<T>)
 {
   T a{1};
+
+  TTS_RELATIVE_EQUAL(a    , a     , 0.  );
+  TTS_RELATIVE_EQUAL(a, a + 0.049f,  5 );
+  TTS_RELATIVE_EQUAL(a, a - 0.049f,  5 );
+  TTS_RELATIVE_EQUAL(a + 0.049f, a,  5 );
+  TTS_RELATIVE_EQUAL(a - 0.049f, a,  5 );
+  TTS_RELATIVE_EQUAL(a, a + 0.499f, 50 );
+  TTS_RELATIVE_EQUAL(a, a - 0.499f, 50 );
+  TTS_RELATIVE_EQUAL(a + 0.499f, a, 50 );
+  TTS_RELATIVE_EQUAL(a - 0.499f, a, 50 );
+
+  #if !defined(__FAST_MATH__)
   T qnan = std::numeric_limits<T>::quiet_NaN();
   T inf  = std::numeric_limits<T>::infinity();
   T minf = -inf;
 
-  TTS_RELATIVE_EQUAL(a    , a     , 0.  );
   TTS_RELATIVE_EQUAL(a    , qnan  , inf );
   TTS_RELATIVE_EQUAL(qnan , a     , inf );
   TTS_RELATIVE_EQUAL(qnan , qnan  , 0.  );
@@ -56,15 +67,7 @@ TTS_CASE_TPL( "Relative distance between floating point", float, double )
   TTS_RELATIVE_EQUAL(a    , minf  , inf );
   TTS_RELATIVE_EQUAL(minf , a     , inf );
   TTS_RELATIVE_EQUAL(minf , minf  , inf );
-
-  TTS_RELATIVE_EQUAL(a, a + 0.049f,  5 );
-  TTS_RELATIVE_EQUAL(a, a - 0.049f,  5 );
-  TTS_RELATIVE_EQUAL(a + 0.049f, a,  5 );
-  TTS_RELATIVE_EQUAL(a - 0.049f, a,  5 );
-  TTS_RELATIVE_EQUAL(a, a + 0.499f, 50 );
-  TTS_RELATIVE_EQUAL(a, a - 0.499f, 50 );
-  TTS_RELATIVE_EQUAL(a + 0.499f, a, 50 );
-  TTS_RELATIVE_EQUAL(a - 0.499f, a, 50 );
+  #endif
 };
 
 #include "my_real.hpp"

@@ -20,12 +20,14 @@ TTS_CASE("ULP distance")
 
 TTS_CASE( "ULP distance between boolean" )
 {
-  auto const inf = std::numeric_limits<double>::infinity();
-
   TTS_ULP_EQUAL(true , true  , 0.   );
-  TTS_ULP_EQUAL(true , false , inf  );
   TTS_ULP_EQUAL(false, false , 0.   );
+
+  #if !defined(__FAST_MATH__)
+  auto const inf = std::numeric_limits<double>::infinity();
+  TTS_ULP_EQUAL(true , false , inf  );
   TTS_ULP_EQUAL(false, true  , inf  );
+  #endif
 };
 
 TTS_CASE_TPL(  "ULP distance between integers"

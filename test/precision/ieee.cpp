@@ -9,8 +9,10 @@
 
 TTS_CASE("IEEE equality")
 {
+  #if !defined(__FAST_MATH__)
   float x = std::numeric_limits<float>::quiet_NaN();
   TTS_IEEE_EQUAL(x,x);
+  #endif
 
   TTS_IEEE_EQUAL(1.f, 1.f);
   TTS_IEEE_EQUAL(2. , 2. );
