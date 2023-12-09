@@ -19,11 +19,22 @@ TTS_CASE_TPL(  "Absolute distance between floating point"
 <typename T>(::tts::type<T>)
 {
   T a{1};
+
+  TTS_ABSOLUTE_EQUAL(a    , a     , 0.  );
+  TTS_ABSOLUTE_EQUAL(a, a + 0.049f, .05 );
+  TTS_ABSOLUTE_EQUAL(a, a - 0.049f, .05 );
+  TTS_ABSOLUTE_EQUAL(a + 0.049f, a, .05 );
+  TTS_ABSOLUTE_EQUAL(a - 0.049f, a, .05 );
+  TTS_ABSOLUTE_EQUAL(a, a + 0.499f, .5 );
+  TTS_ABSOLUTE_EQUAL(a, a - 0.499f, .5 );
+  TTS_ABSOLUTE_EQUAL(a + 0.499f, a, .5 );
+  TTS_ABSOLUTE_EQUAL(a - 0.499f, a, .5 );
+
+  #if !defined(__FAST_MATH__)
   T qnan = std::numeric_limits<T>::quiet_NaN();
   T inf  = std::numeric_limits<T>::infinity();
   T minf = -inf;
 
-  TTS_ABSOLUTE_EQUAL(a    , a     , 0.  );
   TTS_ABSOLUTE_EQUAL(a    , qnan  , inf );
   TTS_ABSOLUTE_EQUAL(qnan , a     , inf );
   TTS_ABSOLUTE_EQUAL(qnan , qnan  , 0.  );
@@ -35,15 +46,7 @@ TTS_CASE_TPL(  "Absolute distance between floating point"
   TTS_ABSOLUTE_EQUAL(a    , minf  , inf );
   TTS_ABSOLUTE_EQUAL(minf , a     , inf );
   TTS_ABSOLUTE_EQUAL(minf , minf  , inf );
-
-  TTS_ABSOLUTE_EQUAL(a, a + 0.049f, .05 );
-  TTS_ABSOLUTE_EQUAL(a, a - 0.049f, .05 );
-  TTS_ABSOLUTE_EQUAL(a + 0.049f, a, .05 );
-  TTS_ABSOLUTE_EQUAL(a - 0.049f, a, .05 );
-  TTS_ABSOLUTE_EQUAL(a, a + 0.499f, .5 );
-  TTS_ABSOLUTE_EQUAL(a, a - 0.499f, .5 );
-  TTS_ABSOLUTE_EQUAL(a + 0.499f, a, .5 );
-  TTS_ABSOLUTE_EQUAL(a - 0.499f, a, .5 );
+  #endif
 };
 
 TTS_CASE( "Absolute distance between boolean" )
