@@ -48,11 +48,20 @@ TTS_CASE_TPL(  "ULP distance between floating points" , double, float )
 {
   T a{1};
   T eps  = std::numeric_limits<T>::epsilon();
+
+  TTS_ULP_EQUAL(a    , a     , 0.  );
+  TTS_ULP_EQUAL(a, a-eps   , 1   );
+  TTS_ULP_EQUAL(a, a+eps   , 0.5 );
+  TTS_ULP_EQUAL(a, a+3*eps , 1.5 );
+
+  TTS_ULP_EQUAL(a-eps  , a , 1   );
+  TTS_ULP_EQUAL(a+eps  , a , 0.5 );
+  TTS_ULP_EQUAL(a+3*eps, a , 1.5 );
+
+  #if !defined(__FAST_MATH__)
   T qnan = std::numeric_limits<T>::quiet_NaN();
   T inf  = std::numeric_limits<T>::infinity();
   T minf = -inf;
-
-  TTS_ULP_EQUAL(a    , a     , 0.  );
   TTS_ULP_EQUAL(a    , qnan  , inf );
   TTS_ULP_EQUAL(qnan , a     , inf );
   TTS_ULP_EQUAL(qnan , qnan  , 0.  );
@@ -64,14 +73,7 @@ TTS_CASE_TPL(  "ULP distance between floating points" , double, float )
   TTS_ULP_EQUAL(a    , minf  , inf );
   TTS_ULP_EQUAL(minf , a     , inf );
   TTS_ULP_EQUAL(minf , minf  , inf );
-
-  TTS_ULP_EQUAL(a, a-eps   , 1   );
-  TTS_ULP_EQUAL(a, a+eps   , 0.5 );
-  TTS_ULP_EQUAL(a, a+3*eps , 1.5 );
-
-  TTS_ULP_EQUAL(a-eps  , a , 1   );
-  TTS_ULP_EQUAL(a+eps  , a , 0.5 );
-  TTS_ULP_EQUAL(a+3*eps, a , 1.5 );
+  #endif
 };
 
 #include "my_real.hpp"
