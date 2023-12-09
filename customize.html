@@ -218,7 +218,7 @@ Precision Measurement</h2>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacetts_a3cd60ebfeba98c825c1e2b796d52be31.html#a3cd60ebfeba98c825c1e2b796d52be31">tts::ulp_distance</a>(ra,rb);</div>
 <div class="line">  }</div>
 <div class="line">};</div>
-<div class="ttc" id="anamespacetts_a3cd60ebfeba98c825c1e2b796d52be31_html_a3cd60ebfeba98c825c1e2b796d52be31"><div class="ttname"><a href="namespacetts_a3cd60ebfeba98c825c1e2b796d52be31.html#a3cd60ebfeba98c825c1e2b796d52be31">tts::ulp_distance</a></div><div class="ttdeci">double ulp_distance(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the distance in ULP between two values.</div><div class="ttdef"><b>Definition:</b> precision.hpp:122</div></div>
+<div class="ttc" id="anamespacetts_a3cd60ebfeba98c825c1e2b796d52be31_html_a3cd60ebfeba98c825c1e2b796d52be31"><div class="ttname"><a href="namespacetts_a3cd60ebfeba98c825c1e2b796d52be31.html#a3cd60ebfeba98c825c1e2b796d52be31">tts::ulp_distance</a></div><div class="ttdeci">double ulp_distance(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the distance in ULP between two values.</div><div class="ttdef"><b>Definition:</b> precision.hpp:133</div></div>
 <div class="ttc" id="anamespacetts_html"><div class="ttname"><a href="namespacetts.html">tts</a></div><div class="ttdoc">Main TTS namespace.</div><div class="ttdef"><b>Definition:</b> comparators.hpp:14</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md22"></a>
 Relative Comparison</h2>
@@ -235,7 +235,7 @@ Relative Comparison</h2>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="namespacetts_a616410f008ed60459668f7b36a2f1dab.html#a616410f008ed60459668f7b36a2f1dab">tts::relative_distance</a>( a.n*b.d , b.n*a.d );</div>
 <div class="line">  }</div>
 <div class="line">};</div>
-<div class="ttc" id="anamespacetts_a616410f008ed60459668f7b36a2f1dab_html_a616410f008ed60459668f7b36a2f1dab"><div class="ttname"><a href="namespacetts_a616410f008ed60459668f7b36a2f1dab.html#a616410f008ed60459668f7b36a2f1dab">tts::relative_distance</a></div><div class="ttdeci">double relative_distance(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the relative distance between two values.</div><div class="ttdef"><b>Definition:</b> precision.hpp:76</div></div>
+<div class="ttc" id="anamespacetts_a616410f008ed60459668f7b36a2f1dab_html_a616410f008ed60459668f7b36a2f1dab"><div class="ttname"><a href="namespacetts_a616410f008ed60459668f7b36a2f1dab.html#a616410f008ed60459668f7b36a2f1dab">tts::relative_distance</a></div><div class="ttdeci">double relative_distance(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the relative distance between two values.</div><div class="ttdef"><b>Definition:</b> precision.hpp:87</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
 Absolute Comparison</h2>
 <p>TTS** uses its <code>absolute_distance</code> function to perform all absolute precision checks. If needed, one can specialize this function in the <code>tts</code> namespace to let <b>TTS</b> use special absolute precision scheme. As usual, one can also reuse the pre-existing <code><a class="el" href="namespacetts_ae29d8013273a5c5c990fea66434ac882.html#ae29d8013273a5c5c990fea66434ac882" title="Compute the absolute distance between two values.">tts::absolute_distance</a></code> to implement their own.</p>
