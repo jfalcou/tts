@@ -47,7 +47,7 @@ namespace tts
   /// List of all standard unsigned types.
   using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
   /// List of all standard integer types.
-  using integral_types    = concatenate_t<int_types,int_types>;
+  using integral_types    = concatenate_t<int_types,uint_types>;
   /// List of all standard arithmetic types.
   using arithmetic_types  = concatenate_t<real_types,int_types,uint_types>;
 }
