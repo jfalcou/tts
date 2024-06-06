@@ -111,7 +111,7 @@ var NAVTREE =
           [ "int_types", "namespacetts.html#a213ac596b9a0b307be93bdc89f5ba738", null ],
           [ "signed_types", "namespacetts.html#af80f4545b36d2c023830480c853739af", null ],
           [ "uint_types", "namespacetts.html#a19e63a903c9a238a3db10c9d56a9af56", null ],
-          [ "integral_types", "namespacetts.html#af94539e8b9b0bc71324e5a5155c97d40", null ],
+          [ "integral_types", "namespacetts.html#a63db889f2ec99ffcdb880b2fa77e904a", null ],
           [ "arithmetic_types", "namespacetts.html#aa98a8d00dc451d2ba4364c2e6d25d94e", null ],
           [ "typename_", "namespacetts.html#a9baae38fc47577b803dbbb539828e086", null ]
         ] ],
