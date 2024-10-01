@@ -61,9 +61,9 @@
 
 #if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
 #  define TTS_CUSTOM_DRIVER_FUNCTION main
-namespace tts::detail { constexpr bool use_main = true; }
+namespace tts::detail { inline constexpr bool use_main = true; }
 #else
-namespace tts::detail { constexpr bool use_main = false; }
+namespace tts::detail { inline constexpr bool use_main = false; }
 #endif
 
 #if defined(TTS_MAIN)
