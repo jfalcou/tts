@@ -107,6 +107,8 @@
 /**/
 
 #define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                         \
+TTS_DISABLE_WARNING_PUSH                                                                            \
+TTS_DISABLE_WARNING_SHADOW                                                                          \
 [&]( TTS_ARG(__VA_ARGS__) )                                                                         \
 {                                                                                                   \
   if constexpr( requires TTS_REMOVE_PARENS(EXPR) )                                                  \
@@ -120,6 +122,7 @@
             );                                                                                      \
     return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
+TTS_DISABLE_WARNING_POP                                                                             \
 }(__VA_ARGS__)                                                                                      \
 /**/
 
@@ -154,6 +157,8 @@
 #endif
 
 #define TTS_EXPECT_NOT_COMPILES_IMPL(EXPR, ...)                                                     \
+TTS_DISABLE_WARNING_PUSH                                                                            \
+TTS_DISABLE_WARNING_SHADOW                                                                          \
 [&]( TTS_ARG(__VA_ARGS__) )                                                                         \
 {                                                                                                   \
   if constexpr( !(requires TTS_REMOVE_PARENS(EXPR)) )                                               \
@@ -165,6 +170,7 @@
     TTS_FAIL("Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " compiles unexpectedly." );  \
     return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
+TTS_DISABLE_WARNING_POP                                                                             \
 }(__VA_ARGS__)                                                                                      \
 /**/
 

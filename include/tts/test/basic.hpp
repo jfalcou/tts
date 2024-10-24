@@ -48,9 +48,9 @@
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR),TTS_FATAL)
 
 #define TTS_EXPECT_IMPL(EXPR,FAILURE)                                                               \
-[&](auto&& expr)                                                                                    \
+[&](auto&& local_tts_expr)                                                                          \
 {                                                                                                   \
-  if( expr )                                                                                        \
+  if( local_tts_expr )                                                                              \
   {                                                                                                 \
     ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \
@@ -97,9 +97,9 @@
 #define TTS_EXPECT_NOT_REQUIRED(EXPR)   TTS_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 
 #define TTS_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                           \
-[&](auto&& expr)                                                                                    \
+[&](auto&& local_tts_expr)                                                                          \
 {                                                                                                   \
-  if( !expr )                                                                                       \
+  if( !local_tts_expr )                                                                             \
   {                                                                                                 \
     ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
   }                                                                                                 \

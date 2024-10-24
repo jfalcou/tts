@@ -8,6 +8,27 @@
 #pragma once
 
 //======================================================================================================================
+// Portable PRAGMA Handler
+//======================================================================================================================
+#if defined(_MSC_VER)
+  #define TTS_DISABLE_WARNING_PUSH           __pragma(warning( push ))
+  #define TTS_DISABLE_WARNING_POP            __pragma(warning( pop ))
+  #define TTS_DISABLE_WARNING(warningNumber) __pragma(warning( disable : warningNumber ))
+  #define TTS_DISABLE_WARNING_SHADOW
+
+#elif defined(__GNUC__) || defined(__clang__)
+  #define TTS_DO_PRAGMA(X)                    _Pragma(#X)
+  #define TTS_DISABLE_WARNING_PUSH            TTS_DO_PRAGMA(GCC diagnostic push)
+  #define TTS_DISABLE_WARNING_POP             TTS_DO_PRAGMA(GCC diagnostic pop)
+  #define TTS_DISABLE_WARNING(warningName)    TTS_DO_PRAGMA(GCC diagnostic ignored #warningName)
+  #define TTS_DISABLE_WARNING_SHADOW          TTS_DISABLE_WARNING(-Wshadow)
+#else
+  #define TTS_DISABLE_WARNING_PUSH
+  #define TTS_DISABLE_WARNING_POP
+  #define TTS_DISABLE_WARNING_SHADOW
+#endif
+
+//======================================================================================================================
 // Macro chains for proper unique line based ID generation
 //======================================================================================================================
 #ifndef TTS_FUNCTION
