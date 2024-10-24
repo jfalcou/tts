@@ -177,9 +177,9 @@ $(document).ready(function(){initNavTree('test_2precision_8hpp_a2eab6442eade4732
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">[&amp;](<span class="keyword">auto</span> lhs, <span class="keyword">auto</span> rhs)                                                                             \</div>
+<b>Value:</b><div class="fragment"><div class="line">[&amp;](<span class="keyword">auto</span> local_tts_lhs, <span class="keyword">auto</span> local_tts_rhs)                                                         \</div>
 <div class="line">{                                                                                                   \</div>
-<div class="line">  <span class="keyword">auto</span> r = FUNC (lhs,rhs);                                                                          \</div>
+<div class="line">  <span class="keyword">auto</span> r = FUNC (local_tts_lhs,local_tts_rhs);                                                      \</div>
 <div class="line">                                                                                                    \</div>
 <div class="line">  if(r &lt;= N)                                                                                        \</div>
 <div class="line">  {                                                                                                 \</div>
@@ -189,7 +189,8 @@ $(document).ready(function(){initNavTree('test_2precision_8hpp_a2eab6442eade4732
 <div class="line">  {                                                                                                 \</div>
 <div class="line">    FAILURE ( <span class="stringliteral">&quot;Expected: &quot;</span> &lt;&lt; TTS_STRING(LHS) &lt;&lt; <span class="stringliteral">&quot; == &quot;</span> &lt;&lt; TTS_STRING(RHS)                          \</div>
 <div class="line">                            &lt;&lt; <span class="stringliteral">&quot; but &quot;</span>                                                              \</div>
-<div class="line">                            &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(lhs) &lt;&lt; <span class="stringliteral">&quot; == &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(rhs)             \</div>
+<div class="line">                            &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(local_tts_lhs)                                      \</div>
+<div class="line">                            &lt;&lt; <span class="stringliteral">&quot; == &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(local_tts_rhs)                            \</div>
 <div class="line">                            &lt;&lt; <span class="stringliteral">&quot; within &quot;</span> &lt;&lt; std::setprecision(PREC) &lt;&lt; std::fixed                  \</div>
 <div class="line">                            &lt;&lt; r &lt;&lt; std::defaultfloat                                               \</div>
 <div class="line">                            &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; UNIT &lt;&lt; <span class="stringliteral">&quot; when &quot;</span>                                              \</div>

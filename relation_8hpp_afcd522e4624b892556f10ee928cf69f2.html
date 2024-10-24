@@ -171,14 +171,15 @@ $(document).ready(function(){initNavTree('relation_8hpp_afcd522e4624b892556f10ee
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">if</span>( ::tts::detail::OP(a,b) )                                                                      \</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">if</span>( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \</div>
 <div class="line">{                                                                                                 \</div>
 <div class="line">  ::tts::global_runtime.pass(); return ::tts::detail::logger{<span class="keyword">false</span>};                              \</div>
 <div class="line">}                                                                                                 \</div>
 <div class="line"><span class="keywordflow">else</span>                                                                                              \</div>
 <div class="line">{                                                                                                 \</div>
 <div class="line">  FAILURE (   <span class="stringliteral">&quot;Expression: &quot;</span>  &lt;&lt; TTS_STRING(A) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> T <span class="stringliteral">&quot; &quot;</span> &lt;&lt; TTS_STRING(B)                      \</div>
-<div class="line">          &lt;&lt;  <span class="stringliteral">&quot; is false because: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(a) &lt;&lt; <span class="stringliteral">&quot; &quot;</span> F <span class="stringliteral">&quot; &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(b)    \</div>
+<div class="line">          &lt;&lt;  <span class="stringliteral">&quot; is false because: &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(local_tts_a)                              \</div>
+<div class="line">          &lt;&lt;  <span class="stringliteral">&quot; &quot;</span> F <span class="stringliteral">&quot; &quot;</span> &lt;&lt; <a class="code hl_function" href="namespacetts_abcc9d7819f7c21822954a11349d9b0e2.html#abcc9d7819f7c21822954a11349d9b0e2">::tts::as_string</a>(local_tts_b)                                          \</div>
 <div class="line">          );                                                                                      \</div>
 <div class="line">  return ::tts::detail::logger{};                                                                 \</div>
 <div class="line">}                                                                                                 \</div>

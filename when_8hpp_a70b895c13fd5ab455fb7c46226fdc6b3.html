@@ -137,10 +137,13 @@ $(document).ready(function(){initNavTree('when_8hpp_a70b895c13fd5ab455fb7c46226f
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;[^] - For: &quot;</span> &lt;&lt; ::tts::detail::current_test &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;                                \</div>
+<b>Value:</b><div class="fragment"><div class="line">TTS_DISABLE_WARNING_PUSH                                                                            \</div>
+<div class="line">TTS_DISABLE_WARNING_SHADOW                                                                          \</div>
+<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;[^] - For: &quot;</span> &lt;&lt; ::tts::detail::current_test &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;                                \</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;When      : &quot;</span> &lt;&lt; STORY &lt;&lt; std::endl;                                                \</div>
 <div class="line">  for(<span class="keywordtype">int</span> tts_section = 0, tts_count = 1; tts_section &lt; tts_count; tts_count -= 0==tts_section++)   \</div>
 <div class="line">    <span class="keywordflow">for</span>( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \</div>
+<div class="line">TTS_DISABLE_WARNING_POP                                                                             \</div>
 </div><!-- fragment -->
 <p>Start a block of scoped environment. </p>
 <p>Code in a scoped environment can contain:</p><ul>
@@ -174,9 +177,9 @@ $(document).ready(function(){initNavTree('when_8hpp_a70b895c13fd5ab455fb7c46226f
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="ttc" id="acase_8hpp_a8f02c0809d6d7acc4b7eadd9d269cdc5_html_a8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="case_8hpp_a8f02c0809d6d7acc4b7eadd9d269cdc5.html#a8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition:</b> case.hpp:147</div></div>
-<div class="ttc" id="arelation_8hpp_afc88cdb469bdc19411c7b0e9f7f33ae1_html_afc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="relation_8hpp_afc88cdb469bdc19411c7b0e9f7f33ae1.html#afc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition:</b> relation.hpp:89</div></div>
+<div class="ttc" id="arelation_8hpp_afc88cdb469bdc19411c7b0e9f7f33ae1_html_afc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="relation_8hpp_afc88cdb469bdc19411c7b0e9f7f33ae1.html#afc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition:</b> relation.hpp:90</div></div>
 <div class="ttc" id="awhen_8hpp_a70b895c13fd5ab455fb7c46226fdc6b3_html_a70b895c13fd5ab455fb7c46226fdc6b3"><div class="ttname"><a href="when_8hpp_a70b895c13fd5ab455fb7c46226fdc6b3.html#a70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a></div><div class="ttdeci">#define TTS_WHEN(STORY)</div><div class="ttdoc">Start a block of scoped environment.</div><div class="ttdef"><b>Definition:</b> when.hpp:80</div></div>
-<div class="ttc" id="awhen_8hpp_a73b1883dce7ec54c87702f8f349d52b3_html_a73b1883dce7ec54c87702f8f349d52b3"><div class="ttname"><a href="when_8hpp_a73b1883dce7ec54c87702f8f349d52b3.html#a73b1883dce7ec54c87702f8f349d52b3">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(...)</div><div class="ttdoc">Add a scoped tests to current scoped environment.</div><div class="ttdef"><b>Definition:</b> when.hpp:138</div></div>
+<div class="ttc" id="awhen_8hpp_a73b1883dce7ec54c87702f8f349d52b3_html_a73b1883dce7ec54c87702f8f349d52b3"><div class="ttname"><a href="when_8hpp_a73b1883dce7ec54c87702f8f349d52b3.html#a73b1883dce7ec54c87702f8f349d52b3">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(...)</div><div class="ttdoc">Add a scoped tests to current scoped environment.</div><div class="ttdef"><b>Definition:</b> when.hpp:144</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
