@@ -25,21 +25,21 @@ namespace tts::detail
 }
 
 #define TTS_ALL_IMPL(SEQ1,SEQ2,OP,N,UNIT,FAILURE)                                                   \
-[](auto const& a, auto const& b)                                                                    \
+[](auto const& local_tts_a, auto const& local_tts_b)                                                \
 {                                                                                                   \
-  if( std::size(b) != std::size(a) )                                                                \
+  if( std::size(local_tts_b) != std::size(local_tts_a) )                                            \
   {                                                                                                 \
     FAILURE ( "Expected: "  << TTS_STRING(SEQ1) << " == " << TTS_STRING(SEQ2)                       \
                             << " but sizes does not match: "                                        \
-                            << "size(" TTS_STRING(SEQ1) ") = " << std::size(a)                      \
-                            << " while size(" TTS_STRING(SEQ2) ") = " << std::size(b)               \
+                            << "size(" TTS_STRING(SEQ1) ") = " << std::size(local_tts_a)            \
+                            << " while size(" TTS_STRING(SEQ2) ") = " << std::size(local_tts_b)     \
             );                                                                                      \
     return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
                                                                                                     \
-  auto ba = std::begin(a);                                                                          \
-  auto bb = std::begin(b);                                                                          \
-  auto ea = std::end(a);                                                                            \
+  auto ba = std::begin(local_tts_a);                                                                \
+  auto bb = std::begin(local_tts_b);                                                                \
+  auto ea = std::end(local_tts_a);                                                                  \
                                                                                                     \
   std::vector < ::tts::detail::failure< std::remove_cvref_t<decltype(*ba)>                          \
                                       , std::remove_cvref_t<decltype(*bb)>                          \

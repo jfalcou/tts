@@ -13,14 +13,15 @@
 #include <tts/test/info.hpp>
 
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
-if( ::tts::detail::OP(a,b) )                                                                      \
+if( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \
 {                                                                                                 \
   ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
   FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                      \
-          <<  " is false because: " << ::tts::as_string(a) << " " F " " << ::tts::as_string(b)    \
+          <<  " is false because: " << ::tts::as_string(local_tts_a)                              \
+          <<  " " F " " << ::tts::as_string(local_tts_b)                                          \
           );                                                                                      \
   return ::tts::detail::logger{};                                                                 \
 }                                                                                                 \
@@ -49,7 +50,7 @@ else                                                                            
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                  \
-[&](auto&& a, auto&& b)                                                                             \
+[&](auto&& local_tts_a, auto&& local_tts_b)                                                         \
 {                                                                                                   \
   TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                        \
 }(A,B)                                                                                              \
@@ -440,10 +441,10 @@ do                                                                              
 #define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
-[&](auto&& a, auto&& b)                                                                             \
+[&](auto&& local_tts_a, auto&& local_tts_b)                                                         \
 {                                                                                                   \
-  using type_a = std::remove_cvref_t<decltype(a)>;                                                  \
-  using type_b = std::remove_cvref_t<decltype(b)>;                                                  \
+  using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                        \
+  using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                        \
                                                                                                     \
   if ( !tts::same_as<type_a, type_b> )                                                              \
   {                                                                                                 \

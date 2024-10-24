@@ -78,13 +78,18 @@ namespace tts::detail
 **/
 //======================================================================================================================
 #define TTS_WHEN(STORY)                                                                             \
+TTS_DISABLE_WARNING_PUSH                                                                            \
+TTS_DISABLE_WARNING_SHADOW                                                                          \
   std::cout << "[^] - For: " << ::tts::detail::current_test << "\n";                                \
   std::cout << "When      : " << STORY << std::endl;                                                \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++)   \
     for( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \
+TTS_DISABLE_WARNING_POP                                                                             \
 /**/
 
 #define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, ...)                                                        \
+TTS_DISABLE_WARNING_PUSH                                                                            \
+TTS_DISABLE_WARNING_SHADOW                                                                          \
   static int TTS_LOCAL_ID = 0;                                                                      \
   std::ostringstream TTS_CAT(desc_,TTS_LOCAL_ID);                                                   \
   if(::tts::detail::section_guard(TTS_LOCAL_ID, tts_section, tts_count )                            \
@@ -94,6 +99,7 @@ namespace tts::detail
     )                                                                                               \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )  \
     for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                  \
+TTS_DISABLE_WARNING_POP                                                                             \
 /**/
 
 //======================================================================================================================

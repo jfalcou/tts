@@ -14,9 +14,9 @@
 #include <tts/engine/logger.hpp>
 
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC,FAILURE)                                   \
-[&](auto lhs, auto rhs)                                                                             \
+[&](auto local_tts_lhs, auto local_tts_rhs)                                                         \
 {                                                                                                   \
-  auto r = FUNC (lhs,rhs);                                                                          \
+  auto r = FUNC (local_tts_lhs,local_tts_rhs);                                                      \
                                                                                                     \
   if(r <= N)                                                                                        \
   {                                                                                                 \
@@ -26,7 +26,8 @@
   {                                                                                                 \
     FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
                             << " but "                                                              \
-                            << ::tts::as_string(lhs) << " == " << ::tts::as_string(rhs)             \
+                            << ::tts::as_string(local_tts_lhs)                                      \
+                            << " == " << ::tts::as_string(local_tts_rhs)                            \
                             << " within " << std::setprecision(PREC) << std::fixed                  \
                             << r << std::defaultfloat                                               \
                             << " " << UNIT << " when "                                              \
@@ -143,22 +144,22 @@
 #define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , 2, __VA_ARGS__ )
 
 
-#define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                   \
-[&](auto lhs, auto rhs)                                                                             \
-{                                                                                                   \
-  if(::tts::is_ieee_equal(lhs,rhs))                                                                 \
-  {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
-                            << " but "                                                              \
-                            << ::tts::as_string(lhs) << " != " << ::tts::as_string(rhs)             \
-            );                                                                                      \
-    return ::tts::detail::logger{};                                                                 \
-  }                                                                                                 \
-}(LHS,RHS)                                                                                          \
+#define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                         \
+[&](auto local_tts_lhs, auto local_tts_rhs)                                                               \
+{                                                                                                         \
+  if(::tts::is_ieee_equal(local_tts_lhs,local_tts_rhs))                                                   \
+  {                                                                                                       \
+    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                                    \
+  }                                                                                                       \
+  else                                                                                                    \
+  {                                                                                                       \
+    FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                                \
+                          << " but "                                                                      \
+                          << ::tts::as_string(local_tts_lhs) << " != " << ::tts::as_string(local_tts_rhs) \
+            );                                                                                            \
+    return ::tts::detail::logger{};                                                                       \
+  }                                                                                                       \
+}(LHS,RHS)                                                                                                \
 /**/
 
 #define TTS_DO_IEEE_EQUAL(L,R,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
