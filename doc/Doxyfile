@@ -97,6 +97,7 @@ RECURSIVE              = YES
 EXCLUDE_SYMBOLS        = detail*
 SOURCE_BROWSER         = NO
 VERBATIM_HEADERS       = NO
+GENERATE_TAGFILE       = $(DOXYGEN_OUPUT)/tts.tag
 
 #---------------------------------------------------------------------------
 # Configuration options related to the HTML output
