@@ -8,11 +8,11 @@
 //======================================================================================================================
 #pragma once
 
-// #include <tts/engine/help.hpp>
+#include <tts/engine/usage.hpp>
 // #include <tts/engine/logger.hpp>
 // #include <tts/engine/test.hpp>
 // #include <tts/engine/suite.hpp>
-// #include <tts/tools/option.hpp>
+#include <tts/tools/options.hpp>
 
 #if defined(TTS_DOXYGEN_INVOKED)
 //======================================================================================================================
@@ -61,21 +61,22 @@
 
 #if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
 #  define TTS_CUSTOM_DRIVER_FUNCTION main
-namespace tts::detail { inline constexpr bool use_main = true; }
+namespace tts::_ { inline constexpr bool use_main = true; }
 #else
-namespace tts::detail { inline constexpr bool use_main = false; }
+namespace tts::_ { inline constexpr bool use_main = false; }
 #endif
 
 #if defined(TTS_MAIN)
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc,argv);
-  if( ::tts::arguments()[{"-h","--help"}] )
-    return ::tts::detail::usage(argv[0]);
+  if( ::tts::arguments()["-h","--help"] )
+    return ::tts::_::usage(argv[0]);
 
-  auto nb_tests = ::tts::detail::suite().size();
+  // auto nb_tests = ::tts::detail::suite().size();
   std::size_t done_tests = 0;
 
+/*
   try
   {
     for(auto &t: ::tts::detail::suite())
@@ -105,5 +106,6 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
 
   if constexpr( ::tts::detail::use_main )   return ::tts::report(0,0);
   else                                      return 0;
+*/
 }
 #endif
