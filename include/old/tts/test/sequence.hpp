@@ -64,7 +64,7 @@ namespace tts::detail
       std::cout << "    @[" << f.index << "] : " << f.original << " and " << f.other                \
                 << " differ by " << OP(f.original,f.other) << " " << UNIT << "\n";                  \
                                                                                                     \
-    std::cout << "\n";                                                                              \
+    puts("");                                                                                       \
     return ::tts::detail::logger{};                                                                 \
   }                                                                                                 \
                                                                                                     \

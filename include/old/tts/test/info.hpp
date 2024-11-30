@@ -66,14 +66,15 @@
     if(!::tts::global_runtime.fail_status)                                                          \
     {                                                                                               \
       ::tts::global_runtime.fail_status = true;                                                     \
-      std::cout << "[X] - " << ::tts::detail::current_test << "\n";                                 \
+      printf("[X] - %s\n", ::tts::detail::current_test);                                            \
     }                                                                                               \
-    if( !::tts::detail::current_type.empty())                                                       \
+    if( ::tts::detail::current_type )                                                               \
     {                                                                                               \
-      std::cout << "  > " << ::tts::detail::current_type << "\n";                                   \
+      printf("  >  with [T = %s]", ::tts::detail::current_type);                                    \
     }                                                                                               \
-    std::cout << "    " << ::tts::source_location::current() << " - ** FAILURE **"                  \
-              << " : " << Message << std::endl;                                                     \
+    printf("    ");                                                                                 \
+    ::tts::source_location::current().display();                                                    \
+    printf(" - ** FAILURE ** : %s\n", Messaqe);                                                     \
   } while(0)
 /**/
 
@@ -105,14 +106,15 @@
     if(!::tts::global_runtime.fail_status)                                                          \
     {                                                                                               \
       ::tts::global_runtime.fail_status = true;                                                     \
-      std::cout << "[@] - " << ::tts::detail::current_test<< "\n";                                  \
+      printf("[@] - %s\n", ::tts::detail::current_test);                                            \
     }                                                                                               \
-    if( !::tts::detail::current_type.empty())                                                       \
+    if( ::tts::detail::current_type )                                                               \
     {                                                                                               \
-      std::cout << "  > " << ::tts::detail::current_type << "\n";                                   \
+      printf("  >  with [T = %s]", ::tts::detail::current_type);                                    \
     }                                                                                               \
-    std::cout << "    " << ::tts::source_location::current() << " - @@ FATAL @@"                    \
-              << " : " << Message << std::endl;                                                     \
+    printf("    ");                                                                                 \
+    ::tts::source_location::current().display();                                                    \
+    printf(" - @@ FATAL @@ : %s\n", Messaqe);                                                       \
     ::tts::fatal_error_status = true;                                                               \
   } while(0)
 /**/

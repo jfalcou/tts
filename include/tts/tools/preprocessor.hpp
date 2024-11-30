@@ -7,6 +7,14 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/tools/traits.hpp>
+
+//======================================================================================================================
+// Macro for move semantic/forward semantic
+//======================================================================================================================
+#define TTS_MOVE(...) static_cast<std::remove_reference_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
+#define TTS_FWD(...)  static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
+
 //======================================================================================================================
 // Portable PRAGMA Handler
 //======================================================================================================================
@@ -15,7 +23,6 @@
   #define TTS_DISABLE_WARNING_POP            __pragma(warning( pop ))
   #define TTS_DISABLE_WARNING(warningNumber) __pragma(warning( disable : warningNumber ))
   #define TTS_DISABLE_WARNING_SHADOW
-
 #elif defined(__GNUC__) || defined(__clang__)
   #define TTS_DO_PRAGMA(X)                    _Pragma(#X)
   #define TTS_DISABLE_WARNING_PUSH            TTS_DO_PRAGMA(GCC diagnostic push)
@@ -56,6 +63,7 @@
 #define TTS_STRING__(...) #__VA_ARGS__
 #define TTS_STRING_(TXT)  TTS_STRING__ TXT
 
+/*
 //======================================================================================================================
 // Count amount of variadic tokens
 //======================================================================================================================
@@ -91,6 +99,7 @@
 #define TTS_REVERSE_IMPL(N,...) TTS_VAL(TTS_REVERSE_ ## N(__VA_ARGS__))
 #define TTS_REVERSE_(N,...)     TTS_REVERSE_IMPL( N, __VA_ARGS__)
 #define TTS_REVERSE(...)        TTS_REVERSE_( TTS_COUNT(__VA_ARGS__), __VA_ARGS__)
+*/
 
 //======================================================================================================================
 // Remove parens around macro token if any are present -- NON TRIVIAL SHIT

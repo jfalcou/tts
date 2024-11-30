@@ -6,37 +6,27 @@
 **/
 //======================================================================================================================
 #pragma once
+#include <stdio.h>
+#include <string.h>
 
-#include <string_view>
-#include <ostream>
-
-namespace tts
+namespace tts::_
 {
   class source_location
   {
     public:
-    [[nodiscard]] static constexpr auto current ( const char* file  = __builtin_FILE()
-                                                , int line          = __builtin_LINE()
-                                                ) noexcept
+    [[nodiscard]] static auto current ( const char* file  = __builtin_FILE()
+                                      , int line          = __builtin_LINE()
+                                      ) noexcept
     {
       source_location sl{};
-      sl.file_ = file;
+      auto offset = strrchr(file, '/') - file + 1;
+      sl.file_ = file + offset;
       sl.line_ = line;
       return sl;
     }
 
-    [[nodiscard]] constexpr auto filename() const noexcept
-    {
-      std::string_view f(file_);
-      return f.substr(f.find_last_of('/')+1);
-    }
-
-    [[nodiscard]] constexpr auto line() const noexcept { return line_; }
-
-    friend std::ostream& operator<<(std::ostream& os, source_location const& s)
-    {
-      return os << "[" << s.filename() << ":" << s.line() << "]";
-    }
+    void print(const char* end) const { printf("[%s:%d]%s", file_, line_, end); }
+    void print()                const { print(""); }
 
     private:
     const char* file_{"unknown"};
