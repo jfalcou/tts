@@ -14,14 +14,13 @@
 /// Main TTS namespace
 namespace tts {}
 
-#include <tts/engine/usage.hpp>
 #include <tts/tools/bitcast.hpp>
 #include <tts/tools/callable.hpp>
 #include <tts/tools/source_location.hpp>
 #include <tts/tools/typename.hpp>
+#include <tts/engine/main.hpp>
 
 // #include <tts/tools/stdfix.hpp>
-// #include <tts/engine/main.hpp>
 // #include <tts/test/case.hpp>
 // #include <tts/test/info.hpp>
 // #include <tts/test/basic.hpp>
