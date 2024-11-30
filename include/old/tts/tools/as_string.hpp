@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/typename.hpp>
+#include <tts/tools/option.hpp>
 
 namespace tts
 {

@@ -8,11 +8,11 @@
 //======================================================================================================================
 #pragma once
 
-// #include <tts/engine/help.hpp>
-// #include <tts/engine/logger.hpp>
-// #include <tts/engine/test.hpp>
-// #include <tts/engine/suite.hpp>
-// #include <tts/tools/option.hpp>
+#include <tts/engine/help.hpp>
+#include <tts/engine/logger.hpp>
+#include <tts/engine/test.hpp>
+#include <tts/engine/suite.hpp>
+#include <tts/tools/option.hpp>
 
 #if defined(TTS_DOXYGEN_INVOKED)
 //======================================================================================================================

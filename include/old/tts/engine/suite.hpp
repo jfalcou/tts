@@ -8,7 +8,7 @@
 #pragma once
 
 #include <cstddef>
-#include <iostream>
+#include <cstdio>
 
 //======================================================================================================================
 // Test environment
@@ -30,11 +30,13 @@ namespace tts::detail
       auto inv_txt  = invalid_count > 1 ? "invalids" : "invalid";
       auto passes   = (fails || invalids) ?  0 : test_count;
 
-      std::cout << "----------------------------------------------------------------\n";
-      std::cout << "Results: " << test_count << " " << test_txt << " - "
-                << success_count << "/" << passes << " " << pass_txt << " - "
-                << failure_count << "/" << fails << " " << fail_txt << " - "
-                << invalid_count << "/" << invalids << " " << inv_txt << "\n";
+      puts("----------------------------------------------------------------");
+      printf("Results: %d %s - %d/%d %s - %d/%d %s - %d/%d %s\n"
+            , test_count, test_txt
+            , success_count, passes, pass_txt
+            , failure_count, fails , fail_txt
+            , invalid_count, invalids, inv_txt
+            );
 
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else                    return (failure_count == fails && invalid_count == invalids) ? 0 : 1;

@@ -8,7 +8,7 @@
 //======================================================================================================================
 #pragma once
 
-#include <iostream>
+#include <cstdio>
 #include <tts/tools/preprocessor.hpp>
 
 namespace tts::detail
@@ -25,7 +25,7 @@ namespace tts::detail
 
     template<typename Desc> bool check(Desc const& desc)
     {
-      if(id == section) std::cout << "  And then: " << desc << std::endl;
+      if(id == section) printf("  And then: %s\n", desc);
       return id == section;
     }
   };
@@ -80,22 +80,18 @@ namespace tts::detail
 #define TTS_WHEN(STORY)                                                                             \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
-  std::cout << "[^] - For: " << ::tts::detail::current_test << "\n";                                \
-  std::cout << "When      : " << STORY << std::endl;                                                \
+  printf("[^] - For: %s\n",::tts::detail::current_test.c_str());                                    \
+  printf("When      : %s\n", STORY);                                                                \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++)   \
     for( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \
 TTS_DISABLE_WARNING_POP                                                                             \
 /**/
 
-#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, ...)                                                        \
+#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                    \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
   static int TTS_LOCAL_ID = 0;                                                                      \
-  std::ostringstream TTS_CAT(desc_,TTS_LOCAL_ID);                                                   \
-  if(::tts::detail::section_guard(TTS_LOCAL_ID, tts_section, tts_count )                            \
-                  .check( ((TTS_CAT(desc_,TTS_LOCAL_ID)  << __VA_ARGS__)                            \
-                          , TTS_CAT(desc_,TTS_LOCAL_ID).str())                                      \
-                        )                                                                           \
+  if(::tts::detail::section_guard(TTS_LOCAL_ID, tts_section, tts_count).check( MESSAGE )            \
     )                                                                                               \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )  \
     for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                  \
@@ -141,4 +137,4 @@ TTS_DISABLE_WARNING_POP                                                         
   @endcode
 **/
 //======================================================================================================================
-#define TTS_AND_THEN(...) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), __VA_ARGS__)
+#define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)

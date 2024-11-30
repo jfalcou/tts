@@ -7,9 +7,9 @@
 //======================================================================================================================
 #pragma once
 
-#include <utility>
+#include <tts/tools/preprocessor.hpp>
 
-namespace tts::detail
+namespace tts::_
 {
   struct callable
   {
@@ -28,12 +28,12 @@ namespace tts::detail
     template<typename Function>
     constexpr callable(Function f)
             : invoker{invoke<Function>}, cleanup{destroy<Function>}
-            , payload{new Function{std::move(f)}}
+            , payload{new Function{TTS_MOVE(f)}}
     {}
 
     constexpr callable(callable&& other) noexcept
-            : invoker{std::move(other.invoker)}, cleanup{std::move(other.cleanup)}
-            , payload{std::move(other.payload)}
+            : invoker{TTS_MOVE(other.invoker)}, cleanup{TTS_MOVE(other.cleanup)}
+            , payload{TTS_MOVE(other.payload)}
     {
       // Remove payload from other
       other.payload = {};
@@ -52,11 +52,7 @@ namespace tts::detail
     explicit constexpr operator bool() const { return payload != nullptr; }
 
     private:
-
-    template <typename T>
-    static void invoke(void* data) { (*static_cast<T*>(data))(); }
-
-    template <typename T>
-    static void destroy(void* data) { delete static_cast<T*>(data); }
+    template<typename T> static void invoke(void* data)   { (*static_cast<T*>(data))();   }
+    template<typename T> static void destroy(void* data)  { delete static_cast<T*>(data); }
   };
 }

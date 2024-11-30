@@ -9,22 +9,17 @@
 
 #include <tts/tools/callable.hpp>
 #include <vector>
-#include <string>
 
 namespace tts::detail
 {
-  inline std::string current_test = "";
+  inline const char* current_test = "";
 
   struct test
   {
-    void operator()()
-    {
-      current_test = name;
-      behaviour();
-    }
+    void operator()() { current_test = name; behaviour(); }
     static inline bool acknowledge(test&& f);
 
-    std::string     name;
+    const char*             name;
     tts::detail::callable   behaviour;
   };
 

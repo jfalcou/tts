@@ -13,6 +13,7 @@
 #include <tts/tools/typename.hpp>
 #include <tts/tools/types.hpp>
 #include <tuple>
+#include <random>
 
 //======================================================================================================================
 // "Seed" capture
@@ -27,7 +28,7 @@ namespace tts::detail
   };
 
   // Global storage for current type used in a given test
-  inline std::string current_type = {};
+  inline const char* current_type = {};
 
   template<typename... Types> struct test_captures
   {
@@ -41,13 +42,13 @@ namespace tts::detail
                                 , [=]()
                                   {
                                     // We setup the current type name before each test so we know
-                                    ( ( (current_type = " with [T = " + typename_<Types> + "]")
+                                    ( ( (current_type = typename_<Types>)
                                       , body(type<Types>())
                                       )
                                     , ...
                                     );
                                     // Clear the current type
-                                    current_type.clear();
+                                    current_type = nullptr;
                                   }
                                 }
                               );
@@ -82,11 +83,11 @@ namespace tts::detail
                                   {
                                     using t_t = std::mt19937::result_type;
                                     std::mt19937 gen(static_cast<t_t>(::tts::random_seed()));
-                                    ( ( (current_type = " with [T = " + typename_<Types> + "]")
+                                    ( ( (current_type = typename_<Types>)
                                       , std::apply(body, tg.generator(type<Types>{}, gen))
                                       ), ...
                                     );
-                                    current_type.clear();
+                                    current_type = nullptr;
                                   }
                                 }
                               );

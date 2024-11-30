@@ -8,7 +8,7 @@
 #pragma once
 
 #include <tts/engine/suite.hpp>
-#include <iostream>
+#include <tts/tools/as_string.hpp>
 
 namespace tts::detail
 {
@@ -24,18 +24,19 @@ namespace tts::detail
       {
         if(!done)
         {
-          std::cout << ">> Additional information: \n";
+          printf(">> Additional information: \n");
           done = true;
         }
 
-        std::cout << d;
+        auto s = as_string(d);
+        printf("%s", s.c_str());
       }
       return *this;
     }
 
     ~logger() noexcept(false)
     {
-      if(display && done) std::cout << "\n";
+      if(display && done) puts("");
       if(::tts::fatal_error_status) throw ::tts::detail::fatal_signal();
     }
 

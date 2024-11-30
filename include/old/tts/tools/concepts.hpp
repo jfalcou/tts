@@ -7,7 +7,7 @@
 //==================================================================================================
 #pragma once
 
-#include <iomanip>
+#include <iosfwd>
 #include <sstream>
 #include <type_traits>
 
