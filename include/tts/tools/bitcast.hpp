@@ -6,39 +6,27 @@
 **/
 //======================================================================================================================
 #pragma once
+#include <string.h>
 
-#include <bit>
-#include <cmath>
-#include <cstdint>
-#include <type_traits>
-#include <utility>
-
-#if !defined(__cpp_lib_bit_cast)
-# include <cstring>
-#endif
-
-namespace tts::detail
+namespace tts::_
 {
-#if !defined(__cpp_lib_bit_cast)
   template <class To, class From>
-  To bit_cast(const From& src) noexcept requires(sizeof(To) == sizeof(From))
+  requires(sizeof(To) == sizeof(From))
+  To bit_cast(const From& src)
   {
     To dst;
-    std::memcpy(&dst, &src, sizeof(To));
+    memcpy(&dst, &src, sizeof(To));
     return dst;
   }
-#else
-  using std::bit_cast;
-#endif
 
-  inline auto as_int(float a)   noexcept  { return bit_cast<std::int32_t>(a); }
-  inline auto as_int(double a)  noexcept  { return bit_cast<std::int64_t>(a); }
+  inline auto as_int(float a)   { return bit_cast<int>(a); }
+  inline auto as_int(double a)  { return bit_cast<decltype(sizeof(void*))>(a); }
 
   template<typename T> inline auto bitinteger(T a) noexcept
   {
     auto ia = as_int(a);
-    using r_t = std::remove_cvref_t<decltype(ia)>;
-    constexpr auto Signmask = r_t(1) << (sizeof(r_t)*8-1);
-    return std::signbit(a) ?  Signmask-ia : ia;
+    using r_t = decltype(ia);
+    constexpr auto mask = r_t(1) << (sizeof(r_t)*8-1);
+    return ((ia & mask) == mask) ?  mask-ia : ia;
   }
 }
