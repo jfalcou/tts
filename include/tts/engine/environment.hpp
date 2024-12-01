@@ -7,13 +7,12 @@
 //======================================================================================================================
 #pragma once
 
-#include <cstddef>
-#include <cstdio>
+#include <stdio.h>
 
 //======================================================================================================================
 // Test environment
 //======================================================================================================================
-namespace tts::detail
+namespace tts::_
 {
   struct env
   {
@@ -22,16 +21,16 @@ namespace tts::detail
     void fatal()    { test_count++; failure_count++; fatal_count++; }
     void invalid()  { test_count++; invalid_count++; }
 
-    int report(std::ptrdiff_t fails, std::ptrdiff_t invalids) const
+    int report(int fails, int invalids) const
     {
-      auto test_txt = test_count    > 1 ? "tests" : "test";
-      auto pass_txt = success_count > 1 ? "successes" : "success";
-      auto fail_txt = failure_count > 1 ? "failures" : "failure";
-      auto inv_txt  = invalid_count > 1 ? "invalids" : "invalid";
+      auto test_txt = test_count    > 1 ? "s"  : "";
+      auto pass_txt = success_count > 1 ? "es" : "";
+      auto fail_txt = failure_count > 1 ? "s"  : "";
+      auto inv_txt  = invalid_count > 1 ? "s"  : "";
       auto passes   = (fails || invalids) ?  0 : test_count;
 
       puts("----------------------------------------------------------------");
-      printf("Results: %d %s - %d/%d %s - %d/%d %s - %d/%d %s\n"
+      printf("Results: %d test%s - %d/%d success%s - %d/%d failure%s - %d/%d invalid%s\n"
             , test_count, test_txt
             , success_count, passes, pass_txt
             , failure_count, fails , fail_txt
@@ -54,9 +53,9 @@ namespace tts::detail
 
 namespace tts
 {
-  inline ::tts::detail::env global_runtime;
-  inline bool global_logger_status  = false;
-  inline bool fatal_error_status    = false;
+  inline ::tts::_::env global_runtime = {};
+  inline bool global_logger_status    = false;
+  inline bool fatal_error_status      = false;
 
   //====================================================================================================================
   /**
@@ -70,7 +69,7 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int report(std::ptrdiff_t fails, std::ptrdiff_t invalids)
+  inline int report(int fails, int invalids)
   {
     return global_runtime.report(fails,invalids);
   }

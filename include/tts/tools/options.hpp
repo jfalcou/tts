@@ -93,7 +93,7 @@ namespace tts
       {
         // Will fail if the test is not called via
         //  ./mytest.exe --pass--the-test or ./mytest.exe -W
-        TTS_EXPECT( (tts::arguments()["--pass--the-test","-W"]) );
+        TTS_EXPECT( (tts::arguments()("--pass--the-test","-W")) );
 
         // Will fail if the test is not called via
         //  ./mytest.exe --at_last
@@ -114,8 +114,14 @@ namespace tts
   struct options
   {
     /// Checks if the flag `f` is set on the command line
+    bool operator[](const char* f) const
+    {
+      return find(f).is_valid();
+    }
+
+    /// Checks if qny flag `fs` is set on the command line
     template<std::same_as<const char*>... Flags>
-    bool operator[](Flags... fs) const
+    bool operator()(Flags... fs) const
     {
       return find(fs...).is_valid();
     }

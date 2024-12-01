@@ -7,10 +7,10 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/tools/buffer.hpp>
 #include <tts/tools/callable.hpp>
-#include <vector>
 
-namespace tts::detail
+namespace tts::_
 {
   inline const char* current_test = "";
 
@@ -20,19 +20,19 @@ namespace tts::detail
     static inline bool acknowledge(test&& f);
 
     const char*             name;
-    tts::detail::callable   behaviour;
+    tts::_::callable   behaviour;
   };
 
   // Global tests suite
-  inline std::vector<test>& suite()
+  inline buffer<test>& suite()
   {
-    static std::vector<test> that = {};
+    static buffer<test> that = {};
     return that;
   }
 
   bool inline test::acknowledge(test&& f)
   {
-    suite().emplace_back( std::forward<test>(f));
+    suite().emplace_back(TTS_MOVE(f));
     return true;
   }
 }
