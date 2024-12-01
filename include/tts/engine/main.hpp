@@ -10,8 +10,8 @@
 
 #include <tts/engine/usage.hpp>
 // #include <tts/engine/logger.hpp>
-// #include <tts/engine/test.hpp>
-// #include <tts/engine/suite.hpp>
+#include <tts/engine/test.hpp>
+#include <tts/engine/environment.hpp>
 #include <tts/tools/options.hpp>
 
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -20,7 +20,7 @@
   @def TTS_CUSTOM_DRIVER_FUNCTION
   @brief Test application entry-point customization
 
-  In case where the `main` function is to br provided externally, one can redefine
+  In case where the `main` function is to be provided externally, one can redefine
   @ref TTS_CUSTOM_DRIVER_FUNCTION in order to specify the name of the test executable entry point.
 
   @see TTS_MAIN
@@ -70,42 +70,45 @@ namespace tts::_ { inline constexpr bool use_main = false; }
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc,argv);
-  if( ::tts::arguments()["-h","--help"] )
+  if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
 
-  // auto nb_tests = ::tts::detail::suite().size();
+  auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
 
 /*
   try
   {
-    for(auto &t: ::tts::detail::suite())
+*/
+    for(auto &t: ::tts::_::suite())
     {
-      auto test_count     = ::tts::global_runtime.test_count;
-      auto failure_count  = ::tts::global_runtime.failure_count;
+      auto test_count                   = ::tts::global_runtime.test_count;
+      auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
       t();
       done_tests++;
 
-      if(test_count     == ::tts::global_runtime.test_count)
+      if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("[!] - %s : EMPTY TEST CASE\n", ::tts::detail::current_test);
+        printf("[!] - %s : EMPTY TEST CASE\n", ::tts::_::current_test);
       }
       else if(failure_count  == ::tts::global_runtime.failure_count)
       {
-        printf("[V] - %s\n", ::tts::detail::current_test);
+        printf("[V] - %s\n", ::tts::_::current_test);
       }
     }
+/*
   }
-  catch( ::tts::detail::fatal_signal& )
+  catch( ::tts::_::fatal_signal& )
   {
     printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",nb_tests - done_tests - 1);
   }
-
-  if constexpr( ::tts::detail::use_main )   return ::tts::report(0,0);
-  else                                      return 0;
 */
+
+  if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);
+  else                               return 0;
 }
+
 #endif
