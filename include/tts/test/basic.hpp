@@ -9,8 +9,8 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
-#include <tts/engine/logger.hpp>
-#include <tts/test/info.hpp>
+//#include <tts/engine/logger.hpp>
+#include <tts/engine/info.hpp>
 
 //======================================================================================================================
 /**
@@ -62,6 +62,7 @@
 }(EXPR)                                                                                             \
 /**/
 
+#if 1
 //======================================================================================================================
 /**
   @def TTS_EXPECT_NOT
@@ -211,3 +212,4 @@ do                                                                              
 }while(0);                                                                                          \
 ::tts::detail::logger{::tts::global_logger_status}                                                  \
 /**/
+#endif

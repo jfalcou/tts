@@ -6,7 +6,8 @@
 **/
 //======================================================================================================================
 #pragma once
-#include <stdio.h>
+
+#include <tts/tools/text.hpp>
 #include <string.h>
 
 namespace tts::_
@@ -18,18 +19,26 @@ namespace tts::_
                                       , int line          = __builtin_LINE()
                                       ) noexcept
     {
-      source_location sl{};
-      auto offset = strrchr(file, '/') - file + 1;
-      sl.file_ = file + offset;
-      sl.line_ = line;
-      return sl;
+      int offset = 0;
+      auto end = strrchr(file, '/');
+      if(end) offset = end - file + 1;
+
+      source_location that{};
+      that.desc_ = text{"[%s:%d]",file+offset,line};
+
+      return that;
     }
 
-    void print(const char* end) const { printf("[%s:%d]%s", file_, line_, end); }
-    void print()                const { print(""); }
+    text as_text() const { return desc_; }
+
+    decltype(auto) data() const { return desc_.data(); }
+    template<_::stream OS>
+    friend OS& operator<<(OS& os, source_location const& s)
+    {
+      return os << s.desc_;
+    }
 
     private:
-    const char* file_{"unknown"};
-    int         line_{};
+    text  desc_{"[unknown:?]"};
   };
 }
