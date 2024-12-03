@@ -174,6 +174,7 @@ namespace tts
   {
     inline options current_arguments = {0,nullptr};
     inline int     current_seed      = -1;
+    inline bool    is_verbose        = false;
   }
 
   //====================================================================================================================

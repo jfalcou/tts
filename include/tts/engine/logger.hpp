@@ -7,10 +7,11 @@
 //======================================================================================================================
 #pragma once
 
-#include <tts/engine/suite.hpp>
-#include <tts/tools/as_string.hpp>
+#include <tts/engine/environment.hpp>
+//#include <tts/tools/as_string.hpp>
+#include <stdio.h>
 
-namespace tts::detail
+namespace tts::_
 {
   struct fatal_signal {};
 
@@ -18,26 +19,26 @@ namespace tts::detail
   {
     logger(bool status = true) : display(status), done(false) {}
 
-    template<typename Data> logger& operator<<(Data const& d)
-    {
-      if(display)
-      {
-        if(!done)
-        {
-          printf(">> Additional information: \n");
-          done = true;
-        }
+    // template<typename Data> logger& operator<<(Data const& d)
+    // {
+    //   if(display)
+    //   {
+    //     if(!done)
+    //     {
+    //       printf(">> Additional information: \n");
+    //       done = true;
+    //     }
 
-        auto s = as_string(d);
-        printf("%s", s.c_str());
-      }
-      return *this;
-    }
+    //     //auto s = as_string(d);
+    //     //printf("%s", s.c_str());
+    //   }
+    //   return *this;
+    // }
 
     ~logger() noexcept(false)
     {
       if(display && done) puts("");
-      if(::tts::fatal_error_status) throw ::tts::detail::fatal_signal();
+      if(::tts::fatal_error_status) throw ::tts::_::fatal_signal();
     }
 
     bool display, done;

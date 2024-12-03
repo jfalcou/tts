@@ -7,7 +7,8 @@
 //======================================================================================================================
 #pragma once
 
-#include <stdio.h>
+#include <tts/tools/concepts.hpp>
+#include <tts/tools/text.hpp>
 namespace tts::_
 {
   template<typename T> struct typename_impl
@@ -20,8 +21,15 @@ namespace tts::_
     constexpr typename_impl()   { data_ = typename_impl_value(); }
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
-    void print(const char* end) const { printf("%.*s%s", data_.size, data_.data,end); }
-    void print()                const { print(""); }
+
+    text as_text() const { return text("%.*s",size(),data()); }
+
+    template<_::stream OS>
+    friend OS& operator<<(OS& os, typename_impl t)
+    {
+      for(int i=0;i<t.size();++i) os << t.data()[i];
+      return os;
+    }
 
     private:
     //==================================================================================================================

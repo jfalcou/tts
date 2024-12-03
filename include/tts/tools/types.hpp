@@ -6,6 +6,7 @@
 **/
 //======================================================================================================================
 #pragma once
+#include <tts/tools/typename.hpp>
 #include <cstdint>
 
 namespace tts
@@ -23,9 +24,8 @@ namespace tts
     template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
   };
 
-  // Concatenate types lists
-  template<typename... Ls> struct concatenate { using type = decltype( (Ls{} + ...) ); };
-  template<typename... Ls> using concatenate_t = typename concatenate<Ls...>::type;
+  /// Concatenate types lists
+  template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
 
   //====================================================================================================================
   //! @brief Type wrapper
@@ -34,20 +34,38 @@ namespace tts
   //!
   //! @tparam T Type to embed
   //====================================================================================================================
-  template<typename T> struct type {};
+  template<typename T> struct type
+  {
+    template<_::stream OS>
+    friend OS& operator<<(OS& os, type const&)
+    {
+      return os << typename_<T>;
+    }
+  };
 
   // Reusable pre-made types lists
 
   /// List of all standard floating point types.
   using real_types        = types < double,float>;
+
   /// List of all standard signed integer types.
   using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
-  /// List of all standard signed types.
-  using signed_types      = concatenate_t<real_types,int_types>;
+
   /// List of all standard unsigned types.
   using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
+
   /// List of all standard integer types.
-  using integral_types    = concatenate_t<int_types,uint_types>;
+  using integral_types    = types < std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
+                                  , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
+                                  >;
+
+  /// List of all standard signed types.
+  using signed_types      = types < double,float
+                                  , std::int64_t , std::int32_t , std::int16_t , std::int8_t
+                                  >;
   /// List of all standard arithmetic types.
-  using arithmetic_types  = concatenate_t<real_types,int_types,uint_types>;
+  using arithmetic_types  = types < double,float
+                                  , std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
+                                  , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
+                                  >;
 }

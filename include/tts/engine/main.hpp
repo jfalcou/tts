@@ -9,7 +9,7 @@
 #pragma once
 
 #include <tts/engine/usage.hpp>
-// #include <tts/engine/logger.hpp>
+#include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/environment.hpp>
 #include <tts/tools/options.hpp>
@@ -73,39 +73,41 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
 
+  ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
+
   auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
 
-/*
   try
   {
-*/
     for(auto &t: ::tts::_::suite())
     {
       auto test_count                   = ::tts::global_runtime.test_count;
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
+      if(::tts::_::is_verbose)
+      {
+        printf("TEST: '%s'\n", t.name);
+      }
       t();
       done_tests++;
 
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("[!] - %s : EMPTY TEST CASE\n", ::tts::_::current_test);
+        printf("TEST: '%s' - [!!]: EMPTY TEST CASE\n", t.name);
       }
-      else if(failure_count  == ::tts::global_runtime.failure_count)
+      else if(failure_count  == ::tts::global_runtime.failure_count && !::tts::_::is_verbose)
       {
-        printf("[V] - %s\n", ::tts::_::current_test);
+        printf("TEST: '%s' - [V]\n", t.name);
       }
     }
-/*
   }
   catch( ::tts::_::fatal_signal& )
   {
-    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",nb_tests - done_tests - 1);
+    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %ld Tests not run\n",nb_tests - done_tests - 1);
   }
-*/
 
   if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);
   else                               return 0;
