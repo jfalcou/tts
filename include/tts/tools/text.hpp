@@ -33,11 +33,11 @@ namespace tts
     template<typename ... Args>
     explicit text( const char* format, Args ... args ) : text()
     {
-      size_ = snprintf( nullptr, 0, format, args ... ) + 1;
+      size_ = snprintf( nullptr, 0, format, args ... );
       if( size_ > 0 )
       {
-        data_ = reinterpret_cast<char*>(malloc(size_));
-        snprintf( data_, size_, format, args ... );
+        data_ = reinterpret_cast<char*>(malloc(size_+ 1));
+        snprintf( data_, size_ + 1, format, args ... );
       }
     }
 
@@ -66,21 +66,27 @@ namespace tts
       std::swap(o.size_,size_);
     }
 
+    text& operator+=(text const& other)
+    {
+      text local{"%s%s",data_, other.data_};
+      swap(local);
+      return *this;
+    }
+
+    text& operator+=(const char* other)
+    {
+      if(other)
+      {
+        text local{"%s%s",data_, other};
+        swap(local);
+      }
+      return *this;
+    }
+
     text operator+(text const& other) const
     {
-      text local;
-      int s = size_ + other.size_;
-
-      if(s)
-      {
-        local.size_ = s;
-        local.data_ = reinterpret_cast<char*>(malloc(s+1));
-        strncpy(local.data_, data_, size_);
-        strncpy(local.data_+size_, other.data_, other.size_);
-        local.data_[s] = '\0';
-      }
-
-      return local;
+      text local(*this);
+      return local += other;
     }
 
     template<_::stream OS>
@@ -91,6 +97,7 @@ namespace tts
     }
 
     bool is_empty()       const   { return size_ == 0;  }
+    int  size()           const   { return size_;       }
     decltype(auto) data() const   { return data_;       }
     decltype(auto) data()         { return data_;       }
     decltype(auto) begin() const  { return data_;       }
@@ -107,13 +114,13 @@ namespace tts
 
   inline text operator+(text const& lhs, const char* rhs)
   {
-    if(rhs) return text{"%s%s",lhs.data(), rhs};
-    else    return lhs;
+    text that(lhs);
+    return that += rhs;
   }
 
   inline text operator+(const char* lhs, text const& rhs)
   {
-    if(lhs) return text{lhs} + rhs;
-    else    return rhs;
+    text that(lhs);
+    return that += rhs;
   }
 }
