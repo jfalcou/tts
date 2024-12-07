@@ -52,12 +52,13 @@
 {                                                                                                   \
   if( local_tts_expr )                                                                              \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    TTS_PASS( "Expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );           \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " evaluates to false." );   \
-    return ::tts::detail::logger{};                                                                 \
+    FAILURE ( "Expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );          \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 /**/
@@ -102,12 +103,12 @@
 {                                                                                                   \
   if( !local_tts_expr )                                                                             \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    ::tts::global_runtime.pass(); return ::tts::_::logger{false};                                   \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
     FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
-    return ::tts::detail::logger{};                                                                 \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 /**/
@@ -159,7 +160,7 @@ do                                                                              
     ::tts::global_logger_status = true;                                                             \
   }                                                                                                 \
 }while(0);                                                                                          \
-::tts::detail::logger{::tts::global_logger_status}                                                  \
+::tts::_::logger{::tts::global_logger_status}                                                       \
 /**/
 
 
@@ -210,6 +211,6 @@ do                                                                              
     ::tts::global_logger_status = true;                                                             \
   }                                                                                                 \
 }while(0);                                                                                          \
-::tts::detail::logger{::tts::global_logger_status}                                                  \
+::tts::_::logger{::tts::global_logger_status}                                                       \
 /**/
 #endif

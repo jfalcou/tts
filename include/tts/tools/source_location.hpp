@@ -29,9 +29,10 @@ namespace tts::_
       return that;
     }
 
-    text as_text() const { return desc_; }
+    friend text as_text(source_location const& s) { return s.desc_; }
 
     decltype(auto) data() const { return desc_.data(); }
+
     template<_::stream OS>
     friend OS& operator<<(OS& os, source_location const& s)
     {

@@ -8,10 +8,10 @@
 #pragma once
 
 #include <tts/tools/concepts.hpp>
+#include <utility>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <utility>
 
 namespace tts
 {
@@ -83,18 +83,6 @@ namespace tts
       return local;
     }
 
-    friend text operator+(text const& lhs, const char* rhs)
-    {
-      if(rhs) return lhs + text{rhs};
-      else    return lhs;
-    }
-
-    friend text operator+(const char* lhs, text const& rhs)
-    {
-      if(lhs) return text{lhs} + rhs;
-      else    return rhs;
-    }
-
     template<_::stream OS>
     friend OS& operator<<(OS& os, text const& t)
     {
@@ -110,8 +98,22 @@ namespace tts
     decltype(auto) end() const    { return data_+size_; }
     decltype(auto) end()          { return data_+size_; }
 
+    friend auto const& as_text(text const& t) { return t; }
+
     private:
     char* data_;
     int   size_;
   };
+
+  inline text operator+(text const& lhs, const char* rhs)
+  {
+    if(rhs) return text{"%s%s",lhs.data(), rhs};
+    else    return lhs;
+  }
+
+  inline text operator+(const char* lhs, text const& rhs)
+  {
+    if(lhs) return text{lhs} + rhs;
+    else    return rhs;
+  }
 }
