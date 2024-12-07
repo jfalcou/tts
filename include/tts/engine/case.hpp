@@ -7,11 +7,11 @@
 //======================================================================================================================
 #pragma once
 
-#include <tts/engine/test.hpp>
 #include <tts/engine/info.hpp>
+#include <tts/engine/test.hpp>
+#include <tts/tools/options.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/types.hpp>
-#include <tts/tools/options.hpp>
 
 //======================================================================================================================
 // "Seed" capture
@@ -40,7 +40,7 @@ namespace tts::_
                                 , [=]()
                                   {
                                     // We setup the current type name before each test so we know
-                                    ( ( (current_type = typename_<Types>.as_text())
+                                    ( ( (current_type = as_text(typename_<Types>))
                                       , (::tts::_::is_verbose ? printf(">  With <T = %s>\n", current_type.data()) : 0)
                                       , body(type<Types>())
                                       )

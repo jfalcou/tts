@@ -22,7 +22,7 @@ namespace tts::_
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
 
-    text as_text() const { return text("%.*s",size(),data()); }
+    friend text as_text(typename_impl const& t) { return text("%.*s",t.size(),t.data()); }
 
     template<_::stream OS>
     friend OS& operator<<(OS& os, typename_impl t)

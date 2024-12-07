@@ -22,7 +22,7 @@ namespace tts {}
 
 // #include <tts/tools/stdfix.hpp>
 // #include <tts/test/info.hpp>
-// #include <tts/test/basic.hpp>
+#include <tts/test/basic.hpp>
 // #include <tts/test/generator.hpp>
 // #include <tts/test/relation.hpp>
 // #include <tts/test/types.hpp>
