@@ -9,7 +9,7 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
-//#include <tts/engine/logger.hpp>
+#include <tts/engine/logger.hpp>
 #include <tts/engine/info.hpp>
 
 //======================================================================================================================
@@ -63,7 +63,6 @@
 }(EXPR)                                                                                             \
 /**/
 
-#if 1
 //======================================================================================================================
 /**
   @def TTS_EXPECT_NOT
@@ -103,11 +102,12 @@
 {                                                                                                   \
   if( !local_tts_expr )                                                                             \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::_::logger{false};                                   \
+    TTS_PASS( "Expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );          \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
+    FAILURE ( "Expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );           \
     return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(EXPR)                                                                                             \
@@ -145,24 +145,21 @@
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
-::tts::global_logger_status = false;                                                                \
-do                                                                                                  \
+[&]()                                                                                               \
 {                                                                                                   \
-  constexpr auto result_tts = EXPR;                                                                 \
-  if( result_tts )                                                                                  \
+  constexpr auto local_tts_expr = EXPR;                                                             \
+  if constexpr( local_tts_expr )                                                                    \
   {                                                                                                 \
-    ::tts::global_runtime.pass();                                                                   \
-    ::tts::global_logger_status = false;                                                            \
+    TTS_PASS( "Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );  \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to false." );                      \
-    ::tts::global_logger_status = true;                                                             \
+    FAILURE ( "Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) ); \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
-}while(0);                                                                                          \
-::tts::_::logger{::tts::global_logger_status}                                                       \
+}()                                                                                                 \
 /**/
-
 
 //======================================================================================================================
 /**
@@ -196,21 +193,18 @@ do                                                                              
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
-::tts::global_logger_status = false;                                                                \
-do                                                                                                  \
+[&]()                                                                                               \
 {                                                                                                   \
-  constexpr auto result_tts = EXPR;                                                                 \
-  if( !result_tts )                                                                                 \
+  constexpr auto local_tts_expr = EXPR;                                                             \
+  if constexpr( !local_tts_expr )                                                                   \
   {                                                                                                 \
-    ::tts::global_runtime.pass();                                                                   \
-    ::tts::global_logger_status = false;                                                            \
+    TTS_PASS( "Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) ); \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
-    ::tts::global_logger_status = true;                                                             \
+    FAILURE ( "Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );  \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
-}while(0);                                                                                          \
-::tts::_::logger{::tts::global_logger_status}                                                       \
+}()                                                                                                 \
 /**/
-#endif

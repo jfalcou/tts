@@ -18,7 +18,7 @@ namespace tts::_
   };
 
   template <typename T>
-  concept behave_as_string = requires(T const& s)
+  concept string = requires(T const& s)
   {
     typename T::size_type;
     typename T::value_type;
@@ -29,11 +29,18 @@ namespace tts::_
   };
 
   template <typename T>
-  concept behave_as_optional = requires(T const& o)
+  concept optional = requires(T const& o)
   {
     typename T::value_type;
     { o.has_value() } -> std::convertible_to<bool>;
     { o.value()     } -> std::convertible_to<typename T::value_type>;
     { o.value_or(0) };
+  };
+
+  template <typename T>
+  concept sequence = requires(T const& s)
+  {
+    { s.begin() };
+    { s.end()   };
   };
 }
