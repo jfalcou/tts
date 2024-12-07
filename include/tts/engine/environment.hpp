@@ -41,27 +41,21 @@ namespace tts::_
       else                    return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
-    int test_count    = 0,
-        success_count = 0,
-        failure_count = 0,
-        fatal_count   = 0,
-        invalid_count = 0;
-
+    int test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0, invalid_count = 0;
     bool fail_status = false;
   };
 }
 
 namespace tts
 {
-  inline ::tts::_::env global_runtime = {};
-  inline bool global_logger_status    = false;
-  inline bool fatal_error_status      = false;
+  inline _::env global_runtime      = {};
+  inline bool   fatal_error_status  = false;
 
   //====================================================================================================================
   /**
     @brief Final tests handler customization point
 
-    Aggregates test results and validate the whole test with respect to expect number of failures and invalid tests.
+    Aggregates test results and validate the whole test suite with respect to expect numbers of failures and invalids.
 
     @param fails    Number of expected failures.
     @param invalids Number of expected invalid tests.
@@ -69,8 +63,5 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int report(int fails, int invalids)
-  {
-    return global_runtime.report(fails,invalids);
-  }
+  inline int report(int fails, int invalids) { return global_runtime.report(fails,invalids); }
 }

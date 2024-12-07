@@ -26,32 +26,32 @@ namespace tts
       + sequences of such types
 
     @ref as_text takes care of applying any command-line options related to formatting to the value printed.
-    For user defined types, an ADL visible overlaod of @ref as_text must be provided.
+    For user defined types, an overload of @ref as_text must be found via ADL.
 
     @groupheader{Examples}
     @code
     #define TTS_MAIN
     #include <tts/tts.hpp>
 
-  namespace space
-  {
-    struct some_type { int i; };
-
-    tts::text as_text( some_type const& s )
+    namespace space
     {
-      return "some_type[" + tts::as_text(s.i) + "]";
-    }
+      struct some_type { int i; };
 
-    struct some_other_type
-    {
-      int j;
-
-      friend tts::text as_text( some_other_type const& s )
+      tts::text as_text( some_type const& s )
       {
-        return "[[" + tts::as_text(s.j) + "]]";
+        return "some_type[" + tts::as_text(s.i) + "]";
       }
-    };
-  }
+
+      struct some_other_type
+      {
+        int j;
+
+        friend tts::text as_text( some_other_type const& s )
+        {
+          return "[[" + tts::as_text(s.j) + "]]";
+        }
+      };
+    }
 
     TTS_CASE( "Check display of type with specific to_string" )
     {
@@ -61,7 +61,7 @@ namespace tts
     @endcode
 
     @param e Value to convert to a string
-    @return the formatted string containing a representation of the value of e
+    @return An instance of @ref tts::text containing a representation of the value of e
   **/
   //====================================================================================================================
   template<typename T> text as_text(T e)
@@ -85,25 +85,23 @@ namespace tts
       auto fmt = ::tts::arguments()("-x","--hex") ? "%X" : "%d";
       return text(fmt,e);
     }
-    else if constexpr(_::behave_as_string<T>)
+    else if constexpr(_::string<T>)
     {
       return text("'%.*s'",e.size(),e.data());
     }
-    else if constexpr(_::behave_as_optional<T>)
+    else if constexpr(_::optional<T>)
     {
       text base{"optional<%s>",as_text(typename_<typename T::value_type>).data()};
       if(e.has_value()) return base + text("{%s}", as_text(e.value()).data());
       else              return base + "{}";
     }
-/*
-    else if constexpr( detail::sequence<T> )
+    else if constexpr( _::sequence<T> )
     {
-      std::string that = "{ ";
+      text that("{ ");
       for(auto const& v : e) that += as_text(v) + " ";
       that += "}";
       return that;
     }
-*/
     else
     {
       return text("[%s]@(%p)", as_text(typename_<T>).data() ,(void*)(&e));
