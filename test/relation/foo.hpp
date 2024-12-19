@@ -15,7 +15,7 @@ namespace foo
   struct bar { float v; };
 
   // Required by TTS
-  inline std::string to_string(bar const& b) { return "foo::bar{" + std::to_string(b.v) + "}"; }
+  inline tts::text    as_text( bar const& b ) { return "foo::bar{" + tts::as_text(b.v) + "}"; }
 
   inline bool compare_equal(foo::bar const& l, foo::bar const& r)
   {
