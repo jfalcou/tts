@@ -63,7 +63,6 @@
 #define TTS_STRING__(...) #__VA_ARGS__
 #define TTS_STRING_(TXT)  TTS_STRING__ TXT
 
-/*
 //======================================================================================================================
 // Count amount of variadic tokens
 //======================================================================================================================
@@ -99,7 +98,6 @@
 #define TTS_REVERSE_IMPL(N,...) TTS_VAL(TTS_REVERSE_ ## N(__VA_ARGS__))
 #define TTS_REVERSE_(N,...)     TTS_REVERSE_IMPL( N, __VA_ARGS__)
 #define TTS_REVERSE(...)        TTS_REVERSE_( TTS_COUNT(__VA_ARGS__), __VA_ARGS__)
-*/
 
 //======================================================================================================================
 // Remove parens around macro token if any are present -- NON TRIVIAL SHIT
