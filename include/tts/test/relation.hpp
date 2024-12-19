@@ -8,41 +8,41 @@
 //======================================================================================================================
 #pragma once
 
-#include <tts/engine/comparators.hpp>
-#include <tts/tools/as_string.hpp>
-#include <tts/test/info.hpp>
+#include <tts/tools/comparators.hpp>
+#include <tts/tools/as_text.hpp>
+#include <tts/engine/info.hpp>
 
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
 if( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \
 {                                                                                                 \
-  ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    TTS_PASS( "'%s %s %s' is true.", TTS_STRING(A), T, TTS_STRING(B) );                           \
+    return ::tts::_::logger{false};                                                               \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
-  FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                      \
-          <<  " is false because: " << ::tts::as_string(local_tts_a)                              \
-          <<  " " F " " << ::tts::as_string(local_tts_b)                                          \
+  FAILURE ( "'%s %s %s' is false because '%s %s %s'."                                             \
+          , TTS_STRING(A), T, TTS_STRING(B)                                                       \
+          , ::tts::as_text(local_tts_a).data(), F, ::tts::as_text(local_tts_b).data()             \
           );                                                                                      \
-  return ::tts::detail::logger{};                                                                 \
+  return ::tts::_::logger{};                                                                      \
 }                                                                                                 \
 /**/
 
-#define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                           \
-constexpr auto result_tts = ::tts::detail::OP(A,B);                                                 \
-if( result_tts )                                                                                    \
-{                                                                                                   \
-  ::tts::global_runtime.pass();                                                                     \
-  ::tts::global_logger_status = false;                                                              \
-}                                                                                                   \
-else                                                                                                \
-{                                                                                                   \
-  FAILURE (   "Expression: "  << TTS_STRING(A) << " " << T << " " << TTS_STRING(B)                  \
-          <<  " is false because: "                                                                 \
-          << ::tts::as_string(A) << " " << F << " " << ::tts::as_string(B)                          \
-          );                                                                                        \
-                                                                                                    \
-  ::tts::global_logger_status = true;                                                               \
-}                                                                                                   \
+#define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                         \
+constexpr auto local_tts_expr = ::tts::detail::OP(A,B);                                           \
+if constexpr( local_tts_expr )                                                                    \
+{                                                                                                 \
+  TTS_PASS( "Constant expression: '%s %s %s' is true.", TTS_STRING(A), T, TTS_STRING(B) );        \
+    return ::tts::_::logger{false};                                                               \
+}                                                                                                 \
+else                                                                                              \
+{                                                                                                 \
+  FAILURE ( "Constant expression '%s %s %s' is false because '%s %s %s'."                         \
+          , TTS_STRING(A), T, TTS_STRING(B)                                                       \
+          , ::tts::as_text(A).data(), F, ::tts::as_text(B).data()                                 \
+          );                                                                                      \
+  return ::tts::_::logger{};                                                                      \
+}                                                                                                 \
 /**/
 
 #define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
@@ -264,12 +264,10 @@ else                                                                            
 #define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
-::tts::global_logger_status = false;                                                                \
 do                                                                                                  \
 {                                                                                                   \
   TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
 }while(0);                                                                                          \
-::tts::detail::logger{::tts::global_logger_status}                                                  \
 /**/
 
 //======================================================================================================================
@@ -446,13 +444,14 @@ do                                                                              
   using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                        \
   using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                        \
                                                                                                     \
-  if ( !tts::same_as<type_a, type_b> )                                                              \
+  if ( !std::same_as<type_a, type_b> )                                                              \
   {                                                                                                 \
-      FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
-              <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
-              << ::tts::typename_<type_b>                                                           \
-              );                                                                                    \
-      return ::tts::detail::logger{};                                                               \
+    FAILURE ( "'%s %s %s' is false because '%.*s' is not '%.*s'."                                   \
+            , TTS_STRING(A), T, TTS_STRING(B)                                                       \
+            , ::tts::typename_<type_a>.size(), ::tts::typename_<type_a>.data()                      \
+            , ::tts::typename_<type_b>.size(), ::tts::typename_<type_b>.data()                      \
+            );                                                                                      \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
@@ -473,19 +472,19 @@ do                                                                              
 #define TTS_TYPED_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                      \
-::tts::global_logger_status = false;                                                                \
 do                                                                                                  \
 {                                                                                                   \
   using type_a = std::remove_cvref_t<decltype(A)>;                                                  \
   using type_b = std::remove_cvref_t<decltype(B)>;                                                  \
                                                                                                     \
-  if ( !tts::same_as<type_a, type_b> )                                                              \
+  if ( !std::same_as<type_a, type_b> )                                                              \
   {                                                                                                 \
-      FAILURE (   "Expression: "  << TTS_STRING(A) << " " T " " << TTS_STRING(B)                    \
-              <<  " is false because: " << ::tts::typename_<type_a> << " is not "                   \
-              << ::tts::typename_<type_b>                                                           \
-              );                                                                                    \
-                                                                                                    \
+    FAILURE ( "'%s %s %s' is false because '%.*s' is not '%.*s'."                                   \
+            , TTS_STRING(A), T, TTS_STRING(B)                                                       \
+            , ::tts::typename_<type_a>.size(), ::tts::typename_<type_a>.data()                      \
+            , ::tts::typename_<type_b>.size(), ::tts::typename_<type_b>.data()                      \
+            );                                                                                      \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
