@@ -6,25 +6,31 @@
 **/
 //======================================================================================================================
 #pragma once
-
+#include <iostream>
 #include <tts/tools/bitcast.hpp>
 #include <type_traits>
+#include <cstdint>
 #include <limits>
-#include <cmath>
-
 
 namespace tts
 {
-namespace detail
-{
-  #if defined(__FAST_MATH__)
-    inline constexpr auto isinf = [](auto) { return false; };
-    inline constexpr auto isnan = [](auto) { return false; };
-  #else
-    inline constexpr auto isinf = [](auto x) { return std::isinf(x); };
-    inline constexpr auto isnan = [](auto x) { return std::isnan(x); };
-  #endif
-}
+  namespace _
+  {
+    #if defined(__FAST_MATH__)
+      constexpr auto isnan(auto)            { return false; };
+      constexpr auto isinf(auto)            { return false; };
+      constexpr auto isunordered(auto,auto) { return false; };
+    #else
+      constexpr auto isnan(auto x)              { return x != x;                    };
+      constexpr auto isinf(auto x)              { return !isnan(x) && isnan(x - x); };
+      constexpr auto isunordered(auto x,auto y) { return  isnan(x) || isnan(y);     };
+    #endif
+
+      constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
+      constexpr auto abs(auto x)         { return x<0 ? -x :x;      };
+      constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
+  }
+
   //====================================================================================================================
   /*!
     @brief Compute the absolute distance between two values
@@ -36,9 +42,10 @@ namespace detail
     @return The distance between a and b
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline double absolute_distance(T const &a, U const &b)
+  template<typename T, typename U> inline double absolute_check(T const &a, U const &b)
   {
-    if constexpr(std::is_same_v<T, U>)
+    if constexpr( requires { absolute_distance(a,b); }) return absolute_distance(a,b);
+    else if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
       {
@@ -46,30 +53,30 @@ namespace detail
       }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (detail::isnan(a) && detail::isnan(b))) return 0.;
+        if((a == b) || (_::isnan(a) && _::isnan(b))) return 0.;
 
-        if(detail::isinf(a) || detail::isinf(b) || detail::isnan(a) || detail::isnan(b))
+        if(_::isinf(a) || _::isinf(b) || _::isnan(a) || _::isnan(b))
           return std::numeric_limits<double>::infinity();
 
-        return std::abs(a - b);
+        return _::abs(a - b);
       }
       else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
       {
         auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
-        return absolute_distance(d0, d1);
+        return absolute_check(d0, d1);
       }
       else
       {
         static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
                       , "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
-                        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_distance ?"
+                        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?"
                       );
       }
     }
     else
     {
       using common_t = std::common_type_t<T, U>;
-      return absolute_distance(static_cast<common_t>(a), static_cast<common_t>(b));
+      return absolute_check(static_cast<common_t>(a), static_cast<common_t>(b));
     }
   }
 
@@ -84,38 +91,39 @@ namespace detail
     @return The relative distance between a and b
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline double relative_distance(T const &a, U const &b)
+  template<typename T, typename U> inline double relative_check(T const &a, U const &b)
   {
-    if constexpr(std::is_same_v<T, U>)
+    if constexpr( requires { relative_distance(a,b); }) return relative_distance(a,b);
+    else if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
       { return a == b ? 0. : 100.; }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (detail::isnan(a) && detail::isnan(b))) return 0.;
+        if((a == b) || (_::isnan(a) && _::isnan(a))) return 0.;
 
-        if(detail::isinf(a) || detail::isinf(b) || detail::isnan(a) || detail::isnan(b))
+        if(_::isinf(a) || _::isinf(b) || _::isnan(a) || _::isnan(b))
           return std::numeric_limits<double>::infinity();
 
-        return 100. * (std::abs(a - b) / std::max(T(1), std::max(std::abs(a), std::abs(b))));
+        return 100. * (_::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b))));
       }
       else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
       {
         auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
-        return relative_distance(d0, d1);
+        return relative_check(d0, d1);
       }
       else
       {
         static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
                       , "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
-                        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_distance ?"
+                        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?"
                       );
       }
     }
     else
     {
       using common_t = std::common_type_t<T, U>;
-      return relative_distance(static_cast<common_t>(a), static_cast<common_t>(b));
+      return relative_check(static_cast<common_t>(a), static_cast<common_t>(b));
     }
   }
 
@@ -130,9 +138,10 @@ namespace detail
     @return The distance in ULP  between a and b
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline double ulp_distance(T const &a, U const &b)
+  template<typename T, typename U> inline double ulp_check(T const &a, U const &b)
   {
-    if constexpr(std::is_same_v<T, U>)
+    if constexpr( requires { ulp_distance(a,b); }) return ulp_distance(a,b);
+    else if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
       {
@@ -142,24 +151,24 @@ namespace detail
       {
         using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
 
-        if((a == b) || (detail::isnan(a) && detail::isnan(b)))
+        if((a == b) || (_::isnan(a) && _::isnan(b)))
         {
           return 0.;
         }
-        else if (std::isunordered(a, b))
+        else if (_::isunordered(a, b))
         {
           return std::numeric_limits<double>::infinity();
         }
         else
         {
-          auto aa = detail::bitinteger(a);
-          auto bb = detail::bitinteger(b);
+          auto aa = _::bitinteger(a);
+          auto bb = _::bitinteger(b);
 
           if(aa > bb) std::swap(aa, bb);
 
           auto z = static_cast<ui_t>(bb-aa);
 
-          if( std::signbit(a) ^ std::signbit(b) ) ++z;
+          if( _::signbit(a) != _::signbit(b) ) ++z;
           return z/2.;
         }
       }
@@ -174,17 +183,16 @@ namespace detail
       {
         static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
                       , "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
-                        "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_distance ?"
+                        "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_check ?"
                       );
       }
     }
     else
     {
       using common_t = std::common_type_t<T, U>;
-      return ulp_distance(static_cast<common_t>(a), static_cast<common_t>(b));
+      return ulp_check(static_cast<common_t>(a), static_cast<common_t>(b));
     }
   }
-
 
   //====================================================================================================================
   /*!
@@ -194,14 +202,15 @@ namespace detail
 
     @param  a Value to compare
     @param  b Value to compare
-    @return Is `a == b` or `detail::isnan(a) && detail::isnan(b)`
+    @return Is `a == b` or `_::isnan(a) && _::isnan(b)`
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline bool is_ieee_equal(T const &a, U const &b)
+  template<typename T, typename U> inline bool ieee_check(T const &a, U const &b)
   {
-    if constexpr(std::is_floating_point_v<T>) // IEEE cases
+    if constexpr( requires { ieee_equal(a,b); }) return ieee_equal(a,b);
+    else if constexpr(std::is_floating_point_v<T>) // IEEE cases
     {
-      return (a==b) || (detail::isnan(a) && detail::isnan(b));
+      return (a==b) || (_::isnan(a) && _::isnan(b));
     }
     else
     {

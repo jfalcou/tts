@@ -31,17 +31,18 @@
   @endcode
 **/
 //======================================================================================================================
-#define TTS_PASS(...)                                                                       \
-  do                                                                                        \
-  {                                                                                         \
-    ::tts::global_runtime.pass();                                                           \
-    if(::tts::_::is_verbose)                                                                \
-    {                                                                                       \
-      printf( "  [V] %s : %s\n"                                                             \
-            , ::tts::_::source_location::current().data(), ::tts::text{__VA_ARGS__}.data()  \
-            );                                                                              \
-    }                                                                                       \
-  } while(0)                                                                                \
+#define TTS_PASS(...)                                                                         \
+  do                                                                                          \
+  {                                                                                           \
+    ::tts::global_runtime.pass();                                                             \
+    if(::tts::_::is_verbose)                                                                  \
+    {                                                                                         \
+      auto contents = ::tts::text{__VA_ARGS__};                                               \
+      printf( "  [V] %s : %.*s\n"                                                             \
+            , ::tts::_::source_location::current().data(), contents.size(), contents.data()   \
+            );                                                                                \
+    }                                                                                         \
+  } while(0)                                                                                  \
 /**/
 
 //======================================================================================================================
@@ -75,8 +76,9 @@
       printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
-    printf( "  [X] %s : ** FAILURE ** : %s\n"                                                               \
-          , ::tts::_::source_location::current().data(), ::tts::text{__VA_ARGS__}.data()                    \
+    auto contents = ::tts::text{__VA_ARGS__};                                                               \
+    printf( "  [X] %s : ** FAILURE ** : %.*s\n"                                                             \
+          , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
           );                                                                                                \
   } while(0)                                                                                                \
 /**/
@@ -112,8 +114,9 @@
       printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
-    printf( "  [@] %s : @@ FATAL @@ : %s\n"                                                                 \
-          , ::tts::_::source_location::current().data(), ::tts::text{__VA_ARGS__}.data()                    \
+    auto contents = ::tts::text{__VA_ARGS__};                                                               \
+    printf( "  [@] %s : @@ FATAL @@ : %.*s\n"                                                               \
+          , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
           );                                                                                                \
     ::tts::fatal_error_status = true;                                                                       \
   } while(0)                                                                                                \

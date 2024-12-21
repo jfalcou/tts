@@ -248,6 +248,9 @@ namespace tts
         data_[size_] = '\0';
       }
     }
+    template<std::size_t N>
+    explicit text(const char (&data)[N]) : text("%.s*",N,&data[0])
+    {}
     template<typename ... Args>
     explicit text( const char* format, Args ... args ) : text()
     {
@@ -258,7 +261,16 @@ namespace tts
         snprintf( data_, size_ + 1, format, args ... );
       }
     }
-    text(text const& other) : text(other.data_) {}
+    text(text const& other) : text()
+    {
+      size_ = other.size_;
+      if(size_)
+      {
+        data_ = reinterpret_cast<char*>(malloc(size_+1));
+        strncpy(data_, other.data_, size_);
+        data_[size_] = '\0';
+      }
+    }
     text(text&& other) : text() { swap(other); }
     text& operator=(text const& other)
     {
@@ -312,7 +324,25 @@ namespace tts
     decltype(auto) begin()        { return data_;       }
     decltype(auto) end() const    { return data_+size_; }
     decltype(auto) end()          { return data_+size_; }
-    friend auto const& as_text(text const& t) { return t; }
+    friend auto const& to_text(text const& t) { return t; }
+    friend auto operator==(text const& a, text const& b) noexcept
+    {
+      return strcmp(a.data_, b.data_) == 0;
+    }
+    template<std::size_t N>
+    friend auto operator==(text const& a, const char (&b)[N]) noexcept
+    {
+      return strcmp(a.data_, &b[0]) == 0;
+    }
+    friend auto operator<=>(text const& a, text const& b) noexcept
+    {
+      return strncmp(a.data_, b.data_, a.size_<b.size_?a.size_:b.size_) <=> 0;
+    }
+    template<std::size_t N>
+    friend auto operator<=>(text const& a, const char (&b)[N]) noexcept
+    {
+      return a <=> text{b};
+    }
     private:
     char* data_;
     int   size_;
@@ -339,7 +369,7 @@ namespace tts::_
     constexpr typename_impl()   { data_ = typename_impl_value(); }
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
-    friend text as_text(typename_impl const& t) { return text("%.*s",t.size(),t.data()); }
+    friend text to_text(typename_impl const& t) { return text("%.*s",t.size(),t.data()); }
     template<_::stream OS>
     friend OS& operator<<(OS& os, typename_impl t)
     {
@@ -407,13 +437,13 @@ namespace tts
 {
   template<typename T> text as_text(T e)
   {
-    if      constexpr( std::is_pointer_v<T> )
+    if      constexpr( requires{ to_text(e); } )
     {
-      return text("%p (%s)" ,(void*)(e), as_text(typename_<T>).data());
+      return to_text(e);
     }
     else if constexpr(std::floating_point<T>)
     {
-      auto precision = ::tts::arguments().value(6,"--precision");
+      auto precision = ::tts::arguments().value(16,"--precision");
       bool hexmode   = ::tts::arguments()("-x","--hex");
       bool scimode   = ::tts::arguments()("-s","--scientific");
       if(scimode)       return text("%.*E" ,e, precision);
@@ -435,6 +465,10 @@ namespace tts
       if(e.has_value()) return base + text("{%s}", as_text(e.value()).data());
       else              return base + "{}";
     }
+    else if constexpr( std::is_pointer_v<T> )
+    {
+      return text("%p (%s)" ,(void*)(e), as_text(typename_<T>).data());
+    }
     else if constexpr( _::sequence<T> )
     {
       text that("{ ");
@@ -448,7 +482,7 @@ namespace tts
     }
   }
   template<std::size_t N>
-  auto        as_text(const char (&t)[N]) { return text(&t[0]);                 }
+  auto        as_text(const char (&t)[N]) { return text(t);                     }
   inline auto as_text(std::nullptr_t)     { return text("nullptr");             }
   inline auto as_text(bool b)             { return text(b ? "true" : "false");  }
 }
@@ -777,7 +811,7 @@ namespace tts::_
       that.desc_ = text{"[%s:%d]",file+offset,line};
       return that;
     }
-    friend text as_text(source_location const& s) { return s.desc_; }
+    friend text to_text(source_location const& s) { return s.desc_; }
     decltype(auto) data() const { return desc_.data(); }
     template<_::stream OS>
     friend OS& operator<<(OS& os, source_location const& s)
@@ -788,17 +822,18 @@ namespace tts::_
     text  desc_{"[unknown:?]"};
   };
 }
-#define TTS_PASS(...)                                                                       \
-  do                                                                                        \
-  {                                                                                         \
-    ::tts::global_runtime.pass();                                                           \
-    if(::tts::_::is_verbose)                                                                \
-    {                                                                                       \
-      printf( "  [V] %s : %s\n"                                                             \
-            , ::tts::_::source_location::current().data(), ::tts::text{__VA_ARGS__}.data()  \
-            );                                                                              \
-    }                                                                                       \
-  } while(0)                                                                                \
+#define TTS_PASS(...)                                                                         \
+  do                                                                                          \
+  {                                                                                           \
+    ::tts::global_runtime.pass();                                                             \
+    if(::tts::_::is_verbose)                                                                  \
+    {                                                                                         \
+      auto contents = ::tts::text{__VA_ARGS__};                                               \
+      printf( "  [V] %s : %.*s\n"                                                             \
+            , ::tts::_::source_location::current().data(), contents.size(), contents.data()   \
+            );                                                                                \
+    }                                                                                         \
+  } while(0)                                                                                  \
 
 #define TTS_FAIL(...)                                                                                       \
   do                                                                                                        \
@@ -810,8 +845,9 @@ namespace tts::_
       printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
-    printf( "  [X] %s : ** FAILURE ** : %s\n"                                                               \
-          , ::tts::_::source_location::current().data(), ::tts::text{__VA_ARGS__}.data()                    \
+    auto contents = ::tts::text{__VA_ARGS__};                                                               \
+    printf( "  [X] %s : ** FAILURE ** : %.*s\n"                                                             \
+          , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
           );                                                                                                \
   } while(0)                                                                                                \
 
@@ -825,8 +861,9 @@ namespace tts::_
       printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
-    printf( "  [@] %s : @@ FATAL @@ : %s\n"                                                                 \
-          , ::tts::_::source_location::current().data(), ::tts::text{__VA_ARGS__}.data()                    \
+    auto contents = ::tts::text{__VA_ARGS__};                                                               \
+    printf( "  [@] %s : @@ FATAL @@ : %.*s\n"                                                               \
+          , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
           );                                                                                                \
     ::tts::fatal_error_status = true;                                                                       \
   } while(0)                                                                                                \
@@ -842,7 +879,7 @@ namespace tts
   template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
   template<typename T> struct type
   {
-    friend text as_text(type) { return as_text(typename_<T>); }
+    friend text to_text(type) { return as_text(typename_<T>); }
     template<_::stream OS>
     friend OS& operator<<(OS& os, type const&)
     {
@@ -1064,12 +1101,12 @@ namespace tts::detail
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
 if( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \
 {                                                                                                 \
-    TTS_PASS( "'%s %s %s' is true.", TTS_STRING(A), T, TTS_STRING(B) );                           \
+    TTS_PASS( "Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );                 \
     return ::tts::_::logger{false};                                                               \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
-  FAILURE ( "'%s %s %s' is false because '%s %s %s'."                                             \
+  FAILURE ( "Expression: %s %s %s is false because %s %s %s."                                     \
           , TTS_STRING(A), T, TTS_STRING(B)                                                       \
           , ::tts::as_text(local_tts_a).data(), F, ::tts::as_text(local_tts_b).data()             \
           );                                                                                      \
@@ -1080,12 +1117,12 @@ else                                                                            
 constexpr auto local_tts_expr = ::tts::detail::OP(A,B);                                           \
 if constexpr( local_tts_expr )                                                                    \
 {                                                                                                 \
-  TTS_PASS( "Constant expression: '%s %s %s' is true.", TTS_STRING(A), T, TTS_STRING(B) );        \
+  TTS_PASS( "Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );          \
     return ::tts::_::logger{false};                                                               \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
-  FAILURE ( "Constant expression '%s %s %s' is false because '%s %s %s'."                         \
+  FAILURE ( "Constant expression: %s %s %s is false because %s %s %s."                            \
           , TTS_STRING(A), T, TTS_STRING(B)                                                       \
           , ::tts::as_text(A).data(), F, ::tts::as_text(B).data()                                 \
           );                                                                                      \
@@ -1096,7 +1133,7 @@ else                                                                            
 #define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                  \
-[&](auto&& local_tts_a, auto&& local_tts_b)                                                         \
+[&](auto const& local_tts_a, auto const& local_tts_b)                                               \
 {                                                                                                   \
   TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                        \
 }(A,B)                                                                                              \
@@ -1276,6 +1313,229 @@ TTS_DISABLE_WARNING_POP                                                         
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
+#include <iostream>
+#include <string.h>
+namespace tts::_
+{
+  template <class To, class From>
+  requires(sizeof(To) == sizeof(From))
+  To bit_cast(const From& src)
+  {
+    To dst;
+    memcpy(&dst, &src, sizeof(To));
+    return dst;
+  }
+  inline auto as_int(float a)   { return bit_cast<int>(a); }
+  inline auto as_int(double a)  { return bit_cast<decltype(sizeof(void*))>(a); }
+  template<typename T> inline auto bitinteger(T a) noexcept
+  {
+    auto ia = as_int(a);
+    using r_t = decltype(ia);
+    constexpr auto mask = r_t(1) << (sizeof(r_t)*8-1);
+    return ((ia & mask) == mask) ?  mask-ia : ia;
+  }
+}
+#include <type_traits>
+#include <cstdint>
+#include <limits>
+namespace tts
+{
+  namespace _
+  {
+    #if defined(__FAST_MATH__)
+      constexpr auto isnan(auto)            { return false; };
+      constexpr auto isinf(auto)            { return false; };
+      constexpr auto isunordered(auto,auto) { return false; };
+    #else
+      constexpr auto isnan(auto x)              { return x != x;                    };
+      constexpr auto isinf(auto x)              { return !isnan(x) && isnan(x - x); };
+      constexpr auto isunordered(auto x,auto y) { return  isnan(x) || isnan(y);     };
+    #endif
+      constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
+      constexpr auto abs(auto x)         { return x<0 ? -x :x;      };
+      constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
+  }
+  template<typename T, typename U> inline double absolute_check(T const &a, U const &b)
+  {
+    if constexpr( requires { absolute_distance(a,b); }) return absolute_distance(a,b);
+    else if constexpr(std::is_same_v<T, U>)
+    {
+      if constexpr(std::is_same_v<T, bool>)
+      {
+        return a == b ? 0. : 1.;
+      }
+      else if constexpr(std::is_floating_point_v<T>)
+      {
+        if((a == b) || (_::isnan(a) && _::isnan(b))) return 0.;
+        if(_::isinf(a) || _::isinf(b) || _::isnan(a) || _::isnan(b))
+          return std::numeric_limits<double>::infinity();
+        return _::abs(a - b);
+      }
+      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
+      {
+        auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
+        return absolute_check(d0, d1);
+      }
+      else
+      {
+        static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
+                      , "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
+                        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?"
+                      );
+      }
+    }
+    else
+    {
+      using common_t = std::common_type_t<T, U>;
+      return absolute_check(static_cast<common_t>(a), static_cast<common_t>(b));
+    }
+  }
+  template<typename T, typename U> inline double relative_check(T const &a, U const &b)
+  {
+    if constexpr( requires { relative_distance(a,b); }) return relative_distance(a,b);
+    else if constexpr(std::is_same_v<T, U>)
+    {
+      if constexpr(std::is_same_v<T, bool>)
+      { return a == b ? 0. : 100.; }
+      else if constexpr(std::is_floating_point_v<T>)
+      {
+        if((a == b) || (_::isnan(a) && _::isnan(a))) return 0.;
+        if(_::isinf(a) || _::isinf(b) || _::isnan(a) || _::isnan(b))
+          return std::numeric_limits<double>::infinity();
+        return 100. * (_::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b))));
+      }
+      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
+      {
+        auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
+        return relative_check(d0, d1);
+      }
+      else
+      {
+        static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
+                      , "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
+                        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?"
+                      );
+      }
+    }
+    else
+    {
+      using common_t = std::common_type_t<T, U>;
+      return relative_check(static_cast<common_t>(a), static_cast<common_t>(b));
+    }
+  }
+  template<typename T, typename U> inline double ulp_check(T const &a, U const &b)
+  {
+    if constexpr( requires { ulp_distance(a,b); }) return ulp_distance(a,b);
+    else if constexpr(std::is_same_v<T, U>)
+    {
+      if constexpr(std::is_same_v<T, bool>)
+      {
+        return a == b ? 0. : std::numeric_limits<double>::infinity();
+      }
+      else if constexpr(std::is_floating_point_v<T>)
+      {
+        using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
+        if((a == b) || (_::isnan(a) && _::isnan(b)))
+        {
+          return 0.;
+        }
+        else if (_::isunordered(a, b))
+        {
+          return std::numeric_limits<double>::infinity();
+        }
+        else
+        {
+          auto aa = _::bitinteger(a);
+          auto bb = _::bitinteger(b);
+          if(aa > bb) std::swap(aa, bb);
+          auto z = static_cast<ui_t>(bb-aa);
+          if( _::signbit(a) != _::signbit(b) ) ++z;
+          return z/2.;
+        }
+      }
+      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
+      {
+        using u_t = typename std::make_unsigned<T>::type;
+        return ((a < b) ? u_t(b - a) : u_t(a - b))/2.;
+      }
+      else
+      {
+        static_assert ( std::is_floating_point_v<T> || std::is_integral_v<T>
+                      , "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
+                        "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_check ?"
+                      );
+      }
+    }
+    else
+    {
+      using common_t = std::common_type_t<T, U>;
+      return ulp_check(static_cast<common_t>(a), static_cast<common_t>(b));
+    }
+  }
+  template<typename T, typename U> inline bool ieee_check(T const &a, U const &b)
+  {
+    if constexpr( requires { ieee_equal(a,b); }) return ieee_equal(a,b);
+    else if constexpr(std::is_floating_point_v<T>)
+    {
+      return (a==b) || (_::isnan(a) && _::isnan(b));
+    }
+    else
+    {
+      return a == b;
+    }
+  }
+}
+#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC,FAILURE)                           \
+[&](auto local_tts_a, auto local_tts_b)                                                     \
+{                                                                                           \
+  auto r = FUNC (local_tts_a,local_tts_b);                                                  \
+                                                                                            \
+  if(r <= N)                                                                                \
+  {                                                                                         \
+    TTS_PASS( "Expression: %s == %s within %.*g %s (over %.*g %s)."                         \
+            , TTS_STRING(LHS), TTS_STRING(RHS)                                              \
+            , PREC, r, UNIT, PREC, static_cast<double>(N), UNIT                             \
+            );                                                                              \
+    return ::tts::_::logger{false};                                                         \
+  }                                                                                         \
+  else                                                                                      \
+  {                                                                                         \
+    FAILURE( "Expected: %s == %s but %s == %s within %.*g %s when  %.*g %s were expected."  \
+            , TTS_STRING(LHS), TTS_STRING(RHS)                                              \
+            , ::tts::as_text(local_tts_a).data(), ::tts::as_text(local_tts_b).data()        \
+            , PREC, r, UNIT, PREC, static_cast<double>(N), UNIT                             \
+            );                                                                              \
+    return ::tts::_::logger{};                                                              \
+  }                                                                                         \
+}(LHS,RHS)                                                                                  \
+
+#define TTS_PRECISION(L,R,N,U,F,P,...)      TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F,P)
+#define TTS_PRECISION_(L,R,N,U,F,P)         TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FAIL)
+#define TTS_PRECISION_REQUIRED(L,R,N,U,F,P) TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FATAL)
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_check, 8, __VA_ARGS__ )
+#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_check, 8, __VA_ARGS__ )
+#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_check, 2, __VA_ARGS__ )
+#define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                 \
+[&](auto local_tts_a, auto local_tts_b)                                                           \
+{                                                                                                 \
+  if(::tts::ieee_check(local_tts_a,local_tts_b))                                                  \
+  {                                                                                               \
+    TTS_PASS( "Expression: %s == %s.", TTS_STRING(LHS), TTS_STRING(RHS));                         \
+    return ::tts::_::logger{false};                                                               \
+  }                                                                                               \
+  else                                                                                            \
+  {                                                                                               \
+    FAILURE ( "Expression: %s == %s is false because %s != %s.", TTS_STRING(LHS), TTS_STRING(RHS) \
+            , ::tts::as_text(local_tts_a).data(), ::tts::as_text(local_tts_b).data()              \
+            );                                                                                    \
+    return ::tts::_::logger{};                                                                    \
+  }                                                                                               \
+}(LHS,RHS)                                                                                        \
+
+#define TTS_DO_IEEE_EQUAL(L,R,...)      TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
+#define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
+#define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
+#define TTS_IEEE_EQUAL(L,R,...)       TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__ )
 #include <stdio.h>
 namespace tts::_
 {

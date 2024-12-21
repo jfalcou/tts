@@ -30,6 +30,10 @@ namespace tts
       }
     }
 
+    template<std::size_t N>
+    explicit text(const char (&data)[N]) : text("%.s*",N,&data[0])
+    {}
+
     template<typename ... Args>
     explicit text( const char* format, Args ... args ) : text()
     {
@@ -41,7 +45,17 @@ namespace tts
       }
     }
 
-    text(text const& other) : text(other.data_) {}
+    text(text const& other) : text()
+    {
+      size_ = other.size_;
+      if(size_)
+      {
+        data_ = reinterpret_cast<char*>(malloc(size_+1));
+        strncpy(data_, other.data_, size_);
+        data_[size_] = '\0';
+      }
+    }
+
     text(text&& other) : text() { swap(other); }
 
     text& operator=(text const& other)
@@ -105,7 +119,29 @@ namespace tts
     decltype(auto) end() const    { return data_+size_; }
     decltype(auto) end()          { return data_+size_; }
 
-    friend auto const& as_text(text const& t) { return t; }
+    friend auto const& to_text(text const& t) { return t; }
+
+    friend auto operator==(text const& a, text const& b) noexcept
+    {
+      return strcmp(a.data_, b.data_) == 0;
+    }
+
+    template<std::size_t N>
+    friend auto operator==(text const& a, const char (&b)[N]) noexcept
+    {
+      return strcmp(a.data_, &b[0]) == 0;
+    }
+
+    friend auto operator<=>(text const& a, text const& b) noexcept
+    {
+      return strncmp(a.data_, b.data_, a.size_<b.size_?a.size_:b.size_) <=> 0;
+    }
+
+    template<std::size_t N>
+    friend auto operator<=>(text const& a, const char (&b)[N]) noexcept
+    {
+      return a <=> text{b};
+    }
 
     private:
     char* data_;

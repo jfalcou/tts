@@ -36,7 +36,7 @@ namespace tts
   //====================================================================================================================
   template<typename T> struct type
   {
-    friend text as_text(type) { return as_text(typename_<T>); }
+    friend text to_text(type) { return as_text(typename_<T>); }
 
     template<_::stream OS>
     friend OS& operator<<(OS& os, type const&)
