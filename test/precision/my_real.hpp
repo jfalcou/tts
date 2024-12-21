@@ -13,26 +13,23 @@
 namespace n1
 {
   struct my_real { float x; operator float() const { return x; } };
-}
 
-namespace tts
-{
-  inline double ulp_distance(n1::my_real const &a, n1::my_real const &b)
+  inline double ulp_distance(my_real const &a, my_real const &b)
   {
     return a.x/b.x;
   }
 
-  inline bool is_ieee_equal(n1::my_real const &a, n1::my_real const &b)
+  inline bool ieee_equal(my_real const &a, my_real const &b)
   {
     return a.x == b.x || (a.x >= 0.f && b.x >= 0.f);
   }
 
-  inline double relative_distance(n1::my_real const &a, n1::my_real const &b)
+  inline double relative_distance(my_real const &a, my_real const &b)
   {
     return a.x/b.x;
   }
 
-  inline double absolute_distance(n1::my_real const &a, n1::my_real const &b)
+  inline double absolute_distance(my_real const &a, my_real const &b)
   {
     return std::abs(a.x - b.x);
   }

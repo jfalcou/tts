@@ -26,7 +26,7 @@ namespace tts
       + sequences of such types
 
     @ref as_text takes care of applying any command-line options related to formatting to the value printed.
-    For user defined types, an overload of @ref as_text must be found via ADL.
+    For user defined types, an overload of `to_text` must be found via ADL.
 
     @groupheader{Examples}
     @code
@@ -37,7 +37,7 @@ namespace tts
     {
       struct some_type { int i; };
 
-      tts::text as_text( some_type const& s )
+      tts::text to_text( some_type const& s )
       {
         return "some_type[" + tts::as_text(s.i) + "]";
       }
@@ -46,7 +46,7 @@ namespace tts
       {
         int j;
 
-        friend tts::text as_text( some_other_type const& s )
+        friend tts::text to_text( some_other_type const& s )
         {
           return "[[" + tts::as_text(s.j) + "]]";
         }
@@ -66,13 +66,13 @@ namespace tts
   //====================================================================================================================
   template<typename T> text as_text(T e)
   {
-    if      constexpr( std::is_pointer_v<T> )
+    if      constexpr( requires{ to_text(e); } )
     {
-      return text("%p (%s)" ,(void*)(e), as_text(typename_<T>).data());
+      return to_text(e);
     }
     else if constexpr(std::floating_point<T>)
     {
-      auto precision = ::tts::arguments().value(6,"--precision");
+      auto precision = ::tts::arguments().value(16,"--precision");
       bool hexmode   = ::tts::arguments()("-x","--hex");
       bool scimode   = ::tts::arguments()("-s","--scientific");
 
@@ -95,6 +95,10 @@ namespace tts
       if(e.has_value()) return base + text("{%s}", as_text(e.value()).data());
       else              return base + "{}";
     }
+    else if constexpr( std::is_pointer_v<T> )
+    {
+      return text("%p (%s)" ,(void*)(e), as_text(typename_<T>).data());
+    }
     else if constexpr( _::sequence<T> )
     {
       text that("{ ");
@@ -109,7 +113,7 @@ namespace tts
   }
 
   template<std::size_t N>
-  auto        as_text(const char (&t)[N]) { return text(&t[0]);                 }
+  auto        as_text(const char (&t)[N]) { return text(t);                     }
   inline auto as_text(std::nullptr_t)     { return text("nullptr");             }
   inline auto as_text(bool b)             { return text(b ? "true" : "false");  }
 }

@@ -15,12 +15,12 @@
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
 if( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \
 {                                                                                                 \
-    TTS_PASS( "'%s %s %s' is true.", TTS_STRING(A), T, TTS_STRING(B) );                           \
+    TTS_PASS( "Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );                 \
     return ::tts::_::logger{false};                                                               \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
-  FAILURE ( "'%s %s %s' is false because '%s %s %s'."                                             \
+  FAILURE ( "Expression: %s %s %s is false because %s %s %s."                                     \
           , TTS_STRING(A), T, TTS_STRING(B)                                                       \
           , ::tts::as_text(local_tts_a).data(), F, ::tts::as_text(local_tts_b).data()             \
           );                                                                                      \
@@ -32,12 +32,12 @@ else                                                                            
 constexpr auto local_tts_expr = ::tts::detail::OP(A,B);                                           \
 if constexpr( local_tts_expr )                                                                    \
 {                                                                                                 \
-  TTS_PASS( "Constant expression: '%s %s %s' is true.", TTS_STRING(A), T, TTS_STRING(B) );        \
+  TTS_PASS( "Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );          \
     return ::tts::_::logger{false};                                                               \
 }                                                                                                 \
 else                                                                                              \
 {                                                                                                 \
-  FAILURE ( "Constant expression '%s %s %s' is false because '%s %s %s'."                         \
+  FAILURE ( "Constant expression: %s %s %s is false because %s %s %s."                            \
           , TTS_STRING(A), T, TTS_STRING(B)                                                       \
           , ::tts::as_text(A).data(), F, ::tts::as_text(B).data()                                 \
           );                                                                                      \
@@ -50,7 +50,7 @@ else                                                                            
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
 
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                  \
-[&](auto&& local_tts_a, auto&& local_tts_b)                                                         \
+[&](auto const& local_tts_a, auto const& local_tts_b)                                               \
 {                                                                                                   \
   TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                        \
 }(A,B)                                                                                              \

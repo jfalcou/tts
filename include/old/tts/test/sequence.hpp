@@ -8,9 +8,9 @@
 //======================================================================================================================
 #pragma once
 
-#include <tts/test/info.hpp>
+#include <tts/engine/info.hpp>
 #include <tts/tools/preprocessor.hpp>
-#include <tts/engine/precision.hpp>
+#include <tts/tools/precision.hpp>
 #include <tts/engine/logger.hpp>
 #include <type_traits>
 
