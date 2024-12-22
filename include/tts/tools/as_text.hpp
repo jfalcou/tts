@@ -82,8 +82,17 @@ namespace tts
     }
     else if constexpr(std::integral<T>)
     {
-      auto fmt = ::tts::arguments()("-x","--hex") ? "%X" : "%d";
-      return text(fmt,e);
+      if constexpr( sizeof(T) > 4)
+      {
+        auto fmt = ::tts::arguments()("-x","--hex") ? "%lX" : "%ld";
+        return text(fmt,e);
+      }
+      else
+      {
+        auto fmt = ::tts::arguments()("-x","--hex") ? "%X" : "%d";
+        return text(fmt,e);
+      }
+
     }
     else if constexpr(_::string<T>)
     {

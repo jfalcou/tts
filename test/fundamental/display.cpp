@@ -5,7 +5,6 @@
   SPDX-License-Identifier: BSL-1.0
 **/
 //==================================================================================================
-#define TTS_MAIN
 #include <tts/tts.hpp>
 #include <optional>
 #include <string>

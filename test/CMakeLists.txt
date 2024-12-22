@@ -7,21 +7,36 @@ copa_setup_test_targets()
 set(root "${CMAKE_SOURCE_DIR}/test")
 
 ##======================================================================================================================
-## Derivative tests
+## Test for TTS infrastructure code
+##======================================================================================================================
+copa_make_single_unit ( INTERFACE     tts_test
+                        DEPENDENCIES  tts-standalone
+                        FILES         fundamental/bitcast.cpp
+                                      fundamental/buffer.cpp
+                                      fundamental/callable.cpp
+                                      fundamental/display.cpp
+                                      #fundamental/text.cpp
+                                      fundamental/main.cpp
+                        ROOT          ${root}
+                        NAME          fundamental.cpp
+                      )
+
+##======================================================================================================================
+## Test for TTS tests
 ##======================================================================================================================
 copa_glob_unit( PATTERN "others/*.cpp"
-                QUIET RELATIVE ${root} INTERFACE tts_test DEPENDENCIES tts-standalone
+                QUIET RELATIVE ${root} INTERFACE tts_test DEPENDENCIES fundamental.exe
               )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  tts-standalone
+                        DEPENDENCIES  fundamental.exe
                         FILES         basic/expect.cpp basic/expect_not.cpp basic/main.cpp
                         ROOT          ${root}
                         NAME          basic.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  tts-standalone
+                        DEPENDENCIES  fundamental.exe
                         FILES         precision/main.cpp
                                       precision/absolute.cpp
                                       precision/ieee.cpp
@@ -32,7 +47,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  tts-standalone
+                        DEPENDENCIES  fundamental.exe
                         FILES         relation/main.cpp
                                       relation/equal.cpp
                                       relation/greater.cpp
