@@ -8,6 +8,7 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
+#include <cassert>
 
 namespace tts::_
 {
@@ -53,8 +54,8 @@ namespace tts::_
       return *this;
     }
 
-    void operator()()       { invoker(payload); }
-    void operator()() const { invoker(payload); }
+    void operator()()       { assert(payload); invoker(payload); }
+    void operator()() const { assert(payload); invoker(payload); }
 
     explicit operator bool() const { return payload != nullptr; }
 

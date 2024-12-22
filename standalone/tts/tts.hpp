@@ -452,8 +452,16 @@ namespace tts
     }
     else if constexpr(std::integral<T>)
     {
-      auto fmt = ::tts::arguments()("-x","--hex") ? "%X" : "%d";
-      return text(fmt,e);
+      if constexpr( sizeof(T) > 4)
+      {
+        auto fmt = ::tts::arguments()("-x","--hex") ? "%lX" : "%ld";
+        return text(fmt,e);
+      }
+      else
+      {
+        auto fmt = ::tts::arguments()("-x","--hex") ? "%X" : "%d";
+        return text(fmt,e);
+      }
     }
     else if constexpr(_::string<T>)
     {
@@ -682,6 +690,7 @@ namespace tts::_
     }
   };
 }
+#include <cassert>
 namespace tts::_
 {
   struct callable
@@ -714,8 +723,8 @@ namespace tts::_
       cleanup = TTS_MOVE(other.cleanup);
       return *this;
     }
-    void operator()()       { invoker(payload); }
-    void operator()() const { invoker(payload); }
+    void operator()()       { assert(payload); invoker(payload); }
+    void operator()() const { assert(payload); invoker(payload); }
     explicit operator bool() const { return payload != nullptr; }
     private:
     template<typename T> static void invoke(void* data)   { (*static_cast<T*>(data))();   }
@@ -1315,9 +1324,10 @@ TTS_DISABLE_WARNING_POP                                                         
 #endif
 #include <iostream>
 #include <string.h>
+#include <cstdint>
 namespace tts::_
 {
-  template <class To, class From>
+  template<typename To, typename From>
   requires(sizeof(To) == sizeof(From))
   To bit_cast(const From& src)
   {
@@ -1325,11 +1335,11 @@ namespace tts::_
     memcpy(&dst, &src, sizeof(To));
     return dst;
   }
-  inline auto as_int(float a)   { return bit_cast<int>(a); }
-  inline auto as_int(double a)  { return bit_cast<decltype(sizeof(void*))>(a); }
+  inline auto as_int(float a)   { return bit_cast<std::uint32_t>(a); }
+  inline auto as_int(double a)  { return bit_cast<std::uint64_t>(a); }
   template<typename T> inline auto bitinteger(T a) noexcept
   {
-    auto ia = as_int(a);
+    auto  ia  = as_int(a);
     using r_t = decltype(ia);
     constexpr auto mask = r_t(1) << (sizeof(r_t)*8-1);
     return ((ia & mask) == mask) ?  mask-ia : ia;
