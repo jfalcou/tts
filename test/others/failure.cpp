@@ -62,7 +62,6 @@ TTS_CASE( "Check that forced broken precision tests fails" )
   TTS_ABSOLUTE_EQUAL(x ,1., 1e-16 );
 };
 
-#if 0
 TTS_CASE("Check broken sequence comparisons")
 {
   std::vector v{1.f,2.f,3.f,-5.f};
@@ -73,7 +72,6 @@ TTS_CASE("Check broken sequence comparisons")
   TTS_ALL_ULP_EQUAL(v,w,0.5);
   TTS_ALL_IEEE_EQUAL(v,w);
 };
-#endif
 
 int main(int argc, char const** argv)
 {

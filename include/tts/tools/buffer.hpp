@@ -23,7 +23,7 @@ namespace tts::_
     {
       if (n > 0)
       {
-        data_ = reinterpret_cast<T*>(malloc(sizeof(T)*n));
+        data_     = reinterpret_cast<T*>(malloc(sizeof(T)*n));
         size_     = n;
         capacity_ = n;
       }
@@ -74,18 +74,16 @@ namespace tts::_
     }
 
     template <typename... Args>
-    void emplace_back(Args&&... args)
-    {
-      push_back(T(TTS_FWD(args)...));
-    }
+    void emplace_back(Args&&... args) { push_back(T(TTS_FWD(args)...)); }
 
     decltype(auto) begin() const { return data_; }
     decltype(auto) begin()       { return data_; }
     decltype(auto) end()   const { return data_ + size_; }
     decltype(auto) end()         { return data_ + size_; }
 
-    std::size_t size() const noexcept { return size_; }
-    std::size_t capacity() const noexcept { return capacity_; }
+    bool        empty() const noexcept    { return size_ == 0;  }
+    std::size_t size() const noexcept     { return size_;       }
+    std::size_t capacity() const noexcept { return capacity_;   }
 
     void swap(buffer& other)
     {
@@ -105,9 +103,8 @@ namespace tts::_
       if (new_capacity > capacity_)
       {
         std::size_t new_cap = capacity_ == 0 ? 1 : capacity_ * 2;
-        while (new_cap < new_capacity) {
-            new_cap *= 2;
-        }
+        while (new_cap < new_capacity) { new_cap *= 2; }
+
         T* new_data = reinterpret_cast<T*>(malloc(sizeof(T)*new_cap));
 
         for (std::size_t i = 0; i < size_; ++i)

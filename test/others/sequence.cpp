@@ -9,6 +9,7 @@
 #include <tts/tts.hpp>
 #include <vector>
 #include <list>
+#include <cmath>
 
 TTS_CASE("Equality over sequence")
 {

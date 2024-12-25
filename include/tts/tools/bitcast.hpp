@@ -6,22 +6,13 @@
 **/
 //======================================================================================================================
 #pragma once
-#include <string.h>
 #include <cstdint>
+#include <bit>
 
 namespace tts::_
 {
-  template<typename To, typename From>
-  requires(sizeof(To) == sizeof(From))
-  To bit_cast(const From& src)
-  {
-    To dst;
-    memcpy(&dst, &src, sizeof(To));
-    return dst;
-  }
-
-  inline auto as_int(float a)   { return bit_cast<std::uint32_t>(a); }
-  inline auto as_int(double a)  { return bit_cast<std::uint64_t>(a); }
+  inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
+  inline auto as_int(double a)  { return std::bit_cast<std::uint64_t>(a); }
 
   template<typename T> inline auto bitinteger(T a) noexcept
   {
