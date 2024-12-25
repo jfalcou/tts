@@ -73,5 +73,5 @@ TTS_CASE( "Check buffer move semantic" )
   TTS_EQUAL(second_copy.size()     , n                      );
   TTS_EQUAL(second_copy.capacity() , n                      );
   TTS_EQUAL(second_copy.end()      , second_copy.begin()+n  );
-  TTS_EQUAL(original.begin()       , ptr                    );
+  TTS_EQUAL(second_copy.begin()    , ptr                    );
 };

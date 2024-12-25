@@ -292,7 +292,7 @@ namespace tts
     }
     text& operator+=(text const& other)
     {
-      text local{"%s%s",data_, other.data_};
+      text local{"%.*s%.*s",size_,data_, other.size_,other.data_};
       swap(local);
       return *this;
     }
@@ -300,7 +300,7 @@ namespace tts
     {
       if(other)
       {
-        text local{"%s%s",data_, other};
+        text local{"%.*s%s",size_,data_, other};
         swap(local);
       }
       return *this;
@@ -598,6 +598,7 @@ namespace tts::_
 #define TTS_MAYBE_STRIP_PARENS_2_I(...)   __VA_ARGS__
 #include <stdlib.h>
 #include <new>
+#include <bit>
 namespace tts::_
 {
   template <typename T>
@@ -609,7 +610,7 @@ namespace tts::_
     {
       if (n > 0)
       {
-        data_ = reinterpret_cast<T*>(malloc(sizeof(T)*n));
+        data_     = reinterpret_cast<T*>(malloc(sizeof(T)*n));
         size_     = n;
         capacity_ = n;
       }
@@ -652,16 +653,14 @@ namespace tts::_
       data_[size_++] = TTS_MOVE(value);
     }
     template <typename... Args>
-    void emplace_back(Args&&... args)
-    {
-      push_back(T(TTS_FWD(args)...));
-    }
+    void emplace_back(Args&&... args) { push_back(T(TTS_FWD(args)...)); }
     decltype(auto) begin() const { return data_; }
     decltype(auto) begin()       { return data_; }
     decltype(auto) end()   const { return data_ + size_; }
     decltype(auto) end()         { return data_ + size_; }
-    std::size_t size() const noexcept { return size_; }
-    std::size_t capacity() const noexcept { return capacity_; }
+    bool        empty() const noexcept    { return size_ == 0;  }
+    std::size_t size() const noexcept     { return size_;       }
+    std::size_t capacity() const noexcept { return capacity_;   }
     void swap(buffer& other)
     {
       std::swap(size_    , other.size_    );
@@ -676,16 +675,13 @@ namespace tts::_
     {
       if (new_capacity > capacity_)
       {
-        std::size_t new_cap = capacity_ == 0 ? 1 : capacity_ * 2;
-        while (new_cap < new_capacity) {
-            new_cap *= 2;
-        }
-        T* new_data = reinterpret_cast<T*>(malloc(sizeof(T)*new_cap));
+        new_capacity = std::bit_ceil(new_capacity);
+        T* new_data = reinterpret_cast<T*>(malloc(sizeof(T)*new_capacity));
         for (std::size_t i = 0; i < size_; ++i)
           new_data[i] = TTS_MOVE(data_[i]);
         free(data_);
         data_ = new_data;
-        capacity_ = new_cap;
+        capacity_ = new_capacity;
       }
     }
   };
@@ -1322,21 +1318,12 @@ TTS_DISABLE_WARNING_POP                                                         
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
-#include <iostream>
-#include <string.h>
 #include <cstdint>
+#include <bit>
 namespace tts::_
 {
-  template<typename To, typename From>
-  requires(sizeof(To) == sizeof(From))
-  To bit_cast(const From& src)
-  {
-    To dst;
-    memcpy(&dst, &src, sizeof(To));
-    return dst;
-  }
-  inline auto as_int(float a)   { return bit_cast<std::uint32_t>(a); }
-  inline auto as_int(double a)  { return bit_cast<std::uint64_t>(a); }
+  inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
+  inline auto as_int(double a)  { return std::bit_cast<std::uint64_t>(a); }
   template<typename T> inline auto bitinteger(T a) noexcept
   {
     auto  ia  = as_int(a);
@@ -1546,6 +1533,102 @@ namespace tts
 #define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__ )
+namespace tts::_
+{
+  template<typename T> constexpr auto size(T const& c) noexcept
+  {
+    if      constexpr( requires{c.size(); }) return c.size();
+    else if constexpr( requires{ size(c); }) return size(c);
+    else
+    {
+      static_assert ( requires{c.size(); } || requires{size(c);}
+                    , "[TTS] Container type must support .size() or ADL size()"
+                    );
+    }
+  }
+  template<typename T> constexpr auto begin(T const& c) noexcept
+  {
+    if      constexpr( requires{c.begin(); }) return c.begin();
+    else if constexpr( requires{ begin(c); }) return begin(c);
+    else
+    {
+      static_assert ( requires{c.begin(); } || requires{begin(c);}
+                    , "[TTS] Container type must support .begin() or ADL begin()"
+                    );
+    }
+  }
+  template<typename T> constexpr auto end(T const& c) noexcept
+  {
+    if      constexpr( requires{c.end(); }) return c.end();
+    else if constexpr( requires{ end(c); }) return end(c);
+    else
+    {
+      static_assert ( requires{c.end(); } || requires{end(c);}
+                    , "[TTS] Container type must support .end() or ADL end()"
+                    );
+    }
+  }
+  template<typename T, typename U> struct failure
+  {
+    std::size_t index;
+    T original;
+    U other;
+  };
+}
+#define TTS_ALL_IMPL(SEQ1,SEQ2,OP,N,UNIT,FAILURE)                                                   \
+[](auto const& local_tts_a, auto const& local_tts_b)                                                \
+{                                                                                                   \
+  if( tts::_::size(local_tts_b) != tts::_::size(local_tts_a) )                                      \
+  {                                                                                                 \
+    FAILURE ( "Expected: %s == %s but found %s elements instead of %s."                             \
+            , TTS_STRING(SEQ1), TTS_STRING(SEQ2)                                                    \
+            , ::tts::as_text(::tts::_::size(local_tts_a)).data()                                    \
+            , ::tts::as_text(::tts::_::size(local_tts_b)).data()                                    \
+            );                                                                                      \
+    return ::tts::_::logger{};                                                                      \
+  }                                                                                                 \
+                                                                                                    \
+  auto ba = tts::_::begin(local_tts_a);                                                             \
+  auto bb = tts::_::begin(local_tts_b);                                                             \
+  auto ea = tts::_::end(local_tts_a);                                                               \
+                                                                                                    \
+  std::size_t i = 0;                                                                                \
+  ::tts::text failures("");                                                                         \
+                                                                                                    \
+  while(ba != ea)                                                                                   \
+  {                                                                                                 \
+    auto local_tts_err = OP(*ba,*bb);                                                               \
+    if( local_tts_err > N )                                                                         \
+    {                                                                                               \
+      failures += ::tts::text ( "      @[%ld] : %s and %s differs by %s %s.\n"                      \
+                              , i++,::tts::as_text(*ba).data(),::tts::as_text(*bb).data()           \
+                              , ::tts::as_text(local_tts_err).data(), UNIT                          \
+                              );                                                                    \
+    }                                                                                               \
+    ba++; bb++;                                                                                     \
+  }                                                                                                 \
+                                                                                                    \
+  if( !failures.is_empty() )                                                                        \
+  {                                                                                                 \
+    FAILURE ( "Expected: %s == %s but found the following errors:\n%s"                              \
+            , TTS_STRING(SEQ1), TTS_STRING(SEQ2)                                                    \
+            , failures.data()                                                                       \
+            );                                                                                      \
+    return ::tts::_::logger{};                                                                      \
+  }                                                                                                 \
+                                                                                                    \
+  ::tts::global_runtime.pass();                                                                     \
+  return ::tts::_::logger{false};                                                                   \
+}(SEQ1, SEQ2)                                                                                       \
+
+#define TTS_ALL(L,R,F,N,U, ...)     TTS_ALL_ ## __VA_ARGS__ (L,R,F,N,U)
+#define TTS_ALL_(L,R,F,N,U)         TTS_ALL_IMPL(L,R,F,N,U,TTS_FAIL)
+#define TTS_ALL_REQUIRED(L,R,F,N,U) TTS_ALL_IMPL(L,R,F,N,U,TTS_FATAL)
+#define TTS_ALL_ABSOLUTE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::absolute_check,N,"unit", __VA_ARGS__ )
+#define TTS_ALL_RELATIVE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::relative_check,N,"%"   , __VA_ARGS__ )
+#define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_check     ,N,"ULP" , __VA_ARGS__ )
+#define TTS_ALL_IEEE_EQUAL(L,R,...)     TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
+#define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
 #include <stdio.h>
 namespace tts::_
 {

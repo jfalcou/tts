@@ -82,7 +82,7 @@ namespace tts
 
     text& operator+=(text const& other)
     {
-      text local{"%s%s",data_, other.data_};
+      text local{"%.*s%.*s",size_,data_, other.size_,other.data_};
       swap(local);
       return *this;
     }
@@ -91,7 +91,7 @@ namespace tts
     {
       if(other)
       {
-        text local{"%s%s",data_, other};
+        text local{"%.*s%s",size_,data_, other};
         swap(local);
       }
       return *this;
