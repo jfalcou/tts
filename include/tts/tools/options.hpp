@@ -15,14 +15,14 @@ namespace tts::_
     option( const char* arg ) : token(arg), position(-1)
     {
       auto it = strchr(arg,'=');
-      position = it ? (it - token) : strlen(token);
+      position = static_cast<int>(it ? (it - token) : strlen(token));
     }
 
     bool has_flag(const char* f) const
     {
       if(position == -1)      return false;
 
-      int len(strlen(f));
+      int len = static_cast<int>(strlen(f));
       if(len > position)  return false;
 
       return strncmp(token,f,position) == 0;
@@ -40,7 +40,7 @@ namespace tts::_
         if constexpr(std::integral<T>)
         {
           decltype(sizeof(void*)) v;
-          n = sscanf(token+position+1, "%ld", &v);
+          n = sscanf(token+position+1, "%zu", &v);
           that = static_cast<T>(v);
         }
         else if constexpr(std::floating_point<T>)
@@ -65,8 +65,8 @@ namespace tts::_
       return that;
     }
 
-    const char* token     = "";
-    int         position  = -1;
+    const char* token    = "";
+    int         position = -1;
   };
 }
 

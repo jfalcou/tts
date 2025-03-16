@@ -106,7 +106,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   }
   catch( ::tts::_::fatal_signal& )
   {
-    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %ld Tests not run\n",nb_tests - done_tests - 1);
+    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
   }
 
   if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);
