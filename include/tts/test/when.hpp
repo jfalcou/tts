@@ -11,7 +11,6 @@
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/text.hpp>
-#include <stdio.h>
 
 namespace tts::_
 {

@@ -8,8 +8,6 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
-#include <stdlib.h>
-#include <new>
 
 namespace tts::_
 {

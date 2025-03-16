@@ -8,7 +8,6 @@
 #pragma once
 
 #include <tts/tools/text.hpp>
-#include <string.h>
 
 namespace tts::_
 {

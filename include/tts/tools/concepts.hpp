@@ -7,8 +7,6 @@
 //======================================================================================================================
 #pragma once
 
-#include <concepts>
-
 namespace tts::_
 {
   template<typename T> concept stream = requires(T& os)

@@ -9,7 +9,6 @@
 
 #include <tts/engine/environment.hpp>
 #include <tts/tools/as_text.hpp>
-#include <stdio.h>
 
 namespace tts::_
 {
