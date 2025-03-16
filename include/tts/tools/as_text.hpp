@@ -7,10 +7,9 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/tools/text.hpp>
 #include <tts/tools/options.hpp>
-#include <tts/tools/typename.hpp>
-#include <type_traits>
-#include <concepts>
+#include <tts/tools/types.hpp>
 
 namespace tts
 {

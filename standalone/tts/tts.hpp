@@ -8,7 +8,18 @@
 #pragma once
 /// Main TTS namespace
 namespace tts {}
+#include <bit>
+#include <cassert>
+#include <concepts>
+#include <cstdint>
+#include <limits>
+#include <new>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <type_traits>
+#include <utility>
 namespace tts::_
 {
   inline constexpr auto usage_text =
@@ -34,7 +45,6 @@ Range specifics Parameters:
     return 0;
   }
 }
-#include <stdio.h>
 namespace tts::_
 {
   struct env
@@ -70,133 +80,6 @@ namespace tts
   inline bool   fatal_error_status  = false;
   inline int report(int fails, int invalids) { return global_runtime.report(fails,invalids); }
 }
-#include <concepts>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-namespace tts::_
-{
-  struct option
-  {
-    option() = default;
-    option( const char* arg ) : token(arg), position(-1)
-    {
-      auto it = strchr(arg,'=');
-      position = it ? (it - token) : strlen(token);
-    }
-    bool has_flag(const char* f) const
-    {
-      if(position == -1)      return false;
-      int len(strlen(f));
-      if(len > position)  return false;
-      return strncmp(token,f,position) == 0;
-    }
-    bool is_valid() const  { return position > 0;  }
-    template<typename T> T get(T const& def = T{}) const
-    {
-      T that = {};
-      if(is_valid())
-      {
-        int n = 0;
-        if constexpr(std::integral<T>)
-        {
-          decltype(sizeof(void*)) v;
-          n = sscanf(token+position+1, "%ld", &v);
-          that = static_cast<T>(v);
-        }
-        else if constexpr(std::floating_point<T>)
-        {
-          double v;
-          n = sscanf(token+position+1, "%lf", &v);
-          that = static_cast<T>(v);
-        }
-        else
-        {
-          n     = 1;
-          that  = T{token+position+1};
-        }
-        if(n!=1) that = def;
-      }
-      else
-      {
-        that = def;
-      }
-      return that;
-    }
-    const char* token     = "";
-    int         position  = -1;
-  };
-}
-namespace tts
-{
-  struct options
-  {
-    bool operator[](const char* f) const
-    {
-      return find(f).is_valid();
-    }
-    template<std::same_as<const char*>... Flags>
-    bool operator()(Flags... fs) const
-    {
-      return find(fs...).is_valid();
-    }
-    template<typename T, std::same_as<const char*>... Flags>
-    T value(Flags... fs) const
-    {
-      T that = {};
-      if( auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
-      return that;
-    }
-    template<typename T, std::same_as<const char*>... Flags>
-    T value(T that, Flags... fs) const
-    {
-      if( auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
-      return that;
-    }
-    bool is_valid() { return argc && argv != nullptr; }
-    int           argc;
-    char const**  argv;
-    private:
-    template<std::same_as<const char*>... Flags> _::option find(Flags... fs) const
-    {
-      const char* flags[] = {fs...};
-      for(int i=1;i<argc;++i)
-      {
-        _::option o(argv[i]);
-        for(auto f : flags)
-        {
-          if( o.has_flag(f) ) return o;
-        }
-      }
-      return _::option{};
-    }
-  };
-}
-namespace tts
-{
-  namespace _
-  {
-    inline options current_arguments = {0,nullptr};
-    inline int     current_seed      = -1;
-    inline bool    is_verbose        = false;
-  }
-  inline void initialize(int argc, const char** argv)
-  {
-    if(!_::current_arguments.is_valid()) _::current_arguments = options{argc,argv};
-  }
-  inline options const& arguments() { return _::current_arguments; }
-  inline int random_seed(int base_seed = -1)
-  {
-    if(_::current_seed == -1)
-    {
-      auto s = arguments().value( base_seed, "--seed" );
-      if(s == -1 ) s = static_cast<int>(time(0));
-      _::current_seed = s;
-    }
-    return _::current_seed;
-  }
-}
-#include <concepts>
 namespace tts::_
 {
   template<typename T> concept stream = requires(T& os)
@@ -229,10 +112,6 @@ namespace tts::_
     { s.end()   };
   };
 }
-#include <utility>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 namespace tts
 {
   struct text
@@ -360,6 +239,128 @@ namespace tts
 }
 namespace tts::_
 {
+  struct option
+  {
+    option() = default;
+    option( const char* arg ) : token(arg), position(-1)
+    {
+      auto it = strchr(arg,'=');
+      position = it ? (it - token) : strlen(token);
+    }
+    bool has_flag(const char* f) const
+    {
+      if(position == -1)      return false;
+      int len(strlen(f));
+      if(len > position)  return false;
+      return strncmp(token,f,position) == 0;
+    }
+    bool is_valid() const  { return position > 0;  }
+    template<typename T> T get(T const& def = T{}) const
+    {
+      T that = {};
+      if(is_valid())
+      {
+        int n = 0;
+        if constexpr(std::integral<T>)
+        {
+          decltype(sizeof(void*)) v;
+          n = sscanf(token+position+1, "%ld", &v);
+          that = static_cast<T>(v);
+        }
+        else if constexpr(std::floating_point<T>)
+        {
+          double v;
+          n = sscanf(token+position+1, "%lf", &v);
+          that = static_cast<T>(v);
+        }
+        else
+        {
+          n     = 1;
+          that  = T{token+position+1};
+        }
+        if(n!=1) that = def;
+      }
+      else
+      {
+        that = def;
+      }
+      return that;
+    }
+    const char* token     = "";
+    int         position  = -1;
+  };
+}
+namespace tts
+{
+  struct options
+  {
+    bool operator[](const char* f) const
+    {
+      return find(f).is_valid();
+    }
+    template<std::same_as<const char*>... Flags>
+    bool operator()(Flags... fs) const
+    {
+      return find(fs...).is_valid();
+    }
+    template<typename T, std::same_as<const char*>... Flags>
+    T value(Flags... fs) const
+    {
+      T that = {};
+      if( auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
+      return that;
+    }
+    template<typename T, std::same_as<const char*>... Flags>
+    T value(T that, Flags... fs) const
+    {
+      if( auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
+      return that;
+    }
+    bool is_valid() { return argc && argv != nullptr; }
+    int           argc;
+    char const**  argv;
+    private:
+    template<std::same_as<const char*>... Flags> _::option find(Flags... fs) const
+    {
+      const char* flags[] = {fs...};
+      for(int i=1;i<argc;++i)
+      {
+        _::option o(argv[i]);
+        for(auto f : flags)
+        {
+          if( o.has_flag(f) ) return o;
+        }
+      }
+      return _::option{};
+    }
+  };
+}
+namespace tts
+{
+  namespace _
+  {
+    inline options current_arguments = {0,nullptr};
+    inline int     current_seed      = -1;
+    inline bool    is_verbose        = false;
+  }
+  inline void initialize(int argc, const char** argv)
+  {
+    if(!_::current_arguments.is_valid()) _::current_arguments = options{argc,argv};
+  }
+  inline options const& arguments() { return _::current_arguments; }
+  inline int random_seed(int base_seed = -1)
+  {
+    if(_::current_seed == -1)
+    {
+      auto s = arguments().value( base_seed, "--seed" );
+      if(s == -1 ) s = static_cast<int>(time(0));
+      _::current_seed = s;
+    }
+    return _::current_seed;
+  }
+}
+namespace tts::_
+{
   template<typename T> struct typename_impl
   {
     private:
@@ -431,8 +432,37 @@ namespace tts
   template<typename T> inline auto constexpr typename_ = _::typename_impl<T>{};
   template<typename T> constexpr auto name(T const&){ return typename_<T>; }
 }
-#include <type_traits>
-#include <concepts>
+namespace tts
+{
+  template<typename... Ts>
+  struct types
+  {
+    template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
+  };
+  template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
+  template<typename T> struct type
+  {
+    friend text to_text(type) { return as_text(typename_<T>); }
+    template<_::stream OS>
+    friend OS& operator<<(OS& os, type const&)
+    {
+      return os << typename_<T>;
+    }
+  };
+  using real_types        = types < double,float>;
+  using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
+  using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
+  using integral_types    = types < std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
+                                  , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
+                                  >;
+  using signed_types      = types < double,float
+                                  , std::int64_t , std::int32_t , std::int16_t , std::int8_t
+                                  >;
+  using arithmetic_types  = types < double,float
+                                  , std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
+                                  , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
+                                  >;
+}
 namespace tts
 {
   template<typename T> text as_text(T e)
@@ -494,7 +524,6 @@ namespace tts
   inline auto as_text(std::nullptr_t)     { return text("nullptr");             }
   inline auto as_text(bool b)             { return text(b ? "true" : "false");  }
 }
-#include <stdio.h>
 namespace tts::_
 {
   struct fatal_signal {};
@@ -522,7 +551,6 @@ namespace tts::_
     bool display, done;
   };
 }
-#include <type_traits>
 namespace tts::_
 {
   template<typename T>    using identity_t = T;
@@ -596,9 +624,6 @@ namespace tts::_
 #define TTS_MAYBE_STRIP_PARENS_1(x)       x
 #define TTS_MAYBE_STRIP_PARENS_2(x)       TTS_APPLY(TTS_MAYBE_STRIP_PARENS_2_I, x)
 #define TTS_MAYBE_STRIP_PARENS_2_I(...)   __VA_ARGS__
-#include <stdlib.h>
-#include <new>
-#include <bit>
 namespace tts::_
 {
   template <typename T>
@@ -675,18 +700,18 @@ namespace tts::_
     {
       if (new_capacity > capacity_)
       {
-        new_capacity = std::bit_ceil(new_capacity);
-        T* new_data = reinterpret_cast<T*>(malloc(sizeof(T)*new_capacity));
+        std::size_t new_cap = capacity_ == 0 ? 1 : capacity_ * 2;
+        while (new_cap < new_capacity) { new_cap *= 2; }
+        T* new_data = reinterpret_cast<T*>(malloc(sizeof(T)*new_cap));
         for (std::size_t i = 0; i < size_; ++i)
           new_data[i] = TTS_MOVE(data_[i]);
         free(data_);
         data_ = new_data;
-        capacity_ = new_capacity;
+        capacity_ = new_cap;
       }
     }
   };
 }
-#include <cassert>
 namespace tts::_
 {
   struct callable
@@ -799,7 +824,6 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   else                               return 0;
 }
 #endif
-#include <string.h>
 namespace tts::_
 {
   class source_location
@@ -873,38 +897,6 @@ namespace tts::_
     ::tts::fatal_error_status = true;                                                                       \
   } while(0)                                                                                                \
 
-#include <cstdint>
-namespace tts
-{
-  template<typename... Ts>
-  struct types
-  {
-    template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
-  };
-  template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
-  template<typename T> struct type
-  {
-    friend text to_text(type) { return as_text(typename_<T>); }
-    template<_::stream OS>
-    friend OS& operator<<(OS& os, type const&)
-    {
-      return os << typename_<T>;
-    }
-  };
-  using real_types        = types < double,float>;
-  using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
-  using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
-  using integral_types    = types < std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
-                                  , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
-                                  >;
-  using signed_types      = types < double,float
-                                  , std::int64_t , std::int32_t , std::int16_t , std::int8_t
-                                  >;
-  using arithmetic_types  = types < double,float
-                                  , std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
-                                  , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
-                                  >;
-}
 namespace tts::_
 {
   struct capture
@@ -1318,8 +1310,6 @@ TTS_DISABLE_WARNING_POP                                                         
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
-#include <cstdint>
-#include <bit>
 namespace tts::_
 {
   inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
@@ -1332,9 +1322,6 @@ namespace tts::_
     return ((ia & mask) == mask) ?  mask-ia : ia;
   }
 }
-#include <type_traits>
-#include <cstdint>
-#include <limits>
 namespace tts
 {
   namespace _
@@ -1629,7 +1616,6 @@ namespace tts::_
 #define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_check     ,N,"ULP" , __VA_ARGS__ )
 #define TTS_ALL_IEEE_EQUAL(L,R,...)     TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
 #define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
-#include <stdio.h>
 namespace tts::_
 {
   struct section_guard

@@ -8,7 +8,6 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
-#include <cassert>
 
 namespace tts::_
 {

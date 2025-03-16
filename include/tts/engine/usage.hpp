@@ -7,8 +7,6 @@
 //======================================================================================================================
 #pragma once
 
-#include <stdio.h>
-
 namespace tts::_
 {
   inline constexpr auto usage_text =
