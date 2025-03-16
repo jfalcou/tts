@@ -20,7 +20,7 @@ namespace tts::_
     {
       int offset = 0;
       auto end = strrchr(file, '/');
-      if(end) offset = end - file + 1;
+      if(end) offset = static_cast<int>(end - file + 1);
 
       source_location that{};
       that.desc_ = text{"[%s:%d]",file+offset,line};

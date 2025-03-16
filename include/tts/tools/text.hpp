@@ -17,7 +17,7 @@ namespace tts
 
     explicit text(const char* ptr) : text()
     {
-      size_ = strlen(ptr);
+      size_ = static_cast<int>(strlen(ptr));
       if(size_)
       {
         data_ = reinterpret_cast<char*>(malloc(size_+1));
