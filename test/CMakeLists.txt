@@ -11,43 +11,46 @@ set(root "${CMAKE_SOURCE_DIR}/test")
 ##======================================================================================================================
 copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  tts-standalone
-                        FILES         fundamental/bitcast.cpp
-                                      fundamental/buffer.cpp
-                                      fundamental/callable.cpp
-                                      fundamental/display.cpp
-                                      #fundamental/text.cpp
-                                      fundamental/main.cpp
+                        FILES         infrastructure/bitcast.cpp
+                                      infrastructure/buffer.cpp
+                                      infrastructure/callable.cpp
+                                      infrastructure/display.cpp
+                                      #infrastructure/text.cpp
+                                      infrastructure/main.cpp
                         ROOT          ${root}
-                        NAME          fundamental.cpp
+                        NAME          infrastructure.basic.cpp
+                      )
+
+copa_make_single_unit ( INTERFACE     tts_test
+                        DEPENDENCIES  tts-standalone
+                        FILES         infrastructure/failure.cpp
+                        ROOT          ${root}
+                        NAME          infrastructure.failure.cpp
                       )
 
 ##======================================================================================================================
 ## Test for TTS tests
 ##======================================================================================================================
-copa_glob_unit( PATTERN "others/*.cpp"
-                QUIET RELATIVE ${root} INTERFACE tts_test DEPENDENCIES fundamental.exe
-              )
-
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  fundamental.exe
+                        DEPENDENCIES  infrastructure.exe
                         FILES         basic/expect.cpp basic/expect_not.cpp basic/main.cpp
                         ROOT          ${root}
-                        NAME          basic.cpp
+                        NAME          tests.basic.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  fundamental.exe
+                        DEPENDENCIES  infrastructure.exe
                         FILES         precision/main.cpp
                                       precision/absolute.cpp
                                       precision/ieee.cpp
                                       precision/relative.cpp
                                       precision/ulp.cpp
                         ROOT          ${root}
-                        NAME          precision.cpp
+                        NAME          tests.precision.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  fundamental.exe
+                        DEPENDENCIES  infrastructure.exe
                         FILES         relation/main.cpp
                                       relation/equal.cpp
                                       relation/greater.cpp
@@ -56,5 +59,10 @@ copa_make_single_unit ( INTERFACE     tts_test
                                       relation/less_equal.cpp
                                       relation/not_equal.cpp
                         ROOT          ${root}
-                        NAME          relation.cpp
+                        NAME          tests.relation.cpp
                       )
+
+copa_glob_unit( PATTERN "tests/*.cpp"
+                RELATIVE ${root} INTERFACE tts_test DEPENDENCIES infrastructure.exe
+              )
+
