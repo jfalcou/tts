@@ -51,9 +51,11 @@ jobs:
       matrix:
         cfg:
         - { compiler: g++     , opts: -O0                                 , linker:                 }
+        - { compiler: g++-14  , opts: -O0                                 , linker:                 }
         - { compiler: clang++ , opts: -O0                                 , linker:                 }
         - { compiler: clang++ , opts: "-O3 -flto -DNDEBUG"                , linker:                 }
         - { compiler: g++     , opts: "-O3 -flto -DNDEBUG"                , linker:                 }
+        - { compiler: g++-14  , opts: "-O3 -flto -DNDEBUG"                , linker:                 }
         - { compiler: clang++ , opts: "-O3 -flto -DNDEBUG -stdlib=libc++" , linker: -stdlib=libc++  }
         - { compiler: clang++ , opts: "-O0 -stdlib=libc++"                , linker: -stdlib=libc++  }
     steps:
