@@ -7,9 +7,9 @@
 //======================================================================================================================
 #pragma once
 
-#include <utility>
+#include <tts/tools/preprocessor.hpp>
 
-namespace tts::detail
+namespace tts::_
 {
   struct callable
   {
@@ -21,42 +21,45 @@ namespace tts::detail
     signature_t cleanup = {}; // Type erased cleanup of payload
     void*       payload = {}; // Function + function state
 
-    constexpr callable() = default;
+    callable(): invoker{nullptr}, cleanup{nullptr}, payload{nullptr} {}
 
     // Copy/transfer the function as the unknown payload holding states
     // We could have have used std::any but you know, compile-time
     template<typename Function>
-    constexpr callable(Function f)
+    callable(Function f)
             : invoker{invoke<Function>}, cleanup{destroy<Function>}
-            , payload{new Function{std::move(f)}}
+            , payload{new Function{TTS_MOVE(f)}}
     {}
 
     constexpr callable(callable&& other) noexcept
-            : invoker{std::move(other.invoker)}, cleanup{std::move(other.cleanup)}
-            , payload{std::move(other.payload)}
+            : invoker{TTS_MOVE(other.invoker)}, cleanup{TTS_MOVE(other.cleanup)}
+            , payload{TTS_MOVE(other.payload)}
     {
-      // Remove payload from other
       other.payload = {};
     }
 
-    // Destroy payload if any
-    ~callable() { cleanup(payload); }
+    ~callable() { if(payload) cleanup(payload); }
 
-    constexpr callable(const callable&)             = delete;
-    constexpr callable& operator=(const callable&)  = delete;
-    constexpr callable& operator=(callable&&)       = delete;
+    callable(const callable&)             = delete;
+    callable& operator=(const callable&)  = delete;
 
-    constexpr void operator()()       { invoker(payload); }
-    constexpr void operator()() const { invoker(payload); }
+    callable& operator=(callable&& other)
+    {
+      payload = TTS_MOVE(other.payload);
+      other.payload = {};
+      invoker = TTS_MOVE(other.invoker);
+      cleanup = TTS_MOVE(other.cleanup);
 
-    explicit constexpr operator bool() const { return payload != nullptr; }
+      return *this;
+    }
+
+    void operator()()       { assert(payload); invoker(payload); }
+    void operator()() const { assert(payload); invoker(payload); }
+
+    explicit operator bool() const { return payload != nullptr; }
 
     private:
-
-    template <typename T>
-    static void invoke(void* data) { (*static_cast<T*>(data))(); }
-
-    template <typename T>
-    static void destroy(void* data) { delete static_cast<T*>(data); }
+    template<typename T> static void invoke(void* data)   { (*static_cast<T*>(data))();   }
+    template<typename T> static void destroy(void* data)  { delete static_cast<T*>(data); }
   };
 }

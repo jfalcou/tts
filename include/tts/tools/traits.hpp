@@ -9,14 +9,10 @@
 
 namespace tts::_
 {
-  inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
-  inline auto as_int(double a)  { return std::bit_cast<std::uint64_t>(a); }
+  // Type identity
+  template<typename T>    using identity_t = T;
 
-  template<typename T> inline auto bitinteger(T a) noexcept
-  {
-    auto  ia  = as_int(a);
-    using r_t = decltype(ia);
-    constexpr auto mask = r_t(1) << (sizeof(r_t)*8-1);
-    return ((ia & mask) == mask) ?  mask-ia : ia;
-  }
+  // Faster declval
+  template<typename, typename = void> extern identity_t<void (*)() noexcept> declval;
+  template<typename T>                extern identity_t<T && (*)() noexcept> declval<T, std::void_t<T&&>>;
 }

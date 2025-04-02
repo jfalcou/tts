@@ -6,6 +6,7 @@
 **/
 //==================================================================================================
 #include <tts/tts.hpp>
+#include <vector>
 
 TTS_CASE( "Check correctness of greater-than comparison tests" )
 {

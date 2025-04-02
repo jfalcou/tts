@@ -8,36 +8,34 @@
 //======================================================================================================================
 #pragma once
 
-#include <tts/test/info.hpp>
+#include <tts/engine/info.hpp>
 #include <tts/tools/preprocessor.hpp>
-#include <tts/engine/precision.hpp>
+#include <tts/tools/precision.hpp>
 #include <tts/engine/logger.hpp>
 
-#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC,FAILURE)                                   \
-[&](auto local_tts_lhs, auto local_tts_rhs)                                                         \
-{                                                                                                   \
-  auto r = FUNC (local_tts_lhs,local_tts_rhs);                                                      \
-                                                                                                    \
-  if(r <= N)                                                                                        \
-  {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                          \
-                            << " but "                                                              \
-                            << ::tts::as_string(local_tts_lhs)                                      \
-                            << " == " << ::tts::as_string(local_tts_rhs)                            \
-                            << " within " << std::setprecision(PREC) << std::fixed                  \
-                            << r << std::defaultfloat                                               \
-                            << " " << UNIT << " when "                                              \
-                            << std::setprecision(PREC) <<  std::fixed                               \
-                            << N << std::defaultfloat                                               \
-                            << " " << UNIT << " was expected."                                      \
-            );                                                                                      \
-    return ::tts::detail::logger{};                                                                 \
-  }                                                                                                 \
-}(LHS,RHS)                                                                                          \
+#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC,FAILURE)                           \
+[&](auto local_tts_a, auto local_tts_b)                                                     \
+{                                                                                           \
+  auto r = FUNC (local_tts_a,local_tts_b);                                                  \
+                                                                                            \
+  if(r <= N)                                                                                \
+  {                                                                                         \
+    TTS_PASS( "Expression: %s == %s within %.*g %s (over %.*g %s)."                         \
+            , TTS_STRING(LHS), TTS_STRING(RHS)                                              \
+            , PREC, r, UNIT, PREC, static_cast<double>(N), UNIT                             \
+            );                                                                              \
+    return ::tts::_::logger{false};                                                         \
+  }                                                                                         \
+  else                                                                                      \
+  {                                                                                         \
+    FAILURE( "Expected: %s == %s but %s == %s within %.*g %s when  %.*g %s were expected."  \
+            , TTS_STRING(LHS), TTS_STRING(RHS)                                              \
+            , ::tts::as_text(local_tts_a).data(), ::tts::as_text(local_tts_b).data()        \
+            , PREC, r, UNIT, PREC, static_cast<double>(N), UNIT                             \
+            );                                                                              \
+    return ::tts::_::logger{};                                                              \
+  }                                                                                         \
+}(LHS,RHS)                                                                                  \
 /**/
 
 #define TTS_PRECISION(L,R,N,U,F,P,...)      TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F,P)
@@ -69,7 +67,7 @@
   @endcode
 **/
 //======================================================================================================================
-#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_distance, 8, __VA_ARGS__ )
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_check, 8, __VA_ARGS__ )
 
 //======================================================================================================================
 /**
@@ -99,7 +97,7 @@
   @endcode
 **/
 //======================================================================================================================
-#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_distance, 8, __VA_ARGS__ )
+#define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_check, 8, __VA_ARGS__ )
 
 //======================================================================================================================
 /**
@@ -141,28 +139,27 @@
   @endcode
 **/
 //======================================================================================================================
-#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_distance     , 2, __VA_ARGS__ )
+#define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_check, 2, __VA_ARGS__ )
 
-
-#define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                         \
-[&](auto local_tts_lhs, auto local_tts_rhs)                                                               \
-{                                                                                                         \
-  if(::tts::is_ieee_equal(local_tts_lhs,local_tts_rhs))                                                   \
-  {                                                                                                       \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                                    \
-  }                                                                                                       \
-  else                                                                                                    \
-  {                                                                                                       \
-    FAILURE ( "Expected: " << TTS_STRING(LHS) << " == " << TTS_STRING(RHS)                                \
-                          << " but "                                                                      \
-                          << ::tts::as_string(local_tts_lhs) << " != " << ::tts::as_string(local_tts_rhs) \
-            );                                                                                            \
-    return ::tts::detail::logger{};                                                                       \
-  }                                                                                                       \
-}(LHS,RHS)                                                                                                \
+#define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                 \
+[&](auto local_tts_a, auto local_tts_b)                                                           \
+{                                                                                                 \
+  if(::tts::ieee_check(local_tts_a,local_tts_b))                                                  \
+  {                                                                                               \
+    TTS_PASS( "Expression: %s == %s.", TTS_STRING(LHS), TTS_STRING(RHS));                         \
+    return ::tts::_::logger{false};                                                               \
+  }                                                                                               \
+  else                                                                                            \
+  {                                                                                               \
+    FAILURE ( "Expression: %s == %s is false because %s != %s.", TTS_STRING(LHS), TTS_STRING(RHS) \
+            , ::tts::as_text(local_tts_a).data(), ::tts::as_text(local_tts_b).data()              \
+            );                                                                                    \
+    return ::tts::_::logger{};                                                                    \
+  }                                                                                               \
+}(LHS,RHS)                                                                                        \
 /**/
 
-#define TTS_DO_IEEE_EQUAL(L,R,...)    TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
+#define TTS_DO_IEEE_EQUAL(L,R,...)      TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
 #define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
 

@@ -8,8 +8,9 @@
 #define TTS_MAIN
 #define TTS_CUSTOM_DRIVER_FUNCTION fail_main
 #include <tts/tts.hpp>
-#include <vector>
+#include <stdexcept>
 #include <list>
+#include <vector>
 
 TTS_CASE( "Invalid test" )                                                     {};
 TTS_CASE_TPL( "Empty invalid template tests", ::tts::arithmetic_types )(auto)  {};
@@ -76,6 +77,5 @@ int main(int argc, char const** argv)
 {
   ::tts::initialize(argc,argv);
   fail_main(argc, argv);
-  std::cout << "Setup seed: " << ::tts::random_seed() << "\n";
   return ::tts::report(23,2);
 }
