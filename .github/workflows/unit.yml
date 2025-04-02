@@ -45,7 +45,7 @@ jobs:
   linux:
     runs-on: [ubuntu-latest]
     container:
-      image: ghcr.io/jfalcou/compilers:v8
+      image: ghcr.io/jfalcou/compilers:v9
     strategy:
       fail-fast: false
       matrix:
@@ -107,7 +107,7 @@ jobs:
   wasm:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/jfalcou/compilers:v8
+      image: ghcr.io/jfalcou/compilers:v9
     strategy:
       fail-fast: false
       matrix:
