@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['basic_2ehpp_0',['basic.hpp',['../basic_8hpp.html',1,'']]],
-  ['between_1',['between',['../structtts_1_1between.html#a06da31624773229dfd590c1abb2a0742',1,'tts::between::between()'],['../structtts_1_1between.html',1,'tts::between&lt; T, U &gt;']]]
+  ['1_200_20phoebe_20daring_0',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md11',1,'']]],
+  ['1_20cadfael_1',['Version 0.1 - Cadfael',['../changelog.html#autotoc_md15',1,'']]],
+  ['1_20cordelia_20gray_2',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md6',1,'']]]
 ];

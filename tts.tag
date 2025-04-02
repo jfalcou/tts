@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<tagfile doxygen_version="1.9.6" doxygen_gitid="4586b5cfaa3d46d51f6a51882951d15644c49edf">
+<tagfile doxygen_version="1.9.8">
   <compound kind="file">
     <name>main.hpp</name>
     <path>tts/engine/</path>
@@ -21,10 +21,51 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>precision.hpp</name>
+    <path>tts/test/</path>
+    <filename>test_2precision_8hpp.html</filename>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_ABSOLUTE_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_af540e2316ab84407390f0b62febfffd1.html</anchorfile>
+      <anchor>af540e2316ab84407390f0b62febfffd1</anchor>
+      <arglist>(L, R, N,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_IEEE_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_aab7ac6c9754243b3103e85283cbd2952.html</anchorfile>
+      <anchor>aab7ac6c9754243b3103e85283cbd2952</anchor>
+      <arglist>(L, R,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_PRECISION_IMPL</name>
+      <anchorfile>test_2precision_8hpp_a2eab6442eade4732846507002c4ee65c.html</anchorfile>
+      <anchor>a2eab6442eade4732846507002c4ee65c</anchor>
+      <arglist>(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_RELATIVE_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_a66fac5cd0984cf9238901308cc60df3e.html</anchorfile>
+      <anchor>a66fac5cd0984cf9238901308cc60df3e</anchor>
+      <arglist>(L, R, N,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_ULP_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_a5813c6197c7af5b0ed77d88ce63592a1.html</anchorfile>
+      <anchor>a5813c6197c7af5b0ed77d88ce63592a1</anchor>
+      <arglist>(L, R, N,...)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>basic.hpp</name>
     <path>tts/test/</path>
     <filename>basic_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" imported="no">tts/test/info.hpp</includes>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
     <member kind="define">
       <type>#define</type>
       <name>TTS_CONSTEXPR_EXPECT</name>
@@ -85,7 +126,7 @@
     <name>exceptions.hpp</name>
     <path>tts/test/</path>
     <filename>exceptions_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" imported="no">tts/test/info.hpp</includes>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
     <member kind="define">
       <type>#define</type>
       <name>TTS_NO_THROW</name>
@@ -135,47 +176,6 @@
     </member>
   </compound>
   <compound kind="file">
-    <name>precision.hpp</name>
-    <path>tts/test/</path>
-    <filename>test_2precision_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" imported="no">tts/test/info.hpp</includes>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_ABSOLUTE_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_af540e2316ab84407390f0b62febfffd1.html</anchorfile>
-      <anchor>af540e2316ab84407390f0b62febfffd1</anchor>
-      <arglist>(L, R, N,...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_IEEE_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_aab7ac6c9754243b3103e85283cbd2952.html</anchorfile>
-      <anchor>aab7ac6c9754243b3103e85283cbd2952</anchor>
-      <arglist>(L, R,...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_PRECISION_IMPL</name>
-      <anchorfile>test_2precision_8hpp_a2eab6442eade4732846507002c4ee65c.html</anchorfile>
-      <anchor>a2eab6442eade4732846507002c4ee65c</anchor>
-      <arglist>(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_RELATIVE_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_a66fac5cd0984cf9238901308cc60df3e.html</anchorfile>
-      <anchor>a66fac5cd0984cf9238901308cc60df3e</anchor>
-      <arglist>(L, R, N,...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_ULP_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_a5813c6197c7af5b0ed77d88ce63592a1.html</anchorfile>
-      <anchor>a5813c6197c7af5b0ed77d88ce63592a1</anchor>
-      <arglist>(L, R, N,...)</arglist>
-    </member>
-  </compound>
-  <compound kind="file">
     <name>ranges.hpp</name>
     <path>tts/test/</path>
     <filename>ranges_8hpp.html</filename>
@@ -188,19 +188,12 @@
       <anchor>a7de5e8bb8cb6f1397f2a0a2505def241</anchor>
       <arglist>(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</arglist>
     </member>
-    <member kind="typedef">
-      <type>prng_generator&lt; T, ::tts::realistic_distribution&lt; T &gt; &gt;</type>
-      <name>realistic_generator</name>
-      <anchorfile>namespacetts_a6c9aa77a32595083fe37d087e4f77cd3.html</anchorfile>
-      <anchor>a6c9aa77a32595083fe37d087e4f77cd3</anchor>
-      <arglist></arglist>
-    </member>
   </compound>
   <compound kind="file">
     <name>relation.hpp</name>
     <path>tts/test/</path>
     <filename>relation_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" imported="no">tts/test/info.hpp</includes>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
     <member kind="define">
       <type>#define</type>
       <name>TTS_CONSTEXPR_EQUAL</name>
@@ -297,7 +290,7 @@
     <name>sequence.hpp</name>
     <path>tts/test/</path>
     <filename>sequence_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" imported="no">tts/test/info.hpp</includes>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
     <namespace>tts</namespace>
     <member kind="define">
       <type>#define</type>
@@ -336,10 +329,30 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>when.hpp</name>
+    <path>tts/test/</path>
+    <filename>when_8hpp.html</filename>
+    <namespace>tts</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_AND_THEN</name>
+      <anchorfile>when_8hpp_a73b1883dce7ec54c87702f8f349d52b3.html</anchorfile>
+      <anchor>a73b1883dce7ec54c87702f8f349d52b3</anchor>
+      <arglist>(...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_WHEN</name>
+      <anchorfile>when_8hpp_a70b895c13fd5ab455fb7c46226fdc6b3.html</anchorfile>
+      <anchor>a70b895c13fd5ab455fb7c46226fdc6b3</anchor>
+      <arglist>(STORY)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>types.hpp</name>
     <path>tts/test/</path>
     <filename>test_2types_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" imported="no">tts/test/info.hpp</includes>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
     <member kind="define">
       <type>#define</type>
       <name>TTS_EXPECT_COMPILES</name>
@@ -367,26 +380,6 @@
       <anchorfile>test_2types_8hpp_ae409fedd6a2e86ff8cc2f9c832dcff3f.html</anchorfile>
       <anchor>ae409fedd6a2e86ff8cc2f9c832dcff3f</anchor>
       <arglist>(TYPE, REF,...)</arglist>
-    </member>
-  </compound>
-  <compound kind="file">
-    <name>when.hpp</name>
-    <path>tts/test/</path>
-    <filename>when_8hpp.html</filename>
-    <namespace>tts</namespace>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_AND_THEN</name>
-      <anchorfile>when_8hpp_a73b1883dce7ec54c87702f8f349d52b3.html</anchorfile>
-      <anchor>a73b1883dce7ec54c87702f8f349d52b3</anchor>
-      <arglist>(...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_WHEN</name>
-      <anchorfile>when_8hpp_a70b895c13fd5ab455fb7c46226fdc6b3.html</anchorfile>
-      <anchor>a70b895c13fd5ab455fb7c46226fdc6b3</anchor>
-      <arglist>(STORY)</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -689,7 +682,6 @@
     <name>changelog</name>
     <title>Change Log</title>
     <filename>changelog.html</filename>
-    <docanchor file="changelog.html">md____w_tts_tts_doc_changelog</docanchor>
   </compound>
   <compound kind="page">
     <name>cli</name>
@@ -708,7 +700,6 @@
     <name>licence</name>
     <title>Licence</title>
     <filename>licence.html</filename>
-    <docanchor file="licence.html">md____w_tts_tts_doc_licence</docanchor>
   </compound>
   <compound kind="page">
     <name>rationale</name>

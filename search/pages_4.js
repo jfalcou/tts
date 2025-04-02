@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['setup_0',['Setup',['../setup.html',1,'']]]
+  ['points_0',['Customization Points',['../customize.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['licence_0',['Licence',['../licence.html',1,'']]]
+  ['interface_0',['Command Line Interface',['../cli.html',1,'']]]
 ];

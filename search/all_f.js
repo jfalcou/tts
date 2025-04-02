@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['value_0',['value',['../structtts_1_1value.html',1,'tts::value&lt; T &gt;'],['../structtts_1_1value.html#a4388c6e795b47f3bc73e37391e7e253f',1,'tts::value::value()'],['../structtts_1_1options.html#a1eb74aee5475f42f8a5f171f0e78e638',1,'tts::options::value(params_t fs, T that={}) const'],['../structtts_1_1options.html#a632aba44edd87aca47e59be9c1d905b7',1,'tts::options::value(const char *f, T that={}) const']]]
+  ['operator_5b_5d_0',['operator[]',['../structtts_1_1options.html#af1698679ae9803ead72ba25d459c772d',1,'tts::options::operator[](params_t fs) const'],['../structtts_1_1options.html#a7bf01d9561af6d9831253e8515e9f3e7',1,'tts::options::operator[](const char *f) const']]],
+  ['options_1',['options',['../cli.html#autotoc_md18',1,'Display Options'],['../structtts_1_1options.html',1,'tts::options']]],
+  ['ordering_2',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]]
 ];
