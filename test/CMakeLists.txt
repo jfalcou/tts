@@ -9,7 +9,7 @@ set(root "${CMAKE_SOURCE_DIR}/test")
 ##======================================================================================================================
 ## Derivative tests
 ##======================================================================================================================
-copa_glob_unit( PATTERN "*.cpp"
+copa_glob_unit( PATTERN "others/*.cpp"
                 QUIET RELATIVE ${root} INTERFACE tts_test DEPENDENCIES tts-standalone
               )
 
