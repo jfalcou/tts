@@ -21,47 +21,6 @@
     </member>
   </compound>
   <compound kind="file">
-    <name>precision.hpp</name>
-    <path>tts/test/</path>
-    <filename>test_2precision_8hpp.html</filename>
-    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_ABSOLUTE_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_af540e2316ab84407390f0b62febfffd1.html</anchorfile>
-      <anchor>af540e2316ab84407390f0b62febfffd1</anchor>
-      <arglist>(L, R, N,...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_IEEE_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_aab7ac6c9754243b3103e85283cbd2952.html</anchorfile>
-      <anchor>aab7ac6c9754243b3103e85283cbd2952</anchor>
-      <arglist>(L, R,...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_PRECISION_IMPL</name>
-      <anchorfile>test_2precision_8hpp_a2eab6442eade4732846507002c4ee65c.html</anchorfile>
-      <anchor>a2eab6442eade4732846507002c4ee65c</anchor>
-      <arglist>(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_RELATIVE_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_a66fac5cd0984cf9238901308cc60df3e.html</anchorfile>
-      <anchor>a66fac5cd0984cf9238901308cc60df3e</anchor>
-      <arglist>(L, R, N,...)</arglist>
-    </member>
-    <member kind="define">
-      <type>#define</type>
-      <name>TTS_ULP_EQUAL</name>
-      <anchorfile>test_2precision_8hpp_a5813c6197c7af5b0ed77d88ce63592a1.html</anchorfile>
-      <anchor>a5813c6197c7af5b0ed77d88ce63592a1</anchor>
-      <arglist>(L, R, N,...)</arglist>
-    </member>
-  </compound>
-  <compound kind="file">
     <name>basic.hpp</name>
     <path>tts/test/</path>
     <filename>basic_8hpp.html</filename>
@@ -173,6 +132,47 @@
       <anchorfile>info_8hpp_aaba95b4d979dd285e0fb78243a807108.html</anchorfile>
       <anchor>aaba95b4d979dd285e0fb78243a807108</anchor>
       <arglist>(Message)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>precision.hpp</name>
+    <path>tts/test/</path>
+    <filename>test_2precision_8hpp.html</filename>
+    <includes id="info_8hpp" name="info.hpp" local="no" import="no" module="no" objc="no">tts/test/info.hpp</includes>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_ABSOLUTE_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_af540e2316ab84407390f0b62febfffd1.html</anchorfile>
+      <anchor>af540e2316ab84407390f0b62febfffd1</anchor>
+      <arglist>(L, R, N,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_IEEE_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_aab7ac6c9754243b3103e85283cbd2952.html</anchorfile>
+      <anchor>aab7ac6c9754243b3103e85283cbd2952</anchor>
+      <arglist>(L, R,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_PRECISION_IMPL</name>
+      <anchorfile>test_2precision_8hpp_a2eab6442eade4732846507002c4ee65c.html</anchorfile>
+      <anchor>a2eab6442eade4732846507002c4ee65c</anchor>
+      <arglist>(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_RELATIVE_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_a66fac5cd0984cf9238901308cc60df3e.html</anchorfile>
+      <anchor>a66fac5cd0984cf9238901308cc60df3e</anchor>
+      <arglist>(L, R, N,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_ULP_EQUAL</name>
+      <anchorfile>test_2precision_8hpp_a5813c6197c7af5b0ed77d88ce63592a1.html</anchorfile>
+      <anchor>a5813c6197c7af5b0ed77d88ce63592a1</anchor>
+      <arglist>(L, R, N,...)</arglist>
     </member>
   </compound>
   <compound kind="file">
