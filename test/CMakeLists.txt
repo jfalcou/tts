@@ -11,58 +11,64 @@ set(root "${CMAKE_SOURCE_DIR}/test")
 ##======================================================================================================================
 copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  tts-standalone
-                        FILES         infrastructure/bitcast.cpp
-                                      infrastructure/buffer.cpp
-                                      infrastructure/callable.cpp
-                                      infrastructure/display.cpp
-                                      #infrastructure/text.cpp
-                                      infrastructure/main.cpp
+                        FILES         unit/infrastructure/bitcast.cpp
+                                      unit/infrastructure/buffer.cpp
+                                      unit/infrastructure/callable.cpp
+                                      unit/infrastructure/display.cpp
+                                      unit/infrastructure/main.cpp
                         ROOT          ${root}
-                        NAME          infrastructure.basic.cpp
+                        NAME          unit.infrastructure.basic.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  tts-standalone
-                        FILES         infrastructure/failure.cpp
+                        FILES         unit/infrastructure/random.cpp
                         ROOT          ${root}
-                        NAME          infrastructure.failure.cpp
+                        NAME          unit.infrastructure.random.cpp
+                      )
+
+copa_make_single_unit ( INTERFACE     tts_test
+                        DEPENDENCIES  tts-standalone
+                        FILES         unit/infrastructure/failure.cpp
+                        ROOT          ${root}
+                        NAME          unit.infrastructure.failure.cpp
                       )
 
 ##======================================================================================================================
 ## Test for TTS tests
 ##======================================================================================================================
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  infrastructure.exe
-                        FILES         basic/expect.cpp basic/expect_not.cpp basic/main.cpp
+                        DEPENDENCIES  unit.infrastructure.exe
+                        FILES         unit/basic/expect.cpp unit/basic/expect_not.cpp unit/basic/main.cpp
                         ROOT          ${root}
-                        NAME          tests.basic.cpp
+                        NAME          unit.basic.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  infrastructure.exe
-                        FILES         precision/main.cpp
-                                      precision/absolute.cpp
-                                      precision/ieee.cpp
-                                      precision/relative.cpp
-                                      precision/ulp.cpp
+                        DEPENDENCIES  unit.infrastructure.exe
+                        FILES         unit/precision/main.cpp
+                                      unit/precision/absolute.cpp
+                                      unit/precision/ieee.cpp
+                                      unit/precision/relative.cpp
+                                      unit/precision/ulp.cpp
                         ROOT          ${root}
-                        NAME          tests.precision.cpp
+                        NAME          unit.precision.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  infrastructure.exe
-                        FILES         relation/main.cpp
-                                      relation/equal.cpp
-                                      relation/greater.cpp
-                                      relation/greater_equal.cpp
-                                      relation/less.cpp
-                                      relation/less_equal.cpp
-                                      relation/not_equal.cpp
+                        DEPENDENCIES  unit.infrastructure.exe
+                        FILES         unit/relation/main.cpp
+                                      unit/relation/equal.cpp
+                                      unit/relation/greater.cpp
+                                      unit/relation/greater_equal.cpp
+                                      unit/relation/less.cpp
+                                      unit/relation/less_equal.cpp
+                                      unit/relation/not_equal.cpp
                         ROOT          ${root}
-                        NAME          tests.relation.cpp
+                        NAME          unit.relation.cpp
                       )
 
-copa_glob_unit( PATTERN "tests/*.cpp"
-                RELATIVE ${root} INTERFACE tts_test DEPENDENCIES infrastructure.exe
+copa_glob_unit( PATTERN "unit/tests/*.cpp"
+                RELATIVE ${root} INTERFACE tts_test DEPENDENCIES unit.infrastructure.exe
               )
 
