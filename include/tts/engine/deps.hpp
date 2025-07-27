@@ -11,11 +11,12 @@
 #include <cassert>
 #include <concepts>
 #include <cstdint>
+#include <cmath>
 #include <limits>
 #include <new>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <time.h>
 #include <type_traits>
 #include <utility>

@@ -21,5 +21,5 @@ namespace tts {}
 #include <tts/test/precision.hpp>
 #include <tts/test/sequence.hpp>
 #include <tts/test/when.hpp>
-// #include <tts/tools/random.hpp>
+#include <tts/tools/random.hpp>
 // #include <tts/test/ranges.hpp>

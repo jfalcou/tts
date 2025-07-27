@@ -12,11 +12,12 @@ namespace tts {}
 #include <cassert>
 #include <concepts>
 #include <cstdint>
+#include <cmath>
 #include <limits>
 #include <new>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <time.h>
 #include <type_traits>
 #include <utility>
@@ -119,7 +120,7 @@ namespace tts
     text() : data_(nullptr), size_(0) {}
     explicit text(const char* ptr) : text()
     {
-      size_ = strlen(ptr);
+      size_ = static_cast<int>(strlen(ptr));
       if(size_)
       {
         data_ = reinterpret_cast<char*>(malloc(size_+1));
@@ -245,12 +246,12 @@ namespace tts::_
     option( const char* arg ) : token(arg), position(-1)
     {
       auto it = strchr(arg,'=');
-      position = it ? (it - token) : strlen(token);
+      position = static_cast<int>(it ? (it - token) : strlen(token));
     }
     bool has_flag(const char* f) const
     {
       if(position == -1)      return false;
-      int len(strlen(f));
+      int len = static_cast<int>(strlen(f));
       if(len > position)  return false;
       return strncmp(token,f,position) == 0;
     }
@@ -264,7 +265,7 @@ namespace tts::_
         if constexpr(std::integral<T>)
         {
           decltype(sizeof(void*)) v;
-          n = sscanf(token+position+1, "%ld", &v);
+          n = sscanf(token+position+1, "%zu", &v);
           that = static_cast<T>(v);
         }
         else if constexpr(std::floating_point<T>)
@@ -286,8 +287,8 @@ namespace tts::_
       }
       return that;
     }
-    const char* token     = "";
-    int         position  = -1;
+    const char* token    = "";
+    int         position = -1;
   };
 }
 namespace tts
@@ -789,6 +790,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   ::tts::initialize(argc,argv);
   if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
+  srand(tts::_::current_seed);
   ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
   auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
@@ -818,7 +820,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   }
   catch( ::tts::_::fatal_signal& )
   {
-    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %ld Tests not run\n",nb_tests - done_tests - 1);
+    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
   }
   if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);
   else                               return 0;
@@ -835,7 +837,7 @@ namespace tts::_
     {
       int offset = 0;
       auto end = strrchr(file, '/');
-      if(end) offset = end - file + 1;
+      if(end) offset = static_cast<int>(end - file + 1);
       source_location that{};
       that.desc_ = text{"[%s:%d]",file+offset,line};
       return that;
@@ -1335,8 +1337,9 @@ namespace tts
       constexpr auto isinf(auto x)              { return !isnan(x) && isnan(x - x); };
       constexpr auto isunordered(auto x,auto y) { return  isnan(x) || isnan(y);     };
     #endif
+      constexpr auto min(auto x, auto y) { return x<y ?  x : y;  };
       constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
-      constexpr auto abs(auto x)         { return x<0 ? -x :x;      };
+      constexpr auto abs(auto x)         { return x<0 ? -x : x;  };
       constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
   }
   template<typename T, typename U> inline double absolute_check(T const &a, U const &b)
@@ -1657,3 +1660,65 @@ TTS_DISABLE_WARNING_SHADOW                                                      
 TTS_DISABLE_WARNING_POP                                                                             \
 
 #define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
+namespace tts
+{
+  namespace _
+  {
+    template<std::integral T> T roll(T M, T N) { return M + rand() / (RAND_MAX / (N - M + 1) + 1); }
+    template<std::floating_point T> T roll(T M, T N)
+    {
+      double base = static_cast<double>((rand() * (N-M)));
+      return static_cast<T>(M + base / static_cast<double>(RAND_MAX));
+    }
+    template<typename T> T exp10(T a) { return exp(log(T(10))*a); }
+    template<std::integral T> T roll_random(T mini, T maxi)
+    {
+      return _::roll(mini, maxi);
+    }
+    template<std::floating_point T> T roll_random(T mini, T maxi)
+    {
+      constexpr T smvlp  = std::numeric_limits<T>::min();
+      constexpr T valmax = std::numeric_limits<T>::max();
+      constexpr T eps    = std::numeric_limits<T>::epsilon();
+      constexpr T nan    = std::numeric_limits<T>::quiet_NaN();
+      if (mini ==    0) mini =  smvlp;
+      if (isinf(maxi) && maxi > 0) maxi =  valmax;
+      if (isinf(mini) && mini < 0) maxi =  valmax;
+      if (maxi ==    0) maxi = -smvlp;
+      T value = {};
+      if(mini < 0 && maxi > 0)
+      {
+        auto amn  = _::abs(mini);
+        auto amx  = _::abs(maxi);
+        auto lamn = log10(amn);
+        auto lamx = log10(amx);
+        auto s    = _::roll(T{0},amx+amn) < amx;
+        if      (lamn >= 0 && log10(amx)  >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
+        else if (lamn <= 0 && lamx        <=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
+        else if (lamn <= 0 && lamx        >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
+        else if (lamn >= 0 && lamx        <=  0)  return s ?  roll_random(smvlp, -mini) : -roll_random(smvlp, maxi);
+        else                                      return nan;
+      }
+      else
+      {
+        if (mini > 0)
+        {
+          if (mini < 1 && maxi >  1) mini = _::max(T(1)/std::sqrt(maxi), mini);
+          mini = (maxi == 1) ? eps : mini;
+          value = _::exp10(_::roll(log10(mini), log10(maxi)));
+        }
+        else if (maxi < 0)
+        {
+          if (mini < -1 && maxi > -1) maxi = _::min(T(1)/std::sqrt(mini), maxi);
+          maxi = (mini == -1) ? -eps : maxi;
+          value= -_::exp10(_::roll(log10(-maxi), log10(-mini)));
+        }
+        return value;
+      }
+    }
+  }
+  template<typename T> T random_value(T mini, T maxi)
+  {
+    return _::roll_random(mini,maxi);
+  }
+}

@@ -201,7 +201,7 @@ namespace tts
   /*! @brief Initialize the random seed for tests
 
       @param base_seed  Seed to use for random number generations. If not provided, the seed provided by the `--seed`
-                        command lien argument will be used. If none is provided, the seed will be computed from the
+                        command line argument will be used. If none is provided, the seed will be computed from the
                         current elapsed time.
   **/
   //====================================================================================================================

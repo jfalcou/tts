@@ -73,6 +73,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
 
+  srand(tts::_::current_seed);
   ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
 
   auto nb_tests = ::tts::_::suite().size();
