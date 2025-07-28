@@ -116,7 +116,7 @@ namespace tts
     }
     else
     {
-      return text("[%s]@(%p)", as_text(typename_<T>).data() ,(void*)(&e));
+      return text("%s", as_text(typename_<T>).data() ,(void*)(&e));
     }
   }
 

@@ -45,12 +45,9 @@ namespace tts
       return that;
     }
 
-    static void display(std::array<X,4> const& v, std::ostream& os) noexcept
+    static void display(std::array<X,4> const& v) noexcept
     {
-      os << "[";
-      for(auto const& e : v)
-        std::cout << tts::as_string(e) << " ";
-      os << "]";
+      printf("%s",as_text(v).data());
     }
   };
 }

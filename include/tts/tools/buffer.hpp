@@ -27,6 +27,11 @@ namespace tts::_
       }
     }
 
+    buffer(std::size_t n, T val) : buffer(n)
+    {
+      for(std::size_t i=0;i<n;++i) data_[i] = val;
+    }
+
     ~buffer()
     {
       if(data_)
@@ -73,6 +78,12 @@ namespace tts::_
 
     template <typename... Args>
     void emplace_back(Args&&... args) { push_back(T(TTS_FWD(args)...)); }
+
+    T   operator[](std::size_t i) const { return data_[i]; }
+    T&  operator[](std::size_t i)       { return data_[i]; }
+
+    T const*  data() const { return data_; }
+    T*        data()       { return data_; }
 
     decltype(auto) begin() const { return data_; }
     decltype(auto) begin()       { return data_; }

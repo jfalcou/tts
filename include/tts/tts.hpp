@@ -22,4 +22,4 @@ namespace tts {}
 #include <tts/test/sequence.hpp>
 #include <tts/test/when.hpp>
 #include <tts/tools/random.hpp>
-// #include <tts/test/ranges.hpp>
+#include <tts/test/ranges.hpp>
