@@ -62,11 +62,11 @@ namespace tts::_
       auto inv_txt  = invalid_count > 1 ? "s"  : "";
       auto passes   = (fails || invalids) ?  0 : test_count;
       puts("----------------------------------------------------------------");
-      printf("Results: %d test%s - %d/%d success%s - %d/%d failure%s - %d/%d invalid%s\n"
+      printf("Results: %d test%s - %d/%d (%2.2f%%) success%s - %d/%d (%2.2f%%) failure%s - %d/%d (%2.2f%%) invalid%s\n"
             , test_count, test_txt
-            , success_count, passes, pass_txt
-            , failure_count, fails , fail_txt
-            , invalid_count, invalids, inv_txt
+            , success_count, passes  , 100.f*success_count/static_cast<float>(test_count), pass_txt
+            , failure_count, fails   , 100.f*failure_count/static_cast<float>(test_count), fail_txt
+            , invalid_count, invalids, 100.f*invalid_count/static_cast<float>(test_count), inv_txt
             );
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else                    return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
