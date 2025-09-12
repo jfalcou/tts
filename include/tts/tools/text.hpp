@@ -8,6 +8,10 @@
 #pragma once
 
 #include <tts/tools/concepts.hpp>
+#include <tts/tools/preprocessor.hpp>
+
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
 
 namespace tts
 {
@@ -156,3 +160,5 @@ namespace tts
     return that += rhs;
   }
 }
+
+TTS_DISABLE_WARNING_POP

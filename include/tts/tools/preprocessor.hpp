@@ -23,16 +23,19 @@
   #define TTS_DISABLE_WARNING_POP            __pragma(warning( pop ))
   #define TTS_DISABLE_WARNING(warningNumber) __pragma(warning( disable : warningNumber ))
   #define TTS_DISABLE_WARNING_SHADOW
+  #define TTS_DISABLE_WARNING_CRT_SECURE     __pragma(warning( disable : 4996 ))
 #elif defined(__GNUC__) || defined(__clang__)
   #define TTS_DO_PRAGMA(X)                    _Pragma(#X)
   #define TTS_DISABLE_WARNING_PUSH            TTS_DO_PRAGMA(GCC diagnostic push)
   #define TTS_DISABLE_WARNING_POP             TTS_DO_PRAGMA(GCC diagnostic pop)
   #define TTS_DISABLE_WARNING(warningName)    TTS_DO_PRAGMA(GCC diagnostic ignored #warningName)
   #define TTS_DISABLE_WARNING_SHADOW          TTS_DISABLE_WARNING(-Wshadow)
+  #define TTS_DISABLE_WARNING_CRT_SECURE
 #else
   #define TTS_DISABLE_WARNING_PUSH
   #define TTS_DISABLE_WARNING_POP
   #define TTS_DISABLE_WARNING_SHADOW
+  #define TTS_DISABLE_WARNING_CRT_SECURE
 #endif
 
 //======================================================================================================================
