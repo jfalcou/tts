@@ -63,7 +63,7 @@ namespace tts
     @return An instance of @ref tts::text containing a representation of the value of e
   **/
   //====================================================================================================================
-  template<typename T> text as_text(T e)
+  template<typename T> text as_text(T const& e)
   {
     if      constexpr( requires{ to_text(e); } )
     {
