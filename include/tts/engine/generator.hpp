@@ -227,7 +227,7 @@ namespace tts
       auto w1   = as_value<D>(first);
       auto w2   = as_value<D>(last);
       auto step = (sz-1) ? (w2-w1)/(sz-1) : 0;
-      return std::min( as_value<D>(w1 + idx*step), w2);
+      return _::min( as_value<D>(w1 + idx*step), w2);
     }
 
     T first;
