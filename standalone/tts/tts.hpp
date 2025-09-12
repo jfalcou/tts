@@ -1223,7 +1223,7 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
-[&]()                                                                                               \
+do                                                                                                  \
 {                                                                                                   \
   constexpr auto local_tts_expr = EXPR;                                                             \
   if constexpr( local_tts_expr )                                                                    \
@@ -1236,13 +1236,13 @@ namespace tts::_
     FAILURE ( "Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) ); \
     return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
-}()                                                                                                 \
+}while(0)                                                                                           \
 
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
-[&]()                                                                                               \
+do                                                                                                  \
 {                                                                                                   \
   constexpr auto local_tts_expr = EXPR;                                                             \
   if constexpr( !local_tts_expr )                                                                   \
@@ -1255,7 +1255,7 @@ namespace tts::_
     FAILURE ( "Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );  \
     return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
-}()                                                                                                 \
+}while(0)                                                                                           \
 
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                            \
 [&]()                                                                                       \
