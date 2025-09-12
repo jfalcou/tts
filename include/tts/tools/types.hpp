@@ -26,6 +26,27 @@ namespace tts
   /// Concatenate types lists
   template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
 
+  template<typename... T> struct as_type_list
+  {
+    using type = types<T...>;
+  };
+
+  template<typename... T>
+  struct as_type_list<types<T...>>
+  {
+    using type = types<T...>;
+  };
+
+  template<typename T>
+  requires requires(T) { typename T::types_list; }
+  struct as_type_list<T>
+  {
+    using type = typename T::types_list;
+  };
+
+  template<typename... T>
+  using as_type_list_t = typename as_type_list<T...>::type;
+
   //====================================================================================================================
   //! @brief Type wrapper
   //!

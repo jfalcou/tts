@@ -441,6 +441,23 @@ namespace tts
     template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
   };
   template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
+  template<typename... T> struct as_type_list
+  {
+    using type = types<T...>;
+  };
+  template<typename... T>
+  struct as_type_list<types<T...>>
+  {
+    using type = types<T...>;
+  };
+  template<typename T>
+  requires requires(T) { typename T::types_list; }
+  struct as_type_list<T>
+  {
+    using type = typename T::types_list;
+  };
+  template<typename... T>
+  using as_type_list_t = typename as_type_list<T...>::type;
   template<typename T> struct type
   {
     friend text to_text(type) { return as_text(typename_<T>); }
@@ -909,6 +926,180 @@ namespace tts::_
 
 namespace tts::_
 {
+  inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
+  inline auto as_int(double a)  { return std::bit_cast<std::uint64_t>(a); }
+  template<typename T> inline auto bitinteger(T a) noexcept
+  {
+    auto  ia  = as_int(a);
+    using r_t = decltype(ia);
+    constexpr auto mask = r_t(1) << (sizeof(r_t)*8-1);
+    return ((ia & mask) == mask) ?  mask-ia : ia;
+  }
+}
+namespace tts::_
+{
+  #if defined(__FAST_MATH__)
+    constexpr auto isnan(auto)            { return false; };
+    constexpr auto isinf(auto)            { return false; };
+    constexpr auto isunordered(auto,auto) { return false; };
+  #else
+    constexpr auto isnan(auto x)              { return x != x;                    };
+    constexpr auto isinf(auto x)              { return !isnan(x) && isnan(x - x); };
+    constexpr auto isunordered(auto x,auto y) { return  isnan(x) || isnan(y);     };
+  #endif
+    constexpr auto min(auto x, auto y) { return x<y ?  x : y;  };
+    constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
+    constexpr auto abs(auto x)         { return x<0 ? -x : x;  };
+    constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
+}
+namespace tts
+{
+  namespace _
+  {
+    template<std::integral T> T roll(T M, T N) { return M + rand() / (RAND_MAX / (N - M + 1) + 1); }
+    template<std::floating_point T> T roll(T M, T N)
+    {
+      double base = static_cast<double>((rand() * (N-M)));
+      return static_cast<T>(M + base / static_cast<double>(RAND_MAX));
+    }
+    template<typename T> T exp10(T a) { return exp(log(T(10))*a); }
+    template<std::integral T> T roll_random(T mini, T maxi)
+    {
+      return _::roll(mini, maxi);
+    }
+    template<std::floating_point T> T roll_random(T mini, T maxi)
+    {
+      constexpr T smvlp  = std::numeric_limits<T>::min();
+      constexpr T valmax = std::numeric_limits<T>::max();
+      constexpr T eps    = std::numeric_limits<T>::epsilon();
+      constexpr T nan    = std::numeric_limits<T>::quiet_NaN();
+      if (mini ==    0) mini =  smvlp;
+      if (isinf(maxi) && maxi > 0) maxi =  valmax;
+      if (isinf(mini) && mini < 0) maxi =  valmax;
+      if (maxi ==    0) maxi = -smvlp;
+      T value = {};
+      if(mini < 0 && maxi > 0)
+      {
+        auto amn  = _::abs(mini);
+        auto amx  = _::abs(maxi);
+        auto lamn = log10(amn);
+        auto lamx = log10(amx);
+        auto s    = _::roll(T{0},amx+amn) < amx;
+        if      (lamn >= 0 && log10(amx)  >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
+        else if (lamn <= 0 && lamx        <=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
+        else if (lamn <= 0 && lamx        >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
+        else if (lamn >= 0 && lamx        <=  0)  return s ?  roll_random(smvlp, -mini) : -roll_random(smvlp, maxi);
+        else                                      return nan;
+      }
+      else
+      {
+        if (mini > 0)
+        {
+          if (mini < 1 && maxi >  1) mini = _::max(T(1)/std::sqrt(maxi), mini);
+          mini = (maxi == 1) ? eps : mini;
+          value = _::exp10(_::roll(log10(mini), log10(maxi)));
+        }
+        else if (maxi < 0)
+        {
+          if (mini < -1 && maxi > -1) maxi = _::min(T(1)/std::sqrt(mini), maxi);
+          maxi = (mini == -1) ? -eps : maxi;
+          value= -_::exp10(_::roll(log10(-maxi), log10(-mini)));
+        }
+        return value;
+      }
+    }
+  }
+  template<typename T> T random_value(T mini, T maxi)
+  {
+    return _::roll_random(mini,maxi);
+  }
+}
+#include <tuple>
+namespace tts
+{
+  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+  template<tts::_::sequence Seq, typename U> struct rebuild;
+  template<template<class,class...> class Seq, typename T, typename... S, typename U>
+  struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
+  template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
+  struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
+  template<typename T> auto produce(type<T> const& t, auto g, auto... others)
+  {
+    return g(t,others...);
+  }
+  template<tts::_::sequence T>
+  auto produce(type<T> const&, auto g, auto... args)
+  {
+    using elmt_type   = std::remove_cvref_t<decltype(*begin(std::declval<T>()))>;
+    using value_type  = decltype(g(tts::type<elmt_type>{},0,0ULL,args...));
+    typename rebuild<T,value_type>::type that;
+    auto b = begin(that);
+    auto e = end(that);
+    auto sz = e - b;
+    for(std::ptrdiff_t i=0;i<sz;++i)
+    {
+      *b++ = as_value<value_type>(g(tts::type<value_type>{},i,sz,args...));
+    }
+    return that;
+  }
+  template<typename T> struct value
+  {
+    constexpr value(T v) : seed(v) {}
+    template<typename U>
+    auto operator()(tts::type<U>, auto...) const { return as_value<U>(seed); }
+    T seed;
+  };
+  template<typename T, typename U = T> struct ramp
+  {
+    constexpr ramp(T s)       : start(s), step(1)   {}
+    constexpr ramp(T s, U st) : start(s), step(st)  {}
+    template<typename D>
+    auto operator()(tts::type<D>) const { return as_value<D>(start); }
+    template<typename D>
+    auto operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start+idx*step); }
+    T start;
+    U step;
+  };
+  template<typename T, typename U = T> struct reverse_ramp
+  {
+    constexpr reverse_ramp(T s)       : start(s), step(1)   {}
+    constexpr reverse_ramp(T s, U st) : start(s), step(st)  {}
+    template<typename D>
+    auto operator()(tts::type<D>) const { return as_value<D>(start); }
+    template<typename D>
+    auto operator()(tts::type<D>, auto idx, auto sz, auto...) const { return as_value<D>(start+(sz-1-idx)*step); }
+    T start;
+    U step;
+  };
+  template<typename T, typename U = T> struct between
+  {
+    constexpr between(T s, U st) : first(s), last(st)  {}
+    template<typename D>
+    auto operator()(tts::type<D>) const { return as_value<D>(first); }
+    template<typename D>
+    auto operator()(tts::type<D>, auto idx, auto sz, auto...) const
+    {
+      auto w1   = as_value<D>(first);
+      auto w2   = as_value<D>(last);
+      auto step = (sz-1) ? (w2-w1)/(sz-1) : 0;
+      return std::min( as_value<D>(w1 + idx*step), w2);
+    }
+    T first;
+    U last;
+  };
+  template<typename Mx, typename Mn> struct randoms
+  {
+    constexpr randoms(Mn mn, Mx mx)  : mini(mn), maxi(mx)  {}
+    template<typename D> auto operator()(tts::type<D>, auto...)
+    {
+      return random_value(as_value<D>(mini), as_value<D>(maxi));
+    }
+    Mn mini;
+    Mx maxi;
+  };
+}
+namespace tts::_
+{
   struct capture
   {
     capture(const char* id) : name(id) {}
@@ -948,6 +1139,40 @@ namespace tts::_
 #define TTS_CASE(ID) [[maybe_unused]] static auto const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::capture{ID} + []()
 #define TTS_CASE_TPL(ID,...)                                                                                            \
 [[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::captures<__VA_ARGS__>{ID} + []               \
+
+namespace tts::_
+{
+  template<typename Types, auto... Generators> struct test_generators;
+  template<typename... Type,auto... Generators>
+  struct test_generators<types<Type...>, Generators...>
+  {
+    test_generators(const char* id) : name(id) {}
+    friend auto operator<<(test_generators tg, auto body)
+    {
+      return test::acknowledge( { tg.name
+                                , [body]() mutable
+                                  {
+                                    (process_type<Type>(body), ...);
+                                    current_type = text{""};
+                                  }
+                                }
+                              );
+    }
+    template<typename T>
+    static void process_type(auto body)
+    {
+      current_type = as_text(typename_<T>);
+      if(::tts::_::is_verbose) printf(">  With <T = %s>\n", current_type.data());
+      (body(produce(type<T>{},Generators)...));
+    }
+    const char* name;
+  };
+}
+#define TTS_CASE_WITH(ID, TYPES, ...)                                                                         \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                \
+                                 = ::tts::_::test_generators< ::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)> \
+                                                            , __VA_ARGS__                                     \
+                                                            >{ID} << []                                       \
 
 #define TTS_EXPECT(EXPR, ...)     TTS_EXPECT_ ## __VA_ARGS__ ( EXPR )
 #define TTS_EXPECT_(EXPR)         TTS_EXPECT_IMPL((EXPR),TTS_FAIL)
@@ -1320,36 +1545,8 @@ TTS_DISABLE_WARNING_POP                                                         
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
-namespace tts::_
-{
-  inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
-  inline auto as_int(double a)  { return std::bit_cast<std::uint64_t>(a); }
-  template<typename T> inline auto bitinteger(T a) noexcept
-  {
-    auto  ia  = as_int(a);
-    using r_t = decltype(ia);
-    constexpr auto mask = r_t(1) << (sizeof(r_t)*8-1);
-    return ((ia & mask) == mask) ?  mask-ia : ia;
-  }
-}
 namespace tts
 {
-  namespace _
-  {
-    #if defined(__FAST_MATH__)
-      constexpr auto isnan(auto)            { return false; };
-      constexpr auto isinf(auto)            { return false; };
-      constexpr auto isunordered(auto,auto) { return false; };
-    #else
-      constexpr auto isnan(auto x)              { return x != x;                    };
-      constexpr auto isinf(auto x)              { return !isnan(x) && isnan(x - x); };
-      constexpr auto isunordered(auto x,auto y) { return  isnan(x) || isnan(y);     };
-    #endif
-      constexpr auto min(auto x, auto y) { return x<y ?  x : y;  };
-      constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
-      constexpr auto abs(auto x)         { return x<0 ? -x : x;  };
-      constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
-  }
   template<typename T, typename U> inline double absolute_check(T const &a, U const &b)
   {
     if constexpr( requires { absolute_distance(a,b); }) return absolute_distance(a,b);
@@ -1668,68 +1865,6 @@ TTS_DISABLE_WARNING_SHADOW                                                      
 TTS_DISABLE_WARNING_POP                                                                             \
 
 #define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
-namespace tts
-{
-  namespace _
-  {
-    template<std::integral T> T roll(T M, T N) { return M + rand() / (RAND_MAX / (N - M + 1) + 1); }
-    template<std::floating_point T> T roll(T M, T N)
-    {
-      double base = static_cast<double>((rand() * (N-M)));
-      return static_cast<T>(M + base / static_cast<double>(RAND_MAX));
-    }
-    template<typename T> T exp10(T a) { return exp(log(T(10))*a); }
-    template<std::integral T> T roll_random(T mini, T maxi)
-    {
-      return _::roll(mini, maxi);
-    }
-    template<std::floating_point T> T roll_random(T mini, T maxi)
-    {
-      constexpr T smvlp  = std::numeric_limits<T>::min();
-      constexpr T valmax = std::numeric_limits<T>::max();
-      constexpr T eps    = std::numeric_limits<T>::epsilon();
-      constexpr T nan    = std::numeric_limits<T>::quiet_NaN();
-      if (mini ==    0) mini =  smvlp;
-      if (isinf(maxi) && maxi > 0) maxi =  valmax;
-      if (isinf(mini) && mini < 0) maxi =  valmax;
-      if (maxi ==    0) maxi = -smvlp;
-      T value = {};
-      if(mini < 0 && maxi > 0)
-      {
-        auto amn  = _::abs(mini);
-        auto amx  = _::abs(maxi);
-        auto lamn = log10(amn);
-        auto lamx = log10(amx);
-        auto s    = _::roll(T{0},amx+amn) < amx;
-        if      (lamn >= 0 && log10(amx)  >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
-        else if (lamn <= 0 && lamx        <=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
-        else if (lamn <= 0 && lamx        >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
-        else if (lamn >= 0 && lamx        <=  0)  return s ?  roll_random(smvlp, -mini) : -roll_random(smvlp, maxi);
-        else                                      return nan;
-      }
-      else
-      {
-        if (mini > 0)
-        {
-          if (mini < 1 && maxi >  1) mini = _::max(T(1)/std::sqrt(maxi), mini);
-          mini = (maxi == 1) ? eps : mini;
-          value = _::exp10(_::roll(log10(mini), log10(maxi)));
-        }
-        else if (maxi < 0)
-        {
-          if (mini < -1 && maxi > -1) maxi = _::min(T(1)/std::sqrt(mini), maxi);
-          maxi = (mini == -1) ? -eps : maxi;
-          value= -_::exp10(_::roll(log10(-maxi), log10(-mini)));
-        }
-        return value;
-      }
-    }
-  }
-  template<typename T> T random_value(T mini, T maxi)
-  {
-    return _::roll_random(mini,maxi);
-  }
-}
 namespace tts
 {
   template<typename Base> struct adapter

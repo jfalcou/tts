@@ -9,6 +9,7 @@
 
 #include <tts/engine/info.hpp>
 #include <tts/engine/test.hpp>
+#include <tts/engine/generator.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/types.hpp>
@@ -153,4 +154,85 @@ namespace tts::_
 //======================================================================================================================
 #define TTS_CASE_TPL(ID,...)                                                                                            \
 [[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::captures<__VA_ARGS__>{ID} + []               \
+/**/
+
+namespace tts::_
+{
+  template<typename Types, auto... Generators> struct test_generators;
+
+  template<typename... Type,auto... Generators>
+  struct test_generators<types<Type...>, Generators...>
+  {
+    test_generators(const char* id) : name(id) {}
+    friend auto operator<<(test_generators tg, auto body)
+    {
+      return test::acknowledge( { tg.name
+                                , [body]() mutable
+                                  {
+                                    (process_type<Type>(body), ...);
+                                    current_type = text{""};
+                                  }
+                                }
+                              );
+    }
+
+    template<typename T>
+    static void process_type(auto body)
+    {
+      current_type = as_text(typename_<T>);
+      if(::tts::_::is_verbose) printf(">  With <T = %s>\n", current_type.data());
+      (body(produce(type<T>{},Generators)...));
+    }
+    const char* name;
+  };
+}
+
+//======================================================================================================================
+/**
+  @def TTS_CASE_WITH
+  @brief Introduces a template test case providing dynamically generated data to the test code.
+
+  The following code block will contain tests parametrized by a template type of your choice passed
+  as lambda function parameters and generated for each type in the types list.
+
+  Such types list can be provided as:
+    + a parenthesised list of types separated by comma.
+    + an instance of the tts::types template class.
+    + an instance of a Type Generator, ie a type exposing a public `types_list` type definition
+
+  Test cases performing no actual tests will be reported as invalid.
+
+  @param ID         A literal string describing the scenario intents.
+  @param TYPES      Lists of types to generate the test case from.
+  @param GENERATOR  A generator function
+
+  @groupheader{Example}
+
+  @code
+  #define TTS_MAIN
+  #include <tts/tts.hpp>
+
+  TTS_CASE_WITH ( "Check behavior for scalar types"
+                , (tts::types<float, double>)
+                , tts::value{37}, tts::between{0,100}, tts::randoms{0.,10.}
+                )
+  (auto v, auto b, auto const& r)
+  {
+    TTS_EQUAL(v, 37);
+
+    TTS_GREATER_EQUAL(b,   0);
+    TTS_LESS_EQUAL   (b, 100);
+
+    TTS_GREATER_EQUAL(r,  0);
+    TTS_LESS_EQUAL   (r, 10);
+  };
+  @endcode
+
+**/
+//======================================================================================================================
+#define TTS_CASE_WITH(ID, TYPES, ...)                                                                         \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                \
+                                 = ::tts::_::test_generators< ::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)> \
+                                                            , __VA_ARGS__                                     \
+                                                            >{ID} << []                                       \
 /**/
