@@ -73,9 +73,9 @@ namespace tts
     }
 
     template<typename U,  typename R, typename V>
-    void results( U ulp, std::size_t count, R ratio, auto desc, V const& v)
+    void results( U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
-      if(ulp!=-1) printf("%-16.1f%-16lu%-16g%s", ulp, count, ratio, desc);
+      if(ulp!=-1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
       else        printf("%*s", static_cast<int>(48+strlen(desc)),desc);
       adapter<V>::display(v);
       printf("\n");
@@ -112,7 +112,7 @@ namespace tts
     double max_ulp = 0.;
     std::size_t nb_buckets  = 2+1+16;
     std::size_t nb_ulps     = 0;
-    _::buffer<std::size_t> ulp_map(nb_buckets,0);
+    _::buffer<unsigned int> ulp_map(nb_buckets,0);
 
     _::buffer<_::histogram_entry<NewType,nout_type>> samples(nb_buckets, {false,{},{},{}});
 
