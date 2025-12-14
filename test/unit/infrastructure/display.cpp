@@ -114,5 +114,10 @@ struct payload
 TTS_CASE( "Check display of unknown type" )
 {
   payload p{1.5,  0xAABBCCDD,0x11223344};
+
+#if defined(_MSC_VER) && ! defined(__clang__)
+  TTS_EQUAL(tts::as_text( p ), "struct payload: [ 00 00 00 00 00 00 F8 3F DD CC BB AA 44 33 22 11 ]");
+#else
   TTS_EQUAL(tts::as_text( p ), "payload: [ 00 00 00 00 00 00 F8 3F DD CC BB AA 44 33 22 11 ]");
+#endif
 };
