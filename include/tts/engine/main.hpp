@@ -30,7 +30,7 @@
   @groupheader{Example}
 
   @code
-  #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
   #define TTS_CUSTOM_DRIVER_FUNCTION my_test_main
   #include <tts/tts.hpp>
 
@@ -87,21 +87,21 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
-      if(::tts::_::is_verbose)
-      {
-        printf("TEST: '%s'\n", t.name);
-      }
+      printf("TEST: '%s'%c", t.name, ::tts::_::is_verbose ? '\n' : ' ');
+      fflush(stdout);
       t();
       done_tests++;
 
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("TEST: '%s' - [!!]: EMPTY TEST CASE\n", t.name);
+        printf("- [!!]: EMPTY TEST CASE\n");
+        fflush(stdout);
       }
       else if(failure_count  == ::tts::global_runtime.failure_count && !::tts::_::is_verbose)
       {
         printf("TEST: '%s' - [V]\n", t.name);
+        fflush(stdout);
       }
     }
   }
