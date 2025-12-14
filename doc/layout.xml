@@ -4,43 +4,18 @@
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="usergroup" visible="yes" title="How-Tos">
-      <tab type="user" url="@ref setup" title="Setup"/>
-      <tab type="user" url="@ref tts101" title="Getting Started"/>
-      <tab type="user" url="@ref cli" title="Command Line Interface"/>
+      <tab type="user" url="@ref setup"     title="Setup"/>
+      <tab type="user" url="@ref tts101"    title="Getting Started"/>
+      <tab type="user" url="@ref cli"       title="Command Line Interface"/>
       <tab type="user" url="@ref customize" title="Customization Points"/>
     </tab>
-    <tab type="usergroup" visible="yes" title="Reference Documentation">
+    <tab type="usergroup" visible="yes"     title="Reference Documentation">
       <tab type="user" url="@ref tts"       title="TTS Namespace"/>
-      <tab type="usergroup" visible="yes" title="Macros">
-        <tab type="usergroup" title="Scenario Definition">
-          <tab type="user" url="@ref TTS_CASE"         title="TTS_CASE"/>
-          <tab type="user" url="@ref TTS_CASE_TPL"     title="TTS_CASE_TPL"/>
-          <tab type="user" url="@ref TTS_CASE_WITH"    title="TTS_CASE_WITH"/>
-          <tab type="user" url="@ref TTS_WHEN"         title="TTS_WHEN"/>
-          <tab type="user" url="@ref TTS_AND_THEN"     title="TTS_AND_THEN"/>
-        </tab>
-        <tab type="usergroup" title="Basic Tests">
-          <tab type="user" url="@ref TTS_EXPECT"      title="TTS_EXPECT"/>
-          <tab type="user" url="@ref TTS_EXPECT_NOT"  title="TTS_EXPECT_NOT"/>
-          <tab type="user" url="@ref TTS_FAIL"        title="TTS_FAIL"/>
-          <tab type="user" url="@ref TTS_FATAL"       title="TTS_FATAL"/>
-          <tab type="user" url="@ref TTS_PASS"        title="TTS_PASS"/>
-        </tab>
-        <tab type="usergroup" title="Relation Tests">
-          <tab type="user" url="@ref TTS_EQUAL"         title="TTS_EQUAL"/>
-          <tab type="user" url="@ref TTS_NOT_EQUAL"     title="TTS_NOT_EQUAL"/>
-          <tab type="user" url="@ref TTS_LESS"          title="TTS_LESS"/>
-          <tab type="user" url="@ref TTS_GREATER"       title="TTS_GREATER"/>
-          <tab type="user" url="@ref TTS_LESS_EQUAL"    title="TTS_LESS_EQUAL"/>
-          <tab type="user" url="@ref TTS_GREATER_EQUAL" title="TTS_GREATER_EQUAL"/>
-        </tab>
-        <tab type="usergroup" title="Precision Tests">
-          <tab type="user" url="@ref TTS_ABSOLUTE_EQUAL"  title="TTS_ABSOLUTE_EQUAL"/>
-          <tab type="user" url="@ref TTS_IEEE_EQUAL"      title="TTS_IEEE_EQUAL"/>
-          <tab type="user" url="@ref TTS_RELATIVE_EQUAL"  title="TTS_RELATIVE_EQUAL"/>
-          <tab type="user" url="@ref TTS_ULP_EQUAL"       title="TTS_ULP_EQUAL"/>
-          <tab type="user" url="@ref TTS_ULP_RANGE_CHECK" title="TTS_ULP_RANGE_CHECK"/>
-        </tab>
+      <tab type="usergroup" visible="yes"   title="Macros">
+        <tab type="user" url="@ref test-scenario"   title="Scenario Definition"/>
+        <tab type="user" url="@ref test-basic"      title="Basic Tests"/>
+        <tab type="user" url="@ref test-relation"   title="Relation Tests"/>
+        <tab type="user" url="@ref test-precision"  title="Precision Tests"/>
         <tab type="usergroup" title="Sequence Tests">
           <tab type="user" url="@ref TTS_ALL_EQUAL"          title="TTS_ALL_EQUAL"/>
           <tab type="user" url="@ref TTS_ALL_ABSOLUTE_EQUAL" title="TTS_ALL_ABSOLUTE_EQUAL"/>
@@ -48,20 +23,7 @@
           <tab type="user" url="@ref TTS_ALL_ULP_EQUAL"      title="TTS_ALL_ULP_EQUAL"/>
           <tab type="user" url="@ref TTS_ALL_IEEE_EQUAL"     title="TTS_ALL_IEEE_EQUAL"/>
         </tab>
-        <tab type="usergroup" title="Exceptions Tests">
-          <tab type="user" url="@ref TTS_THROW"     title="TTS_THROW"/>
-          <tab type="user" url="@ref TTS_NO_THROW"  title="TTS_NO_THROW"/>
-        </tab>
-        <tab type="usergroup" title="Constexpr Tests">
-          <tab type="user" url="@ref TTS_CONSTEXPR_EXPECT"        title="TTS_CONSTEXPR_EXPECT"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_EXPECT_NOT"    title="TTS_CONSTEXPR_EXPECT_NOT"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_EQUAL"         title="TTS_CONSTEXPR_EQUAL"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_NOT_EQUAL"     title="TTS_CONSTEXPR_NOT_EQUAL"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_LESS"          title="TTS_CONSTEXPR_LESS"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_GREATER"       title="TTS_CONSTEXPR_GREATER"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_LESS_EQUAL"    title="TTS_CONSTEXPR_LESS_EQUAL"/>
-          <tab type="user" url="@ref TTS_CONSTEXPR_GREATER_EQUAL" title="TTS_CONSTEXPR_GREATER_EQUAL"/>
-        </tab>
+        <tab type="user" url="@ref test-exceptions"      title="Exceptions Tests"/>
         <tab type="usergroup" title="Type Tests">
           <tab type="user" url="@ref TTS_TYPE_IS"             title="TTS_TYPE_IS"/>
           <tab type="user" url="@ref TTS_EXPR_IS"             title="TTS_EXPR_IS"/>
@@ -75,11 +37,11 @@
       </tab>
       <tab type="usergroup" visible="yes" title="Classes, Aliases and Objects" intro="">
         <tab type="usergroup" title="Data Generators">
-          <tab type="user" url="@ref tts::between"        title="between"/>
-          <tab type="user" url="@ref tts::ramp"           title="ramp"/>
-          <tab type="user" url="@ref tts::reverse_ramp"   title="reverse_ramp"/>
-          <tab type="user" url="@ref tts::sample"         title="sample"/>
-          <tab type="user" url="@ref tts::value"          title="value"/>
+          <tab type="user" url="@ref tts::between"             title="between"/>
+          <tab type="user" url="@ref tts::ramp"                title="ramp"/>
+          <tab type="user" url="@ref tts::reverse_ramp"        title="reverse_ramp"/>
+          <tab type="user" url="@ref tts::value"               title="value"/>
+          <tab type="user" url="@ref tts::realistic_generator" title="realistic_generator"/>
         </tab>
 
         <tab type="usergroup" title="Type Helpers">
@@ -95,9 +57,6 @@
         </tab>
         <tab type="usergroup" title="Runtime Helpers">
           <tab type="user" url="@ref tts::options"                title="options"/>
-          <tab type="user" url="@ref tts::prng_generator"         title="prng_generator"/>
-          <tab type="user" url="@ref tts::realistic_generator"    title="realistic_generator"/>
-          <tab type="user" url="@ref tts::realistic_distribution" title="realistic_distribution"/>
         </tab>
       </tab>
       <tab type="usergroup" visible="yes" title="Functions">
@@ -113,7 +72,7 @@
           <tab type="user" url="@ref tts::relative_distance" title="relative_distance"/>
           <tab type="user" url="@ref tts::ulp_distance"      title="ulp_distance"/>
         </tab>
-      </tab>
+      </tab>Main TTS namespace.
     </tab>
     <tab type="usergroup" visible="yes" title="Informations">
        <tab type="user" url="@ref rationale" title="Rationale"/>

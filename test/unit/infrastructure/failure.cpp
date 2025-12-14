@@ -32,6 +32,17 @@ TTS_CASE( "Check that forced broken relation tests fails" )
   TTS_GREATER_EQUAL(x,3.5f);
 };
 
+TTS_CASE( "Check that forced broken typed relation tests fails" )
+{
+  int x = 0;
+  TTS_TYPED_EQUAL( 0.f, x );
+  TTS_TYPED_NOT_EQUAL( 1.f, x );
+  TTS_TYPED_LESS(-0.5,x);
+  TTS_TYPED_GREATER(1.789,x);
+  TTS_TYPED_LESS_EQUAL(short{-2},x);
+  TTS_TYPED_GREATER_EQUAL('A',x);
+};
+
 TTS_CASE( "Check that forced broken type tests fails" )
 {
   TTS_TYPE_IS(std::add_pointer<float>::type, double**);
@@ -77,5 +88,5 @@ int main(int argc, char const** argv)
 {
   ::tts::initialize(argc,argv);
   fail_main(argc, argv);
-  return ::tts::report(23,2);
+  return ::tts::report(29,2);
 }
