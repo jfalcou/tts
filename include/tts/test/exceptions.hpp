@@ -40,6 +40,14 @@
 
 //======================================================================================================================
 /**
+  @defgroup test-exceptions Exception Tests Macros
+  @brief Macros for performing checks related to exceptions handling.
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
   @def TTS_THROW
   @brief Checks if a given expression throws an exception of a given type
 
@@ -48,23 +56,15 @@
   @param ...        Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  struct some_exception_type {};
-
-  void foo() { throw some_exception_type(); }
-
-  TTS_CASE( "Check that we can capture thrown exceptions" )
-  {
-    TTS_THROW( foo(), some_exception_type );
-  };
-  @endcode
+  @snippet doc/throw.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_THROW(EXPR, EXCEPTION, ...)
+#else
 #define TTS_THROW(EXPR, EXCEPTION, ...)     TTS_THROW_ ## __VA_ARGS__ ( EXPR, EXCEPTION )
+#endif
+
 #define TTS_THROW_(EXPR, EXCEPTION)         TTS_THROW_IMPL(EXPR, EXCEPTION,TTS_FAIL)
 #define TTS_THROW_REQUIRED(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION,TTS_FATAL)
 
@@ -98,20 +98,20 @@
   @param ...        Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  void bar() {}
-
-  TTS_CASE( "Check that nothrow function are detected as such" )
-  {
-    TTS_NO_THROW( bar() );
-  };
-  @endcode
+  @snippet doc/no_throw.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_NO_THROW(EXPR, ...)
+#else
 #define TTS_NO_THROW(EXPR, ...)     TTS_NO_THROW_ ## __VA_ARGS__ ( EXPR )
+#endif
+
 #define TTS_NO_THROW_(EXPR)         TTS_NO_THROW_IMPL(EXPR,TTS_FAIL)
 #define TTS_NO_THROW_REQUIRED(EXPR) TTS_NO_THROW_IMPL(EXPR,TTS_FATAL)
+
+//======================================================================================================================
+/**
+  @}
+**/
+//======================================================================================================================

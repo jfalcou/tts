@@ -44,6 +44,14 @@
 
 //======================================================================================================================
 /**
+  @defgroup test-precision Precision Tests Macros
+  @brief Macros for performing tests taking floating-point precision into account.
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
   @def TTS_ABSOLUTE_EQUAL
   @brief Checks if the absolute distance between values is less or equal to a threshold
 
@@ -54,20 +62,14 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE("Absolute distance")
-  {
-    TTS_ABSOLUTE_EQUAL(-2.  , 2.f  , 4.);
-    TTS_ABSOLUTE_EQUAL('A'  , 80LL , 15, REQUIRED);
-  };
-  @endcode
+  @snippet doc/absolute.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...)
+#else
 #define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_check, 8, __VA_ARGS__ )
+#endif
 
 //======================================================================================================================
 /**
@@ -81,23 +83,14 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE("Relative distance")
-  {
-    TTS_RELATIVE_EQUAL(42.f , 42.f  , 0     );
-    TTS_RELATIVE_EQUAL('A'  , 80LL  , 18.75 );
-    TTS_RELATIVE_EQUAL(1.   , 2.f   , 100.  );
-
-    TTS_RELATIVE_EQUAL(1    , 10    , 900., REQUIRED  );
-  };
-  @endcode
+  @snippet doc/relative.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_RELATIVE_EQUAL(L,R,N,...)
+#else
 #define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_check, 8, __VA_ARGS__ )
+#endif
 
 //======================================================================================================================
 /**
@@ -111,35 +104,14 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "ULP distance")
-  {
-    float a{1};
-    float eps  = std::numeric_limits<float>::epsilon();
-    float qnan = std::numeric_limits<float>::quiet_NaN();
-    float inf  = std::numeric_limits<float>::infinity();
-    float minf = -inf;
-
-    TTS_ULP_EQUAL(a    , a     , 0.  );
-
-    TTS_ULP_EQUAL(a    , qnan  , inf );
-    TTS_ULP_EQUAL(qnan , qnan  , 0.  );
-
-    TTS_ULP_EQUAL(a    , inf   , inf );
-    TTS_ULP_EQUAL(inf  , inf   , inf );
-
-    TTS_ULP_EQUAL(a, a-eps   , 1   );
-    TTS_ULP_EQUAL(a, a+eps   , 0.5 );
-    TTS_ULP_EQUAL(a, a+3*eps , 1.5, REQUIRED );
-  };
-  @endcode
+  @snippet doc/ulp.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ULP_EQUAL(L,R,N,...)
+#else
 #define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_check, 2, __VA_ARGS__ )
+#endif
 
 #define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                 \
 [&](auto local_tts_a, auto local_tts_b)                                                           \
@@ -166,7 +138,7 @@
 //======================================================================================================================
 /**
   @def TTS_IEEE_EQUAL
-  @brief Checks if two values are exactly within a 0 ULP.
+  @brief Checks if two values are exactly within 0 ULP.
 
   This also allow for infinites and NaNs to be compared equal if both values are the
   same infinites or are both $NaN$. This comparison is performed by using the proper tts::ulp_distance overload.
@@ -175,21 +147,17 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "ULP distance")
-  {
-    float x = std::numeric_limits<float>::quiet_NaN();
-    TTS_IEEE_EQUAL(x,x);
-
-    TTS_IEEE_EQUAL(1.f, 1.f);
-    TTS_IEEE_EQUAL(2. , 2. );
-    TTS_IEEE_EQUAL(65 , 'A');
-  };
-  @endcode
+  @snippet doc/ieee.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_IEEE_EQUAL(L,R,...)
+#else
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__ )
+#endif
+
+//======================================================================================================================
+/**
+  @}
+**/
+//======================================================================================================================

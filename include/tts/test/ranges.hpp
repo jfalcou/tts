@@ -145,7 +145,7 @@ namespace tts
       }
     }
 
-    _::header("Max ULP", "Count (#)", "Cum. Ratio (%)", "Samples");
+    _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
     printf("--------------------------------------------------------------------------------\n");
 
     double ratio = 0.;
@@ -172,17 +172,16 @@ namespace tts
 
     return max_ulp;
   }
-
 }
 
 //======================================================================================================================
 /*!
   @def TTS_ULP_RANGE_CHECK
+  @ingroup  test-precision
   @brief Generate a range based test between two functions
 
   Evaluates the histogram of ULP difference between two functions run on the same data set and that
   they lie in a given [ULP distance](rationale.html#ulp).
-  This comparison is performed by using the proper @ref tts::ulp_distance overload.
 
   @param Producer Data set generator to use.
   @param RefType  Type to use as reference function input.
@@ -192,24 +191,12 @@ namespace tts
   @param Ulpmax   Maximal ULPs acceptable for passing the test.
 
   @groupheader{Example}
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  float ok_x (float x) { return x; }
-  float bad_x(float x) { return x + x*1e-7f; }
-
-  TTS_CASE( "Test range check" )
-  {
-    TTS_ULP_RANGE_CHECK ( [] (auto i, auto c) { return (100.f*i)/c; }
-                        , float, float , ok_x, bad_x
-                        , 2.
-                        );
-  };
-  @endcode
+  @snippet doc/ulp_ranges.cpp snippet
 **/
 //======================================================================================================================
-
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
+#else
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                         \
   [&]()                                                                                                   \
   {                                                                                                       \
@@ -243,16 +230,17 @@ namespace tts
     }                                                                                                     \
   }()
 /**/
+#endif
 
 namespace tts
 {
   //====================================================================================================================
   /*!
-    @brief Data generator using the @ref tts::realistic_distribution random distribution
+    @brief Data generator using a realistic random distribution
 
     @groupheader{Example}
     @code
-    #define TTS_MAIN
+    #define TTS_MAIN  // No need for main()
     #include <tts/tts.hpp>
 
     float ok_x (float x) { return x; }
