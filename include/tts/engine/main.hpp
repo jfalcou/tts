@@ -98,9 +98,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
         printf("- [!!]: EMPTY TEST CASE\n");
         fflush(stdout);
       }
-      else if(failure_count  == ::tts::global_runtime.failure_count && !::tts::_::is_verbose)
+      else if(failure_count  == ::tts::global_runtime.failure_count )
       {
-        printf("TEST: '%s' - [V]\n", t.name);
+        if(::tts::_::is_verbose)  printf("TEST: '%s' - [V]\n", t.name);
+        else                      printf("- [V]\n");
         fflush(stdout);
       }
     }
