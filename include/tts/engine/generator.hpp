@@ -10,7 +10,6 @@
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/random.hpp>
 #include <tts/tools/types.hpp>
-#include <tuple>
 
 namespace tts
 {
@@ -51,7 +50,7 @@ namespace tts
   auto produce(type<T> const&, auto g, auto... args)
   {
     using elmt_type   = std::remove_cvref_t<decltype(*begin(std::declval<T>()))>;
-    using value_type  = decltype(g(tts::type<elmt_type>{},0,0ULL,args...));
+    using value_type  = decltype(produce(tts::type<elmt_type>{},g,0,0ULL,args...));
 
     typename rebuild<T,value_type>::type that;
     auto b = begin(that);
@@ -60,7 +59,7 @@ namespace tts
 
     for(std::ptrdiff_t i=0;i<sz;++i)
     {
-      *b++ = as_value<value_type>(g(tts::type<value_type>{},i,sz,args...));
+      *b++ = produce(tts::type<value_type>{},g,i,sz,args...);
     }
     return that;
   }
@@ -71,7 +70,7 @@ namespace tts
 
     @groupheader{Example}
     @code
-    #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
     #include <tts/tts.hpp>
 
     TTS_CASE_WITH ( "Check behavior for value generator"
@@ -102,7 +101,7 @@ namespace tts
 
     @groupheader{Example}
     @code
-    #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
     #include <tts/tts.hpp>
     #include <array>
 
@@ -145,7 +144,7 @@ namespace tts
 
     @groupheader{Example}
     @code
-    #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
     #include <tts/tts.hpp>
     #include <array>
 
@@ -192,7 +191,7 @@ namespace tts
 
     @groupheader{Example}
     @code
-    #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
     #include <tts/tts.hpp>
     #include <array>
 
