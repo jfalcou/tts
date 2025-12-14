@@ -1,36 +1,37 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
 #include <tts/engine/environment.hpp>
 #include <tts/tools/source_location.hpp>
+//======================================================================================================================
+/**
+  @name Informations Reporting
+  @{
+**/
+//======================================================================================================================
 
 //======================================================================================================================
 /**
   @def TTS_PASS
   @brief Force a passing test and display a message.
+  @ingroup test-basic
 
   @param ... A format string and potential arguments to display as additional informations
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN  // No need for main()
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that forced pass passes" )
-  {
-    TTS_PASS("Forced success!!");
-  };
-  @endcode
+  @snippet doc/pass_fail.cpp snippet1
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_PASS(...)
+#else
 #define TTS_PASS(...)                                                                         \
   do                                                                                          \
   {                                                                                           \
@@ -44,28 +45,23 @@
     }                                                                                         \
   } while(0)                                                                                  \
 /**/
+#endif
 
 //======================================================================================================================
 /**
   @def TTS_FAIL
   @brief Force a failing test and display a message.
+  @ingroup test-basic
 
   @param ... A format string and potential arguments to display as additional informations
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN  // No need for main()
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that forced failure fails" )
-  {
-    TTS_FAIL("Forced failure!!");
-    TTS_PASS("This will pass though");
-  };
-  @endcode
+  @snippet doc/pass_fail.cpp snippet2
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_FAIL(...)
+#else
 #define TTS_FAIL(...)                                                                                       \
   do                                                                                                        \
   {                                                                                                         \
@@ -81,28 +77,23 @@
           );                                                                                                \
   } while(0)                                                                                                \
 /**/
+#endif
 
 //======================================================================================================================
 /**
   @def TTS_FATAL
   @brief Force a failing test, display a message and halt the test suite.
+  @ingroup test-basic
 
   @param ... A format string and potential arguments to display as additional informations
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN  // No need for main()
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that forced major failure fails" )
-  {
-    TTS_FATAL("Forced major failure!!");
-    TTS_PASS("This won't pass");
-  };
-  @endcode
+  @snippet doc/pass_fail.cpp snippet3
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_FATAL(...)
+#else
 #define TTS_FATAL(...)                                                                                      \
   do                                                                                                        \
   {                                                                                                         \
@@ -117,5 +108,13 @@
           , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
           );                                                                                                \
     ::tts::fatal_error_status = true;                                                                       \
+    [[maybe_unused ]] ::tts::_::logger _local_tts_fail_hard{};                                              \
   } while(0)                                                                                                \
 /**/
+#endif
+
+//======================================================================================================================
+/**
+  @}
+**/
+//======================================================================================================================

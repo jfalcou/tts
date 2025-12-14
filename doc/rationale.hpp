@@ -10,21 +10,20 @@
 
   > Are these two floating computations results similar enough?
 
-  This is maybe the most difficult question to answer when implementing and validating
-  numerical algorithms. Various methods are often found in existing testing frameworks
-  or are used by developers. But if floating-point arithmetic can be tricky, floating-point
-  comparisons are even trickier.
+  This is the most challenging question to answer when implementing and validating numerical algorithms.
+  Various methods are often found in existing testing frameworks or are used by developers. But if floating-point
+  arithmetic can be tricky, floating-point comparisons are even trickier.
 
-  In the rest of this section, we take for granted that the basic notions of floating-point
-  computations and their related problems are known by the reader. If not, we strongly recommend
-  having a deep look at [Goldberg's paper on the subject](http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
-  or a [simplified version](http://floating-point-gui.de/).
+  In the rest of this section, we assume the reader is familiar with the basic notions of floating-point computation
+  and related problems. If not, we strongly recommend having a deep look
+  at [Goldberg's paper on the subject](http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) or
+  // a [simplified version](http://floating-point-gui.de/).
 
   @subsection ulp-metric Precision metric
 
   The first thing people learn (and often they learn it the hard way) is that strict
-  equality for floating points numbers is often meaningless or very hard to achieve.
-  Once this state of fact is integrated, people often go to use a simple absolute difference
+  equality for floating-point numbers is often meaningless or very hard to achieve.
+  Once this state of fact is integrated, people often go on to use a simple absolute difference
   with an arbitrary threshold. If this method looks sound, it's easy to fold and may lead to
   false positives. The proper way to compare non-zero or non-invalid floating-point numbers
   is to use the **Unit in the Last Place** metric.
@@ -43,7 +42,7 @@
   Achieving 0.5-1 ULP for computationally complex functions like transcendental functions is what a proper numerical
   library should aim for.
 
-  The full algorithm can be expressed in standard C++ in the following way:
+  The complete algorithm can be expressed in standard C++ in the following way:
 
   @code
   template<class T> double ulpdist(T a0, T a1)
@@ -74,7 +73,7 @@
   @endcode
 
   Put in another way, one can estimate the `ulpdist` between two floating point numbers as the number of
-  representable floating points values between them. This estimation leads to the following properties:
+  representable floating point values between them. This estimation leads to the following properties:
 
   \f$
   \begin{align}
@@ -89,21 +88,19 @@
 
   @section ulp-testing Testing ULPs
 
-  What to do then when writing an unit test that handles floating points number ?
+  What to do then when writing a unit test that handles floating-point numbers?
   You basically have three cases :
 
-    * The value you compare must be equal by design. In this case, use [**`TTS_EQUAL`**](reference.html#tts_equal)
-      to clearly state your intent. One such case can be for example functions that construct a floating point value bitwise.
-    * The value you compare are the results of an undetermined number of other
-      floating point operations. In this case, use [**`TTS_ULP_EQUAL`**](reference.html#tts_ulp_equal)
-      and try to estimate the maximum amount of ULP your implementation should give. This can be either
-      done by a strict analysis of the function behavior or by some guess work.
-    * The value you compare are the results of an undetermined number of other floating point operations
-      but stands in a predictable absolute range of error independent of the architecture and magnitude
-      of the input. In this case, use [**`TTS_RELATIVE_EQUAL`**](reference.html#tts_relative_equal).
+  + **The value you compare must be equal by design**. In this case, use @ref TTS_EQUAL to state your intent clearly.
+  One such case is, for example, functions that construct a floating-point value bitwise.
+  + **The values you compare are the results of an undetermined number of other floating point operations**. In this
+  case, use @ref TTS_ULP_EQUAL and try to estimate the maximum amount of ULP your implementation should give. This
+  can be either done by a strict numerical analysis of the function's behaviour or by some guesswork.
+  + **The values you compare are the results of an undetermined number of other floating-point operations
+  , but stands in a predictable absolute range of error independent of the architecture and magnitude
+  of the input**. In this case, use @ref TTS_RELATIVE_EQUAL.
 
-  Take extreme care to not overestimate the value of ULP measures. Some classical algorithms
-  may ends up with hundreds of ULPs but still be meaningful.
-
+ Take extreme care not overestimate the value of ULP measures. Some classical algorithms may produce hundreds of
+ ULPs but remain meaningful.
 **/
 //==================================================================================================

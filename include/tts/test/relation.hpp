@@ -1,10 +1,10 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
@@ -13,7 +13,7 @@
 #include <tts/engine/info.hpp>
 
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
-if( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \
+if( ::tts::_::OP(local_tts_a,local_tts_b) )                                                  \
 {                                                                                                 \
     TTS_PASS( "Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );                 \
     return ::tts::_::logger{false};                                                               \
@@ -29,7 +29,7 @@ else                                                                            
 /**/
 
 #define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                         \
-constexpr auto local_tts_expr = ::tts::detail::OP(A,B);                                           \
+constexpr auto local_tts_expr = ::tts::_::OP(A,B);                                           \
 if constexpr( local_tts_expr )                                                                    \
 {                                                                                                 \
   TTS_PASS( "Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );          \

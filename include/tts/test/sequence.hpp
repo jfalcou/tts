@@ -1,10 +1,10 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
@@ -113,6 +113,14 @@ namespace tts::_
 
 //======================================================================================================================
 /**
+  @defgroup test-sequence Sequence Tests Macros
+  @brief Macros for performing sequence-wide checks.
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
   @def TTS_ALL_ABSOLUTE_EQUAL
   @brief Checks if all elements of two sequences are within a given absolute distance  and that their sizes are equal.
 
@@ -123,24 +131,14 @@ namespace tts::_
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <vector>
-  #include <list>
-
-  TTS_CASE("Absolute distance over sequences")
-  {
-    std::vector v{1.f,2.f,3.f,-1.f};
-    std::list   w{1.f,7.f,3.f,-5.f};
-
-    TTS_ALL_ABSOLUTE_EQUAL(v,w,5);
-  };
-  @endcode
+  @snippet doc/all_absolute.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_ABSOLUTE_EQUAL(L,R,N,...)
+#else
 #define TTS_ALL_ABSOLUTE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::absolute_check,N,"unit", __VA_ARGS__ )
+#endif
 
 //======================================================================================================================
 /**
@@ -154,24 +152,14 @@ namespace tts::_
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <vector>
-  #include <list>
-
-  TTS_CASE("Relative distance over sequences")
-  {
-    std::vector v{1.f,2.f,3.f,-5.f};
-    std::list   w{1.f,2.f,3.1f,-5.f};
-
-    TTS_ALL_RELATIVE_EQUAL(v,w,3.33);
-  };
-  @endcode
+  @snippet doc/all_relative.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_RELATIVE_EQUAL(L,R,N,...)
+#else
 #define TTS_ALL_RELATIVE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::relative_check,N,"%"   , __VA_ARGS__ )
+#endif
 
 //======================================================================================================================
 /**
@@ -185,24 +173,14 @@ namespace tts::_
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <vector>
-  #include <list>
-
-  TTS_CASE( "ULP distance over sequences")
-  {
-    std::vector v{1.f       , 2.f, 3.f, -5.f};
-    std::list   w{1.f+1e-7f , 2.f, 3.f, -5.f};
-
-    TTS_ALL_ULP_EQUAL(v,w,0.5);
-  };
-  @endcode
+  @snippet doc/all_ulp.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_check     ,N,"ULP" , __VA_ARGS__ )
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_ULP_EQUAL(L,R,N,...)
+#else
+#define TTS_ALL_ULP_EQUAL(L,R,N,...)  TTS_ALL(L,R, ::tts::ulp_check     ,N,"ULP" , __VA_ARGS__ )
+#endif
 
 //======================================================================================================================
 /**
@@ -216,25 +194,14 @@ namespace tts::_
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <vector>
-  #include <list>
-
-  TTS_CASE( "IEEE distance over sequences")
-  {
-    float x = std::numeric_limits<float>::quiet_NaN();
-    std::vector v{1.f, 2.f, 3.f, x};
-    std::list   w{1.f, 2.f, 3.f, x};
-
-    TTS_ALL_IEEE_EQUAL(v,w);
-  };
-  @endcode
+  @snippet doc/all_ieee.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_ALL_IEEE_EQUAL(L,R,...)     TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_IEEE_EQUAL(L,R,...)
+#else
+#define TTS_ALL_IEEE_EQUAL(L,R,...) TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
+#endif
 
 //======================================================================================================================
 /**
@@ -247,21 +214,15 @@ namespace tts::_
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <vector>
-  #include <list>
-
-  TTS_CASE("Equality over sequences")
-  {
-    std::vector v{1.f,2.f,3.f,-5.f};
-    std::list   w{1.f,2.f,3.f,-5.f};
-
-    TTS_ALL_EQUAL(v,w);
-  };
-  @endcode
+  @snippet doc/all_equal.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_EQUAL(L,R,...)
+#else
+#define TTS_ALL_EQUAL(L,R,...)  TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
+#endif
+
+//======================================================================================================================
+// @}
+//======================================================================================================================

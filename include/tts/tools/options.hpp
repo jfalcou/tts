@@ -1,9 +1,9 @@
 //======================================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 #include <tts/tools/preprocessor.hpp>
@@ -85,7 +85,7 @@ namespace tts
       @groupheader{Example}
 
       @code
-      #define TTS_MAIN
+      #define TTS_MAIN  // No need for main()
       #include <tts/tts.hpp>
 
       TTS_CASE( "CLI test - flag" )

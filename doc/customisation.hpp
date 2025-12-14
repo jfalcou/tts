@@ -2,7 +2,7 @@
 
 //==================================================================================================
 /**
-  @page  customize Customization Points
+  @page  customize Customizing TTS Behaviour
 
   @tableofcontents
 
@@ -13,57 +13,32 @@
 
   After defining the @ref TTS_CUSTOM_DRIVER_FUNCTION symbol, tests can be added as usual.
   Then, a regular `main` function is to be defined. This function will then performs any
-  special operations required then calls the aforementioned entry point function. Finally,
-  the `main` function will call tts::report which will aggregate test results and validate the whole tests
+  special operations required then calls the afforementioned entry point function. Finally,
+  the `main` function will call @ref tts::report which will aggregate test results and validate the whole tests
   with respect to expect number of failures and invalid tests.
 
-  @code
-  #define TTS_MAIN
-  #define TTS_CUSTOM_DRIVER_FUNCTION custom_entry_point
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Tautological test" )
-  {
-    TTS_EXPECT_NOT(false == true);
-  };
-
-  int main(int argc, char const** argv)
-  {
-    custom_entry_point(argc, argv);
-    return tts::report(0,0);
-  }
-  @endcode
+  @snippet doc/entry_point.cpp snippet
 
   @section  customize-display Data display
   By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string` or, in
   the case of sequence-like types, a sequence of calls to `std::to_string`. In case no overload
-  for `std::to_string` exists for a given type, a string will be built from the type name and its
-  instance's address.
+  for `std::to_string` exists for a given type, a string will be built from the type name and its byte sequence.
+
+  @snippet doc/display-unknown.cpp snippet
 
   In the case a given type needs to be displayed in a specific manner, **TTS** allows to overload the
-  `to_string` in the type's namespace and will use it if it is present.
+  `to_text` in the type's namespace or as a friend function and will use it when necessary.
 
-  @code
-  namespace sample
-  {
-    struct ratio { int n,d; };
-
-    std::string to_string(ratio const& b) { return std::to_string(n) + "/" + std::to_string(d); }
-  };
-  @endcode
+  @snippet doc/custom-display.cpp snippet1
 
   If needed, one can delegates a part of this string construction to the **TTS** internal string
-  conversion function that will use all runtime options for display.
+  conversion function @ref tts::as_text that will use all runtime options for display. @ref tts::text
+  can also be constructed from a formatting specification and other similar setup.
 
-  @code
-  namespace sample
-  {
-    template<typename T> struct box { T value; };
+  @snippet doc/custom-display.cpp snippet2
 
-    template<typename T>
-    std::string to_string(box<T> const& b) { return "box<" + tts::as_string(b.value) + ">"; }
-  };
-  @endcode
+  Beware that, in this situation, command-line argument controlling value display like `-x` or `-s` will not be applied
+  to the formatted string.
 
   @section  customize-comparison Equality and Ordering
   All equality-based checks in **TTS** uses the compared value `operator==`. If needed, one can
@@ -100,7 +75,7 @@
   };
   @endcode
 
-  ## Precision Measurement
+  # Precision Measurement
   When dealing with floating point values, **TTS** uses its `ulp_distance` function to perform all ULP checks.
   If needed, one can specialize this function in the `tts` namespace to let **TTS** use special ULP comparison scheme.
   As usual, one can also reuse the pre-existing `tts::ulp_distance` to implement their own.
@@ -163,7 +138,7 @@
   };
   @endcode
 
-  ## Data Generator
+  # Data Generator
 
   Range checks require a data generator to fill their tests. Outside the provided PRNG generators, one
   can build their own generator.
@@ -189,64 +164,30 @@
   This code defines a generator that will generate `double` between `0` and `value`, each generation returning the
   `i`th portion of the full value.
 
-  @code
-  #define TTS_MAIN
-  #include <tts/ranges.hpp>
-
-  struct cli_generator
-  {
-    cli_generator()
-    {
-      value_ = ::tts::arguments().value("--gen-value", 1.f);
-    }
-
-    template<typename Idx, typename Count> float operator()(Idx i, Count c)
-    {
-      return (value_ * i)/c;
-    }
-
-    friend std::string to_string(cli_generator const& p)
-    {
-      return "cli_generator(" + tts::as_string(p.value_) + ")";
-    }
-
-    private:
-    float value_;
-  };
-
-  float f (float x) { return x; }
-  float g(float x)  { return x + x*1e-7f; }
-
-  TTS_CASE( "Test stateless range check" )
-  {
-    TTS_ULP_RANGE_CHECK ( cli_generator{}
-                      , float, float, f, g
-                      , 2.
-                      );
-  };
-  @endcode
+  @snippet doc/cli_generator.cpp snippet
 
   Run with `./my_test.exe --gen-value=99`, it produces the following output:
 
   @code
+  TEST: 'Test stateless range check'
   Comparing: f<float> with g<float> using cli_generator(99)
-  Max ULP         Count (#)       Cum. Ratio (%)  Samples
+  Max ULP         Count (#)       Ratio Sum (%)   Samples
   --------------------------------------------------------------------------------
-  0               1               0.02            Input:          0
-                                                  Found:          0
-                                                  instead of:     0
+  0.0             1               0.0244141       Input:      0
+                                                  Found:      0
+                                                  instead of: 0
   --------------------------------------------------------------------------------
-  0.5             3534            86.30           Input:          0.0241699
-                                                  Found:          0.0241699
-                                                  instead of:     0.0241699
+  0.5             3534            86.3037         Input:      0.024169921875
+                                                  Found:      0.02416992373764515
+                                                  instead of: 0.024169921875
   --------------------------------------------------------------------------------
-  1.0             561             100.00          Input:          0.12085
-                                                  Found:          0.12085
-                                                  instead of:     0.12085
+  1.0             561             100             Input:      0.120849609375
+                                                  Found:      0.1208496242761612
+                                                  instead of: 0.120849609375
   --------------------------------------------------------------------------------
-  [V] - Test stateless range check
+  TEST: 'Test stateless range check' - [PASSED]
   ----------------------------------------------------------------
-  Results: 1 test - 1/1 success - 0/0 failure - 0/0 invalid
+  Results: 1 test - 1/1 (100.00%) success - 0/0 (0.00%) failure - 0/0 (0.00%) invalid
   @endcode
 **/
 //==================================================================================================

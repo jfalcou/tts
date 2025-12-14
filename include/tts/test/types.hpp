@@ -1,10 +1,10 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
@@ -12,6 +12,14 @@
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/typename.hpp>
 #include <tts/tools/types.hpp>
+
+//======================================================================================================================
+/**
+  @defgroup test-types Type Tests Macros
+  @brief Macros for performing checks on types and their properties.
+  @{
+**/
+//======================================================================================================================
 
 //======================================================================================================================
 /**
@@ -23,20 +31,16 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
+  @snippet doc/type_is.cpp snippet
 
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <type_traits>
-
-  TTS_CASE( "Check that types can be tested for equivalence" )
-  {
-    TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
-  };
-  @endcode
 **/
 //======================================================================================================================
-#define TTS_TYPE_IS(TYPE, REF, ...)     TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPE_IS(TYPE, REF, ...)
+#else
+#define TTS_TYPE_IS(TYPE, REF, ...) TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#endif
+
 #define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FAIL)
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FATAL)
 
@@ -72,23 +76,15 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expression types can be tested for equality" )
-  {
-    double d;
-
-    TTS_EXPR_IS( &d + 5        , double*   );
-    TTS_EXPR_IS( std::move(d)  , double&&  );
-    TTS_EXPR_IS( std::swap(d,d), void      );
-  };
-  @endcode
+  @snippet doc/expr_is.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_EXPR_IS(EXPR, TYPE, ...)     TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPR_IS(EXPR, TYPE, ...)
+#else
+#define TTS_EXPR_IS(EXPR, TYPE, ...)  TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#endif
+
 #define TTS_EXPR_IS_(EXPR, TYPE)         TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FAIL)
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FATAL)
 
@@ -142,22 +138,11 @@ TTS_DISABLE_WARNING_POP                                                         
   @param Expression Brace-enclosed expression to validate.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expression can compile properly" )
-  {
-    double d, e;
-
-    TTS_EXPECT_COMPILES(d, e, { d += 4. * e; } );
-  };
-  @endcode
+  @snippet doc/expect_compiles.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_EXPECT_COMPILES(Symbols..., Expression, ...)
+#define TTS_EXPECT_COMPILES(Symbols, Expression, ...)
 #else
 #define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__) )
 #endif
@@ -190,18 +175,7 @@ TTS_DISABLE_WARNING_POP                                                         
   @param Expression Brace-enclosed expression to validate.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expression can compile properly" )
-  {
-    double d, e;
-
-    TTS_EXPECT_NOT_COMPILES(d, e, { d.foo(e); } );
-  };
-  @endcode
+  @snippet doc/expect_not_compiles.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -209,3 +183,7 @@ TTS_DISABLE_WARNING_POP                                                         
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
+
+//======================================================================================================================
+// @}
+//======================================================================================================================

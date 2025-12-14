@@ -1,9 +1,9 @@
 //==================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //==================================================================================================
 #ifndef MY_REAL_HPP_INCLUDED
 #define MY_REAL_HPP_INCLUDED

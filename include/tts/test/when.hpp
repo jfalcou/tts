@@ -1,10 +1,10 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
@@ -40,44 +40,31 @@ namespace tts::_
 
 //======================================================================================================================
 /**
+  @name Scoped scenarios
+  @ingroup test-scenario
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
   @def TTS_WHEN
+  @ingroup test-scenario
   @brief Start a block of scoped environment.
 
   Code in a scoped environment can contain:
-    + Normal expressions
-    + scoped tests introduced by @ref TTS_AND_THEN
+    + Normal expressions.
+    + scoped tests introduced by @ref TTS_AND_THEN.
+
+  @see TTS_AND_THEN
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check test with sub-test" )
-  {
-    TTS_WHEN("We start some sub-test")
-    {
-      int i = 99;
-
-      TTS_AND_THEN("We increment a variable")
-      {
-        TTS_EQUAL(i,99);
-        i++;
-        TTS_EQUAL(i,100);
-      }
-
-      TTS_AND_THEN("We decrement a variable")
-      {
-        // At the start of this sub-test, i is equal to 99 again
-        TTS_EQUAL(i,99);
-        i--;
-        TTS_EQUAL(i,98);
-      }
-    }
-  };
-  @endcode
+  @snippet doc/when.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_WHEN(STORY)
+#else
 #define TTS_WHEN(STORY)                                                                             \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
@@ -86,6 +73,7 @@ TTS_DISABLE_WARNING_SHADOW                                                      
     for( tts::_::only_once tts_only_once_setup{}; tts_only_once_setup; )                            \
 TTS_DISABLE_WARNING_POP                                                                             \
 /**/
+#endif
 
 #define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                    \
 TTS_DISABLE_WARNING_PUSH                                                                            \
@@ -101,40 +89,24 @@ TTS_DISABLE_WARNING_POP                                                         
 //======================================================================================================================
 /**
   @def TTS_AND_THEN
+  @ingroup test-scenario
   @brief Add a scoped tests to current scoped environment.
 
   Compared to regular local scope, whenever a scoped test is run, the data defined in the enclosing
   @ref TTS_WHEN are re-initialized, thus serving as a setup/tear-down system.
 
+  @see TTS_WHEN
+
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check test with sub-test" )
-  {
-    TTS_WHEN("We start some sub-test")
-    {
-      int i = 99;
-
-      TTS_AND_THEN("We increment a variable")
-      {
-        TTS_EQUAL(i,99);
-        i++;
-        TTS_EQUAL(i,100);
-      }
-
-      TTS_AND_THEN("We decrement a variable")
-      {
-        // At the start of this sub-test, i is equal to 99 again
-        TTS_EQUAL(i,99);
-        i--;
-        TTS_EQUAL(i,98);
-      }
-    }
-  };
-  @endcode
+  @snippet doc/when.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_AND_THEN(MESSAGE)
+#else
 #define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
+#endif
+
+//======================================================================================================================
+// @}
+//======================================================================================================================

@@ -7,33 +7,17 @@
       <tab type="user" url="@ref setup"     title="Setup"/>
       <tab type="user" url="@ref tts101"    title="Getting Started"/>
       <tab type="user" url="@ref cli"       title="Command Line Interface"/>
-      <tab type="user" url="@ref customize" title="Customization Points"/>
+      <tab type="user" url="@ref customize" title="Customizing TTS Behaviour"/>
     </tab>
     <tab type="usergroup" visible="yes"     title="Reference Documentation">
-      <tab type="user" url="@ref tts"       title="TTS Namespace"/>
-      <tab type="usergroup" visible="yes"   title="Macros">
+      <tab type="usergroup" visible="yes"   title="Testing Macros">
         <tab type="user" url="@ref test-scenario"   title="Scenario Definition"/>
         <tab type="user" url="@ref test-basic"      title="Basic Tests"/>
         <tab type="user" url="@ref test-relation"   title="Relation Tests"/>
         <tab type="user" url="@ref test-precision"  title="Precision Tests"/>
-        <tab type="usergroup" title="Sequence Tests">
-          <tab type="user" url="@ref TTS_ALL_EQUAL"          title="TTS_ALL_EQUAL"/>
-          <tab type="user" url="@ref TTS_ALL_ABSOLUTE_EQUAL" title="TTS_ALL_ABSOLUTE_EQUAL"/>
-          <tab type="user" url="@ref TTS_ALL_RELATIVE_EQUAL" title="TTS_ALL_RELATIVE_EQUAL"/>
-          <tab type="user" url="@ref TTS_ALL_ULP_EQUAL"      title="TTS_ALL_ULP_EQUAL"/>
-          <tab type="user" url="@ref TTS_ALL_IEEE_EQUAL"     title="TTS_ALL_IEEE_EQUAL"/>
-        </tab>
-        <tab type="user" url="@ref test-exceptions"      title="Exceptions Tests"/>
-        <tab type="usergroup" title="Type Tests">
-          <tab type="user" url="@ref TTS_TYPE_IS"             title="TTS_TYPE_IS"/>
-          <tab type="user" url="@ref TTS_EXPR_IS"             title="TTS_EXPR_IS"/>
-          <tab type="user" url="@ref TTS_EXPECT_COMPILES"     title="TTS_EXPECT_COMPILES"/>
-          <tab type="user" url="@ref TTS_EXPECT_NOT_COMPILES" title="TTS_EXPECT_NOT_COMPILES"/>
-        </tab>
-        <tab type="usergroup" title="Customization Points">
-          <tab type="user" url="@ref TTS_CUSTOM_DRIVER_FUNCTION"  title="TTS_CUSTOM_DRIVER_FUNCTION"/>
-          <tab type="user" url="@ref TTS_MAIN"                    title="TTS_MAIN"/>
-        </tab>
+        <tab type="user" url="@ref test-sequence"   title="Sequence Tests"/>
+        <tab type="user" url="@ref test-exceptions" title="Exceptions Tests"/>
+        <tab type="user" url="@ref test-types"      title="Type Tests"/>
       </tab>
       <tab type="usergroup" visible="yes" title="Classes, Aliases and Objects" intro="">
         <tab type="usergroup" title="Data Generators">
@@ -60,19 +44,20 @@
         </tab>
       </tab>
       <tab type="usergroup" visible="yes" title="Functions">
-        <tab type="usergroup" title="Helpers">
-          <tab type="user" url="@ref tts::arguments"    title="arguments"/>
-          <tab type="user" url="@ref tts::as_string"    title="as_string"/>
-          <tab type="user" url="@ref tts::name"         title="name"/>
-          <tab type="user" url="@ref tts::random_seed"  title="random_seed"/>
-        </tab>
+        <tab type="user" url="@ref tts::arguments"    title="arguments"/>
+        <tab type="user" url="@ref tts::as_string"    title="as_string"/>
+        <tab type="user" url="@ref tts::name"         title="name"/>
+        <tab type="user" url="@ref tts::random_seed"  title="random_seed"/>
+        <!--
         <tab type="usergroup" title="Customization Points">
           <tab type="user" url="@ref tts::as_value" title="as_value"/>
           <tab type="user" url="@ref tts::absolute_distance" title="absolute_distance"/>
           <tab type="user" url="@ref tts::relative_distance" title="relative_distance"/>
           <tab type="user" url="@ref tts::ulp_distance"      title="ulp_distance"/>
         </tab>
-      </tab>Main TTS namespace.
+        -->
+      </tab>
+      <tab type="user" url="@ref customisation-points" title="Customisation Points"/>
     </tab>
     <tab type="usergroup" visible="yes" title="Informations">
        <tab type="user" url="@ref rationale" title="Rationale"/>

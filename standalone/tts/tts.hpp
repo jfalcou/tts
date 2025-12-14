@@ -1,12 +1,11 @@
 //==================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //==================================================================================================
 #pragma once
-/// Main TTS namespace
 namespace tts {}
 #include <bit>
 #include <cassert>
@@ -29,6 +28,7 @@ Flags:
   -h, --help        Display this help message
   -x, --hex         Print the floating results in hexfloat mode
   -s, --scientific  Print the floating results in scientific mode
+  -v, --verbose     Display tests results regardless of their status.
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
@@ -616,7 +616,13 @@ namespace tts
     }
     else
     {
-      return text("%s", as_text(typename_<T>).data() ,(void*)(&e));
+      unsigned char bytes[sizeof(e)];
+      std::memcpy(bytes, &e, sizeof(e));
+      text txt_bytes("[ ");
+      for(auto const& b : bytes)
+        txt_bytes += text("%2.2X",b) + " ";
+      txt_bytes += "]";
+      return text("%s: %s", as_text(typename_<T>).data() ,txt_bytes.data());
     }
   }
   template<std::size_t N>
@@ -835,20 +841,20 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       auto test_count                   = ::tts::global_runtime.test_count;
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
-      if(::tts::_::is_verbose)
-      {
-        printf("TEST: '%s'\n", t.name);
-      }
+      printf("TEST: '%s'\n", t.name);
+      fflush(stdout);
       t();
       done_tests++;
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("TEST: '%s' - [!!]: EMPTY TEST CASE\n", t.name);
+        printf("  [!!]: EMPTY TEST CASE\n");
+        fflush(stdout);
       }
-      else if(failure_count  == ::tts::global_runtime.failure_count && !::tts::_::is_verbose)
+      else if(failure_count  == ::tts::global_runtime.failure_count )
       {
-        printf("TEST: '%s' - [V]\n", t.name);
+        printf("TEST: '%s' - [PASSED]\n", t.name);
+        fflush(stdout);
       }
     }
   }
@@ -887,6 +893,9 @@ namespace tts::_
     text  desc_{"[unknown:?]"};
   };
 }
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_PASS(...)
+#else
 #define TTS_PASS(...)                                                                         \
   do                                                                                          \
   {                                                                                           \
@@ -894,12 +903,16 @@ namespace tts::_
     if(::tts::_::is_verbose)                                                                  \
     {                                                                                         \
       auto contents = ::tts::text{__VA_ARGS__};                                               \
-      printf( "  [V] %s : %.*s\n"                                                             \
+      printf( "  [+] %s : %.*s\n"                                                             \
             , ::tts::_::source_location::current().data(), contents.size(), contents.data()   \
             );                                                                                \
     }                                                                                         \
   } while(0)                                                                                  \
 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_FAIL(...)
+#else
 #define TTS_FAIL(...)                                                                                       \
   do                                                                                                        \
   {                                                                                                         \
@@ -907,7 +920,6 @@ namespace tts::_
     if(!::tts::global_runtime.fail_status)  ::tts::global_runtime.fail_status = true;                       \
     if(!::tts::_::is_verbose)                                                                               \
     {                                                                                                       \
-      printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
     auto contents = ::tts::text{__VA_ARGS__};                                                               \
@@ -916,6 +928,10 @@ namespace tts::_
           );                                                                                                \
   } while(0)                                                                                                \
 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_FATAL(...)
+#else
 #define TTS_FATAL(...)                                                                                      \
   do                                                                                                        \
   {                                                                                                         \
@@ -923,7 +939,6 @@ namespace tts::_
     if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;                        \
     if(!::tts::_::is_verbose)                                                                               \
     {                                                                                                       \
-      printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
     auto contents = ::tts::text{__VA_ARGS__};                                                               \
@@ -931,8 +946,10 @@ namespace tts::_
           , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
           );                                                                                                \
     ::tts::fatal_error_status = true;                                                                       \
+    [[maybe_unused ]] ::tts::_::logger _local_tts_fail_hard{};                                              \
   } while(0)                                                                                                \
 
+#endif
 namespace tts::_
 {
   inline auto as_int(float a)   { return std::bit_cast<std::uint32_t>(a); }
@@ -1023,7 +1040,6 @@ namespace tts
     return _::roll_random(mini,maxi);
   }
 }
-#include <tuple>
 namespace tts
 {
   template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
@@ -1040,14 +1056,14 @@ namespace tts
   auto produce(type<T> const&, auto g, auto... args)
   {
     using elmt_type   = std::remove_cvref_t<decltype(*begin(std::declval<T>()))>;
-    using value_type  = decltype(g(tts::type<elmt_type>{},0,0ULL,args...));
+    using value_type  = decltype(produce(tts::type<elmt_type>{},g,0,0ULL,args...));
     typename rebuild<T,value_type>::type that;
     auto b = begin(that);
     auto e = end(that);
     auto sz = e - b;
     for(std::ptrdiff_t i=0;i<sz;++i)
     {
-      *b++ = as_value<value_type>(g(tts::type<value_type>{},i,sz,args...));
+      *b++ = produce(tts::type<value_type>{},g,i,sz,args...);
     }
     return that;
   }
@@ -1144,13 +1160,6 @@ namespace tts::_
   requires requires(Generator g) { typename Generator::types_list; }
   struct captures<Generator> : captures<typename Generator::types_list>
   {};
-}
-#define TTS_CASE(ID) [[maybe_unused]] static auto const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::capture{ID} + []()
-#define TTS_CASE_TPL(ID,...)                                                                                            \
-[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::captures<__VA_ARGS__>{ID} + []               \
-
-namespace tts::_
-{
   template<typename Types, auto... Generators> struct test_generators;
   template<typename... Type,auto... Generators>
   struct test_generators<types<Type...>, Generators...>
@@ -1177,13 +1186,35 @@ namespace tts::_
     const char* name;
   };
 }
-#define TTS_CASE_WITH(ID, TYPES, ...)                                                                         \
-[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                \
-                                 = ::tts::_::test_generators< ::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)> \
-                                                            , __VA_ARGS__                                     \
-                                                            >{ID} << []                                       \
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE(ID)
+#else
+#define TTS_CASE(ID)                                                                                                    \
+[[maybe_unused]] static auto const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::capture{ID} + []()                           \
 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE_TPL(ID,...)
+#else
+#define TTS_CASE_TPL(ID,...)                                                                                            \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::captures<__VA_ARGS__>{ID} + []               \
+
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE_WITH(ID, TYPES, ...)
+#else
+#define TTS_CASE_WITH(ID, TYPES, ...)                                                                                   \
+[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                          \
+                                 = ::tts::_::test_generators< ::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>           \
+                                                            , __VA_ARGS__                                               \
+                                                            >{ID} << []                                                 \
+
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPECT(EXPR, ...)
+#else
 #define TTS_EXPECT(EXPR, ...)     TTS_EXPECT_ ## __VA_ARGS__ ( EXPR )
+#endif
 #define TTS_EXPECT_(EXPR)         TTS_EXPECT_IMPL((EXPR),TTS_FAIL)
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR),TTS_FATAL)
 #define TTS_EXPECT_IMPL(EXPR,FAILURE)                                                               \
@@ -1201,7 +1232,11 @@ namespace tts::_
   }                                                                                                 \
 }(EXPR)                                                                                             \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPECT_NOT(EXPR, ...)
+#else
 #define TTS_EXPECT_NOT(EXPR, ...)       TTS_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
+#endif
 #define TTS_EXPECT_NOT_(EXPR)           TTS_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_EXPECT_NOT_REQUIRED(EXPR)   TTS_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 #define TTS_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                           \
@@ -1219,7 +1254,11 @@ namespace tts::_
   }                                                                                                 \
 }(EXPR)                                                                                             \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_EXPECT(EXPR, ...)
+#else
 #define TTS_CONSTEXPR_EXPECT(EXPR, ...) TTS_CEXPR_EXPECT_ ## __VA_ARGS__ ( EXPR )
+#endif
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
@@ -1238,7 +1277,11 @@ do                                                                              
   }                                                                                                 \
 }while(0)                                                                                           \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...)
+#else
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
+#endif
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
@@ -1281,7 +1324,11 @@ do                                                                              
     return ::tts::_::logger{};                                                              \
   }                                                                                         \
 }()
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_THROW(EXPR, EXCEPTION, ...)
+#else
 #define TTS_THROW(EXPR, EXCEPTION, ...)     TTS_THROW_ ## __VA_ARGS__ ( EXPR, EXCEPTION )
+#endif
 #define TTS_THROW_(EXPR, EXCEPTION)         TTS_THROW_IMPL(EXPR, EXCEPTION,TTS_FAIL)
 #define TTS_THROW_REQUIRED(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION,TTS_FATAL)
 #define TTS_NO_THROW_IMPL(EXPR,FAILURE)                                                     \
@@ -1303,10 +1350,14 @@ do                                                                              
     return ::tts::_::logger{};                                                              \
   }                                                                                         \
 }()
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_NO_THROW(EXPR, ...)
+#else
 #define TTS_NO_THROW(EXPR, ...)     TTS_NO_THROW_ ## __VA_ARGS__ ( EXPR )
+#endif
 #define TTS_NO_THROW_(EXPR)         TTS_NO_THROW_IMPL(EXPR,TTS_FAIL)
 #define TTS_NO_THROW_REQUIRED(EXPR) TTS_NO_THROW_IMPL(EXPR,TTS_FATAL)
-namespace tts::detail
+namespace tts::_
 {
   template<typename L, typename R>
   concept comparable_equal  = requires(L l, R r) { compare_equal(l,r); };
@@ -1340,7 +1391,7 @@ namespace tts::detail
   }
 }
 #define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
-if( ::tts::detail::OP(local_tts_a,local_tts_b) )                                                  \
+if( ::tts::_::OP(local_tts_a,local_tts_b) )                                                  \
 {                                                                                                 \
     TTS_PASS( "Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );                 \
     return ::tts::_::logger{false};                                                               \
@@ -1355,7 +1406,7 @@ else                                                                            
 }                                                                                                 \
 
 #define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                         \
-constexpr auto local_tts_expr = ::tts::detail::OP(A,B);                                           \
+constexpr auto local_tts_expr = ::tts::_::OP(A,B);                                           \
 if constexpr( local_tts_expr )                                                                    \
 {                                                                                                 \
   TTS_PASS( "Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );          \
@@ -1379,27 +1430,36 @@ else                                                                            
   TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                        \
 }(A,B)                                                                                              \
 
-#define TTS_EQUAL(LHS, RHS, ...)          TTS_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
-#define TTS_NOT_EQUAL(LHS, RHS, ...)      TTS_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
-#define TTS_LESS(LHS, RHS, ...)           TTS_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_NOT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_NOT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_LESS(LHS, RHS, ...)
+#else
+#define TTS_LESS(LHS, RHS, ...) TTS_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_GREATER(LHS, RHS, ...)
+#else
 #define TTS_GREATER(LHS, RHS, ...)        TTS_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
-#define TTS_LESS_EQUAL(LHS, RHS, ...)     TTS_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_LESS_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_LESS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_GREATER_EQUAL(LHS, RHS, ...)
+#else
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
-#define TTS_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
-#define TTS_CEXPR_RELATION_(A, B, OP, T, F)         TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
-#define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
-#define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
-do                                                                                                  \
-{                                                                                                   \
-  TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
-}while(0);                                                                                          \
-
-#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
-#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
-#define TTS_CONSTEXPR_LESS(LHS, RHS, ...)           TTS_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
-#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)        TTS_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
-#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)     TTS_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
-#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
+#endif
 #define TTS_TYPED_RELATION(A, B, OP, T, F, ...)     TTS_TYPED_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
 #define TTS_TYPED_RELATION_(A, B, OP, T, F)         TTS_TYPED_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
 #define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
@@ -1424,12 +1484,75 @@ do                                                                              
   }                                                                                                 \
 }(A,B)                                                                                              \
 
-#define TTS_TYPED_EQUAL(LHS, RHS, ...)          TTS_TYPED_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
-#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)      TTS_TYPED_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
-#define TTS_TYPED_LESS(LHS, RHS, ...)           TTS_TYPED_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
-#define TTS_TYPED_GREATER(LHS, RHS, ...)        TTS_TYPED_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
-#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...)     TTS_TYPED_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPED_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_TYPED_EQUAL(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPED_LESS(LHS, RHS, ...)
+#else
+#define TTS_TYPED_LESS(LHS, RHS, ...) TTS_TYPED_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPED_GREATER(LHS, RHS, ...)
+#else
+#define TTS_TYPED_GREATER(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)
+#else
 #define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
+#endif
+#define TTS_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
+#define TTS_CEXPR_RELATION_(A, B, OP, T, F)         TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
+#define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
+#define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
+do                                                                                                  \
+{                                                                                                   \
+  TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
+}while(0);                                                                                          \
+
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_LESS(LHS, RHS, ...)
+#else
+#define TTS_CONSTEXPR_LESS(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)
+#else
+#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
+#endif
 #define TTS_TYPED_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_TYPED_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
 #define TTS_TYPED_CEXPR_RELATION_(A, B, OP, T, F)         TTS_TYPED_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
 #define TTS_TYPED_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
@@ -1460,7 +1583,11 @@ do                                                                              
 #define TTS_TYPED_CONSTEXPR_GREATER(LHS, RHS, ...)        TTS_TYPED_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)     TTS_TYPED_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_TYPED_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
-#define TTS_TYPE_IS(TYPE, REF, ...)     TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPE_IS(TYPE, REF, ...)
+#else
+#define TTS_TYPE_IS(TYPE, REF, ...) TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#endif
 #define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FAIL)
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FATAL)
 #define TTS_TYPE_IS_IMPL(TYPE, REF, FAILURE)                                                        \
@@ -1484,7 +1611,11 @@ do                                                                              
   }                                                                                                 \
 }(::tts::type<TTS_REMOVE_PARENS(TYPE)>{}, ::tts::type<TTS_REMOVE_PARENS(REF)>{})                    \
 
-#define TTS_EXPR_IS(EXPR, TYPE, ...)     TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPR_IS(EXPR, TYPE, ...)
+#else
+#define TTS_EXPR_IS(EXPR, TYPE, ...)  TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#endif
 #define TTS_EXPR_IS_(EXPR, TYPE)         TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FAIL)
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FATAL)
 #define TTS_EXPR_IS_IMPL(EXPR, TYPE, FAILURE)                                                       \
@@ -1527,7 +1658,7 @@ TTS_DISABLE_WARNING_POP                                                         
 }(__VA_ARGS__)                                                                                          \
 
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_EXPECT_COMPILES(Symbols..., Expression, ...)
+#define TTS_EXPECT_COMPILES(Symbols, Expression, ...)
 #else
 #define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__) )
 #endif
@@ -1713,9 +1844,21 @@ namespace tts
 #define TTS_PRECISION(L,R,N,U,F,P,...)      TTS_PRECISION_ ## __VA_ARGS__ (L,R,N,U,F,P)
 #define TTS_PRECISION_(L,R,N,U,F,P)         TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FAIL)
 #define TTS_PRECISION_REQUIRED(L,R,N,U,F,P) TTS_PRECISION_IMPL(L,R,N,U,F,P,TTS_FATAL)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ABSOLUTE_EQUAL(L,R,N,...)
+#else
 #define TTS_ABSOLUTE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"unit", ::tts::absolute_check, 8, __VA_ARGS__ )
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_RELATIVE_EQUAL(L,R,N,...)
+#else
 #define TTS_RELATIVE_EQUAL(L,R,N,...) TTS_PRECISION(L,R,N,"%"   , ::tts::relative_check, 8, __VA_ARGS__ )
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ULP_EQUAL(L,R,N,...)
+#else
 #define TTS_ULP_EQUAL(L,R,N,...)      TTS_PRECISION(L,R,N,"ULP" , ::tts::ulp_check, 2, __VA_ARGS__ )
+#endif
 #define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                 \
 [&](auto local_tts_a, auto local_tts_b)                                                           \
 {                                                                                                 \
@@ -1736,7 +1879,11 @@ namespace tts
 #define TTS_DO_IEEE_EQUAL(L,R,...)      TTS_DO_IEEE_EQUAL_ ## __VA_ARGS__ (L,R)
 #define TTS_DO_IEEE_EQUAL_(L,R)         TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L,R) TTS_DO_IEEE_EQUAL_IMPL(L,R,TTS_FATAL)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_IEEE_EQUAL(L,R,...)
+#else
 #define TTS_IEEE_EQUAL(L,R,...)       TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__ )
+#endif
 namespace tts::_
 {
   template<typename T> constexpr auto size(T const& c) noexcept
@@ -1828,11 +1975,31 @@ namespace tts::_
 #define TTS_ALL(L,R,F,N,U, ...)     TTS_ALL_ ## __VA_ARGS__ (L,R,F,N,U)
 #define TTS_ALL_(L,R,F,N,U)         TTS_ALL_IMPL(L,R,F,N,U,TTS_FAIL)
 #define TTS_ALL_REQUIRED(L,R,F,N,U) TTS_ALL_IMPL(L,R,F,N,U,TTS_FATAL)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_ABSOLUTE_EQUAL(L,R,N,...)
+#else
 #define TTS_ALL_ABSOLUTE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::absolute_check,N,"unit", __VA_ARGS__ )
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_RELATIVE_EQUAL(L,R,N,...)
+#else
 #define TTS_ALL_RELATIVE_EQUAL(L,R,N,...) TTS_ALL(L,R, ::tts::relative_check,N,"%"   , __VA_ARGS__ )
-#define TTS_ALL_ULP_EQUAL(L,R,N,...)      TTS_ALL(L,R, ::tts::ulp_check     ,N,"ULP" , __VA_ARGS__ )
-#define TTS_ALL_IEEE_EQUAL(L,R,...)     TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
-#define TTS_ALL_EQUAL(L,R,...)            TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_ULP_EQUAL(L,R,N,...)
+#else
+#define TTS_ALL_ULP_EQUAL(L,R,N,...)  TTS_ALL(L,R, ::tts::ulp_check     ,N,"ULP" , __VA_ARGS__ )
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_IEEE_EQUAL(L,R,...)
+#else
+#define TTS_ALL_IEEE_EQUAL(L,R,...) TTS_ALL_ULP_EQUAL(L,R,0, __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ALL_EQUAL(L,R,...)
+#else
+#define TTS_ALL_EQUAL(L,R,...)  TTS_ALL_ABSOLUTE_EQUAL(L,R, 0 __VA_ARGS__ )
+#endif
 namespace tts::_
 {
   struct section_guard
@@ -1855,6 +2022,9 @@ namespace tts::_
     explicit operator bool() { bool result = once; once = false; return result; }
   };
 }
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_WHEN(STORY)
+#else
 #define TTS_WHEN(STORY)                                                                             \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
@@ -1863,6 +2033,7 @@ TTS_DISABLE_WARNING_SHADOW                                                      
     for( tts::_::only_once tts_only_once_setup{}; tts_only_once_setup; )                            \
 TTS_DISABLE_WARNING_POP                                                                             \
 
+#endif
 #define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                    \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
@@ -1873,7 +2044,11 @@ TTS_DISABLE_WARNING_SHADOW                                                      
     for(tts::_::only_once tts__only_once_section{}; tts__only_once_section; )                       \
 TTS_DISABLE_WARNING_POP                                                                             \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_AND_THEN(MESSAGE)
+#else
 #define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
+#endif
 namespace tts
 {
   template<typename Base> struct adapter
@@ -1987,7 +2162,7 @@ namespace tts
         }
       }
     }
-    _::header("Max ULP", "Count (#)", "Cum. Ratio (%)", "Samples");
+    _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
     printf("--------------------------------------------------------------------------------\n");
     double ratio = 0.;
     for(std::size_t i=0;i<ulp_map.size();++i)
@@ -2009,6 +2184,9 @@ namespace tts
     return max_ulp;
   }
 }
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
+#else
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                         \
   [&]()                                                                                                   \
   {                                                                                                       \
@@ -2041,6 +2219,7 @@ namespace tts
               );                                                                                          \
     }                                                                                                     \
   }()
+#endif
 namespace tts
 {
   template<typename T>

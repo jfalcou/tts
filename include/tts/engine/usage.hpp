@@ -1,9 +1,9 @@
 //======================================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
@@ -15,6 +15,7 @@ Flags:
   -h, --help        Display this help message
   -x, --hex         Print the floating results in hexfloat mode
   -s, --scientific  Print the floating results in scientific mode
+  -v, --verbose     Display tests results regardless of their status.
 
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values

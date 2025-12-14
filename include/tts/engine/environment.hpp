@@ -1,9 +1,10 @@
 //======================================================================================================================
-/**
+//! @file
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
@@ -52,6 +53,7 @@ namespace tts
   //====================================================================================================================
   /**
     @brief Final tests handler customization point
+    @ingroup customisation-points
 
     Aggregates test results and validate the whole test suite with respect to expect numbers of failures and invalids.
 
