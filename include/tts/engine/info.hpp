@@ -16,12 +16,12 @@
   @def TTS_PASS
   @brief Force a passing test and display a message.
 
-  @param Message A literal string to display as additional informations
+  @param ... A format string and potential arguments to display as additional informations
 
   @groupheader{Example}
 
   @code
-  #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
   #include <tts/tts.hpp>
 
   TTS_CASE( "Check that forced pass passes" )
@@ -38,7 +38,7 @@
     if(::tts::_::is_verbose)                                                                  \
     {                                                                                         \
       auto contents = ::tts::text{__VA_ARGS__};                                               \
-      printf( "  [V] %s : %.*s\n"                                                             \
+      printf( "  [+] %s : %.*s\n"                                                             \
             , ::tts::_::source_location::current().data(), contents.size(), contents.data()   \
             );                                                                                \
     }                                                                                         \
@@ -50,12 +50,12 @@
   @def TTS_FAIL
   @brief Force a failing test and display a message.
 
-  @param Message A literal string to display as additional informations
+  @param ... A format string and potential arguments to display as additional informations
 
   @groupheader{Example}
 
   @code
-  #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
   #include <tts/tts.hpp>
 
   TTS_CASE( "Check that forced failure fails" )
@@ -73,7 +73,6 @@
     if(!::tts::global_runtime.fail_status)  ::tts::global_runtime.fail_status = true;                       \
     if(!::tts::_::is_verbose)                                                                               \
     {                                                                                                       \
-      printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
     auto contents = ::tts::text{__VA_ARGS__};                                                               \
@@ -88,12 +87,12 @@
   @def TTS_FATAL
   @brief Force a failing test, display a message and halt the test suite.
 
-  @param Message A literal string to display as additional informations
+  @param ... A format string and potential arguments to display as additional informations
 
   @groupheader{Example}
 
   @code
-  #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
   #include <tts/tts.hpp>
 
   TTS_CASE( "Check that forced major failure fails" )
@@ -111,7 +110,6 @@
     if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;                        \
     if(!::tts::_::is_verbose)                                                                               \
     {                                                                                                       \
-      printf("TEST: %s\n", ::tts::_::current_test);                                                         \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
     auto contents = ::tts::text{__VA_ARGS__};                                                               \

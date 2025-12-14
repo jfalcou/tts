@@ -87,7 +87,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
-      printf("TEST: '%s'%c", t.name, ::tts::_::is_verbose ? '\n' : ' ');
+      printf("TEST: '%s'\n", t.name);
       fflush(stdout);
       t();
       done_tests++;
@@ -95,13 +95,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("- [!!]: EMPTY TEST CASE\n");
+        printf("  [!!]: EMPTY TEST CASE\n");
         fflush(stdout);
       }
       else if(failure_count  == ::tts::global_runtime.failure_count )
       {
-        if(::tts::_::is_verbose)  printf("TEST: '%s' - [V]\n", t.name);
-        else                      printf("- [V]\n");
+        printf("TEST: '%s' - [PASSED]\n", t.name);
         fflush(stdout);
       }
     }
