@@ -104,3 +104,15 @@ TTS_CASE( "Check display of std::optional" )
   TTS_EQUAL(tts::as_text( std::optional{42} )   , "optional<int>{42}");
   TTS_EQUAL(tts::as_text( std::optional<int>{} ), "optional<int>{}"  );
 };
+
+struct payload
+{
+  double d;
+  unsigned int i,j;
+};
+
+TTS_CASE( "Check display of unknown type" )
+{
+  payload p{1.5,  0xAABBCCDD,0x11223344};
+  TTS_EQUAL(tts::as_text( p ), "payload: [ 00 00 00 00 00 00 F8 3F DD CC BB AA 44 33 22 11 ]");
+};

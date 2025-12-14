@@ -29,7 +29,7 @@ namespace tts
 
     @groupheader{Examples}
     @code
-    #define TTS_MAIN
+    #define TTS_MAIN  // No need for main()
     #include <tts/tts.hpp>
 
     namespace space
@@ -52,7 +52,7 @@ namespace tts
       };
     }
 
-    TTS_CASE( "Check display of type with specific to_string" )
+    TTS_CASE( "Check display of type with specific to_text" )
     {
       TTS_EQUAL(tts::as_text( space::some_type{42} )      , "some_type[42]" );
       TTS_EQUAL(tts::as_text( space::some_other_type{63} ), "[[63]]"        );
@@ -116,7 +116,15 @@ namespace tts
     }
     else
     {
-      return text("%s", as_text(typename_<T>).data() ,(void*)(&e));
+      // Display accessible bytes
+      unsigned char bytes[sizeof(e)];
+      std::memcpy(bytes, &e, sizeof(e));
+      text txt_bytes("[ ");
+      for(auto const& b : bytes)
+        txt_bytes += text("%2.2X",b) + " ";
+      txt_bytes += "]";
+
+      return text("%s: %s", as_text(typename_<T>).data() ,txt_bytes.data());
     }
   }
 
