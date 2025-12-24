@@ -4,7 +4,7 @@
 ##  SPDX-License-Identifier: BSL-1.0
 ##======================================================================================================================
 cmake_minimum_required(VERSION 3.22)
-project(tts LANGUAGES CXX)
+project(TTS LANGUAGES CXX)
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 

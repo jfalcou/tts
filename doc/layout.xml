@@ -27,7 +27,6 @@
           <tab type="user" url="@ref tts::value"               title="value"/>
           <tab type="user" url="@ref tts::realistic_generator" title="realistic_generator"/>
         </tab>
-
         <tab type="usergroup" title="Type Helpers">
           <tab type="user" url="@ref tts::type"             title="type"/>
           <tab type="user" url="@ref tts::types"            title="types"/>
@@ -48,14 +47,6 @@
         <tab type="user" url="@ref tts::as_string"    title="as_string"/>
         <tab type="user" url="@ref tts::name"         title="name"/>
         <tab type="user" url="@ref tts::random_seed"  title="random_seed"/>
-        <!--
-        <tab type="usergroup" title="Customization Points">
-          <tab type="user" url="@ref tts::as_value" title="as_value"/>
-          <tab type="user" url="@ref tts::absolute_distance" title="absolute_distance"/>
-          <tab type="user" url="@ref tts::relative_distance" title="relative_distance"/>
-          <tab type="user" url="@ref tts::ulp_distance"      title="ulp_distance"/>
-        </tab>
-        -->
       </tab>
       <tab type="user" url="@ref customisation-points" title="Customisation Points"/>
     </tab>
@@ -122,7 +113,6 @@
     <usedfiles visible="$SHOW_USED_FILES"/>
     <authorsection visible="no"/>
   </class>
-
   <!-- Layout definition for a namespace page -->
   <namespace>
     <briefdescription visible="yes"/>
@@ -154,7 +144,6 @@
     </memberdef>
     <authorsection visible="no"/>
   </namespace>
-
   <!-- Layout definition for a concept page -->
   <concept>
     <briefdescription visible="yes"/>
@@ -163,7 +152,6 @@
     <definition visible="yes" title=""/>
     <authorsection visible="no"/>
   </concept>
-
   <!-- Layout definition for a file page -->
   <file>
     <briefdescription visible="yes"/>
@@ -232,7 +220,6 @@
     </memberdef>
     <authorsection visible="no"/>
   </group>
-
   <!-- Layout definition for a directory page -->
   <directory>
     <briefdescription visible="yes"/>
