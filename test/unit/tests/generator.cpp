@@ -75,8 +75,8 @@ TTS_CASE_WITH ( "Check behavior for non-scalar types"
   T value_ref { 37, 37, 37, 37, 37, 37, 37, 37, 37}
   , rmp_ref   { 65, 66, 67, 68, 69, 70, 71, 72, 73}
   , rmps_ref  {  1,  3,  5,  7,  9, 11, 13, 15, 17}
-  , rrmp_ref  { 18, 17, 16, 15, 14, 13, 12, 11, 10}
-  , rrmps_ref {116,114,112,110,108,106,104,102,100};
+  , rrmp_ref  { 10,  9,  8,  7,  6,  5,  4,  3,  2}
+  , rrmps_ref {100, 98, 96, 94, 92, 90, 88, 86, 84};
 
   using v_t = typename T::value_type;
   auto w1   = static_cast<v_t>(0);

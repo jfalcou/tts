@@ -14,7 +14,7 @@ namespace sample
 {
   struct ratio { int n, d; };
 
-  float relative_distance(ratio a, ratio b)
+  double relative_distance(ratio a, ratio b)
   {
     auto ra = static_cast<float>(a.n) / a.d;
     auto rb = static_cast<float>(b.n) / b.d;

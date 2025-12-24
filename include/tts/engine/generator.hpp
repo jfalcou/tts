@@ -15,10 +15,26 @@ namespace tts
 {
   //====================================================================================================================
   /**
-    @brief Single evaluation of value extension point
+    @defgroup tools-generators Data Generators related tools
+    @brief Tools for data generation.
+    @{
+  **/
+  //====================================================================================================================
+
+  //====================================================================================================================
+  /**
+    @defgroup tools-generators-custom Data Generators Customization Points
+    @brief Customization points to customize data generation for user-defined types.
+    @{
+  **/
+  //====================================================================================================================
+
+  //====================================================================================================================
+  /**
+    @brief Single value evaluation customization point
 
     This function generate a `T` from a value `v`. Default behavior is to convert but this function can be
-    overloaded to handle suer-defined type.
+    overloaded to handle user-defined type.
 
     @tparam T Target data type
     @param  v Value used ot generate the data sample
@@ -28,18 +44,41 @@ namespace tts
   template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
 
   //====================================================================================================================
-  // Generator extension point for sequence
+  /**
+    @brief Type conversion customization point
+
+    Some generators need to rebuild a template sequence type changing only the element type. This structure provides a
+    way to do so in an extensible way. The default implementation handles standard sequence types like `std::array` or
+    `std::vector`.
+
+    @tparam Seq Source sequence type.
+    @tparam U   New element type.
+  **/
   //====================================================================================================================
   template<tts::_::sequence Seq, typename U> struct rebuild;
 
-  template<template<class,class...> class Seq, typename T, typename... S, typename U>
+  template<template<typename,typename...> typename Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
 
-  template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
+  template<template<typename,std::size_t> typename Seq, typename T, std::size_t N, typename U>
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
 
   //====================================================================================================================
-  // Generator extension point
+  /**
+    @brief Data production customization point
+
+    This function is in charge of producing data of type `T` using generator `g` and additional parameters
+    `others...`. The default implementation simply calls the generator `g` with the provided parameters.
+
+    By default, this function also handles sequence types by producing each of their elements using the provided
+    generator.
+
+    @tparam T Target data type
+    @param  t      Type wrapper for the target data type
+    @param  g      Data generator to use
+    @param  others Additional parameters forwarded to the generator
+    @return A value of type `T` produced by the generator `g`.
+  **/
   //====================================================================================================================
   template<typename T> auto produce(type<T> const& t, auto g, auto... others)
   {
@@ -55,7 +94,7 @@ namespace tts
     typename rebuild<T,value_type>::type that;
     auto b = begin(that);
     auto e = end(that);
-    auto sz = e - b;
+    std::ptrdiff_t sz = e - b;
 
     for(std::ptrdiff_t i=0;i<sz;++i)
     {
@@ -65,74 +104,62 @@ namespace tts
   }
 
   //====================================================================================================================
+  /// @}
+  //====================================================================================================================
+
+  //====================================================================================================================
+  /**
+    @defgroup tools-generators-class Data Generators
+    @brief Generators to produce data samples for testing.
+    @{
+  **/
+  //====================================================================================================================
+
+  //====================================================================================================================
   /**
     @brief Defines a data generator that always return the same value.
 
-    @groupheader{Example}
-    @code
-  #define TTS_MAIN  // No need for main()
-    #include <tts/tts.hpp>
+    This generator produces always the same value provided at construction converted to the target type.
+    @tparam T Type of the value to be produced
 
-    TTS_CASE_WITH ( "Check behavior for value generator"
-                  , tts::arithmetic_types
-                  , tts::generate(tts::value{42} )
-                  )
-    (auto value)
-    {
-      TTS_EQUAL(value , 42 );
-    };
-    @endcode
+    @groupheader{Example}
+    @snippet doc/generator_value.cpp snippet
   **/
   //====================================================================================================================
   template<typename T> struct value
   {
-    /// Set the value to be generated
     constexpr value(T v) : seed(v) {}
 
-    template<typename U>
-    auto operator()(tts::type<U>, auto...) const { return as_value<U>(seed); }
+    template<typename D>
+    D operator()(tts::type<D>, auto...) const { return as_value<D>(seed); }
 
     T seed;
   };
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce a ramp of data
+    @brief Defines a data generator that produce a ramp of data.
+
+    This generator produces a ramp starting from an initial value and increasing by a fixed step at each call.
+    I.e., for a size `N`, the produced values are: `start, start+step, start+2*step, ..., start+(N-1)*step`.
+
+    @tparam T Type of the initial value
+    @tparam U Type of the step value
 
     @groupheader{Example}
-    @code
-  #define TTS_MAIN  // No need for main()
-    #include <tts/tts.hpp>
-    #include <array>
-
-    TTS_CASE_WITH ( "Check behavior for ramp generator"
-                  , (std::array<int,4>)
-                  , tts::generate(tts::ramp{65}, tts::ramp{1,2})
-                  )
-    (auto ramp1, auto ramp2)
-    {
-      for(int i=0;i<ramp1.size();++i)
-        TTS_EQUAL(ramp1[i],65+i);
-
-      for(int i=0;i<ramp2.size();++i)
-        TTS_EQUAL(ramp2[i],1+i*2);
-    };
-    @endcode
+    @snippet doc/generator_ramp.cpp snippet
   **/
   //====================================================================================================================
   template<typename T, typename U = T> struct ramp
   {
-    /// Define a ramp with an initial value and an unit step
     constexpr ramp(T s)       : start(s), step(1)   {}
-
-    /// Define a ramp with an initial value and a custom step
     constexpr ramp(T s, U st) : start(s), step(st)  {}
 
     template<typename D>
-    auto operator()(tts::type<D>) const { return as_value<D>(start); }
+    D operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start+idx*step); }
 
     template<typename D>
-    auto operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start+idx*step); }
+    D operator()(tts::type<D>) const { return as_value<D>(start); }
 
     T start;
     U step;
@@ -140,46 +167,28 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce a reversed ramp of data
+    @brief Defines a data generator that produce a reverse ramp of data.
+
+    This generator produces a ramp starting from a final value and decreasing by a fixed step at each call.
+    I.e., for a size `N`, the produced values are: `start, start-step, start-2*step, ..., start-(N-1)*step`.
+
+    @tparam T Type of the initial value
+    @tparam U Type of the step value
 
     @groupheader{Example}
-    @code
-  #define TTS_MAIN  // No need for main()
-    #include <tts/tts.hpp>
-    #include <array>
-
-    TTS_CASE_WITH ( "Check behavior for reverse_ramp generator"
-                  , (std::array<int,4>)
-                  , tts::generate(tts::reverse_ramp{0}, tts::reverse_ramp{10,2})
-                  )
-    (auto ramp1, auto ramp2)
-    {
-      TTS_EQUAL(ramp1[0],3);
-      TTS_EQUAL(ramp1[1],2);
-      TTS_EQUAL(ramp1[2],1);
-      TTS_EQUAL(ramp1[3],0);
-
-      TTS_EQUAL(ramp2[0],16);
-      TTS_EQUAL(ramp2[1],14);
-      TTS_EQUAL(ramp2[2],12);
-      TTS_EQUAL(ramp2[3],10);
-    };
-    @endcode
+    @snippet doc/generator_reverse_ramp.cpp snippet
   **/
   //====================================================================================================================
   template<typename T, typename U = T> struct reverse_ramp
   {
-    /// Define a reversed ramp with a final value and an unit step
     constexpr reverse_ramp(T s)       : start(s), step(1)   {}
-
-    /// Define a reversed ramp with a final value and a custom step
     constexpr reverse_ramp(T s, U st) : start(s), step(st)  {}
 
     template<typename D>
-    auto operator()(tts::type<D>) const { return as_value<D>(start); }
+    D operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start-idx*step); }
 
     template<typename D>
-    auto operator()(tts::type<D>, auto idx, auto sz, auto...) const { return as_value<D>(start+(sz-1-idx)*step); }
+    D operator()(tts::type<D>) const { return as_value<D>(start); }
 
     T start;
     U step;
@@ -187,60 +196,59 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce value within an interval
+    @brief Defines a data generator that produce values between two bounds.
+
+    This generator produces values linearly spaced between two bounds (inclusive). For a size `N`, the produced values
+    are: `first, first+step, first+2*step, ..., last`, where `step = (last-first)/(N-1)`.
+
+    When generated values exceed the last bound due to rounding, the last bound is returned instead.
+
+    @tparam T Type of the first bound
+    @tparam U Type of the last bound
 
     @groupheader{Example}
-    @code
-  #define TTS_MAIN  // No need for main()
-    #include <tts/tts.hpp>
-    #include <array>
-
-    TTS_CASE_WITH ( "Check behavior for interval generator"
-                  , (std::array<int,7>)
-                  , tts::generate(tts::between{-3,3})
-                  )
-    (auto data)
-    {
-      TTS_EQUAL(data[0],-3);
-      TTS_EQUAL(data[1],-2);
-      TTS_EQUAL(data[2],-1);
-      TTS_EQUAL(data[3],0);
-      TTS_EQUAL(data[4],1);
-      TTS_EQUAL(data[5],2);
-      TTS_EQUAL(data[6],3);
-    };
-    @endcode
+    @snippet doc/generator_between.cpp snippet
   **/
   //====================================================================================================================
   template<typename T, typename U = T> struct between
   {
-    /// Define the interval for the generator
-    constexpr between(T s, U st) : first(s), last(st)  {}
+    constexpr between(T first, U last) : first_(first), last_(last)  {}
 
     template<typename D>
-    auto operator()(tts::type<D>) const { return as_value<D>(first); }
-
-    template<typename D>
-    auto operator()(tts::type<D>, auto idx, auto sz, auto...) const
+    D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      auto w1   = as_value<D>(first);
-      auto w2   = as_value<D>(last);
+      auto w1   = as_value<D>(first_);
+      auto w2   = as_value<D>(last_);
       auto step = (sz-1) ? (w2-w1)/(sz-1) : 0;
       return _::min( as_value<D>(w1 + idx*step), w2);
     }
 
-    T first;
-    U last;
+    template<typename D>
+    D operator()(tts::type<D>) const { return as_value<D>(first_); }
+
+    T first_;
+    U last_;
   };
 
   //====================================================================================================================
-  // Random generator between two bounds using realistic_distribution
+  /**
+   * @brief Random generator between two bounds using realistic_distribution
+
+    This generator produces random values between two bounds (inclusive) using a realistic distribution. The realistic
+    distribution aims to provide a more uniform coverage of the range by avoiding too many extreme values.
+
+    @tparam Mx Type of the upper bound
+    @tparam Mn Type of the lower bound
+
+    @groupheader{Example}
+    @snippet doc/generator_randoms.cpp snippet
+  **/
   //====================================================================================================================
   template<typename Mx, typename Mn> struct randoms
   {
     constexpr randoms(Mn mn, Mx mx)  : mini(mn), maxi(mx)  {}
 
-    template<typename D> auto operator()(tts::type<D>, auto...)
+    template<typename D> D operator()(tts::type<D>, auto...)
     {
       return random_value(as_value<D>(mini), as_value<D>(maxi));
     }
@@ -248,4 +256,8 @@ namespace tts
     Mn mini;
     Mx maxi;
   };
+
+  //====================================================================================================================
+  /// @}
+  //====================================================================================================================
 }

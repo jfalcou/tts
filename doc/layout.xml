@@ -19,15 +19,13 @@
         <tab type="user" url="@ref test-exceptions" title="Exceptions Tests"/>
         <tab type="user" url="@ref test-types"      title="Type Tests"/>
       </tab>
-      <tab type="usergroup" visible="yes" title="Classes, Aliases and Objects" intro="">
-        <tab type="usergroup" title="Data Generators">
-          <tab type="user" url="@ref tts::between"             title="between"/>
-          <tab type="user" url="@ref tts::ramp"                title="ramp"/>
-          <tab type="user" url="@ref tts::reverse_ramp"        title="reverse_ramp"/>
-          <tab type="user" url="@ref tts::value"               title="value"/>
-          <tab type="user" url="@ref tts::realistic_generator" title="realistic_generator"/>
+      <tab type="usergroup" visible="yes" title="Tools and Helpers" intro="">
+
+        <tab type="usergroup" visible="yes" title="Data Generators">
+          <tab type="user" url="@ref tools-generators-class"  title="Generator Classes"/>
+          <tab type="user" url="@ref tools-generators-custom" title="Customizing Generators"/>
         </tab>
-        <tab type="usergroup" title="Type Helpers">
+        <tab type="usergroup" visible="yes" title="Type Utilities">
           <tab type="user" url="@ref tts::type"             title="type"/>
           <tab type="user" url="@ref tts::types"            title="types"/>
           <tab type="user" url="@ref tts::real_types"       title="real_types" />
@@ -37,8 +35,6 @@
           <tab type="user" url="@ref tts::integral_types"   title="integral_types" />
           <tab type="user" url="@ref tts::arithmetic_types" title="arithmetic_types" />
           <tab type="user" url="@ref tts::typename_"        title="typename_"/>
-        </tab>
-        <tab type="usergroup" title="Runtime Helpers">
           <tab type="user" url="@ref tts::options"                title="options"/>
         </tab>
       </tab>

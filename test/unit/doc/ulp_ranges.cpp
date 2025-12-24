@@ -15,7 +15,7 @@ float bad_x(float x) { return x + x*1e-7f; }
 
 TTS_CASE( "Test range check" )
 {
-  TTS_ULP_RANGE_CHECK ( [] (auto i, auto c) { return (100.f*i)/c; }
+  TTS_ULP_RANGE_CHECK ( [] (auto, auto i, auto c) { return (100.f*i)/c; }
                       , float, float , ok_x, bad_x
                       , 2.
                       );

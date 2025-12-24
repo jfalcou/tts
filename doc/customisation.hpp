@@ -87,54 +87,24 @@
 
   # Data Generator
 
-  Range checks require a data generator to fill their tests. Outside the provided PRNG
-  generators, one can build their own generator.
-
-  A range generator is a Callable object providing the following interface.
-
-  @code
-  auto operator()(auto index, auto count);
-  @endcode
-
-  **Parameters**:
-    + `index` : an integral value representing the index of the generated value.
-    + `count` : an integral value representing the total number of values to be generated.
-
-  **Returns:** A value of any type.
-
-  By this definition, any lambda function with the proper interface is a suitable data
-  generator. This makes defining a local generator trivial as it doesn't require an actual
-  callable object to be defined.
-
-  **Examples:**
-
-  This code defines a generator that will generate `double` between `0` and `value`, each
-  generation returning the `i`th portion of the full value.
-
-  @snippet doc/cli_generator.cpp snippet
-
-  Run with `./my_test.exe --gen-value=99`, it produces the following output:
+  [Test cases based on data sets](@ref TTS_CASE_WITH)  and [range checks](@ref TTS_ULP_RANGE_CHECK) require one or more data generators to perform.
+  If the pre-existing data generators do not fit one's needs, one can provide a `constexpr` compatible callable object
+  with the following signature:
 
   @code
-  TEST: 'Test stateless range check'
-  Comparing: f<float> with g<float> using cli_generator(99)
-  Max ULP         Count (#)       Ratio Sum (%)   Samples
-  --------------------------------------------------------------------------------
-  0.0             1               0.0244141       Input:      0
-                                                  Found:      0
-                                                  instead of: 0
-  --------------------------------------------------------------------------------
-  0.5             3534            86.3037         Input:      0.024169921875
-                                                  Found:      0.02416992373764515
-                                                  instead of: 0.024169921875
-  --------------------------------------------------------------------------------
-  1.0             561             100             Input:      0.120849609375
-                                                  Found:      0.1208496242761612
-                                                  instead of: 0.120849609375
-  --------------------------------------------------------------------------------
-  TEST: 'Test stateless range check' - [PASSED]
-  ----------------------------------------------------------------
-  Results: 1 test - 1/1 (100.00%) success - 0/0 (0.00%) failure - 0/0 (0.00%) invalid
+  template<typename T>
+  T operator()(tts::type<T> target, auto index, auto count);
   @endcode
+
+  where:
+    + `target` is an instance of `tts::type<T>` representing the type of value to be generated.
+    + `index`  is an integral value representing the index of the generated value.
+    + `count`  is an integral value representing the total number of values to be generated.
+
+  For example, the following code defines a generator that will generate values alternating between `-1` and `1`
+  every `n` iterations.
+
+  @snippet doc/generator.cpp snippet
+
 **/
 //==================================================================================================

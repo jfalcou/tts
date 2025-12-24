@@ -220,6 +220,15 @@ namespace tts
 
     return _::current_seed;
   }
+
+  //====================================================================================================================
+  /*! @brief Check if verbose mode is enabled
+
+      @return `true` if verbose mode is enabled, `false` otherwise.
+              Verbose mode is enabled when the `--verbose` or `-v` command line argument is provided.
+  **/
+  //====================================================================================================================
+  inline bool is_verbose() { return _::is_verbose; }
 }
 
 TTS_DISABLE_WARNING_POP

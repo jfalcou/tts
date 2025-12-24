@@ -105,7 +105,7 @@ namespace tts
     _::buffer<RefType>  inputs(count);
 
     for(std::size_t i=0;i<inputs.size();++i)
-      inputs[i] = g(i,count);
+      inputs[i] = produce(type<RefType>{},g,i,count);
 
     std::size_t repetition  = ::tts::arguments().value(1, "--loop");
 
@@ -263,7 +263,7 @@ namespace tts
   struct realistic_generator
   {
     realistic_generator(T mn, T mx) : mini(mn), maxi(mx) {}
-    T operator()(auto,auto) const { return ::tts::random_value(mini,maxi); }
+    T operator()(auto, auto,auto) const { return ::tts::random_value(mini,maxi); }
 
     friend tts::text to_text( realistic_generator const& s )
     {

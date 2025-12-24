@@ -54,10 +54,10 @@ namespace tts
 
 TTS_CASE( "Test stateless range check" )
 {
-  TTS_ULP_RANGE_CHECK ( [](auto i, auto c) { return (100.f*i)/c; }
+  TTS_ULP_RANGE_CHECK ( tts::between(0.f,100.f)
                       , float, (std::array<float,4>)
                       ,  ok_x, ajar_ax
-                      , 128
+                      , 64
                       );
 };
 

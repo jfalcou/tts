@@ -440,6 +440,7 @@ namespace tts
     }
     return _::current_seed;
   }
+  inline bool is_verbose() { return _::is_verbose; }
 }
 TTS_DISABLE_WARNING_POP
 namespace tts::_
@@ -1044,9 +1045,9 @@ namespace tts
 {
   template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
   template<tts::_::sequence Seq, typename U> struct rebuild;
-  template<template<class,class...> class Seq, typename T, typename... S, typename U>
+  template<template<typename,typename...> typename Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T,S...>,U> { using type = Seq<U,S...>; };
-  template<template<class,std::size_t> class Seq, typename T, std::size_t N, typename U>
+  template<template<typename,std::size_t> typename Seq, typename T, std::size_t N, typename U>
   struct rebuild<Seq<T,N>,U>    { using type = Seq<U,N>; };
   template<typename T> auto produce(type<T> const& t, auto g, auto... others)
   {
@@ -1060,7 +1061,7 @@ namespace tts
     typename rebuild<T,value_type>::type that;
     auto b = begin(that);
     auto e = end(that);
-    auto sz = e - b;
+    std::ptrdiff_t sz = e - b;
     for(std::ptrdiff_t i=0;i<sz;++i)
     {
       *b++ = produce(tts::type<value_type>{},g,i,sz,args...);
@@ -1070,8 +1071,8 @@ namespace tts
   template<typename T> struct value
   {
     constexpr value(T v) : seed(v) {}
-    template<typename U>
-    auto operator()(tts::type<U>, auto...) const { return as_value<U>(seed); }
+    template<typename D>
+    D operator()(tts::type<D>, auto...) const { return as_value<D>(seed); }
     T seed;
   };
   template<typename T, typename U = T> struct ramp
@@ -1079,9 +1080,9 @@ namespace tts
     constexpr ramp(T s)       : start(s), step(1)   {}
     constexpr ramp(T s, U st) : start(s), step(st)  {}
     template<typename D>
-    auto operator()(tts::type<D>) const { return as_value<D>(start); }
+    D operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start+idx*step); }
     template<typename D>
-    auto operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start+idx*step); }
+    D operator()(tts::type<D>) const { return as_value<D>(start); }
     T start;
     U step;
   };
@@ -1090,32 +1091,32 @@ namespace tts
     constexpr reverse_ramp(T s)       : start(s), step(1)   {}
     constexpr reverse_ramp(T s, U st) : start(s), step(st)  {}
     template<typename D>
-    auto operator()(tts::type<D>) const { return as_value<D>(start); }
+    D operator()(tts::type<D>, auto idx, auto...) const { return as_value<D>(start-idx*step); }
     template<typename D>
-    auto operator()(tts::type<D>, auto idx, auto sz, auto...) const { return as_value<D>(start+(sz-1-idx)*step); }
+    D operator()(tts::type<D>) const { return as_value<D>(start); }
     T start;
     U step;
   };
   template<typename T, typename U = T> struct between
   {
-    constexpr between(T s, U st) : first(s), last(st)  {}
+    constexpr between(T first, U last) : first_(first), last_(last)  {}
     template<typename D>
-    auto operator()(tts::type<D>) const { return as_value<D>(first); }
-    template<typename D>
-    auto operator()(tts::type<D>, auto idx, auto sz, auto...) const
+    D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      auto w1   = as_value<D>(first);
-      auto w2   = as_value<D>(last);
+      auto w1   = as_value<D>(first_);
+      auto w2   = as_value<D>(last_);
       auto step = (sz-1) ? (w2-w1)/(sz-1) : 0;
       return _::min( as_value<D>(w1 + idx*step), w2);
     }
-    T first;
-    U last;
+    template<typename D>
+    D operator()(tts::type<D>) const { return as_value<D>(first_); }
+    T first_;
+    U last_;
   };
   template<typename Mx, typename Mn> struct randoms
   {
     constexpr randoms(Mn mn, Mx mx)  : mini(mn), maxi(mx)  {}
-    template<typename D> auto operator()(tts::type<D>, auto...)
+    template<typename D> D operator()(tts::type<D>, auto...)
     {
       return random_value(as_value<D>(mini), as_value<D>(maxi));
     }
@@ -2133,7 +2134,7 @@ namespace tts
     _::buffer<out_type> ref_out(count), new_out(count);
     _::buffer<RefType>  inputs(count);
     for(std::size_t i=0;i<inputs.size();++i)
-      inputs[i] = g(i,count);
+      inputs[i] = produce(type<RefType>{},g,i,count);
     std::size_t repetition  = ::tts::arguments().value(1, "--loop");
     double max_ulp = 0.;
     std::size_t nb_buckets  = 2+1+16;
@@ -2226,7 +2227,7 @@ namespace tts
   struct realistic_generator
   {
     realistic_generator(T mn, T mx) : mini(mn), maxi(mx) {}
-    T operator()(auto,auto) const { return ::tts::random_value(mini,maxi); }
+    T operator()(auto, auto,auto) const { return ::tts::random_value(mini,maxi); }
     friend tts::text to_text( realistic_generator const& s )
     {
       return tts::text{ "realistic_generator<%s>(%s,%s)"
