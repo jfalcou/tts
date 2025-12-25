@@ -416,9 +416,6 @@ namespace tts
       return _::option{};
     }
   };
-}
-namespace tts
-{
   namespace _
   {
     inline options current_arguments = {0,nullptr};
@@ -429,6 +426,9 @@ namespace tts
   {
     if(!_::current_arguments.is_valid()) _::current_arguments = options{argc,argv};
   }
+}
+namespace tts
+{
   inline options const& arguments() { return _::current_arguments; }
   inline int random_seed(int base_seed = -1)
   {
@@ -454,7 +454,10 @@ namespace tts::_
     constexpr typename_impl()   { data_ = typename_impl_value(); }
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
-    friend text to_text(typename_impl const& t) { return text("%.*s",t.size(),t.data()); }
+    friend text to_text(typename_impl const& t)
+    {
+      return text("%.*s",t.size(),t.data());
+    }
     template<_::stream OS>
     friend OS& operator<<(OS& os, typename_impl t)
     {
@@ -504,8 +507,8 @@ namespace tts::_
   #else
       that.data = __PRETTY_FUNCTION__;
       auto i = find(that.data,"=") + 2;
+      that.size = find(that.data,"]") - i;
       that.data += i;
-      that.size = length(that.data) - 1;
   #endif
       return that;
     }
@@ -513,8 +516,13 @@ namespace tts::_
 }
 namespace tts
 {
-  template<typename T> inline auto constexpr typename_ = _::typename_impl<T>{};
-  template<typename T> constexpr auto name(T const&){ return typename_<T>; }
+  template<typename T>
+  inline auto constexpr typename_ = _::typename_impl<T>{};
+  template<typename T>
+  constexpr auto name([[maybe_unused]] T const& t)
+  {
+    return typename_<T>;
+  }
 }
 namespace tts
 {
@@ -831,10 +839,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   ::tts::initialize(argc,argv);
   if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
-  srand(tts::_::current_seed);
   ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
   auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
+  srand(tts::random_seed());
   try
   {
     for(auto &t: ::tts::_::suite())
@@ -1056,7 +1064,7 @@ namespace tts
   template<tts::_::sequence T>
   auto produce(type<T> const&, auto g, auto... args)
   {
-    using elmt_type   = std::remove_cvref_t<decltype(*begin(std::declval<T>()))>;
+    using elmt_type   = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
     using value_type  = decltype(produce(tts::type<elmt_type>{},g,0,0ULL,args...));
     typename rebuild<T,value_type>::type that;
     auto b = begin(that);

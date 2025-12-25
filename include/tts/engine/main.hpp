@@ -17,7 +17,7 @@
 #if defined(TTS_DOXYGEN_INVOKED)
 //======================================================================================================================
 /**
-  @defgroup customisation-points Customisation Points
+  @defgroup customization-points Customization Points
   @{
 **/
 //======================================================================================================================
@@ -35,21 +35,7 @@
   @see tts::report
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN  // No need for main()
-  #define TTS_CUSTOM_DRIVER_FUNCTION my_test_main
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Some test" ) {};
-
-  int main(int argc, char const** argv)
-  {
-    ::tts::initialize(argc,argv);
-    my_test_main(argc, argv);
-    return ::tts::report(0,1);
-  }
-  @endcode
+  @snippet doc/custom_driver.cpp snippet
 **/
 //======================================================================================================================
 #define TTS_CUSTOM_DRIVER_FUNCTION
@@ -84,11 +70,11 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
 
-  srand(tts::_::current_seed);
   ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
 
   auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
+  srand(tts::random_seed());
 
   try
   {

@@ -4,10 +4,14 @@
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="usergroup" visible="yes" title="How-Tos">
-      <tab type="user" url="@ref setup"     title="Setup"/>
-      <tab type="user" url="@ref tts101"    title="Getting Started"/>
-      <tab type="user" url="@ref cli"       title="Command Line Interface"/>
-      <tab type="user" url="@ref customize" title="Customizing TTS Behaviour"/>
+      <tab type="user" url="@ref setup"   title="Setup"/>
+      <tab type="user" url="@ref tts101"  title="Getting Started"/>
+      <tab type="user" url="@ref cli"     title="Command Line Interface"/>
+      <tab type="usergroup" visible="yes" title="Customizing TTS">
+        <tab type="user" url="@ref customize"               title="General Behaviour"/>
+        <tab type="user" url="@ref tools-generators-custom" title="Generators"/>
+        <tab type="user" url="@ref customization-points"    title="Other Customizations"/>
+      </tab>
     </tab>
     <tab type="usergroup" visible="yes"     title="Reference Documentation">
       <tab type="usergroup" visible="yes"   title="Testing Macros">
@@ -20,31 +24,13 @@
         <tab type="user" url="@ref test-types"      title="Type Tests"/>
       </tab>
       <tab type="usergroup" visible="yes" title="Tools and Helpers" intro="">
-
-        <tab type="usergroup" visible="yes" title="Data Generators">
-          <tab type="user" url="@ref tools-generators-class"  title="Generator Classes"/>
-          <tab type="user" url="@ref tools-generators-custom" title="Customizing Generators"/>
-        </tab>
-        <tab type="usergroup" visible="yes" title="Type Utilities">
-          <tab type="user" url="@ref tts::type"             title="type"/>
-          <tab type="user" url="@ref tts::types"            title="types"/>
-          <tab type="user" url="@ref tts::real_types"       title="real_types" />
-          <tab type="user" url="@ref tts::int_types"        title="int_types" />
-          <tab type="user" url="@ref tts::signed_types"     title="signed_types" />
-          <tab type="user" url="@ref tts::uint_types"       title="uint_types" />
-          <tab type="user" url="@ref tts::integral_types"   title="integral_types" />
-          <tab type="user" url="@ref tts::arithmetic_types" title="arithmetic_types" />
-          <tab type="user" url="@ref tts::typename_"        title="typename_"/>
-          <tab type="user" url="@ref tts::options"                title="options"/>
-        </tab>
+        <tab type="user" url="@ref tools-config"            title="Configuration"/>
+        <tab type="user" url="@ref tools-generators-class"  title="Data Generators"/>
+        <tab type="user" url="@ref tools-precision"         title="Precision Utilities"/>
+        <tab type="user" url="@ref tools-random"            title="PRNG Utilities"/>
+        <tab type="user" url="@ref tools-text"              title="Text Utilities"/>
+        <tab type="user" url="@ref tools-types"             title="Type Utilities"/>
       </tab>
-      <tab type="usergroup" visible="yes" title="Functions">
-        <tab type="user" url="@ref tts::arguments"    title="arguments"/>
-        <tab type="user" url="@ref tts::as_string"    title="as_string"/>
-        <tab type="user" url="@ref tts::name"         title="name"/>
-        <tab type="user" url="@ref tts::random_seed"  title="random_seed"/>
-      </tab>
-      <tab type="user" url="@ref customisation-points" title="Customisation Points"/>
     </tab>
     <tab type="usergroup" visible="yes" title="Informations">
        <tab type="user" url="@ref rationale" title="Rationale"/>

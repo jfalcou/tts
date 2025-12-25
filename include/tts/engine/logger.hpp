@@ -12,7 +12,6 @@
 
 namespace tts::_
 {
-
   struct fatal_signal {};
 
   struct logger

@@ -58,21 +58,29 @@
 
   @snippet doc/comparators.cpp snippet2
 
-  # Precision Measurement
+  @section customize-precision Precision Measurement
 
   ## ULP Distance
   When dealing with floating point values, **TTS** uses its `ulp_distance` function to perform
   all [ULP checks](rationale.html#ulp). If needed, one can specialize this function in the
   type's namespace or as a friend function to let **TTS** use a special ULP comparison
-  scheme. As usual, one can also reuse the pre-existing `tts::ulp_check` to implement their
+  scheme. One can also reuse the pre-existing `tts::ulp_check` to implement their
   own.
 
   @snippet doc/precision_ulp.cpp snippet
 
+  ## IEEE Comparison
+  IEEE comparison consists in checking for exact equality while considering all NaN/Invalid values of
+  floating point values. One can specialize the `ieee_equal` function in the type's namespace or as a friend function
+  to let **TTS** use a special IEEE comparison scheme. One can also reuse the pre-existing `tts::ieee_check` to
+  implement their own.
+
+  @snippet doc/precision_ieee.cpp snippet
+
   ## Relative Comparison
   Relative precision checks within **TTS** are done through the `relative_distance` function.
   If needed, one can specialize this function in the type's namespace or as a friend function
-  to let **TTS** use a special relative precision scheme. As usual, one can also reuse the
+  to let **TTS** use a special relative precision scheme. One can also reuse the
   pre-existing `tts::relative_check` to implement their own.
 
   @snippet doc/precision_relative.cpp snippet
@@ -80,16 +88,16 @@
   ## Absolute Comparison
   **TTS** uses its `absolute_distance` function to perform all absolute precision checks. If
   needed, one can specialize this function in the type's namespace or as a friend function to
-  let **TTS** use a special absolute precision scheme. As usual, one can also reuse the
+  let **TTS** use a special absolute precision scheme. One can also reuse the
   pre-existing `tts::absolute_check` to implement their own.
 
   @snippet doc/precision_absolute.cpp snippet
 
   # Data Generator
 
-  [Test cases based on data sets](@ref TTS_CASE_WITH)  and [range checks](@ref TTS_ULP_RANGE_CHECK) require one or more data generators to perform.
-  If the pre-existing data generators do not fit one's needs, one can provide a `constexpr` compatible callable object
-  with the following signature:
+  [Test cases based on data sets](@ref TTS_CASE_WITH)  and [range checks](@ref TTS_ULP_RANGE_CHECK)
+  require one or more data generators to perform. If the pre-existing data generators are not suitable,
+  define your own by providing a `constexpr` callable object with the following signature:
 
   @code
   template<typename T>

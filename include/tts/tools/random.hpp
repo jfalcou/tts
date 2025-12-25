@@ -1,4 +1,5 @@
 //======================================================================================================================
+//! @file
 /*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
@@ -11,6 +12,13 @@
 
 namespace tts
 {
+  //====================================================================================================================
+  /**
+    @defgroup tools-random Utilities
+    @{
+  **/
+  //====================================================================================================================
+
   namespace _
   {
     template<std::integral T> T roll(T M, T N) { return M + rand() / (RAND_MAX / (N - M + 1) + 1); }
@@ -76,6 +84,26 @@ namespace tts
     }
   }
 
+  //====================================================================================================================
+  /**
+    @public
+    @brief Generates a random value between two bounds.
+    @ingroup tools-random
+
+    This function generates a random value of type `T` between the specified `mini` and `maxi` bounds using an uniform
+    distribution for integral types and a log-uniform distribution for floating-point types. The seed is derived from the
+    @ref tts::random_seed function.
+
+    @groupheader{Example}
+    @snippet doc/random.cpp snippet
+
+    @param mini Lower bound for the random value generation.
+    @param maxi Upper bound for the random value generation.
+    @return A random value of type `T` between `mini` and `maxi`.
+
+    @see tts::randoms
+  **/
+  //====================================================================================================================
   template<typename T> T random_value(T mini, T maxi)
   {
     return _::roll_random(mini,maxi);

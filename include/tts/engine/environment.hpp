@@ -8,6 +8,8 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/engine/deps.hpp>
+
 //======================================================================================================================
 // Test environment
 //======================================================================================================================
@@ -52,8 +54,8 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Final tests handler customization point
-    @ingroup customisation-points
+    @brief Test reporting customization point
+    @ingroup customization-points
 
     Aggregates test results and validate the whole test suite with respect to expect numbers of failures and invalids.
 

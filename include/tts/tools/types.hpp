@@ -1,4 +1,5 @@
 //======================================================================================================================
+//! @file
 /*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
@@ -11,11 +12,14 @@
 namespace tts
 {
   //====================================================================================================================
-  //! @brief Type list structure
-  //!
-  //! Encapsulates a variadic list of types to be processed by scenarios.
-  //!
-  //! @tparam Ts List of types to embed into a type list
+  /**
+    @addtogroup tools-types
+    @{
+  **/
+  //====================================================================================================================
+
+  //====================================================================================================================
+  /// Encapsulates a variadic list of types into a reusable object
   //====================================================================================================================
   template<typename... Ts>
   struct types
@@ -23,7 +27,7 @@ namespace tts
     template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
   };
 
-  /// Concatenate types lists
+  // Concatenate types lists
   template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
 
   template<typename... T> struct as_type_list
@@ -48,11 +52,7 @@ namespace tts
   using as_type_list_t = typename as_type_list<T...>::type;
 
   //====================================================================================================================
-  //! @brief Type wrapper
-  //!
-  //! Encapsulates a type to be processed by scenarios.
-  //!
-  //! @tparam T Type to embed
+  /// @brief Encapsulates a single type into a reusable type object
   //====================================================================================================================
   template<typename T> struct type
   {
@@ -65,29 +65,32 @@ namespace tts
     }
   };
 
-  // Reusable pre-made types lists
-
-  /// List of all standard floating point types.
+  /// Types list containing all standard floating point types.
   using real_types        = types < double,float>;
 
-  /// List of all standard signed integer types.
+  /// Types list containing all standard signed integer types.
   using int_types         = types < std::int64_t , std::int32_t , std::int16_t , std::int8_t>;
 
-  /// List of all standard unsigned types.
+  /// Types list containing all standard unsigned types.
   using uint_types        = types < std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t>;
 
-  /// List of all standard integer types.
+  /// Types list containing all standard integer types.
   using integral_types    = types < std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
                                   , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
                                   >;
 
-  /// List of all standard signed types.
+  /// Types list containing all standard signed types.
   using signed_types      = types < double,float
                                   , std::int64_t , std::int32_t , std::int16_t , std::int8_t
                                   >;
-  /// List of all standard arithmetic types.
+
+  /// Types list containing all standard arithmetic types.
   using arithmetic_types  = types < double,float
                                   , std::int64_t  , std::int32_t  , std::int16_t  , std::int8_t
                                   , std::uint64_t , std::uint32_t , std::uint16_t , std::uint8_t
                                   >;
+
+  //====================================================================================================================
+  /// @}
+  //====================================================================================================================
 }

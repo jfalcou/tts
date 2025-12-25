@@ -1,4 +1,5 @@
 //======================================================================================================================
+//! @file
 /*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
@@ -9,6 +10,7 @@
 
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/text.hpp>
+
 namespace tts::_
 {
   template<typename T> struct typename_impl
@@ -22,7 +24,10 @@ namespace tts::_
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
 
-    friend text to_text(typename_impl const& t) { return text("%.*s",t.size(),t.data()); }
+    friend text to_text(typename_impl const& t)
+    {
+      return text("%.*s",t.size(),t.data());
+    }
 
     template<_::stream OS>
     friend OS& operator<<(OS& os, typename_impl t)
@@ -85,8 +90,8 @@ namespace tts::_
   #else
       that.data = __PRETTY_FUNCTION__;
       auto i = find(that.data,"=") + 2;
+      that.size = find(that.data,"]") - i;
       that.data += i;
-      that.size = length(that.data) - 1;
   #endif
       return that;
     }
@@ -95,9 +100,51 @@ namespace tts::_
 
 namespace tts
 {
-  /// Provide a string containing the name of the type `T` in readable form.
-  template<typename T> inline auto constexpr typename_ = _::typename_impl<T>{};
+  //====================================================================================================================
+  /**
+    @defgroup tools-types Type Utilities
+    @{
+  **/
+  //====================================================================================================================
 
-  /// Provide a string containing the name of the type of its parameter in readable form.
-  template<typename T> constexpr auto name(T const&){ return typename_<T>; }
+  //====================================================================================================================
+  /**
+    @public
+    @brief Evaluates to an object containing the name of the type `T` in readable form.
+
+    `typename_<T>` is a `constexpr` object that can be used to retrieve the name of a type `T` as a text-like object.
+    It can be used in conjunction with `as_text` or stream output operators to display type names.
+
+    @groupheader{Example}
+    @snippet doc/typename.cpp snippet1
+
+    @tparam T Type to query.
+  **/
+  //====================================================================================================================
+  template<typename T>
+  inline auto constexpr typename_ = _::typename_impl<T>{};
+
+  //====================================================================================================================
+  /**
+    @public
+    @brief Returns the name of the type `T` in readable form.
+
+    This function is a convenience wrapper around @ref typename_.
+
+    @groupheader{Example}
+    @snippet doc/typename.cpp snippet2
+
+    @param t Value to retrieve the type name for.
+    @return A `typename_` instance representing the name of `T` as a string-like object.
+  **/
+  //====================================================================================================================
+  template<typename T>
+  constexpr auto name([[maybe_unused]] T const& t)
+  {
+    return typename_<T>;
+  }
+
+  //====================================================================================================================
+  /// @}
+  //====================================================================================================================
 }

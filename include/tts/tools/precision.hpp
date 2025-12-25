@@ -12,10 +12,20 @@
 namespace tts
 {
   //====================================================================================================================
+  /**
+    @defgroup tools-precision Precision Utilities
+    @{
+  **/
+  //====================================================================================================================
+
+  //====================================================================================================================
   /*!
+    @ingroup tools-precision
+    @public
     @brief Compute the absolute distance between two values
 
-    This function can be overloaded in the @ref tts namespace to compute the  distance for external types.
+    @note This functions is meant to help implementing @ref TTS_ABSOLUTE_EQUAL support for custom types.
+          For testing purposes, use @ref TTS_ABSOLUTE_EQUAL directly. See @ref customize-precision for more details.
 
     @param  a Value to compare
     @param  b Value to compare
@@ -62,9 +72,12 @@ namespace tts
 
   //====================================================================================================================
   /*!
+    @ingroup tools-precision
+    @public
     @brief Compute the relative distance between two values
 
-    This function can be overloaded in the @ref tts namespace to compute the relative distance for external types.
+    @note This functions is meant to help implementing @ref TTS_RELATIVE_EQUAL support for custom types.
+          For testing purposes, use @ref TTS_RELATIVE_EQUAL directly. See @ref customize-precision for more details.
 
     @param  a Value to compare
     @param  b Value to compare
@@ -109,9 +122,12 @@ namespace tts
 
   //====================================================================================================================
   /*!
+    @ingroup tools-precision
+    @public
     @brief Compute the distance in ULP between two values
 
-    This function can be overloaded in the @ref tts namespace to compute the distance in ULP for external types.
+    @note This functions is meant to help implementing @ref TTS_ULP_EQUAL support for custom types.
+          For testing purposes, use @ref TTS_ULP_EQUAL directly. See @ref customize-precision for more details.
 
     @param  a Value to compare
     @param  b Value to compare
@@ -176,9 +192,12 @@ namespace tts
 
   //====================================================================================================================
   /*!
+    @ingroup tools-precision
+    @public
     @brief Compute if values are exactly equals or all NaNs/Invalids
 
-    This function can be overloaded in the @ref tts namespace to compute the strict equality for external types.
+    @note This functions is meant to help implementing @ref TTS_IEEE_EQUAL support for custom types.
+          For testing purposes, use @ref TTS_IEEE_EQUAL directly. See @ref customize-precision for more details.
 
     @param  a Value to compare
     @param  b Value to compare
@@ -197,4 +216,7 @@ namespace tts
       return a == b;
     }
   }
+  //====================================================================================================================
+  //! @}
+  //====================================================================================================================
 }

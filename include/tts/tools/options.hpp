@@ -1,4 +1,5 @@
 //======================================================================================================================
+//! @file
 /*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
@@ -77,37 +78,45 @@ namespace tts::_
 namespace tts
 {
   //====================================================================================================================
-  /*!
-      @brief Command line arguments lightweight processor
+  /**
+    @defgroup tools-config Configuration Utilities
+  **/
+  //====================================================================================================================
 
-      @see option
+  //====================================================================================================================
+  /**
+    @ingroup tools-config
+    @public
+    @brief Command line arguments lightweight processor
 
-      @groupheader{Example}
+    @see option
 
-      @code
-      #define TTS_MAIN  // No need for main()
-      #include <tts/tts.hpp>
+    @groupheader{Example}
 
-      TTS_CASE( "CLI test - flag" )
-      {
-        // Will fail if the test is not called via
-        //  ./mytest.exe --pass--the-test or ./mytest.exe -W
-        TTS_EXPECT( (tts::arguments()("--pass--the-test","-W")) );
+    @code
+    #define TTS_MAIN  // No need for main()
+    #include <tts/tts.hpp>
 
-        // Will fail if the test is not called via
-        //  ./mytest.exe --at_last
-        TTS_EXPECT( tts::arguments()["--at_last"] );
-      };
+    TTS_CASE( "CLI test - flag" )
+    {
+      // Will fail if the test is not called via
+      //  ./mytest.exe --pass--the-test or ./mytest.exe -W
+      TTS_EXPECT( (tts::arguments()("--pass--the-test","-W")) );
 
-      TTS_CASE( "CLI test - setting" )
-      {
-        // Will fail if the test is not called via ./mytest.exe --xxx=13.37
-        TTS_EQUAL( tts::arguments().value<double>("--xxx"), 13.37);
+      // Will fail if the test is not called via
+      //  ./mytest.exe --at_last
+      TTS_EXPECT( tts::arguments()["--at_last"] );
+    };
 
-        // Will fail if the test is not called via ./mytest.exe --www=9 or ./mytest.exe -zzz=9
-        TTS_EQUAL( (tts::arguments().value(0,"--www","-zzz")), 9);
-      };
-      @endcode
+    TTS_CASE( "CLI test - setting" )
+    {
+      // Will fail if the test is not called via ./mytest.exe --xxx=13.37
+      TTS_EQUAL( tts::arguments().value<double>("--xxx"), 13.37);
+
+      // Will fail if the test is not called via ./mytest.exe --www=9 or ./mytest.exe -zzz=9
+      TTS_EQUAL( (tts::arguments().value(0,"--www","-zzz")), 9);
+    };
+    @endcode
   **/
   //====================================================================================================================
   struct options
@@ -165,10 +174,7 @@ namespace tts
       return _::option{};
     }
   };
-}
 
-namespace tts
-{
   namespace _
   {
     inline options current_arguments = {0,nullptr};
@@ -177,23 +183,32 @@ namespace tts
   }
 
   //====================================================================================================================
-  /*!
+  /**
     @brief Initializes a TTS test suite
+    @ingroup customization-points
 
     This function is to be called when writing a custom entry point.
 
     @param argc Number of command line argument fetched from `main`
     @param argv Command line arguments pointer fetched from `main`
+
+    @see TTS_CUSTOM_DRIVER_FUNCTION
   **/
   //====================================================================================================================
   inline void initialize(int argc, const char** argv)
   {
     if(!_::current_arguments.is_valid()) _::current_arguments = options{argc,argv};
   }
+}
 
 
+namespace tts
+{
   //====================================================================================================================
-  /*! @brief Retrieve the current list of command line argument
+  /**
+      @ingroup tools-config
+      @public
+      @brief Retrieve the current list of command line argument
 
       @see options
       @return The pre-processed command line arguments as a reference to a tts::options instance.
@@ -202,11 +217,20 @@ namespace tts
   inline options const& arguments() { return _::current_arguments; }
 
   //====================================================================================================================
-  /*! @brief Initialize the random seed for tests
+  /**
+      @ingroup tools-random
+      @public
+      @brief Initialize the random seed for tests
 
-      @param base_seed  Seed to use for random number generations. If not provided, the seed provided by the `--seed`
-                        command line argument will be used. If none is provided, the seed will be computed from the
-                        current elapsed time.
+      Initializes and retrieves the random seed used by TTS for random number generation. If the seed has not been
+      initialized yet, it uses the value provided as argument. If that value is -1, it uses the current time as seed.
+      Once initialized, calling this function will return the same seed each time.
+
+      @groupheader{Example}
+      @snippet doc/random_seed.cpp snippet
+
+      @param base_seed  Seed to use for random number generations.
+      @return The current random seed used by TTS.
   **/
   //====================================================================================================================
   inline int random_seed(int base_seed = -1)
@@ -222,10 +246,13 @@ namespace tts
   }
 
   //====================================================================================================================
-  /*! @brief Check if verbose mode is enabled
+  /**
+    @ingroup tools-config
+    @public
+    @brief Check if verbose mode is enabled
 
-      @return `true` if verbose mode is enabled, `false` otherwise.
-              Verbose mode is enabled when the `--verbose` or `-v` command line argument is provided.
+    @return `true` if verbose mode is enabled, `false` otherwise.
+            Verbose mode is enabled when the `--verbose` or `-v` command line argument is provided.
   **/
   //====================================================================================================================
   inline bool is_verbose() { return _::is_verbose; }

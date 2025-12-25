@@ -88,7 +88,7 @@ namespace tts
   template<tts::_::sequence T>
   auto produce(type<T> const&, auto g, auto... args)
   {
-    using elmt_type   = std::remove_cvref_t<decltype(*begin(std::declval<T>()))>;
+    using elmt_type   = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
     using value_type  = decltype(produce(tts::type<elmt_type>{},g,0,0ULL,args...));
 
     typename rebuild<T,value_type>::type that;
