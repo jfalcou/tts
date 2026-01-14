@@ -1076,7 +1076,7 @@ namespace tts
       T value = {};
       if (mini > 0)
       {
-        if (mini < 1 && maxi > 1) mini = std::max(T(1) / std::sqrt(maxi), mini);
+        if (mini < 1 && maxi > 1) mini = max(T(1) / std::sqrt(maxi), mini);
         mini = (maxi == 1) ? eps : mini;
         T log_min = std::log10(mini);
         T log_max = std::log10(maxi);
@@ -1085,7 +1085,7 @@ namespace tts
       }
       else if (maxi < 0)
       {
-        if (mini < -1 && maxi > -1) maxi = std::min(T(1) / std::sqrt(-mini), maxi);
+        if (mini < -1 && maxi > -1) maxi = min(T(1) / std::sqrt(-mini), maxi);
         maxi = (mini == -1) ? -eps : maxi;
         T log_min = std::log10(-maxi);
         T log_max = std::log10(-mini);
