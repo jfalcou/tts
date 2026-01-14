@@ -24,4 +24,6 @@ namespace tts::_
     constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
     constexpr auto abs(auto x)         { return x<0 ? -x : x;  };
     constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
+
+    template<typename T> T exp10(T a) { return std::pow(T(10), a); }
 }

@@ -986,62 +986,117 @@ namespace tts::_
     constexpr auto max(auto x, auto y) { return x<y ?  y : x;  };
     constexpr auto abs(auto x)         { return x<0 ? -x : x;  };
     constexpr bool signbit(auto x)     { return (as_int(x) >> (sizeof(x)*8-1)) != 0; };
+    template<typename T> T exp10(T a) { return std::pow(T(10), a); }
 }
 namespace tts
 {
   namespace _
   {
-    template<std::integral T> T roll(T M, T N) { return M + rand() / (RAND_MAX / (N - M + 1) + 1); }
-    template<std::floating_point T> T roll(T M, T N)
+    struct rand_result
     {
-      double base = static_cast<double>((rand() * (N-M)));
-      return static_cast<T>(M + base / static_cast<double>(RAND_MAX));
-    }
-    template<typename T> T exp10(T a) { return exp(log(T(10))*a); }
-    template<std::integral T> T roll_random(T mini, T maxi)
+      unsigned int val, max;
+    };
+    inline rand_result rand30()
     {
-      return _::roll(mini, maxi);
+      if constexpr (RAND_MAX >= 2147483647)
+      {
+        return { static_cast<unsigned int>(std::rand()), static_cast<unsigned int>(RAND_MAX) };
+      }
+      else
+      {
+        constexpr unsigned int SHIFT_MAX = (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
+        unsigned int r = (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
+        return { r, SHIFT_MAX };
+      }
     }
-    template<std::floating_point T> T roll_random(T mini, T maxi)
+    template<std::integral T>
+    T roll(T M, T N)
+    {
+      if (M == N) return M;
+      if (M > N) std::swap(M, N);
+      using U = std::make_unsigned_t<T>;
+      U range = static_cast<U>(N - M) + 1;
+      if (range <= static_cast<U>(RAND_MAX))
+      {
+        unsigned int r_max = static_cast<unsigned int>(RAND_MAX);
+        unsigned int bucket_size = r_max / static_cast<unsigned int>(range);
+        unsigned int limit = bucket_size * static_cast<unsigned int>(range);
+        unsigned int r;
+        do
+        {
+          r = static_cast<unsigned int>(std::rand());
+        } while (r >= limit);
+        return M + static_cast<T>(r / bucket_size);
+      }
+      auto [r_raw, r_max] = rand30();
+      if (range > r_max)
+      {
+        return M + static_cast<T>(r_raw % range);
+      }
+      U bucket_size = r_max / range;
+      U limit       = bucket_size * range;
+      unsigned int r = r_raw;
+      while (r >= limit)
+      {
+        r = rand30().val;
+      }
+      return M + static_cast<T>(r / bucket_size);
+    }
+    template<std::floating_point T>
+    T roll(T M, T N)
+    {
+      if (M == N) return M;
+      if (M > N) std::swap(M, N);
+      auto [r_raw, r_max] = rand30();
+      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
+      return static_cast<T>(M + uniform_01 * (N - M));
+    }
+    template<std::integral T>
+    T roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
+    template<std::floating_point T>
+    T roll_random(T mini, T maxi)
     {
       constexpr T smvlp  = std::numeric_limits<T>::min();
       constexpr T valmax = std::numeric_limits<T>::max();
       constexpr T eps    = std::numeric_limits<T>::epsilon();
-      constexpr T nan    = std::numeric_limits<T>::quiet_NaN();
-      if (mini ==    0) mini =  smvlp;
-      if (isinf(maxi) && maxi > 0) maxi =  valmax;
-      if (isinf(mini) && mini < 0) maxi =  valmax;
-      if (maxi ==    0) maxi = -smvlp;
-      T value = {};
-      if(mini < 0 && maxi > 0)
+      constexpr T quiet_nan = std::numeric_limits<T>::quiet_NaN();
+      if (mini == 0) mini = smvlp;
+      if (maxi == 0) maxi = -smvlp;
+      if (std::isinf(mini) && mini < 0) mini = -valmax;
+      if (std::isinf(maxi) && maxi > 0) maxi =  valmax;
+      if (mini < 0 && maxi > 0)
       {
-        auto amn  = _::abs(mini);
-        auto amx  = _::abs(maxi);
-        auto lamn = log10(amn);
-        auto lamx = log10(amx);
-        auto s    = _::roll(T{0},amx+amn) < amx;
-        if      (lamn >= 0 && log10(amx)  >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
-        else if (lamn <= 0 && lamx        <=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
-        else if (lamn <= 0 && lamx        >=  0)  return s ? -roll_random(smvlp, amn)   :  roll_random(smvlp, amx );
-        else if (lamn >= 0 && lamx        <=  0)  return s ?  roll_random(smvlp, -mini) : -roll_random(smvlp, maxi);
-        else                                      return nan;
+        T abs_min = _::abs(mini);
+        T abs_max = _::abs(maxi);
+        T total_mag = abs_min + abs_max;
+        bool pick_positive = _::roll(T(0.0), total_mag) < abs_max;
+        if (pick_positive) return  roll_random(smvlp, maxi);
+        else               return -roll_random(smvlp, abs_min);
+      }
+      T value = {};
+      if (mini > 0)
+      {
+        if (mini < 1 && maxi > 1) mini = std::max(T(1) / std::sqrt(maxi), mini);
+        mini = (maxi == 1) ? eps : mini;
+        T log_min = std::log10(mini);
+        T log_max = std::log10(maxi);
+        T log_val = _::roll(log_min, log_max);
+        value = _::exp10(log_val);
+      }
+      else if (maxi < 0)
+      {
+        if (mini < -1 && maxi > -1) maxi = std::min(T(1) / std::sqrt(-mini), maxi);
+        maxi = (mini == -1) ? -eps : maxi;
+        T log_min = std::log10(-maxi);
+        T log_max = std::log10(-mini);
+        T log_val = _::roll(log_min, log_max);
+        value = -_::exp10(log_val);
       }
       else
       {
-        if (mini > 0)
-        {
-          if (mini < 1 && maxi >  1) mini = _::max(T(1)/std::sqrt(maxi), mini);
-          mini = (maxi == 1) ? eps : mini;
-          value = _::exp10(_::roll(log10(mini), log10(maxi)));
-        }
-        else if (maxi < 0)
-        {
-          if (mini < -1 && maxi > -1) maxi = _::min(T(1)/std::sqrt(mini), maxi);
-          maxi = (mini == -1) ? -eps : maxi;
-          value= -_::exp10(_::roll(log10(-maxi), log10(-mini)));
-        }
-        return value;
+        return quiet_nan;
       }
+      return value;
     }
   }
   template<typename T> T random_value(T mini, T maxi)
