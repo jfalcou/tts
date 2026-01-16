@@ -250,6 +250,11 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...)
     {
+      if constexpr(std::is_unsigned_v<D>)
+      {
+        assert(mini >= 0 && "Minimum value for unsigned type random generator must be non-negative");
+        assert(maxi >= 0 && "Maximum value for unsigned type random generator must be non-negative");
+      }
       return random_value(as_value<D>(mini), as_value<D>(maxi));
     }
 
