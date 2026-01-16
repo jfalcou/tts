@@ -64,6 +64,43 @@ namespace tts::_ { inline constexpr bool use_main = false; }
 #endif
 
 #if defined(TTS_MAIN)
+//======================================================================================================================
+// Outlined reporting functions implementations
+//======================================================================================================================
+namespace tts::_
+{
+  void report_pass(const char* location, const char* message)
+  {
+    if(::tts::_::is_verbose && !::tts::_::is_quiet)
+    {
+      printf( "  [+] %s : %s\n", location, message );
+    }
+  }
+
+  void report_fail(const char* location, const char* message, ::tts::text const& type)
+  {
+    if(!::tts::_::is_verbose)
+    {
+      if( !type.is_empty() ) printf(">  With <T = %s>\n", type.data());
+    }
+
+    if(!::tts::_::is_quiet)
+    {
+      printf( "  [X] %s : ** FAILURE ** : %s\n", location, message );
+    }
+  }
+
+  void report_fatal(const char* location, const char* message, ::tts::text const& type)
+  {
+    if(!::tts::_::is_verbose)
+    {
+      if( !type.is_empty() ) printf(">  With <T = %s>\n", type.data());
+    }
+
+    printf( "  [@] %s : @@ FATAL @@ : %s\n", location, message );
+  }
+}
+
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc,argv);
