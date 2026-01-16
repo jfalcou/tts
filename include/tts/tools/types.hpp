@@ -52,6 +52,27 @@ namespace tts
   using as_type_list_t = typename as_type_list<T...>::type;
 
   //====================================================================================================================
+  /// @brief Filter a types list by a predicate
+  ///
+  /// Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates
+  /// to true.
+  ///
+  /// @tparam Pred  Predicate template taking a single type parameter and exposing a static boolean member `value`
+  /// @tparam Type  Types list to filter
+  //====================================================================================================================
+  template<template<typename> typename Pred, typename Type> struct filter
+  {
+    template<typename T>
+    static consteval std::conditional_t<Pred<T>::value, types<T>, types<>> filter_type();
+
+    template<typename... Ls> static consteval auto filter_impl(types<Ls...>)
+    {
+      return (filter_type<Ls>() + ... + types<>{});
+    }
+    using types_list = decltype(filter_impl(Type{}));
+  };
+
+  //====================================================================================================================
   /// @brief Encapsulates a single type into a reusable type object
   //====================================================================================================================
   template<typename T> struct type
