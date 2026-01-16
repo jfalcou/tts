@@ -551,6 +551,16 @@ namespace tts
   };
   template<typename... T>
   using as_type_list_t = typename as_type_list<T...>::type;
+  template<template<typename> typename Pred, typename Type> struct filter
+  {
+    template<typename T>
+    static consteval std::conditional_t<Pred<T>::value, types<T>, types<>> filter_type();
+    template<typename... Ls> static consteval auto filter_impl(types<Ls...>)
+    {
+      return (filter_type<Ls>() + ... + types<>{});
+    }
+    using types_list = decltype(filter_impl(Type{}));
+  };
   template<typename T> struct type
   {
     friend text to_text(type) { return as_text(typename_<T>); }
@@ -1433,12 +1443,29 @@ do                                                                              
 #endif
 #define TTS_NO_THROW_(EXPR)         TTS_NO_THROW_IMPL(EXPR,TTS_FAIL)
 #define TTS_NO_THROW_REQUIRED(EXPR) TTS_NO_THROW_IMPL(EXPR,TTS_FATAL)
+#include <cstring>
 namespace tts::_
 {
   template<typename L, typename R>
   concept comparable_equal  = requires(L l, R r) { compare_equal(l,r); };
   template<typename L, typename R>
   concept comparable_less   = requires(L l, R r) { compare_less(l,r); };
+  template<typename L, typename R>
+  inline constexpr bool bit_eq(L const &l, R const &r)
+  {
+    static_assert (sizeof(L) == sizeof(R)
+                  , "Types must have the same size for bitwise comparison"
+                  );
+    return std::memcmp(&l, &r, sizeof(L)) == 0;
+  }
+  template<typename L, typename R>
+  inline constexpr bool bit_neq(L const &l, R const &r)
+  {
+    static_assert (sizeof(L) == sizeof(R)
+                  , "Types must have the same size for bitwise comparison"
+                  );
+    return std::memcmp(&l, &r, sizeof(L)) != 0;
+  }
   template<typename L, typename R> inline constexpr bool eq(L const &l, R const &r)
   {
     if constexpr( comparable_equal<L,R> ) return compare_equal(l,r);
@@ -1506,6 +1533,16 @@ else                                                                            
   TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                        \
 }(A,B)                                                                                              \
 
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_BIT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_BIT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, bit_eq , "==" , "!=" , __VA_ARGS__)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, bit_neq , "!=" , "==" , __VA_ARGS__)
+#endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EQUAL(LHS, RHS, ...)
 #else

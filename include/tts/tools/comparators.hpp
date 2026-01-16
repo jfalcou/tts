@@ -6,6 +6,7 @@
 */
 //======================================================================================================================
 #pragma once
+#include <cstring>
 
 //======================================================================================================================
 // Wrappers for comparisons with external setup
@@ -17,6 +18,26 @@ namespace tts::_
 
   template<typename L, typename R>
   concept comparable_less   = requires(L l, R r) { compare_less(l,r); };
+
+  template<typename L, typename R>
+  inline constexpr bool bit_eq(L const &l, R const &r)
+  {
+    static_assert (sizeof(L) == sizeof(R)
+                  , "Types must have the same size for bitwise comparison"
+                  );
+
+    return std::memcmp(&l, &r, sizeof(L)) == 0;
+  }
+
+  template<typename L, typename R>
+  inline constexpr bool bit_neq(L const &l, R const &r)
+  {
+    static_assert (sizeof(L) == sizeof(R)
+                  , "Types must have the same size for bitwise comparison"
+                  );
+
+    return std::memcmp(&l, &r, sizeof(L)) != 0;
+  }
 
   template<typename L, typename R> inline constexpr bool eq(L const &l, R const &r)
   {

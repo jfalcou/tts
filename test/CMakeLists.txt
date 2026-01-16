@@ -58,6 +58,7 @@ copa_make_single_unit ( INTERFACE     tts_test
 copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  unit.infrastructure.exe
                         FILES         unit/relation/main.cpp
+                                      unit/relation/bit_equal.cpp
                                       unit/relation/equal.cpp
                                       unit/relation/greater.cpp
                                       unit/relation/greater_equal.cpp

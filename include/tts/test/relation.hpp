@@ -74,6 +74,47 @@ else                                                                            
 
 //======================================================================================================================
 /**
+  @def TTS_BIT_EQUAL
+  @brief Performs equality comparison between the bits of two expressions
+
+  This comparison is performed by using memcmp on the underlying representation of both expressions.
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+  @snippet doc/bit_equal.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_BIT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_BIT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, bit_eq , "==" , "!=" , __VA_ARGS__)
+#endif
+
+
+//======================================================================================================================
+/**
+  @def TTS_BIT_NOT_EQUAL
+  @brief Performs inequality comparison between the bits of two expressions
+
+  This comparison is performed by using memcmp on the underlying representation of both expressions.
+
+  @param LHS, RHS  Expressions to compare.
+  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+
+  @groupheader{Example}
+  @snippet doc/bit_not_equal.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)
+#else
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, bit_neq , "!=" , "==" , __VA_ARGS__)
+#endif
+
+//======================================================================================================================
+/**
   @def TTS_EQUAL
   @brief Performs equality comparison between two expressions
 
