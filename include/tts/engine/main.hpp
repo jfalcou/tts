@@ -71,6 +71,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
     return ::tts::_::usage(argv[0]);
 
   ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
+  ::tts::_::is_quiet   = ::tts::arguments()("-q","--quiet");
 
   auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
@@ -84,7 +85,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
-      printf("TEST: '%s'\n", t.name);
+      if(!::tts::_::is_quiet) printf("TEST: '%s'\n", t.name);
       fflush(stdout);
       t();
       done_tests++;
@@ -92,19 +93,20 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("  [!!]: EMPTY TEST CASE\n");
+        if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
         fflush(stdout);
       }
       else if(failure_count  == ::tts::global_runtime.failure_count )
       {
-        printf("TEST: '%s' - [PASSED]\n", t.name);
+        if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
         fflush(stdout);
       }
     }
   }
   catch( ::tts::_::fatal_signal& )
   {
-    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
+    if(!::tts::_::is_quiet)
+      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
   }
 
   if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);

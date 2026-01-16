@@ -68,6 +68,7 @@ namespace tts
 
     template<typename... S> void header(S const&... s)
     {
+      if(::tts::_::is_quiet) return;
       ((printf("%-*s", 16, s)), ...);
       puts("");
     }
@@ -75,6 +76,7 @@ namespace tts
     template<typename U,  typename R, typename V>
     void results( U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
+      if(::tts::_::is_quiet) return;
       if(ulp!=-1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
       else        printf("%*s", static_cast<int>(48+strlen(desc)),desc);
       adapter<V>::display(v);
@@ -84,6 +86,7 @@ namespace tts
     template<typename P>
     void print_producer(P const& prod, auto alt)
     {
+      if(::tts::_::is_quiet) return;
       if constexpr(requires(P const& p){ to_text(p); }) printf("%s\n",::tts::as_text(prod).data());
       else                                                printf("%s\n",alt);
     }
@@ -146,7 +149,7 @@ namespace tts
     }
 
     _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-    printf("--------------------------------------------------------------------------------\n");
+    if(!_::is_quiet) printf("--------------------------------------------------------------------------------\n");
 
     double ratio = 0.;
 
@@ -166,7 +169,7 @@ namespace tts
         _::results(ulps , ulp_map[i], ratio, "Input:      ", in);
         _::results(-1.,-1,-1., "Found:      "      , out);
         _::results(-1.,-1,-1., "instead of: " , ref);
-        printf("--------------------------------------------------------------------------------\n");
+        if(!_::is_quiet) printf("--------------------------------------------------------------------------------\n");
       }
     }
 
@@ -200,12 +203,13 @@ namespace tts
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                         \
   [&]()                                                                                                   \
   {                                                                                                       \
-    printf("Comparing: %s<%s> with %s<%s> using "                                                         \
-          , TTS_STRING(RefFunc)                                                                           \
-          , TTS_STRING(TTS_REMOVE_PARENS(RefType))                                                        \
-          , TTS_STRING(NewFunc)                                                                           \
-          , TTS_STRING(TTS_REMOVE_PARENS(NewType))                                                        \
-          );                                                                                              \
+    if(!::tts::_::is_quiet)                                                                               \
+      printf("Comparing: %s<%s> with %s<%s> using "                                                       \
+            , TTS_STRING(RefFunc)                                                                         \
+            , TTS_STRING(TTS_REMOVE_PARENS(RefType))                                                      \
+            , TTS_STRING(NewFunc)                                                                         \
+            , TTS_STRING(TTS_REMOVE_PARENS(NewType))                                                      \
+            );                                                                                            \
                                                                                                           \
     auto generator  = TTS_REMOVE_PARENS(Producer);                                                        \
     ::tts::_::print_producer(generator,TTS_STRING(TTS_REMOVE_PARENS(Producer)));                          \

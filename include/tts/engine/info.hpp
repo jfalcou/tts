@@ -71,10 +71,13 @@
     {                                                                                                       \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
-    auto contents = ::tts::text{__VA_ARGS__};                                                               \
-    printf( "  [X] %s : ** FAILURE ** : %.*s\n"                                                             \
-          , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
-          );                                                                                                \
+    if(!::tts::_::is_quiet)                                                                                 \
+    {                                                                                                       \
+      auto contents = ::tts::text{__VA_ARGS__};                                                             \
+      printf( "  [X] %s : ** FAILURE ** : %.*s\n"                                                           \
+            , ::tts::_::source_location::current().data(), contents.size(), contents.data()                 \
+            );                                                                                              \
+    }                                                                                                       \
   } while(0)                                                                                                \
 /**/
 #endif

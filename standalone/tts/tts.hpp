@@ -29,6 +29,7 @@ Flags:
   -x, --hex         Print the floating results in hexfloat mode
   -s, --scientific  Print the floating results in scientific mode
   -v, --verbose     Display tests results regardless of their status.
+  -q, --quiet       Display only test failures percentage.
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
@@ -421,6 +422,7 @@ namespace tts
     inline options current_arguments = {0,nullptr};
     inline int     current_seed      = -1;
     inline bool    is_verbose        = false;
+    inline bool    is_quiet          = false;
   }
   inline void initialize(int argc, const char** argv)
   {
@@ -840,6 +842,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
   if( ::tts::arguments()("-h","--help") )
     return ::tts::_::usage(argv[0]);
   ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
+  ::tts::_::is_quiet   = ::tts::arguments()("-q","--quiet");
   auto nb_tests = ::tts::_::suite().size();
   std::size_t done_tests = 0;
   srand(tts::random_seed());
@@ -850,26 +853,27 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
       auto test_count                   = ::tts::global_runtime.test_count;
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
-      printf("TEST: '%s'\n", t.name);
+      if(!::tts::_::is_quiet) printf("TEST: '%s'\n", t.name);
       fflush(stdout);
       t();
       done_tests++;
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        printf("  [!!]: EMPTY TEST CASE\n");
+        if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
         fflush(stdout);
       }
       else if(failure_count  == ::tts::global_runtime.failure_count )
       {
-        printf("TEST: '%s' - [PASSED]\n", t.name);
+        if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
         fflush(stdout);
       }
     }
   }
   catch( ::tts::_::fatal_signal& )
   {
-    printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
+    if(!::tts::_::is_quiet)
+      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
   }
   if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);
   else                               return 0;
@@ -931,10 +935,13 @@ namespace tts::_
     {                                                                                                       \
       if( !::tts::_::current_type.is_empty() ) printf(">  With <T = %s>\n", ::tts::_::current_type.data()); \
     }                                                                                                       \
-    auto contents = ::tts::text{__VA_ARGS__};                                                               \
-    printf( "  [X] %s : ** FAILURE ** : %.*s\n"                                                             \
-          , ::tts::_::source_location::current().data(), contents.size(), contents.data()                   \
-          );                                                                                                \
+    if(!::tts::_::is_quiet)                                                                                 \
+    {                                                                                                       \
+      auto contents = ::tts::text{__VA_ARGS__};                                                             \
+      printf( "  [X] %s : ** FAILURE ** : %.*s\n"                                                           \
+            , ::tts::_::source_location::current().data(), contents.size(), contents.data()                 \
+            );                                                                                              \
+    }                                                                                                       \
   } while(0)                                                                                                \
 
 #endif
@@ -1210,7 +1217,7 @@ namespace tts::_
                                 , [=]()
                                   {
                                     ( ( (current_type = as_text(typename_<Types>))
-                                      , (::tts::_::is_verbose ? printf(">  With <T = %s>\n", current_type.data()) : 0)
+                                      , (::tts::_::is_verbose && !::tts::_::is_quiet ? printf(">  With <T = %s>\n", current_type.data()) : 0)
                                       , body(type<Types>())
                                       )
                                     , ...
@@ -1249,7 +1256,7 @@ namespace tts::_
     static void process_type(auto body)
     {
       current_type = as_text(typename_<T>);
-      if(::tts::_::is_verbose) printf(">  With <T = %s>\n", current_type.data());
+      if(::tts::_::is_verbose && !::tts::_::is_quiet) printf(">  With <T = %s>\n", current_type.data());
       (body(produce(type<T>{},Generators)...));
     }
     const char* name;
@@ -2173,12 +2180,14 @@ namespace tts
     }
     template<typename... S> void header(S const&... s)
     {
+      if(::tts::_::is_quiet) return;
       ((printf("%-*s", 16, s)), ...);
       puts("");
     }
     template<typename U,  typename R, typename V>
     void results( U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
+      if(::tts::_::is_quiet) return;
       if(ulp!=-1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
       else        printf("%*s", static_cast<int>(48+strlen(desc)),desc);
       adapter<V>::display(v);
@@ -2187,6 +2196,7 @@ namespace tts
     template<typename P>
     void print_producer(P const& prod, auto alt)
     {
+      if(::tts::_::is_quiet) return;
       if constexpr(requires(P const& p){ to_text(p); }) printf("%s\n",::tts::as_text(prod).data());
       else                                                printf("%s\n",alt);
     }
@@ -2232,7 +2242,7 @@ namespace tts
       }
     }
     _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-    printf("--------------------------------------------------------------------------------\n");
+    if(!_::is_quiet) printf("--------------------------------------------------------------------------------\n");
     double ratio = 0.;
     for(std::size_t i=0;i<ulp_map.size();++i)
     {
@@ -2247,7 +2257,7 @@ namespace tts
         _::results(ulps , ulp_map[i], ratio, "Input:      ", in);
         _::results(-1.,-1,-1., "Found:      "      , out);
         _::results(-1.,-1,-1., "instead of: " , ref);
-        printf("--------------------------------------------------------------------------------\n");
+        if(!_::is_quiet) printf("--------------------------------------------------------------------------------\n");
       }
     }
     return max_ulp;
@@ -2259,12 +2269,13 @@ namespace tts
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                         \
   [&]()                                                                                                   \
   {                                                                                                       \
-    printf("Comparing: %s<%s> with %s<%s> using "                                                         \
-          , TTS_STRING(RefFunc)                                                                           \
-          , TTS_STRING(TTS_REMOVE_PARENS(RefType))                                                        \
-          , TTS_STRING(NewFunc)                                                                           \
-          , TTS_STRING(TTS_REMOVE_PARENS(NewType))                                                        \
-          );                                                                                              \
+    if(!::tts::_::is_quiet)                                                                               \
+      printf("Comparing: %s<%s> with %s<%s> using "                                                       \
+            , TTS_STRING(RefFunc)                                                                         \
+            , TTS_STRING(TTS_REMOVE_PARENS(RefType))                                                      \
+            , TTS_STRING(NewFunc)                                                                         \
+            , TTS_STRING(TTS_REMOVE_PARENS(NewType))                                                      \
+            );                                                                                            \
                                                                                                           \
     auto generator  = TTS_REMOVE_PARENS(Producer);                                                        \
     ::tts::_::print_producer(generator,TTS_STRING(TTS_REMOVE_PARENS(Producer)));                          \

@@ -43,7 +43,7 @@ namespace tts::_
                                   {
                                     // We setup the current type name before each test so we know
                                     ( ( (current_type = as_text(typename_<Types>))
-                                      , (::tts::_::is_verbose ? printf(">  With <T = %s>\n", current_type.data()) : 0)
+                                      , (::tts::_::is_verbose && !::tts::_::is_quiet ? printf(">  With <T = %s>\n", current_type.data()) : 0)
                                       , body(type<Types>())
                                       )
                                     , ...
@@ -90,7 +90,7 @@ namespace tts::_
     static void process_type(auto body)
     {
       current_type = as_text(typename_<T>);
-      if(::tts::_::is_verbose) printf(">  With <T = %s>\n", current_type.data());
+      if(::tts::_::is_verbose && !::tts::_::is_quiet) printf(">  With <T = %s>\n", current_type.data());
       (body(produce(type<T>{},Generators)...));
     }
     const char* name;

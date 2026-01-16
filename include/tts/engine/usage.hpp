@@ -16,6 +16,7 @@ Flags:
   -x, --hex         Print the floating results in hexfloat mode
   -s, --scientific  Print the floating results in scientific mode
   -v, --verbose     Display tests results regardless of their status.
+  -q, --quiet       Display only test failures percentage.
 
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
