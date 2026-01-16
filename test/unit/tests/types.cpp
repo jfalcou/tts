@@ -61,3 +61,32 @@ TTS_CASE_TPL( "Check interaction with type list generator", sizes<5> )
 {
   TTS_TYPE_IS( std::add_const_t<Type>, Type const);
 };
+
+struct A {};
+struct B {};
+struct X {};
+struct Y {};
+struct Z {};
+
+TTS_CASE( "Check cartesian product of type lists" )
+{
+  using list1  = tts::types<A, B>;
+  using list2  = tts::types<X, Y>;
+  using list3  = tts::types<X, Y, Z>;
+
+  TTS_TYPE_IS ( (tts::cartesian_product<list1, list2>::types_list)
+              , (tts::types<tts::types<A, X>, tts::types<A, Y>,tts::types<B, X>, tts::types<B, Y>>)
+              );
+
+  TTS_TYPE_IS ( (tts::cartesian_product<list1, list3>::types_list)
+              , (tts::types<tts::types<A, X>, tts::types<A, Y>, tts::types<A, Z>
+                           ,tts::types<B, X>, tts::types<B, Y>, tts::types<B, Z>>)
+              );
+
+  TTS_TYPE_IS ( (tts::cartesian_product<list3, list2>::types_list)
+              , (tts::types < tts::types<X, X>, tts::types<X, Y>
+                            , tts::types<Y, X>, tts::types<Y, Y>
+                            , tts::types<Z, X>, tts::types<Z, Y>
+                           >)
+              );
+};

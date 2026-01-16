@@ -36,7 +36,7 @@
   do                                                                                          \
   {                                                                                           \
     ::tts::global_runtime.pass();                                                             \
-    if(::tts::_::is_verbose)                                                                  \
+    if(::tts::_::is_verbose && !::tts::_::is_quiet)                                           \
     {                                                                                         \
       auto contents = ::tts::text{__VA_ARGS__};                                               \
       printf( "  [+] %s : %.*s\n"                                                             \

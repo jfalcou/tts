@@ -28,7 +28,7 @@ namespace tts
   };
 
   // Concatenate types lists
-  template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
+  template<typename... Ls> using concatenate = decltype( (Ls{} + ... + types<>{}) );
 
   template<typename... T> struct as_type_list
   {
@@ -50,6 +50,28 @@ namespace tts
 
   template<typename... T>
   using as_type_list_t = typename as_type_list<T...>::type;
+
+  //====================================================================================================================
+  /// @brief Generate the Cartesian product of two type lists
+  ///
+  /// Given two types lists L1 and L2, generate a new types list containing all possible combinations of types from
+  /// L1 and L2 as a types<T1,T2> where T1 is from L1 and T2 is from L2.
+  ///
+  /// @tparam L1 First types list
+  /// @tparam L2 Second types list
+  ///
+  //====================================================================================================================
+  template<typename L1, typename L2> struct cartesian_product;
+
+  template<typename... Ts, typename... Us>
+  struct cartesian_product<types<Ts...>, types<Us...>>
+  {
+    template<typename T> using product_row = types< types<T, Us>... >;
+    using types_list = decltype( (product_row<Ts>{} + ... + types<>{}) );
+  };
+
+  template<typename L> struct cartesian_square : cartesian_product<L, L>
+  {};
 
   //====================================================================================================================
   /// @brief Filter a types list by a predicate

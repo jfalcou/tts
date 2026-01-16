@@ -533,7 +533,7 @@ namespace tts
   {
     template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
   };
-  template<typename... Ls> using concatenate = decltype( (Ls{} + ...) );
+  template<typename... Ls> using concatenate = decltype( (Ls{} + ... + types<>{}) );
   template<typename... T> struct as_type_list
   {
     using type = types<T...>;
@@ -551,6 +551,15 @@ namespace tts
   };
   template<typename... T>
   using as_type_list_t = typename as_type_list<T...>::type;
+  template<typename L1, typename L2> struct cartesian_product;
+  template<typename... Ts, typename... Us>
+  struct cartesian_product<types<Ts...>, types<Us...>>
+  {
+    template<typename T> using product_row = types< types<T, Us>... >;
+    using types_list = decltype( (product_row<Ts>{} + ... + types<>{}) );
+  };
+  template<typename L> struct cartesian_square : cartesian_product<L, L>
+  {};
   template<template<typename> typename Pred, typename Type> struct filter
   {
     template<typename T>
@@ -923,7 +932,7 @@ namespace tts::_
   do                                                                                          \
   {                                                                                           \
     ::tts::global_runtime.pass();                                                             \
-    if(::tts::_::is_verbose)                                                                  \
+    if(::tts::_::is_verbose && !::tts::_::is_quiet)                                           \
     {                                                                                         \
       auto contents = ::tts::text{__VA_ARGS__};                                               \
       printf( "  [+] %s : %.*s\n"                                                             \
