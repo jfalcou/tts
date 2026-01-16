@@ -10,7 +10,6 @@ set(root "${CMAKE_SOURCE_DIR}/test")
 ## Test for TTS infrastructure code
 ##======================================================================================================================
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  tts-standalone
                         FILES         unit/infrastructure/bitcast.cpp
                                       unit/infrastructure/buffer.cpp
                                       unit/infrastructure/callable.cpp
@@ -21,14 +20,12 @@ copa_make_single_unit ( INTERFACE     tts_test
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  tts-standalone
                         FILES         unit/infrastructure/random.cpp
                         ROOT          ${root}
                         NAME          unit.infrastructure.random.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
-                        DEPENDENCIES  tts-standalone
                         FILES         unit/infrastructure/failure.cpp
                         ROOT          ${root}
                         NAME          unit.infrastructure.failure.cpp

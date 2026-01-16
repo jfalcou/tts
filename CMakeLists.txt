@@ -45,7 +45,10 @@ copa_setup_install( LIBRARY tts
 ##======================================================================================================================
 ## Standalone generation
 ##======================================================================================================================
-copa_setup_standalone(${QUIET_OPTION} FILE tts.hpp SOURCE include DESTINATION standalone ROOT tts TARGET tts-standalone)
+copa_setup_standalone ( QUIET
+                        FILE tts.hpp SOURCE include ROOT tts TARGET tts-standalone
+                        OUTPUT "${PROJECT_BINARY_DIR}"
+                      )
 
 ##======================================================================================================================
 ## Setup doxygen
