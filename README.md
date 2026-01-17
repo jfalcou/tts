@@ -18,8 +18,8 @@ In addition to classical TDD features, its main goal is to provide:
 TTS is thus suitable for numerical-heavy testing.
 
 # Supported Compilers
-  * g++ 10.3 and superior
-  * clang 12 and superior
+  * g++ 11.1 and superior
+  * clang 13 and superior
   * Visual Studio 17 2022 v19.30.30709.0
   * clang-CL 15.0.1 or superior
   * emscripten 3.1.14
