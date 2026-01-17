@@ -2001,7 +2001,7 @@ namespace tts
     }
     else
     {
-      return a == b;
+      return _::eq(a,b);
     }
   }
 }
