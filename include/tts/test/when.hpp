@@ -16,25 +16,32 @@ namespace tts::_
 {
   struct section_guard
   {
-    int &       id;
-    int const & section;
+    int       &id;
+    int const &section;
 
-    section_guard(int &id_, int const &section_, int &count) : id(id_) , section(section_)
+    section_guard(int &id_, int const &section_, int &count)
+        : id(id_)
+        , section(section_)
     {
       if(section == 0) id = count++ - 1;
     }
 
-    bool check(const char* desc)
+    bool check(const char *desc)
     {
-      if(id == section && desc && is_verbose ) printf("  And then: %s\n", desc);
+      if(id == section && desc && is_verbose) printf("  And then: %s\n", desc);
       return id == section;
     }
   };
 
   struct only_once
   {
-    bool once = true;
-    explicit operator bool() { bool result = once; once = false; return result; }
+    bool     once = true;
+    explicit operator bool()
+    {
+      bool result = once;
+      once        = false;
+      return result;
+    }
   };
 }
 
@@ -63,27 +70,27 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_WHEN(STORY)
+#  define TTS_WHEN(STORY)
 #else
-#define TTS_WHEN(STORY)                                                                             \
-TTS_DISABLE_WARNING_PUSH                                                                            \
-TTS_DISABLE_WARNING_SHADOW                                                                          \
-  (::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text{STORY}.data()) : 0);               \
-  for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++)   \
-    for( tts::_::only_once tts_only_once_setup{}; tts_only_once_setup; )                            \
-TTS_DISABLE_WARNING_POP                                                                             \
+#  define TTS_WHEN(STORY)                                                                          \
+    TTS_DISABLE_WARNING_PUSH                                                                       \
+    TTS_DISABLE_WARNING_SHADOW(                                                                    \
+        ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);        \
+    for(int tts_section = 0, tts_count = 1; tts_section < tts_count;                               \
+        tts_count -= 0 == tts_section++)                                                           \
+      for(tts::_::only_once tts_only_once_setup {}; tts_only_once_setup;) TTS_DISABLE_WARNING_POP  \
 /**/
 #endif
 
-#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                    \
-TTS_DISABLE_WARNING_PUSH                                                                            \
-TTS_DISABLE_WARNING_SHADOW                                                                          \
-  static int TTS_LOCAL_ID = 0;                                                                      \
-  if(::tts::_::section_guard(TTS_LOCAL_ID, tts_section, tts_count).check( MESSAGE )                 \
-    )                                                                                               \
-  for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )  \
-    for(tts::_::only_once tts__only_once_section{}; tts__only_once_section; )                       \
-TTS_DISABLE_WARNING_POP                                                                             \
+#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                   \
+  TTS_DISABLE_WARNING_PUSH                                                                         \
+  TTS_DISABLE_WARNING_SHADOW                                                                       \
+  static int TTS_LOCAL_ID = 0;                                                                     \
+  if(::tts::_::section_guard(TTS_LOCAL_ID, tts_section, tts_count).check(MESSAGE))                 \
+    for(int tts_section = 0, tts_count = 1; tts_section < tts_count;                               \
+        tts_count -= 0 == tts_section++)                                                           \
+      for(tts::_::only_once tts__only_once_section {}; tts__only_once_section;)                    \
+        TTS_DISABLE_WARNING_POP                                                                    \
 /**/
 
 //======================================================================================================================
@@ -102,9 +109,9 @@ TTS_DISABLE_WARNING_POP                                                         
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_AND_THEN(MESSAGE)
+#  define TTS_AND_THEN(MESSAGE)
 #else
-#define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
+#  define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
 #endif
 
 //======================================================================================================================

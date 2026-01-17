@@ -7,15 +7,14 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-struct some_exception_type {};
+struct some_exception_type
+{
+};
 
 void foo() { throw some_exception_type(); }
 
-TTS_CASE( "Check that we can capture thrown exceptions" )
-{
-  TTS_THROW( foo(), some_exception_type );
-};
+TTS_CASE("Check that we can capture thrown exceptions") { TTS_THROW(foo(), some_exception_type); };
 //! [snippet]

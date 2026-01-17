@@ -38,18 +38,18 @@
   @snippet doc/custom_driver.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_CUSTOM_DRIVER_FUNCTION
+#  define TTS_CUSTOM_DRIVER_FUNCTION
 
 //======================================================================================================================
 /*!
   @def TTS_MAIN
   @brief Identify the file containing tests entry point
 
-  Users can dispatch tests in multiple Translation Units to be linked afterward. In this scenario, one
-  single Translation Unit must define @ref TTS_MAIN to generate the test entry point function.
+  Users can dispatch tests in multiple Translation Units to be linked afterward. In this scenario,
+one single Translation Unit must define @ref TTS_MAIN to generate the test entry point function.
 **/
 //======================================================================================================================
-#define TTS_MAIN
+#  define TTS_MAIN
 
 //======================================================================================================================
 /// @}
@@ -58,9 +58,15 @@
 
 #if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
 #  define TTS_CUSTOM_DRIVER_FUNCTION main
-namespace tts::_ { inline constexpr bool use_main = true; }
+namespace tts::_
+{
+  inline constexpr bool use_main = true;
+}
 #else
-namespace tts::_ { inline constexpr bool use_main = false; }
+namespace tts::_
+{
+  inline constexpr bool use_main = false;
+}
 #endif
 
 #if defined(TTS_MAIN)
@@ -69,48 +75,44 @@ namespace tts::_ { inline constexpr bool use_main = false; }
 //======================================================================================================================
 namespace tts::_
 {
-  void report_pass(const char* location, const char* message)
+  void report_pass(const char *location, const char *message)
   {
     if(::tts::_::is_verbose && !::tts::_::is_quiet)
     {
-      printf( "  [+] %s : %s\n", location, message );
+      printf("  [+] %s : %s\n", location, message);
     }
   }
 
-  void report_fail(const char* location, const char* message, ::tts::text const& type)
+  void report_fail(const char *location, const char *message, ::tts::text const &type)
   {
     if(!::tts::_::is_verbose)
     {
-      if( !type.is_empty() ) printf(">  With <T = %s>\n", type.data());
+      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
     }
 
-    if(!::tts::_::is_quiet)
-    {
-      printf( "  [X] %s : ** FAILURE ** : %s\n", location, message );
-    }
+    if(!::tts::_::is_quiet) { printf("  [X] %s : ** FAILURE ** : %s\n", location, message); }
   }
 
-  void report_fatal(const char* location, const char* message, ::tts::text const& type)
+  void report_fatal(const char *location, const char *message, ::tts::text const &type)
   {
     if(!::tts::_::is_verbose)
     {
-      if( !type.is_empty() ) printf(">  With <T = %s>\n", type.data());
+      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
     }
 
-    printf( "  [@] %s : @@ FATAL @@ : %s\n", location, message );
+    printf("  [@] %s : @@ FATAL @@ : %s\n", location, message);
   }
 }
 
-int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char const** argv)
+int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const **argv)
 {
-  ::tts::initialize(argc,argv);
-  if( ::tts::arguments()("-h","--help") )
-    return ::tts::_::usage(argv[0]);
+  ::tts::initialize(argc, argv);
+  if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
 
-  ::tts::_::is_verbose = ::tts::arguments()("-v","--verbose");
-  ::tts::_::is_quiet   = ::tts::arguments()("-q","--quiet");
+  ::tts::_::is_verbose = ::tts::arguments()("-v", "--verbose");
+  ::tts::_::is_quiet   = ::tts::arguments()("-q", "--quiet");
 
-  auto nb_tests = ::tts::_::suite().size();
+  auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
   srand(tts::random_seed());
 
@@ -133,21 +135,24 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc,[[maybe_unused]] char c
         if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
         fflush(stdout);
       }
-      else if(failure_count  == ::tts::global_runtime.failure_count )
+      else if(failure_count == ::tts::global_runtime.failure_count)
       {
         if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
         fflush(stdout);
       }
     }
   }
-  catch( ::tts::_::fatal_signal& )
+  catch(::tts::_::fatal_signal &)
   {
     if(!::tts::_::is_quiet)
-      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n", static_cast<int>(nb_tests - done_tests - 1));
+      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",
+             static_cast<int>(nb_tests - done_tests - 1));
   }
 
-  if constexpr( ::tts::_::use_main ) return ::tts::report(0,0);
-  else                               return 0;
+  if constexpr(::tts::_::use_main)
+    return ::tts::report(0, 0);
+  else
+    return 0;
 }
 
 #endif

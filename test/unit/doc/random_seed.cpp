@@ -8,7 +8,7 @@
 
 //! [snippet]
 #define TTS_MAIN
-#define TTS_CUSTOM_DRIVER_FUNCTION  random_main
+#define TTS_CUSTOM_DRIVER_FUNCTION random_main
 #include <tts/tts.hpp>
 
 TTS_CASE("Usage of tts::random_seed")
@@ -20,13 +20,13 @@ TTS_CASE("Usage of tts::random_seed")
   TTS_EQUAL(tts::random_seed(), 1234);
 };
 
-int main(int argc, const char** argv)
+int main(int argc, const char **argv)
 {
   tts::random_seed(1234);
 
-  printf( "TTS - Random Seed : %d\n", tts::random_seed());
+  printf("TTS - Random Seed : %d\n", tts::random_seed());
 
   random_main(argc, argv);
-  return tts::report(0,0);
+  return tts::report(0, 0);
 }
 //! [snippet]

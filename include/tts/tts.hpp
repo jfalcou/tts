@@ -7,7 +7,9 @@
 //==================================================================================================
 #pragma once
 
-namespace tts {}
+namespace tts
+{
+}
 
 #include <tts/engine/deps.hpp>
 #include <tts/engine/main.hpp>

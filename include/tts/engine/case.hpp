@@ -22,9 +22,12 @@ namespace tts::_
 {
   struct capture
   {
-    capture(const char* id) : name(id) {}
-    auto operator+(auto body) const { return test::acknowledge( {name, body} ); }
-    const char* name;
+    capture(const char *id)
+        : name(id)
+    {
+    }
+    auto        operator+(auto body) const { return test::acknowledge({name, body}); }
+    const char *name;
   };
 
   // Global storage for current type used in a given test
@@ -32,70 +35,74 @@ namespace tts::_
 
   template<typename... Types> struct captures
   {
-    captures(const char* id) : name(id) {}
+    captures(const char *id)
+        : name(id)
+    {
+    }
 
     auto operator+(auto body) const
     {
       // We register all the types in a single test to keep the compile-time O(1)
       // Registering different type in different tests generate far too much callable::invoker
       // symbol that make compile-time O(N)
-      return test::acknowledge( { name
-                                , [=]()
-                                  {
-                                    // We setup the current type name before each test so we know
-                                    ( ( (current_type = as_text(typename_<Types>))
-                                      , (::tts::_::is_verbose && !::tts::_::is_quiet ? printf(">  With <T = %s>\n", current_type.data()) : 0)
-                                      , body(type<Types>())
-                                      )
-                                    , ...
-                                    );
-                                    // Clear the current type
-                                    current_type = text{""};
-                                  }
-                                }
-                              );
+      return test::acknowledge({name,
+                                [ = ]()
+                                {
+                                  // We setup the current type name before each test so we know
+                                  (((current_type = as_text(typename_<Types>)),
+                                    (::tts::_::is_verbose && !::tts::_::is_quiet
+                                         ? printf(">  With <T = %s>\n", current_type.data())
+                                         : 0),
+                                    body(type<Types>())),
+                                   ...);
+                                  // Clear the current type
+                                  current_type = text {""};
+                                }});
     }
-    const char* name;
+    const char *name;
   };
 
   // Specialisation for types lists
   template<template<typename...> typename List, typename... Types>
-  requires( !requires(List<Types...>) { typename List<Types...>::types_list; })
+    requires(!requires(List<Types...>) { typename List<Types...>::types_list; })
   struct captures<List<Types...>> : captures<Types...>
-  {};
+  {
+  };
 
   // Specialisation for types list generator
   template<typename Generator>
-  requires requires(Generator) { typename Generator::types_list; }
+    requires requires(Generator) { typename Generator::types_list; }
   struct captures<Generator> : captures<typename Generator::types_list>
-  {};
+  {
+  };
 
   template<typename Types, auto... Generators> struct test_generators;
 
-  template<typename... Type,auto... Generators>
+  template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
-    test_generators(const char* id) : name(id) {}
+    test_generators(const char *id)
+        : name(id)
+    {
+    }
     friend auto operator<<(test_generators tg, auto body)
     {
-      return test::acknowledge( { tg.name
-                                , [body]() mutable
-                                  {
-                                    (process_type<Type>(body), ...);
-                                    current_type = text{""};
-                                  }
-                                }
-                              );
+      return test::acknowledge({tg.name,
+                                [ body ]() mutable
+                                {
+                                  (process_type<Type>(body), ...);
+                                  current_type = text {""};
+                                }});
     }
 
-    template<typename T>
-    static void process_type(auto body)
+    template<typename T> static void process_type(auto body)
     {
       current_type = as_text(typename_<T>);
-      if(::tts::_::is_verbose && !::tts::_::is_quiet) printf(">  With <T = %s>\n", current_type.data());
-      (body(produce(type<T>{},Generators)...));
+      if(::tts::_::is_verbose && !::tts::_::is_quiet)
+        printf(">  With <T = %s>\n", current_type.data());
+      (body(produce(type<T> {}, Generators)...));
     }
-    const char* name;
+    const char *name;
   };
 }
 
@@ -129,11 +136,11 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_CASE(ID)
+#  define TTS_CASE(ID)
 #else
-#define TTS_CASE(ID)                                                                                                    \
-[[maybe_unused]] static auto const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::capture{ID} + +[]()                          \
-/**/
+#  define TTS_CASE(ID)                                                                             \
+    [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                              \
+        ::tts::_::capture {ID} + +[]() /**/
 #endif
 
 //======================================================================================================================
@@ -160,11 +167,11 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_CASE_TPL(ID,...)
+#  define TTS_CASE_TPL(ID, ...)
 #else
-#define TTS_CASE_TPL(ID,...)                                                                                            \
-[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::captures<__VA_ARGS__>{ID} + []               \
-/**/
+#  define TTS_CASE_TPL(ID, ...)                                                                    \
+    [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                              \
+        ::tts::_::captures<__VA_ARGS__> {ID} + [] /**/
 #endif
 
 //======================================================================================================================
@@ -191,14 +198,13 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_CASE_WITH(ID, TYPES, ...)
+#  define TTS_CASE_WITH(ID, TYPES, ...)
 #else
-#define TTS_CASE_WITH(ID, TYPES, ...)                                                                                   \
-[[maybe_unused]] static bool const TTS_CAT(case_,TTS_FUNCTION)                                                          \
-                                 = ::tts::_::test_generators< ::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>           \
-                                                            , __VA_ARGS__                                               \
-                                                            >{ID} << []                                                 \
-/**/
+#  define TTS_CASE_WITH(ID, TYPES, ...)                                                            \
+    [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                              \
+        ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {  \
+            ID}                                                                                    \
+        << [] /**/
 #endif
 
 //======================================================================================================================

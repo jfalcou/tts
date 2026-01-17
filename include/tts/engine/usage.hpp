@@ -10,7 +10,7 @@
 namespace tts::_
 {
   inline constexpr auto usage_text =
-R"(
+      R"(
 Flags:
   -h, --help        Display this help message
   -x, --hex         Print the floating results in hexfloat mode
@@ -33,7 +33,7 @@ Range specifics Parameters:
   //====================================================================================================================
   // Prints the CLI option of any TTS test executable
   //====================================================================================================================
-  inline int usage(const char* name)
+  inline int usage(const char *name)
   {
     printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
     puts(usage_text);

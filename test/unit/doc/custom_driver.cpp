@@ -12,17 +12,17 @@
 #include <tts/tts.hpp>
 #include <iostream>
 
-TTS_CASE( "Some test" ) {};
+TTS_CASE("Some test") {};
 
-int main(int argc, char const** argv)
+int main(int argc, char const **argv)
 {
   std::cout << "Initializing tests...\n";
-  ::tts::initialize(argc,argv);
+  ::tts::initialize(argc, argv);
 
   std::cout << "Running tests...\n";
   my_test_main(argc, argv);
 
   std::cout << "Finalizing tests...\n";
-  return ::tts::report(0,1);
+  return ::tts::report(0, 1);
 }
 //! [snippet]

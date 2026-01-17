@@ -16,9 +16,9 @@ namespace tts::_
   //====================================================================================================================
   // Reporting functions declarations (Implemented in main.hpp via TTS_MAIN)
   //====================================================================================================================
-  void report_pass(const char* location, const char* message);
-  void report_fail(const char* location, const char* message, ::tts::text const& type);
-  void report_fatal(const char* location, const char* message, ::tts::text const& type);
+  void report_pass(const char *location, const char *message);
+  void report_fail(const char *location, const char *message, ::tts::text const &type);
+  void report_fatal(const char *location, const char *message, ::tts::text const &type);
 }
 
 //======================================================================================================================
@@ -41,17 +41,14 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_PASS(...)
+#  define TTS_PASS(...)
 #else
-#define TTS_PASS(...)                                                                         \
-  do                                                                                          \
-  {                                                                                           \
-    ::tts::global_runtime.pass();                                                             \
-    ::tts::_::report_pass( ::tts::_::source_location::current().data()                        \
-                         , ::tts::text{__VA_ARGS__}.data()                                    \
-                         );                                                                   \
-  } while(0)                                                                                  \
-/**/
+#  define TTS_PASS(...)                                                                            \
+    do {                                                                                           \
+      ::tts::global_runtime.pass();                                                                \
+      ::tts::_::report_pass(::tts::_::source_location::current().data(),                           \
+                            ::tts::text {__VA_ARGS__}.data());                                     \
+    } while(0) /**/
 /**/
 #endif
 
@@ -68,19 +65,16 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_FAIL(...)
+#  define TTS_FAIL(...)
 #else
-#define TTS_FAIL(...)                                                                       \
-do                                                                                          \
-{                                                                                           \
-  ::tts::global_runtime.fail();                                                             \
-  if(!::tts::global_runtime.fail_status)  ::tts::global_runtime.fail_status = true;         \
-  ::tts::_::report_fail( ::tts::_::source_location::current().data()                        \
-                        , ::tts::text{__VA_ARGS__}.data()                                   \
-                        , ::tts::_::current_type                                            \
-                        );                                                                  \
-} while(0)                                                                                  \
-/**/
+#  define TTS_FAIL(...)                                                                            \
+    do {                                                                                           \
+      ::tts::global_runtime.fail();                                                                \
+      if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;             \
+      ::tts::_::report_fail(::tts::_::source_location::current().data(),                           \
+                            ::tts::text {__VA_ARGS__}.data(),                                      \
+                            ::tts::_::current_type);                                               \
+    } while(0) /**/
 #endif
 
 //======================================================================================================================
@@ -96,21 +90,18 @@ do                                                                              
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_FATAL(...)
+#  define TTS_FATAL(...)
 #else
-#define TTS_FATAL(...)                                                                      \
-do                                                                                          \
-{                                                                                           \
-  ::tts::global_runtime.fail();                                                             \
-  if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;          \
-  ::tts::_::report_fatal ( ::tts::_::source_location::current().data()                      \
-                          , ::tts::text{__VA_ARGS__}.data()                                 \
-                          , ::tts::_::current_type                                          \
-                          );                                                                \
-  ::tts::fatal_error_status = true;                                                         \
-  [[maybe_unused ]] ::tts::_::logger _local_tts_fail_hard{};                                \
-} while(0)                                                                                  \
-/**/
+#  define TTS_FATAL(...)                                                                           \
+    do {                                                                                           \
+      ::tts::global_runtime.fail();                                                                \
+      if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;             \
+      ::tts::_::report_fatal(::tts::_::source_location::current().data(),                          \
+                             ::tts::text {__VA_ARGS__}.data(),                                     \
+                             ::tts::_::current_type);                                              \
+      ::tts::fatal_error_status = true;                                                            \
+      [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                   \
+    } while(0) /**/
 #endif
 
 //======================================================================================================================

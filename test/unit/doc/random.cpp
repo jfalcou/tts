@@ -7,11 +7,10 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE_TPL("Check tts::random_value", float, double, int)
-<typename T>(tts::type<T>)
+TTS_CASE_TPL("Check tts::random_value", float, double, int)<typename T>(tts::type<T>)
 {
   for(auto i = 0; i < 100000; ++i)
   {
