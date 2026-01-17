@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['basic_20tests_20macros_0',['Basic Tests Macros',['../group__test-basic.html',1,'']]],
-  ['begin_1',['begin',['../structtts_1_1text.html#a5e0c31a5270a9d660d013bbec9d95f2b',1,'tts::text::begin() const'],['../structtts_1_1text.html#a3318b2e2a1e352e19ee7e3b26f0bd24e',1,'tts::text::begin()']]],
-  ['behaviour_2',['Customizing TTS Behaviour',['../customize.html',1,'']]],
-  ['between_3',['between',['../structtts_1_1between.html',1,'tts']]],
-  ['bradimore_4',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md0',1,'']]],
-  ['bug_20fixes_5',['Bug Fixes',['../changelog.html#autotoc_md4',1,'']]]
+  ['a_20short_20example_0',['A Short Example',['../index.html#autotoc_md34',1,'']]],
+  ['a_20test_20case_1',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
+  ['absolute_20comparison_2',['Absolute Comparison',['../customize.html#autotoc_md31',1,'']]],
+  ['absolute_5fcheck_3',['absolute_check',['../group__tools-precision.html#ga839002675e78cc93d0c421beeb976014',1,'tts']]],
+  ['adela_20bradley_4',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]],
+  ['and_20ordering_5',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
+  ['arguments_6',['arguments',['../group__tools-config.html#ga1e9e78ed104b86ad669dbb9bc9471343',1,'tts']]],
+  ['arithmetic_5ftypes_7',['arithmetic_types',['../group__tools-types.html#ga2ba4e001ffe97c25f318dec428b5f147',1,'tts']]],
+  ['as_5ftext_8',['as_text',['../group__tools-text.html#ga044124276e1b1e518a746121e16b0fad',1,'tts']]],
+  ['as_5fvalue_9',['as_value',['../group__tools-generators-custom.html#gabda75718fc9250b5bbe3731531eed0ae',1,'tts']]],
+  ['aubrey_20bradimore_10',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]]
 ];

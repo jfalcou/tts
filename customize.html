@@ -129,13 +129,13 @@ $(document).ready(function(){initNavTree('customize.html',''); initResizable(); 
 <ul><li class="level1"><a href="#customize-driver">Tests Driver</a></li>
 <li class="level1"><a href="#customize-display">Data display</a></li>
 <li class="level1"><a href="#customize-comparison">Equality and Ordering</a></li>
-<li class="level1"><a href="#customize-precision">Precision Measurement</a><ul><li class="level2"><a href="#autotoc_md21">ULP Distance</a></li>
-<li class="level2"><a href="#autotoc_md22">IEEE Comparison</a></li>
-<li class="level2"><a href="#autotoc_md23">Relative Comparison</a></li>
-<li class="level2"><a href="#autotoc_md24">Absolute Comparison</a></li>
+<li class="level1"><a href="#customize-precision">Precision Measurement</a><ul><li class="level2"><a href="#autotoc_md28">ULP Distance</a></li>
+<li class="level2"><a href="#autotoc_md29">IEEE Comparison</a></li>
+<li class="level2"><a href="#autotoc_md30">Relative Comparison</a></li>
+<li class="level2"><a href="#autotoc_md31">Absolute Comparison</a></li>
 </ul>
 </li>
-<li class="level1"><a href="#autotoc_md25">Data Generator</a></li>
+<li class="level1"><a href="#autotoc_md32">Data Generator</a></li>
 </ul>
 </div>
 <div class="textblock"><h1><a class="anchor" id="customize-driver"></a>
@@ -301,7 +301,7 @@ Equality and Ordering</h1>
 <div class="ttc" id="agroup__test-relation_html_gafdc655f9fc11b2894b5be4748b3b4cf2"><div class="ttname"><a href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a></div><div class="ttdeci">#define TTS_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:196</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="customize-precision"></a>
 Precision Measurement</h1>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md28"></a>
 ULP Distance</h2>
 <p>When dealing with floating point values, <b>TTS</b> uses its <code>ulp_distance</code> function to perform all <a href="rationale.html#ulp">ULP checks</a>. If needed, one can specialize this function in the type's namespace or as a friend function to let <b>TTS</b> use a special ULP comparison scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf" title="Compute the distance in ULP between two values.">tts::ulp_check</a></code> to implement their own.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
@@ -329,7 +329,7 @@ ULP Distance</h2>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-precision_html_ga5813c6197c7af5b0ed77d88ce63592a1"><div class="ttname"><a href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a></div><div class="ttdeci">#define TTS_ULP_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if two values are within a given ULP distance.</div><div class="ttdef"><b>Definition</b> precision.hpp:111</div></div>
 <div class="ttc" id="agroup__tools-precision_html_ga70797fbc9070b0329ea2ea75fc42d5bf"><div class="ttname"><a href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf">tts::ulp_check</a></div><div class="ttdeci">double ulp_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the distance in ULP between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:137</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md22"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md29"></a>
 IEEE Comparison</h2>
 <p>IEEE comparison consists in checking for exact equality while considering all NaN/Invalid values of floating point values. One can specialize the <code>ieee_equal</code> function in the type's namespace or as a friend function to let <b>TTS</b> use a special IEEE comparison scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3" title="Compute if values are exactly equals or all NaNs/Invalids.">tts::ieee_check</a></code> to implement their own.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
@@ -358,7 +358,7 @@ IEEE Comparison</h2>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-precision_html_gaab7ac6c9754243b3103e85283cbd2952"><div class="ttname"><a href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a></div><div class="ttdeci">#define TTS_IEEE_EQUAL(L, R,...)</div><div class="ttdoc">Checks if two values are exactly within 0 ULP.</div><div class="ttdef"><b>Definition</b> precision.hpp:154</div></div>
 <div class="ttc" id="agroup__tools-precision_html_ga5ad6651e0bf21e28acd2103d87d37ec3"><div class="ttname"><a href="group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3">tts::ieee_check</a></div><div class="ttdeci">bool ieee_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute if values are exactly equals or all NaNs/Invalids.</div><div class="ttdef"><b>Definition</b> precision.hpp:207</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md30"></a>
 Relative Comparison</h2>
 <p>Relative precision checks within <b>TTS</b> are done through the <code>relative_distance</code> function. If needed, one can specialize this function in the type's namespace or as a friend function to let <b>TTS</b> use a special relative precision scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1" title="Compute the relative distance between two values.">tts::relative_check</a></code> to implement their own.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
@@ -386,7 +386,7 @@ Relative Comparison</h2>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-precision_html_ga66fac5cd0984cf9238901308cc60df3e"><div class="ttname"><a href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a></div><div class="ttdeci">#define TTS_RELATIVE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if values are within a given relative distance expressed as a percentage.</div><div class="ttdef"><b>Definition</b> precision.hpp:90</div></div>
 <div class="ttc" id="agroup__tools-precision_html_ga6e18df7e178a3bcd4720b26430669df1"><div class="ttname"><a href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1">tts::relative_check</a></div><div class="ttdeci">double relative_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the relative distance between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:87</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md24"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md31"></a>
 Absolute Comparison</h2>
 <p>TTS** uses its <code>absolute_distance</code> function to perform all absolute precision checks. If needed, one can specialize this function in the type's namespace or as a friend function to let <b>TTS</b> use a special absolute precision scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a></code> to implement their own.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
@@ -414,7 +414,7 @@ Absolute Comparison</h2>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:69</div></div>
 <div class="ttc" id="agroup__tools-precision_html_ga839002675e78cc93d0c421beeb976014"><div class="ttname"><a href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014">tts::absolute_check</a></div><div class="ttdeci">double absolute_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the absolute distance between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:35</div></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md25"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md32"></a>
 Data Generator</h1>
 <p><a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">Test cases based on data sets</a> and <a class="el" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">range checks</a> require one or more data generators to perform. If the pre-existing data generators are not suitable, define your own by providing a <code>constexpr</code> callable object with the following signature:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>

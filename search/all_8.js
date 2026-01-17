@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['fansler_0',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md13',1,'']]],
-  ['features_1',['New Features',['../changelog.html#autotoc_md3',1,'']]],
-  ['fetchcontent_2',['CMake FetchContent',['../setup.html#setup-fetchcontent',1,'']]],
-  ['filter_3',['filter',['../structtts_1_1filter.html',1,'tts']]],
-  ['first_20public_20release_4',['First public release.',['../changelog.html#autotoc_md16',1,'']]],
-  ['fixes_5',['Bug Fixes',['../changelog.html#autotoc_md4',1,'']]],
-  ['from_20the_20source_6',['Install from the source',['../setup.html#setup-source',1,'']]]
+  ['end_0',['end',['../structtts_1_1text.html#a27812392b0e3cfabc8944ba3edc6e918',1,'tts::text::end() const'],['../structtts_1_1text.html#a68a1f4b5a83dfef5a6c4ce929376edee',1,'tts::text::end()']]],
+  ['equality_20and_20ordering_1',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
+  ['example_2',['A Short Example',['../index.html#autotoc_md34',1,'']]],
+  ['exception_20tests_20macros_3',['Exception Tests Macros',['../group__test-exceptions.html',1,'']]]
 ];

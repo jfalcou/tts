@@ -126,17 +126,59 @@ $(document).ready(function(){initNavTree('changelog.html',''); initResizable(); 
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
-Version 2.2 - Aubrey Bradimore</h1>
+Version 3.0 - Beatrice Adela Bradley</h1>
 <h2><a class="anchor" id="autotoc_md1"></a>
 What's Changed</h2>
+<p>A large body of work (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>) has been done to make <b>TTS</b> compile-time far better. This affects the user API a tiny bit, hence the bump to <b>TTS v3.0</b>.</p>
 <h3><a class="anchor" id="autotoc_md2"></a>
+Infrastructure</h3>
+<ul>
+<li>Fix support for MSVC and clang CL (<a href="https://github.com/jfalcou/tts/pull/75">https://github.com/jfalcou/tts/pull/75</a>)</li>
+<li><b>TTS</b> now use Use [copacabana] as CMake infrastructure library (<a href="https://github.com/jfalcou/tts/pull/77">https://github.com/jfalcou/tts/pull/77</a>)</li>
+<li>Move documentation to Doxygen (<a href="https://github.com/jfalcou/tts/pull/83">https://github.com/jfalcou/tts/pull/83</a>)</li>
+<li>Enable WASM tests (<a href="https://github.com/jfalcou/tts/pull/95">https://github.com/jfalcou/tts/pull/95</a>)</li>
+<li>Enable tests with ICPX (<a href="https://github.com/jfalcou/tts/pull/96">https://github.com/jfalcou/tts/pull/96</a>)</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md3"></a>
+Bug Fixes</h3>
+<ul>
+<li>Added static_assert to catch unsupported types in TTS_ABSOLUTE/RELATIVE/ULP_EQUAL (<a href="https://github.com/jfalcou/tts/pull/78">https://github.com/jfalcou/tts/pull/78</a>)</li>
+<li>Fix #82 - Make FATAL error log their messages (<a href="https://github.com/jfalcou/tts/pull/85">https://github.com/jfalcou/tts/pull/85</a>)</li>
+<li>fixed uint types not in integral_types by @SadiinsoSnowfall in <a href="https://github.com/jfalcou/tts/pull/99">https://github.com/jfalcou/tts/pull/99</a></li>
+<li>Fix #100 - TTS doesn't generate -Wshadow warnings (<a href="https://github.com/jfalcou/tts/pull/102">https://github.com/jfalcou/tts/pull/102</a>)</li>
+<li>Make produce(sequence) use produce(scalar) to allow for easier non-standard type production by @SadiinsoSnowfall (<a href="https://github.com/jfalcou/tts/pull/110">https://github.com/jfalcou/tts/pull/110</a>)</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md4"></a>
+New Features</h3>
+<ul>
+<li>Decorrelate IEEE_EQUAL from ULP_DISTANCE (<a href="https://github.com/jfalcou/tts/pull/89">https://github.com/jfalcou/tts/pull/89</a>)</li>
+<li><code>tts::generate</code> is deprecated. All data generators are now <code>constexpr</code> (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
+<li>Added <code>TTS_BIT_EQUAL</code> and <code>TTS_BIT_NOT_EQUAL</code> to perform bitwise comparison (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
+<li>Added <code>filter</code> to filter out types in complex case definition (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
+<li>Added <code>cartesian_product</code> to generate more complex template types list (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
+<li>Summary display now displays percentage of success/failures (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
+<li>Added the <code>-q/--quiet</code> CLI option to remove all output but summary (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md5"></a>
+New Contributors</h3>
+<ul>
+<li>@SadiinsoSnowfall</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md6"></a>
+Detective who?</h3>
+<p><a href="https://en.wikipedia.org/wiki/Mrs_Bradley">Beatrice Adela Bradley</a>.</p>
+<h1><a class="anchor" id="autotoc_md7"></a>
+Version 2.2 - Aubrey Bradimore</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+What's Changed</h2>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Infrastructure</h3>
 <ul>
 <li><b>We are now under the Boost Software Licence 1.0</b></li>
 <li>Enable Android tests and support</li>
 <li>Clarify some output when failures occur</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md3"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 New Features</h3>
 <ul>
 <li>Implement ALL_EQUAL</li>
@@ -145,18 +187,18 @@ New Features</h3>
 <li>Reimplement <code>TTS_WHEN</code> and <code>TTS_AND_THEN</code> to support sub-tests</li>
 <li>Add typed tests that checks both value and exact type</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md4"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 Bug Fixes</h3>
 <ul>
 <li>Fix Visual Studio interaction with constexpr tests</li>
 <li>Improve random generators and seed management</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Aubrey_Bradimore">Aubrey Bradimore</a>, this is a Christmas Release afterall</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md13"></a>
 Version 2.1 - Cordelia Gray</h1>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 What's Changed</h2>
 <ul>
 <li>Fix #42 - Proper FetchContent support</li>
@@ -164,10 +206,10 @@ What's Changed</h2>
 <li>Enable EMSCRIPTEN tests and supports</li>
 <li>Add tests over sequences</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md8"></a>
+<h2><a class="anchor" id="autotoc_md15"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Cordelia_Gray">Cordelia Gray</a>, a very suitable detective</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Version 2.0 - Kay Scarpetta</h1>
 <p><b>TTS</b> version 2.0 is taking a major break from an earlier version. Compile-time was creeping upward and some features were not that useful. So the code base got streamlined and simplified.</p>
 <p>This version is a <b>Major Release With API Changes</b> release:</p>
@@ -181,10 +223,10 @@ Version 2.0 - Kay Scarpetta</h1>
 <li>Output streamlined to fit machine processing in CI context or scripts</li>
 <li>Better handling of template test cases: less generated symbol, better flexibility in inputs (list of types or types list generator)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Kay_Scarpetta">Kay Scarpetta</a>, the private forensic consultant.</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md18"></a>
 Version 1.0 - Phoebe Daring</h1>
 <p>This version is a <b>Major Release With API Changes</b> release:</p>
 <p><b>Breaking API Changes</b>:</p>
@@ -197,10 +239,10 @@ Version 1.0 - Phoebe Daring</h1>
 <li>Fix #34 - Provide a command-line option to fix precision when displaying floating points</li>
 <li>Fix #37 - Stop displaying <code>char const*</code> as a string.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md19"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Phoebe_Daring">Phoebe Daring</a>, the first half of the Daring Twins since 1912.</p>
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 Version 0.2 - Kate Fansler</h1>
 <p>This version is a fix+features release:</p>
 <ul>
@@ -210,19 +252,19 @@ Version 0.2 - Kate Fansler</h1>
 <li><code>TTS_CASE_TPL</code> now generates one scenario per type</li>
 <li>Fix #21 - Add runtime filtering for tests based on description string</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Kate_Fansler">Kate Fansler</a>, solving academic crimes since 1964.</p>
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md22"></a>
 Version 0.1 - Cadfael</h1>
-<h2><a class="anchor" id="autotoc_md16"></a>
+<h2><a class="anchor" id="autotoc_md23"></a>
 First public release.</h2>
 <p><b>TTS</b> first complete release enables numerically oriented TDD including:</p><ul>
 <li>precision testing</li>
 <li>checks over the data set</li>
 <li>easy to customize the use of user-defined types.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Cadfael">Cadfael</a> is probably the eldest of all amateur detectives in history. </p>
 </div></div><!-- contents -->

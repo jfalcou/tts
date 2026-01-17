@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['licence_0',['Licence',['../licence.html',1,'']]],
-  ['line_20interface_1',['Command Line Interface',['../cli.html',1,'']]],
-  ['log_2',['Change Log',['../changelog.html',1,'']]]
+  ['kate_20fansler_0',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md20',1,'']]],
+  ['kay_20scarpetta_1',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]]
 ];
