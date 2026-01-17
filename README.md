@@ -1,3 +1,5 @@
+<img src="https://github.com/jfalcou/tts/raw/main/doc/logo.png" alt="TTS Library logo" data-canonical-src="https://github.com/jfalcou/tts/raw/main/logo.png" align="left" width="7%" height="7%" />
+
 # The TTS Library
 
 [![Licence](https://img.shields.io/github/license/jfalcou/tts?style=plastic)](https://img.shields.io/github/license/jfalcou/tts?style=plastic)
