@@ -2,7 +2,7 @@
 
 [![Licence](https://img.shields.io/github/license/jfalcou/tts?style=plastic)](https://img.shields.io/github/license/jfalcou/tts?style=plastic)
 [![Discord](https://img.shields.io/discord/692734675726237696?style=plastic)](https://discord.com/channels/692734675726237696/692735300522344468)
-[![Build status](https://ci.appveyor.com/api/projects/status/020yd3e6dwhu4dae/branch/master?svg=true)](https://ci.appveyor.com/project/jfalcou/tts/branch/master)
+[![CI Status](https://github.com/jfalcou/tts/actions/workflows/unit.yml/badge.svg)](https://github.com/jfalcou/tts/actions/workflows/unit.yml)
 
 **Tiny Test System** is a C++20 open-source Unit Test library designed following the ideas of
 libraries like CATCH or LEST.
