@@ -10,6 +10,7 @@
 #include <numeric>
 #include <vector>
 #include <map>
+#include <cmath>
 
 TTS_CASE("Check realistic integral distribution")
 {

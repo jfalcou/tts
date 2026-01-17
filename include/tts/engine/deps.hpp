@@ -11,7 +11,6 @@
 #include <cassert>
 #include <concepts>
 #include <cstdint>
-#include <cmath>
 #include <limits>
 #include <new>
 #include <cstdio>

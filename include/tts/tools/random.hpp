@@ -120,8 +120,8 @@ namespace tts
       if (maxi == 0) maxi = -smvlp;
 
       // Fix Infinite inputs (Prevent NaN propagation)
-      if (std::isinf(mini) && mini < 0) mini = -valmax;
-      if (std::isinf(maxi) && maxi > 0) maxi =  valmax;
+      if (_::is_inf(mini) && mini < 0) mini = -valmax;
+      if (_::is_inf(maxi) && maxi > 0) maxi =  valmax;
 
       // Handle Zero-Crossing Ranges [-A, +B]
       if (mini < 0 && maxi > 0)
@@ -142,11 +142,11 @@ namespace tts
       // Handle Single-Sided Ranges
       if (mini > 0)
       {
-        if (mini < 1 && maxi > 1) mini = max(T(1) / std::sqrt(maxi), mini);
+        if (mini < 1 && maxi > 1) mini = max(T(1) / _::sqrt(maxi), mini);
         mini = (maxi == 1) ? eps : mini;
 
-        T log_min = std::log10(mini);
-        T log_max = std::log10(maxi);
+        T log_min = _::log10(mini);
+        T log_max = _::log10(maxi);
 
         // Roll in log-space
         T log_val = _::roll(log_min, log_max);
@@ -155,11 +155,11 @@ namespace tts
       else if (maxi < 0)
       {
         // Mirror logic for negatives
-        if (mini < -1 && maxi > -1) maxi = min(T(1) / std::sqrt(-mini), maxi);
+        if (mini < -1 && maxi > -1) maxi = min(T(1) / _::sqrt(-mini), maxi);
         maxi = (mini == -1) ? -eps : maxi;
 
-        T log_min = std::log10(-maxi);
-        T log_max = std::log10(-mini);
+        T log_min = _::log10(-maxi);
+        T log_max = _::log10(-mini);
 
         T log_val = _::roll(log_min, log_max);
         value = -_::exp10(log_val);

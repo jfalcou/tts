@@ -50,7 +50,7 @@ namespace tts
     {
       auto next2 = [](double x)
       {
-        auto v = static_cast<std::size_t>(std::ceil(x));
+        auto v = static_cast<std::size_t>(_::ceil(x));
         v--;
         v |= v >> 1; v |= v >> 2; v |= v >> 4; v |= v >> 8; v |= v >> 16;
         v++;
@@ -58,10 +58,10 @@ namespace tts
       };
 
       std::size_t bucket;
-      if     (ulp <= 1.5   )  bucket = static_cast<std::size_t>(std::ceil(ulp*2));
-      else if(_::isinf(ulp))  bucket = nb_buckets-1;
+      if     (ulp <= 1.5   )  bucket = static_cast<std::size_t>(_::ceil(ulp*2));
+      else if(_::is_inf(ulp))  bucket = nb_buckets-1;
       else                    bucket = _::min ( nb_buckets-2
-                                              , static_cast<std::size_t>(std::log2(next2(ulp))+4)
+                                              , static_cast<std::size_t>(_::log2(next2(ulp))+4.)
                                               );
       return bucket;
     }

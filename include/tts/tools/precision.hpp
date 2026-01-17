@@ -43,9 +43,9 @@ namespace tts
       }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (_::isnan(a) && _::isnan(b))) return 0.;
+        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
 
-        if(_::isinf(a) || _::isinf(b) || _::isnan(a) || _::isnan(b))
+        if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
           return std::numeric_limits<double>::infinity();
 
         return _::abs(a - b);
@@ -93,9 +93,9 @@ namespace tts
       { return a == b ? 0. : 100.; }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (_::isnan(a) && _::isnan(a))) return 0.;
+        if((a == b) || (_::is_nan(a) && _::is_nan(a))) return 0.;
 
-        if(_::isinf(a) || _::isinf(b) || _::isnan(a) || _::isnan(b))
+        if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
           return std::numeric_limits<double>::infinity();
 
         return 100. * (_::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b))));
@@ -147,11 +147,11 @@ namespace tts
       {
         using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
 
-        if((a == b) || (_::isnan(a) && _::isnan(b)))
+        if((a == b) || (_::is_nan(a) && _::is_nan(b)))
         {
           return 0.;
         }
-        else if (_::isunordered(a, b))
+        else if (_::is_unordered(a, b))
         {
           return std::numeric_limits<double>::infinity();
         }
@@ -201,7 +201,7 @@ namespace tts
 
     @param  a Value to compare
     @param  b Value to compare
-    @return Is `a == b` or `_::isnan(a) && _::isnan(b)`
+    @return Is `a == b` or `_::is_nan(a) && _::is_nan(b)`
   **/
   //====================================================================================================================
   template<typename T, typename U> inline bool ieee_check(T const &a, U const &b)
@@ -209,7 +209,7 @@ namespace tts
     if constexpr( requires { ieee_equal(a,b); }) return ieee_equal(a,b);
     else if constexpr(std::is_floating_point_v<T>) // IEEE cases
     {
-      return (a==b) || (_::isnan(a) && _::isnan(b));
+      return (a==b) || (_::is_nan(a) && _::is_nan(b));
     }
     else
     {
