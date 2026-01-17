@@ -1,5 +1,6 @@
 #define TTS_MAIN
 #include <tts/tts.hpp>
+#include <stdexcept>
 
 TTS_CASE( "Check expectations" )
 {
