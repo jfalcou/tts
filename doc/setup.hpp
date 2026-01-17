@@ -52,7 +52,7 @@
   Simply use `wget` to fetch the latest version and place it where you want:
 
   @code
-  wget https://raw.githubusercontent.com/jfalcou/tts/main/stanalone/tts/tts.hpp
+  wget https://raw.githubusercontent.com/jfalcou/tts/main/standalone/tts/tts.hpp
   @endcode
 
   Use **TTS** by just compiling your code with the include path pointing to the location of this single file.

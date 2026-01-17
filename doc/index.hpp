@@ -26,7 +26,7 @@
   # A Short Example
 
   @code
-  #define TTS_MAIN
+  #define TTS_MAIN  // No need for main()
   #include <tts/tts.hpp>
 
   TTS_CASE( "Check expectations" )

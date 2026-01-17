@@ -1,16 +1,16 @@
 //======================================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
-#include <tts/engine/suite.hpp>
-#include <iostream>
+#include <tts/engine/environment.hpp>
+#include <tts/tools/as_text.hpp>
 
-namespace tts::detail
+namespace tts::_
 {
   struct fatal_signal {};
 
@@ -24,19 +24,19 @@ namespace tts::detail
       {
         if(!done)
         {
-          std::cout << ">> Additional information: \n";
+          printf("     >> Additional information: \n     ");
           done = true;
         }
 
-        std::cout << d;
+        printf("%s",as_text(d).data());
       }
       return *this;
     }
 
     ~logger() noexcept(false)
     {
-      if(display && done) std::cout << "\n";
-      if(::tts::fatal_error_status) throw ::tts::detail::fatal_signal();
+      if(display && done)           puts("");
+      if(::tts::fatal_error_status) throw ::tts::_::fatal_signal();
     }
 
     bool display, done;

@@ -1,11 +1,27 @@
 //======================================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
+
+namespace tts::_
+{
+  // Type identity
+  template<typename T>    using identity_t = T;
+
+  // Faster declval
+  template<typename, typename = void> extern identity_t<void (*)() noexcept> declval;
+  template<typename T>                extern identity_t<T && (*)() noexcept> declval<T, std::void_t<T&&>>;
+}
+
+//======================================================================================================================
+// Macro for move semantic/forward semantic
+//======================================================================================================================
+#define TTS_MOVE(...) static_cast<std::remove_reference_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
+#define TTS_FWD(...)  static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 
 //======================================================================================================================
 // Portable PRAGMA Handler
@@ -15,17 +31,19 @@
   #define TTS_DISABLE_WARNING_POP            __pragma(warning( pop ))
   #define TTS_DISABLE_WARNING(warningNumber) __pragma(warning( disable : warningNumber ))
   #define TTS_DISABLE_WARNING_SHADOW
-
+  #define TTS_DISABLE_WARNING_CRT_SECURE     __pragma(warning( disable : 4996 ))
 #elif defined(__GNUC__) || defined(__clang__)
   #define TTS_DO_PRAGMA(X)                    _Pragma(#X)
   #define TTS_DISABLE_WARNING_PUSH            TTS_DO_PRAGMA(GCC diagnostic push)
   #define TTS_DISABLE_WARNING_POP             TTS_DO_PRAGMA(GCC diagnostic pop)
   #define TTS_DISABLE_WARNING(warningName)    TTS_DO_PRAGMA(GCC diagnostic ignored #warningName)
   #define TTS_DISABLE_WARNING_SHADOW          TTS_DISABLE_WARNING(-Wshadow)
+  #define TTS_DISABLE_WARNING_CRT_SECURE
 #else
   #define TTS_DISABLE_WARNING_PUSH
   #define TTS_DISABLE_WARNING_POP
   #define TTS_DISABLE_WARNING_SHADOW
+  #define TTS_DISABLE_WARNING_CRT_SECURE
 #endif
 
 //======================================================================================================================

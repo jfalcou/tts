@@ -1,17 +1,18 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
-#include <iostream>
 #include <tts/tools/preprocessor.hpp>
+#include <tts/tools/options.hpp>
+#include <tts/tools/text.hpp>
 
-namespace tts::detail
+namespace tts::_
 {
   struct section_guard
   {
@@ -23,9 +24,9 @@ namespace tts::detail
       if(section == 0) id = count++ - 1;
     }
 
-    template<typename Desc> bool check(Desc const& desc)
+    bool check(const char* desc)
     {
-      if(id == section) std::cout << "  And then: " << desc << std::endl;
+      if(id == section && desc && is_verbose ) printf("  And then: %s\n", desc);
       return id == section;
     }
   };
@@ -39,106 +40,73 @@ namespace tts::detail
 
 //======================================================================================================================
 /**
+  @name Scoped scenarios
+  @ingroup test-scenario
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
   @def TTS_WHEN
+  @ingroup test-scenario
   @brief Start a block of scoped environment.
 
   Code in a scoped environment can contain:
-    + Normal expressions
-    + scoped tests introduced by @ref TTS_AND_THEN
+    + Normal expressions.
+    + scoped tests introduced by @ref TTS_AND_THEN.
+
+  @see TTS_AND_THEN
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check test with sub-test" )
-  {
-    TTS_WHEN("We start some sub-test")
-    {
-      int i = 99;
-
-      TTS_AND_THEN("We increment a variable")
-      {
-        TTS_EQUAL(i,99);
-        i++;
-        TTS_EQUAL(i,100);
-      }
-
-      TTS_AND_THEN("We decrement a variable")
-      {
-        // At the start of this sub-test, i is equal to 99 again
-        TTS_EQUAL(i,99);
-        i--;
-        TTS_EQUAL(i,98);
-      }
-    }
-  };
-  @endcode
+  @snippet doc/when.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_WHEN(STORY)
+#else
 #define TTS_WHEN(STORY)                                                                             \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
-  std::cout << "[^] - For: " << ::tts::detail::current_test << "\n";                                \
-  std::cout << "When      : " << STORY << std::endl;                                                \
+  (::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text{STORY}.data()) : 0);               \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++)   \
-    for( tts::detail::only_once tts_only_once_setup{}; tts_only_once_setup; )                       \
+    for( tts::_::only_once tts_only_once_setup{}; tts_only_once_setup; )                            \
 TTS_DISABLE_WARNING_POP                                                                             \
 /**/
+#endif
 
-#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, ...)                                                        \
+#define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                    \
 TTS_DISABLE_WARNING_PUSH                                                                            \
 TTS_DISABLE_WARNING_SHADOW                                                                          \
   static int TTS_LOCAL_ID = 0;                                                                      \
-  std::ostringstream TTS_CAT(desc_,TTS_LOCAL_ID);                                                   \
-  if(::tts::detail::section_guard(TTS_LOCAL_ID, tts_section, tts_count )                            \
-                  .check( ((TTS_CAT(desc_,TTS_LOCAL_ID)  << __VA_ARGS__)                            \
-                          , TTS_CAT(desc_,TTS_LOCAL_ID).str())                                      \
-                        )                                                                           \
+  if(::tts::_::section_guard(TTS_LOCAL_ID, tts_section, tts_count).check( MESSAGE )                 \
     )                                                                                               \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count; tts_count -= 0==tts_section++ )  \
-    for(tts::detail::only_once tts__only_once_section{}; tts__only_once_section; )                  \
+    for(tts::_::only_once tts__only_once_section{}; tts__only_once_section; )                       \
 TTS_DISABLE_WARNING_POP                                                                             \
 /**/
 
 //======================================================================================================================
 /**
   @def TTS_AND_THEN
+  @ingroup test-scenario
   @brief Add a scoped tests to current scoped environment.
 
   Compared to regular local scope, whenever a scoped test is run, the data defined in the enclosing
   @ref TTS_WHEN are re-initialized, thus serving as a setup/tear-down system.
 
+  @see TTS_WHEN
+
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check test with sub-test" )
-  {
-    TTS_WHEN("We start some sub-test")
-    {
-      int i = 99;
-
-      TTS_AND_THEN("We increment a variable")
-      {
-        TTS_EQUAL(i,99);
-        i++;
-        TTS_EQUAL(i,100);
-      }
-
-      TTS_AND_THEN("We decrement a variable")
-      {
-        // At the start of this sub-test, i is equal to 99 again
-        TTS_EQUAL(i,99);
-        i--;
-        TTS_EQUAL(i,98);
-      }
-    }
-  };
-  @endcode
+  @snippet doc/when.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_AND_THEN(...) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), __VA_ARGS__)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_AND_THEN(MESSAGE)
+#else
+#define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
+#endif
+
+//======================================================================================================================
+/// @}
+//======================================================================================================================

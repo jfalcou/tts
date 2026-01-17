@@ -15,6 +15,8 @@
   `--help`        | `-h`     | Display the list of supported options `./my_test --help`
   `--hex`         | `-x`     | Display floating point values as hexadecimal. `./my_test --hex`
   `--scientific`  | `-s`     | Display floating point values as hexadecimal. `./my_test --scientific`
+  `--verbose`     | `-v`     | Display tests results regardless of their status. `./my_test --verbose`
+  `--quiet`       | `-q`     | Remove all tests results regardless of their status. `./my_test --quiet`
 
   # Tests Parameters
   These options are provided to control the specifics of the tests parameters. Those

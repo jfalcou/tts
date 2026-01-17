@@ -4,7 +4,7 @@
 ##  SPDX-License-Identifier: BSL-1.0
 ##======================================================================================================================
 cmake_minimum_required(VERSION 3.22)
-project(tts LANGUAGES CXX)
+project(TTS LANGUAGES CXX)
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
@@ -45,7 +45,10 @@ copa_setup_install( LIBRARY tts
 ##======================================================================================================================
 ## Standalone generation
 ##======================================================================================================================
-copa_setup_standalone(${QUIET_OPTION} FILE tts.hpp SOURCE include DESTINATION standalone ROOT tts TARGET tts-standalone)
+copa_setup_standalone ( QUIET
+                        FILE tts.hpp SOURCE include ROOT tts TARGET tts-standalone
+                        OUTPUT "${PROJECT_BINARY_DIR}"
+                      )
 
 ##======================================================================================================================
 ## Setup doxygen

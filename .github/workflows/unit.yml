@@ -137,8 +137,8 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-        - { opts: "-O0"                }
-        - { opts: "-O3 -flto -DNDEBUG" }
+        - { opts: "-fp-model=precise -O0"                }
+        - { opts: "-fp-model=precise -O3 -flto -DNDEBUG" }
     steps:
       - name: Fetch current branch
         uses: actions/checkout@v4.1.1

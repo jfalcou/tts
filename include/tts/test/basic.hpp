@@ -10,7 +10,22 @@
 
 #include <tts/tools/preprocessor.hpp>
 #include <tts/engine/logger.hpp>
-#include <tts/test/info.hpp>
+#include <tts/engine/info.hpp>
+
+//======================================================================================================================
+/**
+  @defgroup test-basic Basic Tests Macros
+  @brief Macros for performing direct true/false checks over predicate-like expressions.
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
+  @name Predicate Checks
+  @{
+**/
+//======================================================================================================================
 
 //======================================================================================================================
 /**
@@ -21,29 +36,15 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expectation can be met" )
-  {
-    int a = 42, b = 69;
-
-    TTS_EXPECT(a <  b);
-    TTS_EXPECT(b >  a);
-    TTS_EXPECT(a != b);
-
-    // This test would cause the program to stop and not run the remaining tests
-    // TTS_EXPECT(a == b, REQUIRED);
-
-    TTS_EXPECT(a <= b);
-    TTS_EXPECT(b >= a);
-  };
-  @endcode
+  @snippet doc/expect.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPECT(EXPR, ...)
+#else
 #define TTS_EXPECT(EXPR, ...)     TTS_EXPECT_ ## __VA_ARGS__ ( EXPR )
+#endif
+
 #define TTS_EXPECT_(EXPR)         TTS_EXPECT_IMPL((EXPR),TTS_FAIL)
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR),TTS_FATAL)
 
@@ -52,12 +53,13 @@
 {                                                                                                   \
   if( local_tts_expr )                                                                              \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    TTS_PASS( "Expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );           \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " evaluates to false." );   \
-    return ::tts::detail::logger{};                                                                 \
+    FAILURE ( "Expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );          \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 /**/
@@ -71,28 +73,15 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expectation can be met" )
-  {
-    int a = 42, b = 69;
-
-    TTS_EXPECT_NOT(a == b);
-    TTS_EXPECT_NOT(b < a);
-
-    // This test would cause the program to stop and not run the remaining tests
-    // TTS_EXPECT_NOT(a != b, REQUIRED);
-
-    TTS_EXPECT_NOT(a >= b);
-    TTS_EXPECT_NOT(a <= b);
-  };
-  @endcode
+  @snippet doc/expect_not.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPECT_NOT(EXPR, ...)
+#else
 #define TTS_EXPECT_NOT(EXPR, ...)       TTS_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
+#endif
+
 #define TTS_EXPECT_NOT_(EXPR)           TTS_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_EXPECT_NOT_REQUIRED(EXPR)   TTS_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 
@@ -101,12 +90,13 @@
 {                                                                                                   \
   if( !local_tts_expr )                                                                             \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    TTS_PASS( "Expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );          \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
-    return ::tts::detail::logger{};                                                                 \
+    FAILURE ( "Expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );           \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(EXPR)                                                                                             \
 /**/
@@ -120,47 +110,34 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expectation can be met" )
-  {
-    constexpr int a = 42, b = 69;
-
-    TTS_CONSTEXPR_EXPECT(a != b);
-    TTS_CONSTEXPR_EXPECT(a <  b);
-    TTS_CONSTEXPR_EXPECT(a <= b);
-    TTS_CONSTEXPR_EXPECT(b >  a);
-    TTS_CONSTEXPR_EXPECT(b >= a);
-  };
-  @endcode
+  @snippet doc/cexpr_expect.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_EXPECT(EXPR, ...)
+#else
 #define TTS_CONSTEXPR_EXPECT(EXPR, ...) TTS_CEXPR_EXPECT_ ## __VA_ARGS__ ( EXPR )
+#endif
+
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR,TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_IMPL(EXPR,FAILURE)                                                         \
-::tts::global_logger_status = false;                                                                \
 do                                                                                                  \
 {                                                                                                   \
-  constexpr auto result_tts = EXPR;                                                                 \
-  if( result_tts )                                                                                  \
+  constexpr auto local_tts_expr = EXPR;                                                             \
+  if constexpr( local_tts_expr )                                                                    \
   {                                                                                                 \
-    ::tts::global_runtime.pass();                                                                   \
-    ::tts::global_logger_status = false;                                                            \
+    TTS_PASS( "Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );  \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to false." );                      \
-    ::tts::global_logger_status = true;                                                             \
+    FAILURE ( "Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) ); \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
-}while(0);                                                                                          \
-::tts::detail::logger{::tts::global_logger_status}                                                  \
+}while(0)                                                                                           \
 /**/
-
 
 //======================================================================================================================
 /**
@@ -171,43 +148,43 @@ do                                                                              
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that counter-expectation can be met" )
-  {
-    constexpr int a = 42, b = 69;
-
-    TTS_CONSTEXPR_EXPECT_NOT(a == b);
-    TTS_CONSTEXPR_EXPECT_NOT(a >  b);
-    TTS_CONSTEXPR_EXPECT_NOT(a >= b);
-    TTS_CONSTEXPR_EXPECT_NOT(b <  a);
-    TTS_CONSTEXPR_EXPECT_NOT(b <= a);
-  };
-  @endcode
+  @snippet doc/cexpr_expect_not.cpp snippet
 **/
 //======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...)
+#else
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_ ## __VA_ARGS__ ( EXPR )
+#endif
+
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR,FAILURE)                                                     \
-::tts::global_logger_status = false;                                                                \
 do                                                                                                  \
 {                                                                                                   \
-  constexpr auto result_tts = EXPR;                                                                 \
-  if( !result_tts )                                                                                 \
+  constexpr auto local_tts_expr = EXPR;                                                             \
+  if constexpr( !local_tts_expr )                                                                   \
   {                                                                                                 \
-    ::tts::global_runtime.pass();                                                                   \
-    ::tts::global_logger_status = false;                                                            \
+    TTS_PASS( "Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) ); \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Expression: "  << TTS_STRING(EXPR) << " evaluates to true." );                       \
-    ::tts::global_logger_status = true;                                                             \
+    FAILURE ( "Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)) );  \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
-}while(0);                                                                                          \
-::tts::detail::logger{::tts::global_logger_status}                                                  \
+}while(0)                                                                                           \
 /**/
+
+//======================================================================================================================
+/**
+  @}
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
+  @}
+**/
+//======================================================================================================================

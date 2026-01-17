@@ -1,45 +1,44 @@
 //======================================================================================================================
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
-#include <string_view>
-#include <ostream>
+#include <tts/tools/text.hpp>
 
-namespace tts
+namespace tts::_
 {
   class source_location
   {
     public:
-    [[nodiscard]] static constexpr auto current ( const char* file  = __builtin_FILE()
-                                                , int line          = __builtin_LINE()
-                                                ) noexcept
+    [[nodiscard]] static auto current ( const char* file  = __builtin_FILE()
+                                      , int line          = __builtin_LINE()
+                                      ) noexcept
     {
-      source_location sl{};
-      sl.file_ = file;
-      sl.line_ = line;
-      return sl;
+      int offset = 0;
+      auto end = strrchr(file, '/');
+      if(end) offset = static_cast<int>(end - file + 1);
+
+      source_location that{};
+      that.desc_ = text{"[%s:%d]",file+offset,line};
+
+      return that;
     }
 
-    [[nodiscard]] constexpr auto filename() const noexcept
-    {
-      std::string_view f(file_);
-      return f.substr(f.find_last_of('/')+1);
-    }
+    friend text to_text(source_location const& s) { return s.desc_; }
 
-    [[nodiscard]] constexpr auto line() const noexcept { return line_; }
+    decltype(auto) data() const { return desc_.data(); }
 
-    friend std::ostream& operator<<(std::ostream& os, source_location const& s)
+    template<_::stream OS>
+    friend OS& operator<<(OS& os, source_location const& s)
     {
-      return os << "[" << s.filename() << ":" << s.line() << "]";
+      return os << s.desc_;
     }
 
     private:
-    const char* file_{"unknown"};
-    int         line_{};
+    text  desc_{"[unknown:?]"};
   };
 }

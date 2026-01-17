@@ -1,17 +1,25 @@
 //======================================================================================================================
 //! @file
-/**
+/*
   TTS - Tiny Test System
   Copyright : TTS Contributors & Maintainers
   SPDX-License-Identifier: BSL-1.0
-**/
+*/
 //======================================================================================================================
 #pragma once
 
-#include <tts/test/info.hpp>
-#include <tts/tools/types.hpp>
+#include <tts/engine/info.hpp>
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/typename.hpp>
+#include <tts/tools/types.hpp>
+
+//======================================================================================================================
+/**
+  @defgroup test-types Type Tests Macros
+  @brief Macros for performing checks on types and their properties.
+  @{
+**/
+//======================================================================================================================
 
 //======================================================================================================================
 /**
@@ -23,20 +31,16 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
+  @snippet doc/type_is.cpp snippet
 
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-  #include <type_traits>
-
-  TTS_CASE( "Check that types can be tested for equivalence" )
-  {
-    TTS_TYPE_IS( std::add_pointer<float const>::type, float const* );
-  };
-  @endcode
 **/
 //======================================================================================================================
-#define TTS_TYPE_IS(TYPE, REF, ...)     TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TYPE_IS(TYPE, REF, ...)
+#else
+#define TTS_TYPE_IS(TYPE, REF, ...) TTS_TYPE_IS_ ## __VA_ARGS__ (TYPE, REF)
+#endif
+
 #define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FAIL)
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF,TTS_FATAL)
 
@@ -45,15 +49,19 @@
 {                                                                                                   \
   if constexpr( std::is_same_v<TTS_T,TTS_R> )                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    TTS_PASS( "Type: '%s' is '%s'."                                                                 \
+            , TTS_STRING(TTS_REMOVE_PARENS(TYPE)), TTS_STRING(TTS_REMOVE_PARENS(REF))               \
+            );                                                                                      \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE ( "Type: "  << TTS_STRING(TTS_REMOVE_PARENS(TYPE)) << " is not the same as "            \
-                        << TTS_STRING(TTS_REMOVE_PARENS(REF))  << " because "                       \
-                        << ::tts::typename_<TTS_T> << " is not " << ::tts::typename_<TTS_R>         \
+    FAILURE ( "Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'."                    \
+            , TTS_STRING(TTS_REMOVE_PARENS(TYPE)), TTS_STRING(TTS_REMOVE_PARENS(REF))               \
+            , ::tts::typename_<TTS_T>.size(), ::tts::typename_<TTS_T>.data()                        \
+            , ::tts::typename_<TTS_R>.size(), ::tts::typename_<TTS_R>.data()                        \
             );                                                                                      \
-    return ::tts::detail::logger{};                                                                 \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(::tts::type<TTS_REMOVE_PARENS(TYPE)>{}, ::tts::type<TTS_REMOVE_PARENS(REF)>{})                    \
 /**/
@@ -68,23 +76,15 @@
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expression types can be tested for equality" )
-  {
-    double d;
-
-    TTS_EXPR_IS( &d + 5        , double*   );
-    TTS_EXPR_IS( std::move(d)  , double&&  );
-    TTS_EXPR_IS( std::swap(d,d), void      );
-  };
-  @endcode
+  @snippet doc/expr_is.cpp snippet
 **/
 //======================================================================================================================
-#define TTS_EXPR_IS(EXPR, TYPE, ...)     TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_EXPR_IS(EXPR, TYPE, ...)
+#else
+#define TTS_EXPR_IS(EXPR, TYPE, ...)  TTS_EXPR_IS_ ## __VA_ARGS__ (EXPR, TYPE)
+#endif
+
 #define TTS_EXPR_IS_(EXPR, TYPE)         TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FAIL)
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE,TTS_FATAL)
 
@@ -93,37 +93,40 @@
 {                                                                                                   \
   if constexpr( std::is_same_v<TTS_T,TTS_R> )                                                       \
   {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
+    TTS_PASS( "Expression: '%s' is of type '%s'."                                                   \
+            , TTS_STRING(TTS_REMOVE_PARENS(EXPR)), TTS_STRING(TTS_REMOVE_PARENS(TYPE))              \
+            );                                                                                      \
+    return ::tts::_::logger{false};                                                                 \
   }                                                                                                 \
   else                                                                                              \
   {                                                                                                 \
-    FAILURE (   "Type: "  << TTS_STRING(TTS_REMOVE_PARENS(EXPR))  << " is not the same as "         \
-                          << TTS_STRING(TTS_REMOVE_PARENS(TYPE)) << " because "                     \
-                          << ::tts::typename_<TTS_T> << " is not " << ::tts::typename_<TTS_R>       \
+    FAILURE ( "Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'."                  \
+            , TTS_STRING(TTS_REMOVE_PARENS(EXPR)), TTS_STRING(TTS_REMOVE_PARENS(TYPE))              \
+            , ::tts::typename_<TTS_T>.size(), ::tts::typename_<TTS_T>.data()                        \
+            , ::tts::typename_<TTS_R>.size(), ::tts::typename_<TTS_R>.data()                        \
             );                                                                                      \
-    return ::tts::detail::logger{};                                                                 \
+    return ::tts::_::logger{};                                                                      \
   }                                                                                                 \
 }(::tts::type<decltype(TTS_REMOVE_PARENS(EXPR))>{}, ::tts::type<TTS_REMOVE_PARENS(TYPE)>{})         \
 /**/
 
-#define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                         \
-TTS_DISABLE_WARNING_PUSH                                                                            \
-TTS_DISABLE_WARNING_SHADOW                                                                          \
-[&]( TTS_ARG(__VA_ARGS__) )                                                                         \
-{                                                                                                   \
-  if constexpr( requires TTS_REMOVE_PARENS(EXPR) )                                                  \
-  {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    TTS_FAIL(     "Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR))                             \
-              <<  " does not compile as expected."                                                  \
-            );                                                                                      \
-    return ::tts::detail::logger{};                                                                 \
-  }                                                                                                 \
-TTS_DISABLE_WARNING_POP                                                                             \
-}(__VA_ARGS__)                                                                                      \
+#define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                             \
+TTS_DISABLE_WARNING_PUSH                                                                                \
+TTS_DISABLE_WARNING_SHADOW                                                                              \
+[&]( TTS_ARG(__VA_ARGS__) )                                                                             \
+{                                                                                                       \
+  if constexpr( requires TTS_REMOVE_PARENS(EXPR) )                                                      \
+  {                                                                                                     \
+    TTS_PASS("Expression: '%s' compiles as expected.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));            \
+    return ::tts::_::logger{false};                                                                     \
+  }                                                                                                     \
+  else                                                                                                  \
+  {                                                                                                     \
+    TTS_FAIL ( "Expression: '%s' does not compile as expected.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));  \
+    return ::tts::_::logger{};                                                                          \
+  }                                                                                                     \
+TTS_DISABLE_WARNING_POP                                                                                 \
+}(__VA_ARGS__)                                                                                          \
 /**/
 
 //======================================================================================================================
@@ -133,45 +136,34 @@ TTS_DISABLE_WARNING_POP                                                         
 
   @param Symbols Variadic lists of symbols used in the tests
   @param Expression Brace-enclosed expression to validate.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expression can compile properly" )
-  {
-    double d, e;
-
-    TTS_EXPECT_COMPILES(d, e, { d += 4. * e; } );
-  };
-  @endcode
+  @snippet doc/expect_compiles.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_EXPECT_COMPILES(Symbols..., Expression, ...)
+#define TTS_EXPECT_COMPILES(Symbols, Expression, ...)
 #else
 #define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__) )
 #endif
 
-#define TTS_EXPECT_NOT_COMPILES_IMPL(EXPR, ...)                                                     \
-TTS_DISABLE_WARNING_PUSH                                                                            \
-TTS_DISABLE_WARNING_SHADOW                                                                          \
-[&]( TTS_ARG(__VA_ARGS__) )                                                                         \
-{                                                                                                   \
-  if constexpr( !(requires TTS_REMOVE_PARENS(EXPR)) )                                               \
-  {                                                                                                 \
-    ::tts::global_runtime.pass(); return ::tts::detail::logger{false};                              \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    TTS_FAIL("Expression: " << TTS_STRING(TTS_REMOVE_PARENS(EXPR)) << " compiles unexpectedly." );  \
-    return ::tts::detail::logger{};                                                                 \
-  }                                                                                                 \
-TTS_DISABLE_WARNING_POP                                                                             \
-}(__VA_ARGS__)                                                                                      \
+#define TTS_EXPECT_NOT_COMPILES_IMPL(EXPR, ...)                                                         \
+TTS_DISABLE_WARNING_PUSH                                                                                \
+TTS_DISABLE_WARNING_SHADOW                                                                              \
+[&]( TTS_ARG(__VA_ARGS__) )                                                                             \
+{                                                                                                       \
+  if constexpr( !(requires TTS_REMOVE_PARENS(EXPR)) )                                                   \
+  {                                                                                                     \
+    TTS_PASS("Expression: '%s' does not compile as expected.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));    \
+    return ::tts::_::logger{false};                                                                     \
+  }                                                                                                     \
+  else                                                                                                  \
+  {                                                                                                     \
+    TTS_FAIL ( "Expression: '%s' compiles unexpectedly.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));         \
+    return ::tts::_::logger{};                                                                          \
+  }                                                                                                     \
+TTS_DISABLE_WARNING_POP                                                                                 \
+}(__VA_ARGS__)                                                                                          \
 /**/
 
 //======================================================================================================================
@@ -181,21 +173,9 @@ TTS_DISABLE_WARNING_POP                                                         
 
   @param Symbols Variadic lists of symbols used in the tests
   @param Expression Brace-enclosed expression to validate.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
-
-  @code
-  #define TTS_MAIN
-  #include <tts/tts.hpp>
-
-  TTS_CASE( "Check that expression can compile properly" )
-  {
-    double d, e;
-
-    TTS_EXPECT_NOT_COMPILES(d, e, { d.foo(e); } );
-  };
-  @endcode
+  @snippet doc/expect_not_compiles.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -203,3 +183,7 @@ TTS_DISABLE_WARNING_POP                                                         
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
+
+//======================================================================================================================
+/// @}
+//======================================================================================================================
