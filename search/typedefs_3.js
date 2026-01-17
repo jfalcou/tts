@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['signed_5ftypes_0',['signed_types',['../namespacetts.html#af80f4545b36d2c023830480c853739af',1,'tts']]]
+  ['signed_5ftypes_0',['signed_types',['../group__tools-types.html#gacbe5f97a90a5f822d42ad22443f1e3ec',1,'tts']]]
 ];

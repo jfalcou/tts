@@ -1,0 +1,314 @@
+<!-- HTML header for doxygen 1.9.5-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TTS: Type Utilities</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="godbolt.js"></script>
+<script type="text/javascript" src="fragment.js"></script>
+<script type="text/javascript" src="paragraph.js"></script>
+<script type="text/javascript">
+  DoxygenAwesomeParagraphLink.init()
+  DoxygenAwesomeFragmentCopyButton.init()
+  SendToGodbolt.init("tts","clang1600","-O3 -std=c++20 -DNEDBUG")
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="color.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<a href="https://github.com/jfalcou/tts" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<!-- BEGIN TITLEAREA-->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr  style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">TTS<span id="projectnumber">&#160;v2.3.0</span>
+   </div>
+   <div id="projectbrief">The Tiny Test System</div>
+  </td>
+ </tr>
+   <tr><td colspan="2" style="padding: 20px 0px 0px 0px;">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- END TITLEAREA-->
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('group__tools-types.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">Type Utilities</div></div>
+</div><!--header-->
+<div class="contents">
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1cartesian__product.html">tts::cartesian_product&lt; L1, L2 &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate the Cartesian product of two type lists.  <a href="structtts_1_1cartesian__product.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1filter.html">tts::filter&lt; Pred, Type &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Filter a types list by a predicate.  <a href="structtts_1_1filter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1type.html">tts::type&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encapsulates a single type into a reusable type object.  <a href="structtts_1_1type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1types.html">tts::types&lt; Ts &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encapsulates a variadic list of types into a reusable object.  <a href="structtts_1_1types.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga2ba4e001ffe97c25f318dec428b5f147" id="r_ga2ba4e001ffe97c25f318dec428b5f147"><td class="memItemLeft" align="right" valign="top"><a id="ga2ba4e001ffe97c25f318dec428b5f147" name="ga2ba4e001ffe97c25f318dec428b5f147"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tts::arithmetic_types</b> = <a class="el" href="structtts_1_1types.html">types</a>&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</td></tr>
+<tr class="memdesc:ga2ba4e001ffe97c25f318dec428b5f147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types list containing all standard arithmetic types. <br /></td></tr>
+<tr class="separator:ga2ba4e001ffe97c25f318dec428b5f147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga213ac596b9a0b307be93bdc89f5ba738" id="r_ga213ac596b9a0b307be93bdc89f5ba738"><td class="memItemLeft" align="right" valign="top"><a id="ga213ac596b9a0b307be93bdc89f5ba738" name="ga213ac596b9a0b307be93bdc89f5ba738"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tts::int_types</b> = <a class="el" href="structtts_1_1types.html">types</a>&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;</td></tr>
+<tr class="memdesc:ga213ac596b9a0b307be93bdc89f5ba738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types list containing all standard signed integer types. <br /></td></tr>
+<tr class="separator:ga213ac596b9a0b307be93bdc89f5ba738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga45e7f2bb8d7d6afb1676d1642c7629f6" id="r_ga45e7f2bb8d7d6afb1676d1642c7629f6"><td class="memItemLeft" align="right" valign="top"><a id="ga45e7f2bb8d7d6afb1676d1642c7629f6" name="ga45e7f2bb8d7d6afb1676d1642c7629f6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tts::integral_types</b> = <a class="el" href="structtts_1_1types.html">types</a>&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</td></tr>
+<tr class="memdesc:ga45e7f2bb8d7d6afb1676d1642c7629f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types list containing all standard integer types. <br /></td></tr>
+<tr class="separator:ga45e7f2bb8d7d6afb1676d1642c7629f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga533f8005aab86ce53226691c5ae1e7ba" id="r_ga533f8005aab86ce53226691c5ae1e7ba"><td class="memItemLeft" align="right" valign="top"><a id="ga533f8005aab86ce53226691c5ae1e7ba" name="ga533f8005aab86ce53226691c5ae1e7ba"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tts::real_types</b> = <a class="el" href="structtts_1_1types.html">types</a>&lt; double, float &gt;</td></tr>
+<tr class="memdesc:ga533f8005aab86ce53226691c5ae1e7ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types list containing all standard floating point types. <br /></td></tr>
+<tr class="separator:ga533f8005aab86ce53226691c5ae1e7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacbe5f97a90a5f822d42ad22443f1e3ec" id="r_gacbe5f97a90a5f822d42ad22443f1e3ec"><td class="memItemLeft" align="right" valign="top"><a id="gacbe5f97a90a5f822d42ad22443f1e3ec" name="gacbe5f97a90a5f822d42ad22443f1e3ec"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tts::signed_types</b> = <a class="el" href="structtts_1_1types.html">types</a>&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;</td></tr>
+<tr class="memdesc:gacbe5f97a90a5f822d42ad22443f1e3ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types list containing all standard signed types. <br /></td></tr>
+<tr class="separator:gacbe5f97a90a5f822d42ad22443f1e3ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga19e63a903c9a238a3db10c9d56a9af56" id="r_ga19e63a903c9a238a3db10c9d56a9af56"><td class="memItemLeft" align="right" valign="top"><a id="ga19e63a903c9a238a3db10c9d56a9af56" name="ga19e63a903c9a238a3db10c9d56a9af56"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>tts::uint_types</b> = <a class="el" href="structtts_1_1types.html">types</a>&lt; std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</td></tr>
+<tr class="memdesc:ga19e63a903c9a238a3db10c9d56a9af56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types list containing all standard unsigned types. <br /></td></tr>
+<tr class="separator:ga19e63a903c9a238a3db10c9d56a9af56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga4a803fd6715f8e58dd6ae617651bab88" id="r_ga4a803fd6715f8e58dd6ae617651bab88"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga4a803fd6715f8e58dd6ae617651bab88"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">tts::name</a> (T const &amp;t)</td></tr>
+<tr class="memdesc:ga4a803fd6715f8e58dd6ae617651bab88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the name of the type <code>T</code> in readable form.  <br /></td></tr>
+<tr class="separator:ga4a803fd6715f8e58dd6ae617651bab88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga812107840eb150e332662cedfb176c10" id="r_ga812107840eb150e332662cedfb176c10"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ga812107840eb150e332662cedfb176c10"><td class="memTemplItemLeft" align="right" valign="top">auto constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a> = _::typename_impl&lt;T&gt;{}</td></tr>
+<tr class="memdesc:ga812107840eb150e332662cedfb176c10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates to an object containing the name of the type <code>T</code> in readable form.  <br /></td></tr>
+<tr class="separator:ga812107840eb150e332662cedfb176c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga4a803fd6715f8e58dd6ae617651bab88" name="ga4a803fd6715f8e58dd6ae617651bab88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4a803fd6715f8e58dd6ae617651bab88">&#9670;&#160;</a></span>name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto tts::name </td>
+          <td>(</td>
+          <td class="paramtype">T const &amp;&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/tools/typename.hpp&gt;</code></p>
+
+<p>Returns the name of the type <code>T</code> in readable form. </p>
+<p>This function is a convenience wrapper around <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename_</a>.</p>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a> ( <span class="stringliteral">&quot;Check name() utility&quot;</span></div>
+<div class="line">              , (<span class="keywordtype">int</span>, <span class="keywordtype">float</span>, std::vector&lt;double&gt;)</div>
+<div class="line">              , <a class="code hl_struct" href="structtts_1_1value.html">tts::value</a>{37}</div>
+<div class="line">              )</div>
+<div class="line">( <span class="keyword">auto</span> <span class="keyword">const</span>&amp; args )</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#ga716bf0e62df7eb57ae864b0a250e445b">TTS_PASS</a>(<span class="stringliteral">&quot;tts::name(args) = &#39;&quot;</span> + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(<a class="code hl_function" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">tts::name</a>(args)) + <span class="stringliteral">&quot;&#39;&quot;</span> );</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-basic_html_ga716bf0e62df7eb57ae864b0a250e445b"><div class="ttname"><a href="group__test-basic.html#ga716bf0e62df7eb57ae864b0a250e445b">TTS_PASS</a></div><div class="ttdeci">#define TTS_PASS(...)</div><div class="ttdoc">Force a passing test and display a message.</div><div class="ttdef"><b>Definition</b> info.hpp:44</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:194</div></div>
+<div class="ttc" id="agroup__tools-text_html_ga044124276e1b1e518a746121e16b0fad"><div class="ttname"><a href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a></div><div class="ttdeci">text as_text(T const &amp;e)</div><div class="ttdoc">Value-to-string conversion.</div><div class="ttdef"><b>Definition</b> as_text.hpp:48</div></div>
+<div class="ttc" id="agroup__tools-types_html_ga4a803fd6715f8e58dd6ae617651bab88"><div class="ttname"><a href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">tts::name</a></div><div class="ttdeci">constexpr auto name(T const &amp;t)</div><div class="ttdoc">Returns the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:142</div></div>
+<div class="ttc" id="astructtts_1_1value_html"><div class="ttname"><a href="structtts_1_1value.html">tts::value</a></div><div class="ttdoc">Defines a data generator that always return the same value.</div><div class="ttdef"><b>Definition</b> generator.hpp:130</div></div>
+</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Value to retrieve the type name for. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A <code>typename_</code> instance representing the name of <code>T</code> as a string-like object. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga812107840eb150e332662cedfb176c10" name="ga812107840eb150e332662cedfb176c10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga812107840eb150e332662cedfb176c10">&#9670;&#160;</a></span>typename_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto constexpr tts::typename_ = _::typename_impl&lt;T&gt;{}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/tools/typename.hpp&gt;</code></p>
+
+<p>Evaluates to an object containing the name of the type <code>T</code> in readable form. </p>
+<p><code>typename_&lt;T&gt;</code> is a <code>constexpr</code> object that can be used to retrieve the name of a type <code>T</code> as a text-like object. It can be used in conjunction with <code>as_text</code> or stream output operators to display type names.</p>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>( <span class="stringliteral">&quot;Check typename_ utility&quot;</span></div>
+<div class="line">            , <span class="keywordtype">int</span>, <span class="keywordtype">float</span>, std::vector&lt;double&gt;</div>
+<div class="line">            )</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;( <a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a> )</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#ga716bf0e62df7eb57ae864b0a250e445b">TTS_PASS</a>(<span class="stringliteral">&quot;Type name: &#39;&quot;</span> + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_&lt;T&gt;</a>) + <span class="stringliteral">&quot;&#39;&quot;</span> );</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:163</div></div>
+<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:125</div></div>
+<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:109</div></div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type to query. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- HTML footer for doxygen 1.8.20-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+  </ul>
+</div>
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</body>
+</html>

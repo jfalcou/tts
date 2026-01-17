@@ -1,17 +1,18 @@
 var searchData=
 [
-  ['s_20changed_0',['s changed',['../changelog.html#autotoc_md7',1,'What&apos;s Changed'],['../changelog.html#autotoc_md1',1,'What&apos;s Changed']]],
-  ['sample_1',['sample',['../structtts_1_1sample.html',1,'tts::sample&lt; Distribution &gt;'],['../structtts_1_1sample.html#a287484f36d6766d0556e6f22c9ff2a16',1,'tts::sample::sample()']]],
-  ['scarpetta_2',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md9',1,'']]],
-  ['sequence_2ehpp_3',['sequence.hpp',['../sequence_8hpp.html',1,'']]],
-  ['setup_4',['setup',['../setup.html',1,'Setup'],['../setup.html#setup-standalone',1,'Standalone setup']]],
-  ['setup_20with_20cpm_5',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['short_20example_6',['A Short Example',['../index.html#autotoc_md26',1,'']]],
-  ['signed_5ftypes_7',['signed_types',['../namespacetts.html#af80f4545b36d2c023830480c853739af',1,'tts']]],
+  ['s_20changed_0',['s changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md7',1,'What&apos;s Changed']]],
+  ['scarpetta_1',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md9',1,'']]],
+  ['sequence_20tests_20macros_2',['Sequence Tests Macros',['../group__test-sequence.html',1,'']]],
+  ['setup_3',['setup',['../setup.html',1,'Setup'],['../setup.html#setup-standalone',1,'Standalone setup']]],
+  ['setup_20with_20cpm_4',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
+  ['short_20example_5',['A Short Example',['../index.html#autotoc_md27',1,'']]],
+  ['signed_5ftypes_6',['signed_types',['../group__tools-types.html#gacbe5f97a90a5f822d42ad22443f1e3ec',1,'tts']]],
+  ['size_7',['size',['../structtts_1_1text.html#aa67422042d8e978b4c9d75eee86cc04c',1,'tts::text']]],
   ['source_8',['Install from the source',['../setup.html#setup-source',1,'']]],
   ['specify_20a_20test_20case_9',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
   ['standalone_20setup_10',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
   ['started_11',['Getting Started',['../tts101.html',1,'']]],
-  ['supported_20compilers_12',['Supported Compilers',['../index.html#autotoc_md25',1,'']]],
-  ['system_13',['The Tiny Test System',['../index.html',1,'']]]
+  ['supported_20compilers_12',['Supported Compilers',['../index.html#autotoc_md26',1,'']]],
+  ['swap_13',['swap',['../structtts_1_1text.html#a7c99c45e9c6c75838c0a2029282be259',1,'tts::text']]],
+  ['system_14',['The Tiny Test System',['../index.html',1,'']]]
 ];

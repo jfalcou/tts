@@ -10,3 +10,8 @@ html
   --page-foreground-color: hsl(189, 48%, 28%);
   --page-secondary-foreground-color: hsl(189, 48%, 48%);
 }
+
+p, div, table, dl
+{
+  text-align: justify; !important
+}

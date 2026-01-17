@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sample_0',['sample',['../structtts_1_1sample.html#a287484f36d6766d0556e6f22c9ff2a16',1,'tts::sample']]]
+  ['produce_0',['produce',['../group__tools-generators-custom.html#ga932f1a56fbe54c1347f9e4c8331dee49',1,'tts']]]
 ];

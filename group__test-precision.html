@@ -1,0 +1,518 @@
+<!-- HTML header for doxygen 1.9.5-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.9.8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TTS: Precision Tests Macros</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="godbolt.js"></script>
+<script type="text/javascript" src="fragment.js"></script>
+<script type="text/javascript" src="paragraph.js"></script>
+<script type="text/javascript">
+  DoxygenAwesomeParagraphLink.init()
+  DoxygenAwesomeFragmentCopyButton.init()
+  SendToGodbolt.init("tts","clang1600","-O3 -std=c++20 -DNEDBUG")
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="color.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<a href="https://github.com/jfalcou/tts" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<!-- BEGIN TITLEAREA-->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr  style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
+  <td id="projectalign">
+   <div id="projectname">TTS<span id="projectnumber">&#160;v2.3.0</span>
+   </div>
+   <div id="projectbrief">The Tiny Test System</div>
+  </td>
+ </tr>
+   <tr><td colspan="2" style="padding: 20px 0px 0px 0px;">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- END TITLEAREA-->
+<!-- end header part -->
+<!-- Generated by Doxygen 1.9.8 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(document).ready(function(){initNavTree('group__test-precision.html',''); initResizable(); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a>  </div>
+  <div class="headertitle"><div class="title">Precision Tests Macros</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Macros for performing tests taking floating-point precision into account.  
+<a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:gaf540e2316ab84407390f0b62febfffd1" id="r_gaf540e2316ab84407390f0b62febfffd1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(L,  R,  N, ...)</td></tr>
+<tr class="memdesc:gaf540e2316ab84407390f0b62febfffd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the absolute distance between values is less or equal to a threshold.  <br /></td></tr>
+<tr class="separator:gaf540e2316ab84407390f0b62febfffd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab7ac6c9754243b3103e85283cbd2952" id="r_gaab7ac6c9754243b3103e85283cbd2952"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(L,  R, ...)</td></tr>
+<tr class="memdesc:gaab7ac6c9754243b3103e85283cbd2952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if two values are exactly within 0 ULP.  <br /></td></tr>
+<tr class="separator:gaab7ac6c9754243b3103e85283cbd2952"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga66fac5cd0984cf9238901308cc60df3e" id="r_ga66fac5cd0984cf9238901308cc60df3e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(L,  R,  N, ...)</td></tr>
+<tr class="memdesc:ga66fac5cd0984cf9238901308cc60df3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if values are within a given relative distance expressed as a percentage.  <br /></td></tr>
+<tr class="separator:ga66fac5cd0984cf9238901308cc60df3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5813c6197c7af5b0ed77d88ce63592a1" id="r_ga5813c6197c7af5b0ed77d88ce63592a1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(L,  R,  N, ...)</td></tr>
+<tr class="memdesc:ga5813c6197c7af5b0ed77d88ce63592a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if two values are within a given ULP distance.  <br /></td></tr>
+<tr class="separator:ga5813c6197c7af5b0ed77d88ce63592a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7de5e8bb8cb6f1397f2a0a2505def241" id="r_ga7de5e8bb8cb6f1397f2a0a2505def241"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a>(Producer,  RefType,  NewType,  RefFunc,  NewFunc,  Ulpmax)</td></tr>
+<tr class="memdesc:ga7de5e8bb8cb6f1397f2a0a2505def241"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a range based test between two functions.  <br /></td></tr>
+<tr class="separator:ga7de5e8bb8cb6f1397f2a0a2505def241"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="gaf540e2316ab84407390f0b62febfffd1" name="gaf540e2316ab84407390f0b62febfffd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf540e2316ab84407390f0b62febfffd1">&#9670;&#160;</a></span>TTS_ABSOLUTE_EQUAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_ABSOLUTE_EQUAL</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">L, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">R, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">N, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/test/precision.hpp&gt;</code></p>
+
+<p>Checks if the absolute distance between values is less or equal to a threshold. </p>
+<p>This comparison is performed by using the proper tts::absolute_distance overload.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L,R</td><td>Expressions to compare. </td></tr>
+    <tr><td class="paramname">N</td><td>Maximum absolute distance accepted between <code>L</code> and <code>R</code>. </td></tr>
+    <tr><td class="paramname">...</td><td>Optional tag. If equals to <code>REQUIRED</code>, this test will stop the program if it fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Absolute distance&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(-2.  , 2.f  , 4.);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>  , 80LL , 15, REQUIRED);</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:69</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="gaab7ac6c9754243b3103e85283cbd2952" name="gaab7ac6c9754243b3103e85283cbd2952"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab7ac6c9754243b3103e85283cbd2952">&#9670;&#160;</a></span>TTS_IEEE_EQUAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_IEEE_EQUAL</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">L, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">R, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/test/precision.hpp&gt;</code></p>
+
+<p>Checks if two values are exactly within 0 ULP. </p>
+<p>This also allow for infinites and NaNs to be compared equal if both values are the same infinites or are both $NaN$. This comparison is performed by using the proper tts::ulp_distance overload.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L,R</td><td>Expressions to compare. </td></tr>
+    <tr><td class="paramname">...</td><td>Optional tag. If equals to <code>REQUIRED</code>, this test will stop the program if it fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;ULP distance&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">float</span> x = std::numeric_limits&lt;float&gt;::quiet_NaN();</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(x,x);</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(1.f, 1.f);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(2. , 2. );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(65 , <span class="charliteral">&#39;A&#39;</span>);</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-precision_html_gaab7ac6c9754243b3103e85283cbd2952"><div class="ttname"><a href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a></div><div class="ttdeci">#define TTS_IEEE_EQUAL(L, R,...)</div><div class="ttdoc">Checks if two values are exactly within 0 ULP.</div><div class="ttdef"><b>Definition</b> precision.hpp:154</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga66fac5cd0984cf9238901308cc60df3e" name="ga66fac5cd0984cf9238901308cc60df3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga66fac5cd0984cf9238901308cc60df3e">&#9670;&#160;</a></span>TTS_RELATIVE_EQUAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_RELATIVE_EQUAL</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">L, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">R, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">N, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/test/precision.hpp&gt;</code></p>
+
+<p>Checks if values are within a given relative distance expressed as a percentage. </p>
+<p>This comparison is performed by using the proper tts::relative_distance overload.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L,R</td><td>Expressions to compare. </td></tr>
+    <tr><td class="paramname">N</td><td>Maximum relative percentage accepted between <code>L</code> and <code>R</code>. </td></tr>
+    <tr><td class="paramname">...</td><td>Optional tag. If equals to <code>REQUIRED</code>, this test will stop the program if it fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Relative distance&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(42.f , 42.f  , 0     );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>  , 80LL  , 18.75 );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(1.   , 2.f   , 100.  );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(1, 10, 900., REQUIRED);</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-precision_html_ga66fac5cd0984cf9238901308cc60df3e"><div class="ttname"><a href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a></div><div class="ttdeci">#define TTS_RELATIVE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if values are within a given relative distance expressed as a percentage.</div><div class="ttdef"><b>Definition</b> precision.hpp:90</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga5813c6197c7af5b0ed77d88ce63592a1" name="ga5813c6197c7af5b0ed77d88ce63592a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5813c6197c7af5b0ed77d88ce63592a1">&#9670;&#160;</a></span>TTS_ULP_EQUAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_ULP_EQUAL</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">L, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">R, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">N, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/test/precision.hpp&gt;</code></p>
+
+<p>Checks if two values are within a given ULP distance. </p>
+<p>This comparison is performed by using the proper tts::ulp_distance overload.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">L,R</td><td>Expressions to compare. </td></tr>
+    <tr><td class="paramname">N</td><td>Maximum ULPs accepted between <code>L</code> and <code>R</code>. </td></tr>
+    <tr><td class="paramname">...</td><td>Optional tag. If equals to <code>REQUIRED</code>, this test will stop the program if it fails.</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;ULP distance&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">float</span> a{1};</div>
+<div class="line">  <span class="keywordtype">float</span> eps  = std::numeric_limits&lt;float&gt;::epsilon();</div>
+<div class="line">  <span class="keywordtype">float</span> qnan = std::numeric_limits&lt;float&gt;::quiet_NaN();</div>
+<div class="line">  <span class="keywordtype">float</span> inf  = std::numeric_limits&lt;float&gt;::infinity();</div>
+<div class="line">  <span class="keywordtype">float</span> minf = -inf;</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a    , a     , 0.  );</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a    , qnan  , inf );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(qnan , qnan  , 0.  );</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a    , inf   , inf );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(inf  , inf   , inf );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(minf ,minf   , inf );</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a-eps   , 1   );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a+eps   , 0.5 );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a+3*eps , 1.5, REQUIRED );</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-precision_html_ga5813c6197c7af5b0ed77d88ce63592a1"><div class="ttname"><a href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a></div><div class="ttdeci">#define TTS_ULP_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if two values are within a given ULP distance.</div><div class="ttdef"><b>Definition</b> precision.hpp:111</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga7de5e8bb8cb6f1397f2a0a2505def241" name="ga7de5e8bb8cb6f1397f2a0a2505def241"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7de5e8bb8cb6f1397f2a0a2505def241">&#9670;&#160;</a></span>TTS_ULP_RANGE_CHECK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_ULP_RANGE_CHECK</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Producer, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">RefType, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">NewType, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">RefFunc, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">NewFunc, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">Ulpmax&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/test/ranges.hpp&gt;</code></p>
+
+<p>Generate a range based test between two functions. </p>
+<p>Evaluates the histogram of ULP difference between two functions run on the same data set and that they lie in a given <a href="rationale.html#ulp">ULP distance</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Producer</td><td>Data set generator to use. </td></tr>
+    <tr><td class="paramname">RefType</td><td>Type to use as reference function input. </td></tr>
+    <tr><td class="paramname">NewType</td><td>Type to use as challenger function input. </td></tr>
+    <tr><td class="paramname">RefFunc</td><td>Reference function to compare to. </td></tr>
+    <tr><td class="paramname">NewFunc</td><td>Challenger function to be compared to the reference one. </td></tr>
+    <tr><td class="paramname">Ulpmax</td><td>Maximal ULPs acceptable for passing the test.</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">float</span> ok_x (<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x; }</div>
+<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x + x*1e-7f; }</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Test range check&quot;</span> )</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a> ( [] (<span class="keyword">auto</span>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> c) { <span class="keywordflow">return</span> (100.f*i)/c; }</div>
+<div class="line">                      , float, float , ok_x, bad_x</div>
+<div class="line">                      , 2.</div>
+<div class="line">                      );</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-precision_html_ga7de5e8bb8cb6f1397f2a0a2505def241"><div class="ttname"><a href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a></div><div class="ttdeci">#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</div><div class="ttdoc">Generate a range based test between two functions.</div><div class="ttdef"><b>Definition</b> ranges.hpp:201</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- HTML footer for doxygen 1.8.20-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+  </ul>
+</div>
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</body>
+</html>
