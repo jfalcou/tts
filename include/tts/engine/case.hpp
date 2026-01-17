@@ -33,6 +33,7 @@ namespace tts::_
   template<typename... Types> struct captures
   {
     captures(const char* id) : name(id) {}
+
     auto operator+(auto body) const
     {
       // We register all the types in a single test to keep the compile-time O(1)
@@ -59,12 +60,13 @@ namespace tts::_
 
   // Specialisation for types lists
   template<template<typename...> typename List, typename... Types>
+  requires( !requires(List<Types...>) { typename List<Types...>::types_list; })
   struct captures<List<Types...>> : captures<Types...>
   {};
 
   // Specialisation for types list generator
   template<typename Generator>
-  requires requires(Generator g) { typename Generator::types_list; }
+  requires requires(Generator) { typename Generator::types_list; }
   struct captures<Generator> : captures<typename Generator::types_list>
   {};
 

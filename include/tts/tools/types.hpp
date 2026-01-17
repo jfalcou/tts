@@ -24,7 +24,8 @@ namespace tts
   template<typename... Ts>
   struct types
   {
-    template<typename... Us> constexpr types<Ts...,Us...> operator+( types<Us...> const&) const;
+    template<typename... Us>
+    constexpr types<Ts...,Us...> operator+( types<Us...> const&) const { return {}; }
   };
 
   // Concatenate types lists
@@ -52,14 +53,17 @@ namespace tts
   using as_type_list_t = typename as_type_list<T...>::type;
 
   //====================================================================================================================
-  /// @brief Generate the Cartesian product of two type lists
-  ///
-  /// Given two types lists L1 and L2, generate a new types list containing all possible combinations of types from
-  /// L1 and L2 as a types<T1,T2> where T1 is from L1 and T2 is from L2.
-  ///
-  /// @tparam L1 First types list
-  /// @tparam L2 Second types list
-  ///
+  /** @brief Generate the Cartesian product of two type lists
+
+      Given two types lists L1 and L2, generate a new types list containing all possible combinations of types from
+      L1 and L2 as a types<T1,T2> where T1 is from L1 and T2 is from L2.
+
+      @tparam L1 First types list
+      @tparam L2 Second types list
+
+      @groupheader{Example}
+      @snippet doc/cartesian.cpp snippet
+  **/
   //====================================================================================================================
   template<typename L1, typename L2> struct cartesian_product;
 
@@ -74,20 +78,24 @@ namespace tts
   {};
 
   //====================================================================================================================
-  /// @brief Filter a types list by a predicate
-  ///
-  /// Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates
-  /// to true.
-  ///
-  /// @tparam Pred  Predicate template taking a single type parameter and exposing a static boolean member `value`
-  /// @tparam Type  Types list to filter
+  /** @brief Filter a types list by a predicate
+
+    Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates
+    to true.
+
+    @tparam Pred  Predicate template taking a single type parameter and exposing a static boolean member `value`
+    @tparam Type  Types list to filter
+
+    @groupheader{Example}
+    @snippet doc/filter.cpp snippet
+**/
   //====================================================================================================================
   template<template<typename> typename Pred, typename Type> struct filter
   {
     template<typename T>
-    static consteval std::conditional_t<Pred<T>::value, types<T>, types<>> filter_type();
+    static constexpr std::conditional_t<Pred<T>::value, types<T>, types<>> filter_type() { return {}; }
 
-    template<typename... Ls> static consteval auto filter_impl(types<Ls...>)
+    template<typename... Ls> static constexpr auto filter_impl(types<Ls...>)
     {
       return (filter_type<Ls>() + ... + types<>{});
     }

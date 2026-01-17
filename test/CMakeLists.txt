@@ -75,5 +75,5 @@ copa_glob_unit( PATTERN "unit/tests/*.cpp"
 ## Test for TTS Documentation
 ##======================================================================================================================
 copa_glob_unit( PATTERN "unit/doc/*.cpp"
-                RELATIVE ${root} INTERFACE tts_test DEPENDENCIES unit.infrastructure.exe
+                RELATIVE ${root} INTERFACE tts_test
               )
