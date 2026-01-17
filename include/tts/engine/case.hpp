@@ -130,7 +130,7 @@ namespace tts::_
 #define TTS_CASE(ID)
 #else
 #define TTS_CASE(ID)                                                                                                    \
-[[maybe_unused]] static auto const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::capture{ID} + []()                           \
+[[maybe_unused]] static auto const TTS_CAT(case_,TTS_FUNCTION) = ::tts::_::capture{ID} + +[]()                          \
 /**/
 #endif
 

@@ -23,6 +23,13 @@ namespace tts::_
 
     callable(): invoker{nullptr}, cleanup{nullptr}, payload{nullptr} {}
 
+    // Optimized path for simple function pointers (used by TTS_CASE)
+    // Avoids template instantiation and heap allocation for stateless tests
+    callable(void(*f)())
+            : invoker{invoke_ptr}, cleanup{cleanup_ptr}
+            , payload{reinterpret_cast<void*>(f)}
+    {}
+
     // Copy/transfer the function as the unknown payload holding states
     // We could have have used std::any but you know, compile-time
     template<typename Function>
@@ -61,5 +68,9 @@ namespace tts::_
     private:
     template<typename T> static void invoke(void* data)   { (*static_cast<T*>(data))();   }
     template<typename T> static void destroy(void* data)  { delete static_cast<T*>(data); }
+
+    // Static helpers for the function pointer path
+    static void invoke_ptr(void* data)  { reinterpret_cast<void(*)()>(data)(); }
+    static void cleanup_ptr(void*)      {}
   };
 }
