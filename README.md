@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/jfalcou/tts/refs/heads/main/doc/logo.svg" alt="TTS Logo: < check >" data-canonical-src="https://jfalcou.github.io/tts/doc/logo.svg" width="8%" align="left"/>
+<img src="https://raw.githubusercontent.com/jfalcou/tts/refs/heads/main/doc/logo.svg" alt="TTS Logo: check" data-canonical-src="https://jfalcou.github.io/tts/doc/logo.svg" width="10%" align="left"/>
 
 # The TTS Library
 
