@@ -30,7 +30,7 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
 PointerAlignment: Right
-SortIncludes: true
+SortIncludes: Never
 SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
 SpaceBeforeAssignmentOperators: true
