@@ -1,6 +1,41 @@
 Change Log {#changelog}
 ==========
 
+# Version 3.0 - Beatrice Adela Bradley
+
+## What's Changed
+
+A large body of work (https://github.com/jfalcou/tts/pull/105) has been done to make **TTS** compile-time far better. This affects the user API a tiny bit, hence the bump to **TTS v3.0**.
+
+### Infrastructure
+  * Fix support for MSVC and clang CL (https://github.com/jfalcou/tts/pull/75)
+  * **TTS** now use Use [copacabana] as CMake infrastructure library (https://github.com/jfalcou/tts/pull/77)
+  * Move documentation to Doxygen (https://github.com/jfalcou/tts/pull/83)
+  * Enable WASM tests (https://github.com/jfalcou/tts/pull/95)
+  * Enable tests with ICPX (https://github.com/jfalcou/tts/pull/96)
+
+### Bug Fixes
+  * Added static_assert to catch unsupported types in TTS_ABSOLUTE/RELATIVE/ULP_EQUAL (https://github.com/jfalcou/tts/pull/78)
+  * Fix #82 - Make FATAL error log their messages (https://github.com/jfalcou/tts/pull/85)
+  * fixed uint types not in integral_types by @SadiinsoSnowfall in https://github.com/jfalcou/tts/pull/99
+  * Fix #100 - TTS doesn't generate -Wshadow warnings (https://github.com/jfalcou/tts/pull/102)
+  * Make produce(sequence) use produce(scalar) to allow for easier non-standard type production by @SadiinsoSnowfall (https://github.com/jfalcou/tts/pull/110)
+
+### New Features
+  * Decorrelate IEEE_EQUAL from ULP_DISTANCE (https://github.com/jfalcou/tts/pull/89)
+  * `tts::generate` is deprecated. All data generators are now `constexpr` (https://github.com/jfalcou/tts/pull/105)
+  * Added `TTS_BIT_EQUAL` and `TTS_BIT_NOT_EQUAL` to perform bitwise comparison (https://github.com/jfalcou/tts/pull/105)
+  * Added `filter` to filter out types in complex case definition (https://github.com/jfalcou/tts/pull/105)
+  * Added `cartesian_product` to generate more complex template types list (https://github.com/jfalcou/tts/pull/105)
+  * Summary display now displays percentage of success/failures (https://github.com/jfalcou/tts/pull/105)
+  * Added the `-q/--quiet` CLI option to remove all output but summary  (https://github.com/jfalcou/tts/pull/105)
+
+### New Contributors
+* @SadiinsoSnowfall
+
+### Detective who?
+[Beatrice Adela Bradley](https://en.wikipedia.org/wiki/Mrs_Bradley).
+
 # Version 2.2 - Aubrey Bradimore
 
 ## What's Changed

@@ -17,7 +17,7 @@ option( TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF )
 ##======================================================================================================================
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake ${COPACABANA_SOURCE_DIR}/copacabana/cmake)
 include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
-copa_project_version(MAJOR 2 MINOR 3 PATCH 0)
+copa_project_version(MAJOR 3 MINOR 0 PATCH 0)
 
 ##======================================================================================================================
 ## Summary Display
