@@ -14,8 +14,8 @@ TTS_CASE("Check that expression types can be tested for equality")
 {
   [[maybe_unused]] double d;
 
-  TTS_EXPR_IS(&d + 5, double *);
-  TTS_EXPR_IS(std::move(d), double &&);
+  TTS_EXPR_IS(&d + 5, double*);
+  TTS_EXPR_IS(std::move(d), double&&);
   TTS_EXPR_IS(std::swap(d, d), void);
 };
 //! [snippet]

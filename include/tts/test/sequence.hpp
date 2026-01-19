@@ -16,12 +16,10 @@
 
 namespace tts::_
 {
-  template<typename T> constexpr auto size(T const &c) noexcept
+  template<typename T> constexpr auto size(T const& c) noexcept
   {
-    if constexpr(requires { c.size(); })
-      return c.size();
-    else if constexpr(requires { size(c); })
-      return size(c);
+    if constexpr(requires { c.size(); }) return c.size();
+    else if constexpr(requires { size(c); }) return size(c);
     else
     {
       static_assert(
@@ -30,12 +28,10 @@ namespace tts::_
     }
   }
 
-  template<typename T> constexpr auto begin(T const &c) noexcept
+  template<typename T> constexpr auto begin(T const& c) noexcept
   {
-    if constexpr(requires { c.begin(); })
-      return c.begin();
-    else if constexpr(requires { begin(c); })
-      return begin(c);
+    if constexpr(requires { c.begin(); }) return c.begin();
+    else if constexpr(requires { begin(c); }) return begin(c);
     else
     {
       static_assert(
@@ -44,12 +40,10 @@ namespace tts::_
     }
   }
 
-  template<typename T> constexpr auto end(T const &c) noexcept
+  template<typename T> constexpr auto end(T const& c) noexcept
   {
-    if constexpr(requires { c.end(); })
-      return c.end();
-    else if constexpr(requires { end(c); })
-      return end(c);
+    if constexpr(requires { c.end(); }) return c.end();
+    else if constexpr(requires { end(c); }) return end(c);
     else
     {
       static_assert(
@@ -67,7 +61,7 @@ namespace tts::_
 }
 
 #define TTS_ALL_IMPL(SEQ1, SEQ2, OP, N, UNIT, FAILURE)                                             \
-  [](auto const &local_tts_a, auto const &local_tts_b)                                             \
+  [](auto const& local_tts_a, auto const& local_tts_b)                                             \
   {                                                                                                \
     if(tts::_::size(local_tts_b) != tts::_::size(local_tts_a))                                     \
     {                                                                                              \
@@ -79,11 +73,11 @@ namespace tts::_
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
                                                                                                    \
-    auto ba = tts::_::begin(local_tts_a);                                                          \
-    auto bb = tts::_::begin(local_tts_b);                                                          \
-    auto ea = tts::_::end(local_tts_a);                                                            \
+    auto        ba = tts::_::begin(local_tts_a);                                                   \
+    auto        bb = tts::_::begin(local_tts_b);                                                   \
+    auto        ea = tts::_::end(local_tts_a);                                                     \
                                                                                                    \
-    std::size_t i = 0;                                                                             \
+    std::size_t i  = 0;                                                                            \
     ::tts::text failures("");                                                                      \
                                                                                                    \
     while(ba != ea)                                                                                \
@@ -115,8 +109,8 @@ namespace tts::_
     return ::tts::_::logger {false};                                                               \
   }(SEQ1, SEQ2) /**/
 
-#define TTS_ALL(L, R, F, N, U, ...) TTS_ALL_##__VA_ARGS__(L, R, F, N, U)
-#define TTS_ALL_(L, R, F, N, U) TTS_ALL_IMPL(L, R, F, N, U, TTS_FAIL)
+#define TTS_ALL(L, R, F, N, U, ...)     TTS_ALL_##__VA_ARGS__(L, R, F, N, U)
+#define TTS_ALL_(L, R, F, N, U)         TTS_ALL_IMPL(L, R, F, N, U, TTS_FAIL)
 #define TTS_ALL_REQUIRED(L, R, F, N, U) TTS_ALL_IMPL(L, R, F, N, U, TTS_FATAL)
 
 //======================================================================================================================
@@ -144,10 +138,10 @@ their sizes are equal.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ALL_ABSOLUTE_EQUAL(L, R, N, ...)
+#define TTS_ALL_ABSOLUTE_EQUAL(L, R, N, ...)
 #else
-#  define TTS_ALL_ABSOLUTE_EQUAL(L, R, N, ...)                                                     \
-    TTS_ALL(L, R, ::tts::absolute_check, N, "unit", __VA_ARGS__)
+#define TTS_ALL_ABSOLUTE_EQUAL(L, R, N, ...)                                                       \
+  TTS_ALL(L, R, ::tts::absolute_check, N, "unit", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -167,10 +161,10 @@ their sizes are equal.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)
+#define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)
 #else
-#  define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)                                                     \
-    TTS_ALL(L, R, ::tts::relative_check, N, "%", __VA_ARGS__)
+#define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)                                                       \
+  TTS_ALL(L, R, ::tts::relative_check, N, "%", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -190,9 +184,9 @@ sizes are equal.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ALL_ULP_EQUAL(L, R, N, ...)
+#define TTS_ALL_ULP_EQUAL(L, R, N, ...)
 #else
-#  define TTS_ALL_ULP_EQUAL(L, R, N, ...) TTS_ALL(L, R, ::tts::ulp_check, N, "ULP", __VA_ARGS__)
+#define TTS_ALL_ULP_EQUAL(L, R, N, ...) TTS_ALL(L, R, ::tts::ulp_check, N, "ULP", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -212,9 +206,9 @@ overload.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ALL_IEEE_EQUAL(L, R, ...)
+#define TTS_ALL_IEEE_EQUAL(L, R, ...)
 #else
-#  define TTS_ALL_IEEE_EQUAL(L, R, ...) TTS_ALL_ULP_EQUAL(L, R, 0, __VA_ARGS__)
+#define TTS_ALL_IEEE_EQUAL(L, R, ...) TTS_ALL_ULP_EQUAL(L, R, 0, __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -232,9 +226,9 @@ overload.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ALL_EQUAL(L, R, ...)
+#define TTS_ALL_EQUAL(L, R, ...)
 #else
-#  define TTS_ALL_EQUAL(L, R, ...) TTS_ALL_ABSOLUTE_EQUAL(L, R, 0 __VA_ARGS__)
+#define TTS_ALL_EQUAL(L, R, ...) TTS_ALL_ABSOLUTE_EQUAL(L, R, 0 __VA_ARGS__)
 #endif
 
 //======================================================================================================================

@@ -12,12 +12,12 @@ namespace tts
 {
   template<typename Base> struct adapter
   {
-    template<typename U, typename Func> static void run(Base const *&src, U *&dst, Func f) noexcept
+    template<typename U, typename Func> static void run(Base const*& src, U*& dst, Func f) noexcept
     {
       *dst++ = f(*src++);
     }
-    static auto retrieve(Base const *src) noexcept { return *src; }
-    static void display(Base const &v) noexcept { printf("%s", as_text(v).data()); }
+    static auto retrieve(Base const* src) noexcept { return *src; }
+    static void display(Base const& v) noexcept { printf("%s", as_text(v).data()); }
   };
 
   namespace _
@@ -30,7 +30,7 @@ namespace tts
     };
 
     template<typename Type, typename In, typename Out, typename Func>
-    void compute(In const &inputs, Out &outputs, Func fn)
+    void compute(In const& inputs, Out& outputs, Func fn)
     {
       auto in  = inputs.data();
       auto end = inputs.data() + inputs.size();
@@ -54,16 +54,13 @@ namespace tts
       };
 
       std::size_t bucket;
-      if(ulp <= 1.5)
-        bucket = static_cast<std::size_t>(_::ceil(ulp * 2));
-      else if(_::is_inf(ulp))
-        bucket = nb_buckets - 1;
-      else
-        bucket = _::min(nb_buckets - 2, static_cast<std::size_t>(_::log2(next2(ulp)) + 4.));
+      if(ulp <= 1.5) bucket = static_cast<std::size_t>(_::ceil(ulp * 2));
+      else if(_::is_inf(ulp)) bucket = nb_buckets - 1;
+      else bucket = _::min(nb_buckets - 2, static_cast<std::size_t>(_::log2(next2(ulp)) + 4.));
       return bucket;
     }
 
-    template<typename... S> void header(S const &...s)
+    template<typename... S> void header(S const&... s)
     {
       if(::tts::_::is_quiet) return;
       ((printf("%-*s", 16, s)), ...);
@@ -71,35 +68,32 @@ namespace tts
     }
 
     template<typename U, typename R, typename V>
-    void results(U ulp, unsigned int count, R ratio, auto desc, V const &v)
+    void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
       if(::tts::_::is_quiet) return;
-      if(ulp != -1)
-        printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
-      else
-        printf("%*s", static_cast<int>(48 + strlen(desc)), desc);
+      if(ulp != -1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
+      else printf("%*s", static_cast<int>(48 + strlen(desc)), desc);
       adapter<V>::display(v);
       printf("\n");
     }
 
-    template<typename P> void print_producer(P const &prod, auto alt)
+    template<typename P> void print_producer(P const& prod, auto alt)
     {
       if(::tts::_::is_quiet) return;
-      if constexpr(requires(P const &p) { to_text(p); })
+      if constexpr(requires(P const& p) { to_text(p); })
         printf("%s\n", ::tts::as_text(prod).data());
-      else
-        printf("%s\n", alt);
+      else printf("%s\n", alt);
     }
   }
 
   template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
   double ulp_histogram(Generator g, RefFun reference, NewFun challenger)
   {
-    using out_type  = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
-    using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
+    using out_type            = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
+    using nout_type           = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
 
     //-- Find how many elements in a block
-    std::size_t count = ::tts::arguments().value(4096, "--block");
+    std::size_t         count = ::tts::arguments().value(4096, "--block");
 
     //-- Prepare blocks
     _::buffer<out_type> ref_out(count), new_out(count);
@@ -108,7 +102,7 @@ namespace tts
     for(std::size_t i = 0; i < inputs.size(); ++i)
       inputs[ i ] = produce(type<RefType> {}, g, i, count);
 
-    std::size_t repetition = ::tts::arguments().value(1, "--loop");
+    std::size_t             repetition = ::tts::arguments().value(1, "--loop");
 
     double                  max_ulp    = 0.;
     std::size_t             nb_buckets = 2 + 1 + 16;
@@ -132,7 +126,7 @@ namespace tts
         ulpdists[ i ] = ::tts::ulp_check(ref_out[ i ], new_out[ i ]);
         max_ulp       = _::max(max_ulp, ulpdists[ i ]);
 
-        auto idx = _::last_bucket_less(nb_buckets, ulpdists[ i ]);
+        auto idx      = _::last_bucket_less(nb_buckets, ulpdists[ i ]);
         ulp_map[ idx ]++;
 
         if(!samples[ idx ].status)
@@ -155,15 +149,12 @@ namespace tts
     {
       if(ulp_map[ i ] != 0)
       {
-        double ulps = 0;
-        ratio += (100. * ulp_map[ i ]) / nb_ulps;
+        double ulps  = 0;
+        ratio       += (100. * ulp_map[ i ]) / nb_ulps;
 
-        if(i <= 3)
-          ulps = i / 2.0;
-        else if(i == nb_buckets - 1)
-          ulps = std::numeric_limits<double>::infinity();
-        else
-          ulps = 1 << (i - 4);
+        if(i <= 3) ulps = i / 2.0;
+        else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
+        else ulps = 1 << (i - 4);
 
         auto [ s, in, out, ref ] = samples[ i ];
 
@@ -201,37 +192,37 @@ namespace tts
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
 #else
-#  define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                \
-    [ & ]()                                                                                        \
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                  \
+  [ & ]()                                                                                          \
+  {                                                                                                \
+    if(!::tts::_::is_quiet)                                                                        \
+      printf("Comparing: %s<%s> with %s<%s> using ",                                               \
+             TTS_STRING(RefFunc),                                                                  \
+             TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                               \
+             TTS_STRING(NewFunc),                                                                  \
+             TTS_STRING(TTS_REMOVE_PARENS(NewType)));                                              \
+                                                                                                   \
+    auto generator = TTS_REMOVE_PARENS(Producer);                                                  \
+    ::tts::_::print_producer(generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));                  \
+                                                                                                   \
+    double tts_ulp_max         = Ulpmax;                                                           \
+    double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
+    double local_tts_max_ulp =                                                                     \
+        ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(              \
+            generator, RefFunc, NewFunc);                                                          \
+                                                                                                   \
+    if(local_tts_max_ulp <= local_tts_threshold) { ::tts::global_runtime.pass(); }                 \
+    else                                                                                           \
     {                                                                                              \
-      if(!::tts::_::is_quiet)                                                                      \
-        printf("Comparing: %s<%s> with %s<%s> using ",                                             \
-               TTS_STRING(RefFunc),                                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                             \
+      TTS_FAIL("Expecting: %s similar to %s within %s ULP but found: %s ULP instead",              \
                TTS_STRING(NewFunc),                                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(NewType)));                                            \
-                                                                                                   \
-      auto generator = TTS_REMOVE_PARENS(Producer);                                                \
-      ::tts::_::print_producer(generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));                \
-                                                                                                   \
-      double tts_ulp_max         = Ulpmax;                                                         \
-      double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");              \
-      double local_tts_max_ulp =                                                                   \
-          ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(            \
-              generator, RefFunc, NewFunc);                                                        \
-                                                                                                   \
-      if(local_tts_max_ulp <= local_tts_threshold) { ::tts::global_runtime.pass(); }               \
-      else                                                                                         \
-      {                                                                                            \
-        TTS_FAIL("Expecting: %s similar to %s within %s ULP but found: %s ULP instead",            \
-                 TTS_STRING(NewFunc),                                                              \
-                 TTS_STRING(RefFunc),                                                              \
-                 ::tts::as_text(local_tts_threshold).data(),                                       \
-                 ::tts::as_text(local_tts_max_ulp).data());                                        \
-      }                                                                                            \
-    }()
+               TTS_STRING(RefFunc),                                                                \
+               ::tts::as_text(local_tts_threshold).data(),                                         \
+               ::tts::as_text(local_tts_max_ulp).data());                                          \
+    }                                                                                              \
+  }()
 /**/
 #endif
 
@@ -269,9 +260,9 @@ namespace tts
         , maxi(mx)
     {
     }
-    T operator()(auto, auto, auto) const { return ::tts::random_value(mini, maxi); }
+    T                operator()(auto, auto, auto) const { return ::tts::random_value(mini, maxi); }
 
-    friend tts::text to_text(realistic_generator const &s)
+    friend tts::text to_text(realistic_generator const& s)
     {
       return tts::text {"realistic_generator<%s>(%s,%s)",
                         tts::as_text(typename_<T>).data(),

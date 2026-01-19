@@ -14,7 +14,7 @@
 TTS_CASE_WITH("Test tts::ramp generator",
               (std::array<float, 10>, int, double),
               tts::ramp {65},
-              tts::ramp {1, 2})<typename T>(T const &ramp1, T const &ramp2)
+              tts::ramp {1, 2})<typename T>(T const& ramp1, T const& ramp2)
 {
   if constexpr(std::is_arithmetic_v<T>)
   {

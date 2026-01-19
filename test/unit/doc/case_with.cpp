@@ -15,7 +15,7 @@ TTS_CASE_WITH("Check behavior for scalar types",
               tts::value {37},
               tts::between {0, 100},
               tts::randoms {0., 10.})
-(auto v, auto b, auto const &r)
+(auto v, auto b, auto const& r)
 {
   TTS_EQUAL(v, 37);
 

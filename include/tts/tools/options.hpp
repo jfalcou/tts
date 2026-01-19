@@ -17,7 +17,7 @@ namespace tts::_
   struct option
   {
     option() = default;
-    option(const char *arg)
+    option(char const* arg)
         : token(arg)
         , position(-1)
     {
@@ -25,7 +25,7 @@ namespace tts::_
       position = static_cast<int>(it ? (it - token) : strlen(token));
     }
 
-    bool has_flag(const char *f) const
+    bool has_flag(char const* f) const
     {
       if(position == -1) return false;
 
@@ -35,9 +35,9 @@ namespace tts::_
       return strncmp(token, f, position) == 0;
     }
 
-    bool is_valid() const { return position > 0; }
+    bool                   is_valid() const { return position > 0; }
 
-    template<typename T> T get(T const &def = T {}) const
+    template<typename T> T get(T const& def = T {}) const
     {
       T that = {};
 
@@ -46,7 +46,7 @@ namespace tts::_
         int n = 0;
         if constexpr(std::integral<T>)
         {
-          decltype(sizeof(void *)) v;
+          decltype(sizeof(void*)) v;
           n    = sscanf(token + position + 1, "%zu", &v);
           that = static_cast<T>(v);
         }
@@ -69,7 +69,7 @@ namespace tts::_
       return that;
     }
 
-    const char *token    = "";
+    char const* token    = "";
     int         position = -1;
   };
 }
@@ -121,16 +121,16 @@ namespace tts
   struct options
   {
     /// Checks if the flag `f` is set on the command line
-    bool operator[](const char *f) const { return find(f).is_valid(); }
+    bool operator[](char const* f) const { return find(f).is_valid(); }
 
     /// Checks if qny flag `fs` is set on the command line
-    template<std::same_as<const char *>... Flags> bool operator()(Flags... fs) const
+    template<std::same_as<char const*>... Flags> bool operator()(Flags... fs) const
     {
       return find(fs...).is_valid();
     }
 
     /// Returns a value of type `T` if a flag matches any of the strings in `fs` or `T{}` otherwise
-    template<typename T, std::same_as<const char *>... Flags> T value(Flags... fs) const
+    template<typename T, std::same_as<char const*>... Flags> T value(Flags... fs) const
     {
       T that = {};
       if(auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
@@ -138,22 +138,22 @@ namespace tts
     }
 
     /// Returns a value of type `T` if a flag matches any of the strings in `fs` or `that` otherwise
-    template<typename T, std::same_as<const char *>... Flags> T value(T that, Flags... fs) const
+    template<typename T, std::same_as<char const*>... Flags> T value(T that, Flags... fs) const
     {
       if(auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
       return that;
     }
 
     /// Checks if current options set is not empty
-    bool is_valid() { return argc && argv != nullptr; }
+    bool         is_valid() { return argc && argv != nullptr; }
 
     int          argc;
-    char const **argv;
+    char const** argv;
 
   private:
-    template<std::same_as<const char *>... Flags> _::option find(Flags... fs) const
+    template<std::same_as<char const*>... Flags> _::option find(Flags... fs) const
     {
-      const char *flags[] = {fs...};
+      char const* flags[] = {fs...};
 
       for(int i = 1; i < argc; ++i)
       {
@@ -189,7 +189,7 @@ namespace tts
     @see TTS_CUSTOM_DRIVER_FUNCTION
   **/
   //====================================================================================================================
-  inline void initialize(int argc, const char **argv)
+  inline void initialize(int argc, char const** argv)
   {
     if(!_::current_arguments.is_valid()) _::current_arguments = options {argc, argv};
   }
@@ -207,7 +207,7 @@ namespace tts
       @return The pre-processed command line arguments as a reference to a tts::options instance.
   **/
   //====================================================================================================================
-  inline options const &arguments() { return _::current_arguments; }
+  inline options const& arguments() { return _::current_arguments; }
 
   //====================================================================================================================
   /**
@@ -227,7 +227,7 @@ namespace tts
       @return The current random seed used by TTS.
   **/
   //====================================================================================================================
-  inline int random_seed(int base_seed = -1)
+  inline int            random_seed(int base_seed = -1)
   {
     if(_::current_seed == -1)
     {

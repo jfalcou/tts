@@ -21,7 +21,7 @@
     {                                                                                              \
       EXPR;                                                                                        \
     }                                                                                              \
-    catch(EXCEPTION &)                                                                             \
+    catch(EXCEPTION&)                                                                              \
     {                                                                                              \
       tts_caught = true;                                                                           \
     }                                                                                              \
@@ -70,12 +70,12 @@ fails.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_THROW(EXPR, EXCEPTION, ...)
+#define TTS_THROW(EXPR, EXCEPTION, ...)
 #else
-#  define TTS_THROW(EXPR, EXCEPTION, ...) TTS_THROW_##__VA_ARGS__(EXPR, EXCEPTION)
+#define TTS_THROW(EXPR, EXCEPTION, ...) TTS_THROW_##__VA_ARGS__(EXPR, EXCEPTION)
 #endif
 
-#define TTS_THROW_(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION, TTS_FAIL)
+#define TTS_THROW_(EXPR, EXCEPTION)         TTS_THROW_IMPL(EXPR, EXCEPTION, TTS_FAIL)
 #define TTS_THROW_REQUIRED(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION, TTS_FATAL)
 
 #define TTS_NO_THROW_IMPL(EXPR, FAILURE)                                                           \
@@ -120,12 +120,12 @@ fails.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_NO_THROW(EXPR, ...)
+#define TTS_NO_THROW(EXPR, ...)
 #else
-#  define TTS_NO_THROW(EXPR, ...) TTS_NO_THROW_##__VA_ARGS__(EXPR)
+#define TTS_NO_THROW(EXPR, ...) TTS_NO_THROW_##__VA_ARGS__(EXPR)
 #endif
 
-#define TTS_NO_THROW_(EXPR) TTS_NO_THROW_IMPL(EXPR, TTS_FAIL)
+#define TTS_NO_THROW_(EXPR)         TTS_NO_THROW_IMPL(EXPR, TTS_FAIL)
 #define TTS_NO_THROW_REQUIRED(EXPR) TTS_NO_THROW_IMPL(EXPR, TTS_FATAL)
 
 //======================================================================================================================

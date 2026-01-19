@@ -22,12 +22,12 @@ namespace tts::_
 {
   struct capture
   {
-    capture(const char *id)
+    capture(char const* id)
         : name(id)
     {
     }
     auto        operator+(auto body) const { return test::acknowledge({name, body}); }
-    const char *name;
+    char const* name;
   };
 
   // Global storage for current type used in a given test
@@ -35,7 +35,7 @@ namespace tts::_
 
   template<typename... Types> struct captures
   {
-    captures(const char *id)
+    captures(char const* id)
         : name(id)
     {
     }
@@ -59,7 +59,7 @@ namespace tts::_
                                   current_type = text {""};
                                 }});
     }
-    const char *name;
+    char const* name;
   };
 
   // Specialisation for types lists
@@ -81,7 +81,7 @@ namespace tts::_
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
-    test_generators(const char *id)
+    test_generators(char const* id)
         : name(id)
     {
     }
@@ -102,7 +102,7 @@ namespace tts::_
         printf(">  With <T = %s>\n", current_type.data());
       (body(produce(type<T> {}, Generators)...));
     }
-    const char *name;
+    char const* name;
   };
 }
 
@@ -136,11 +136,11 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CASE(ID)
+#define TTS_CASE(ID)
 #else
-#  define TTS_CASE(ID)                                                                             \
-    [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                              \
-        ::tts::_::capture {ID} + +[]() /**/
+#define TTS_CASE(ID)                                                                               \
+  [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                                \
+      ::tts::_::capture {ID} + +[]() /**/
 #endif
 
 //======================================================================================================================
@@ -167,11 +167,11 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CASE_TPL(ID, ...)
+#define TTS_CASE_TPL(ID, ...)
 #else
-#  define TTS_CASE_TPL(ID, ...)                                                                    \
-    [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                              \
-        ::tts::_::captures<__VA_ARGS__> {ID} + [] /**/
+#define TTS_CASE_TPL(ID, ...)                                                                      \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+      ::tts::_::captures<__VA_ARGS__> {ID} + [] /**/
 #endif
 
 //======================================================================================================================
@@ -198,13 +198,12 @@ namespace tts::_
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CASE_WITH(ID, TYPES, ...)
+#define TTS_CASE_WITH(ID, TYPES, ...)
 #else
-#  define TTS_CASE_WITH(ID, TYPES, ...)                                                            \
-    [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                              \
-        ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {  \
-            ID}                                                                                    \
-        << [] /**/
+#define TTS_CASE_WITH(ID, TYPES, ...)                                                              \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+      ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID} \
+      << [] /**/
 #endif
 
 //======================================================================================================================

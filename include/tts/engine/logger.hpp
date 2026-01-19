@@ -24,7 +24,7 @@ namespace tts::_
     {
     }
 
-    template<typename Data> logger &operator<<(Data const &d)
+    template<typename Data> logger& operator<<(Data const& d)
     {
       if(display)
       {

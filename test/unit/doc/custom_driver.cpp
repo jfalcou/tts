@@ -14,7 +14,7 @@
 
 TTS_CASE("Some test") {};
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   std::cout << "Initializing tests...\n";
   ::tts::initialize(argc, argv);

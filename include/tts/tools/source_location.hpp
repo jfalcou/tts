@@ -14,7 +14,7 @@ namespace tts::_
   class source_location
   {
   public:
-    [[nodiscard]] static auto current(const char *file = __builtin_FILE(),
+    [[nodiscard]] static auto current(char const* file = __builtin_FILE(),
                                       int         line = __builtin_LINE()) noexcept
     {
       int  offset = 0;
@@ -27,11 +27,11 @@ namespace tts::_
       return that;
     }
 
-    friend text to_text(source_location const &s) { return s.desc_; }
+    friend text                       to_text(source_location const& s) { return s.desc_; }
 
-    decltype(auto) data() const { return desc_.data(); }
+    decltype(auto)                    data() const { return desc_.data(); }
 
-    template<_::stream OS> friend OS &operator<<(OS &os, source_location const &s)
+    template<_::stream OS> friend OS& operator<<(OS& os, source_location const& s)
     {
       return os << s.desc_;
     }

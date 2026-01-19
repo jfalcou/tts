@@ -18,7 +18,7 @@ namespace tts::_
   private:
     using data_t = struct
     {
-      const char *data;
+      char const* data;
       int         size;
     };
     data_t data_ = {};
@@ -28,9 +28,9 @@ namespace tts::_
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
 
-    friend text to_text(typename_impl const &t) { return text("%.*s", t.size(), t.data()); }
+    friend text    to_text(typename_impl const& t) { return text("%.*s", t.size(), t.data()); }
 
-    template<_::stream OS> friend OS &operator<<(OS &os, typename_impl t)
+    template<_::stream OS> friend OS& operator<<(OS& os, typename_impl t)
     {
       for(int i = 0; i < t.size(); ++i) os << t.data()[ i ];
       return os;
@@ -40,16 +40,16 @@ namespace tts::_
     //==================================================================================================================
     // constexpr C-style string queries
     //==================================================================================================================
-    constexpr static int length(const char *str)
+    constexpr static int length(char const* str)
     {
       int i = 0;
       while(str[ i ] != '\0') { ++i; }
       return i;
     }
 
-    constexpr static auto find(const char *str, const char *n)
+    constexpr static auto find(char const* str, char const* n)
     {
-      auto compare = [](const char *lhs, const char *rhs, int count)
+      auto compare = [](char const* lhs, char const* rhs, int count)
       {
         if(lhs == nullptr || rhs == nullptr) { return rhs != nullptr ? -1 : 1; }
         for(int i = 0; i < count; ++i)
@@ -84,14 +84,14 @@ namespace tts::_
       data_t that = {};
 
 #if defined(_MSC_VER)
-      that.data   = __FUNCSIG__;
-      auto offset = find(that.data, "<") + 1;
-      that.size   = find(that.data, ">::typename_impl_value(") - offset;
-      that.data += offset;
+      that.data    = __FUNCSIG__;
+      auto offset  = find(that.data, "<") + 1;
+      that.size    = find(that.data, ">::typename_impl_value(") - offset;
+      that.data   += offset;
 #else
-      that.data = __PRETTY_FUNCTION__;
-      auto i    = find(that.data, "=") + 2;
-      that.size = find(that.data, "]") - i;
+      that.data  = __PRETTY_FUNCTION__;
+      auto i     = find(that.data, "=") + 2;
+      that.size  = find(that.data, "]") - i;
       that.data += i;
 #endif
       return that;
@@ -139,7 +139,7 @@ namespace tts
     @return A `typename_` instance representing the name of `T` as a string-like object.
   **/
   //====================================================================================================================
-  template<typename T> constexpr auto name([[maybe_unused]] T const &t) { return typename_<T>; }
+  template<typename T> constexpr auto name([[maybe_unused]] T const& t) { return typename_<T>; }
 
   //====================================================================================================================
   /// @}

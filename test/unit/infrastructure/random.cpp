@@ -14,8 +14,8 @@
 
 TTS_CASE("Check realistic integral distribution")
 {
-  int mini = -10'000;
-  int maxi = +10'000;
+  int                mini = -10'000;
+  int                maxi = +10'000;
 
   std::map<int, int> samples;
   int const          nb = 16'000;
@@ -46,8 +46,8 @@ TTS_CASE("Check realistic integral distribution")
 
 TTS_CASE_TPL("Check realistic real distribution", float, double)<typename Type>(::tts::type<Type>)
 {
-  Type mini = -10'000;
-  Type maxi = +10'000;
+  Type               mini = -10'000;
+  Type               maxi = +10'000;
 
   std::map<int, int> samples;
   int                nb = 16'000;

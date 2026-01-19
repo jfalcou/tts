@@ -13,7 +13,7 @@
 
 TTS_CASE_WITH("Test tts::value generator",
               (std::array<float, 10>, int, double),
-              tts::value {13.37})<typename T>(T const &args)
+              tts::value {13.37})<typename T>(T const& args)
 {
   if constexpr(std::is_arithmetic_v<T>) { TTS_EQUAL(args, static_cast<T>(13.37)); }
   else

@@ -8,16 +8,16 @@
 #define TTS_CUSTOM_DRIVER_FUNCTION fail_main
 
 //! [snippet1]
-#define TTS_MAIN // No need for main()
+#define TTS_MAIN                   // No need for main()
 #include <tts/tts.hpp>
 
 struct payload
 {
-  double         d;
-  unsigned int   i, j;
-  constexpr bool operator==(payload const &) const = default;
+  double           d;
+  unsigned int     i, j;
+  constexpr bool   operator==(payload const&) const = default;
 
-  friend tts::text to_text(payload const &p)
+  friend tts::text to_text(payload const& p)
   {
     return "payload(" + tts::as_text(p.d) + ")[" + tts::as_text(p.i) + "][" + tts::as_text(p.j) +
            "]";
@@ -45,10 +45,10 @@ namespace sample
   {
     double         d;
     unsigned int   i, j;
-    constexpr bool operator==(payload const &) const = default;
+    constexpr bool operator==(payload const&) const = default;
   };
 
-  tts::text to_text(payload const &p) { return tts::text("payload(%f)[%d][%d]", p.d, p.i, p.j); }
+  tts::text to_text(payload const& p) { return tts::text("payload(%f)[%d][%d]", p.d, p.i, p.j); }
 }
 
 TTS_CASE("Display another type with custom to_text")
@@ -60,7 +60,7 @@ TTS_CASE("Display another type with custom to_text")
 };
 //! [snippet2]
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);

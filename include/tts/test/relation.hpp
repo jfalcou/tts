@@ -51,12 +51,12 @@
   }                                                                                                \
   /**/
 
-#define TTS_RELATION(A, B, OP, T, F, ...) TTS_RELATION_##__VA_ARGS__(A, B, OP, T, F)
-#define TTS_RELATION_(A, B, OP, T, F) TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_##__VA_ARGS__(A, B, OP, T, F)
+#define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                 \
-  [ & ](auto const &local_tts_a, auto const &local_tts_b)                                          \
+  [ & ](auto const& local_tts_a, auto const& local_tts_b)                                          \
   { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }(A, B) /**/
 
 //======================================================================================================================
@@ -89,9 +89,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_BIT_EQUAL(LHS, RHS, ...)
+#define TTS_BIT_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_BIT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, bit_eq, "==", "!=", __VA_ARGS__)
+#define TTS_BIT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, bit_eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -109,9 +109,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_BIT_NOT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, bit_neq, "!=", "==", __VA_ARGS__)
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, bit_neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -131,9 +131,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_EQUAL(LHS, RHS, ...)
+#define TTS_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
+#define TTS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -152,9 +152,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_NOT_EQUAL(LHS, RHS, ...)
+#define TTS_NOT_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_NOT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
+#define TTS_NOT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -173,9 +173,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_LESS(LHS, RHS, ...)
+#define TTS_LESS(LHS, RHS, ...)
 #else
-#  define TTS_LESS(LHS, RHS, ...) TTS_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
+#define TTS_LESS(LHS, RHS, ...) TTS_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -194,9 +194,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_GREATER(LHS, RHS, ...)
+#define TTS_GREATER(LHS, RHS, ...)
 #else
-#  define TTS_GREATER(LHS, RHS, ...) TTS_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
+#define TTS_GREATER(LHS, RHS, ...) TTS_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -215,9 +215,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_LESS_EQUAL(LHS, RHS, ...)
+#define TTS_LESS_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_LESS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
+#define TTS_LESS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -236,9 +236,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_GREATER_EQUAL(LHS, RHS, ...)
+#define TTS_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+#define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -253,12 +253,12 @@
 //======================================================================================================================
 
 #define TTS_TYPED_RELATION(A, B, OP, T, F, ...) TTS_TYPED_RELATION_##__VA_ARGS__(A, B, OP, T, F)
-#define TTS_TYPED_RELATION_(A, B, OP, T, F) TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_TYPED_RELATION_(A, B, OP, T, F)     TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F)                                                \
   TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
-  [ & ](auto &&local_tts_a, auto &&local_tts_b)                                                    \
+  [ & ](auto&& local_tts_a, auto&& local_tts_b)                                                    \
   {                                                                                                \
     using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                     \
     using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                     \
@@ -293,9 +293,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPED_EQUAL(LHS, RHS, ...)
+#define TTS_TYPED_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_TYPED_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
+#define TTS_TYPED_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -313,10 +313,10 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)
+#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)                                                       \
-    TTS_TYPED_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
+#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)                                                         \
+  TTS_TYPED_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -334,9 +334,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPED_LESS(LHS, RHS, ...)
+#define TTS_TYPED_LESS(LHS, RHS, ...)
 #else
-#  define TTS_TYPED_LESS(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
+#define TTS_TYPED_LESS(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -354,9 +354,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPED_GREATER(LHS, RHS, ...)
+#define TTS_TYPED_GREATER(LHS, RHS, ...)
 #else
-#  define TTS_TYPED_GREATER(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
+#define TTS_TYPED_GREATER(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -374,10 +374,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...)
+#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...)                                                      \
-    TTS_TYPED_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
+#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -396,10 +395,10 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)
+#define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)                                                   \
-    TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+#define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)                                                     \
+  TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -414,7 +413,7 @@ same.
 //======================================================================================================================
 
 #define TTS_CEXPR_RELATION(A, B, OP, T, F, ...) TTS_CEXPR_RELATION_##__VA_ARGS__(A, B, OP, T, F)
-#define TTS_CEXPR_RELATION_(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_CEXPR_RELATION_(A, B, OP, T, F)     TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F)                                                \
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
@@ -440,10 +439,9 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                       \
-    TTS_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -462,10 +460,10 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                                   \
-    TTS_CEXPR_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                                     \
+  TTS_CEXPR_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -484,9 +482,9 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_LESS(LHS, RHS, ...)
+#define TTS_CONSTEXPR_LESS(LHS, RHS, ...)
 #else
-#  define TTS_CONSTEXPR_LESS(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
+#define TTS_CONSTEXPR_LESS(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -505,10 +503,10 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)
+#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)
 #else
-#  define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)                                                     \
-    TTS_CEXPR_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
+#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)                                                       \
+  TTS_CEXPR_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
 #endif
 //======================================================================================================================
 
@@ -527,10 +525,10 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)                                                  \
-    TTS_CEXPR_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)                                                    \
+  TTS_CEXPR_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -549,10 +547,10 @@ same.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#  define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                               \
-    TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                                 \
+  TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================

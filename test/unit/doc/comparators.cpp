@@ -8,7 +8,7 @@
 #define TTS_CUSTOM_DRIVER_FUNCTION fail_main
 
 //! [snippet1]
-#define TTS_MAIN // No need for main()
+#define TTS_MAIN                   // No need for main()
 #include <tts/tts.hpp>
 
 namespace sample
@@ -18,7 +18,7 @@ namespace sample
     T value;
   };
 
-  template<typename T> bool compare_equal(box<T> const &l, box<T> const &r)
+  template<typename T> bool compare_equal(box<T> const& l, box<T> const& r)
   {
     return l.value == r.value;
   }
@@ -48,12 +48,12 @@ namespace sample
     T value;
   };
 
-  template<typename T> bool compare_equal(absolute<T> const &l, absolute<T> const &r)
+  template<typename T> bool compare_equal(absolute<T> const& l, absolute<T> const& r)
   {
     return std::abs(l.value) == std::abs(r.value);
   }
 
-  template<typename T> bool compare_less(absolute<T> const &l, absolute<T> const &r)
+  template<typename T> bool compare_less(absolute<T> const& l, absolute<T> const& r)
   {
     return std::abs(l.value) < std::abs(r.value);
   }
@@ -72,7 +72,7 @@ TTS_CASE("Compare values with custom comparisons")
 };
 //! [snippet2]
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);

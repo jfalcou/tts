@@ -45,7 +45,7 @@ TTS_CASE("Check that forced broken typed relation tests fails")
 
 TTS_CASE("Check that forced broken type tests fails")
 {
-  TTS_TYPE_IS(std::add_pointer<float>::type, double **);
+  TTS_TYPE_IS(std::add_pointer<float>::type, double**);
   TTS_EXPR_IS(4.f * 3, (std::list<int[ 4 ]>));
 
   int x {}, y {};
@@ -86,7 +86,7 @@ TTS_CASE("Check broken sequence comparisons")
   TTS_ALL_IEEE_EQUAL(v, w);
 };
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);

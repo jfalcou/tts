@@ -33,7 +33,7 @@ Range specifics Parameters:
   //====================================================================================================================
   // Prints the CLI option of any TTS test executable
   //====================================================================================================================
-  inline int usage(const char *name)
+  inline int usage(char const* name)
   {
     printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
     puts(usage_text);

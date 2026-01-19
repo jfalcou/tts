@@ -17,13 +17,13 @@ namespace space
     int i;
   };
 
-  tts::text to_text(some_type const &s) { return "some_type[" + tts::as_text(s.i) + "]"; }
+  tts::text to_text(some_type const& s) { return "some_type[" + tts::as_text(s.i) + "]"; }
 
   struct some_other_type
   {
-    int j;
+    int              j;
 
-    friend tts::text to_text(some_other_type const &s) { return "[[" + tts::as_text(s.j) + "]]"; }
+    friend tts::text to_text(some_other_type const& s) { return "[[" + tts::as_text(s.j) + "]]"; }
   };
 }
 

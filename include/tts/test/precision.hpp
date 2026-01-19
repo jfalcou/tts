@@ -48,8 +48,8 @@
     }                                                                                              \
   }(LHS, RHS) /**/
 
-#define TTS_PRECISION(L, R, N, U, F, P, ...) TTS_PRECISION_##__VA_ARGS__(L, R, N, U, F, P)
-#define TTS_PRECISION_(L, R, N, U, F, P) TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FAIL)
+#define TTS_PRECISION(L, R, N, U, F, P, ...)     TTS_PRECISION_##__VA_ARGS__(L, R, N, U, F, P)
+#define TTS_PRECISION_(L, R, N, U, F, P)         TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FAIL)
 #define TTS_PRECISION_REQUIRED(L, R, N, U, F, P) TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FATAL)
 
 //======================================================================================================================
@@ -76,10 +76,10 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ABSOLUTE_EQUAL(L, R, N, ...)
+#define TTS_ABSOLUTE_EQUAL(L, R, N, ...)
 #else
-#  define TTS_ABSOLUTE_EQUAL(L, R, N, ...)                                                         \
-    TTS_PRECISION(L, R, N, "unit", ::tts::absolute_check, 8, __VA_ARGS__)
+#define TTS_ABSOLUTE_EQUAL(L, R, N, ...)                                                           \
+  TTS_PRECISION(L, R, N, "unit", ::tts::absolute_check, 8, __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -98,10 +98,10 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_RELATIVE_EQUAL(L, R, N, ...)
+#define TTS_RELATIVE_EQUAL(L, R, N, ...)
 #else
-#  define TTS_RELATIVE_EQUAL(L, R, N, ...)                                                         \
-    TTS_PRECISION(L, R, N, "%", ::tts::relative_check, 8, __VA_ARGS__)
+#define TTS_RELATIVE_EQUAL(L, R, N, ...)                                                           \
+  TTS_PRECISION(L, R, N, "%", ::tts::relative_check, 8, __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -120,10 +120,9 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_ULP_EQUAL(L, R, N, ...)
+#define TTS_ULP_EQUAL(L, R, N, ...)
 #else
-#  define TTS_ULP_EQUAL(L, R, N, ...)                                                              \
-    TTS_PRECISION(L, R, N, "ULP", ::tts::ulp_check, 2, __VA_ARGS__)
+#define TTS_ULP_EQUAL(L, R, N, ...) TTS_PRECISION(L, R, N, "ULP", ::tts::ulp_check, 2, __VA_ARGS__)
 #endif
 
 #define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                  \
@@ -145,8 +144,8 @@
     }                                                                                              \
   }(LHS, RHS) /**/
 
-#define TTS_DO_IEEE_EQUAL(L, R, ...) TTS_DO_IEEE_EQUAL_##__VA_ARGS__(L, R)
-#define TTS_DO_IEEE_EQUAL_(L, R) TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FAIL)
+#define TTS_DO_IEEE_EQUAL(L, R, ...)     TTS_DO_IEEE_EQUAL_##__VA_ARGS__(L, R)
+#define TTS_DO_IEEE_EQUAL_(L, R)         TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L, R) TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FATAL)
 
 //======================================================================================================================
@@ -166,9 +165,9 @@ tts::ulp_distance overload.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_IEEE_EQUAL(L, R, ...)
+#define TTS_IEEE_EQUAL(L, R, ...)
 #else
-#  define TTS_IEEE_EQUAL(L, R, ...) TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__)
+#define TTS_IEEE_EQUAL(L, R, ...) TTS_DO_IEEE_EQUAL(L, R, __VA_ARGS__)
 #endif
 
 //======================================================================================================================

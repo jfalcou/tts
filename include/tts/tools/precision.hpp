@@ -33,10 +33,9 @@ namespace tts
     @return The distance between a and b
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline double absolute_check(T const &a, U const &b)
+  template<typename T, typename U> inline double absolute_check(T const& a, U const& b)
   {
-    if constexpr(requires { absolute_distance(a, b); })
-      return absolute_distance(a, b);
+    if constexpr(requires { absolute_distance(a, b); }) return absolute_distance(a, b);
     else if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
@@ -87,10 +86,9 @@ namespace tts
     @return The relative distance between a and b
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline double relative_check(T const &a, U const &b)
+  template<typename T, typename U> inline double relative_check(T const& a, U const& b)
   {
-    if constexpr(requires { relative_distance(a, b); })
-      return relative_distance(a, b);
+    if constexpr(requires { relative_distance(a, b); }) return relative_distance(a, b);
     else if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
@@ -141,10 +139,9 @@ namespace tts
     @return The distance in ULP  between a and b
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline double ulp_check(T const &a, U const &b)
+  template<typename T, typename U> inline double ulp_check(T const& a, U const& b)
   {
-    if constexpr(requires { ulp_distance(a, b); })
-      return ulp_distance(a, b);
+    if constexpr(requires { ulp_distance(a, b); }) return ulp_distance(a, b);
     else if constexpr(std::is_same_v<T, U>)
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
@@ -206,10 +203,9 @@ namespace tts
     @return Is `a == b` or `_::is_nan(a) && _::is_nan(b)`
   **/
   //====================================================================================================================
-  template<typename T, typename U> inline bool ieee_check(T const &a, U const &b)
+  template<typename T, typename U> inline bool ieee_check(T const& a, U const& b)
   {
-    if constexpr(requires { ieee_equal(a, b); })
-      return ieee_equal(a, b);
+    if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
     else if constexpr(std::is_floating_point_v<T>) // IEEE cases
     {
       return (a == b) || (_::is_nan(a) && _::is_nan(b));

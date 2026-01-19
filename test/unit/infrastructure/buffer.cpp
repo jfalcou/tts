@@ -25,7 +25,7 @@ TTS_CASE("Check sized buffer")
   TTS_EQUAL(b.capacity(), n);
   TTS_EQUAL(b.end(), b.begin() + n);
 
-  for(auto &e: b) e = 1;
+  for(auto& e: b) e = 1;
   for(auto e: b) TTS_EQUAL(e, 1);
 };
 
@@ -33,7 +33,7 @@ TTS_CASE("Check buffer copy semantic")
 {
   constexpr std::size_t n = 7;
   tts::_::buffer<int>   original(n);
-  for(auto &e: original) e = 1;
+  for(auto& e: original) e = 1;
 
   tts::_::buffer<int> copy = original;
 
@@ -55,9 +55,9 @@ TTS_CASE("Check buffer move semantic")
 {
   constexpr std::size_t n = 7;
   tts::_::buffer<int>   original(n);
-  for(auto &e: original) e = 1;
+  for(auto& e: original) e = 1;
 
-  auto ptr = original.begin();
+  auto                ptr  = original.begin();
 
   tts::_::buffer<int> copy = std::move(original);
 

@@ -40,25 +40,25 @@ TTS_CASE("Check display of pointer types")
   TTS_EQUAL(tts::as_text(nullptr), "nullptr");
 
 #if defined(macintosh) || defined(Macintosh) || (defined(__APPLE__) && defined(__MACH__))
-  TTS_EQUAL(tts::as_text((float *)(0)), "0x0 (float *)");
-  TTS_EQUAL(tts::as_text((void *)(0)), "0x0 (void *)");
-  TTS_EQUAL(tts::as_text((char *)(0)), "0x0 (char *)");
+  TTS_EQUAL(tts::as_text((float*)(0)), "0x0 (float *)");
+  TTS_EQUAL(tts::as_text((void*)(0)), "0x0 (void *)");
+  TTS_EQUAL(tts::as_text((char*)(0)), "0x0 (char *)");
 #elif defined(__EMSCRIPTEN__)
-  TTS_EQUAL(tts::as_text((float *)(0)), "0 (float *)");
-  TTS_EQUAL(tts::as_text((void *)(0)), "0 (void *)");
-  TTS_EQUAL(tts::as_text((char *)(0)), "0 (char *)");
+  TTS_EQUAL(tts::as_text((float*)(0)), "0 (float *)");
+  TTS_EQUAL(tts::as_text((void*)(0)), "0 (void *)");
+  TTS_EQUAL(tts::as_text((char*)(0)), "0 (char *)");
 #elif defined(_MSC_VER)
-  TTS_EQUAL(tts::as_text((float *)(0)), "0000000000000000 (float *)");
-  TTS_EQUAL(tts::as_text((void *)(0)), "0000000000000000 (void *)");
-  TTS_EQUAL(tts::as_text((char *)(0)), "0000000000000000 (char *)");
+  TTS_EQUAL(tts::as_text((float*)(0)), "0000000000000000 (float *)");
+  TTS_EQUAL(tts::as_text((void*)(0)), "0000000000000000 (void *)");
+  TTS_EQUAL(tts::as_text((char*)(0)), "0000000000000000 (char *)");
 #elif defined(__clang__)
-  TTS_EQUAL(tts::as_text((float *)(0)), "(nil) (float *)");
-  TTS_EQUAL(tts::as_text((void *)(0)), "(nil) (void *)");
-  TTS_EQUAL(tts::as_text((char *)(0)), "(nil) (char *)");
+  TTS_EQUAL(tts::as_text((float*)(0)), "(nil) (float *)");
+  TTS_EQUAL(tts::as_text((void*)(0)), "(nil) (void *)");
+  TTS_EQUAL(tts::as_text((char*)(0)), "(nil) (char *)");
 #else
-  TTS_EQUAL(tts::as_text((float *)(0)), "(nil) (float*)");
-  TTS_EQUAL(tts::as_text((void *)(0)), "(nil) (void*)");
-  TTS_EQUAL(tts::as_text((char *)(0)), "(nil) (char*)");
+  TTS_EQUAL(tts::as_text((float*)(0)), "(nil) (float*)");
+  TTS_EQUAL(tts::as_text((void*)(0)), "(nil) (void*)");
+  TTS_EQUAL(tts::as_text((char*)(0)), "(nil) (char*)");
 #endif
 };
 
@@ -69,13 +69,13 @@ namespace space
     int i;
   };
 
-  tts::text to_text(some_type const &s) { return "some_type[" + tts::as_text(s.i) + "]"; }
+  tts::text to_text(some_type const& s) { return "some_type[" + tts::as_text(s.i) + "]"; }
 
   struct some_other_type
   {
-    int j;
+    int              j;
 
-    friend tts::text to_text(some_other_type const &s) { return "[[" + tts::as_text(s.j) + "]]"; }
+    friend tts::text to_text(some_other_type const& s) { return "[[" + tts::as_text(s.j) + "]]"; }
   };
 }
 

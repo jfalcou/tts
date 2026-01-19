@@ -11,7 +11,7 @@
 #include <tts/tts.hpp>
 #include <array>
 
-TTS_CASE_TPL("Check types using variadic list", char, short, int, double, void *)<typename T>(
+TTS_CASE_TPL("Check types using variadic list", char, short, int, double, void*)<typename T>(
     tts::type<T>)
 {
   TTS_GREATER_EQUAL(sizeof(T), 1UL);

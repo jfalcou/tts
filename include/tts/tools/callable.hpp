@@ -14,11 +14,11 @@ namespace tts::_
   struct callable
   {
   public:
-    using signature_t = void (*)(void *);
+    using signature_t   = void (*)(void*);
 
     signature_t invoker = {}; // Type erased invoke call functions
     signature_t cleanup = {}; // Type erased cleanup of payload
-    void       *payload = {}; // Function + function state
+    void*       payload = {}; // Function + function state
 
     callable()
         : invoker {nullptr}
@@ -32,7 +32,7 @@ namespace tts::_
     callable(void (*f)())
         : invoker {invoke_ptr}
         , cleanup {cleanup_ptr}
-        , payload {reinterpret_cast<void *>(f)}
+        , payload {reinterpret_cast<void*>(f)}
     {
     }
 
@@ -46,7 +46,7 @@ namespace tts::_
     {
     }
 
-    constexpr callable(callable &&other) noexcept
+    constexpr callable(callable&& other) noexcept
         : invoker {TTS_MOVE(other.invoker)}
         , cleanup {TTS_MOVE(other.cleanup)}
         , payload {TTS_MOVE(other.payload)}
@@ -59,10 +59,10 @@ namespace tts::_
       if(payload) cleanup(payload);
     }
 
-    callable(const callable &)            = delete;
-    callable &operator=(const callable &) = delete;
+    callable(callable const&)            = delete;
+    callable& operator=(callable const&) = delete;
 
-    callable &operator=(callable &&other)
+    callable& operator=(callable&& other)
     {
       payload       = TTS_MOVE(other.payload);
       other.payload = {};
@@ -86,11 +86,11 @@ namespace tts::_
     explicit operator bool() const { return payload != nullptr; }
 
   private:
-    template<typename T> static void invoke(void *data) { (*static_cast<T *>(data))(); }
-    template<typename T> static void destroy(void *data) { delete static_cast<T *>(data); }
+    template<typename T> static void invoke(void* data) { (*static_cast<T*>(data))(); }
+    template<typename T> static void destroy(void* data) { delete static_cast<T*>(data); }
 
     // Static helpers for the function pointer path
-    static void invoke_ptr(void *data) { reinterpret_cast<void (*)()>(data)(); }
-    static void cleanup_ptr(void *) {}
+    static void invoke_ptr(void* data) { reinterpret_cast<void (*)()>(data)(); }
+    static void cleanup_ptr(void*) {}
   };
 }

@@ -73,10 +73,10 @@ namespace tts
       if(range > r_max) { return M + static_cast<T>(r_raw % range); }
 
       // Rejection Sampling: discard the "tail" of the random range
-      U bucket_size = r_max / range;
-      U limit       = bucket_size * range;
+      U            bucket_size = r_max / range;
+      U            limit       = bucket_size * range;
 
-      unsigned int r = r_raw;
+      unsigned int r           = r_raw;
       while(r >= limit) { r = rand30().val; }
 
       return M + static_cast<T>(r / bucket_size);
@@ -92,11 +92,11 @@ namespace tts
       auto [ r_raw, r_max ] = rand30();
 
       // Normalize exactly to [0, 1] based on actual generator capability
-      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
+      double uniform_01     = static_cast<double>(r_raw) / static_cast<double>(r_max);
       return static_cast<T>(M + uniform_01 * (N - M));
     }
 
-    template<std::integral T> T roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
+    template<std::integral T> T       roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
 
     // Floating point complex logic (Logarithmic distribution)
     template<std::floating_point T> T roll_random(T mini, T maxi)
@@ -117,17 +117,15 @@ namespace tts
       // Handle Zero-Crossing Ranges [-A, +B]
       if(mini < 0 && maxi > 0)
       {
-        T abs_min = _::abs(mini);
-        T abs_max = _::abs(maxi);
+        T    abs_min       = _::abs(mini);
+        T    abs_max       = _::abs(maxi);
 
         // Weight probability by magnitude
         T    total_mag     = abs_min + abs_max;
         bool pick_positive = _::roll(T(0.0), total_mag) < abs_max;
 
-        if(pick_positive)
-          return roll_random(smvlp, maxi);
-        else
-          return -roll_random(smvlp, abs_min);
+        if(pick_positive) return roll_random(smvlp, maxi);
+        else return -roll_random(smvlp, abs_min);
       }
 
       T value = {};
@@ -136,7 +134,7 @@ namespace tts
       if(mini > 0)
       {
         if(mini < 1 && maxi > 1) mini = max(T(1) / _::sqrt(maxi), mini);
-        mini = (maxi == 1) ? eps : mini;
+        mini      = (maxi == 1) ? eps : mini;
 
         T log_min = _::log10(mini);
         T log_max = _::log10(maxi);
@@ -149,7 +147,7 @@ namespace tts
       {
         // Mirror logic for negatives
         if(mini < -1 && maxi > -1) maxi = min(T(1) / _::sqrt(-mini), maxi);
-        maxi = (mini == -1) ? -eps : maxi;
+        maxi      = (mini == -1) ? -eps : maxi;
 
         T log_min = _::log10(-maxi);
         T log_max = _::log10(-mini);

@@ -40,16 +40,16 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_EXPECT(EXPR, ...)
+#define TTS_EXPECT(EXPR, ...)
 #else
-#  define TTS_EXPECT(EXPR, ...) TTS_EXPECT_##__VA_ARGS__(EXPR)
+#define TTS_EXPECT(EXPR, ...) TTS_EXPECT_##__VA_ARGS__(EXPR)
 #endif
 
-#define TTS_EXPECT_(EXPR) TTS_EXPECT_IMPL((EXPR), TTS_FAIL)
+#define TTS_EXPECT_(EXPR)         TTS_EXPECT_IMPL((EXPR), TTS_FAIL)
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR), TTS_FATAL)
 
 #define TTS_EXPECT_IMPL(EXPR, FAILURE)                                                             \
-  [ & ](auto &&local_tts_expr)                                                                     \
+  [ & ](auto&& local_tts_expr)                                                                     \
   {                                                                                                \
     if(local_tts_expr)                                                                             \
     {                                                                                              \
@@ -76,16 +76,16 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_EXPECT_NOT(EXPR, ...)
+#define TTS_EXPECT_NOT(EXPR, ...)
 #else
-#  define TTS_EXPECT_NOT(EXPR, ...) TTS_EXPECT_NOT_##__VA_ARGS__(EXPR)
+#define TTS_EXPECT_NOT(EXPR, ...) TTS_EXPECT_NOT_##__VA_ARGS__(EXPR)
 #endif
 
-#define TTS_EXPECT_NOT_(EXPR) TTS_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
+#define TTS_EXPECT_NOT_(EXPR)         TTS_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
 #define TTS_EXPECT_NOT_REQUIRED(EXPR) TTS_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                         \
-  [ & ](auto &&local_tts_expr)                                                                     \
+  [ & ](auto&& local_tts_expr)                                                                     \
   {                                                                                                \
     if(!local_tts_expr)                                                                            \
     {                                                                                              \
@@ -112,12 +112,12 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_EXPECT(EXPR, ...)
+#define TTS_CONSTEXPR_EXPECT(EXPR, ...)
 #else
-#  define TTS_CONSTEXPR_EXPECT(EXPR, ...) TTS_CEXPR_EXPECT_##__VA_ARGS__(EXPR)
+#define TTS_CONSTEXPR_EXPECT(EXPR, ...) TTS_CEXPR_EXPECT_##__VA_ARGS__(EXPR)
 #endif
 
-#define TTS_CEXPR_EXPECT_(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FAIL)
+#define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_IMPL(EXPR, FAILURE)                                                       \
@@ -148,12 +148,12 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...)
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...)
 #else
-#  define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_##__VA_ARGS__(EXPR)
+#define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...) TTS_CEXPR_EXPECT_NOT_##__VA_ARGS__(EXPR)
 #endif
 
-#define TTS_CEXPR_EXPECT_NOT_(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
+#define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                   \

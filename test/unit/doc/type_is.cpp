@@ -13,6 +13,6 @@
 
 TTS_CASE("Check that types can be tested for equivalence")
 {
-  TTS_TYPE_IS(std::add_pointer<float const>::type, float const *);
+  TTS_TYPE_IS(std::add_pointer<float const>::type, float const*);
 };
 //! [snippet]

@@ -14,7 +14,7 @@
 
 TTS_CASE("Tautological test") { TTS_EXPECT_NOT(false == true); };
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   std::cout << "Welcome to a special test driver !\n";
   custom_entry_point(argc, argv);

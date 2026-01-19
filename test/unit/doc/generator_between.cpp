@@ -13,7 +13,7 @@
 
 TTS_CASE_WITH("Test tts::between generator",
               (std::array<float, 10>, int, double),
-              tts::between {-4, 4})<typename T>(T const &args)
+              tts::between {-4, 4})<typename T>(T const& args)
 {
   if constexpr(std::is_arithmetic_v<T>) { TTS_EQUAL(args, static_cast<T>(-4)); }
   else

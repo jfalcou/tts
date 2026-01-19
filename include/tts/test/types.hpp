@@ -36,12 +36,12 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_TYPE_IS(TYPE, REF, ...)
+#define TTS_TYPE_IS(TYPE, REF, ...)
 #else
-#  define TTS_TYPE_IS(TYPE, REF, ...) TTS_TYPE_IS_##__VA_ARGS__(TYPE, REF)
+#define TTS_TYPE_IS(TYPE, REF, ...) TTS_TYPE_IS_##__VA_ARGS__(TYPE, REF)
 #endif
 
-#define TTS_TYPE_IS_(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FAIL)
+#define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FAIL)
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FATAL)
 
 #define TTS_TYPE_IS_IMPL(TYPE, REF, FAILURE)                                                       \
@@ -81,12 +81,12 @@
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_EXPR_IS(EXPR, TYPE, ...)
+#define TTS_EXPR_IS(EXPR, TYPE, ...)
 #else
-#  define TTS_EXPR_IS(EXPR, TYPE, ...) TTS_EXPR_IS_##__VA_ARGS__(EXPR, TYPE)
+#define TTS_EXPR_IS(EXPR, TYPE, ...) TTS_EXPR_IS_##__VA_ARGS__(EXPR, TYPE)
 #endif
 
-#define TTS_EXPR_IS_(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FAIL)
+#define TTS_EXPR_IS_(EXPR, TYPE)         TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FAIL)
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FATAL)
 
 #define TTS_EXPR_IS_IMPL(EXPR, TYPE, FAILURE)                                                      \
@@ -146,9 +146,9 @@ context.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_EXPECT_COMPILES(Symbols, Expression, ...)
+#define TTS_EXPECT_COMPILES(Symbols, Expression, ...)
 #else
-#  define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
+#define TTS_EXPECT_COMPILES(...) TTS_VAL(TTS_EXPECT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
 
 #define TTS_EXPECT_NOT_COMPILES_IMPL(EXPR, ...)                                                    \
@@ -184,10 +184,9 @@ SFINAE context.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#  define TTS_EXPECT_NOT_COMPILES(Symbols..., Expression, ...)
+#define TTS_EXPECT_NOT_COMPILES(Symbols..., Expression, ...)
 #else
-#  define TTS_EXPECT_NOT_COMPILES(...)                                                             \
-    TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
+#define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
 
 //======================================================================================================================

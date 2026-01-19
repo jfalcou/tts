@@ -14,7 +14,7 @@ TTS_CASE("Check that forced failure fails") { TTS_FAIL("Forced fail"); };
 TTS_CASE("Check detection of invalid test") {};
 TTS_CASE("Check detection of more invalid tests") {};
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   fail_main(argc, argv);
   return ::tts::report(1, 2);

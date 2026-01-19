@@ -65,10 +65,8 @@ namespace tts::_
              100.f * invalid_count / static_cast<float>(test_count),
              inv_txt);
 
-      if(!fails && !invalids)
-        return test_count == success_count ? 0 : 1;
-      else
-        return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
+      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
+      else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
     int  test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0, invalid_count = 0;
@@ -95,5 +93,5 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int report(int fails, int invalids) { return global_runtime.report(fails, invalids); }
+  inline int    report(int fails, int invalids) { return global_runtime.report(fails, invalids); }
 }

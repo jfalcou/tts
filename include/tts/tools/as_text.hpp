@@ -46,7 +46,7 @@ namespace tts
     @see tts::text
   **/
   //====================================================================================================================
-  template<typename T> text as_text(T const &e)
+  template<typename T> text as_text(T const& e)
   {
     if constexpr(requires { to_text(e); }) { return to_text(e); }
     else if constexpr(std::floating_point<T>)
@@ -55,12 +55,9 @@ namespace tts
       bool hexmode   = ::tts::arguments()("-x", "--hex");
       bool scimode   = ::tts::arguments()("-s", "--scientific");
 
-      if(scimode)
-        return text("%.*E", e, precision);
-      else if(hexmode)
-        return text("%#.*A", e, precision);
-      else
-        return text("%.*g", e, precision);
+      if(scimode) return text("%.*E", e, precision);
+      else if(hexmode) return text("%#.*A", e, precision);
+      else return text("%.*g", e, precision);
     }
     else if constexpr(std::integral<T>)
     {
@@ -79,19 +76,17 @@ namespace tts
     else if constexpr(_::optional<T>)
     {
       text base {"optional<%s>", as_text(typename_<typename T::value_type>).data()};
-      if(e.has_value())
-        return base + text("{%s}", as_text(e.value()).data());
-      else
-        return base + "{}";
+      if(e.has_value()) return base + text("{%s}", as_text(e.value()).data());
+      else return base + "{}";
     }
     else if constexpr(std::is_pointer_v<T>)
     {
-      return text("%p (%s)", (void *)(e), as_text(typename_<T>).data());
+      return text("%p (%s)", (void*)(e), as_text(typename_<T>).data());
     }
     else if constexpr(_::sequence<T>)
     {
       text that("{ ");
-      for(auto const &v: e) that += as_text(v) + " ";
+      for(auto const& v: e) that += as_text(v) + " ";
       that += "}";
       return that;
     }
@@ -101,7 +96,7 @@ namespace tts
       unsigned char bytes[ sizeof(e) ];
       std::memcpy(bytes, &e, sizeof(e));
       text txt_bytes("[ ");
-      for(auto const &b: bytes) txt_bytes += text("%2.2X", b) + " ";
+      for(auto const& b: bytes) txt_bytes += text("%2.2X", b) + " ";
       txt_bytes += "]";
 
       return text("%s: %s", as_text(typename_<T>).data(), txt_bytes.data());
@@ -112,7 +107,7 @@ namespace tts
   //! @}
   //====================================================================================================================
 
-  template<std::size_t N> auto as_text(const char (&t)[ N ]) { return text(t); }
+  template<std::size_t N> auto as_text(char const (&t)[ N ]) { return text(t); }
   inline auto                  as_text(std::nullptr_t) { return text("nullptr"); }
   inline auto                  as_text(bool b) { return text(b ? "true" : "false"); }
 }

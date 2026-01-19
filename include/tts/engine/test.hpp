@@ -12,7 +12,7 @@
 
 namespace tts::_
 {
-  inline const char *current_test = "";
+  inline char const* current_test = "";
 
   struct test
   {
@@ -21,20 +21,20 @@ namespace tts::_
       current_test = name;
       behaviour();
     }
-    static inline bool acknowledge(test &&f);
+    static inline bool acknowledge(test&& f);
 
-    const char      *name;
-    tts::_::callable behaviour;
+    char const*        name;
+    tts::_::callable   behaviour;
   };
 
   // Global tests suite
-  inline buffer<test> &suite()
+  inline buffer<test>& suite()
   {
     static buffer<test> that = {};
     return that;
   }
 
-  bool inline test::acknowledge(test &&f)
+  bool inline test::acknowledge(test&& f)
   {
     suite().emplace_back(TTS_MOVE(f));
     return true;

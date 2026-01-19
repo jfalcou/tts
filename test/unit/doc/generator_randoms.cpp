@@ -13,7 +13,7 @@
 
 TTS_CASE_WITH("Test tts::randoms generator",
               (std::array<float, 10>, std::array<int, 7>, double),
-              tts::randoms {-4, 4})<typename T>(T const &args)
+              tts::randoms {-4, 4})<typename T>(T const& args)
 {
   if constexpr(std::is_arithmetic_v<T>)
   {

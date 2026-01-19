@@ -41,7 +41,7 @@ namespace tts
     @return A value of type `T` obtained by conversion of `v`.
   **/
   //====================================================================================================================
-  template<typename T, typename V> auto as_value(V const &v) { return static_cast<T>(v); }
+  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
 
   //====================================================================================================================
   /**
@@ -87,12 +87,12 @@ namespace tts
     @return A value of type `T` produced by the generator `g`.
   **/
   //====================================================================================================================
-  template<typename T> auto produce(type<T> const &t, auto g, auto... others)
+  template<typename T> auto produce(type<T> const& t, auto g, auto... others)
   {
     return g(t, others...);
   }
 
-  template<tts::_::sequence T> auto produce(type<T> const &, auto g, auto... args)
+  template<tts::_::sequence T> auto produce(type<T> const&, auto g, auto... args)
   {
     using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
     using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
@@ -142,7 +142,7 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...) const { return as_value<D>(seed); }
 
-    T seed;
+    T                      seed;
   };
 
   //====================================================================================================================
@@ -180,8 +180,8 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
 
-    T start;
-    U step;
+    T                      start;
+    U                      step;
   };
 
   //====================================================================================================================
@@ -219,8 +219,8 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
 
-    T start;
-    U step;
+    T                      start;
+    U                      step;
   };
 
   //====================================================================================================================
@@ -258,8 +258,8 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>) const { return as_value<D>(first_); }
 
-    T first_;
-    U last_;
+    T                      first_;
+    U                      last_;
   };
 
   //====================================================================================================================

@@ -29,7 +29,7 @@ struct flip_values
 };
 
 TTS_CASE_WITH("Test custom generator", (std::array<float, 10>, std::array<int, 4>), flip_values {3})
-(auto const &args)
+(auto const& args)
 {
   for(std::size_t i = 0; i < args.size(); ++i)
   {

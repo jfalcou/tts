@@ -20,7 +20,7 @@ TTS_CASE("Usage of tts::random_seed")
   TTS_EQUAL(tts::random_seed(), 1234);
 };
 
-int main(int argc, const char **argv)
+int main(int argc, char const** argv)
 {
   tts::random_seed(1234);
 

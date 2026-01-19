@@ -10,8 +10,8 @@
 #include <bit>
 
 #if !defined(__GNUC__) && !defined(__clang__)
-#  define TTS_USE_STDMATH
-#  include <math.h>
+#define TTS_USE_STDMATH
+#include <math.h>
 #endif
 
 namespace tts::_

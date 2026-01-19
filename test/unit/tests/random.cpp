@@ -12,20 +12,20 @@
 #include <cmath>
 #include <iostream>
 
-template<typename T> double compute_mean(const std::vector<T> &data)
+template<typename T> double compute_mean(std::vector<T> const& data)
 {
   if(data.empty()) return 0.0;
   double sum = std::accumulate(data.begin(), data.end(), 0.0);
   return sum / data.size();
 }
 
-template<typename T> double compute_variance(const std::vector<T> &data, double mean)
+template<typename T> double compute_variance(std::vector<T> const& data, double mean)
 {
   if(data.size() < 2) return 0.0;
   double sum_sq_diff = 0.0;
   for(T val: data)
   {
-    double diff = val - mean;
+    double diff  = val - mean;
     sum_sq_diff += diff * diff;
   }
   return sum_sq_diff / data.size();
@@ -36,9 +36,9 @@ TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]",
              long,
              unsigned int)<typename T>(tts::type<T>)
 {
-  T           min_v   = 10;
-  T           max_v   = 30;
-  std::size_t samples = 100000;
+  T                   min_v   = 10;
+  T                   max_v   = 30;
+  std::size_t         samples = 100000;
 
   std::vector<double> results;
   results.reserve(samples);
@@ -64,9 +64,9 @@ TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]",
 
 TTS_CASE_TPL("Check Float Log-Uniformity", float, double)<typename T>(tts::type<T>)
 {
-  T           min_v   = 1;
-  T           max_v   = 1000;
-  std::size_t samples = 100000;
+  T                   min_v   = 1;
+  T                   max_v   = 1000;
+  std::size_t         samples = 100000;
 
   std::vector<double> log_results;
   log_results.reserve(samples);

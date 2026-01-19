@@ -7,7 +7,7 @@
 //==================================================================================================
 #define TTS_CUSTOM_DRIVER_FUNCTION fail_main
 //! [snippet]
-#define TTS_MAIN // No need for main()
+#define TTS_MAIN                   // No need for main()
 #include <tts/tts.hpp>
 #include <vector>
 
@@ -21,7 +21,7 @@ TTS_CASE("Check correctness of type checked greater-than comparison tests")
 };
 //! [snippet]
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);

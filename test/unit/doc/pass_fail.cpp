@@ -8,7 +8,7 @@
 #define TTS_CUSTOM_DRIVER_FUNCTION fail_main
 
 //! [snippet1]
-#define TTS_MAIN // No need for main()
+#define TTS_MAIN                   // No need for main()
 #include <tts/tts.hpp>
 
 TTS_CASE("Check that forced pass passes") { TTS_PASS("Forced success!!"); };
@@ -41,7 +41,7 @@ TTS_CASE("Check that forced major failure fails")
 };
 //! [snippet3]
 
-int main(int argc, char const **argv)
+int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);
