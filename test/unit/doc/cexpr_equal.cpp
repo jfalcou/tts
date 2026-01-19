@@ -7,10 +7,10 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE( "Check correctness of constexpr equality tests" )
+TTS_CASE("Check correctness of constexpr equality tests")
 {
   constexpr float a = 45.f;
   constexpr int   b = 45;

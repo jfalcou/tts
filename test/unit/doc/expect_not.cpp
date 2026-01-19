@@ -7,10 +7,10 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE( "Check that expectation can't be met" )
+TTS_CASE("Check that expectation can't be met")
 {
   int a = 42, b = 69;
 
@@ -21,6 +21,6 @@ TTS_CASE( "Check that expectation can't be met" )
   // TTS_EXPECT_NOT(a != b, REQUIRED);
 
   TTS_EXPECT_NOT(a >= b);
-  TTS_EXPECT_NOT(a >  b);
+  TTS_EXPECT_NOT(a > b);
 };
 //! [snippet]

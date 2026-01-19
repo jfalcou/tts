@@ -12,14 +12,18 @@
 
 namespace tts::_
 {
-  inline const char* current_test = "";
+  inline char const* current_test = "";
 
   struct test
   {
-    void operator()() { current_test = name; behaviour(); }
+    void operator()()
+    {
+      current_test = name;
+      behaviour();
+    }
     static inline bool acknowledge(test&& f);
 
-    const char*             name;
+    char const*        name;
     tts::_::callable   behaviour;
   };
 

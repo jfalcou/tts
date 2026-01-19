@@ -7,11 +7,8 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE( "Check basic arithmetic" )
-{
-    TTS_EQUAL(2+2, 4);
-};
+TTS_CASE("Check basic arithmetic") { TTS_EQUAL(2 + 2, 4); };
 //! [snippet]

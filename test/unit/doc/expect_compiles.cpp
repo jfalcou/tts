@@ -7,13 +7,13 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE( "Check that expression can compile properly" )
+TTS_CASE("Check that expression can compile properly")
 {
   double d, e;
 
-  TTS_EXPECT_COMPILES(d, e, { d += 4. * e; } );
+  TTS_EXPECT_COMPILES(d, e, { d += 4. * e; });
 };
 //! [snippet]

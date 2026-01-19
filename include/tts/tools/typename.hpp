@@ -15,60 +15,61 @@ namespace tts::_
 {
   template<typename T> struct typename_impl
   {
-    private:
-    using data_t = struct { const char* data; int size; };
+  private:
+    using data_t = struct
+    {
+      char const* data;
+      int         size;
+    };
     data_t data_ = {};
 
-    public:
-    constexpr typename_impl()   { data_ = typename_impl_value(); }
+  public:
+    constexpr typename_impl() { data_ = typename_impl_value(); }
     constexpr auto data() const { return data_.data; }
     constexpr auto size() const { return data_.size; }
 
-    friend text to_text(typename_impl const& t)
-    {
-      return text("%.*s",t.size(),t.data());
-    }
+    friend text    to_text(typename_impl const& t) { return text("%.*s", t.size(), t.data()); }
 
-    template<_::stream OS>
-    friend OS& operator<<(OS& os, typename_impl t)
+    template<_::stream OS> friend OS& operator<<(OS& os, typename_impl t)
     {
-      for(int i=0;i<t.size();++i) os << t.data()[i];
+      for(int i = 0; i < t.size(); ++i) os << t.data()[ i ];
       return os;
     }
 
-    private:
+  private:
     //==================================================================================================================
     // constexpr C-style string queries
     //==================================================================================================================
-    constexpr static int length(const char* str)
+    constexpr static int length(char const* str)
     {
       int i = 0;
-      while (str[i] != '\0') { ++i; }
+      while(str[ i ] != '\0') { ++i; }
       return i;
     }
 
-    constexpr static auto find(const char* str, const char* n)
+    constexpr static auto find(char const* str, char const* n)
     {
-      auto compare = [](const char* lhs, const char* rhs, int count)
+      auto compare = [](char const* lhs, char const* rhs, int count)
       {
-        if (lhs == nullptr || rhs == nullptr) { return rhs != nullptr ? -1 : 1; }
-        for (int i = 0; i < count; ++i)
+        if(lhs == nullptr || rhs == nullptr) { return rhs != nullptr ? -1 : 1; }
+        for(int i = 0; i < count; ++i)
         {
-          if (lhs[i] != rhs[i])     { return lhs[i] < rhs[i] ? -1 : 1; }
-          else if (lhs[i] == '\0')  { return 0; }
+          if(lhs[ i ] != rhs[ i ]) { return lhs[ i ] < rhs[ i ] ? -1 : 1; }
+          else if(lhs[ i ] == '\0') { return 0; }
         }
         return 0;
       };
 
       auto begin = str;
-      if (char c = *n++; c != '\0')
+      if(char c = *n++; c != '\0')
       {
         int len = length(n);
-        do
-        {
+        do {
           char sc = {};
-          do { if ((sc = *str++) == '\0') return 0; } while (sc != c);
-        } while (compare(str, n, len) != 0);
+          do {
+            if((sc = *str++) == '\0') return 0;
+          } while(sc != c);
+        } while(compare(str, n, len) != 0);
         --str;
       }
 
@@ -82,17 +83,17 @@ namespace tts::_
     {
       data_t that = {};
 
-  #if defined(_MSC_VER )
-      that.data   = __FUNCSIG__;
-      auto offset = find(that.data,"<") + 1;
-      that.size   = find(that.data,">::typename_impl_value(") - offset;
-      that.data  += offset;
-  #else
-      that.data = __PRETTY_FUNCTION__;
-      auto i = find(that.data,"=") + 2;
-      that.size = find(that.data,"]") - i;
+#if defined(_MSC_VER)
+      that.data    = __FUNCSIG__;
+      auto offset  = find(that.data, "<") + 1;
+      that.size    = find(that.data, ">::typename_impl_value(") - offset;
+      that.data   += offset;
+#else
+      that.data  = __PRETTY_FUNCTION__;
+      auto i     = find(that.data, "=") + 2;
+      that.size  = find(that.data, "]") - i;
       that.data += i;
-  #endif
+#endif
       return that;
     }
   };
@@ -112,8 +113,9 @@ namespace tts
     @public
     @brief Evaluates to an object containing the name of the type `T` in readable form.
 
-    `typename_<T>` is a `constexpr` object that can be used to retrieve the name of a type `T` as a text-like object.
-    It can be used in conjunction with `as_text` or stream output operators to display type names.
+    `typename_<T>` is a `constexpr` object that can be used to retrieve the name of a type `T` as a
+  text-like object. It can be used in conjunction with `as_text` or stream output operators to
+  display type names.
 
     @groupheader{Example}
     @snippet doc/typename.cpp snippet1
@@ -121,8 +123,7 @@ namespace tts
     @tparam T Type to query.
   **/
   //====================================================================================================================
-  template<typename T>
-  inline auto constexpr typename_ = _::typename_impl<T>{};
+  template<typename T> inline auto constexpr typename_ = _::typename_impl<T> {};
 
   //====================================================================================================================
   /**
@@ -138,11 +139,7 @@ namespace tts
     @return A `typename_` instance representing the name of `T` as a string-like object.
   **/
   //====================================================================================================================
-  template<typename T>
-  constexpr auto name([[maybe_unused]] T const& t)
-  {
-    return typename_<T>;
-  }
+  template<typename T> constexpr auto name([[maybe_unused]] T const& t) { return typename_<T>; }
 
   //====================================================================================================================
   /// @}

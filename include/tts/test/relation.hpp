@@ -12,50 +12,52 @@
 #include <tts/tools/as_text.hpp>
 #include <tts/engine/info.hpp>
 
-#define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
-if( ::tts::_::OP(local_tts_a,local_tts_b) )                                                  \
-{                                                                                                 \
-    TTS_PASS( "Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );                 \
-    return ::tts::_::logger{false};                                                               \
-}                                                                                                 \
-else                                                                                              \
-{                                                                                                 \
-  FAILURE ( "Expression: %s %s %s is false because %s %s %s."                                     \
-          , TTS_STRING(A), T, TTS_STRING(B)                                                       \
-          , ::tts::as_text(local_tts_a).data(), F, ::tts::as_text(local_tts_b).data()             \
-          );                                                                                      \
-  return ::tts::_::logger{};                                                                      \
-}                                                                                                 \
-/**/
+#define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                 \
+  if(::tts::_::OP(local_tts_a, local_tts_b))                                                       \
+  {                                                                                                \
+    TTS_PASS("Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));                    \
+    return ::tts::_::logger {false};                                                               \
+  }                                                                                                \
+  else                                                                                             \
+  {                                                                                                \
+    FAILURE("Expression: %s %s %s is false because %s %s %s.",                                     \
+            TTS_STRING(A),                                                                         \
+            T,                                                                                     \
+            TTS_STRING(B),                                                                         \
+            ::tts::as_text(local_tts_a).data(),                                                    \
+            F,                                                                                     \
+            ::tts::as_text(local_tts_b).data());                                                   \
+    return ::tts::_::logger {};                                                                    \
+  }                                                                                                \
+  /**/
 
-#define TTS_CEXPR_RELATION_BASE( A, B, OP, T, F, FAILURE)                                         \
-constexpr auto local_tts_expr = ::tts::_::OP(A,B);                                           \
-if constexpr( local_tts_expr )                                                                    \
-{                                                                                                 \
-  TTS_PASS( "Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B) );          \
-    return ::tts::_::logger{false};                                                               \
-}                                                                                                 \
-else                                                                                              \
-{                                                                                                 \
-  FAILURE ( "Constant expression: %s %s %s is false because %s %s %s."                            \
-          , TTS_STRING(A), T, TTS_STRING(B)                                                       \
-          , ::tts::as_text(A).data(), F, ::tts::as_text(B).data()                                 \
-          );                                                                                      \
-  return ::tts::_::logger{};                                                                      \
-}                                                                                                 \
-/**/
+#define TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                           \
+  constexpr auto local_tts_expr = ::tts::_::OP(A, B);                                              \
+  if constexpr(local_tts_expr)                                                                     \
+  {                                                                                                \
+    TTS_PASS("Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));           \
+    return ::tts::_::logger {false};                                                               \
+  }                                                                                                \
+  else                                                                                             \
+  {                                                                                                \
+    FAILURE("Constant expression: %s %s %s is false because %s %s %s.",                            \
+            TTS_STRING(A),                                                                         \
+            T,                                                                                     \
+            TTS_STRING(B),                                                                         \
+            ::tts::as_text(A).data(),                                                              \
+            F,                                                                                     \
+            ::tts::as_text(B).data());                                                             \
+    return ::tts::_::logger {};                                                                    \
+  }                                                                                                \
+  /**/
 
-#define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
-#define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
-#define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
+#define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_##__VA_ARGS__(A, B, OP, T, F)
+#define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
-#define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                  \
-[&](auto const& local_tts_a, auto const& local_tts_b)                                               \
-{                                                                                                   \
-  TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                        \
-}(A,B)                                                                                              \
-/**/
-
+#define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                 \
+  [ & ](auto const& local_tts_a, auto const& local_tts_b)                                          \
+  { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }(A, B) /**/
 
 //======================================================================================================================
 /**
@@ -89,9 +91,8 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_BIT_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_BIT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, bit_eq , "==" , "!=" , __VA_ARGS__)
+#define TTS_BIT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, bit_eq, "==", "!=", __VA_ARGS__)
 #endif
-
 
 //======================================================================================================================
 /**
@@ -110,7 +111,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, bit_neq , "!=" , "==" , __VA_ARGS__)
+#define TTS_BIT_NOT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, bit_neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -132,7 +133,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
+#define TTS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -153,7 +154,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_NOT_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_NOT_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
+#define TTS_NOT_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -174,7 +175,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_LESS(LHS, RHS, ...)
 #else
-#define TTS_LESS(LHS, RHS, ...) TTS_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
+#define TTS_LESS(LHS, RHS, ...) TTS_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -195,7 +196,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_GREATER(LHS, RHS, ...)
 #else
-#define TTS_GREATER(LHS, RHS, ...)        TTS_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
+#define TTS_GREATER(LHS, RHS, ...) TTS_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -216,7 +217,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_LESS_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_LESS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+#define TTS_LESS_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -237,7 +238,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_GREATER_EQUAL(LHS, RHS, ...)  TTS_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
+#define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -251,31 +252,31 @@ else                                                                            
 **/
 //======================================================================================================================
 
-#define TTS_TYPED_RELATION(A, B, OP, T, F, ...)     TTS_TYPED_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
-#define TTS_TYPED_RELATION_(A, B, OP, T, F)         TTS_TYPED_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
-#define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
+#define TTS_TYPED_RELATION(A, B, OP, T, F, ...) TTS_TYPED_RELATION_##__VA_ARGS__(A, B, OP, T, F)
+#define TTS_TYPED_RELATION_(A, B, OP, T, F)     TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F)                                                \
+  TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
-#define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
-[&](auto&& local_tts_a, auto&& local_tts_b)                                                         \
-{                                                                                                   \
-  using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                        \
-  using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                        \
-                                                                                                    \
-  if ( !std::same_as<type_a, type_b> )                                                              \
-  {                                                                                                 \
-    FAILURE ( "'%s %s %s' is false because '%.*s' is not '%.*s'."                                   \
-            , TTS_STRING(A), T, TTS_STRING(B)                                                       \
-            , ::tts::typename_<type_a>.size(), ::tts::typename_<type_a>.data()                      \
-            , ::tts::typename_<type_b>.size(), ::tts::typename_<type_b>.data()                      \
-            );                                                                                      \
-    return ::tts::_::logger{};                                                                      \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                      \
-  }                                                                                                 \
-}(A,B)                                                                                              \
-/**/
+#define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
+  [ & ](auto&& local_tts_a, auto&& local_tts_b)                                                    \
+  {                                                                                                \
+    using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                     \
+    using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                     \
+                                                                                                   \
+    if(!std::same_as<type_a, type_b>)                                                              \
+    {                                                                                              \
+      FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
+              TTS_STRING(A),                                                                       \
+              T,                                                                                   \
+              TTS_STRING(B),                                                                       \
+              ::tts::typename_<type_a>.size(),                                                     \
+              ::tts::typename_<type_a>.data(),                                                     \
+              ::tts::typename_<type_b>.size(),                                                     \
+              ::tts::typename_<type_b>.data());                                                    \
+      return ::tts::_::logger {};                                                                  \
+    }                                                                                              \
+    else { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                            \
+  }(A, B) /**/
 
 //======================================================================================================================
 /**
@@ -294,7 +295,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_TYPED_EQUAL(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, eq , "==" , "!=" , __VA_ARGS__)
+#define TTS_TYPED_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -314,7 +315,8 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, neq, "!=" , "==" , __VA_ARGS__)
+#define TTS_TYPED_NOT_EQUAL(LHS, RHS, ...)                                                         \
+  TTS_TYPED_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -334,7 +336,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_LESS(LHS, RHS, ...)
 #else
-#define TTS_TYPED_LESS(LHS, RHS, ...) TTS_TYPED_RELATION(LHS,RHS, lt , "<"  , ">=" , __VA_ARGS__)
+#define TTS_TYPED_LESS(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -354,7 +356,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_GREATER(LHS, RHS, ...)
 #else
-#define TTS_TYPED_GREATER(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, gt , ">"  , "<=" , __VA_ARGS__)
+#define TTS_TYPED_GREATER(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -374,7 +376,7 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS,RHS, le , "<=" , ">"  , __VA_ARGS__)
+#define TTS_TYPED_LESS_EQUAL(LHS, RHS, ...) TTS_TYPED_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -382,7 +384,8 @@ else                                                                            
   @def TTS_TYPED_GREATER_EQUAL
   @brief Performs type and equality comparison between two expressions
 
-  This test behaves as @ref TTS_GREATER_EQUAL but also verify that both arguments's types are the same.
+  This test behaves as @ref TTS_GREATER_EQUAL but also verify that both arguments's types are the
+same.
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -394,7 +397,8 @@ else                                                                            
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)  TTS_TYPED_RELATION(LHS,RHS, ge , ">=" , "<=" , __VA_ARGS__)
+#define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)                                                     \
+  TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -408,15 +412,15 @@ else                                                                            
 **/
 //======================================================================================================================
 
-#define TTS_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
-#define TTS_CEXPR_RELATION_(A, B, OP, T, F)         TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
-#define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
+#define TTS_CEXPR_RELATION(A, B, OP, T, F, ...) TTS_CEXPR_RELATION_##__VA_ARGS__(A, B, OP, T, F)
+#define TTS_CEXPR_RELATION_(A, B, OP, T, F)     TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F)                                                \
+  TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
-#define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                            \
-do                                                                                                  \
-{                                                                                                   \
-  TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                  \
-}while(0);                                                                                          \
+#define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
+  do {                                                                                             \
+    TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                               \
+  } while(0);                                                                                      \
 /**/
 
 //======================================================================================================================
@@ -437,7 +441,7 @@ do                                                                              
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
+#define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -458,7 +462,8 @@ do                                                                              
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
+#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                                     \
+  TTS_CEXPR_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -479,7 +484,7 @@ do                                                                              
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_LESS(LHS, RHS, ...)
 #else
-#define TTS_CONSTEXPR_LESS(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
+#define TTS_CONSTEXPR_LESS(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -500,7 +505,8 @@ do                                                                              
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)
 #else
-#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
+#define TTS_CONSTEXPR_GREATER(LHS, RHS, ...)                                                       \
+  TTS_CEXPR_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
 #endif
 //======================================================================================================================
 
@@ -521,7 +527,8 @@ do                                                                              
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...) TTS_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
+#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)                                                    \
+  TTS_CEXPR_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -542,45 +549,53 @@ do                                                                              
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
+#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                                 \
+  TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
 /// @}
 //======================================================================================================================
 
-#define TTS_TYPED_CEXPR_RELATION(A, B, OP, T, F, ...)     TTS_TYPED_CEXPR_RELATION_ ## __VA_ARGS__ (A,B,OP,T,F)
-#define TTS_TYPED_CEXPR_RELATION_(A, B, OP, T, F)         TTS_TYPED_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FAIL)
-#define TTS_TYPED_CEXPR_RELATION_REQUIRED(A, B, OP, T, F) TTS_TYPED_CEXPR_RELATION_IMPL(A,B,OP,T,F,TTS_FATAL)
+#define TTS_TYPED_CEXPR_RELATION(A, B, OP, T, F, ...)                                              \
+  TTS_TYPED_CEXPR_RELATION_##__VA_ARGS__(A, B, OP, T, F)
+#define TTS_TYPED_CEXPR_RELATION_(A, B, OP, T, F)                                                  \
+  TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
+#define TTS_TYPED_CEXPR_RELATION_REQUIRED(A, B, OP, T, F)                                          \
+  TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
-#define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                      \
-do                                                                                                  \
-{                                                                                                   \
-  using type_a = std::remove_cvref_t<decltype(A)>;                                                  \
-  using type_b = std::remove_cvref_t<decltype(B)>;                                                  \
-                                                                                                    \
-  if ( !std::same_as<type_a, type_b> )                                                              \
-  {                                                                                                 \
-    FAILURE ( "'%s %s %s' is false because '%.*s' is not '%.*s'."                                   \
-            , TTS_STRING(A), T, TTS_STRING(B)                                                       \
-            , ::tts::typename_<type_a>.size(), ::tts::typename_<type_a>.data()                      \
-            , ::tts::typename_<type_b>.size(), ::tts::typename_<type_b>.data()                      \
-            );                                                                                      \
-    return ::tts::_::logger{};                                                                      \
-  }                                                                                                 \
-  else                                                                                              \
-  {                                                                                                 \
-    TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                \
-  }                                                                                                 \
-} while(0)                                                                                          \
-/**/
+#define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
+  do {                                                                                             \
+    using type_a = std::remove_cvref_t<decltype(A)>;                                               \
+    using type_b = std::remove_cvref_t<decltype(B)>;                                               \
+                                                                                                   \
+    if(!std::same_as<type_a, type_b>)                                                              \
+    {                                                                                              \
+      FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
+              TTS_STRING(A),                                                                       \
+              T,                                                                                   \
+              TTS_STRING(B),                                                                       \
+              ::tts::typename_<type_a>.size(),                                                     \
+              ::tts::typename_<type_a>.data(),                                                     \
+              ::tts::typename_<type_b>.size(),                                                     \
+              ::tts::typename_<type_b>.data());                                                    \
+      return ::tts::_::logger {};                                                                  \
+    }                                                                                              \
+    else { TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                      \
+  } while(0) /**/
 
-#define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)          TTS_TYPED_CEXPR_RELATION(LHS,RHS, eq , "==" , "!=", __VA_ARGS__)
-#define TTS_TYPED_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)      TTS_TYPED_CEXPR_RELATION(LHS,RHS, neq, "!=" , "==", __VA_ARGS__)
-#define TTS_TYPED_CONSTEXPR_LESS(LHS, RHS, ...)           TTS_TYPED_CEXPR_RELATION(LHS,RHS, lt , "<"  , ">=", __VA_ARGS__)
-#define TTS_TYPED_CONSTEXPR_GREATER(LHS, RHS, ...)        TTS_TYPED_CEXPR_RELATION(LHS,RHS, gt , ">"  , "<=", __VA_ARGS__)
-#define TTS_TYPED_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)     TTS_TYPED_CEXPR_RELATION(LHS,RHS, le , "<=" , ">" , __VA_ARGS__)
-#define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)  TTS_TYPED_CEXPR_RELATION(LHS,RHS, ge , ">=" , "<=", __VA_ARGS__)
+#define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
+#define TTS_TYPED_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                               \
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, neq, "!=", "==", __VA_ARGS__)
+#define TTS_TYPED_CONSTEXPR_LESS(LHS, RHS, ...)                                                    \
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, lt, "<", ">=", __VA_ARGS__)
+#define TTS_TYPED_CONSTEXPR_GREATER(LHS, RHS, ...)                                                 \
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, gt, ">", "<=", __VA_ARGS__)
+#define TTS_TYPED_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)                                              \
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
+#define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                           \
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
 
 //======================================================================================================================
 /// @}

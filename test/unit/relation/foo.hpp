@@ -12,20 +12,17 @@
 
 namespace foo
 {
-  struct bar { float v; };
+  struct bar
+  {
+    float v;
+  };
 
   // Required by TTS
-  inline tts::text    as_text( bar const& b ) { return "foo::bar{" + tts::as_text(b.v) + "}"; }
+  inline tts::text as_text(bar const& b) { return "foo::bar{" + tts::as_text(b.v) + "}"; }
 
-  inline bool compare_equal(foo::bar const& l, foo::bar const& r)
-  {
-    return l.v == r.v;
-  }
+  inline bool      compare_equal(foo::bar const& l, foo::bar const& r) { return l.v == r.v; }
 
-  inline bool compare_less(foo::bar const& l, foo::bar const& r)
-  {
-    return l.v < r.v;
-  }
+  inline bool      compare_less(foo::bar const& l, foo::bar const& r) { return l.v < r.v; }
 }
 
 #endif

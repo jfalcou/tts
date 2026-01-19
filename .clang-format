@@ -3,16 +3,27 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##==================================================================================================
-AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: true
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCompound: true
+  AlignFunctionPointers: false
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCompound: true
+  AlignFunctionPointers: false
+  PadOperators: true
 AlignEscapedNewlines: Right
-AlignOperands: true
 AlignTrailingComments: true
 AlignAfterOpenBracket: Align
-AllowShortBlocksOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: All
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: MultiLine
 BreakBeforeBraces: Allman
@@ -24,13 +35,13 @@ Cpp11BracedListStyle: true
 FixNamespaceComments: false
 IncludeBlocks: Regroup
 IndentCaseLabels: false
-IndentPPDirectives: AfterHash
+IndentPPDirectives: None
 IndentWidth: 2
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
-PointerAlignment: Right
-SortIncludes: true
+PointerAlignment: Left
+SortIncludes: Never
 SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
 SpaceBeforeAssignmentOperators: true
@@ -51,3 +62,18 @@ BinPackArguments: false
 BinPackParameters: false
 ExperimentalAutoDetectBinPacking: false
 AllowAllParametersOfDeclarationOnNextLine: false
+QualifierAlignment: Right
+ReferenceAlignment: Pointer
+AlignArrayOfStructures: Right
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCompound: true
+  PadOperators: true
+AllowShortCaseExpressionOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortLambdasOnASingleLine: All
+BreakBeforeConceptDeclarations: Always
+InsertNewlineAtEOF: true
+Language: Cpp

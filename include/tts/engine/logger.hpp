@@ -12,11 +12,17 @@
 
 namespace tts::_
 {
-  struct fatal_signal {};
+  struct fatal_signal
+  {
+  };
 
   struct logger
   {
-    logger(bool status = true) : display(status), done(false) {}
+    logger(bool status = true)
+        : display(status)
+        , done(false)
+    {
+    }
 
     template<typename Data> logger& operator<<(Data const& d)
     {
@@ -28,14 +34,14 @@ namespace tts::_
           done = true;
         }
 
-        printf("%s",as_text(d).data());
+        printf("%s", as_text(d).data());
       }
       return *this;
     }
 
     ~logger() noexcept(false)
     {
-      if(display && done)           puts("");
+      if(display && done) puts("");
       if(::tts::fatal_error_status) throw ::tts::_::fatal_signal();
     }
 

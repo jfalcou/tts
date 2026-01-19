@@ -7,12 +7,15 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
 namespace sample
 {
-  struct ratio { int n, d; };
+  struct ratio
+  {
+    int n, d;
+  };
 
   double absolute_distance(ratio a, ratio b)
   {
@@ -23,10 +26,10 @@ namespace sample
   }
 };
 
-TTS_CASE( "Compare values with custom absolute distance computation" )
+TTS_CASE("Compare values with custom absolute distance computation")
 {
-  sample::ratio a{115,77};
-  sample::ratio b{397,85};
+  sample::ratio a {115, 77};
+  sample::ratio b {397, 85};
 
   TTS_ABSOLUTE_EQUAL(a, b, 4);
 };

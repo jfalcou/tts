@@ -17,25 +17,27 @@ namespace tts::_
   struct option
   {
     option() = default;
-    option( const char* arg ) : token(arg), position(-1)
+    option(char const* arg)
+        : token(arg)
+        , position(-1)
     {
-      auto it = strchr(arg,'=');
+      auto it  = strchr(arg, '=');
       position = static_cast<int>(it ? (it - token) : strlen(token));
     }
 
-    bool has_flag(const char* f) const
+    bool has_flag(char const* f) const
     {
-      if(position == -1)      return false;
+      if(position == -1) return false;
 
       int len = static_cast<int>(strlen(f));
-      if(len > position)  return false;
+      if(len > position) return false;
 
-      return strncmp(token,f,position) == 0;
+      return strncmp(token, f, position) == 0;
     }
 
-    bool is_valid() const  { return position > 0;  }
+    bool                   is_valid() const { return position > 0; }
 
-    template<typename T> T get(T const& def = T{}) const
+    template<typename T> T get(T const& def = T {}) const
     {
       T that = {};
 
@@ -45,32 +47,29 @@ namespace tts::_
         if constexpr(std::integral<T>)
         {
           decltype(sizeof(void*)) v;
-          n = sscanf(token+position+1, "%zu", &v);
+          n    = sscanf(token + position + 1, "%zu", &v);
           that = static_cast<T>(v);
         }
         else if constexpr(std::floating_point<T>)
         {
           double v;
-          n = sscanf(token+position+1, "%lf", &v);
+          n    = sscanf(token + position + 1, "%lf", &v);
           that = static_cast<T>(v);
         }
         else
         {
-          n     = 1;
-          that  = T{token+position+1};
+          n    = 1;
+          that = T {token + position + 1};
         }
 
-        if(n!=1) that = def;
+        if(n != 1) that = def;
       }
-      else
-      {
-        that = def;
-      }
+      else { that = def; }
 
       return that;
     }
 
-    const char* token    = "";
+    char const* token    = "";
     int         position = -1;
   };
 }
@@ -122,62 +121,56 @@ namespace tts
   struct options
   {
     /// Checks if the flag `f` is set on the command line
-    bool operator[](const char* f) const
-    {
-      return find(f).is_valid();
-    }
+    bool operator[](char const* f) const { return find(f).is_valid(); }
 
     /// Checks if qny flag `fs` is set on the command line
-    template<std::same_as<const char*>... Flags>
-    bool operator()(Flags... fs) const
+    template<std::same_as<char const*>... Flags> bool operator()(Flags... fs) const
     {
       return find(fs...).is_valid();
     }
 
     /// Returns a value of type `T` if a flag matches any of the strings in `fs` or `T{}` otherwise
-    template<typename T, std::same_as<const char*>... Flags>
-    T value(Flags... fs) const
+    template<typename T, std::same_as<char const*>... Flags> T value(Flags... fs) const
     {
       T that = {};
-      if( auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
+      if(auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
       return that;
     }
 
     /// Returns a value of type `T` if a flag matches any of the strings in `fs` or `that` otherwise
-    template<typename T, std::same_as<const char*>... Flags>
-    T value(T that, Flags... fs) const
+    template<typename T, std::same_as<char const*>... Flags> T value(T that, Flags... fs) const
     {
-      if( auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
+      if(auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
       return that;
     }
 
     /// Checks if current options set is not empty
-    bool is_valid() { return argc && argv != nullptr; }
+    bool         is_valid() { return argc && argv != nullptr; }
 
-    int           argc;
-    char const**  argv;
+    int          argc;
+    char const** argv;
 
-    private:
-    template<std::same_as<const char*>... Flags> _::option find(Flags... fs) const
+  private:
+    template<std::same_as<char const*>... Flags> _::option find(Flags... fs) const
     {
-      const char* flags[] = {fs...};
+      char const* flags[] = {fs...};
 
-      for(int i=1;i<argc;++i)
+      for(int i = 1; i < argc; ++i)
       {
-        _::option o(argv[i]);
-        for(auto f : flags)
+        _::option o(argv[ i ]);
+        for(auto f: flags)
         {
-          if( o.has_flag(f) ) return o;
+          if(o.has_flag(f)) return o;
         }
       }
 
-      return _::option{};
+      return _::option {};
     }
   };
 
   namespace _
   {
-    inline options current_arguments = {0,nullptr};
+    inline options current_arguments = {0, nullptr};
     inline int     current_seed      = -1;
     inline bool    is_verbose        = false;
     inline bool    is_quiet          = false;
@@ -196,12 +189,11 @@ namespace tts
     @see TTS_CUSTOM_DRIVER_FUNCTION
   **/
   //====================================================================================================================
-  inline void initialize(int argc, const char** argv)
+  inline void initialize(int argc, char const** argv)
   {
-    if(!_::current_arguments.is_valid()) _::current_arguments = options{argc,argv};
+    if(!_::current_arguments.is_valid()) _::current_arguments = options {argc, argv};
   }
 }
-
 
 namespace tts
 {
@@ -223,9 +215,10 @@ namespace tts
       @public
       @brief Initialize the random seed for tests
 
-      Initializes and retrieves the random seed used by TTS for random number generation. If the seed has not been
-      initialized yet, it uses the value provided as argument. If that value is -1, it uses the current time as seed.
-      Once initialized, calling this function will return the same seed each time.
+      Initializes and retrieves the random seed used by TTS for random number generation. If the
+  seed has not been initialized yet, it uses the value provided as argument. If that value is -1, it
+  uses the current time as seed. Once initialized, calling this function will return the same seed
+  each time.
 
       @groupheader{Example}
       @snippet doc/random_seed.cpp snippet
@@ -234,12 +227,12 @@ namespace tts
       @return The current random seed used by TTS.
   **/
   //====================================================================================================================
-  inline int random_seed(int base_seed = -1)
+  inline int            random_seed(int base_seed = -1)
   {
     if(_::current_seed == -1)
     {
-      auto s = arguments().value( base_seed, "--seed" );
-      if(s == -1 ) s = static_cast<int>(time(0));
+      auto s = arguments().value(base_seed, "--seed");
+      if(s == -1) s = static_cast<int>(time(0));
       _::current_seed = s;
     }
 

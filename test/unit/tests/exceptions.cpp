@@ -8,18 +8,14 @@
 #define TTS_MAIN
 #include <tts/tts.hpp>
 
-struct some_exception_type {};
+struct some_exception_type
+{
+};
 
 void foo() { throw some_exception_type(); }
 
-TTS_CASE( "Check that we can capture thrown exceptions" )
-{
-  TTS_THROW( foo(), some_exception_type );
-};
+TTS_CASE("Check that we can capture thrown exceptions") { TTS_THROW(foo(), some_exception_type); };
 
-void bar() noexcept { }
+void bar() noexcept {}
 
-TTS_CASE( "Check that nothrow function are detected as such" )
-{
-  TTS_NO_THROW( bar() );
-};
+TTS_CASE("Check that nothrow function are detected as such") { TTS_NO_THROW(bar()); };

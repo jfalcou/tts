@@ -7,15 +7,15 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE( "Check that expression types can be tested for equality" )
+TTS_CASE("Check that expression types can be tested for equality")
 {
   [[maybe_unused]] double d;
 
-  TTS_EXPR_IS( &d + 5        , double*   );
-  TTS_EXPR_IS( std::move(d)  , double&&  );
-  TTS_EXPR_IS( std::swap(d,d), void      );
+  TTS_EXPR_IS(&d + 5, double*);
+  TTS_EXPR_IS(std::move(d), double&&);
+  TTS_EXPR_IS(std::swap(d, d), void);
 };
 //! [snippet]

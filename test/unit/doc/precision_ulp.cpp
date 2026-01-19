@@ -7,12 +7,15 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN  // No need for main()
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
 namespace sample
 {
-  struct ratio { int n, d; };
+  struct ratio
+  {
+    int n, d;
+  };
 
   double ulp_distance(ratio a, ratio b)
   {
@@ -23,11 +26,11 @@ namespace sample
   }
 };
 
-TTS_CASE( "Compare values with custom ULP distance computation" )
+TTS_CASE("Compare values with custom ULP distance computation")
 {
-  sample::ratio a{8388608,8388608};
-  sample::ratio b{8388618,8388608};
+  sample::ratio a {8388608, 8388608};
+  sample::ratio b {8388618, 8388608};
 
-  TTS_ULP_EQUAL(a, b,10);
+  TTS_ULP_EQUAL(a, b, 10);
 };
 //! [snippet]
