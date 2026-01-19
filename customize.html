@@ -147,91 +147,84 @@ Tests Driver</h1>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Tautological test&quot;</span> )</div>
-<div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567">TTS_EXPECT_NOT</a>(<span class="keyword">false</span> == <span class="keyword">true</span>);</div>
-<div class="line">};</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Tautological test&quot;</span>) { <a class="code hl_define" href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567">TTS_EXPECT_NOT</a>(<span class="keyword">false</span> == <span class="keyword">true</span>); };</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> <span class="keyword">const</span>** argv)</div>
 <div class="line">{</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Welcome to a special test driver !\n&quot;</span>;</div>
 <div class="line">  custom_entry_point(argc, argv);</div>
-<div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a>(0,0);</div>
+<div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a>(0, 0);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__customization-points_html_ga7181b42fe16159a0d60df9880d8da4c3"><div class="ttname"><a href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a></div><div class="ttdeci">int report(int fails, int invalids)</div><div class="ttdoc">Test reporting customization point.</div><div class="ttdef"><b>Definition</b> environment.hpp:68</div></div>
-<div class="ttc" id="agroup__test-basic_html_gaaa8c6daa892bf6b6c20d6f049e340567"><div class="ttname"><a href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567">TTS_EXPECT_NOT</a></div><div class="ttdeci">#define TTS_EXPECT_NOT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to false.</div><div class="ttdef"><b>Definition</b> basic.hpp:80</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
+<div class="ttc" id="agroup__customization-points_html_ga7181b42fe16159a0d60df9880d8da4c3"><div class="ttname"><a href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a></div><div class="ttdeci">int report(int fails, int invalids)</div><div class="ttdoc">Test reporting customization point.</div><div class="ttdef"><b>Definition</b> environment.hpp:96</div></div>
+<div class="ttc" id="agroup__test-basic_html_gaaa8c6daa892bf6b6c20d6f049e340567"><div class="ttname"><a href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567">TTS_EXPECT_NOT</a></div><div class="ttdeci">#define TTS_EXPECT_NOT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to false.</div><div class="ttdef"><b>Definition</b> basic.hpp:79</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="customize-display"></a>
 Data display</h1>
 <p>By default, whenever <b>TTS</b> needs to display a value in a report, it uses <code>std::to_string</code> or, in the case of sequence-like types, a sequence of calls to <code>std::to_string</code>. In case no overload for <code>std::to_string</code> exists for a given type, a string will be built from the type name and its byte sequence.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>payload</div>
 <div class="line">{</div>
-<div class="line">  <span class="keywordtype">double</span> d;</div>
-<div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i,j;</div>
+<div class="line">  <span class="keywordtype">double</span>         d;</div>
+<div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>   i, j;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(payload <span class="keyword">const</span>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Display an unknown type&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Display an unknown type&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  payload p{1.5,  0xAABBCCDD,0x11223344};</div>
-<div class="line">  payload q{1.5,  0xFFEEDDCC,0x99887766};</div>
+<div class="line">  payload p {1.5, 0xAABBCCDD, 0x11223344};</div>
+<div class="line">  payload q {1.5, 0xFFEEDDCC, 0x99887766};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(p, q);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:133</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:134</div></div>
 </div><!-- fragment --><p>In the case a given type needs to be displayed in a specific manner, <b>TTS</b> allows to overload <code>to_text</code> in the type's namespace or as a friend function and will use it when necessary.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>payload</div>
 <div class="line">{</div>
-<div class="line">  <span class="keywordtype">double</span> d;</div>
-<div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i,j;</div>
-<div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(payload <span class="keyword">const</span>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line">  <span class="keywordtype">double</span>           d;</div>
+<div class="line">  <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>     i, j;</div>
+<div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">bool</span>   operator==(payload <span class="keyword">const</span>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">friend</span> <a class="code hl_struct" href="structtts_1_1text.html">tts::text</a> to_text( payload <span class="keyword">const</span>&amp; p )</div>
+<div class="line">  <span class="keyword">friend</span> <a class="code hl_struct" href="structtts_1_1text.html">tts::text</a> to_text(payload <span class="keyword">const</span>&amp; p)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keywordflow">return</span> <span class="stringliteral">&quot;payload(&quot;</span> + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(p.d) + <span class="stringliteral">&quot;)[&quot;</span></div>
-<div class="line">                      + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(p.i) + <span class="stringliteral">&quot;][&quot;</span></div>
-<div class="line">                      + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(p.j) + <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line">    <span class="keywordflow">return</span> <span class="stringliteral">&quot;payload(&quot;</span> + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(p.d) + <span class="stringliteral">&quot;)[&quot;</span> + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(p.i) + <span class="stringliteral">&quot;][&quot;</span> + <a class="code hl_function" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(p.j) +</div>
+<div class="line">           <span class="stringliteral">&quot;]&quot;</span>;</div>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Display a type with custom to_text&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Display a type with custom to_text&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  payload p{1.5,  0xAABBCCDD,0x11223344};</div>
-<div class="line">  payload q{1.5,  0xFFEEDDCC,0x99887766};</div>
+<div class="line">  payload p {1.5, 0xAABBCCDD, 0x11223344};</div>
+<div class="line">  payload q {1.5, 0xFFEEDDCC, 0x99887766};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(p, q);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__tools-text_html_ga044124276e1b1e518a746121e16b0fad"><div class="ttname"><a href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a></div><div class="ttdeci">text as_text(T const &amp;e)</div><div class="ttdoc">Value-to-string conversion.</div><div class="ttdef"><b>Definition</b> as_text.hpp:48</div></div>
-<div class="ttc" id="astructtts_1_1text_html"><div class="ttname"><a href="structtts_1_1text.html">tts::text</a></div><div class="ttdoc">Lightweight string-like object.</div><div class="ttdef"><b>Definition</b> text.hpp:34</div></div>
+<div class="ttc" id="agroup__tools-text_html_ga044124276e1b1e518a746121e16b0fad"><div class="ttname"><a href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a></div><div class="ttdeci">text as_text(T const &amp;e)</div><div class="ttdoc">Value-to-string conversion.</div><div class="ttdef"><b>Definition</b> as_text.hpp:49</div></div>
+<div class="ttc" id="astructtts_1_1text_html"><div class="ttname"><a href="structtts_1_1text.html">tts::text</a></div><div class="ttdoc">Lightweight string-like object.</div><div class="ttdef"><b>Definition</b> text.hpp:35</div></div>
 </div><!-- fragment --><p>If needed, one can delegate a part of this string construction to the <b>TTS</b> internal string conversion function <a class="el" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a> that will use all runtime options for display. <a class="el" href="structtts_1_1text.html">tts::text</a> can also be constructed from a formatting specification and other similar setup.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">struct </span>payload</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keywordtype">double</span> d;</div>
-<div class="line">    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i,j;</div>
+<div class="line">    <span class="keywordtype">double</span>         d;</div>
+<div class="line">    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>   i, j;</div>
 <div class="line">    <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(payload <span class="keyword">const</span>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
 <div class="line">  };</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_struct" href="structtts_1_1text.html">tts::text</a> to_text( payload <span class="keyword">const</span>&amp; p )</div>
-<div class="line">  {</div>
-<div class="line">    <span class="keywordflow">return</span> <a class="code hl_struct" href="structtts_1_1text.html">tts::text</a>(<span class="stringliteral">&quot;payload(%f)[%d][%d]&quot;</span>, p.d, p.i, p.j);</div>
-<div class="line">  }</div>
+<div class="line">  <a class="code hl_struct" href="structtts_1_1text.html">tts::text</a> to_text(payload <span class="keyword">const</span>&amp; p) { <span class="keywordflow">return</span> <a class="code hl_struct" href="structtts_1_1text.html">tts::text</a>(<span class="stringliteral">&quot;payload(%f)[%d][%d]&quot;</span>, p.d, p.i, p.j); }</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Display another type with custom to_text&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Display another type with custom to_text&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::payload p{1.5,  0xAABBCCDD,0x11223344};</div>
-<div class="line">  sample::payload q{1.5,  0xFFEEDDCC,0x99887766};</div>
+<div class="line">  sample::payload p {1.5, 0xAABBCCDD, 0x11223344};</div>
+<div class="line">  sample::payload q {1.5, 0xFFEEDDCC, 0x99887766};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(p, q);</div>
 <div class="line">};</div>
@@ -239,77 +232,83 @@ Data display</h1>
 <h1><a class="anchor" id="customize-comparison"></a>
 Equality and Ordering</h1>
 <p>All equality-based checks in <b>TTS</b> use the compared value <code>operator==</code>. If needed, one can specialize the <code>compare_equal</code> function in the type's namespace or as a friend function to let <b>TTS</b> use a special comparison scheme.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>box { T value; };</div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>box</div>
+<div class="line">  {</div>
+<div class="line">    T value;</div>
+<div class="line">  };</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line">  <span class="keywordtype">bool</span> compare_equal(box&lt;T&gt; <span class="keyword">const</span>&amp; l, box&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keywordtype">bool</span> compare_equal(box&lt;T&gt; <span class="keyword">const</span>&amp; l, box&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keywordflow">return</span> l.value == r.value;</div>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Compare values with custom equality&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Compare values with custom equality&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::box&lt;int&gt; a{42};</div>
-<div class="line">  sample::box&lt;int&gt; b{13};</div>
+<div class="line">  sample::box&lt;int&gt; a {42};</div>
+<div class="line">  sample::box&lt;int&gt; b {13};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(a, a);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:154</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:155</div></div>
 </div><!-- fragment --><p>Similarly, <b>TTS</b> uses <code>operator&lt;</code> to build all its ordering-based checks. If needed, one can specialize the <code>compare_less</code> function in the type's namespace or as a friend function to let <b>TTS</b> use a special ordering scheme.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>absolute { T value; };</div>
-<div class="line"> </div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line">  <span class="keywordtype">bool</span> compare_equal(absolute&lt;T&gt; <span class="keyword">const</span>&amp; l, absolute&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>absolute</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keywordflow">return</span> std::abs(l.value) ==  std::abs(r.value);</div>
+<div class="line">    T value;</div>
+<div class="line">  };</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keywordtype">bool</span> compare_equal(absolute&lt;T&gt; <span class="keyword">const</span>&amp; l, absolute&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordflow">return</span> std::abs(l.value) == std::abs(r.value);</div>
 <div class="line">  }</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line">  <span class="keywordtype">bool</span> compare_less(absolute&lt;T&gt; <span class="keyword">const</span>&amp; l, absolute&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keywordtype">bool</span> compare_less(absolute&lt;T&gt; <span class="keyword">const</span>&amp; l, absolute&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keywordflow">return</span>  std::abs(l.value) &lt; std::abs(r.value);</div>
+<div class="line">    <span class="keywordflow">return</span> std::abs(l.value) &lt; std::abs(r.value);</div>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Compare values with custom comparisons&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Compare values with custom comparisons&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::absolute&lt;int&gt; a{42};</div>
-<div class="line">  sample::absolute&lt;int&gt; b{-42};</div>
-<div class="line">  sample::absolute&lt;int&gt; c{-13};</div>
+<div class="line">  sample::absolute&lt;int&gt; a {42};</div>
+<div class="line">  sample::absolute&lt;int&gt; b {-42};</div>
+<div class="line">  sample::absolute&lt;int&gt; c {-13};</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(c,b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(c, b);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(a, a);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a>(b,c);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a>(b, c);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(b, a);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:217</div></div>
-<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:175</div></div>
-<div class="ttc" id="agroup__test-relation_html_gac4de7d35f38edf73b2a602538100ea23"><div class="ttname"><a href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:238</div></div>
-<div class="ttc" id="agroup__test-relation_html_gafdc655f9fc11b2894b5be4748b3b4cf2"><div class="ttname"><a href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a></div><div class="ttdeci">#define TTS_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:196</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:218</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:176</div></div>
+<div class="ttc" id="agroup__test-relation_html_gac4de7d35f38edf73b2a602538100ea23"><div class="ttname"><a href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:239</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafdc655f9fc11b2894b5be4748b3b4cf2"><div class="ttname"><a href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a></div><div class="ttdeci">#define TTS_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:197</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="customize-precision"></a>
 Precision Measurement</h1>
 <h2><a class="anchor" id="autotoc_md28"></a>
 ULP Distance</h2>
 <p>When dealing with floating point values, <b>TTS</b> uses its <code>ulp_distance</code> function to perform all <a href="rationale.html#ulp">ULP checks</a>. If needed, one can specialize this function in the type's namespace or as a friend function to let <b>TTS</b> use a special ULP comparison scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf" title="Compute the distance in ULP between two values.">tts::ulp_check</a></code> to implement their own.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">struct </span>ratio { <span class="keywordtype">int</span> n, d; };</div>
+<div class="line">  <span class="keyword">struct </span>ratio</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span> n, d;</div>
+<div class="line">  };</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> ulp_distance(ratio a, ratio b)</div>
 <div class="line">  {</div>
@@ -320,24 +319,27 @@ ULP Distance</h2>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Compare values with custom ULP distance computation&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Compare values with custom ULP distance computation&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::ratio a{8388608,8388608};</div>
-<div class="line">  sample::ratio b{8388618,8388608};</div>
+<div class="line">  sample::ratio a {8388608, 8388608};</div>
+<div class="line">  sample::ratio b {8388618, 8388608};</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, b,10);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, b, 10);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga5813c6197c7af5b0ed77d88ce63592a1"><div class="ttname"><a href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a></div><div class="ttdeci">#define TTS_ULP_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if two values are within a given ULP distance.</div><div class="ttdef"><b>Definition</b> precision.hpp:111</div></div>
-<div class="ttc" id="agroup__tools-precision_html_ga70797fbc9070b0329ea2ea75fc42d5bf"><div class="ttname"><a href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf">tts::ulp_check</a></div><div class="ttdeci">double ulp_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the distance in ULP between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:137</div></div>
+<div class="ttc" id="agroup__test-precision_html_ga5813c6197c7af5b0ed77d88ce63592a1"><div class="ttname"><a href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a></div><div class="ttdeci">#define TTS_ULP_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if two values are within a given ULP distance.</div><div class="ttdef"><b>Definition</b> precision.hpp:123</div></div>
+<div class="ttc" id="agroup__tools-precision_html_ga70797fbc9070b0329ea2ea75fc42d5bf"><div class="ttname"><a href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf">tts::ulp_check</a></div><div class="ttdeci">double ulp_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the distance in ULP between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:142</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md29"></a>
 IEEE Comparison</h2>
 <p>IEEE comparison consists in checking for exact equality while considering all NaN/Invalid values of floating point values. One can specialize the <code>ieee_equal</code> function in the type's namespace or as a friend function to let <b>TTS</b> use a special IEEE comparison scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3" title="Compute if values are exactly equals or all NaNs/Invalids.">tts::ieee_check</a></code> to implement their own.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">struct </span>ratio { <span class="keywordtype">int</span> n, d; };</div>
+<div class="line">  <span class="keyword">struct </span>ratio</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span> n, d;</div>
+<div class="line">  };</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> ieee_equal(ratio a, ratio b)</div>
 <div class="line">  {</div>
@@ -348,25 +350,28 @@ IEEE Comparison</h2>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Compare values with custom IEEE distance computation&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Compare values with custom IEEE distance computation&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::ratio a{189,265};</div>
-<div class="line">  sample::ratio b{0,0};</div>
+<div class="line">  sample::ratio a {189, 265};</div>
+<div class="line">  sample::ratio b {0, 0};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(a, a);</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(b ,b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(b, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_gaab7ac6c9754243b3103e85283cbd2952"><div class="ttname"><a href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a></div><div class="ttdeci">#define TTS_IEEE_EQUAL(L, R,...)</div><div class="ttdoc">Checks if two values are exactly within 0 ULP.</div><div class="ttdef"><b>Definition</b> precision.hpp:154</div></div>
-<div class="ttc" id="agroup__tools-precision_html_ga5ad6651e0bf21e28acd2103d87d37ec3"><div class="ttname"><a href="group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3">tts::ieee_check</a></div><div class="ttdeci">bool ieee_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute if values are exactly equals or all NaNs/Invalids.</div><div class="ttdef"><b>Definition</b> precision.hpp:207</div></div>
+<div class="ttc" id="agroup__test-precision_html_gaab7ac6c9754243b3103e85283cbd2952"><div class="ttname"><a href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a></div><div class="ttdeci">#define TTS_IEEE_EQUAL(L, R,...)</div><div class="ttdoc">Checks if two values are exactly within 0 ULP.</div><div class="ttdef"><b>Definition</b> precision.hpp:168</div></div>
+<div class="ttc" id="agroup__tools-precision_html_ga5ad6651e0bf21e28acd2103d87d37ec3"><div class="ttname"><a href="group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3">tts::ieee_check</a></div><div class="ttdeci">bool ieee_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute if values are exactly equals or all NaNs/Invalids.</div><div class="ttdef"><b>Definition</b> precision.hpp:206</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md30"></a>
 Relative Comparison</h2>
 <p>Relative precision checks within <b>TTS</b> are done through the <code>relative_distance</code> function. If needed, one can specialize this function in the type's namespace or as a friend function to let <b>TTS</b> use a special relative precision scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1" title="Compute the relative distance between two values.">tts::relative_check</a></code> to implement their own.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">struct </span>ratio { <span class="keywordtype">int</span> n, d; };</div>
+<div class="line">  <span class="keyword">struct </span>ratio</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span> n, d;</div>
+<div class="line">  };</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> relative_distance(ratio a, ratio b)</div>
 <div class="line">  {</div>
@@ -377,24 +382,27 @@ Relative Comparison</h2>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Compare values with custom relative distance computation&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Compare values with custom relative distance computation&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::ratio a{1,77};</div>
-<div class="line">  sample::ratio b{3,85};</div>
+<div class="line">  sample::ratio a {1, 77};</div>
+<div class="line">  sample::ratio b {3, 85};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(a, b, 2.25);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga66fac5cd0984cf9238901308cc60df3e"><div class="ttname"><a href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a></div><div class="ttdeci">#define TTS_RELATIVE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if values are within a given relative distance expressed as a percentage.</div><div class="ttdef"><b>Definition</b> precision.hpp:90</div></div>
-<div class="ttc" id="agroup__tools-precision_html_ga6e18df7e178a3bcd4720b26430669df1"><div class="ttname"><a href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1">tts::relative_check</a></div><div class="ttdeci">double relative_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the relative distance between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:87</div></div>
+<div class="ttc" id="agroup__test-precision_html_ga66fac5cd0984cf9238901308cc60df3e"><div class="ttname"><a href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a></div><div class="ttdeci">#define TTS_RELATIVE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if values are within a given relative distance expressed as a percentage.</div><div class="ttdef"><b>Definition</b> precision.hpp:101</div></div>
+<div class="ttc" id="agroup__tools-precision_html_ga6e18df7e178a3bcd4720b26430669df1"><div class="ttname"><a href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1">tts::relative_check</a></div><div class="ttdeci">double relative_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the relative distance between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:89</div></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md31"></a>
 Absolute Comparison</h2>
 <p>TTS** uses its <code>absolute_distance</code> function to perform all absolute precision checks. If needed, one can specialize this function in the type's namespace or as a friend function to let <b>TTS</b> use a special absolute precision scheme. One can also reuse the pre-existing <code><a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a></code> to implement their own.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>sample</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">struct </span>ratio { <span class="keywordtype">int</span> n, d; };</div>
+<div class="line">  <span class="keyword">struct </span>ratio</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span> n, d;</div>
+<div class="line">  };</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> absolute_distance(ratio a, ratio b)</div>
 <div class="line">  {</div>
@@ -405,21 +413,21 @@ Absolute Comparison</h2>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Compare values with custom absolute distance computation&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Compare values with custom absolute distance computation&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  sample::ratio a{115,77};</div>
-<div class="line">  sample::ratio b{397,85};</div>
+<div class="line">  sample::ratio a {115, 77};</div>
+<div class="line">  sample::ratio b {397, 85};</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(a, b, 4);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:69</div></div>
-<div class="ttc" id="agroup__tools-precision_html_ga839002675e78cc93d0c421beeb976014"><div class="ttname"><a href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014">tts::absolute_check</a></div><div class="ttdeci">double absolute_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the absolute distance between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:35</div></div>
+<div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:79</div></div>
+<div class="ttc" id="agroup__tools-precision_html_ga839002675e78cc93d0c421beeb976014"><div class="ttname"><a href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014">tts::absolute_check</a></div><div class="ttdeci">double absolute_check(T const &amp;a, U const &amp;b)</div><div class="ttdoc">Compute the absolute distance between two values.</div><div class="ttdef"><b>Definition</b> precision.hpp:36</div></div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md32"></a>
 Data Generator</h1>
 <p><a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">Test cases based on data sets</a> and <a class="el" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">range checks</a> require one or more data generators to perform. If the pre-existing data generators are not suitable, define your own by providing a <code>constexpr</code> callable object with the following signature:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line">T operator()(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a> target, <span class="keyword">auto</span> index, <span class="keyword">auto</span> count);</div>
-<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:109</div></div>
+<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
 </div><!-- fragment --><p>where:</p><ul>
 <li><code>target</code> is an instance of <code><a class="el" href="structtts_1_1type.html" title="Encapsulates a single type into a reusable type object.">tts::type</a>&lt;T&gt;</code> representing the type of value to be generated.</li>
 <li><code>index</code> is an integral value representing the index of the generated value.</li>
@@ -432,31 +440,30 @@ Data Generator</h1>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>flip_values</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">constexpr</span> flip_values(<span class="keywordtype">int</span> p = 1) : period_(p), value_(-1)</div>
-<div class="line">  {}</div>
-<div class="line"> </div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line">  <span class="keyword">auto</span> operator()(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> )</div>
+<div class="line">  <span class="keyword">constexpr</span> flip_values(<span class="keywordtype">int</span> p = 1)</div>
+<div class="line">      : period_(p)</div>
+<div class="line">      , value_(-1)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keywordflow">if</span>( (i % period_) == 0 ) value_ = -value_;</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">auto</span> operator()(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>, <span class="keyword">auto</span> i, <span class="keyword">auto</span>)</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordflow">if</span>((i % period_) == 0) value_ = -value_;</div>
 <div class="line">    <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(value_);</div>
 <div class="line">  }</div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">int</span> period_, value_;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a> ( <span class="stringliteral">&quot;Test custom generator&quot;</span></div>
-<div class="line">              , (std::array&lt;float,10&gt;, std::array&lt;int,4&gt;)</div>
-<div class="line">              , flip_values{3}</div>
-<div class="line">              )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a>(<span class="stringliteral">&quot;Test custom generator&quot;</span>, (std::array&lt;float, 10&gt;, std::array&lt;int, 4&gt;), flip_values {3})</div>
 <div class="line">(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; args)</div>
 <div class="line">{</div>
-<div class="line">  <span class="keywordflow">for</span>(std::size_t i=0;i&lt;args.size();++i)</div>
+<div class="line">  <span class="keywordflow">for</span>(std::size_t i = 0; i &lt; args.size(); ++i)</div>
 <div class="line">  {</div>
-<div class="line">    <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(args[i], ((i%3 == 0) ? 1.0f : -1.0f));</div>
+<div class="line">    <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(args[ i ], ((i % 3 == 0) ? 1.0f : -1.0f));</div>
 <div class="line">  }</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:194</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:201</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

@@ -133,30 +133,27 @@ $(document).ready(function(){initNavTree('structtts_1_1filter.html',''); initRes
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">template</a>&lt; <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> &gt; <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> Pred, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">Type</a>&gt;<br />
 struct tts::filter&lt; Pred, Type &gt;</div><p>Filter a types list by a predicate. </p>
-<p>Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates to true.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates to true. </p><pre class="fragment">@tparam Pred  Predicate template taking a single type parameter and exposing a static boolean
+</pre><p> member <code>value</code> </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Pred</td><td>Predicate template taking a single type parameter and exposing a static boolean member <code>value</code> </td></tr>
     <tr><td class="paramname">Type</td><td>Types list to filter</td></tr>
   </table>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keyword">struct </span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">small_type</a> : std::bool_constant&lt;(sizeof(T) &lt; 4)&gt;</div>
-<div class="line">{};</div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">small_type</a> : std::bool_constant&lt;(sizeof(T) &lt; 4)&gt;</div>
+<div class="line">{</div>
+<div class="line">};</div>
 <div class="line"> </div>
-<div class="line">TTS_CASE_TPL( &quot;Check types over filtered types list&quot;</div>
-<div class="line">            , tts::filter&lt;small_type, tts::arithmetic_types &gt;::types_list</div>
-<div class="line">            )</div>
-<div class="line">&lt;typename T&gt;( tts::type&lt;T&gt; )</div>
+<div class="line">TTS_CASE_TPL(&quot;Check types over filtered types list&quot;,</div>
+<div class="line">             tts::filter&lt;small_type, tts::arithmetic_types&gt;::types_list)&lt;typename T&gt;(tts::type&lt;T&gt;)</div>
 <div class="line">{</div>
 <div class="line">  TTS_LESS(sizeof(T), 4UL);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:125</div></div>
+<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:126</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.20-->

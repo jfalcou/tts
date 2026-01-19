@@ -130,81 +130,12 @@ $(document).ready(function(){initNavTree('group__tools-random.html',''); initRes
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8ea524699884c8186b2ff61af741abca" id="r_ga8ea524699884c8186b2ff61af741abca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a> (<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">int</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">base_seed</a>=-1)</td></tr>
-<tr class="memdesc:ga8ea524699884c8186b2ff61af741abca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the random seed for tests.  <br /></td></tr>
-<tr class="separator:ga8ea524699884c8186b2ff61af741abca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9dc5772b5c94d78eb16251df77ce161f" id="r_ga9dc5772b5c94d78eb16251df77ce161f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a> &gt; </td></tr>
 <tr class="memitem:ga9dc5772b5c94d78eb16251df77ce161f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__tools-random.html#ga9dc5772b5c94d78eb16251df77ce161f">tts::random_value</a> (<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a> mini, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a> maxi)</td></tr>
 <tr class="memdesc:ga9dc5772b5c94d78eb16251df77ce161f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a random value between two bounds.  <br /></td></tr>
 <tr class="separator:ga9dc5772b5c94d78eb16251df77ce161f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga8ea524699884c8186b2ff61af741abca" name="ga8ea524699884c8186b2ff61af741abca"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8ea524699884c8186b2ff61af741abca">&#9670;&#160;</a></span>random_seed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">int</a> tts::random_seed </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">int</a>&#160;</td>
-          <td class="paramname"><em>base_seed</em> = <code>-1</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p><code>#include &lt;tts/tools/options.hpp&gt;</code></p>
-
-<p>Initialize the random seed for tests. </p>
-<p>Initializes and retrieves the random seed used by TTS for random number generation. If the seed has not been initialized yet, it uses the value provided as argument. If that value is -1, it uses the current time as seed. Once initialized, calling this function will return the same seed each time.</p>
-<h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN</span></div>
-<div class="line"><span class="preprocessor">#define TTS_CUSTOM_DRIVER_FUNCTION  random_main</span></div>
-<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Usage of tts::random_seed&quot;</span>)</div>
-<div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_function" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a>(), 1234);</div>
-<div class="line"> </div>
-<div class="line">  <span class="comment">// Calling with a different seed does not change the current one</span></div>
-<div class="line">  <a class="code hl_function" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a>(999);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_function" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a>(), 1234);</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">main</a>(<span class="keywordtype">int</span> argc, <span class="keyword">const</span> <span class="keywordtype">char</span>** argv)</div>
-<div class="line">{</div>
-<div class="line">  <a class="code hl_function" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a>(1234);</div>
-<div class="line"> </div>
-<div class="line">  <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">printf</a>( <span class="stringliteral">&quot;TTS - Random Seed : %d\n&quot;</span>, <a class="code hl_function" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a>());</div>
-<div class="line"> </div>
-<div class="line">  <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">random_main</a>(argc, argv);</div>
-<div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a>(0,0);</div>
-<div class="line">}</div>
-<div class="ttc" id="agroup__customization-points_html_ga7181b42fe16159a0d60df9880d8da4c3"><div class="ttname"><a href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a></div><div class="ttdeci">int report(int fails, int invalids)</div><div class="ttdoc">Test reporting customization point.</div><div class="ttdef"><b>Definition</b> environment.hpp:68</div></div>
-<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:133</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
-<div class="ttc" id="agroup__tools-random_html_ga8ea524699884c8186b2ff61af741abca"><div class="ttname"><a href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a></div><div class="ttdeci">int random_seed(int base_seed=-1)</div><div class="ttdoc">Initialize the random seed for tests.</div><div class="ttdef"><b>Definition</b> options.hpp:237</div></div>
-<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:125</div></div>
-</div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">base_seed</td><td>Seed to use for random number generations. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The current random seed used by TTS. </dd></dl>
-
-</div>
-</div>
 <a id="ga9dc5772b5c94d78eb16251df77ce161f" name="ga9dc5772b5c94d78eb16251df77ce161f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga9dc5772b5c94d78eb16251df77ce161f">&#9670;&#160;</a></span>random_value()</h2>
 
@@ -236,13 +167,12 @@ template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662c
 <p><code>#include &lt;tts/tools/random.hpp&gt;</code></p>
 
 <p>Generates a random value between two bounds. </p>
-<p>This function generates a random value of type <code>T</code> between the specified <code>mini</code> and <code>maxi</code> bounds using an uniform distribution for integral types and a log-uniform distribution for floating-point types. The seed is derived from the <a class="el" href="group__tools-random.html#ga8ea524699884c8186b2ff61af741abca">tts::random_seed</a> function.</p>
+<p>This function generates a random value of type <code>T</code> between the specified <code>mini</code> and <code>maxi</code> bounds using an uniform distribution for integral types and a log-uniform distribution for floating-point types. The seed is derived from the tts::random_seed function.</p>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check tts::random_value&quot;</span>, <span class="keywordtype">float</span>, <span class="keywordtype">double</span>, <span class="keywordtype">int</span>)</div>
-<div class="line">&lt;<span class="keyword">typename</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a>&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check tts::random_value&quot;</span>, <span class="keywordtype">float</span>, <span class="keywordtype">double</span>, <span class="keywordtype">int</span>)&lt;<span class="keyword">typename</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a>&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keywordflow">for</span>(<span class="keyword">auto</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a> = 0; <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a> &lt; 100000; ++<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a>)</div>
 <div class="line">  {</div>
@@ -252,9 +182,10 @@ template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662c
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:43</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:163</div></div>
-<div class="ttc" id="agroup__tools-random_html_ga9dc5772b5c94d78eb16251df77ce161f"><div class="ttname"><a href="group__tools-random.html#ga9dc5772b5c94d78eb16251df77ce161f">tts::random_value</a></div><div class="ttdeci">T random_value(T mini, T maxi)</div><div class="ttdoc">Generates a random value between two bounds.</div><div class="ttdef"><b>Definition</b> random.hpp:196</div></div>
-<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:109</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:170</div></div>
+<div class="ttc" id="agroup__tools-random_html_ga9dc5772b5c94d78eb16251df77ce161f"><div class="ttname"><a href="group__tools-random.html#ga9dc5772b5c94d78eb16251df77ce161f">tts::random_value</a></div><div class="ttdeci">T random_value(T mini, T maxi)</div><div class="ttdoc">Generates a random value between two bounds.</div><div class="ttdef"><b>Definition</b> random.hpp:185</div></div>
+<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:126</div></div>
+<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
 </div><!-- fragment --><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">mini</td><td>Lower bound for the random value generation. </td></tr>

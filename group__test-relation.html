@@ -240,9 +240,9 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of bitwise equality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of bitwise equality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7e22dd58cf97c15c43af306d4a851717">TTS_BIT_EQUAL</a>(1.f, 0x3F800000);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7e22dd58cf97c15c43af306d4a851717">TTS_BIT_EQUAL</a>(1., 0x3FF0000000000000ULL);</div>
@@ -250,8 +250,8 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure.</span></div>
 <div class="line">  <span class="comment">// TTS_BIT_EQUAL(12, 21, REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga7e22dd58cf97c15c43af306d4a851717"><div class="ttname"><a href="group__test-relation.html#ga7e22dd58cf97c15c43af306d4a851717">TTS_BIT_EQUAL</a></div><div class="ttdeci">#define TTS_BIT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between the bits of two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:90</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga7e22dd58cf97c15c43af306d4a851717"><div class="ttname"><a href="group__test-relation.html#ga7e22dd58cf97c15c43af306d4a851717">TTS_BIT_EQUAL</a></div><div class="ttdeci">#define TTS_BIT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between the bits of two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:92</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -299,9 +299,9 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of bitwise inequality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of bitwise inequality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga077362a50ea4b83fe31f75f6c560cfea">TTS_BIT_NOT_EQUAL</a>(1.f, 0x3F80F700);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga077362a50ea4b83fe31f75f6c560cfea">TTS_BIT_NOT_EQUAL</a>(2., 0x3FF0000000000000ULL);</div>
@@ -309,7 +309,7 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure.</span></div>
 <div class="line">  <span class="comment">// TTS_BIT_NOT_EQUAL(21, 21, REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga077362a50ea4b83fe31f75f6c560cfea"><div class="ttname"><a href="group__test-relation.html#ga077362a50ea4b83fe31f75f6c560cfea">TTS_BIT_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_BIT_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between the bits of two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:111</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga077362a50ea4b83fe31f75f6c560cfea"><div class="ttname"><a href="group__test-relation.html#ga077362a50ea4b83fe31f75f6c560cfea">TTS_BIT_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_BIT_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between the bits of two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:112</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -357,17 +357,17 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of constexpr equality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of constexpr equality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">float</span> a = 45.f;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">int</span>   b = 45;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8cef7c5be110750a5fccf13db94a913c">TTS_CONSTEXPR_EQUAL</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga8cef7c5be110750a5fccf13db94a913c"><div class="ttname"><a href="group__test-relation.html#ga8cef7c5be110750a5fccf13db94a913c">TTS_CONSTEXPR_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:438</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga8cef7c5be110750a5fccf13db94a913c"><div class="ttname"><a href="group__test-relation.html#ga8cef7c5be110750a5fccf13db94a913c">TTS_CONSTEXPR_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:442</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -415,17 +415,17 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of constexpr greater-than tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of constexpr greater-than tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">int</span>   a = 45;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">float</span> b = 4.5f;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gaebbbbfae70585abf5b6be4428b2c5713">TTS_CONSTEXPR_GREATER</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gaebbbbfae70585abf5b6be4428b2c5713"><div class="ttname"><a href="group__test-relation.html#gaebbbbfae70585abf5b6be4428b2c5713">TTS_CONSTEXPR_GREATER</a></div><div class="ttdeci">#define TTS_CONSTEXPR_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:501</div></div>
+<div class="ttc" id="agroup__test-relation_html_gaebbbbfae70585abf5b6be4428b2c5713"><div class="ttname"><a href="group__test-relation.html#gaebbbbfae70585abf5b6be4428b2c5713">TTS_CONSTEXPR_GREATER</a></div><div class="ttdeci">#define TTS_CONSTEXPR_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:506</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -473,10 +473,10 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of constexpr less-or-equal-than tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of constexpr less-or-equal-than tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">int</span>   a = 45;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">float</span> b = 4.5f;</div>
@@ -484,7 +484,7 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga13898c7492c2bf9ca8b8146cc1510fea">TTS_CONSTEXPR_GREATER_EQUAL</a>(a, b);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga13898c7492c2bf9ca8b8146cc1510fea">TTS_CONSTEXPR_GREATER_EQUAL</a>(a, a);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga13898c7492c2bf9ca8b8146cc1510fea"><div class="ttname"><a href="group__test-relation.html#ga13898c7492c2bf9ca8b8146cc1510fea">TTS_CONSTEXPR_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:543</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga13898c7492c2bf9ca8b8146cc1510fea"><div class="ttname"><a href="group__test-relation.html#ga13898c7492c2bf9ca8b8146cc1510fea">TTS_CONSTEXPR_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:550</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -532,17 +532,17 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of constexpr less-than tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of constexpr less-than tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">float</span> a = 4.5f;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">int</span>   b = 45;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf7d95b00a74fb828bbd60b50fb4ee18e">TTS_CONSTEXPR_LESS</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gaf7d95b00a74fb828bbd60b50fb4ee18e"><div class="ttname"><a href="group__test-relation.html#gaf7d95b00a74fb828bbd60b50fb4ee18e">TTS_CONSTEXPR_LESS</a></div><div class="ttdeci">#define TTS_CONSTEXPR_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:480</div></div>
+<div class="ttc" id="agroup__test-relation_html_gaf7d95b00a74fb828bbd60b50fb4ee18e"><div class="ttname"><a href="group__test-relation.html#gaf7d95b00a74fb828bbd60b50fb4ee18e">TTS_CONSTEXPR_LESS</a></div><div class="ttdeci">#define TTS_CONSTEXPR_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:485</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -590,10 +590,10 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of constexpr less-or-equal-than tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of constexpr less-or-equal-than tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">float</span> a = 4.5f;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">int</span>   b = 45;</div>
@@ -601,7 +601,7 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga6650da0ab50af14da5642553aa9f0249">TTS_CONSTEXPR_LESS_EQUAL</a>(a, b);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga6650da0ab50af14da5642553aa9f0249">TTS_CONSTEXPR_LESS_EQUAL</a>(a, a);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga6650da0ab50af14da5642553aa9f0249"><div class="ttname"><a href="group__test-relation.html#ga6650da0ab50af14da5642553aa9f0249">TTS_CONSTEXPR_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:522</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga6650da0ab50af14da5642553aa9f0249"><div class="ttname"><a href="group__test-relation.html#ga6650da0ab50af14da5642553aa9f0249">TTS_CONSTEXPR_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:528</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -649,17 +649,17 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of constexpr equality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of constexpr equality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">float</span> a = 4.5f;</div>
 <div class="line">  <span class="keyword">constexpr</span> <span class="keywordtype">int</span>   b = 45;</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1c05dc582ca8e663be1f0b1ce98e1d18">TTS_CONSTEXPR_NOT_EQUAL</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga1c05dc582ca8e663be1f0b1ce98e1d18"><div class="ttname"><a href="group__test-relation.html#ga1c05dc582ca8e663be1f0b1ce98e1d18">TTS_CONSTEXPR_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:459</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga1c05dc582ca8e663be1f0b1ce98e1d18"><div class="ttname"><a href="group__test-relation.html#ga1c05dc582ca8e663be1f0b1ce98e1d18">TTS_CONSTEXPR_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_CONSTEXPR_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions at compile-time.</div><div class="ttdef"><b>Definition</b> relation.hpp:463</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -707,21 +707,21 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of equality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of equality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(45, 45.f);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{1,2,3};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {1, 2, 3};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(a, b);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure.</span></div>
 <div class="line">  <span class="comment">// TTS_EQUAL(12, 21, REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:133</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:134</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -769,21 +769,21 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of greater-than comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of greater-than comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a>(69., 42ULL);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{13,5}, b{2,4,6};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {13, 5}, b {2, 4, 6};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a>(a, b);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// This test will cause the program to stop with a failure</span></div>
 <div class="line">  <span class="comment">// TTS_GREATER(1., 10., REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gafdc655f9fc11b2894b5be4748b3b4cf2"><div class="ttname"><a href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a></div><div class="ttdeci">#define TTS_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:196</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafdc655f9fc11b2894b5be4748b3b4cf2"><div class="ttname"><a href="group__test-relation.html#gafdc655f9fc11b2894b5be4748b3b4cf2">TTS_GREATER</a></div><div class="ttdeci">#define TTS_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs greater-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:197</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -831,23 +831,23 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of greater-equal comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of greater-equal comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(69LL, 42.f);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(69., 69);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{12,3}, b{7,9,11};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(a,b);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(a,a);</div>
+<div class="line">  std::vector&lt;float&gt; a {12, 3}, b {7, 9, 11};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(a, b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(a, a);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure</span></div>
 <div class="line">  <span class="comment">// TTS_GREATER_EQUAL(1., 10., REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gac4de7d35f38edf73b2a602538100ea23"><div class="ttname"><a href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:238</div></div>
+<div class="ttc" id="agroup__test-relation_html_gac4de7d35f38edf73b2a602538100ea23"><div class="ttname"><a href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:239</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -895,21 +895,21 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of less-than comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of less-than comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(42., 69);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{12,3};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {12, 3};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(a, b);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure</span></div>
 <div class="line">  <span class="comment">// TTS_LESS(69, 42, REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:175</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:176</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -957,23 +957,23 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of less-equal comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of less-equal comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(42., 69);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(69., 69);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{7,9};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(a,b);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(a,a);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {7, 9};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(a, b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(a, a);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure</span></div>
 <div class="line">  <span class="comment">// TTS_LESS_EQUAL(10., 1., REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:217</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:218</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1021,21 +1021,21 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of inequality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of inequality tests&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(42,69.f);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(42, 69.f);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{7,9};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {7, 9};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(a, b);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// This test would cause the program to stop with a failure</span></div>
 <div class="line">  <span class="comment">// TTS_NOT_EQUAL(&#39;A&#39;, 65, REQUIRED);</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:154</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:155</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1083,18 +1083,18 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of type checked equality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of type checked equality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga2fe1a944ff62f78b3d41014c7da16833">TTS_TYPED_EQUAL</a>(45, 45.f);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{1,2,3};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga2fe1a944ff62f78b3d41014c7da16833">TTS_TYPED_EQUAL</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {1, 2, 3};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga2fe1a944ff62f78b3d41014c7da16833">TTS_TYPED_EQUAL</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga2fe1a944ff62f78b3d41014c7da16833"><div class="ttname"><a href="group__test-relation.html#ga2fe1a944ff62f78b3d41014c7da16833">TTS_TYPED_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:295</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga2fe1a944ff62f78b3d41014c7da16833"><div class="ttname"><a href="group__test-relation.html#ga2fe1a944ff62f78b3d41014c7da16833">TTS_TYPED_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:296</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1142,19 +1142,19 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of type checked greater-than comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of type checked greater-than comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga6a90c373a81c24de25c21ab0de876da3">TTS_TYPED_GREATER</a>(69., 42ULL);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga6a90c373a81c24de25c21ab0de876da3">TTS_TYPED_GREATER</a>(69., 42.);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{13,5}, b{2,4,6};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga6a90c373a81c24de25c21ab0de876da3">TTS_TYPED_GREATER</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {13, 5}, b {2, 4, 6};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga6a90c373a81c24de25c21ab0de876da3">TTS_TYPED_GREATER</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga6a90c373a81c24de25c21ab0de876da3"><div class="ttname"><a href="group__test-relation.html#ga6a90c373a81c24de25c21ab0de876da3">TTS_TYPED_GREATER</a></div><div class="ttdeci">#define TTS_TYPED_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:355</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga6a90c373a81c24de25c21ab0de876da3"><div class="ttname"><a href="group__test-relation.html#ga6a90c373a81c24de25c21ab0de876da3">TTS_TYPED_GREATER</a></div><div class="ttdeci">#define TTS_TYPED_GREATER(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:357</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1202,21 +1202,21 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of type checked greater-equal comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of type checked greater-equal comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(69LL, 42.f);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(69.f, 42.f);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(69, 69);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{12,3}, b{7,9,11};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(a,b);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(a,a);</div>
+<div class="line">  std::vector&lt;float&gt; a {12, 3}, b {7, 9, 11};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(a, b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a>(a, a);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga1b3c9829da62a684ca0aebb408e88004"><div class="ttname"><a href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:395</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga1b3c9829da62a684ca0aebb408e88004"><div class="ttname"><a href="group__test-relation.html#ga1b3c9829da62a684ca0aebb408e88004">TTS_TYPED_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:398</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1264,19 +1264,19 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of type checked less-than comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of type checked less-than comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga321b28dabad138008cb5781f6e0f4f85">TTS_TYPED_LESS</a>(42., 69.);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga321b28dabad138008cb5781f6e0f4f85">TTS_TYPED_LESS</a>(42., 69);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{12,3};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga321b28dabad138008cb5781f6e0f4f85">TTS_TYPED_LESS</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {12, 3};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga321b28dabad138008cb5781f6e0f4f85">TTS_TYPED_LESS</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga321b28dabad138008cb5781f6e0f4f85"><div class="ttname"><a href="group__test-relation.html#ga321b28dabad138008cb5781f6e0f4f85">TTS_TYPED_LESS</a></div><div class="ttdeci">#define TTS_TYPED_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:335</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga321b28dabad138008cb5781f6e0f4f85"><div class="ttname"><a href="group__test-relation.html#ga321b28dabad138008cb5781f6e0f4f85">TTS_TYPED_LESS</a></div><div class="ttdeci">#define TTS_TYPED_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:337</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1324,21 +1324,21 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of type checked less-equal comparison tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of type checked less-equal comparison tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(42.f, 69LL);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(42.f, 69.f);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(69, 69);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{79,11};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(a,b);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(a,a);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {79, 11};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(a, b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a>(a, a);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gaf05aa77455a2ae962c6e00f2086d063d"><div class="ttname"><a href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:375</div></div>
+<div class="ttc" id="agroup__test-relation_html_gaf05aa77455a2ae962c6e00f2086d063d"><div class="ttname"><a href="group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d">TTS_TYPED_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:377</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1386,18 +1386,18 @@ $(document).ready(function(){initNavTree('group__test-relation.html',''); initRe
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check correctness of type checked non-equality tests&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check correctness of type checked non-equality tests&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gab49da0ae0de2c26fc284f41bf04557d4">TTS_TYPED_NOT_EQUAL</a>(45, 47.f);</div>
 <div class="line"> </div>
-<div class="line">  std::vector&lt;float&gt; a{1,2,3}, b{7,9};</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gab49da0ae0de2c26fc284f41bf04557d4">TTS_TYPED_NOT_EQUAL</a>(a,b);</div>
+<div class="line">  std::vector&lt;float&gt; a {1, 2, 3}, b {7, 9};</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gab49da0ae0de2c26fc284f41bf04557d4">TTS_TYPED_NOT_EQUAL</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_gab49da0ae0de2c26fc284f41bf04557d4"><div class="ttname"><a href="group__test-relation.html#gab49da0ae0de2c26fc284f41bf04557d4">TTS_TYPED_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:315</div></div>
+<div class="ttc" id="agroup__test-relation_html_gab49da0ae0de2c26fc284f41bf04557d4"><div class="ttname"><a href="group__test-relation.html#gab49da0ae0de2c26fc284f41bf04557d4">TTS_TYPED_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_TYPED_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs type and equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:316</div></div>
 </div><!-- fragment --> 
 </div>
 </div>

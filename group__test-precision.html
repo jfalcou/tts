@@ -201,16 +201,16 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Absolute distance&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(-2.  , 2.f  , 4.);</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>  , 80LL , 15, REQUIRED);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(-2., 2.f, 4.);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>, 80LL, 15, REQUIRED);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:69</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
+<div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:79</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -258,19 +258,19 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;ULP distance&quot;</span>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;ULP distance&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keywordtype">float</span> x = std::numeric_limits&lt;float&gt;::quiet_NaN();</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(x,x);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(x, x);</div>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(1.f, 1.f);</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(2. , 2. );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(65 , <span class="charliteral">&#39;A&#39;</span>);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(2., 2.);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a>(65, <span class="charliteral">&#39;A&#39;</span>);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_gaab7ac6c9754243b3103e85283cbd2952"><div class="ttname"><a href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a></div><div class="ttdeci">#define TTS_IEEE_EQUAL(L, R,...)</div><div class="ttdoc">Checks if two values are exactly within 0 ULP.</div><div class="ttdef"><b>Definition</b> precision.hpp:154</div></div>
+<div class="ttc" id="agroup__test-precision_html_gaab7ac6c9754243b3103e85283cbd2952"><div class="ttname"><a href="group__test-precision.html#gaab7ac6c9754243b3103e85283cbd2952">TTS_IEEE_EQUAL</a></div><div class="ttdeci">#define TTS_IEEE_EQUAL(L, R,...)</div><div class="ttdoc">Checks if two values are exactly within 0 ULP.</div><div class="ttdef"><b>Definition</b> precision.hpp:168</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -325,17 +325,17 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Relative distance&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(42.f , 42.f  , 0     );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>  , 80LL  , 18.75 );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(1.   , 2.f   , 100.  );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(42.f, 42.f, 0);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>, 80LL, 18.75);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(1., 2.f, 100.);</div>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a>(1, 10, 900., REQUIRED);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga66fac5cd0984cf9238901308cc60df3e"><div class="ttname"><a href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a></div><div class="ttdeci">#define TTS_RELATIVE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if values are within a given relative distance expressed as a percentage.</div><div class="ttdef"><b>Definition</b> precision.hpp:90</div></div>
+<div class="ttc" id="agroup__test-precision_html_ga66fac5cd0984cf9238901308cc60df3e"><div class="ttname"><a href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e">TTS_RELATIVE_EQUAL</a></div><div class="ttdeci">#define TTS_RELATIVE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if values are within a given relative distance expressed as a percentage.</div><div class="ttdef"><b>Definition</b> precision.hpp:101</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -390,31 +390,31 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;ULP distance&quot;</span>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;ULP distance&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <span class="keywordtype">float</span> a{1};</div>
+<div class="line">  <span class="keywordtype">float</span> a {1};</div>
 <div class="line">  <span class="keywordtype">float</span> eps  = std::numeric_limits&lt;float&gt;::epsilon();</div>
 <div class="line">  <span class="keywordtype">float</span> qnan = std::numeric_limits&lt;float&gt;::quiet_NaN();</div>
 <div class="line">  <span class="keywordtype">float</span> inf  = std::numeric_limits&lt;float&gt;::infinity();</div>
 <div class="line">  <span class="keywordtype">float</span> minf = -inf;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a    , a     , 0.  );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a, 0.);</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a    , qnan  , inf );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(qnan , qnan  , 0.  );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, qnan, inf);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(qnan, qnan, 0.);</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a    , inf   , inf );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(inf  , inf   , inf );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(minf ,minf   , inf );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, inf, inf);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(inf, inf, inf);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(minf, minf, inf);</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a-eps   , 1   );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a+eps   , 0.5 );</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a+3*eps , 1.5, REQUIRED );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a - eps, 1);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a + eps, 0.5);</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(a, a + 3 * eps, 1.5, REQUIRED);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga5813c6197c7af5b0ed77d88ce63592a1"><div class="ttname"><a href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a></div><div class="ttdeci">#define TTS_ULP_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if two values are within a given ULP distance.</div><div class="ttdef"><b>Definition</b> precision.hpp:111</div></div>
+<div class="ttc" id="agroup__test-precision_html_ga5813c6197c7af5b0ed77d88ce63592a1"><div class="ttname"><a href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a></div><div class="ttdeci">#define TTS_ULP_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if two values are within a given ULP distance.</div><div class="ttdef"><b>Definition</b> precision.hpp:123</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -484,20 +484,18 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">float</span> ok_x (<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x; }</div>
-<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x + x*1e-7f; }</div>
+<div class="line"><span class="keywordtype">float</span> ok_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x; }</div>
+<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x + x * 1e-7f; }</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Test range check&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Test range check&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a> ( [] (<span class="keyword">auto</span>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> c) { <span class="keywordflow">return</span> (100.f*i)/c; }</div>
-<div class="line">                      , float, float , ok_x, bad_x</div>
-<div class="line">                      , 2.</div>
-<div class="line">                      );</div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a>(</div>
+<div class="line">      [](<span class="keyword">auto</span>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> c) { <span class="keywordflow">return</span> (100.f * i) / c; }, float, float, ok_x, bad_x, 2.);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga7de5e8bb8cb6f1397f2a0a2505def241"><div class="ttname"><a href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a></div><div class="ttdeci">#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</div><div class="ttdoc">Generate a range based test between two functions.</div><div class="ttdef"><b>Definition</b> ranges.hpp:201</div></div>
+<div class="ttc" id="agroup__test-precision_html_ga7de5e8bb8cb6f1397f2a0a2505def241"><div class="ttname"><a href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a></div><div class="ttdeci">#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</div><div class="ttdoc">Generate a range based test between two functions.</div><div class="ttdef"><b>Definition</b> ranges.hpp:195</div></div>
 </div><!-- fragment --> 
 </div>
 </div>

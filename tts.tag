@@ -39,8 +39,8 @@
       <type>bool</type>
       <name>operator[]</name>
       <anchorfile>structtts_1_1options.html</anchorfile>
-      <anchor>a7bf01d9561af6d9831253e8515e9f3e7</anchor>
-      <arglist>(const char *f) const</arglist>
+      <anchor>a0eab710faf43ec53f037b07c4d94cead</anchor>
+      <arglist>(char const *f) const</arglist>
     </member>
     <member kind="function">
       <type>T</type>
@@ -100,22 +100,22 @@
       <type></type>
       <name>text</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a151f1783204210b64ba20906b0ff15d7</anchor>
-      <arglist>(const char *format, Args ... args)</arglist>
+      <anchor>a1c7b28a8843dc1a8644d2311905f381d</anchor>
+      <arglist>(char const (&amp;data)[N])</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>text</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a38b4ede160657c70626049d0ed2861aa</anchor>
-      <arglist>(const char *ptr)</arglist>
+      <anchor>afad159ee022f1f9eb56d64fe88a85210</anchor>
+      <arglist>(char const *format, Args... args)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>text</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a8280697086ff2245f47aee2f255fd0fa</anchor>
-      <arglist>(const char(&amp;data)[N])</arglist>
+      <anchor>aae99c638e7a882ae6a57bc84a1229a5a</anchor>
+      <arglist>(char const *ptr)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -198,8 +198,8 @@
       <type>text &amp;</type>
       <name>operator+=</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a6440dd6ce93d2065a86a285384b1a9bd</anchor>
-      <arglist>(const char *other)</arglist>
+      <anchor>aff9e4812e78307ed288f044575d60586</anchor>
+      <arglist>(char const *other)</arglist>
     </member>
     <member kind="function">
       <type>text &amp;</type>
@@ -247,8 +247,8 @@
       <type>friend auto</type>
       <name>operator&lt;=&gt;</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a551d9bdae1e32ab0bdb4ef25219fa63a</anchor>
-      <arglist>(text const &amp;a, const char(&amp;b)[N]) noexcept</arglist>
+      <anchor>a899617a31b5a1a6ec53f3f8bb828fdc2</anchor>
+      <arglist>(text const &amp;a, char const (&amp;b)[N]) noexcept</arglist>
     </member>
     <member kind="friend">
       <type>friend auto</type>
@@ -261,8 +261,8 @@
       <type>friend auto</type>
       <name>operator==</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a990c35a60b87dd5316bb54476e03fc10</anchor>
-      <arglist>(text const &amp;a, const char(&amp;b)[N]) noexcept</arglist>
+      <anchor>a8061a5d00482a128ad89eb5ec0fd061a</anchor>
+      <arglist>(text const &amp;a, char const (&amp;b)[N]) noexcept</arglist>
     </member>
     <member kind="friend">
       <type>friend auto</type>
@@ -383,8 +383,8 @@
       <type>void</type>
       <name>tts::initialize</name>
       <anchorfile>group__customization-points.html</anchorfile>
-      <anchor>ga00fa573920d3dda291088d61899dab28</anchor>
-      <arglist>(int argc, const char **argv)</arglist>
+      <anchor>ga8b25d232b7bc19668349b1defdc1e7f9</anchor>
+      <arglist>(int argc, char const **argv)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -806,42 +806,42 @@
       <type>types&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</type>
       <name>tts::arithmetic_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga2ba4e001ffe97c25f318dec428b5f147</anchor>
+      <anchor>gac7ad808d0a55e6d494d2a92b8c9c8392</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;</type>
       <name>tts::int_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga213ac596b9a0b307be93bdc89f5ba738</anchor>
+      <anchor>gae047727aacfb9f51b00c48322c061bef</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</type>
       <name>tts::integral_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga45e7f2bb8d7d6afb1676d1642c7629f6</anchor>
+      <anchor>ga4deed4d1187eb9f1ac35581d25ebb0c5</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; double, float &gt;</type>
       <name>tts::real_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga533f8005aab86ce53226691c5ae1e7ba</anchor>
+      <anchor>ga4b791474bc15107f8dc20ed5414852d3</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;</type>
       <name>tts::signed_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>gacbe5f97a90a5f822d42ad22443f1e3ec</anchor>
+      <anchor>ga2eee6023454e5652e937f8028c1ac129</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</type>
       <name>tts::uint_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga19e63a903c9a238a3db10c9d56a9af56</anchor>
+      <anchor>gac45179d8434bfa60371601f8a35cbbd4</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -863,13 +863,6 @@
     <name>tools-random</name>
     <title>Utilities</title>
     <filename>group__tools-random.html</filename>
-    <member kind="function">
-      <type>int</type>
-      <name>tts::random_seed</name>
-      <anchorfile>group__tools-random.html</anchorfile>
-      <anchor>ga8ea524699884c8186b2ff61af741abca</anchor>
-      <arglist>(int base_seed=-1)</arglist>
-    </member>
     <member kind="function">
       <type>T</type>
       <name>tts::random_value</name>

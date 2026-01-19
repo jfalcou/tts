@@ -190,17 +190,17 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check that expression can compile properly&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that expression can compile properly&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keywordtype">double</span> d, e;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-types.html#ga9127c128ee9f5b4d6bd3b7e7ce78b027">TTS_EXPECT_COMPILES</a>(d, e, { d += 4. * e; } );</div>
+<div class="line">  <a class="code hl_define" href="group__test-types.html#ga9127c128ee9f5b4d6bd3b7e7ce78b027">TTS_EXPECT_COMPILES</a>(d, e, { d += 4. * e; });</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
-<div class="ttc" id="agroup__test-types_html_ga9127c128ee9f5b4d6bd3b7e7ce78b027"><div class="ttname"><a href="group__test-types.html#ga9127c128ee9f5b4d6bd3b7e7ce78b027">TTS_EXPECT_COMPILES</a></div><div class="ttdeci">#define TTS_EXPECT_COMPILES(Symbols, Expression,...)</div><div class="ttdoc">Checks if an Expression based on a list of Symbols will compile properly in a SFINAE context.</div><div class="ttdef"><b>Definition</b> types.hpp:145</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
+<div class="ttc" id="agroup__test-types_html_ga9127c128ee9f5b4d6bd3b7e7ce78b027"><div class="ttname"><a href="group__test-types.html#ga9127c128ee9f5b4d6bd3b7e7ce78b027">TTS_EXPECT_COMPILES</a></div><div class="ttdeci">#define TTS_EXPECT_COMPILES(Symbols, Expression,...)</div><div class="ttdoc">Checks if an Expression based on a list of Symbols will compile properly in a SFINAE context.</div><div class="ttdef"><b>Definition</b> types.hpp:149</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -247,16 +247,16 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check that expression can compile properly&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that expression can compile properly&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keywordtype">double</span> d, e;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-types.html#ga4047df0595cb9937d9d0406581e66a2f">TTS_EXPECT_NOT_COMPILES</a>(d, e, { d.foo(e); } );</div>
+<div class="line">  <a class="code hl_define" href="group__test-types.html#ga4047df0595cb9937d9d0406581e66a2f">TTS_EXPECT_NOT_COMPILES</a>(d, e, { d.foo(e); });</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-types_html_ga4047df0595cb9937d9d0406581e66a2f"><div class="ttname"><a href="group__test-types.html#ga4047df0595cb9937d9d0406581e66a2f">TTS_EXPECT_NOT_COMPILES</a></div><div class="ttdeci">#define TTS_EXPECT_NOT_COMPILES(Symbols..., Expression,...)</div><div class="ttdoc">Checks if an Expression based on a list of Symbols will not compile properly in a SFINAE context.</div><div class="ttdef"><b>Definition</b> types.hpp:182</div></div>
+<div class="ttc" id="agroup__test-types_html_ga4047df0595cb9937d9d0406581e66a2f"><div class="ttname"><a href="group__test-types.html#ga4047df0595cb9937d9d0406581e66a2f">TTS_EXPECT_NOT_COMPILES</a></div><div class="ttdeci">#define TTS_EXPECT_NOT_COMPILES(Symbols..., Expression,...)</div><div class="ttdoc">Checks if an Expression based on a list of Symbols will not compile properly in a SFINAE context.</div><div class="ttdef"><b>Definition</b> types.hpp:187</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -304,18 +304,18 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check that expression types can be tested for equality&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that expression types can be tested for equality&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  [[maybe_unused]] <span class="keywordtype">double</span> d;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>( &amp;d + 5        , <span class="keywordtype">double</span>*   );</div>
-<div class="line">  <a class="code hl_define" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>( std::move(d)  , <span class="keywordtype">double</span>&amp;&amp;  );</div>
-<div class="line">  <a class="code hl_define" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>( std::swap(d,d), <span class="keywordtype">void</span>      );</div>
+<div class="line">  <a class="code hl_define" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>(&amp;d + 5, <span class="keywordtype">double</span>*);</div>
+<div class="line">  <a class="code hl_define" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>(std::move(d), <span class="keywordtype">double</span>&amp;&amp;);</div>
+<div class="line">  <a class="code hl_define" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>(std::swap(d, d), <span class="keywordtype">void</span>);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-types_html_gaefac9e4f88dbb637d5457b45fdd7de5f"><div class="ttname"><a href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a></div><div class="ttdeci">#define TTS_EXPR_IS(EXPR, TYPE,...)</div><div class="ttdoc">Checks if an Expression evaluates to a value of a given Type.</div><div class="ttdef"><b>Definition</b> types.hpp:83</div></div>
+<div class="ttc" id="agroup__test-types_html_gaefac9e4f88dbb637d5457b45fdd7de5f"><div class="ttname"><a href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a></div><div class="ttdeci">#define TTS_EXPR_IS(EXPR, TYPE,...)</div><div class="ttdoc">Checks if an Expression evaluates to a value of a given Type.</div><div class="ttdef"><b>Definition</b> types.hpp:84</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -363,13 +363,13 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check that types can be tested for equivalence&quot;</span> )</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that types can be tested for equivalence&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-types.html#gae409fedd6a2e86ff8cc2f9c832dcff3f">TTS_TYPE_IS</a>( std::add_pointer&lt;float const&gt;::type, <span class="keywordtype">float</span> <span class="keyword">const</span>* );</div>
+<div class="line">  <a class="code hl_define" href="group__test-types.html#gae409fedd6a2e86ff8cc2f9c832dcff3f">TTS_TYPE_IS</a>(std::add_pointer&lt;float const&gt;::type, <span class="keywordtype">float</span> <span class="keyword">const</span>*);</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-types_html_gae409fedd6a2e86ff8cc2f9c832dcff3f"><div class="ttname"><a href="group__test-types.html#gae409fedd6a2e86ff8cc2f9c832dcff3f">TTS_TYPE_IS</a></div><div class="ttdeci">#define TTS_TYPE_IS(TYPE, REF,...)</div><div class="ttdoc">Checks if two types satisfy std::is_same_v&lt;Type,Target&gt; == true.</div><div class="ttdef"><b>Definition</b> types.hpp:39</div></div>
 </div><!-- fragment --> 

@@ -7,7 +7,7 @@ var searchData=
   ['adela_20bradley_4',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]],
   ['and_20ordering_5',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['arguments_6',['arguments',['../group__tools-config.html#ga1e9e78ed104b86ad669dbb9bc9471343',1,'tts']]],
-  ['arithmetic_5ftypes_7',['arithmetic_types',['../group__tools-types.html#ga2ba4e001ffe97c25f318dec428b5f147',1,'tts']]],
+  ['arithmetic_5ftypes_7',['arithmetic_types',['../group__tools-types.html#gac7ad808d0a55e6d494d2a92b8c9c8392',1,'tts']]],
   ['as_5ftext_8',['as_text',['../group__tools-text.html#ga044124276e1b1e518a746121e16b0fad',1,'tts']]],
   ['as_5fvalue_9',['as_value',['../group__tools-generators-custom.html#gabda75718fc9250b5bbe3731531eed0ae',1,'tts']]],
   ['aubrey_20bradimore_10',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]]

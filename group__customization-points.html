@@ -140,9 +140,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga00fa573920d3dda291088d61899dab28" id="r_ga00fa573920d3dda291088d61899dab28"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__customization-points.html#ga00fa573920d3dda291088d61899dab28">tts::initialize</a> (int argc, const char **argv)</td></tr>
-<tr class="memdesc:ga00fa573920d3dda291088d61899dab28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a TTS test suite.  <br /></td></tr>
-<tr class="separator:ga00fa573920d3dda291088d61899dab28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b25d232b7bc19668349b1defdc1e7f9" id="r_ga8b25d232b7bc19668349b1defdc1e7f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__customization-points.html#ga8b25d232b7bc19668349b1defdc1e7f9">tts::initialize</a> (int argc, char const **argv)</td></tr>
+<tr class="memdesc:ga8b25d232b7bc19668349b1defdc1e7f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a TTS test suite.  <br /></td></tr>
+<tr class="separator:ga8b25d232b7bc19668349b1defdc1e7f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7181b42fe16159a0d60df9880d8da4c3" id="r_ga7181b42fe16159a0d60df9880d8da4c3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a> (int fails, int invalids)</td></tr>
 <tr class="memdesc:ga7181b42fe16159a0d60df9880d8da4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test reporting customization point.  <br /></td></tr>
 <tr class="separator:ga7181b42fe16159a0d60df9880d8da4c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,7 +166,7 @@ Functions</h2></td></tr>
 <p>In case where the <code>main</code> function is to be provided externally, one can redefine <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59">TTS_CUSTOM_DRIVER_FUNCTION</a> in order to specify the name of the test executable entry point.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a> </dd>
 <dd>
-<a class="el" href="group__customization-points.html#ga00fa573920d3dda291088d61899dab28" title="Initializes a TTS test suite.">tts::initialize</a> </dd>
+<a class="el" href="group__customization-points.html#ga8b25d232b7bc19668349b1defdc1e7f9" title="Initializes a TTS test suite.">tts::initialize</a> </dd>
 <dd>
 <a class="el" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3" title="Test reporting customization point.">tts::report</a></dd></dl>
 <h2 class="groupheader">Example </h2>
@@ -175,21 +175,21 @@ Functions</h2></td></tr>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Some test&quot;</span> ) {};</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Some test&quot;</span>) {};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> <span class="keyword">const</span>** argv)</div>
 <div class="line">{</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Initializing tests...\n&quot;</span>;</div>
-<div class="line">  <a class="code hl_function" href="group__customization-points.html#ga00fa573920d3dda291088d61899dab28">::tts::initialize</a>(argc,argv);</div>
+<div class="line">  <a class="code hl_function" href="group__customization-points.html#ga8b25d232b7bc19668349b1defdc1e7f9">::tts::initialize</a>(argc, argv);</div>
 <div class="line"> </div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Running tests...\n&quot;</span>;</div>
 <div class="line">  my_test_main(argc, argv);</div>
 <div class="line"> </div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Finalizing tests...\n&quot;</span>;</div>
-<div class="line">  return ::tts::report(0,1);</div>
+<div class="line">  return ::tts::report(0, 1);</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__customization-points_html_ga00fa573920d3dda291088d61899dab28"><div class="ttname"><a href="group__customization-points.html#ga00fa573920d3dda291088d61899dab28">tts::initialize</a></div><div class="ttdeci">void initialize(int argc, const char **argv)</div><div class="ttdoc">Initializes a TTS test suite.</div><div class="ttdef"><b>Definition</b> options.hpp:199</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:132</div></div>
+<div class="ttc" id="agroup__customization-points_html_ga8b25d232b7bc19668349b1defdc1e7f9"><div class="ttname"><a href="group__customization-points.html#ga8b25d232b7bc19668349b1defdc1e7f9">tts::initialize</a></div><div class="ttdeci">void initialize(int argc, char const **argv)</div><div class="ttdoc">Initializes a TTS test suite.</div><div class="ttdef"><b>Definition</b> options.hpp:192</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -213,8 +213,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga00fa573920d3dda291088d61899dab28" name="ga00fa573920d3dda291088d61899dab28"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga00fa573920d3dda291088d61899dab28">&#9670;&#160;</a></span>initialize()</h2>
+<a id="ga8b25d232b7bc19668349b1defdc1e7f9" name="ga8b25d232b7bc19668349b1defdc1e7f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8b25d232b7bc19668349b1defdc1e7f9">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -231,7 +231,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char **&#160;</td>
+          <td class="paramtype">char const **&#160;</td>
           <td class="paramname"><em>argv</em>&#160;</td>
         </tr>
         <tr>
