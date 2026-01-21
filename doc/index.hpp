@@ -18,9 +18,10 @@
   Those features make **TTS** suitable for numerical-heavy testing.
 
   # Supported Compilers
-  +  g++ 10.3 and superior
-  +  clang 12 and superior
+  +  g++ 11.1 and superior
+  +  clang 13 and superior
   +  Visual Studio 17 2022 v19.30.30709.0
+  + clang-CL 15.0.1 or superior
   +  emscripten 3.1.14
 
   # A Short Example
@@ -28,6 +29,7 @@
   @code
   #define TTS_MAIN  // No need for main()
   #include <tts/tts.hpp>
+  #include <stdexcept>
 
   TTS_CASE( "Check expectations" )
   {
@@ -46,7 +48,7 @@
     TTS_GREATER_EQUAL(x,3.5f);
   };
 
-  void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
+  void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; };
 
   TTS_CASE( "Check runtime exceptions" )
   {
