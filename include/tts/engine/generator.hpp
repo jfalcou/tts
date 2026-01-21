@@ -252,7 +252,7 @@ namespace tts
     {
       auto w1   = as_value<D>(first_);
       auto w2   = as_value<D>(last_);
-      auto step = (sz - 1) ? (w2 - w1) / (sz - 1) : 0;
+      auto step = (sz - 1) ? (w2 - w1) / as_value<D>(sz - 1) : 0;
       return _::min(as_value<D>(w1 + idx * step), w2);
     }
 

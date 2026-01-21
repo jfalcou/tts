@@ -54,15 +54,15 @@ namespace tts::_
              test_txt,
              success_count,
              passes,
-             100.f * success_count / static_cast<float>(test_count),
+             100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
              pass_txt,
              failure_count,
              fails,
-             100.f * failure_count / static_cast<float>(test_count),
+             100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
              fail_txt,
              invalid_count,
              invalids,
-             100.f * invalid_count / static_cast<float>(test_count),
+             100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
              inv_txt);
 
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
