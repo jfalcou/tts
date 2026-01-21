@@ -87,15 +87,15 @@ namespace tts::_
              test_txt,
              success_count,
              passes,
-             100.f * success_count / static_cast<float>(test_count),
+             100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
              pass_txt,
              failure_count,
              fails,
-             100.f * failure_count / static_cast<float>(test_count),
+             100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
              fail_txt,
              invalid_count,
              invalids,
-             100.f * invalid_count / static_cast<float>(test_count),
+             100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
              inv_txt);
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
@@ -1329,7 +1329,7 @@ namespace tts
     {
       auto w1   = as_value<D>(first_);
       auto w2   = as_value<D>(last_);
-      auto step = (sz - 1) ? (w2 - w1) / (sz - 1) : 0;
+      auto step = (sz - 1) ? (w2 - w1) / as_value<D>(sz - 1) : 0;
       return _::min(as_value<D>(w1 + idx * step), w2);
     }
     template<typename D> D operator()(tts::type<D>) const { return as_value<D>(first_); }
@@ -2401,7 +2401,7 @@ namespace tts
       std::size_t bucket;
       if(ulp <= 1.5) bucket = static_cast<std::size_t>(_::ceil(ulp * 2));
       else if(_::is_inf(ulp)) bucket = nb_buckets - 1;
-      else bucket = _::min(nb_buckets - 2, static_cast<std::size_t>(_::log2(next2(ulp)) + 4.));
+      else bucket = _::min(nb_buckets - 2, static_cast<std::size_t>(_::log2(next2(ulp)) + 4));
       return bucket;
     }
     template<typename... S> void header(S const&... s)
