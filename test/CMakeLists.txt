@@ -66,7 +66,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                         NAME          unit.relation.cpp
                       )
 
-copa_glob_unit( PATTERN "unit/tests/*.cpp"
+copa_glob_unit( QUIET PATTERN "unit/tests/*.cpp"
                 RELATIVE ${root} INTERFACE tts_test DEPENDENCIES unit.infrastructure.exe
               )
 
@@ -74,6 +74,6 @@ copa_glob_unit( PATTERN "unit/tests/*.cpp"
 ##======================================================================================================================
 ## Test for TTS Documentation
 ##======================================================================================================================
-copa_glob_unit( PATTERN "unit/doc/*.cpp"
+copa_glob_unit( QUIET PATTERN "unit/doc/*.cpp"
                 RELATIVE ${root} INTERFACE tts_test
               )
