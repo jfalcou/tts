@@ -28,7 +28,7 @@ TTS is thus suitable for numerical-heavy testing.
 
 # A Short Example
 
-[See it live on Compiler Explorer](https://godbolt.org/z/5s3P1r4sr)
+[See it live on Compiler Explorer](https://godbolt.org/z/KTrGW437T)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_MAIN
@@ -52,7 +52,7 @@ TTS_CASE( "Check relationship between values" )
   TTS_GREATER_EQUAL(x,3.5f);
 };
 
-void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; };
+void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
 
 TTS_CASE( "Check runtime exceptions" )
 {

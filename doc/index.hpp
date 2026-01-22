@@ -48,7 +48,7 @@
     TTS_GREATER_EQUAL(x,3.5f);
   };
 
-  void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; };
+  void foo(bool x)  { if(x) throw std::runtime_error{"THIS IS AN ERROR"}; }
 
   TTS_CASE( "Check runtime exceptions" )
   {
