@@ -28,11 +28,12 @@ TTS is thus suitable for numerical-heavy testing.
 
 # A Short Example
 
-[See it live on Compiler Explorer](https://godbolt.org/z/cM5sxMxjo)
+[See it live on Compiler Explorer](https://godbolt.org/z/KTrGW437T)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ c++
 #define TTS_MAIN
 #include <tts/tts.hpp>
+#include <stdexcept>
 
 TTS_CASE( "Check expectations" )
 {
