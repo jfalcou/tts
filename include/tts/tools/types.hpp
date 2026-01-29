@@ -55,7 +55,7 @@ namespace tts
   /** @brief Generate the Cartesian product of two type lists
 
       Given two types lists L1 and L2, generate a new types list containing all possible
-  combinations of types from L1 and L2 as a types<T1,T2> where T1 is from L1 and T2 is from L2.
+      combinations of types from L1 and L2 as a types<T1,T2> where T1 is from L1 and T2 is from L2.
 
       @tparam L1 First types list
       @tparam L2 Second types list
@@ -80,15 +80,15 @@ namespace tts
   /** @brief Filter a types list by a predicate
 
     Using an unary predicate template, filter a types list to only keep the types for which the
-predicate evaluates to true.
+    predicate evaluates to true.
 
     @tparam Pred  Predicate template taking a single type parameter and exposing a static boolean
-member `value`
+    member `value`
     @tparam Type  Types list to filter
 
     @groupheader{Example}
     @snippet doc/filter.cpp snippet
-**/
+  **/
   //====================================================================================================================
   template<template<typename> typename Pred, typename Type> struct filter
   {
