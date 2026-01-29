@@ -133,9 +133,10 @@ $(document).ready(function(){initNavTree('structtts_1_1filter.html',''); initRes
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">template</a>&lt; <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> &gt; <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> Pred, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">Type</a>&gt;<br />
 struct tts::filter&lt; Pred, Type &gt;</div><p>Filter a types list by a predicate. </p>
-<p>Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates to true. </p><pre class="fragment">@tparam Pred  Predicate template taking a single type parameter and exposing a static boolean
-</pre><p> member <code>value</code> </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>Using an unary predicate template, filter a types list to only keep the types for which the predicate evaluates to true.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
+    <tr><td class="paramname">Pred</td><td>Predicate template taking a single type parameter and exposing a static boolean member <code>value</code> </td></tr>
     <tr><td class="paramname">Type</td><td>Types list to filter</td></tr>
   </table>
   </dd>

@@ -138,15 +138,17 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h1><a class="anchor" id="autotoc_md33"></a>
 Supported Compilers</h1>
 <ul>
-<li>g++ 10.3 and superior</li>
-<li>clang 12 and superior</li>
+<li>g++ 11.1 and superior</li>
+<li>clang 13 and superior</li>
 <li>Visual Studio 17 2022 v19.30.30709.0</li>
+<li>clang-CL 15.0.1 or superior</li>
 <li>emscripten 3.1.14</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md34"></a>
 A Short Example</h1>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Check expectations&quot;</span> )</div>
 <div class="line">{</div>
