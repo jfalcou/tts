@@ -66,6 +66,7 @@ endif()
 ## Tests setup
 ##======================================================================================================================
 if(TTS_BUILD_TEST)
+  include(CTest)
   enable_testing()
   add_custom_target(tts-unit)
   add_subdirectory(test)
