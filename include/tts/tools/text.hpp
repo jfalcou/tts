@@ -10,6 +10,10 @@
 
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/preprocessor.hpp>
+#include <compare>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
@@ -44,12 +48,19 @@ namespace tts
     explicit text(char const* ptr)
         : text()
     {
-      size_ = static_cast<int>(strlen(ptr));
-      if(size_)
+      if(ptr)
       {
-        data_ = reinterpret_cast<char*>(malloc(size_ + 1));
-        strncpy(data_, ptr, size_);
-        data_[ size_ ] = '\0';
+        std::size_t len = strlen(ptr);
+        if(len > 0)
+        {
+          data_ = reinterpret_cast<char*>(malloc(len + 1));
+          if(data_)
+          {
+            size_ = static_cast<int>(len);
+            memcpy(data_, ptr, size_);
+            data_[ size_ ] = '\0';
+          }
+        }
       }
     }
 
@@ -72,11 +83,16 @@ namespace tts
     explicit text(char const* format, Args... args)
         : text()
     {
-      size_ = snprintf(nullptr, 0, format, args...);
-      if(size_ > 0)
+      // Store result in local int to check for errors/negatives
+      int len = snprintf(nullptr, 0, format, args...);
+      if(len > 0)
       {
-        data_ = reinterpret_cast<char*>(malloc(size_ + 1));
-        snprintf(data_, size_ + 1, format, args...);
+        data_ = reinterpret_cast<char*>(malloc(len + 1));
+        if(data_)
+        {
+          size_ = len; // Only assign size if alloc succeeds
+          snprintf(data_, size_ + 1, format, args...);
+        }
       }
     }
 
@@ -84,12 +100,16 @@ namespace tts
     text(text const& other)
         : text()
     {
-      size_ = other.size_;
-      if(size_)
+      // Strictly check for positive size and valid pointer to prevent allocation errors
+      if(other.size_ > 0 && other.data_)
       {
-        data_ = reinterpret_cast<char*>(malloc(size_ + 1));
-        strncpy(data_, other.data_, size_);
-        data_[ size_ ] = '\0';
+        data_ = reinterpret_cast<char*>(malloc(other.size_ + 1));
+        if(data_)
+        {
+          size_ = other.size_;
+          memcpy(data_, other.data_, size_);
+          data_[ size_ ] = '\0';
+        }
       }
     }
 
@@ -132,7 +152,7 @@ namespace tts
     /// Concatenate another text instance
     text& operator+=(text const& other)
     {
-      text local {"%.*s%.*s", size_, data_, other.size_, other.data_};
+      text local {"%.*s%.*s", size_, data(), other.size_, other.data()};
       swap(local);
       return *this;
     }
@@ -142,7 +162,7 @@ namespace tts
     {
       if(other)
       {
-        text local {"%.*s%s", size_, data_, other};
+        text local {"%.*s%s", size_, data(), other};
         swap(local);
       }
       return *this;
@@ -158,52 +178,67 @@ namespace tts
     /// Stream output operator
     template<_::stream OS> friend OS& operator<<(OS& os, text const& t)
     {
-      for(int i = 0; i < t.size_; ++i) os << t.data_[ i ];
+      if(t.data_)
+      {
+        for(int i = 0; i < t.size_; ++i) os << t.data_[ i ];
+      }
       return os;
     }
 
     /// Check if the text is empty
-    bool               is_empty() const { return size_ == 0; }
+    bool                      is_empty() const { return size_ == 0; }
 
     /// Get the size of the text
-    int                size() const { return size_; }
+    int                       size() const { return size_; }
 
     /// Get a pointer to the constant underlying character data
-    decltype(auto)     data() const { return data_; }
+    /// Returns an empty string literal if data_ is null to prevent %s crashes
+    [[nodiscard]] char const* data() const { return data_ ? data_ : ""; }
 
     /// Get a pointer to the underlying character data
-    decltype(auto)     data() { return data_; }
+    [[nodiscard]] char*       data() { return data_; }
 
     /// Get a const iterator to the beginning of the text
-    decltype(auto)     begin() const { return data_; }
+    decltype(auto)            begin() const { return data_; }
 
     /// Get an iterator to the beginning of the text
-    decltype(auto)     begin() { return data_; }
+    decltype(auto)            begin() { return data_; }
 
     /// Get a const iterator to the end of the text
-    decltype(auto)     end() const { return data_ + size_; }
+    decltype(auto)            end() const { return data_ + size_; }
 
     /// Get an iterator to the end of the text
-    decltype(auto)     end() { return data_ + size_; }
+    decltype(auto)            end() { return data_ + size_; }
 
-    friend auto const& to_text(text const& t) { return t; }
+    friend auto const&        to_text(text const& t) { return t; }
 
     /// Equality comparison operator
-    friend auto        operator==(text const& a, text const& b) noexcept
+    friend bool               operator==(text const& a, text const& b) noexcept
     {
+      if(a.size_ != b.size_) return false;
+      if(a.is_empty()) return true;
       return strcmp(a.data_, b.data_) == 0;
     }
 
     /// Equality comparison operator with C-style string
-    template<std::size_t N> friend auto operator==(text const& a, char const (&b)[ N ]) noexcept
+    template<std::size_t N> friend bool operator==(text const& a, char const (&b)[ N ]) noexcept
     {
+      if(a.is_empty()) return N == 1;
       return strcmp(a.data_, &b[ 0 ]) == 0;
     }
 
     /// Three-way comparison operator with other text instance
-    friend auto operator<=>(text const& a, text const& b) noexcept
+    friend std::strong_ordering operator<=>(text const& a, text const& b) noexcept
     {
-      return strncmp(a.data_, b.data_, a.size_ < b.size_ ? a.size_ : b.size_) <=> 0;
+      if(a.is_empty() && b.is_empty()) return std::strong_ordering::equal;
+      if(a.is_empty()) return std::strong_ordering::less;
+      if(b.is_empty()) return std::strong_ordering::greater;
+
+      int const size = a.size_ < b.size_ ? a.size_ : b.size_;
+      int const cmp  = strncmp(a.data_, b.data_, size);
+
+      if(cmp != 0) return cmp <=> 0;
+      return a.size_ <=> b.size_;
     }
 
     /// Three-way comparison operator with C-style string
