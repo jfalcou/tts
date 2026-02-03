@@ -215,6 +215,10 @@ namespace tts::_
 #define TTS_MAYBE_STRIP_PARENS_1(x)          x
 #define TTS_MAYBE_STRIP_PARENS_2(x)          TTS_APPLY(TTS_MAYBE_STRIP_PARENS_2_I, x)
 #define TTS_MAYBE_STRIP_PARENS_2_I(...)      __VA_ARGS__
+#include <compare>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts
@@ -229,12 +233,19 @@ namespace tts
     explicit text(char const* ptr)
         : text()
     {
-      size_ = static_cast<int>(strlen(ptr));
-      if(size_)
+      if(ptr)
       {
-        data_ = reinterpret_cast<char*>(malloc(size_ + 1));
-        strncpy(data_, ptr, size_);
-        data_[ size_ ] = '\0';
+        std::size_t len = strlen(ptr);
+        if(len > 0)
+        {
+          data_ = reinterpret_cast<char*>(malloc(len + 1));
+          if(data_)
+          {
+            size_ = static_cast<int>(len);
+            memcpy(data_, ptr, size_);
+            data_[ size_ ] = '\0';
+          }
+        }
       }
     }
     template<std::size_t N>
@@ -246,22 +257,29 @@ namespace tts
     explicit text(char const* format, Args... args)
         : text()
     {
-      size_ = snprintf(nullptr, 0, format, args...);
-      if(size_ > 0)
+      int len = snprintf(nullptr, 0, format, args...);
+      if(len > 0)
       {
-        data_ = reinterpret_cast<char*>(malloc(size_ + 1));
-        snprintf(data_, size_ + 1, format, args...);
+        data_ = reinterpret_cast<char*>(malloc(len + 1));
+        if(data_)
+        {
+          size_ = len;
+          snprintf(data_, size_ + 1, format, args...);
+        }
       }
     }
     text(text const& other)
         : text()
     {
-      size_ = other.size_;
-      if(size_)
+      if(other.size_ > 0 && other.data_)
       {
-        data_ = reinterpret_cast<char*>(malloc(size_ + 1));
-        strncpy(data_, other.data_, size_);
-        data_[ size_ ] = '\0';
+        data_ = reinterpret_cast<char*>(malloc(other.size_ + 1));
+        if(data_)
+        {
+          size_ = other.size_;
+          memcpy(data_, other.data_, size_);
+          data_[ size_ ] = '\0';
+        }
       }
     }
     text(text&& other)
@@ -292,7 +310,7 @@ namespace tts
     }
     text& operator+=(text const& other)
     {
-      text local {"%.*s%.*s", size_, data_, other.size_, other.data_};
+      text local {"%.*s%.*s", size_, data(), other.size_, other.data()};
       swap(local);
       return *this;
     }
@@ -300,7 +318,7 @@ namespace tts
     {
       if(other)
       {
-        text local {"%.*s%s", size_, data_, other};
+        text local {"%.*s%s", size_, data(), other};
         swap(local);
       }
       return *this;
@@ -312,29 +330,41 @@ namespace tts
     }
     template<_::stream OS> friend OS& operator<<(OS& os, text const& t)
     {
-      for(int i = 0; i < t.size_; ++i) os << t.data_[ i ];
+      if(t.data_)
+      {
+        for(int i = 0; i < t.size_; ++i) os << t.data_[ i ];
+      }
       return os;
     }
-    bool               is_empty() const { return size_ == 0; }
-    int                size() const { return size_; }
-    decltype(auto)     data() const { return data_; }
-    decltype(auto)     data() { return data_; }
-    decltype(auto)     begin() const { return data_; }
-    decltype(auto)     begin() { return data_; }
-    decltype(auto)     end() const { return data_ + size_; }
-    decltype(auto)     end() { return data_ + size_; }
-    friend auto const& to_text(text const& t) { return t; }
-    friend auto        operator==(text const& a, text const& b) noexcept
+    bool                      is_empty() const { return size_ == 0; }
+    int                       size() const { return size_; }
+    [[nodiscard]] char const* data() const { return data_ ? data_ : ""; }
+    [[nodiscard]] char*       data() { return data_; }
+    decltype(auto)            begin() const { return data_; }
+    decltype(auto)            begin() { return data_; }
+    decltype(auto)            end() const { return data_ + size_; }
+    decltype(auto)            end() { return data_ + size_; }
+    friend auto const&        to_text(text const& t) { return t; }
+    friend bool               operator==(text const& a, text const& b) noexcept
     {
+      if(a.size_ != b.size_) return false;
+      if(a.is_empty()) return true;
       return strcmp(a.data_, b.data_) == 0;
     }
-    template<std::size_t N> friend auto operator==(text const& a, char const (&b)[ N ]) noexcept
+    template<std::size_t N> friend bool operator==(text const& a, char const (&b)[ N ]) noexcept
     {
+      if(a.is_empty()) return N == 1;
       return strcmp(a.data_, &b[ 0 ]) == 0;
     }
-    friend auto operator<=>(text const& a, text const& b) noexcept
+    friend std::strong_ordering operator<=>(text const& a, text const& b) noexcept
     {
-      return strncmp(a.data_, b.data_, a.size_ < b.size_ ? a.size_ : b.size_) <=> 0;
+      if(a.is_empty() && b.is_empty()) return std::strong_ordering::equal;
+      if(a.is_empty()) return std::strong_ordering::less;
+      if(b.is_empty()) return std::strong_ordering::greater;
+      int const size = a.size_ < b.size_ ? a.size_ : b.size_;
+      int const cmp  = strncmp(a.data_, b.data_, size);
+      if(cmp != 0) return cmp <=> 0;
+      return a.size_ <=> b.size_;
     }
     template<std::size_t N> friend auto operator<=>(text const& a, char const (&b)[ N ]) noexcept
     {
@@ -638,9 +668,9 @@ namespace tts
       auto precision = ::tts::arguments().value(16, "--precision");
       bool hexmode   = ::tts::arguments()("-x", "--hex");
       bool scimode   = ::tts::arguments()("-s", "--scientific");
-      if(scimode) return text("%.*E", e, precision);
-      else if(hexmode) return text("%#.*A", e, precision);
-      else return text("%.*g", e, precision);
+      if(scimode) return text("%.*E", precision, e);
+      else if(hexmode) return text("%#.*A", precision, e);
+      else return text("%.*g", precision, e);
     }
     else if constexpr(std::integral<T>)
     {
@@ -655,16 +685,25 @@ namespace tts
         return text(fmt, e);
       }
     }
-    else if constexpr(_::string<T>) { return text("'%.*s'", e.size(), e.data()); }
+    else if constexpr(_::string<T>)
+    {
+      return text("'%.*s'", static_cast<int>(e.size()), e.data() ? e.data() : "");
+    }
     else if constexpr(_::optional<T>)
     {
-      text base {"optional<%s>", as_text(typename_<typename T::value_type>).data()};
-      if(e.has_value()) return base + text("{%s}", as_text(e.value()).data());
+      auto type_desc = as_text(typename_<typename T::value_type>);
+      text base {"optional<%s>", type_desc.data() ? type_desc.data() : "unknown"};
+      if(e.has_value())
+      {
+        auto val_desc = as_text(e.value());
+        return base + text("{%s}", val_desc.data() ? val_desc.data() : "?");
+      }
       else return base + "{}";
     }
     else if constexpr(std::is_pointer_v<T>)
     {
-      return text("%p (%s)", (void*)(e), as_text(typename_<T>).data());
+      auto type_desc = as_text(typename_<T>);
+      return text("%p (%s)", (void*)(e), type_desc.data() ? type_desc.data() : "unknown");
     }
     else if constexpr(_::sequence<T>)
     {
@@ -679,8 +718,11 @@ namespace tts
       std::memcpy(bytes, &e, sizeof(e));
       text txt_bytes("[ ");
       for(auto const& b: bytes) txt_bytes += text("%2.2X", b) + " ";
-      txt_bytes += "]";
-      return text("%s: %s", as_text(typename_<T>).data(), txt_bytes.data());
+      txt_bytes      += "]";
+      auto type_desc  = as_text(typename_<T>);
+      return text("%s: %s",
+                  type_desc.data() ? type_desc.data() : "unknown",
+                  txt_bytes.data() ? txt_bytes.data() : "[]");
     }
   }
   template<std::size_t N> auto as_text(char const (&t)[ N ]) { return text(t); }
