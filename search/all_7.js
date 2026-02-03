@@ -1,7 +1,7 @@
 var searchData=
 [
   ['daring_0',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md18',1,'']]],
-  ['data_1',['data',['../structtts_1_1text.html#aaea924612ba83169551d54592fce433c',1,'tts::text::data()'],['../structtts_1_1text.html#ad7927b1fe9dd940cccfd647cf7f0e615',1,'tts::text::data() const']]],
+  ['data_1',['data',['../structtts_1_1text.html#a9f452f6739ede5e9b52f660d91057094',1,'tts::text::data()'],['../structtts_1_1text.html#a1bed9847e3611c55dd670a502cedc93d',1,'tts::text::data() const']]],
   ['data_20display_2',['Data display',['../customize.html#customize-display',1,'']]],
   ['data_20generator_3',['Data Generator',['../customize.html#autotoc_md32',1,'']]],
   ['data_20generators_4',['Data Generators',['../group__tools-generators-class.html',1,'']]],

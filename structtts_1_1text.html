@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('structtts_1_1text.html',''); initResiz
 <div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:134</div></div>
 <div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
 <div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:126</div></div>
-<div class="ttc" id="astructtts_1_1text_html"><div class="ttname"><a href="structtts_1_1text.html">tts::text</a></div><div class="ttdoc">Lightweight string-like object.</div><div class="ttdef"><b>Definition</b> text.hpp:35</div></div>
+<div class="ttc" id="astructtts_1_1text_html"><div class="ttname"><a href="structtts_1_1text.html">tts::text</a></div><div class="ttdoc">Lightweight string-like object.</div><div class="ttdef"><b>Definition</b> text.hpp:39</div></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="group__tools-text.html#ga044124276e1b1e518a746121e16b0fad" title="Value-to-string conversion.">tts::as_text</a> </dd></dl>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -162,7 +162,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7b439a33411d4f65c4b4fb577ca24edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c7b28a8843dc1a8644d2311905f381d" id="r_a1c7b28a8843dc1a8644d2311905f381d"><td class="memTemplParams" colspan="2"><a id="a1c7b28a8843dc1a8644d2311905f381d" name="a1c7b28a8843dc1a8644d2311905f381d"></a>
 template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:a1c7b28a8843dc1a8644d2311905f381d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>text</b> (<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> (&amp;<a class="el" href="structtts_1_1text.html#ad7927b1fe9dd940cccfd647cf7f0e615">data</a>)[<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">N</a>])</td></tr>
+<tr class="memitem:a1c7b28a8843dc1a8644d2311905f381d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>text</b> (<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> (&amp;<a class="el" href="structtts_1_1text.html#a1bed9847e3611c55dd670a502cedc93d">data</a>)[<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">N</a>])</td></tr>
 <tr class="memdesc:a1c7b28a8843dc1a8644d2311905f381d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from fixed-size C-style string. <br /></td></tr>
 <tr class="separator:a1c7b28a8843dc1a8644d2311905f381d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad159ee022f1f9eb56d64fe88a85210" id="r_afad159ee022f1f9eb56d64fe88a85210"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
@@ -193,14 +193,12 @@ template&lt;std::size_t N&gt; </td></tr>
 <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">decltype</a>(<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>)&#160;</td><td class="memItemRight" valign="bottom"><b>begin</b> () <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a></td></tr>
 <tr class="memdesc:a5e0c31a5270a9d660d013bbec9d95f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a const iterator to the beginning of the text. <br /></td></tr>
 <tr class="separator:a5e0c31a5270a9d660d013bbec9d95f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaea924612ba83169551d54592fce433c" id="r_aaea924612ba83169551d54592fce433c"><td class="memItemLeft" align="right" valign="top"><a id="aaea924612ba83169551d54592fce433c" name="aaea924612ba83169551d54592fce433c"></a>
-<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">decltype</a>(<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>)&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> ()</td></tr>
-<tr class="memdesc:aaea924612ba83169551d54592fce433c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pointer to the underlying character data. <br /></td></tr>
-<tr class="separator:aaea924612ba83169551d54592fce433c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7927b1fe9dd940cccfd647cf7f0e615" id="r_ad7927b1fe9dd940cccfd647cf7f0e615"><td class="memItemLeft" align="right" valign="top"><a id="ad7927b1fe9dd940cccfd647cf7f0e615" name="ad7927b1fe9dd940cccfd647cf7f0e615"></a>
-<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">decltype</a>(<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>)&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> () <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a></td></tr>
-<tr class="memdesc:ad7927b1fe9dd940cccfd647cf7f0e615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pointer to the constant underlying character data. <br /></td></tr>
-<tr class="separator:ad7927b1fe9dd940cccfd647cf7f0e615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f452f6739ede5e9b52f660d91057094" id="r_a9f452f6739ede5e9b52f660d91057094"><td class="memItemLeft" align="right" valign="top"><a id="a9f452f6739ede5e9b52f660d91057094" name="a9f452f6739ede5e9b52f660d91057094"></a>
+<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>data</b> ()</td></tr>
+<tr class="memdesc:a9f452f6739ede5e9b52f660d91057094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a pointer to the underlying character data. <br /></td></tr>
+<tr class="separator:a9f452f6739ede5e9b52f660d91057094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bed9847e3611c55dd670a502cedc93d" id="r_a1bed9847e3611c55dd670a502cedc93d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1text.html#a1bed9847e3611c55dd670a502cedc93d">data</a> () <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a></td></tr>
+<tr class="separator:a1bed9847e3611c55dd670a502cedc93d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68a1f4b5a83dfef5a6c4ce929376edee" id="r_a68a1f4b5a83dfef5a6c4ce929376edee"><td class="memItemLeft" align="right" valign="top"><a id="a68a1f4b5a83dfef5a6c4ce929376edee" name="a68a1f4b5a83dfef5a6c4ce929376edee"></a>
 <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">decltype</a>(<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>)&#160;</td><td class="memItemRight" valign="bottom"><b>end</b> ()</td></tr>
 <tr class="memdesc:a68a1f4b5a83dfef5a6c4ce929376edee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an iterator to the end of the text. <br /></td></tr>
@@ -254,19 +252,19 @@ template&lt;std::size_t N&gt; </td></tr>
 <tr class="memitem:a899617a31b5a1a6ec53f3f8bb828fdc2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> (&amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>)[<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">N</a>]) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
 <tr class="memdesc:a899617a31b5a1a6ec53f3f8bb828fdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way comparison operator with C-style string. <br /></td></tr>
 <tr class="separator:a899617a31b5a1a6ec53f3f8bb828fdc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d66f308db249ff29db82ac7d282674c" id="r_a5d66f308db249ff29db82ac7d282674c"><td class="memItemLeft" align="right" valign="top"><a id="a5d66f308db249ff29db82ac7d282674c" name="a5d66f308db249ff29db82ac7d282674c"></a>
-<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
-<tr class="memdesc:a5d66f308db249ff29db82ac7d282674c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way comparison operator with other text instance. <br /></td></tr>
-<tr class="separator:a5d66f308db249ff29db82ac7d282674c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8061a5d00482a128ad89eb5ec0fd061a" id="r_a8061a5d00482a128ad89eb5ec0fd061a"><td class="memTemplParams" colspan="2"><a id="a8061a5d00482a128ad89eb5ec0fd061a" name="a8061a5d00482a128ad89eb5ec0fd061a"></a>
+<tr class="memitem:a5017f7f566c30b51b64afc273cd328ec" id="r_a5017f7f566c30b51b64afc273cd328ec"><td class="memItemLeft" align="right" valign="top"><a id="a5017f7f566c30b51b64afc273cd328ec" name="a5017f7f566c30b51b64afc273cd328ec"></a>
+std::strong_ordering&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=&gt;</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
+<tr class="memdesc:a5017f7f566c30b51b64afc273cd328ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way comparison operator with other text instance. <br /></td></tr>
+<tr class="separator:a5017f7f566c30b51b64afc273cd328ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9657802a107531ee24f60e585ae80fa9" id="r_a9657802a107531ee24f60e585ae80fa9"><td class="memTemplParams" colspan="2"><a id="a9657802a107531ee24f60e585ae80fa9" name="a9657802a107531ee24f60e585ae80fa9"></a>
 template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:a8061a5d00482a128ad89eb5ec0fd061a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> (&amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>)[<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">N</a>]) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
-<tr class="memdesc:a8061a5d00482a128ad89eb5ec0fd061a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator with C-style string. <br /></td></tr>
-<tr class="separator:a8061a5d00482a128ad89eb5ec0fd061a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae71f7648dc76db5a0a3be318e2038cf7" id="r_ae71f7648dc76db5a0a3be318e2038cf7"><td class="memItemLeft" align="right" valign="top"><a id="ae71f7648dc76db5a0a3be318e2038cf7" name="ae71f7648dc76db5a0a3be318e2038cf7"></a>
-<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
-<tr class="memdesc:ae71f7648dc76db5a0a3be318e2038cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator. <br /></td></tr>
-<tr class="separator:ae71f7648dc76db5a0a3be318e2038cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9657802a107531ee24f60e585ae80fa9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">bool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator==</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> (&amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>)[<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">N</a>]) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
+<tr class="memdesc:a9657802a107531ee24f60e585ae80fa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator with C-style string. <br /></td></tr>
+<tr class="separator:a9657802a107531ee24f60e585ae80fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80ccce1207f2c1cbee1e0def444710af" id="r_a80ccce1207f2c1cbee1e0def444710af"><td class="memItemLeft" align="right" valign="top"><a id="a80ccce1207f2c1cbee1e0def444710af" name="a80ccce1207f2c1cbee1e0def444710af"></a>
+<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (<a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">a</a>, <a class="el" href="structtts_1_1text.html">text</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a> &amp;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">b</a>) <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">noexcept</a></td></tr>
+<tr class="memdesc:a80ccce1207f2c1cbee1e0def444710af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator. <br /></td></tr>
+<tr class="separator:a80ccce1207f2c1cbee1e0def444710af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afad159ee022f1f9eb56d64fe88a85210" name="afad159ee022f1f9eb56d64fe88a85210"></a>
@@ -314,6 +312,33 @@ template&lt;typename... Args&gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1bed9847e3611c55dd670a502cedc93d" name="a1bed9847e3611c55dd670a502cedc93d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bed9847e3611c55dd670a502cedc93d">&#9670;&#160;</a></span>data()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">char</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">const</a>  * tts::text::data </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get a pointer to the constant underlying character data Returns an empty string literal if data_ is null to prevent s crashes </p>
 
 </div>
 </div>

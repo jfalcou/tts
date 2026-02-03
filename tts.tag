@@ -153,17 +153,17 @@
       <arglist>() const</arglist>
     </member>
     <member kind="function">
-      <type>decltype(auto)</type>
+      <type>char *</type>
       <name>data</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>aaea924612ba83169551d54592fce433c</anchor>
+      <anchor>a9f452f6739ede5e9b52f660d91057094</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function">
-      <type>decltype(auto)</type>
+      <type>char const *</type>
       <name>data</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>ad7927b1fe9dd940cccfd647cf7f0e615</anchor>
+      <anchor>a1bed9847e3611c55dd670a502cedc93d</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">
@@ -251,24 +251,24 @@
       <arglist>(text const &amp;a, char const (&amp;b)[N]) noexcept</arglist>
     </member>
     <member kind="friend">
-      <type>friend auto</type>
+      <type>friend std::strong_ordering</type>
       <name>operator&lt;=&gt;</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a5d66f308db249ff29db82ac7d282674c</anchor>
+      <anchor>a5017f7f566c30b51b64afc273cd328ec</anchor>
       <arglist>(text const &amp;a, text const &amp;b) noexcept</arglist>
     </member>
     <member kind="friend">
-      <type>friend auto</type>
+      <type>friend bool</type>
       <name>operator==</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a8061a5d00482a128ad89eb5ec0fd061a</anchor>
+      <anchor>a9657802a107531ee24f60e585ae80fa9</anchor>
       <arglist>(text const &amp;a, char const (&amp;b)[N]) noexcept</arglist>
     </member>
     <member kind="friend">
-      <type>friend auto</type>
+      <type>friend bool</type>
       <name>operator==</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>ae71f7648dc76db5a0a3be318e2038cf7</anchor>
+      <anchor>a80ccce1207f2c1cbee1e0def444710af</anchor>
       <arglist>(text const &amp;a, text const &amp;b) noexcept</arglist>
     </member>
   </compound>
