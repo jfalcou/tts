@@ -55,9 +55,9 @@ namespace tts
       bool hexmode   = ::tts::arguments()("-x", "--hex");
       bool scimode   = ::tts::arguments()("-s", "--scientific");
 
-      if(scimode) return text("%.*E", e, precision);
-      else if(hexmode) return text("%#.*A", e, precision);
-      else return text("%.*g", e, precision);
+      if(scimode) return text("%.*E", precision, e);
+      else if(hexmode) return text("%#.*A", precision, e);
+      else return text("%.*g", precision, e);
     }
     else if constexpr(std::integral<T>)
     {
@@ -72,16 +72,27 @@ namespace tts
         return text(fmt, e);
       }
     }
-    else if constexpr(_::string<T>) { return text("'%.*s'", e.size(), e.data()); }
+    else if constexpr(_::string<T>)
+    {
+      return text("'%.*s'", static_cast<int>(e.size()), e.data() ? e.data() : "");
+    }
     else if constexpr(_::optional<T>)
     {
-      text base {"optional<%s>", as_text(typename_<typename T::value_type>).data()};
-      if(e.has_value()) return base + text("{%s}", as_text(e.value()).data());
+      // Safe access to type name
+      auto type_desc = as_text(typename_<typename T::value_type>);
+      text base {"optional<%s>", type_desc.data() ? type_desc.data() : "unknown"};
+
+      if(e.has_value())
+      {
+        auto val_desc = as_text(e.value());
+        return base + text("{%s}", val_desc.data() ? val_desc.data() : "?");
+      }
       else return base + "{}";
     }
     else if constexpr(std::is_pointer_v<T>)
     {
-      return text("%p (%s)", (void*)(e), as_text(typename_<T>).data());
+      auto type_desc = as_text(typename_<T>);
+      return text("%p (%s)", (void*)(e), type_desc.data() ? type_desc.data() : "unknown");
     }
     else if constexpr(_::sequence<T>)
     {
@@ -97,9 +108,12 @@ namespace tts
       std::memcpy(bytes, &e, sizeof(e));
       text txt_bytes("[ ");
       for(auto const& b: bytes) txt_bytes += text("%2.2X", b) + " ";
-      txt_bytes += "]";
+      txt_bytes      += "]";
 
-      return text("%s: %s", as_text(typename_<T>).data(), txt_bytes.data());
+      auto type_desc  = as_text(typename_<T>);
+      return text("%s: %s",
+                  type_desc.data() ? type_desc.data() : "unknown",
+                  txt_bytes.data() ? txt_bytes.data() : "[]");
     }
   }
 
