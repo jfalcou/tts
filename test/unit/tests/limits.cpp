@@ -38,7 +38,7 @@ TTS_CASE_TPL("Limit values for integer types", tts::integral_types)
 TTS_CASE_TPL("Limit values for floating-point types", tts::real_types)
 <typename T>(tts::type<T> tgt)
 {
-  TTS_EQUAL(tts::limits(tgt).nan, std::numeric_limits<T>::quiet_NaN());
+  TTS_IEEE_EQUAL(tts::limits(tgt).nan, std::numeric_limits<T>::quiet_NaN());
   TTS_EQUAL(tts::limits(tgt).inf, std::numeric_limits<T>::infinity());
   TTS_EQUAL(tts::limits(tgt).minf, -std::numeric_limits<T>::infinity());
   TTS_EQUAL(tts::limits(tgt).mzero, static_cast<T>(-0.0));
