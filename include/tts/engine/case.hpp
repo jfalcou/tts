@@ -63,9 +63,7 @@ namespace tts::_
   };
 
   // Specialisation for types lists
-  template<template<typename...> typename List, typename... Types>
-    requires(!requires(List<Types...>) { typename List<Types...>::types_list; })
-  struct captures<List<Types...>> : captures<Types...>
+  template<typename... Types> struct captures<types<Types...>> : captures<Types...>
   {
   };
 
