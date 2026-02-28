@@ -13,6 +13,6 @@ var searchData=
   ['standalone_20setup_10',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
   ['started_11',['Getting Started',['../tts101.html',1,'']]],
   ['supported_20compilers_12',['Supported Compilers',['../index.html#autotoc_md33',1,'']]],
-  ['swap_13',['swap',['../structtts_1_1text.html#a7c99c45e9c6c75838c0a2029282be259',1,'tts::text']]],
+  ['swap_13',['swap',['../structtts_1_1text.html#ab5678b661ead194b1045172bee5e8b96',1,'tts::text']]],
   ['system_14',['The Tiny Test System',['../index.html',1,'']]]
 ];

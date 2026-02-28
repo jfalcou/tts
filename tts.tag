@@ -121,8 +121,8 @@
       <type></type>
       <name>text</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>aafa82435ee0ac725d73cf9e712714024</anchor>
-      <arglist>(text &amp;&amp;other)</arglist>
+      <anchor>a5b915ebebca894fba4802d64936b6d47</anchor>
+      <arglist>(text &amp;&amp;other) noexcept</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -212,8 +212,8 @@
       <type>text &amp;</type>
       <name>operator=</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a197a29ca307136144d4aca5e8f95159e</anchor>
-      <arglist>(text &amp;&amp;other)</arglist>
+      <anchor>a9cbef17a36a80da358be2cfebdc57496</anchor>
+      <arglist>(text &amp;&amp;other) noexcept</arglist>
     </member>
     <member kind="function">
       <type>text &amp;</type>
@@ -233,8 +233,8 @@
       <type>void</type>
       <name>swap</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a7c99c45e9c6c75838c0a2029282be259</anchor>
-      <arglist>(text &amp;o)</arglist>
+      <anchor>ab5678b661ead194b1045172bee5e8b96</anchor>
+      <arglist>(text &amp;o) noexcept</arglist>
     </member>
     <member kind="friend">
       <type>friend OS &amp;</type>
