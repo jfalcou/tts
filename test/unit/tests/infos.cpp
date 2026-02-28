@@ -15,9 +15,14 @@ TTS_CASE("Check that forced failure fails")
 };
 
 TTS_CASE("Check detection of invalid test")
-{};
+{
+// Expect to fail because of invalid test (missing assertion)
+};
+
 TTS_CASE("Check detection of more invalid tests")
-{};
+{
+// Expect to fail because of invalid test (missing assertion)
+};
 
 int main(int argc, char const** argv)
 {

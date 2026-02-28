@@ -105,6 +105,7 @@ namespace tts::_
     }
     static void cleanup_ptr(void*)
     {
+      // No cleanup needed for function pointers
     }
   };
 }

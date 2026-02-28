@@ -13,7 +13,9 @@
 #include <iostream>
 
 TTS_CASE("Some test")
-{};
+{
+// This test will be counted as invalid because it does not contain any assertion.
+};
 
 int main(int argc, char const** argv)
 {

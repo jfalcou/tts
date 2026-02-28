@@ -154,7 +154,7 @@ namespace tts
     }
 
     /// Checks if current options set is not empty
-    bool is_valid()
+    bool is_valid() const
     {
       return argc && argv != nullptr;
     }

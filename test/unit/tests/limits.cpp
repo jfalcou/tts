@@ -42,7 +42,6 @@ TTS_CASE_TPL("Limit values for floating-point types", tts::real_types)
   TTS_EQUAL(tts::limits(tgt).inf, std::numeric_limits<T>::infinity());
   TTS_EQUAL(tts::limits(tgt).minf, -std::numeric_limits<T>::infinity());
   TTS_EQUAL(tts::limits(tgt).mzero, static_cast<T>(-0.0));
-  //  TTS_EQUAL(tts::limits(tgt).maxflint, tts::maxflint_v<T>);
   TTS_EQUAL(tts::limits(tgt).mindenormal, std::numeric_limits<T>::denorm_min());
   TTS_EQUAL(tts::limits(tgt).smallestposval, std::numeric_limits<T>::min());
   TTS_EQUAL(tts::limits(tgt).mone, static_cast<T>(-1.0));
