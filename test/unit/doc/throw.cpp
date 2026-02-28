@@ -14,7 +14,13 @@ struct some_exception_type
 {
 };
 
-void foo() { throw some_exception_type(); }
+void foo()
+{
+  throw some_exception_type();
+}
 
-TTS_CASE("Check that we can capture thrown exceptions") { TTS_THROW(foo(), some_exception_type); };
+TTS_CASE("Check that we can capture thrown exceptions")
+{
+  TTS_THROW(foo(), some_exception_type);
+};
 //! [snippet]

@@ -11,7 +11,10 @@
 #define TTS_MAIN                   // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE("Check that forced pass passes") { TTS_PASS("Forced success!!"); };
+TTS_CASE("Check that forced pass passes")
+{
+  TTS_PASS("Forced success!!");
+};
 //! [snippet1]
 
 #undef TTS_MAIN

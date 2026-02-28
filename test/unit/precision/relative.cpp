@@ -31,7 +31,8 @@ TTS_CASE_TPL("Relative distance between integers",
              std::int8_t,
              std::int16_t,
              std::int32_t,
-             std::int64_t)<typename T>(::tts::type<T>)
+             std::int64_t)
+<typename T>(::tts::type<T>)
 {
   T a = 65, b = a + 5;
 
@@ -40,7 +41,8 @@ TTS_CASE_TPL("Relative distance between integers",
   TTS_RELATIVE_EQUAL(b, a, 7.15);
 };
 
-TTS_CASE_TPL("Relative distance between floating point", float, double)<typename T>(::tts::type<T>)
+TTS_CASE_TPL("Relative distance between floating point", float, double)
+<typename T>(::tts::type<T>)
 {
   T a {1};
 

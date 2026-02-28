@@ -26,7 +26,10 @@ namespace tts::_
         : name(id)
     {
     }
-    auto        operator+(auto body) const { return test::acknowledge({name, body}); }
+    auto operator+(auto body) const
+    {
+      return test::acknowledge({name, body});
+    }
     char const* name;
   };
 

@@ -90,7 +90,10 @@ namespace tts::_
       if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
     }
 
-    if(!::tts::_::is_quiet) { printf("  [X] %s : ** FAILURE ** : %s\n", location, message); }
+    if(!::tts::_::is_quiet)
+    {
+      printf("  [X] %s : ** FAILURE ** : %s\n", location, message);
+    }
   }
 
   void report_fatal(char const* location, char const* message, ::tts::text const& type)

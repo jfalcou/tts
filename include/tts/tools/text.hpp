@@ -180,37 +180,65 @@ namespace tts
     {
       if(t.data_)
       {
-        for(int i = 0; i < t.size_; ++i) os << t.data_[ i ];
+        for(int i = 0; i < t.size_; ++i)
+          os << t.data_[ i ];
       }
       return os;
     }
 
     /// Check if the text is empty
-    bool is_empty() const { return size_ == 0; }
+    bool is_empty() const
+    {
+      return size_ == 0;
+    }
 
     /// Get the size of the text
-    int size() const { return size_; }
+    int size() const
+    {
+      return size_;
+    }
 
     /// Get a pointer to the constant underlying character data
     /// Returns an empty string literal if data_ is null to prevent %s crashes
-    [[nodiscard]] char const* data() const { return data_ ? data_ : ""; }
+    [[nodiscard]] char const* data() const
+    {
+      return data_ ? data_ : "";
+    }
 
     /// Get a pointer to the underlying character data
-    [[nodiscard]] char* data() { return data_; }
+    [[nodiscard]] char* data()
+    {
+      return data_;
+    }
 
     /// Get a const iterator to the beginning of the text
-    decltype(auto) begin() const { return data_; }
+    decltype(auto) begin() const
+    {
+      return data_;
+    }
 
     /// Get an iterator to the beginning of the text
-    decltype(auto) begin() { return data_; }
+    decltype(auto) begin()
+    {
+      return data_;
+    }
 
     /// Get a const iterator to the end of the text
-    decltype(auto) end() const { return data_ + size_; }
+    decltype(auto) end() const
+    {
+      return data_ + size_;
+    }
 
     /// Get an iterator to the end of the text
-    decltype(auto)     end() { return data_ + size_; }
+    decltype(auto) end()
+    {
+      return data_ + size_;
+    }
 
-    friend auto const& to_text(text const& t) { return t; }
+    friend auto const& to_text(text const& t)
+    {
+      return t;
+    }
 
     /// Equality comparison operator
     friend bool operator==(text const& a, text const& b) noexcept

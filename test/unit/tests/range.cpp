@@ -9,9 +9,15 @@
 #include <tts/tts.hpp>
 #include <array>
 
-int                ok_x(float x) { return static_cast<int>(x); }
+int ok_x(float x)
+{
+  return static_cast<int>(x);
+}
 
-int                ajar_x(float x) { return static_cast<int>((int(x) % 2 == 1) ? x : x + x); }
+int ajar_x(float x)
+{
+  return static_cast<int>((int(x) % 2 == 1) ? x : x + x);
+}
 
 std::array<int, 4> ajar_ax(std::array<float, 4> const& x)
 {
@@ -44,7 +50,10 @@ namespace tts
       return that;
     }
 
-    static void display(std::array<X, 4> const& v) noexcept { printf("%s", as_text(v).data()); }
+    static void display(std::array<X, 4> const& v) noexcept
+    {
+      printf("%s", as_text(v).data());
+    }
   };
 }
 
@@ -56,5 +65,5 @@ TTS_CASE("Test stateless range check")
 TTS_CASE("Test stateful range check")
 {
   TTS_ULP_RANGE_CHECK(
-      tts::realistic_generator<float>(-10, 10), float, (std::array<float, 4>), ok_x, ajar_ax, 128);
+  tts::realistic_generator<float>(-10, 10), float, (std::array<float, 4>), ok_x, ajar_ax, 128);
 };

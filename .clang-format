@@ -20,11 +20,12 @@ AlignConsecutiveDeclarations:
 AlignEscapedNewlines: Right
 AlignTrailingComments: true
 AlignAfterOpenBracket: Align
-AllowShortBlocksOnASingleLine: Always
+AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-AllowShortLoopsOnASingleLine: true
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: MultiLine
 BreakBeforeBraces: Allman
 BreakBeforeTernaryOperators: true
@@ -76,7 +77,12 @@ AlignConsecutiveMacros:
   PadOperators: true
 AllowShortCaseExpressionOnASingleLine: true
 AllowShortEnumsOnASingleLine: true
-AllowShortLambdasOnASingleLine: All
 BreakBeforeConceptDeclarations: Always
 InsertNewlineAtEOF: true
 Language: Cpp
+StatementMacros:
+  - TTS_CASE
+  - TTS_CASE_TPL
+  - TTS_CASE_WITH
+  - TTS_WHEN
+  - TTS_AND_THEN

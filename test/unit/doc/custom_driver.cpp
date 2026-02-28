@@ -12,7 +12,8 @@
 #include <tts/tts.hpp>
 #include <iostream>
 
-TTS_CASE("Some test") {};
+TTS_CASE("Some test")
+{};
 
 int main(int argc, char const** argv)
 {

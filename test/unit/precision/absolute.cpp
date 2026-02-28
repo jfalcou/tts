@@ -13,7 +13,8 @@ TTS_CASE("Absolute distance")
   TTS_ABSOLUTE_EQUAL('A', 80LL, 15);
 };
 
-TTS_CASE_TPL("Absolute distance between floating point", double, float)<typename T>(::tts::type<T>)
+TTS_CASE_TPL("Absolute distance between floating point", double, float)
+<typename T>(::tts::type<T>)
 {
   T a {1};
 
@@ -62,7 +63,8 @@ TTS_CASE_TPL("Absolute distance between integers",
              std::int8_t,
              std::int16_t,
              std::int32_t,
-             std::int64_t)<typename T>(::tts::type<T>)
+             std::int64_t)
+<typename T>(::tts::type<T>)
 {
   T a = 65, b = a + 5;
 

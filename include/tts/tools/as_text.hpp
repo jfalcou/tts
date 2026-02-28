@@ -48,7 +48,10 @@ namespace tts
   //====================================================================================================================
   template<typename T> text as_text(T const& e)
   {
-    if constexpr(requires { to_text(e); }) { return to_text(e); }
+    if constexpr(requires { to_text(e); })
+    {
+      return to_text(e);
+    }
     else if constexpr(std::floating_point<T>)
     {
       auto precision = ::tts::arguments().value(16, "--precision");
@@ -97,7 +100,8 @@ namespace tts
     else if constexpr(_::sequence<T>)
     {
       text that("{ ");
-      for(auto const& v: e) that += as_text(v) + " ";
+      for(auto const& v: e)
+        that += as_text(v) + " ";
       that += "}";
       return that;
     }
@@ -107,7 +111,8 @@ namespace tts
       unsigned char bytes[ sizeof(e) ];
       std::memcpy(bytes, &e, sizeof(e));
       text txt_bytes("[ ");
-      for(auto const& b: bytes) txt_bytes += text("%2.2X", b) + " ";
+      for(auto const& b: bytes)
+        txt_bytes += text("%2.2X", b) + " ";
       txt_bytes      += "]";
 
       auto type_desc  = as_text(typename_<T>);
@@ -121,7 +126,16 @@ namespace tts
   //! @}
   //====================================================================================================================
 
-  template<std::size_t N> auto as_text(char const (&t)[ N ]) { return text(t); }
-  inline auto                  as_text(std::nullptr_t) { return text("nullptr"); }
-  inline auto                  as_text(bool b) { return text(b ? "true" : "false"); }
+  template<std::size_t N> auto as_text(char const (&t)[ N ])
+  {
+    return text(t);
+  }
+  inline auto as_text(std::nullptr_t)
+  {
+    return text("nullptr");
+  }
+  inline auto as_text(bool b)
+  {
+    return text(b ? "true" : "false");
+  }
 }

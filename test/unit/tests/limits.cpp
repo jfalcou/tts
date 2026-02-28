@@ -26,7 +26,8 @@ template<> struct tts::limits_set<data>
   data one {1, 1.0f};
 };
 
-TTS_CASE_TPL("Limit values for integer types", tts::integral_types)<typename T>(tts::type<T> tgt)
+TTS_CASE_TPL("Limit values for integer types", tts::integral_types)
+<typename T>(tts::type<T> tgt)
 {
   TTS_EQUAL(tts::limits(tgt).valmax, std::numeric_limits<T>::max());
   TTS_EQUAL(tts::limits(tgt).valmin, std::numeric_limits<T>::lowest());
@@ -34,7 +35,8 @@ TTS_CASE_TPL("Limit values for integer types", tts::integral_types)<typename T>(
   TTS_EQUAL(tts::limits(tgt).one, static_cast<T>(1));
 };
 
-TTS_CASE_TPL("Limit values for floating-point types", tts::real_types)<typename T>(tts::type<T> tgt)
+TTS_CASE_TPL("Limit values for floating-point types", tts::real_types)
+<typename T>(tts::type<T> tgt)
 {
   TTS_EQUAL(tts::limits(tgt).nan, std::numeric_limits<T>::quiet_NaN());
   TTS_EQUAL(tts::limits(tgt).inf, std::numeric_limits<T>::infinity());

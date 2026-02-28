@@ -30,12 +30,30 @@ TTS_CASE("Check that expectation can be met")
   TTS_EXPECT(a || b, REQUIRED);
 };
 
-constexpr bool eq(int a, int b) { return a == b; }
-constexpr bool neq(int a, int b) { return a != b; }
-constexpr bool lt(int a, int b) { return a < b; }
-constexpr bool gt(int a, int b) { return a > b; }
-constexpr bool lte(int a, int b) { return a <= b; }
-constexpr bool gte(int a, int b) { return a >= b; }
+constexpr bool eq(int a, int b)
+{
+  return a == b;
+}
+constexpr bool neq(int a, int b)
+{
+  return a != b;
+}
+constexpr bool lt(int a, int b)
+{
+  return a < b;
+}
+constexpr bool gt(int a, int b)
+{
+  return a > b;
+}
+constexpr bool lte(int a, int b)
+{
+  return a <= b;
+}
+constexpr bool gte(int a, int b)
+{
+  return a >= b;
+}
 
 TTS_CASE("Check that constexpr expectation can be met")
 {

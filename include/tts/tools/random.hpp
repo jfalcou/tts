@@ -60,7 +60,8 @@ namespace tts
         unsigned int limit       = bucket_size * static_cast<unsigned int>(range);
 
         unsigned int r;
-        do {
+        do
+        {
           r = static_cast<unsigned int>(std::rand());
         } while(r >= limit);
 
@@ -70,14 +71,20 @@ namespace tts
       auto [ r_raw, r_max ] = rand30();
 
       // Fallback for huge ranges exceeding our 30-bit generator
-      if(range > r_max) { return M + static_cast<T>(r_raw % range); }
+      if(range > r_max)
+      {
+        return M + static_cast<T>(r_raw % range);
+      }
 
       // Rejection Sampling: discard the "tail" of the random range
       U            bucket_size = r_max / range;
       U            limit       = bucket_size * range;
 
       unsigned int r           = r_raw;
-      while(r >= limit) { r = rand30().val; }
+      while(r >= limit)
+      {
+        r = rand30().val;
+      }
 
       return M + static_cast<T>(r / bucket_size);
     }
@@ -96,7 +103,10 @@ namespace tts
       return static_cast<T>(M + uniform_01 * (N - M));
     }
 
-    template<std::integral T> T roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
+    template<std::integral T> T roll_random(T mini, T maxi)
+    {
+      return _::roll(mini, maxi);
+    }
 
     // Floating point complex logic (Logarithmic distribution)
     template<std::floating_point T> T roll_random(T mini, T maxi)
@@ -155,7 +165,10 @@ namespace tts
         T log_val = _::roll(log_min, log_max);
         value     = -_::exp10(log_val);
       }
-      else { return quiet_nan; }
+      else
+      {
+        return quiet_nan;
+      }
 
       return value;
     }
@@ -181,5 +194,8 @@ namespace tts
     @see tts::randoms
   **/
   //====================================================================================================================
-  template<typename T> T random_value(T mini, T maxi) { return _::roll_random(mini, maxi); }
+  template<typename T> T random_value(T mini, T maxi)
+  {
+    return _::roll_random(mini, maxi);
+  }
 }

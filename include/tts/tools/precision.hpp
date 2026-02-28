@@ -152,8 +152,14 @@ namespace tts
       {
         using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
 
-        if((a == b) || (_::is_nan(a) && _::is_nan(b))) { return 0.; }
-        else if(_::is_unordered(a, b)) { return std::numeric_limits<double>::infinity(); }
+        if((a == b) || (_::is_nan(a) && _::is_nan(b)))
+        {
+          return 0.;
+        }
+        else if(_::is_unordered(a, b))
+        {
+          return std::numeric_limits<double>::infinity();
+        }
         else
         {
           auto aa = _::bitinteger(a);
@@ -210,7 +216,10 @@ namespace tts
     {
       return (a == b) || (_::is_nan(a) && _::is_nan(b));
     }
-    else { return _::eq(a, b); }
+    else
+    {
+      return _::eq(a, b);
+    }
   }
   //====================================================================================================================
   //! @}

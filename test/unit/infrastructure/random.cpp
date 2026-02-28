@@ -29,7 +29,8 @@ TTS_CASE("Check realistic integral distribution")
 
   // The number of values per bucket should, in average, vary very little
   std::vector<int> input;
-  for(auto [ b, v ]: samples) input.push_back(v);
+  for(auto [ b, v ]: samples)
+    input.push_back(v);
 
   std::vector<int> output(input.size());
   std::adjacent_difference(input.begin(),
@@ -38,13 +39,15 @@ TTS_CASE("Check realistic integral distribution")
                            [](auto a, auto b) { return std::abs(a) - std::abs(b); });
 
   float average_variation_per_bucket = 0;
-  for(std::size_t i = 1; i < output.size() - 1; ++i) average_variation_per_bucket += output[ i ];
+  for(std::size_t i = 1; i < output.size() - 1; ++i)
+    average_variation_per_bucket += output[ i ];
   average_variation_per_bucket /= nb;
 
   TTS_LESS(average_variation_per_bucket, 0.5f);
 };
 
-TTS_CASE_TPL("Check realistic real distribution", float, double)<typename Type>(::tts::type<Type>)
+TTS_CASE_TPL("Check realistic real distribution", float, double)
+<typename Type>(::tts::type<Type>)
 {
   Type               mini = -10'000;
   Type               maxi = +10'000;
@@ -62,7 +65,8 @@ TTS_CASE_TPL("Check realistic real distribution", float, double)<typename Type>(
 
   // The number of values per bucket should, in average, vary very little
   std::vector<int> input;
-  for(auto [ b, v ]: samples) input.push_back(v);
+  for(auto [ b, v ]: samples)
+    input.push_back(v);
 
   std::vector<int> output(input.size());
   std::adjacent_difference(input.begin(),
@@ -71,7 +75,8 @@ TTS_CASE_TPL("Check realistic real distribution", float, double)<typename Type>(
                            [](auto a, auto b) { return std::abs(a) - std::abs(b); });
 
   float average_variation_per_bucket = 0;
-  for(std::size_t i = 1; i < output.size() - 1; ++i) average_variation_per_bucket += output[ i ];
+  for(std::size_t i = 1; i < output.size() - 1; ++i)
+    average_variation_per_bucket += output[ i ];
   average_variation_per_bucket /= nb;
 
   TTS_LESS(average_variation_per_bucket, 0.25f);

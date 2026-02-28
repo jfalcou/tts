@@ -24,15 +24,28 @@ namespace tts::_
     data_t data_ = {};
 
   public:
-    constexpr typename_impl() { data_ = typename_impl_value(); }
-    constexpr auto data() const { return data_.data; }
-    constexpr auto size() const { return data_.size; }
+    constexpr typename_impl()
+    {
+      data_ = typename_impl_value();
+    }
+    constexpr auto data() const
+    {
+      return data_.data;
+    }
+    constexpr auto size() const
+    {
+      return data_.size;
+    }
 
-    friend text    to_text(typename_impl const& t) { return text("%.*s", t.size(), t.data()); }
+    friend text to_text(typename_impl const& t)
+    {
+      return text("%.*s", t.size(), t.data());
+    }
 
     template<_::stream OS> friend OS& operator<<(OS& os, typename_impl t)
     {
-      for(int i = 0; i < t.size(); ++i) os << t.data()[ i ];
+      for(int i = 0; i < t.size(); ++i)
+        os << t.data()[ i ];
       return os;
     }
 
@@ -43,7 +56,10 @@ namespace tts::_
     constexpr static int length(char const* str)
     {
       int i = 0;
-      while(str[ i ] != '\0') { ++i; }
+      while(str[ i ] != '\0')
+      {
+        ++i;
+      }
       return i;
     }
 
@@ -51,11 +67,20 @@ namespace tts::_
     {
       auto compare = [](char const* lhs, char const* rhs, int count)
       {
-        if(lhs == nullptr || rhs == nullptr) { return rhs != nullptr ? -1 : 1; }
+        if(lhs == nullptr || rhs == nullptr)
+        {
+          return rhs != nullptr ? -1 : 1;
+        }
         for(int i = 0; i < count; ++i)
         {
-          if(lhs[ i ] != rhs[ i ]) { return lhs[ i ] < rhs[ i ] ? -1 : 1; }
-          else if(lhs[ i ] == '\0') { return 0; }
+          if(lhs[ i ] != rhs[ i ])
+          {
+            return lhs[ i ] < rhs[ i ] ? -1 : 1;
+          }
+          else if(lhs[ i ] == '\0')
+          {
+            return 0;
+          }
         }
         return 0;
       };
@@ -64,9 +89,11 @@ namespace tts::_
       if(char c = *n++; c != '\0')
       {
         int len = length(n);
-        do {
+        do
+        {
           char sc = {};
-          do {
+          do
+          {
             if((sc = *str++) == '\0') return 0;
           } while(sc != c);
         } while(compare(str, n, len) != 0);
@@ -139,7 +166,10 @@ namespace tts
     @return A `typename_` instance representing the name of `T` as a string-like object.
   **/
   //====================================================================================================================
-  template<typename T> constexpr auto name([[maybe_unused]] T const& t) { return typename_<T>; }
+  template<typename T> constexpr auto name([[maybe_unused]] T const& t)
+  {
+    return typename_<T>;
+  }
 
   //====================================================================================================================
   /// @}

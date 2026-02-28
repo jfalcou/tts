@@ -42,7 +42,10 @@ namespace tts
     @return A value of type `T` obtained by conversion of `v`.
   **/
   //====================================================================================================================
-  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+  template<typename T, typename V> auto as_value(V const& v)
+  {
+    return static_cast<T>(v);
+  }
 
   //====================================================================================================================
   /**
@@ -234,7 +237,10 @@ namespace tts
     @return A instance of `limits_set<T>` containing limits and special values for type `T`.
   **/
   //====================================================================================================================
-  template<typename T> inline auto limits(tts::type<T>) { return limits_set<T> {}; }
+  template<typename T> inline auto limits(tts::type<T>)
+  {
+    return limits_set<T> {};
+  }
 
   //====================================================================================================================
   /**
@@ -255,9 +261,12 @@ namespace tts
     {
     }
 
-    template<typename D> D operator()(tts::type<D>, auto...) const { return as_value<D>(seed); }
+    template<typename D> D operator()(tts::type<D>, auto...) const
+    {
+      return as_value<D>(seed);
+    }
 
-    T                      seed;
+    T seed;
   };
 
   //====================================================================================================================
@@ -293,10 +302,13 @@ namespace tts
       return as_value<D>(start + idx * step);
     }
 
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(start);
+    }
 
-    T                      start;
-    U                      step;
+    T start;
+    U step;
   };
 
   //====================================================================================================================
@@ -332,10 +344,13 @@ namespace tts
       return as_value<D>(start - idx * step);
     }
 
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(start);
+    }
 
-    T                      start;
-    U                      step;
+    T start;
+    U step;
   };
 
   //====================================================================================================================
@@ -371,10 +386,13 @@ namespace tts
       return _::min(as_value<D>(w1 + idx * step), w2);
     }
 
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(first_); }
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(first_);
+    }
 
-    T                      first_;
-    U                      last_;
+    T first_;
+    U last_;
   };
 
   //====================================================================================================================

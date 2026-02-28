@@ -83,14 +83,28 @@ namespace tts::_
       invoker(payload);
     }
 
-    explicit operator bool() const { return payload != nullptr; }
+    explicit operator bool() const
+    {
+      return payload != nullptr;
+    }
 
   private:
-    template<typename T> static void invoke(void* data) { (*static_cast<T*>(data))(); }
-    template<typename T> static void destroy(void* data) { delete static_cast<T*>(data); }
+    template<typename T> static void invoke(void* data)
+    {
+      (*static_cast<T*>(data))();
+    }
+    template<typename T> static void destroy(void* data)
+    {
+      delete static_cast<T*>(data);
+    }
 
     // Static helpers for the function pointer path
-    static void invoke_ptr(void* data) { reinterpret_cast<void (*)()>(data)(); }
-    static void cleanup_ptr(void*) {}
+    static void invoke_ptr(void* data)
+    {
+      reinterpret_cast<void (*)()>(data)();
+    }
+    static void cleanup_ptr(void*)
+    {
+    }
   };
 }
