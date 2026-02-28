@@ -51,8 +51,8 @@ namespace tts::_
                                   // We setup the current type name before each test so we know
                                   (((current_type = as_text(typename_<Types>)),
                                     (::tts::_::is_verbose && !::tts::_::is_quiet
-                                         ? printf(">  With <T = %s>\n", current_type.data())
-                                         : 0),
+                                     ? printf(">  With <T = %s>\n", current_type.data())
+                                     : 0),
                                     body(type<Types>())),
                                    ...);
                                   // Clear the current type
@@ -138,7 +138,7 @@ namespace tts::_
 #else
 #define TTS_CASE(ID)                                                                               \
   [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                                \
-      ::tts::_::capture {ID} + +[]() /**/
+  ::tts::_::capture {ID} + +[]() /**/
 #endif
 
 //======================================================================================================================
@@ -169,7 +169,7 @@ namespace tts::_
 #else
 #define TTS_CASE_TPL(ID, ...)                                                                      \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-      ::tts::_::captures<__VA_ARGS__> {ID} + [] /**/
+  ::tts::_::captures<__VA_ARGS__> {ID} + [] /**/
 #endif
 
 //======================================================================================================================
@@ -200,8 +200,8 @@ namespace tts::_
 #else
 #define TTS_CASE_WITH(ID, TYPES, ...)                                                              \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-      ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID} \
-      << [] /**/
+  ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
+  << [] /**/
 #endif
 
 //======================================================================================================================

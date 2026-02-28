@@ -115,7 +115,7 @@ namespace tts::_
     T*          data_;
 
     // Ensure enough capacity for new elements
-    void        ensure_capacity(std::size_t new_capacity)
+    void ensure_capacity(std::size_t new_capacity)
     {
       if(new_capacity > capacity_)
       {

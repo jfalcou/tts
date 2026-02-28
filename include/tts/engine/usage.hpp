@@ -10,7 +10,7 @@
 namespace tts::_
 {
   inline constexpr auto usage_text =
-      R"(
+  R"(
 Flags:
   -h, --help        Display this help message
   -x, --hex         Print the floating results in hexfloat mode

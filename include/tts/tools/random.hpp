@@ -36,9 +36,9 @@ namespace tts
       else
       {
         constexpr unsigned int SHIFT_MAX =
-            (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
+        (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
         unsigned int r =
-            (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
+        (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
         return {r, SHIFT_MAX};
       }
     }
@@ -92,11 +92,11 @@ namespace tts
       auto [ r_raw, r_max ] = rand30();
 
       // Normalize exactly to [0, 1] based on actual generator capability
-      double uniform_01     = static_cast<double>(r_raw) / static_cast<double>(r_max);
+      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
       return static_cast<T>(M + uniform_01 * (N - M));
     }
 
-    template<std::integral T> T       roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
+    template<std::integral T> T roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
 
     // Floating point complex logic (Logarithmic distribution)
     template<std::floating_point T> T roll_random(T mini, T maxi)
@@ -117,8 +117,8 @@ namespace tts
       // Handle Zero-Crossing Ranges [-A, +B]
       if(mini < 0 && maxi > 0)
       {
-        T    abs_min       = _::abs(mini);
-        T    abs_max       = _::abs(maxi);
+        T abs_min = _::abs(mini);
+        T abs_max = _::abs(maxi);
 
         // Weight probability by magnitude
         T    total_mag     = abs_min + abs_max;

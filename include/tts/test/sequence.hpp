@@ -23,8 +23,8 @@ namespace tts::_
     else
     {
       static_assert(
-          requires { c.size(); } || requires { size(c); },
-          "[TTS] Container type must support .size() or ADL size()");
+      requires { c.size(); } || requires { size(c); },
+      "[TTS] Container type must support .size() or ADL size()");
     }
   }
 
@@ -35,8 +35,8 @@ namespace tts::_
     else
     {
       static_assert(
-          requires { c.begin(); } || requires { begin(c); },
-          "[TTS] Container type must support .begin() or ADL begin()");
+      requires { c.begin(); } || requires { begin(c); },
+      "[TTS] Container type must support .begin() or ADL begin()");
     }
   }
 
@@ -47,8 +47,8 @@ namespace tts::_
     else
     {
       static_assert(
-          requires { c.end(); } || requires { end(c); },
-          "[TTS] Container type must support .end() or ADL end()");
+      requires { c.end(); } || requires { end(c); },
+      "[TTS] Container type must support .end() or ADL end()");
     }
   }
 

@@ -75,7 +75,7 @@ namespace tts::_
 #define TTS_WHEN(STORY)                                                                            \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW(                                                                      \
-      ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);          \
+  ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);              \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count;                                 \
       tts_count -= 0 == tts_section++)                                                             \
     for(tts::_::only_once tts_only_once_setup {}; tts_only_once_setup;) TTS_DISABLE_WARNING_POP    \

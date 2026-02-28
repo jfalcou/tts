@@ -227,7 +227,7 @@ namespace tts
       @return The current random seed used by TTS.
   **/
   //====================================================================================================================
-  inline int            random_seed(int base_seed = -1)
+  inline int random_seed(int base_seed = -1)
   {
     if(_::current_seed == -1)
     {

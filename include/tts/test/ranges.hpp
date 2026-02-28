@@ -89,11 +89,11 @@ namespace tts
   template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
   double ulp_histogram(Generator g, RefFun reference, NewFun challenger)
   {
-    using out_type            = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
-    using nout_type           = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
+    using out_type  = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
+    using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
 
     //-- Find how many elements in a block
-    std::size_t         count = ::tts::arguments().value(4096, "--block");
+    std::size_t count = ::tts::arguments().value(4096, "--block");
 
     //-- Prepare blocks
     _::buffer<out_type> ref_out(count), new_out(count);
@@ -163,7 +163,7 @@ namespace tts
         _::results(-1., -1, -1., "instead of: ", ref);
         if(!_::is_quiet)
           printf(
-              "--------------------------------------------------------------------------------\n");
+          "--------------------------------------------------------------------------------\n");
       }
     }
 
@@ -210,8 +210,8 @@ namespace tts
     double tts_ulp_max         = Ulpmax;                                                           \
     double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
     double local_tts_max_ulp =                                                                     \
-        ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(              \
-            generator, RefFunc, NewFunc);                                                          \
+    ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(                  \
+    generator, RefFunc, NewFunc);                                                                  \
                                                                                                    \
     if(local_tts_max_ulp <= local_tts_threshold) { ::tts::global_runtime.pass(); }                 \
     else                                                                                           \
