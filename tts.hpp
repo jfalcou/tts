@@ -294,7 +294,7 @@ namespace tts
         }
       }
     }
-    text(text&& other)
+    text(text&& other) noexcept
         : text()
     {
       swap(other);
@@ -305,7 +305,7 @@ namespace tts
       swap(local);
       return *this;
     }
-    text& operator=(text&& other)
+    text& operator=(text&& other) noexcept
     {
       text local(std::move(other));
       swap(local);
@@ -315,7 +315,7 @@ namespace tts
     {
       if(data_) free(data_);
     }
-    void swap(text& o)
+    void swap(text& o) noexcept
     {
       std::swap(o.data_, data_);
       std::swap(o.size_, size_);
@@ -852,7 +852,7 @@ namespace tts::_
     bool                            empty() const noexcept { return size_ == 0; }
     std::size_t                     size() const noexcept { return size_; }
     std::size_t                     capacity() const noexcept { return capacity_; }
-    void                            swap(buffer& other)
+    void                            swap(buffer& other) noexcept
     {
       std::swap(size_, other.size_);
       std::swap(capacity_, other.capacity_);
@@ -918,7 +918,7 @@ namespace tts::_
     }
     callable(callable const&)            = delete;
     callable& operator=(callable const&) = delete;
-    callable& operator=(callable&& other)
+    callable& operator=(callable&& other) noexcept
     {
       payload       = TTS_MOVE(other.payload);
       other.payload = {};
