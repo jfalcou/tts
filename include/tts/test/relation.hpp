@@ -36,7 +36,7 @@
   if constexpr(local_tts_expr)                                                                     \
   {                                                                                                \
     TTS_PASS("Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));           \
-    return ::tts::_::logger {false};                                                               \
+    ::tts::global_logger_status = false;                                                           \
   }                                                                                                \
   else                                                                                             \
   {                                                                                                \
@@ -47,7 +47,7 @@
             ::tts::as_text(A).data(),                                                              \
             F,                                                                                     \
             ::tts::as_text(B).data());                                                             \
-    return ::tts::_::logger {};                                                                    \
+    ::tts::global_logger_status = true;                                                            \
   }                                                                                                \
   /**/
 
@@ -418,9 +418,11 @@ same.
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
+  ::tts::global_logger_status = false;                                                             \
   do {                                                                                             \
     TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                               \
   } while(0);                                                                                      \
+  ::tts::_::logger { ::tts::global_logger_status }                                                 \
 /**/
 
 //======================================================================================================================
@@ -565,6 +567,7 @@ same.
   TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
+  ::tts::global_logger_status = false;                                                             \
   do {                                                                                             \
     using type_a = std::remove_cvref_t<decltype(A)>;                                               \
     using type_b = std::remove_cvref_t<decltype(B)>;                                               \
@@ -579,10 +582,12 @@ same.
               ::tts::typename_<type_a>.data(),                                                     \
               ::tts::typename_<type_b>.size(),                                                     \
               ::tts::typename_<type_b>.data());                                                    \
-      return ::tts::_::logger {};                                                                  \
+      ::tts::global_logger_status = false;                                                         \
     }                                                                                              \
     else { TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                      \
-  } while(0) /**/
+  } while(0);                                                                                      \
+  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  /**/
 
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)

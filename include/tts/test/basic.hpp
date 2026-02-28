@@ -121,19 +121,22 @@
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_IMPL(EXPR, FAILURE)                                                       \
+  ::tts::global_logger_status = false;                                                             \
   do {                                                                                             \
     constexpr auto local_tts_expr = EXPR;                                                          \
     if constexpr(local_tts_expr)                                                                   \
     {                                                                                              \
       TTS_PASS("Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR))); \
-      return ::tts::_::logger {false};                                                             \
+      ::tts::global_logger_status = false;                                                         \
     }                                                                                              \
     else                                                                                           \
     {                                                                                              \
       FAILURE("Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR))); \
-      return ::tts::_::logger {};                                                                  \
+      ::tts::global_logger_status = true;                                                          \
     }                                                                                              \
-  } while(0) /**/
+  } while(0);                                                                                      \
+  ::tts::_::logger { ::tts::global_logger_status }
+/**/
 
 //======================================================================================================================
 /**
@@ -157,20 +160,23 @@
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                   \
+  ::tts::global_logger_status = false;                                                             \
   do {                                                                                             \
     constexpr auto local_tts_expr = EXPR;                                                          \
     if constexpr(!local_tts_expr)                                                                  \
     {                                                                                              \
       TTS_PASS("Constant expression: %s evaluates to false.",                                      \
                TTS_STRING(TTS_REMOVE_PARENS(EXPR)));                                               \
-      return ::tts::_::logger {false};                                                             \
+      ::tts::global_logger_status = false;                                                         \
     }                                                                                              \
     else                                                                                           \
     {                                                                                              \
       FAILURE("Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));  \
-      return ::tts::_::logger {};                                                                  \
+      ::tts::global_logger_status = true;                                                          \
     }                                                                                              \
-  } while(0) /**/
+  } while(0);                                                                                      \
+  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  /**/
 
 //======================================================================================================================
 /**
