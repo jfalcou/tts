@@ -6,14 +6,14 @@
 AlignConsecutiveAssignments:
   Enabled: true
   AcrossEmptyLines: true
-  AcrossComments: true
+  AcrossComments: false
   AlignCompound: true
   AlignFunctionPointers: false
   PadOperators: true
 AlignConsecutiveDeclarations:
   Enabled: true
   AcrossEmptyLines: true
-  AcrossComments: true
+  AcrossComments: false
   AlignCompound: true
   AlignFunctionPointers: false
   PadOperators: true
@@ -32,6 +32,8 @@ BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 ColumnLimit: 100
 Cpp11BracedListStyle: true
+CommentPragmas: '^ [^@]'
+ContinuationIndentWidth: 0
 FixNamespaceComments: false
 IncludeBlocks: Regroup
 IndentCaseLabels: false
@@ -41,6 +43,7 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
 PointerAlignment: Left
+ReflowComments: true
 SortIncludes: Never
 SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
