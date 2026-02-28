@@ -102,7 +102,7 @@ namespace tts::_
     std::size_t                     size() const noexcept { return size_; }
     std::size_t                     capacity() const noexcept { return capacity_; }
 
-    void                            swap(buffer& other)
+    void                            swap(buffer& other) noexcept
     {
       std::swap(size_, other.size_);
       std::swap(capacity_, other.capacity_);
