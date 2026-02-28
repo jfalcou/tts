@@ -62,7 +62,7 @@ namespace tts::_
     callable(callable const&)            = delete;
     callable& operator=(callable const&) = delete;
 
-    callable& operator=(callable&& other)
+    callable& operator=(callable&& other) noexcept
     {
       payload       = TTS_MOVE(other.payload);
       other.payload = {};

@@ -114,7 +114,7 @@ namespace tts
     }
 
     /// Move constructor
-    text(text&& other)
+    text(text&& other) noexcept
         : text()
     {
       swap(other);
@@ -129,7 +129,7 @@ namespace tts
     }
 
     /// Move assignment operator
-    text& operator=(text&& other)
+    text& operator=(text&& other) noexcept
     {
       text local(std::move(other));
       swap(local);
@@ -143,7 +143,7 @@ namespace tts
     }
 
     /// Swap contents with another text instance
-    void swap(text& o)
+    void swap(text& o) noexcept
     {
       std::swap(o.data_, data_);
       std::swap(o.size_, size_);
