@@ -168,9 +168,8 @@ namespace tts
     @ingroup tools-random
 
     This function generates a random value of type `T` between the specified `mini` and `maxi`
-  bounds using an uniform distribution for integral types and a log-uniform distribution for
-  floating-point types. The seed is derived from the
-    @ref tts::random_seed function.
+    bounds using an uniform distribution for integral types and a log-uniform distribution for
+    floating-point types. The seed is derived from the tts::random_seed function.
 
     @groupheader{Example}
     @snippet doc/random.cpp snippet
