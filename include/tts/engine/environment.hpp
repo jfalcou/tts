@@ -76,8 +76,9 @@ namespace tts::_
 
 namespace tts
 {
-  inline _::env global_runtime     = {};
-  inline bool   fatal_error_status = false;
+  inline _::env global_runtime       = {};
+  inline bool   fatal_error_status   = false;
+  inline bool   global_logger_status = false;
 
   //====================================================================================================================
   /**
