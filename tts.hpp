@@ -429,6 +429,7 @@ namespace tts
   }
 }
 TTS_DISABLE_WARNING_POP
+#include <cassert>
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts::_
@@ -440,11 +441,13 @@ namespace tts::_
         : token(arg)
         , position(-1)
     {
+      assert(arg && "Token cannot be null");
       auto it  = strchr(arg, '=');
       position = static_cast<int>(it ? (it - token) : strlen(token));
     }
     bool has_flag(char const* f) const
     {
+      assert(f && "Flag cannot be null");
       if(position == -1) return false;
       int len = static_cast<int>(strlen(f));
       if(len > position) return false;
@@ -2963,6 +2966,7 @@ namespace tts::_
 #else
 #define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
 #endif
+#include <cassert>
 namespace tts
 {
   template<typename Base> struct adapter
@@ -3026,6 +3030,7 @@ namespace tts
     template<typename U, typename R, typename V>
     void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
+      assert(desc && "Description cannot be null");
       if(::tts::_::is_quiet) return;
       if(ulp != -1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
       else printf("%*s", static_cast<int>(48 + strlen(desc)), desc);
