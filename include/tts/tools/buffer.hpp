@@ -9,6 +9,7 @@
 
 #include <tts/tools/preprocessor.hpp>
 #include <type_traits>
+#include <cassert>
 
 namespace tts::_
 {
@@ -27,7 +28,9 @@ namespace tts::_
     {
       if(n > 0)
       {
-        data_     = reinterpret_cast<T*>(malloc(sizeof(T) * n));
+        data_ = static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR
+        assert(data_ && "tts::buffer out of memory");
+
         size_     = n;
         capacity_ = n;
         for(std::size_t i = 0; i < n; ++i)
@@ -40,7 +43,9 @@ namespace tts::_
     {
       if(n > 0)
       {
-        data_     = reinterpret_cast<T*>(malloc(sizeof(T) * n));
+        data_ = static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR
+        assert(data_ && "tts::buffer out of memory");
+
         size_     = n;
         capacity_ = n;
         for(std::size_t i = 0; i < n; ++i)
@@ -66,7 +71,9 @@ namespace tts::_
     {
       if(other.size_ > 0)
       {
-        data_     = reinterpret_cast<T*>(malloc(sizeof(T) * other.size_));
+        data_ = static_cast<T*>(malloc(sizeof(T) * other.size_)); // NOSONAR
+        assert(data_ && "tts::buffer out of memory");
+
         size_     = other.size_;
         capacity_ = other.size_;
         for(std::size_t i = 0; i < size_; ++i)
@@ -180,12 +187,14 @@ namespace tts::_
         while(new_cap < new_capacity)
           new_cap *= 2;
 
-        T* new_data = reinterpret_cast<T*>(malloc(sizeof(T) * new_cap));
+        auto new_data = static_cast<T*>(malloc(sizeof(T) * new_cap)); // NOSONAR
+        assert(new_data && "tts::buffer out of memory");
 
         for(std::size_t i = 0; i < size_; ++i)
         {
           new(new_data + i) T(TTS_MOVE(data_[ i ]));
-          (data_ + i)->~T();
+          if constexpr(!std::is_trivially_destructible_v<T>)
+            (data_ + i)->~T(); // NOSONAR - T may be non-trivial
         }
 
         free(data_);
