@@ -187,6 +187,27 @@ namespace tts
 
   template<typename T> using base_type_t = typename base_type<T>::type;
 
+  //====================================================================================================================
+  /**
+    @brief Boolean type computation
+
+    This structure is used to compute a boolean type for a type `T`. By default, the boolean type is
+    `bool`, but this structure can be specialized for user-defined types to provide a different
+  boolean type.
+
+      **Helper types:**
+      - `boolean_type_t<T>`: Alias for `typename boolean_type<T>::type`
+
+      @tparam T Type for which to compute the boolean type.
+  **/
+  //====================================================================================================================
+  template<typename T> struct boolean_type
+  {
+    using type = bool;
+  };
+
+  template<typename T> using boolean_type_t = typename boolean_type<T>::type;
+
   namespace _
   {
     struct empty_limits
@@ -316,6 +337,28 @@ namespace tts
     }
 
     T seed;
+  };
+
+  template<typename T, typename U = T> struct logicals
+  {
+    constexpr logicals(T v, U k)
+        : start(v)
+        , range(k)
+    {
+    }
+
+    template<typename D> auto operator()(tts::type<D>) const
+    {
+      return as_value<tts::boolean_type_t<D>>(false);
+    }
+
+    template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
+    {
+      return as_value<tts::boolean_type_t<D>>(((start + idx) % range) == 0);
+    }
+
+    T start;
+    U range;
   };
 
   //====================================================================================================================
