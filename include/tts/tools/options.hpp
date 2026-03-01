@@ -8,6 +8,7 @@
 //======================================================================================================================
 #pragma once
 #include <tts/tools/preprocessor.hpp>
+#include <cassert>
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
@@ -21,15 +22,17 @@ namespace tts::_
         : token(arg)
         , position(-1)
     {
+      assert(arg && "Token cannot be null");
       auto it  = strchr(arg, '=');
-      position = static_cast<int>(it ? (it - token) : strlen(token));
+      position = static_cast<int>(it ? (it - token) : strlen(token)); // NOSONAR
     }
 
     bool has_flag(char const* f) const
     {
+      assert(f && "Flag cannot be null");
       if(position == -1) return false;
 
-      int len = static_cast<int>(strlen(f));
+      int len = static_cast<int>(strlen(f)); // NOSONAR
       if(len > position) return false;
 
       return strncmp(token, f, position) == 0;

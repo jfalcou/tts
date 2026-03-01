@@ -8,6 +8,8 @@
 //======================================================================================================================
 #pragma once
 
+#include <cassert>
+
 namespace tts
 {
   template<typename Base> struct adapter
@@ -77,9 +79,10 @@ namespace tts
     template<typename U, typename R, typename V>
     void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
+      assert(desc && "Description cannot be null");
       if(::tts::_::is_quiet) return;
       if(ulp != -1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
-      else printf("%*s", static_cast<int>(48 + strlen(desc)), desc);
+      else printf("%*s", static_cast<int>(48 + strlen(desc)), desc); // NOSONAR
       adapter<V>::display(v);
       printf("\n");
     }
