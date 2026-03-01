@@ -18,7 +18,7 @@ namespace tts::_
 
   struct logger
   {
-    logger(bool status = true)
+    explicit logger(bool status = true)
         : display(status)
         , done(false)
     {

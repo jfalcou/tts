@@ -29,7 +29,7 @@ namespace tts::_
 
     // Optimized path for simple function pointers (used by TTS_CASE)
     // Avoids template instantiation and heap allocation for stateless tests
-    callable(void (*f)())
+    callable(void (*f)()) // NOSONAR
         : invoker {invoke_ptr}
         , cleanup {cleanup_ptr}
         , payload {reinterpret_cast<void*>(f)}
@@ -39,10 +39,10 @@ namespace tts::_
     // Copy/transfer the function as the unknown payload holding states
     // We could have have used std::any but you know, compile-time
     template<typename Function>
-    callable(Function f)
+    callable(Function f) // NOSONAR
         : invoker {invoke<Function>}
         , cleanup {destroy<Function>}
-        , payload {new Function {TTS_MOVE(f)}}
+        , payload {new Function {TTS_MOVE(f)}} // NOSONAR Type erasure
     {
     }
 

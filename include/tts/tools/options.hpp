@@ -18,7 +18,7 @@ namespace tts::_
   struct option
   {
     option() = default;
-    option(char const* arg)
+    explicit option(char const* arg)
         : token(arg)
         , position(-1)
     {
@@ -234,9 +234,9 @@ namespace tts
       @brief Initialize the random seed for tests
 
       Initializes and retrieves the random seed used by TTS for random number generation. If the
-  seed has not been initialized yet, it uses the value provided as argument. If that value is -1, it
-  uses the current time as seed. Once initialized, calling this function will return the same seed
-  each time.
+      seed has not been initialized yet, it uses the value provided as argument. If that value is
+  -1, it uses the current time as seed. Once initialized, calling this function will return the same
+  seed each time.
 
       @groupheader{Example}
       @snippet doc/random_seed.cpp snippet
@@ -250,7 +250,7 @@ namespace tts
     if(_::current_seed == -1)
     {
       auto s = arguments().value(base_seed, "--seed");
-      if(s == -1) s = static_cast<int>(time(0));
+      if(s == -1) s = static_cast<int>(time(nullptr));
       _::current_seed = s;
     }
 
