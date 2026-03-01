@@ -89,23 +89,25 @@ namespace tts::_
     }
 
   private:
-    template<typename T> static void invoke(void* data)
+    template<typename T>
+    static void invoke(void* data) // NOSONAR Type erasure: no need for a more complex solution
     {
       (*static_cast<T*>(data))();
     }
-    template<typename T> static void destroy(void* data)
+    template<typename T>
+    static void destroy(void* data) // NOSONAR Type erasure: no need for a more complex solution
     {
-      delete static_cast<T*>(data);
+      delete static_cast<T*>(data); // NOSONAR Type erasure: delete is safe
     }
 
     // Static helpers for the function pointer path
-    static void invoke_ptr(void* data)
+    static void invoke_ptr(void* data) // NOSONAR Type erasure: no need for a more complex solution
     {
-      reinterpret_cast<void (*)()>(data)();
+      reinterpret_cast<void (*)()>(data)(); // NOSONAR Type erasure
     }
-    static void cleanup_ptr(void*)
+    static void cleanup_ptr(void*) // NOSONAR Type erasure: no need for a more complex solution
     {
-      // No cleanup needed for function pointers
+      // NOSONAR No cleanup needed for function pointers
     }
   };
 }
