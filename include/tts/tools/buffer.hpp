@@ -8,6 +8,7 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
+#include <type_traits>
 
 namespace tts::_
 {
@@ -51,8 +52,11 @@ namespace tts::_
     {
       if(data_)
       {
-        for(std::size_t i = 0; i < size_; ++i)
-          (data_ + i)->~T();
+        if constexpr(!std::is_trivially_destructible_v<T>)
+        {
+          for(std::size_t i = 0; i < size_; ++i)
+            (data_ + i)->~T(); // NOSONAR - T may be non-trivial
+        }
         free(data_);
       }
     }
