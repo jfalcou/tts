@@ -304,6 +304,8 @@ namespace tts
 
     @tparam T Type for which to provide limits
     @return A instance of `limits_set<T>` containing limits and special values for type `T`.
+
+    @relates limits_set
   **/
   //====================================================================================================================
   template<typename T> inline auto limits(tts::type<T>)
@@ -339,6 +341,21 @@ namespace tts
     T seed;
   };
 
+  //====================================================================================================================
+  /**
+    @brief Defines a data generator that produce logical values in a regular pattern.
+
+    This generator produces logical values (true/false) in a regular pattern defined by two
+  parameters: a starting index and a range.
+
+    For a size `N`, the produced values are:
+      - `true` for indices `i` where `(start + i) % range == 0`
+      - `false` for all other indices.
+
+    @tparam T Type of the starting index
+    @tparam U Type of the range
+  **/
+  //====================================================================================================================
   template<typename T, typename U = T> struct logicals
   {
     constexpr logicals(T v, U k)
@@ -526,18 +543,6 @@ namespace tts
     Mx maxi;
   };
 
-  namespace _
-  {
-    struct random_bits_t
-    {
-      template<typename D> auto operator()(tts::type<D>, auto...)
-      {
-        using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
-        return tts::random_value<i_t>(0, 8 * sizeof(i_t) - 1);
-      }
-    };
-  }
-
   //====================================================================================================================
   /**
     @brief Produces random bits patterns
@@ -550,7 +555,14 @@ namespace tts
     @snippet doc/generator_random_bits.cpp snippet
   **/
   //====================================================================================================================
-  inline constexpr _::random_bits_t random_bits = {};
+  struct random_bits
+  {
+    template<typename D> auto operator()(tts::type<D>, auto...)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return tts::random_value<i_t>(0, 8 * sizeof(i_t) - 1);
+    }
+  };
 
   //====================================================================================================================
   /**
