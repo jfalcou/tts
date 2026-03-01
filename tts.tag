@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.9.8">
   <compound kind="struct">
+    <name>tts::base_type</name>
+    <filename>structtts_1_1base__type.html</filename>
+    <templarg>typename T</templarg>
+  </compound>
+  <compound kind="struct">
     <name>tts::between</name>
     <filename>structtts_1_1between.html</filename>
     <templarg>typename T</templarg>
@@ -19,14 +24,19 @@
     <templarg>typename Type</templarg>
   </compound>
   <compound kind="struct">
+    <name>tts::limits_set</name>
+    <filename>structtts_1_1limits__set.html</filename>
+    <templarg>typename T</templarg>
+  </compound>
+  <compound kind="struct">
     <name>tts::options</name>
     <filename>structtts_1_1options.html</filename>
     <member kind="function">
       <type>bool</type>
       <name>is_valid</name>
       <anchorfile>structtts_1_1options.html</anchorfile>
-      <anchor>a9548e8175531e8efa53c039e376ca902</anchor>
-      <arglist>()</arglist>
+      <anchor>ac8155f76d1b47eeddc7594fb2682090b</anchor>
+      <arglist>() const</arglist>
     </member>
     <member kind="function">
       <type>bool</type>
@@ -399,10 +409,18 @@
     <title>Data Generators</title>
     <filename>group__tools-generators-class.html</filename>
     <class kind="struct">tts::between</class>
+    <class kind="struct">tts::limits_set</class>
     <class kind="struct">tts::ramp</class>
     <class kind="struct">tts::randoms</class>
     <class kind="struct">tts::reverse_ramp</class>
     <class kind="struct">tts::value</class>
+    <member kind="function">
+      <type>auto</type>
+      <name>tts::limits</name>
+      <anchorfile>group__tools-generators-class.html</anchorfile>
+      <anchor>gac33890b31b31d8cec2586d82db5040e9</anchor>
+      <arglist>(tts::type&lt; T &gt;)</arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>tools-generators-custom</name>
@@ -430,6 +448,7 @@
     <filename>group__tools-generators.html</filename>
     <subgroup>tools-generators-class</subgroup>
     <subgroup>tools-generators-custom</subgroup>
+    <class kind="struct">tts::base_type</class>
   </compound>
   <compound kind="group">
     <name>test-exceptions</name>

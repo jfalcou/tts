@@ -181,11 +181,19 @@ Macros</h2></td></tr>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> bar() {}</div>
+<div class="line"><span class="keywordtype">void</span> bar()</div>
+<div class="line">{</div>
+<div class="line">  <span class="comment">// This function is marked as noexcept, so it should not throw any exceptions.</span></div>
+<div class="line">  <span class="comment">// If it does, the test framework should detect this and report it as a failure.</span></div>
+<div class="line">  <span class="comment">// In this case, we are not throwing anything, so the test should pass.</span></div>
+<div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that nothrow function are detected as such&quot;</span>) { <a class="code hl_define" href="group__test-exceptions.html#ga73a53c85dca47c0b593e451e30d62bec">TTS_NO_THROW</a>(bar()); };</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that nothrow function are detected as such&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-exceptions.html#ga73a53c85dca47c0b593e451e30d62bec">TTS_NO_THROW</a>(bar());</div>
+<div class="line">};</div>
 <div class="ttc" id="agroup__test-exceptions_html_ga73a53c85dca47c0b593e451e30d62bec"><div class="ttname"><a href="group__test-exceptions.html#ga73a53c85dca47c0b593e451e30d62bec">TTS_NO_THROW</a></div><div class="ttdeci">#define TTS_NO_THROW(EXPR,...)</div><div class="ttdoc">Checks if a given expression throws no exception.</div><div class="ttdef"><b>Definition</b> exceptions.hpp:123</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:140</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -240,9 +248,15 @@ Macros</h2></td></tr>
 <div class="line">{</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> foo() { <span class="keywordflow">throw</span> some_exception_type(); }</div>
+<div class="line"><span class="keywordtype">void</span> foo()</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">throw</span> some_exception_type();</div>
+<div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that we can capture thrown exceptions&quot;</span>) { <a class="code hl_define" href="group__test-exceptions.html#ga55820a3f048b29e7e4f33d0730d072c8">TTS_THROW</a>(foo(), some_exception_type); };</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that we can capture thrown exceptions&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-exceptions.html#ga55820a3f048b29e7e4f33d0730d072c8">TTS_THROW</a>(foo(), some_exception_type);</div>
+<div class="line">};</div>
 <div class="ttc" id="agroup__test-exceptions_html_ga55820a3f048b29e7e4f33d0730d072c8"><div class="ttname"><a href="group__test-exceptions.html#ga55820a3f048b29e7e4f33d0730d072c8">TTS_THROW</a></div><div class="ttdeci">#define TTS_THROW(EXPR, EXCEPTION,...)</div><div class="ttdoc">Checks if a given expression throws an exception of a given type.</div><div class="ttdef"><b>Definition</b> exceptions.hpp:73</div></div>
 </div><!-- fragment --> 
 </div>

@@ -123,7 +123,8 @@ $(document).ready(function(){initNavTree('group__tools-generators-class.html',''
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Data Generators<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -135,6 +136,9 @@ $(document).ready(function(){initNavTree('group__tools-generators-class.html',''
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1between.html">tts::between&lt; T, U &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce values between two bounds.  <a href="structtts_1_1between.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1limits__set.html">tts::limits_set&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a set of limits for a type <code>T</code>.  <a href="structtts_1_1limits__set.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1ramp.html">tts::ramp&lt; T, U &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce a ramp of data.  <a href="structtts_1_1ramp.html#details">More...</a><br /></td></tr>
@@ -148,7 +152,55 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtts_1_1value.html">tts::value&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that always return the same value.  <a href="structtts_1_1value.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gac33890b31b31d8cec2586d82db5040e9" id="r_gac33890b31b31d8cec2586d82db5040e9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:gac33890b31b31d8cec2586d82db5040e9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__tools-generators-class.html#gac33890b31b31d8cec2586d82db5040e9">tts::limits</a> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; T &gt;)</td></tr>
+<tr class="memdesc:gac33890b31b31d8cec2586d82db5040e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a set of limits for the type <code>T</code>.  <br /></td></tr>
+<tr class="separator:gac33890b31b31d8cec2586d82db5040e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="gac33890b31b31d8cec2586d82db5040e9" name="gac33890b31b31d8cec2586d82db5040e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac33890b31b31d8cec2586d82db5040e9">&#9670;&#160;</a></span>limits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto tts::limits </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtts_1_1type.html">tts::type</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/generator.hpp&gt;</code></p>
+
+<p>Provides a set of limits for the type <code>T</code>. </p>
+<p>This function returns a structure containing various limits and special values for the type <code>T</code> that can be used for generating test data that covers edge cases and special values.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type for which to provide limits </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A instance of <code><a class="el" href="structtts_1_1limits__set.html" title="Defines a set of limits for a type T.">limits_set</a>&lt;T&gt;</code> containing limits and special values for type <code>T</code>. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.20-->

@@ -9,6 +9,6 @@ var searchData=
   ['integral_5ftypes_6',['integral_types',['../group__tools-types.html#ga4deed4d1187eb9f1ac35581d25ebb0c5',1,'tts']]],
   ['interface_7',['Command Line Interface',['../cli.html',1,'']]],
   ['is_5fempty_8',['is_empty',['../structtts_1_1text.html#a179150a2fec58fe69d3cfecefd034842',1,'tts::text']]],
-  ['is_5fvalid_9',['is_valid',['../structtts_1_1options.html#a9548e8175531e8efa53c039e376ca902',1,'tts::options']]],
+  ['is_5fvalid_9',['is_valid',['../structtts_1_1options.html#ac8155f76d1b47eeddc7594fb2682090b',1,'tts::options']]],
   ['is_5fverbose_10',['is_verbose',['../group__tools-config.html#ga111c01e89ab08e5cbdce117148636b27',1,'tts']]]
 ];

@@ -210,7 +210,7 @@ Macros</h2></td></tr>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a>(<span class="charliteral">&#39;A&#39;</span>, 80LL, 15, REQUIRED);</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-precision_html_gaf540e2316ab84407390f0b62febfffd1"><div class="ttname"><a href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1">TTS_ABSOLUTE_EQUAL</a></div><div class="ttdeci">#define TTS_ABSOLUTE_EQUAL(L, R, N,...)</div><div class="ttdoc">Checks if the absolute distance between values is less or equal to a threshold.</div><div class="ttdef"><b>Definition</b> precision.hpp:79</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:140</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -487,15 +487,21 @@ Macros</h2></td></tr>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">float</span> ok_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x; }</div>
-<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x + x * 1e-7f; }</div>
+<div class="line"><span class="keywordtype">float</span> ok_x(<span class="keywordtype">float</span> x)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> x;</div>
+<div class="line">}</div>
+<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> x + x * 1e-7f;</div>
+<div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Test range check&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a>(</div>
-<div class="line">      [](<span class="keyword">auto</span>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> c) { <span class="keywordflow">return</span> (100.f * i) / c; }, float, float, ok_x, bad_x, 2.);</div>
+<div class="line">  [](<span class="keyword">auto</span>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> c) { <span class="keywordflow">return</span> (100.f * i) / c; }, float, float, ok_x, bad_x, 2.);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga7de5e8bb8cb6f1397f2a0a2505def241"><div class="ttname"><a href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a></div><div class="ttdeci">#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</div><div class="ttdoc">Generate a range based test between two functions.</div><div class="ttdef"><b>Definition</b> ranges.hpp:195</div></div>
+<div class="ttc" id="agroup__test-precision_html_ga7de5e8bb8cb6f1397f2a0a2505def241"><div class="ttname"><a href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a></div><div class="ttdeci">#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</div><div class="ttdoc">Generate a range based test between two functions.</div><div class="ttdef"><b>Definition</b> ranges.hpp:202</div></div>
 </div><!-- fragment --> 
 </div>
 </div>

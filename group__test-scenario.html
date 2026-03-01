@@ -175,30 +175,33 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check test with sub-test&quot;</span>) {<a class="code hl_define" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a>(<span class="stringliteral">&quot;We start some sub-test&quot;</span>) {<span class="keywordtype">int</span> i = 99;</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We increment a variable&quot;</span>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check test with sub-test&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 1: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
-<div class="line">  i++;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 100);</div>
-<div class="line">}</div>
+<div class="line">  <a class="code hl_define" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a>(<span class="stringliteral">&quot;We start some sub-test&quot;</span>)</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span> i = 99;</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We decrement a variable&quot;</span>)</div>
-<div class="line">{</div>
-<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 2: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
-<div class="line">  i--;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 98);</div>
-<div class="line">}</div>
-<div class="line">}</div>
-<div class="line">}</div>
-<div class="line">;</div>
+<div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We increment a variable&quot;</span>)</div>
+<div class="line">    {</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 1: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
+<div class="line">      i++;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 100);</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We decrement a variable&quot;</span>)</div>
+<div class="line">    {</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 2: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
+<div class="line">      i--;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 98);</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line">};</div>
 <div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:134</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga36226295afb27d17e36249a61a3864af"><div class="ttname"><a href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(MESSAGE)</div><div class="ttdoc">Add a scoped tests to current scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:112</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga36226295afb27d17e36249a61a3864af"><div class="ttname"><a href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(MESSAGE)</div><div class="ttdoc">Add a scoped tests to current scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:113</div></div>
 <div class="ttc" id="agroup__test-scenario_html_ga70b895c13fd5ab455fb7c46226fdc6b3"><div class="ttname"><a href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a></div><div class="ttdeci">#define TTS_WHEN(STORY)</div><div class="ttdoc">Start a block of scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:73</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:139</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:140</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -232,7 +235,10 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check basic arithmetic&quot;</span>) { <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(2 + 2, 4); };</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check basic arithmetic&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(2 + 2, 4);</div>
+<div class="line">};</div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -284,13 +290,14 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;array&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using variadic list&quot;</span>, <span class="keywordtype">char</span>, <span class="keywordtype">short</span>, <span class="keywordtype">int</span>, <span class="keywordtype">double</span>, <span class="keywordtype">void</span>*)&lt;<span class="keyword">typename</span> T&gt;(</div>
-<div class="line">    <a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using variadic list&quot;</span>, <span class="keywordtype">char</span>, <span class="keywordtype">short</span>, <span class="keywordtype">int</span>, <span class="keywordtype">double</span>, <span class="keywordtype">void</span>*)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(<span class="keyword">sizeof</span>(T), 1UL);</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using a types list&quot;</span>, <a class="code hl_struct" href="structtts_1_1types.html">tts::types&lt;float, double&gt;</a>)&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using a types list&quot;</span>, <a class="code hl_struct" href="structtts_1_1types.html">tts::types&lt;float, double&gt;</a>)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(1 / T {2}, T {0.5});</div>
 <div class="line">};</div>
@@ -306,13 +313,14 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line">  <span class="keyword">using </span>types_list = <a class="code hl_struct" href="structtts_1_1types.html">tts::types&lt;std::array&lt;std::byte, I + 1&gt;</a>...&gt;;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using a types list generator&quot;</span>, sizes&lt;5&gt;)&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using a types list generator&quot;</span>, sizes&lt;5&gt;)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
 <div class="line">{</div>
 <div class="line">  T x;</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<span class="keyword">sizeof</span>(x), x.size());</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-relation_html_gac4de7d35f38edf73b2a602538100ea23"><div class="ttname"><a href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:239</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:170</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:171</div></div>
 <div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
 <div class="ttc" id="astructtts_1_1types_html"><div class="ttname"><a href="structtts_1_1types.html">tts::types</a></div><div class="ttdoc">Encapsulates a variadic list of types into a reusable object.</div><div class="ttdef"><b>Definition</b> types.hpp:25</div></div>
 </div><!-- fragment --> 
@@ -388,10 +396,10 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(r, 10);</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:218</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:201</div></div>
-<div class="ttc" id="astructtts_1_1between_html"><div class="ttname"><a href="structtts_1_1between.html">tts::between</a></div><div class="ttdoc">Defines a data generator that produce values between two bounds.</div><div class="ttdef"><b>Definition</b> generator.hpp:244</div></div>
-<div class="ttc" id="astructtts_1_1randoms_html"><div class="ttname"><a href="structtts_1_1randoms.html">tts::randoms</a></div><div class="ttdoc">Random generator between two bounds using realistic_distribution.</div><div class="ttdef"><b>Definition</b> generator.hpp:281</div></div>
-<div class="ttc" id="astructtts_1_1value_html"><div class="ttname"><a href="structtts_1_1value.html">tts::value</a></div><div class="ttdoc">Defines a data generator that always return the same value.</div><div class="ttdef"><b>Definition</b> generator.hpp:137</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:202</div></div>
+<div class="ttc" id="astructtts_1_1between_html"><div class="ttname"><a href="structtts_1_1between.html">tts::between</a></div><div class="ttdoc">Defines a data generator that produce values between two bounds.</div><div class="ttdef"><b>Definition</b> generator.hpp:374</div></div>
+<div class="ttc" id="astructtts_1_1randoms_html"><div class="ttname"><a href="structtts_1_1randoms.html">tts::randoms</a></div><div class="ttdoc">Random generator between two bounds using realistic_distribution.</div><div class="ttdef"><b>Definition</b> generator.hpp:414</div></div>
+<div class="ttc" id="astructtts_1_1value_html"><div class="ttname"><a href="structtts_1_1value.html">tts::value</a></div><div class="ttdoc">Defines a data generator that always return the same value.</div><div class="ttdef"><b>Definition</b> generator.hpp:258</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -424,26 +432,29 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check test with sub-test&quot;</span>) {<a class="code hl_define" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a>(<span class="stringliteral">&quot;We start some sub-test&quot;</span>) {<span class="keywordtype">int</span> i = 99;</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We increment a variable&quot;</span>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check test with sub-test&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 1: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
-<div class="line">  i++;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 100);</div>
-<div class="line">}</div>
+<div class="line">  <a class="code hl_define" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a>(<span class="stringliteral">&quot;We start some sub-test&quot;</span>)</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span> i = 99;</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We decrement a variable&quot;</span>)</div>
-<div class="line">{</div>
-<div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 2: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
-<div class="line">  i--;</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 98);</div>
-<div class="line">}</div>
-<div class="line">}</div>
-<div class="line">}</div>
-<div class="line">;</div>
+<div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We increment a variable&quot;</span>)</div>
+<div class="line">    {</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 1: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
+<div class="line">      i++;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 100);</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;We decrement a variable&quot;</span>)</div>
+<div class="line">    {</div>
+<div class="line">      std::cout &lt;&lt; <span class="stringliteral">&quot;&gt;&gt; Sub-test 2: i = &quot;</span> &lt;&lt; i &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 99);</div>
+<div class="line">      i--;</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(i, 98);</div>
+<div class="line">    }</div>
+<div class="line">  }</div>
+<div class="line">};</div>
 </div><!-- fragment --> 
 </div>
 </div>

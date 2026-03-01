@@ -150,11 +150,12 @@ struct tts::filter&lt; Pred, Type &gt;</div><p>Filter a types list by a predicat
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">TTS_CASE_TPL(&quot;Check types over filtered types list&quot;,</div>
-<div class="line">             tts::filter&lt;small_type, tts::arithmetic_types&gt;::types_list)&lt;typename T&gt;(tts::type&lt;T&gt;)</div>
+<div class="line">             tts::filter&lt;small_type, tts::arithmetic_types&gt;::types_list)</div>
+<div class="line">&lt;typename T&gt;(tts::type&lt;T&gt;)</div>
 <div class="line">{</div>
 <div class="line">  TTS_LESS(sizeof(T), 4UL);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:126</div></div>
+<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:153</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.20-->

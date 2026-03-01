@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TTS: tts::randoms&lt; Mx, Mn &gt; Struct Template Reference</title>
+<title>TTS: tts::limits_set&lt; T &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,7 +96,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structtts_1_1randoms.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structtts_1_1limits__set.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -123,61 +123,69 @@ $(document).ready(function(){initNavTree('structtts_1_1randoms.html',''); initRe
 
 <div class="header">
   <div class="summary">
-<a href="structtts_1_1randoms-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">tts::randoms&lt; Mx, Mn &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a> &raquo; <a class="el" href="group__tools-generators-class.html">Data Generators</a></div></div></div>
+<a href="structtts_1_1limits__set-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">tts::limits_set&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a> &raquo; <a class="el" href="group__tools-generators-class.html">Data Generators</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Random generator between two bounds using realistic_distribution.  
- <a href="structtts_1_1randoms.html#details">More...</a></p>
+<p>Defines a set of limits for a type <code>T</code>.  
+ <a href="structtts_1_1limits__set.html#details">More...</a></p>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">Mx</a>, <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">Mn</a>&gt;<br />
-struct tts::randoms&lt; Mx, Mn &gt;</div><p>Random generator between two bounds using realistic_distribution. </p>
-<p>This generator produces random values between two bounds (inclusive) using a realistic distribution. The realistic distribution aims to provide a more uniform coverage of the range by avoiding too many extreme values.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a>&gt;<br />
+struct tts::limits_set&lt; T &gt;</div><p>Defines a set of limits for a type <code>T</code>. </p>
+<p>This structure provides a set of limits and special values for the type <code>T</code> that can be used for generating test data that covers edge cases and special values. The actual limits provided depend on the type <code>T</code> and its base type.</p>
+<p>The provided limits include:</p><ul>
+<li><code>valmax</code>: The maximum representable value of the base type.</li>
+<li><code>valmin</code>: The minimum representable value of the base type.</li>
+<li><code>zero</code>: The value representing zero.</li>
+<li><code>one</code>: The value representing one.</li>
+</ul>
+<p>For floating-point types, additional limits include:</p><ul>
+<li><code>nan</code>: Not-a-Number value.</li>
+<li><code>inf</code>: Positive infinity.</li>
+<li><code>minf</code>: Negative infinity.</li>
+<li><code>maxflint</code>: The largest integer value that can be exactly represented in the type.</li>
+<li><code>mindenormal</code>: The smallest positive subnormal value.</li>
+<li><code>smallestposval</code>: The smallest positive normal value.</li>
+<li><code>mzero</code>: Negative zero.</li>
+<li><code>mone</code>: The value representing negative one.</li>
+</ul>
+<p>This class can be specialized for user-defined types to provide custom limits.</p>
+<h2 class="groupheader">Examples </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;limits generator example&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="comment">// Create a limits generator for float</span></div>
+<div class="line">  <span class="keyword">auto</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a> = <a class="code hl_function" href="group__tools-generators-class.html#gac33890b31b31d8cec2586d82db5040e9">tts::limits</a>(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;float&gt;</a> {});</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// Basic sanity checks</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.nan != <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.nan);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.inf, std::numeric_limits&lt;float&gt;::infinity());</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.valmax, std::numeric_limits&lt;float&gt;::max());</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.valmin, std::numeric_limits&lt;float&gt;::lowest());</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.maxflint, <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(1u &lt;&lt; std::numeric_limits&lt;float&gt;::digits));</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:43</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:134</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:140</div></div>
+<div class="ttc" id="agroup__tools-generators-class_html_gac33890b31b31d8cec2586d82db5040e9"><div class="ttname"><a href="group__tools-generators-class.html#gac33890b31b31d8cec2586d82db5040e9">tts::limits</a></div><div class="ttdeci">auto limits(tts::type&lt; T &gt;)</div><div class="ttdoc">Provides a set of limits for the type T.</div><div class="ttdef"><b>Definition</b> generator.hpp:240</div></div>
+<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:153</div></div>
+<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Mx</td><td>Type of the upper bound </td></tr>
-    <tr><td class="paramname">Mn</td><td>Type of the lower bound</td></tr>
+    <tr><td class="paramname">T</td><td>Type for which to provide limits for. </td></tr>
   </table>
   </dd>
 </dl>
-<h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
-<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;array&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a>(<span class="stringliteral">&quot;Test tts::randoms generator&quot;</span>,</div>
-<div class="line">              (std::array&lt;float, 10&gt;, std::array&lt;int, 7&gt;, <span class="keywordtype">double</span>),</div>
-<div class="line">              <a class="code hl_struct" href="structtts_1_1randoms.html">tts::randoms</a> {-4, 4})</div>
-<div class="line">&lt;<span class="keyword">typename</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a>&gt;(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a> <span class="keyword">const</span>&amp; <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">args</a>)</div>
-<div class="line">{</div>
-<div class="line">  <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(std::is_arithmetic_v&lt;T&gt;)</div>
-<div class="line">  {</div>
-<div class="line">    <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">args</a>, <span class="keyword">static_cast&lt;</span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a><span class="keyword">&gt;</span>(-4));</div>
-<div class="line">    <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">args</a>, <span class="keyword">static_cast&lt;</span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a><span class="keyword">&gt;</span>(4));</div>
-<div class="line">  }</div>
-<div class="line">  <span class="keywordflow">else</span></div>
-<div class="line">  {</div>
-<div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">value_type</a> = <span class="keyword">typename</span> T::value_type;</div>
-<div class="line">    <span class="keywordflow">for</span>(std::size_t <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a> = 0; <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a> &lt; <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">args</a>.size(); ++<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a>)</div>
-<div class="line">    {</div>
-<div class="line">      <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">args</a>[ <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a> ], <span class="keyword">static_cast&lt;</span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">value_type</a><span class="keyword">&gt;</span>(-4));</div>
-<div class="line">      <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">args</a>[ <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">i</a> ], <span class="keyword">static_cast&lt;</span><a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">value_type</a><span class="keyword">&gt;</span>(4));</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-<div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:218</div></div>
-<div class="ttc" id="agroup__test-relation_html_gac4de7d35f38edf73b2a602538100ea23"><div class="ttname"><a href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a></div><div class="ttdeci">#define TTS_GREATER_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs greater-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:239</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:202</div></div>
-<div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:153</div></div>
-<div class="ttc" id="astructtts_1_1randoms_html"><div class="ttname"><a href="structtts_1_1randoms.html">tts::randoms</a></div><div class="ttdoc">Random generator between two bounds using realistic_distribution.</div><div class="ttdef"><b>Definition</b> generator.hpp:414</div></div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.20-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>tts</b></li><li class="navelem"><a class="el" href="structtts_1_1randoms.html">randoms</a></li>
+    <li class="navelem"><b>tts</b></li><li class="navelem"><a class="el" href="structtts_1_1limits__set.html">limits_set</a></li>
   </ul>
 </div>
 </div> <!-- DOXYSTRAP RELATED -->
