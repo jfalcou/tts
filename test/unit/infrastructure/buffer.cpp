@@ -78,3 +78,56 @@ TTS_CASE("Check buffer move semantic")
   TTS_EQUAL(second_copy.end(), second_copy.begin() + n);
   TTS_EQUAL(second_copy.begin(), ptr);
 };
+
+TTS_CASE("Check buffer swap")
+{
+  constexpr std::size_t n = 7;
+  tts::_::buffer<int>   first(n);
+  for(auto& e: first)
+    e = 1;
+
+  tts::_::buffer<int> second(n);
+  for(auto& e: second)
+    e = 2;
+
+  auto ptr1 = first.begin();
+  auto ptr2 = second.begin();
+
+  first.swap(second);
+
+  TTS_EQUAL(first.size(), n);
+  TTS_EQUAL(first.capacity(), n);
+  TTS_EQUAL(first.end(), first.begin() + n);
+  TTS_EQUAL(first.begin(), ptr2);
+
+  TTS_EQUAL(second.size(), n);
+  TTS_EQUAL(second.capacity(), n);
+  TTS_EQUAL(second.end(), second.begin() + n);
+  TTS_EQUAL(second.begin(), ptr1);
+};
+
+TTS_CASE("Check buffer with non trivially destructible type")
+{
+  static int dtor_count = 0;
+
+  struct non_trivial
+  {
+    non_trivial()                              = default;
+    non_trivial(non_trivial const&)            = delete;
+    non_trivial& operator=(non_trivial const&) = delete;
+    ~non_trivial()
+    {
+      ++dtor_count;
+    }
+  };
+
+  {
+    tts::_::buffer<non_trivial> b(3);
+
+    TTS_EQUAL(b.size(), 3UL);
+    TTS_EQUAL(b.capacity(), 3UL);
+    TTS_EQUAL(b.end(), b.begin() + 3);
+  }
+
+  TTS_EQUAL(dtor_count, 3);
+};

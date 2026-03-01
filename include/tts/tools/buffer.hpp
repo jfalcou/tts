@@ -29,14 +29,22 @@ namespace tts::_
         data_     = reinterpret_cast<T*>(malloc(sizeof(T) * n));
         size_     = n;
         capacity_ = n;
+        for(std::size_t i = 0; i < n; ++i)
+          new(data_ + i) T();
       }
     }
 
     buffer(std::size_t n, T val)
-        : buffer(n)
+        : buffer()
     {
-      for(std::size_t i = 0; i < n; ++i)
-        data_[ i ] = val;
+      if(n > 0)
+      {
+        data_     = reinterpret_cast<T*>(malloc(sizeof(T) * n));
+        size_     = n;
+        capacity_ = n;
+        for(std::size_t i = 0; i < n; ++i)
+          new(data_ + i) T(val);
+      }
     }
 
     ~buffer()
@@ -44,16 +52,22 @@ namespace tts::_
       if(data_)
       {
         for(std::size_t i = 0; i < size_; ++i)
-          (&data_[ i ])->~T();
+          (data_ + i)->~T();
         free(data_);
       }
     }
 
     buffer(buffer const& other)
-        : buffer(other.size_)
+        : buffer()
     {
-      for(std::size_t i = 0; i < size_; ++i)
-        new(data_ + i) T(TTS_MOVE(other.data_[ i ]));
+      if(other.size_ > 0)
+      {
+        data_     = reinterpret_cast<T*>(malloc(sizeof(T) * other.size_));
+        size_     = other.size_;
+        capacity_ = other.size_;
+        for(std::size_t i = 0; i < size_; ++i)
+          new(data_ + i) T(other.data_[ i ]);
+      }
     }
 
     buffer(buffer&& other) noexcept
@@ -79,18 +93,19 @@ namespace tts::_
     void push_back(T const& value)
     {
       ensure_capacity(size_ + 1);
-      data_[ size_++ ] = value;
+      new(data_ + size_++) T(value);
     }
 
     void push_back(T&& value)
     {
       ensure_capacity(size_ + 1);
-      data_[ size_++ ] = TTS_MOVE(value);
+      new(data_ + size_++) T(TTS_MOVE(value));
     }
 
     template<typename... Args> void emplace_back(Args&&... args)
     {
-      push_back(T(TTS_FWD(args)...));
+      ensure_capacity(size_ + 1);
+      new(data_ + size_++) T(TTS_FWD(args)...);
     }
 
     T operator[](std::size_t i) const
@@ -153,21 +168,21 @@ namespace tts::_
     std::size_t capacity_;
     T*          data_;
 
-    // Ensure enough capacity for new elements
-    void ensure_capacity(std::size_t new_capacity)
+    void        ensure_capacity(std::size_t new_capacity)
     {
       if(new_capacity > capacity_)
       {
         std::size_t new_cap = capacity_ == 0 ? 1 : capacity_ * 2;
         while(new_cap < new_capacity)
-        {
           new_cap *= 2;
-        }
 
         T* new_data = reinterpret_cast<T*>(malloc(sizeof(T) * new_cap));
 
         for(std::size_t i = 0; i < size_; ++i)
-          new_data[ i ] = TTS_MOVE(data_[ i ]);
+        {
+          new(new_data + i) T(TTS_MOVE(data_[ i ]));
+          (data_ + i)->~T();
+        }
 
         free(data_);
         data_     = new_data;
