@@ -1,6 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.9.8">
   <compound kind="struct">
+    <name>tts::as_integer</name>
+    <filename>structtts_1_1as__integer.html</filename>
+    <templarg>typename G</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tts::as_signed_integer</name>
+    <filename>structtts_1_1as__signed__integer.html</filename>
+    <templarg>typename G</templarg>
+  </compound>
+  <compound kind="struct">
     <name>tts::base_type</name>
     <filename>structtts_1_1base__type.html</filename>
     <templarg>typename T</templarg>
@@ -10,6 +20,11 @@
     <filename>structtts_1_1between.html</filename>
     <templarg>typename T</templarg>
     <templarg>typename U</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tts::boolean_type</name>
+    <filename>structtts_1_1boolean__type.html</filename>
+    <templarg>typename T</templarg>
   </compound>
   <compound kind="struct">
     <name>tts::cartesian_product</name>
@@ -27,6 +42,19 @@
     <name>tts::limits_set</name>
     <filename>structtts_1_1limits__set.html</filename>
     <templarg>typename T</templarg>
+    <member kind="function">
+      <type>auto</type>
+      <name>limits</name>
+      <anchorfile>group__tools-generators-class.html</anchorfile>
+      <anchor>ga5bdd075a33a6dcabef5e5d7e33299727</anchor>
+      <arglist>(tts::type&lt; T &gt;)</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tts::logicals</name>
+    <filename>structtts_1_1logicals.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>typename U</templarg>
   </compound>
   <compound kind="struct">
     <name>tts::options</name>
@@ -72,6 +100,10 @@
     <filename>structtts_1_1ramp.html</filename>
     <templarg>typename T</templarg>
     <templarg>typename U</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tts::random_bits</name>
+    <filename>structtts_1_1random__bits.html</filename>
   </compound>
   <compound kind="struct">
     <name>tts::randoms</name>
@@ -408,17 +440,21 @@
     <name>tools-generators-class</name>
     <title>Data Generators</title>
     <filename>group__tools-generators-class.html</filename>
+    <class kind="struct">tts::as_integer</class>
+    <class kind="struct">tts::as_signed_integer</class>
     <class kind="struct">tts::between</class>
     <class kind="struct">tts::limits_set</class>
+    <class kind="struct">tts::logicals</class>
     <class kind="struct">tts::ramp</class>
+    <class kind="struct">tts::random_bits</class>
     <class kind="struct">tts::randoms</class>
     <class kind="struct">tts::reverse_ramp</class>
     <class kind="struct">tts::value</class>
     <member kind="function">
       <type>auto</type>
-      <name>tts::limits</name>
+      <name>tts::limits_set::limits</name>
       <anchorfile>group__tools-generators-class.html</anchorfile>
-      <anchor>gac33890b31b31d8cec2586d82db5040e9</anchor>
+      <anchor>ga5bdd075a33a6dcabef5e5d7e33299727</anchor>
       <arglist>(tts::type&lt; T &gt;)</arglist>
     </member>
   </compound>
@@ -449,6 +485,7 @@
     <subgroup>tools-generators-class</subgroup>
     <subgroup>tools-generators-custom</subgroup>
     <class kind="struct">tts::base_type</class>
+    <class kind="struct">tts::boolean_type</class>
   </compound>
   <compound kind="group">
     <name>test-exceptions</name>

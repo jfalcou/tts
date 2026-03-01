@@ -123,6 +123,7 @@ $(document).ready(function(){initNavTree('structtts_1_1limits__set.html',''); in
 
 <div class="header">
   <div class="summary">
+<a href="#related">Related Symbols</a> &#124;
 <a href="structtts_1_1limits__set-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">tts::limits_set&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a> &raquo; <a class="el" href="group__tools-generators-class.html">Data Generators</a></div></div></div>
 </div><!--header-->
@@ -158,7 +159,7 @@ struct tts::limits_set&lt; T &gt;</div><p>Defines a set of limits for a type <co
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;limits generator example&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="comment">// Create a limits generator for float</span></div>
-<div class="line">  <span class="keyword">auto</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a> = <a class="code hl_function" href="group__tools-generators-class.html#gac33890b31b31d8cec2586d82db5040e9">tts::limits</a>(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;float&gt;</a> {});</div>
+<div class="line">  <span class="keyword">auto</span> <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a> = tts::limits(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;float&gt;</a> {});</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// Basic sanity checks</span></div>
 <div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(<a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.nan != <a class="code hl_variable" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">l</a>.nan);</div>
@@ -169,8 +170,7 @@ struct tts::limits_set&lt; T &gt;</div><p>Defines a set of limits for a type <co
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:43</div></div>
 <div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:134</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:140</div></div>
-<div class="ttc" id="agroup__tools-generators-class_html_gac33890b31b31d8cec2586d82db5040e9"><div class="ttname"><a href="group__tools-generators-class.html#gac33890b31b31d8cec2586d82db5040e9">tts::limits</a></div><div class="ttdeci">auto limits(tts::type&lt; T &gt;)</div><div class="ttdoc">Provides a set of limits for the type T.</div><div class="ttdef"><b>Definition</b> generator.hpp:240</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:145</div></div>
 <div class="ttc" id="agroup__tools-types_html_ga812107840eb150e332662cedfb176c10"><div class="ttname"><a href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">tts::typename_</a></div><div class="ttdeci">auto constexpr typename_</div><div class="ttdoc">Evaluates to an object containing the name of the type T in readable form.</div><div class="ttdef"><b>Definition</b> typename.hpp:153</div></div>
 <div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -179,7 +179,17 @@ struct tts::limits_set&lt; T &gt;</div><p>Defines a set of limits for a type <co
   </table>
   </dd>
 </dl>
-</div></div><!-- contents -->
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="related" name="related"></a>
+Related Symbols</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p>(Note that these are not member symbols.) </p>
+</td></tr>
+<tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727" id="r_ga5bdd075a33a6dcabef5e5d7e33299727"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a> &gt; </td></tr>
+<tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__tools-generators-class.html#ga5bdd075a33a6dcabef5e5d7e33299727">limits</a> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a> &gt;)</td></tr>
+<tr class="memdesc:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a set of limits for the type <code>T</code>.  <br /></td></tr>
+<tr class="separator:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.20-->
 <!-- start footer part -->

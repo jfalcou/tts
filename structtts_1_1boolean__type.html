@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TTS: Getting Started</title>
+<title>TTS: tts::boolean_type&lt; T &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,7 +96,7 @@ var searchBox = new SearchBox("searchBox", "search/",'.html');
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('tts101.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structtts_1_1boolean__type.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -121,55 +121,29 @@ $(document).ready(function(){initNavTree('tts101.html',''); initResizable(); });
 </div>
 </div>
 
-<div><div class="header">
-  <div class="headertitle"><div class="title">Getting Started</div></div>
+<div class="header">
+  <div class="summary">
+<a href="structtts_1_1boolean__type-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">tts::boolean_type&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#tuto-test-case">Specify a Test Case</a></li>
-<li class="level1"><a href="#tuto-macro">Testing Macros</a></li>
-</ul>
-</div>
-<div class="textblock"><p>Unit Tests are usually organised into <b>scenarios</b> that test the specific behaviour of a software component. Such scenarios are usually implemented in separate executables. Each scenario is decomposed into <b>test suites</b>, i.e., a group of related tests verifying that the software component correctly services the current scenario. Test suites are themselves composed of at least one test case.</p>
-<p>With <b>TTS</b>, this decomposition (scenario/suite/test) is supported by various macros.</p>
-<p>Let's dive into the details of how <b>TTS</b> manages and reports tests.</p>
-<h1><a class="anchor" id="tuto-test-case"></a>
-Specify a Test Case</h1>
-<p>Test cases are functions performing repeatable, minimal operations able to unambiguously capture a function or class behaviour and assess its correctness. In <b>TTS</b>, a test case can be defined either as:</p>
-<ul>
-<li>a single function defined by the <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a> macro. In this case, the test function will be run and proceed to every test it contains.</li>
-<li>a family of functions generated from a template function and a sequence of types via the <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a> macro. Inside the test case itself, the template type is accessible through the template parameter <code>T</code>.</li>
-</ul>
-<p>In both cases, the test case is defined with a unique string description. Additionally, good testing practices recommend using fine-grained test cases to simplify test management.</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
-<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Make a simple test suite&quot;</span> )</div>
-<div class="line">{</div>
-<div class="line">  <span class="comment">// This test case is empty and thus will be reported as invalid</span></div>
-<div class="line">};</div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:145</div></div>
-</div><!-- fragment --><p>Notice the <code>#define TTS_MAIN</code> line. This is used to notify <b>TTS</b> that the current translation unit will contain the <b>TTS</b> main entry point. You can use <b>TTS</b> in multiple translation units, but only one of them must have the   <a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5">TTS_MAIN</a> macro enabled.</p>
-<p>The unit test reports the total number of tests performed, the number of passing tests, the number of failing tests and the number of invalid tests. In this case, unsurprisingly, our empty test is reported as invalid, as we consider an empty test case as erroneous in itself. <b>TTS</b> enforces an <b>Empty Suite Is An Error</b> rule that applies at the test case level: <b>any test case with no actual testing will be considered as a failure and reported as an invalid test</b>.</p>
-<h1><a class="anchor" id="tuto-macro"></a>
-Testing Macros</h1>
-<p>Most of the <b>TTS</b> components are available as macros that perform usual test operations and report their successes or failures to the test suite manager directly from within a test case. Let's amend our initial test by adding a single call to <a class="el" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a> :</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
-<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Make a simple test suite&quot;</span> )</div>
-<div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>( <span class="keyword">true</span> );</div>
-<div class="line">};</div>
-<div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:43</div></div>
-</div><!-- fragment --><p>One may notice that no other information is displayed. This is the default behaviour. You can now use <a href="usergroup2.html">the various <b>TTS</b> testing macros</a> to design your own unit tests. </p>
-</div></div><!-- contents -->
-</div><!-- PageDoc -->
+
+<p>Boolean type computation.  
+ <a href="structtts_1_1boolean__type.html#details">More...</a></p>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">typename</a> <a class="el" href="group__tools-types.html#ga812107840eb150e332662cedfb176c10">T</a>&gt;<br />
+struct tts::boolean_type&lt; T &gt;</div><p>Boolean type computation. </p>
+<p>This structure is used to compute a boolean type for a type <code>T</code>. By default, the boolean type is <code>bool</code>, but this structure can be specialized for user-defined types to provide a different boolean type. </p><pre class="fragment">  Helper types:**
+- `boolean_type_t&lt;T&gt;`: Alias for `typename boolean_type&lt;T&gt;::type`
+
+@tparam T Type for which to compute the boolean type.
+</pre> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.20-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
+    <li class="navelem"><b>tts</b></li><li class="navelem"><a class="el" href="structtts_1_1boolean__type.html">boolean_type</a></li>
   </ul>
 </div>
 </div> <!-- DOXYSTRAP RELATED -->
