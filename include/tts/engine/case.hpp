@@ -101,7 +101,12 @@ namespace tts::_
       current_type = as_text(typename_<T>);
       if(::tts::_::is_verbose && !::tts::_::is_quiet)
         printf(">  With <T = %s>\n", current_type.data());
-      (body(produce(type<T> {}, Generators)...));
+      process_call(body, produce(type<T> {}, Generators)...);
+    }
+
+    template<typename... Args> static void process_call(auto body, Args&&... args)
+    {
+      body(std::forward<Args>(args)...);
     }
     char const* name;
   };

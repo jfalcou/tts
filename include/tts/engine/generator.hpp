@@ -14,6 +14,54 @@
 
 namespace tts
 {
+  namespace _
+  {
+    template<std::size_t N, bool Signed> struct sized_integer;
+
+    template<> struct sized_integer<1, true>
+    {
+      using type = std::int8_t;
+    };
+
+    template<> struct sized_integer<2, true>
+    {
+      using type = std::int16_t;
+    };
+
+    template<> struct sized_integer<4, true>
+    {
+      using type = std::int32_t;
+    };
+
+    template<> struct sized_integer<8, true>
+    {
+      using type = std::int64_t;
+    };
+
+    template<> struct sized_integer<1, false>
+    {
+      using type = std::uint8_t;
+    };
+
+    template<> struct sized_integer<2, false>
+    {
+      using type = std::uint16_t;
+    };
+
+    template<> struct sized_integer<4, false>
+    {
+      using type = std::uint32_t;
+    };
+
+    template<> struct sized_integer<8, false>
+    {
+      using type = std::uint64_t;
+    };
+
+    template<typename T, bool Signed = false>
+    using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
+  }
+
   //====================================================================================================================
   /**
     @defgroup tools-generators Data Generators related tools
@@ -139,6 +187,27 @@ namespace tts
 
   template<typename T> using base_type_t = typename base_type<T>::type;
 
+  //====================================================================================================================
+  /**
+    @brief Boolean type computation
+
+    This structure is used to compute a boolean type for a type `T`. By default, the boolean type is
+    `bool`, but this structure can be specialized for user-defined types to provide a different
+  boolean type.
+
+      **Helper types:**
+      - `boolean_type_t<T>`: Alias for `typename boolean_type<T>::type`
+
+      @tparam T Type for which to compute the boolean type.
+  **/
+  //====================================================================================================================
+  template<typename T> struct boolean_type
+  {
+    using type = bool;
+  };
+
+  template<typename T> using boolean_type_t = typename boolean_type<T>::type;
+
   namespace _
   {
     struct empty_limits
@@ -231,10 +300,12 @@ namespace tts
     @brief Provides a set of limits for the type `T`.
 
     This function returns a structure containing various limits and special values for the type `T`
-  that can be used for generating test data that covers edge cases and special values.
+    that can be used for generating test data that covers edge cases and special values.
 
     @tparam T Type for which to provide limits
     @return A instance of `limits_set<T>` containing limits and special values for type `T`.
+
+    @relates limits_set
   **/
   //====================================================================================================================
   template<typename T> inline auto limits(tts::type<T>)
@@ -247,7 +318,8 @@ namespace tts
     @brief Defines a data generator that always return the same value.
 
     This generator produces always the same value provided at construction converted to the target
-  type.
+    type.
+
     @tparam T Type of the value to be produced
 
     @groupheader{Example}
@@ -271,11 +343,48 @@ namespace tts
 
   //====================================================================================================================
   /**
+    @brief Defines a data generator that produce logical values in a regular pattern.
+
+    This generator produces logical values (true/false) in a regular pattern defined by two
+  parameters: a starting index and a range.
+
+    For a size `N`, the produced values are:
+      - `true` for indices `i` where `(start + i) % range == 0`
+      - `false` for all other indices.
+
+    @tparam T Type of the starting index
+    @tparam U Type of the range
+  **/
+  //====================================================================================================================
+  template<typename T, typename U = T> struct logicals
+  {
+    constexpr logicals(T v, U k)
+        : start(v)
+        , range(k)
+    {
+    }
+
+    template<typename D> auto operator()(tts::type<D>) const
+    {
+      return as_value<tts::boolean_type_t<D>>(false);
+    }
+
+    template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
+    {
+      return as_value<tts::boolean_type_t<D>>(((start + idx) % range) == 0);
+    }
+
+    T start;
+    U range;
+  };
+
+  //====================================================================================================================
+  /**
     @brief Defines a data generator that produce a ramp of data.
 
     This generator produces a ramp starting from an initial value and increasing by a fixed step at
-  each call. I.e., for a size `N`, the produced values are: `start, start+step, start+2*step, ...,
-  start+(N-1)*step`.
+    each call. I.e., for a size `N`, the produced values are: `start, start+step, start+2*step, ...,
+    start+(N-1)*step`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -316,8 +425,8 @@ namespace tts
     @brief Defines a data generator that produce a reverse ramp of data.
 
     This generator produces a ramp starting from a final value and decreasing by a fixed step at
-  each call. I.e., for a size `N`, the produced values are: `start, start-step, start-2*step, ...,
-  start-(N-1)*step`.
+    each call. I.e., for a size `N`, the produced values are: `start, start-step, start-2*step, ...,
+    start-(N-1)*step`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -358,8 +467,8 @@ namespace tts
     @brief Defines a data generator that produce values between two bounds.
 
     This generator produces values linearly spaced between two bounds (inclusive). For a size `N`,
-  the produced values are: `first, first+step, first+2*step, ..., last`, where `step =
-  (last-first)/(N-1)`.
+    the produced values are: `first, first+step, first+2*step, ..., last`, where `step =
+    (last-first)/(N-1)`.
 
     When generated values exceed the last bound due to rounding, the last bound is returned instead.
 
@@ -397,11 +506,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-   * @brief Random generator between two bounds using realistic_distribution
+    @brief Random generator between two bounds using realistic_distribution
 
     This generator produces random values between two bounds (inclusive) using a realistic
-  distribution. The realistic distribution aims to provide a more uniform coverage of the range by
-  avoiding too many extreme values.
+    distribution. The realistic distribution aims to provide a more uniform coverage of the range by
+    avoiding too many extreme values.
 
     @tparam Mx Type of the upper bound
     @tparam Mn Type of the lower bound
@@ -432,6 +541,84 @@ namespace tts
 
     Mn mini;
     Mx maxi;
+  };
+
+  //====================================================================================================================
+  /**
+    @brief Produces random bits patterns
+
+    This generator produces random bit patterns by generating a random integer value and
+  interpreting its bits as the bits of the target type. The number of bits generated is equal to the
+  number of bits in the target type.
+
+    @groupheader{Example}
+    @snippet doc/generator_random_bits.cpp snippet
+  **/
+  //====================================================================================================================
+  struct random_bits
+  {
+    template<typename D> auto operator()(tts::type<D>, auto...)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return tts::random_value<i_t>(0, 8 * sizeof(i_t) - 1);
+    }
+  };
+
+  //====================================================================================================================
+  /**
+    @brief Converts a generator to produce integer values
+
+    This generator adapter takes a generator `g` and produces integer values by generating values
+    using `g` and converting them to integers. The conversion is done by interpreting the generated
+    values as integers of the same size as the base type of the target type.
+
+    @groupheader{Example}
+    @snippet doc/generator_as_integer.cpp snippet
+
+    @tparam G Type of the generator to adapt
+  **/
+  //====================================================================================================================
+  template<typename G> struct as_integer
+  {
+    constexpr explicit as_integer(G g)
+        : generator_(g)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>, auto... args)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return generator_(tts::type<i_t> {}, args...);
+    }
+    G generator_;
+  };
+
+  //====================================================================================================================
+  /**
+    @brief Converts a generator to produce integer values
+
+    This generator adapter takes a generator `g` and produces signed integer values by generating
+  values using `g` and converting them to integers. The conversion is done by interpreting the
+  generated values as integers of the same size as the base type of the target type.
+
+    @groupheader{Example}
+    @snippet doc/generator_as_signed_integer.cpp snippet
+
+    @tparam G Type of the generator to adapt
+  **/
+  //====================================================================================================================
+  template<typename G> struct as_signed_integer
+  {
+    constexpr explicit as_signed_integer(G g)
+        : generator_(g)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>, auto... args)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>, true>;
+      tts::type<i_t> tgt {};
+      return generator_(tgt, args...);
+    }
+    G generator_;
   };
 
   //====================================================================================================================
