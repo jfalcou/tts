@@ -14,6 +14,34 @@
 
 namespace tts
 {
+  namespace _
+  {
+    template<typename T, bool Signed> struct sized_integer;
+
+    template<typename T> struct sized_integer<T, true>
+    {
+      using type = std::conditional_t<
+      sizeof(T) == 1,
+      std::int8_t,
+      std::conditional_t<sizeof(T) == 2,
+                         std::int16_t,
+                         std::conditional_t<sizeof(T) == 4, std::int32_t, std::int64_t>>>;
+    };
+
+    template<typename T> struct sized_integer<T, false>
+    {
+      using type = std::conditional_t<
+      sizeof(T) == 1,
+      std::uint8_t,
+      std::conditional_t<sizeof(T) == 2,
+                         std::uint16_t,
+                         std::conditional_t<sizeof(T) == 4, std::uint32_t, std::uint64_t>>>;
+    };
+
+    template<typename T, bool Signed = false>
+    using sized_integer_t = typename sized_integer<T, Signed>::type;
+  }
+
   //====================================================================================================================
   /**
     @defgroup tools-generators Data Generators related tools
@@ -231,7 +259,7 @@ namespace tts
     @brief Provides a set of limits for the type `T`.
 
     This function returns a structure containing various limits and special values for the type `T`
-  that can be used for generating test data that covers edge cases and special values.
+    that can be used for generating test data that covers edge cases and special values.
 
     @tparam T Type for which to provide limits
     @return A instance of `limits_set<T>` containing limits and special values for type `T`.
@@ -247,7 +275,8 @@ namespace tts
     @brief Defines a data generator that always return the same value.
 
     This generator produces always the same value provided at construction converted to the target
-  type.
+    type.
+
     @tparam T Type of the value to be produced
 
     @groupheader{Example}
@@ -274,8 +303,8 @@ namespace tts
     @brief Defines a data generator that produce a ramp of data.
 
     This generator produces a ramp starting from an initial value and increasing by a fixed step at
-  each call. I.e., for a size `N`, the produced values are: `start, start+step, start+2*step, ...,
-  start+(N-1)*step`.
+    each call. I.e., for a size `N`, the produced values are: `start, start+step, start+2*step, ...,
+    start+(N-1)*step`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -316,8 +345,8 @@ namespace tts
     @brief Defines a data generator that produce a reverse ramp of data.
 
     This generator produces a ramp starting from a final value and decreasing by a fixed step at
-  each call. I.e., for a size `N`, the produced values are: `start, start-step, start-2*step, ...,
-  start-(N-1)*step`.
+    each call. I.e., for a size `N`, the produced values are: `start, start-step, start-2*step, ...,
+    start-(N-1)*step`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -358,8 +387,8 @@ namespace tts
     @brief Defines a data generator that produce values between two bounds.
 
     This generator produces values linearly spaced between two bounds (inclusive). For a size `N`,
-  the produced values are: `first, first+step, first+2*step, ..., last`, where `step =
-  (last-first)/(N-1)`.
+    the produced values are: `first, first+step, first+2*step, ..., last`, where `step =
+    (last-first)/(N-1)`.
 
     When generated values exceed the last bound due to rounding, the last bound is returned instead.
 
@@ -397,11 +426,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-   * @brief Random generator between two bounds using realistic_distribution
+    @brief Random generator between two bounds using realistic_distribution
 
     This generator produces random values between two bounds (inclusive) using a realistic
-  distribution. The realistic distribution aims to provide a more uniform coverage of the range by
-  avoiding too many extreme values.
+    distribution. The realistic distribution aims to provide a more uniform coverage of the range by
+    avoiding too many extreme values.
 
     @tparam Mx Type of the upper bound
     @tparam Mn Type of the lower bound
@@ -433,6 +462,32 @@ namespace tts
     Mn mini;
     Mx maxi;
   };
+
+  namespace _
+  {
+    struct random_bits_t
+    {
+      template<typename D> auto operator()(tts::type<D>, auto...)
+      {
+        using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+        return tts::random_value<i_t>(0, 8 * sizeof(i_t) - 1);
+      }
+    };
+  }
+
+  //====================================================================================================================
+  /**
+    @brief Produces random bits patterns
+
+    This generator produces random bit patterns by generating a random integer value and
+  interpreting its bits as the bits of the target type. The number of bits generated is equal to the
+  number of bits in the target type.
+
+    @groupheader{Example}
+    @snippet doc/generator_random_bits.cpp snippet
+  **/
+  //====================================================================================================================
+  inline constexpr _::random_bits_t random_bits = {};
 
   //====================================================================================================================
   /// @}
