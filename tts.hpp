@@ -35,7 +35,7 @@ namespace tts
 namespace tts::_
 {
   inline constexpr auto usage_text =
-      R"(
+  R"(
 Flags:
   -h, --help        Display this help message
   -x, --hex         Print the floating results in hexfloat mode
@@ -120,7 +120,10 @@ namespace tts
   inline _::env global_runtime       = {};
   inline bool   fatal_error_status   = false;
   inline bool   global_logger_status = false;
-  inline int    report(int fails, int invalids) { return global_runtime.report(fails, invalids); }
+  inline int report(int fails, int invalids)
+  {
+    return global_runtime.report(fails, invalids);
+  }
 }
 namespace tts::_
 {
@@ -344,20 +347,48 @@ namespace tts
     {
       if(t.data_)
       {
-        for(int i = 0; i < t.size_; ++i) os << t.data_[ i ];
+        for(int i = 0; i < t.size_; ++i)
+          os << t.data_[ i ];
       }
       return os;
     }
-    bool                      is_empty() const { return size_ == 0; }
-    int                       size() const { return size_; }
-    [[nodiscard]] char const* data() const { return data_ ? data_ : ""; }
-    [[nodiscard]] char*       data() { return data_; }
-    decltype(auto)            begin() const { return data_; }
-    decltype(auto)            begin() { return data_; }
-    decltype(auto)            end() const { return data_ + size_; }
-    decltype(auto)            end() { return data_ + size_; }
-    friend auto const&        to_text(text const& t) { return t; }
-    friend bool               operator==(text const& a, text const& b) noexcept
+    bool is_empty() const
+    {
+      return size_ == 0;
+    }
+    int size() const
+    {
+      return size_;
+    }
+    [[nodiscard]] char const* data() const
+    {
+      return data_ ? data_ : "";
+    }
+    [[nodiscard]] char* data()
+    {
+      return data_;
+    }
+    decltype(auto) begin() const
+    {
+      return data_;
+    }
+    decltype(auto) begin()
+    {
+      return data_;
+    }
+    decltype(auto) end() const
+    {
+      return data_ + size_;
+    }
+    decltype(auto) end()
+    {
+      return data_ + size_;
+    }
+    friend auto const& to_text(text const& t)
+    {
+      return t;
+    }
+    friend bool operator==(text const& a, text const& b) noexcept
     {
       if(a.size_ != b.size_) return false;
       if(a.is_empty()) return true;
@@ -419,7 +450,10 @@ namespace tts::_
       if(len > position) return false;
       return strncmp(token, f, position) == 0;
     }
-    bool                   is_valid() const { return position > 0; }
+    bool is_valid() const
+    {
+      return position > 0;
+    }
     template<typename T> T get(T const& def = T {}) const
     {
       T that = {};
@@ -445,7 +479,10 @@ namespace tts::_
         }
         if(n != 1) that = def;
       }
-      else { that = def; }
+      else
+      {
+        that = def;
+      }
       return that;
     }
     char const* token    = "";
@@ -456,7 +493,10 @@ namespace tts
 {
   struct options
   {
-    bool operator[](char const* f) const { return find(f).is_valid(); }
+    bool operator[](char const* f) const
+    {
+      return find(f).is_valid();
+    }
     template<std::same_as<char const*>... Flags> bool operator()(Flags... fs) const
     {
       return find(fs...).is_valid();
@@ -472,7 +512,10 @@ namespace tts
       if(auto o = find(fs...); o.is_valid()) that = o.template get<T>(that);
       return that;
     }
-    bool         is_valid() { return argc && argv != nullptr; }
+    bool is_valid() const
+    {
+      return argc && argv != nullptr;
+    }
     int          argc;
     char const** argv;
   private:
@@ -504,8 +547,11 @@ namespace tts
 }
 namespace tts
 {
-  inline options const& arguments() { return _::current_arguments; }
-  inline int            random_seed(int base_seed = -1)
+  inline options const& arguments()
+  {
+    return _::current_arguments;
+  }
+  inline int random_seed(int base_seed = -1)
   {
     if(_::current_seed == -1)
     {
@@ -515,7 +561,10 @@ namespace tts
     }
     return _::current_seed;
   }
-  inline bool is_verbose() { return _::is_verbose; }
+  inline bool is_verbose()
+  {
+    return _::is_verbose;
+  }
 }
 TTS_DISABLE_WARNING_POP
 namespace tts::_
@@ -530,31 +579,56 @@ namespace tts::_
     };
     data_t data_ = {};
   public:
-    constexpr typename_impl() { data_ = typename_impl_value(); }
-    constexpr auto data() const { return data_.data; }
-    constexpr auto size() const { return data_.size; }
-    friend text    to_text(typename_impl const& t) { return text("%.*s", t.size(), t.data()); }
+    constexpr typename_impl()
+    {
+      data_ = typename_impl_value();
+    }
+    constexpr auto data() const
+    {
+      return data_.data;
+    }
+    constexpr auto size() const
+    {
+      return data_.size;
+    }
+    friend text to_text(typename_impl const& t)
+    {
+      return text("%.*s", t.size(), t.data());
+    }
     template<_::stream OS> friend OS& operator<<(OS& os, typename_impl t)
     {
-      for(int i = 0; i < t.size(); ++i) os << t.data()[ i ];
+      for(int i = 0; i < t.size(); ++i)
+        os << t.data()[ i ];
       return os;
     }
   private:
     constexpr static int length(char const* str)
     {
       int i = 0;
-      while(str[ i ] != '\0') { ++i; }
+      while(str[ i ] != '\0')
+      {
+        ++i;
+      }
       return i;
     }
     constexpr static auto find(char const* str, char const* n)
     {
       auto compare = [](char const* lhs, char const* rhs, int count)
       {
-        if(lhs == nullptr || rhs == nullptr) { return rhs != nullptr ? -1 : 1; }
+        if(lhs == nullptr || rhs == nullptr)
+        {
+          return rhs != nullptr ? -1 : 1;
+        }
         for(int i = 0; i < count; ++i)
         {
-          if(lhs[ i ] != rhs[ i ]) { return lhs[ i ] < rhs[ i ] ? -1 : 1; }
-          else if(lhs[ i ] == '\0') { return 0; }
+          if(lhs[ i ] != rhs[ i ])
+          {
+            return lhs[ i ] < rhs[ i ] ? -1 : 1;
+          }
+          else if(lhs[ i ] == '\0')
+          {
+            return 0;
+          }
         }
         return 0;
       };
@@ -562,9 +636,11 @@ namespace tts::_
       if(char c = *n++; c != '\0')
       {
         int len = length(n);
-        do {
+        do
+        {
           char sc = {};
-          do {
+          do
+          {
             if((sc = *str++) == '\0') return 0;
           } while(sc != c);
         } while(compare(str, n, len) != 0);
@@ -593,7 +669,10 @@ namespace tts::_
 namespace tts
 {
   template<typename T> inline auto constexpr typename_ = _::typename_impl<T> {};
-  template<typename T> constexpr auto name([[maybe_unused]] T const& t) { return typename_<T>; }
+  template<typename T> constexpr auto name([[maybe_unused]] T const& t)
+  {
+    return typename_<T>;
+  }
 }
 namespace tts
 {
@@ -644,12 +723,18 @@ namespace tts
   };
   template<typename T> struct type
   {
-    friend text                       to_text(type) { return as_text(typename_<T>); }
-    template<_::stream OS> friend OS& operator<<(OS& os, type const&) { return os << typename_<T>; }
+    friend text to_text(type)
+    {
+      return as_text(typename_<T>);
+    }
+    template<_::stream OS> friend OS& operator<<(OS& os, type const&)
+    {
+      return os << typename_<T>;
+    }
   };
-  using real_types     = types<double, float>;
-  using int_types      = types<std::int64_t, std::int32_t, std::int16_t, std::int8_t>;
-  using uint_types     = types<std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t>;
+  using real_types = types<double, float>;
+  using int_types = types<std::int64_t, std::int32_t, std::int16_t, std::int8_t>;
+  using uint_types = types<std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t>;
   using integral_types = types<std::int64_t,
                                std::int32_t,
                                std::int16_t,
@@ -674,7 +759,10 @@ namespace tts
 {
   template<typename T> text as_text(T const& e)
   {
-    if constexpr(requires { to_text(e); }) { return to_text(e); }
+    if constexpr(requires { to_text(e); })
+    {
+      return to_text(e);
+    }
     else if constexpr(std::floating_point<T>)
     {
       auto precision = ::tts::arguments().value(16, "--precision");
@@ -720,7 +808,8 @@ namespace tts
     else if constexpr(_::sequence<T>)
     {
       text that("{ ");
-      for(auto const& v: e) that += as_text(v) + " ";
+      for(auto const& v: e)
+        that += as_text(v) + " ";
       that += "}";
       return that;
     }
@@ -729,7 +818,8 @@ namespace tts
       unsigned char bytes[ sizeof(e) ];
       std::memcpy(bytes, &e, sizeof(e));
       text txt_bytes("[ ");
-      for(auto const& b: bytes) txt_bytes += text("%2.2X", b) + " ";
+      for(auto const& b: bytes)
+        txt_bytes += text("%2.2X", b) + " ";
       txt_bytes      += "]";
       auto type_desc  = as_text(typename_<T>);
       return text("%s: %s",
@@ -737,9 +827,18 @@ namespace tts
                   txt_bytes.data() ? txt_bytes.data() : "[]");
     }
   }
-  template<std::size_t N> auto as_text(char const (&t)[ N ]) { return text(t); }
-  inline auto                  as_text(std::nullptr_t) { return text("nullptr"); }
-  inline auto                  as_text(bool b) { return text(b ? "true" : "false"); }
+  template<std::size_t N> auto as_text(char const (&t)[ N ])
+  {
+    return text(t);
+  }
+  inline auto as_text(std::nullptr_t)
+  {
+    return text("nullptr");
+  }
+  inline auto as_text(bool b)
+  {
+    return text(b ? "true" : "false");
+  }
 }
 namespace tts::_
 {
@@ -798,20 +897,23 @@ namespace tts::_
     buffer(std::size_t n, T val)
         : buffer(n)
     {
-      for(std::size_t i = 0; i < n; ++i) data_[ i ] = val;
+      for(std::size_t i = 0; i < n; ++i)
+        data_[ i ] = val;
     }
     ~buffer()
     {
       if(data_)
       {
-        for(std::size_t i = 0; i < size_; ++i) (&data_[ i ])->~T();
+        for(std::size_t i = 0; i < size_; ++i)
+          (&data_[ i ])->~T();
         free(data_);
       }
     }
     buffer(buffer const& other)
         : buffer(other.size_)
     {
-      for(std::size_t i = 0; i < size_; ++i) new(data_ + i) T(TTS_MOVE(other.data_[ i ]));
+      for(std::size_t i = 0; i < size_; ++i)
+        new(data_ + i) T(TTS_MOVE(other.data_[ i ]));
     }
     buffer(buffer&& other) noexcept
         : buffer()
@@ -840,19 +942,55 @@ namespace tts::_
       ensure_capacity(size_ + 1);
       data_[ size_++ ] = TTS_MOVE(value);
     }
-    template<typename... Args> void emplace_back(Args&&... args) { push_back(T(TTS_FWD(args)...)); }
-    T                               operator[](std::size_t i) const { return data_[ i ]; }
-    T&                              operator[](std::size_t i) { return data_[ i ]; }
-    T const*                        data() const { return data_; }
-    T*                              data() { return data_; }
-    decltype(auto)                  begin() const { return data_; }
-    decltype(auto)                  begin() { return data_; }
-    decltype(auto)                  end() const { return data_ + size_; }
-    decltype(auto)                  end() { return data_ + size_; }
-    bool                            empty() const noexcept { return size_ == 0; }
-    std::size_t                     size() const noexcept { return size_; }
-    std::size_t                     capacity() const noexcept { return capacity_; }
-    void                            swap(buffer& other) noexcept
+    template<typename... Args> void emplace_back(Args&&... args)
+    {
+      push_back(T(TTS_FWD(args)...));
+    }
+    T operator[](std::size_t i) const
+    {
+      return data_[ i ];
+    }
+    T& operator[](std::size_t i)
+    {
+      return data_[ i ];
+    }
+    T const* data() const
+    {
+      return data_;
+    }
+    T* data()
+    {
+      return data_;
+    }
+    decltype(auto) begin() const
+    {
+      return data_;
+    }
+    decltype(auto) begin()
+    {
+      return data_;
+    }
+    decltype(auto) end() const
+    {
+      return data_ + size_;
+    }
+    decltype(auto) end()
+    {
+      return data_ + size_;
+    }
+    bool empty() const noexcept
+    {
+      return size_ == 0;
+    }
+    std::size_t size() const noexcept
+    {
+      return size_;
+    }
+    std::size_t capacity() const noexcept
+    {
+      return capacity_;
+    }
+    void swap(buffer& other) noexcept
     {
       std::swap(size_, other.size_);
       std::swap(capacity_, other.capacity_);
@@ -862,14 +1000,18 @@ namespace tts::_
     std::size_t size_;
     std::size_t capacity_;
     T*          data_;
-    void        ensure_capacity(std::size_t new_capacity)
+    void ensure_capacity(std::size_t new_capacity)
     {
       if(new_capacity > capacity_)
       {
         std::size_t new_cap = capacity_ == 0 ? 1 : capacity_ * 2;
-        while(new_cap < new_capacity) { new_cap *= 2; }
+        while(new_cap < new_capacity)
+        {
+          new_cap *= 2;
+        }
         T* new_data = reinterpret_cast<T*>(malloc(sizeof(T) * new_cap));
-        for(std::size_t i = 0; i < size_; ++i) new_data[ i ] = TTS_MOVE(data_[ i ]);
+        for(std::size_t i = 0; i < size_; ++i)
+          new_data[ i ] = TTS_MOVE(data_[ i ]);
         free(data_);
         data_     = new_data;
         capacity_ = new_cap;
@@ -936,12 +1078,26 @@ namespace tts::_
       assert(payload);
       invoker(payload);
     }
-    explicit operator bool() const { return payload != nullptr; }
+    explicit operator bool() const
+    {
+      return payload != nullptr;
+    }
   private:
-    template<typename T> static void invoke(void* data) { (*static_cast<T*>(data))(); }
-    template<typename T> static void destroy(void* data) { delete static_cast<T*>(data); }
-    static void invoke_ptr(void* data) { reinterpret_cast<void (*)()>(data)(); }
-    static void cleanup_ptr(void*) {}
+    template<typename T> static void invoke(void* data)
+    {
+      (*static_cast<T*>(data))();
+    }
+    template<typename T> static void destroy(void* data)
+    {
+      delete static_cast<T*>(data);
+    }
+    static void invoke_ptr(void* data)
+    {
+      reinterpret_cast<void (*)()>(data)();
+    }
+    static void cleanup_ptr(void*)
+    {
+    }
   };
 }
 namespace tts::_
@@ -1001,7 +1157,10 @@ namespace tts::_
     {
       if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
     }
-    if(!::tts::_::is_quiet) { printf("  [X] %s : ** FAILURE ** : %s\n", location, message); }
+    if(!::tts::_::is_quiet)
+    {
+      printf("  [X] %s : ** FAILURE ** : %s\n", location, message);
+    }
   }
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
@@ -1070,8 +1229,14 @@ namespace tts::_
       that.desc_ = text {"[%s:%d]", file + offset, line};
       return that;
     }
-    friend text                       to_text(source_location const& s) { return s.desc_; }
-    decltype(auto)                    data() const { return desc_.data(); }
+    friend text to_text(source_location const& s)
+    {
+      return s.desc_;
+    }
+    decltype(auto) data() const
+    {
+      return desc_.data();
+    }
     template<_::stream OS> friend OS& operator<<(OS& os, source_location const& s)
     {
       return os << s.desc_;
@@ -1090,7 +1255,8 @@ namespace tts::_
 #define TTS_PASS(...)
 #else
 #define TTS_PASS(...)                                                                              \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     ::tts::global_runtime.pass();                                                                  \
     ::tts::_::report_pass(::tts::_::source_location::current().data(),                             \
                           ::tts::text {__VA_ARGS__}.data());                                       \
@@ -1100,7 +1266,8 @@ namespace tts::_
 #define TTS_FAIL(...)
 #else
 #define TTS_FAIL(...)                                                                              \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     ::tts::global_runtime.fail();                                                                  \
     if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
     ::tts::_::report_fail(::tts::_::source_location::current().data(),                             \
@@ -1112,7 +1279,8 @@ namespace tts::_
 #define TTS_FATAL(...)
 #else
 #define TTS_FATAL(...)                                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     ::tts::global_runtime.fail();                                                                  \
     if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
     ::tts::_::report_fatal(::tts::_::source_location::current().data(),                            \
@@ -1124,8 +1292,14 @@ namespace tts::_
 #endif
 namespace tts::_
 {
-  inline auto                      as_int(float a) { return std::bit_cast<std::uint32_t>(a); }
-  inline auto                      as_int(double a) { return std::bit_cast<std::uint64_t>(a); }
+  inline auto as_int(float a)
+  {
+    return std::bit_cast<std::uint32_t>(a);
+  }
+  inline auto as_int(double a)
+  {
+    return std::bit_cast<std::uint64_t>(a);
+  }
   template<typename T> inline auto bitinteger(T a) noexcept
   {
     auto ia             = as_int(a);
@@ -1142,53 +1316,179 @@ namespace tts::_
 namespace tts::_
 {
 #if defined(__FAST_MATH__)
-  constexpr auto is_nan(auto) { return false; };
-  constexpr auto is_inf(auto) { return false; };
-  constexpr auto is_unordered(auto, auto) { return false; };
+  constexpr auto is_nan(auto)
+  {
+    return false;
+  };
+  constexpr auto is_inf(auto)
+  {
+    return false;
+  };
+  constexpr auto is_unordered(auto, auto)
+  {
+    return false;
+  };
 #else
-  constexpr auto is_nan(auto x) { return x != x; };
-  constexpr auto is_inf(auto x) { return !is_nan(x) && is_nan(x - x); };
-  constexpr auto is_unordered(auto x, auto y) { return is_nan(x) || is_nan(y); };
+  constexpr auto is_nan(auto x)
+  {
+    return x != x;
+  };
+  constexpr auto is_inf(auto x)
+  {
+    return !is_nan(x) && is_nan(x - x);
+  };
+  constexpr auto is_unordered(auto x, auto y)
+  {
+    return is_nan(x) || is_nan(y);
+  };
 #endif
-  constexpr auto min(auto x, auto y) { return x < y ? x : y; };
-  constexpr auto max(auto x, auto y) { return x < y ? y : x; };
-  constexpr auto abs(auto x) { return x < 0 ? -x : x; };
-  constexpr bool signbit(auto x) { return (as_int(x) >> (sizeof(x) * 8 - 1)) != 0; };
+  constexpr auto min(auto x, auto y)
+  {
+    return x < y ? x : y;
+  };
+  constexpr auto max(auto x, auto y)
+  {
+    return x < y ? y : x;
+  };
+  constexpr auto abs(auto x)
+  {
+    return x < 0 ? -x : x;
+  };
+  constexpr bool signbit(auto x)
+  {
+    return (as_int(x) >> (sizeof(x) * 8 - 1)) != 0;
+  };
 #if !defined(TTS_USE_STDMATH)
-  inline double      pow(double x, double y) { return __builtin_pow(x, y); }
-  inline float       pow(float x, float y) { return __builtin_powf(x, y); }
-  inline long double pow(long double x, long double y) { return __builtin_powl(x, y); }
-  inline double      sqrt(double x) { return __builtin_sqrt(x); }
-  inline float       sqrt(float x) { return __builtin_sqrtf(x); }
-  inline long double sqrt(long double x) { return __builtin_sqrtl(x); }
-  inline double      log10(double x) { return __builtin_log10(x); }
-  inline float       log10(float x) { return __builtin_log10f(x); }
-  inline long double log10(long double x) { return __builtin_log10l(x); }
-  inline double      ceil(double x) { return __builtin_ceil(x); }
-  inline float       ceil(float x) { return __builtin_ceilf(x); }
-  inline long double ceil(long double x) { return __builtin_ceill(x); }
-  inline double      log2(double x) { return __builtin_log2(x); }
-  inline float       log2(float x) { return __builtin_log2f(x); }
-  inline long double log2(long double x) { return __builtin_log2l(x); }
+  inline double pow(double x, double y)
+  {
+    return __builtin_pow(x, y);
+  }
+  inline float pow(float x, float y)
+  {
+    return __builtin_powf(x, y);
+  }
+  inline long double pow(long double x, long double y)
+  {
+    return __builtin_powl(x, y);
+  }
+  inline double sqrt(double x)
+  {
+    return __builtin_sqrt(x);
+  }
+  inline float sqrt(float x)
+  {
+    return __builtin_sqrtf(x);
+  }
+  inline long double sqrt(long double x)
+  {
+    return __builtin_sqrtl(x);
+  }
+  inline double log10(double x)
+  {
+    return __builtin_log10(x);
+  }
+  inline float log10(float x)
+  {
+    return __builtin_log10f(x);
+  }
+  inline long double log10(long double x)
+  {
+    return __builtin_log10l(x);
+  }
+  inline double ceil(double x)
+  {
+    return __builtin_ceil(x);
+  }
+  inline float ceil(float x)
+  {
+    return __builtin_ceilf(x);
+  }
+  inline long double ceil(long double x)
+  {
+    return __builtin_ceill(x);
+  }
+  inline double log2(double x)
+  {
+    return __builtin_log2(x);
+  }
+  inline float log2(float x)
+  {
+    return __builtin_log2f(x);
+  }
+  inline long double log2(long double x)
+  {
+    return __builtin_log2l(x);
+  }
 #else
-  inline double      pow(double x, double y) { return ::pow(x, y); }
-  inline float       pow(float x, float y) { return ::powf(x, y); }
-  inline long double pow(long double x, long double y) { return ::powl(x, y); }
-  inline double      sqrt(double x) { return ::sqrt(x); }
-  inline float       sqrt(float x) { return ::sqrtf(x); }
-  inline long double sqrt(long double x) { return ::sqrtl(x); }
-  inline double      log10(double x) { return ::log10(x); }
-  inline float       log10(float x) { return ::log10f(x); }
-  inline long double log10(long double x) { return ::log10l(x); }
-  inline double      ceil(double x) { return ::ceil(x); }
-  inline float       ceil(float x) { return ::ceilf(x); }
-  inline long double ceil(long double x) { return ::ceill(x); }
-  inline double      log2(double x) { return ::log2(x); }
-  inline float       log2(float x) { return ::log2f(x); }
-  inline long double log2(long double x) { return ::log2l(x); }
+  inline double pow(double x, double y)
+  {
+    return ::pow(x, y);
+  }
+  inline float pow(float x, float y)
+  {
+    return ::powf(x, y);
+  }
+  inline long double pow(long double x, long double y)
+  {
+    return ::powl(x, y);
+  }
+  inline double sqrt(double x)
+  {
+    return ::sqrt(x);
+  }
+  inline float sqrt(float x)
+  {
+    return ::sqrtf(x);
+  }
+  inline long double sqrt(long double x)
+  {
+    return ::sqrtl(x);
+  }
+  inline double log10(double x)
+  {
+    return ::log10(x);
+  }
+  inline float log10(float x)
+  {
+    return ::log10f(x);
+  }
+  inline long double log10(long double x)
+  {
+    return ::log10l(x);
+  }
+  inline double ceil(double x)
+  {
+    return ::ceil(x);
+  }
+  inline float ceil(float x)
+  {
+    return ::ceilf(x);
+  }
+  inline long double ceil(long double x)
+  {
+    return ::ceill(x);
+  }
+  inline double log2(double x)
+  {
+    return ::log2(x);
+  }
+  inline float log2(float x)
+  {
+    return ::log2f(x);
+  }
+  inline long double log2(long double x)
+  {
+    return ::log2l(x);
+  }
 #endif
-  constexpr inline std::size_t log2(std::size_t n) { return n ? std::bit_width(n) - 1 : 0; }
-  template<typename T> T       exp10(T a) { return tts::_::pow(T(10), a); }
+  constexpr inline std::size_t log2(std::size_t n)
+  {
+    return n ? std::bit_width(n) - 1 : 0;
+  }
+  template<typename T> T exp10(T a)
+  {
+    return tts::_::pow(T(10), a);
+  }
 }
 namespace tts
 {
@@ -1207,9 +1507,9 @@ namespace tts
       else
       {
         constexpr unsigned int SHIFT_MAX =
-            (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
+        (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
         unsigned int r =
-            (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
+        (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
         return {r, SHIFT_MAX};
       }
     }
@@ -1225,17 +1525,24 @@ namespace tts
         unsigned int bucket_size = r_max / static_cast<unsigned int>(range);
         unsigned int limit       = bucket_size * static_cast<unsigned int>(range);
         unsigned int r;
-        do {
+        do
+        {
           r = static_cast<unsigned int>(std::rand());
         } while(r >= limit);
         return M + static_cast<T>(r / bucket_size);
       }
       auto [ r_raw, r_max ] = rand30();
-      if(range > r_max) { return M + static_cast<T>(r_raw % range); }
+      if(range > r_max)
+      {
+        return M + static_cast<T>(r_raw % range);
+      }
       U            bucket_size = r_max / range;
       U            limit       = bucket_size * range;
       unsigned int r           = r_raw;
-      while(r >= limit) { r = rand30().val; }
+      while(r >= limit)
+      {
+        r = rand30().val;
+      }
       return M + static_cast<T>(r / bucket_size);
     }
     template<std::floating_point T> T roll(T M, T N)
@@ -1243,10 +1550,13 @@ namespace tts
       if(M == N) return M;
       if(M > N) std::swap(M, N);
       auto [ r_raw, r_max ] = rand30();
-      double uniform_01     = static_cast<double>(r_raw) / static_cast<double>(r_max);
+      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
       return static_cast<T>(M + uniform_01 * (N - M));
     }
-    template<std::integral T> T       roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
+    template<std::integral T> T roll_random(T mini, T maxi)
+    {
+      return _::roll(mini, maxi);
+    }
     template<std::floating_point T> T roll_random(T mini, T maxi)
     {
       constexpr T smvlp     = std::numeric_limits<T>::min();
@@ -1259,8 +1569,8 @@ namespace tts
       if(_::is_inf(maxi) && maxi > 0) maxi = valmax;
       if(mini < 0 && maxi > 0)
       {
-        T    abs_min       = _::abs(mini);
-        T    abs_max       = _::abs(maxi);
+        T abs_min = _::abs(mini);
+        T abs_max = _::abs(maxi);
         T    total_mag     = abs_min + abs_max;
         bool pick_positive = _::roll(T(0.0), total_mag) < abs_max;
         if(pick_positive) return roll_random(smvlp, maxi);
@@ -1285,15 +1595,25 @@ namespace tts
         T log_val = _::roll(log_min, log_max);
         value     = -_::exp10(log_val);
       }
-      else { return quiet_nan; }
+      else
+      {
+        return quiet_nan;
+      }
       return value;
     }
   }
-  template<typename T> T random_value(T mini, T maxi) { return _::roll_random(mini, maxi); }
+  template<typename T> T random_value(T mini, T maxi)
+  {
+    return _::roll_random(mini, maxi);
+  }
 }
+#include <limits>
 namespace tts
 {
-  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+  template<typename T, typename V> auto as_value(V const& v)
+  {
+    return static_cast<T>(v);
+  }
   template<tts::_::sequence Seq, typename U> struct rebuild;
   template<template<typename, typename...> typename Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T, S...>, U>
@@ -1323,14 +1643,66 @@ namespace tts
     }
     return that;
   }
+  template<typename T> struct base_type
+  {
+    using type = T;
+  };
+  template<typename T> using base_type_t = typename base_type<T>::type;
+  namespace _
+  {
+    struct empty_limits
+    {
+    };
+    template<typename T> struct common_limits
+    {
+      using b_t = base_type_t<T>;
+      static_assert(std::numeric_limits<b_t>::is_specialized,
+                    "Base type must have std::numeric_limits specialized");
+      T valmax = static_cast<T>(std::numeric_limits<b_t>::max());
+      T valmin = static_cast<T>(std::numeric_limits<b_t>::lowest());
+      T zero   = static_cast<T>(0);
+      T one    = static_cast<T>(1);
+    };
+    template<typename T> struct float_limits
+    {
+      using b_t = base_type_t<T>;
+      static constexpr b_t get_maxflint()
+      {
+        if constexpr(sizeof(b_t) == 4) return static_cast<b_t>(0x1p+24);
+        else return static_cast<b_t>(0x1p+53);
+      }
+      T nan            = static_cast<T>(std::numeric_limits<b_t>::quiet_NaN());
+      T inf            = static_cast<T>(std::numeric_limits<b_t>::infinity());
+      T minf           = static_cast<T>(-std::numeric_limits<b_t>::infinity());
+      T mzero          = static_cast<T>(-0.0);
+      T maxflint       = static_cast<T>(get_maxflint());
+      T mindenormal    = static_cast<T>(std::numeric_limits<b_t>::denorm_min());
+      T smallestposval = static_cast<T>(std::numeric_limits<b_t>::min());
+      T mone           = static_cast<T>(-1.0);
+    };
+  }
+  template<typename T>
+  struct limits_set
+      : _::common_limits<T>
+      , std::conditional_t<std::floating_point<base_type_t<T>>, _::float_limits<T>, _::empty_limits>
+  {
+    using type = T;
+  };
+  template<typename T> inline auto limits(tts::type<T>)
+  {
+    return limits_set<T> {};
+  }
   template<typename T> struct value
   {
     constexpr value(T v)
         : seed(v)
     {
     }
-    template<typename D> D operator()(tts::type<D>, auto...) const { return as_value<D>(seed); }
-    T                      seed;
+    template<typename D> D operator()(tts::type<D>, auto...) const
+    {
+      return as_value<D>(seed);
+    }
+    T seed;
   };
   template<typename T, typename U = T> struct ramp
   {
@@ -1348,9 +1720,12 @@ namespace tts
     {
       return as_value<D>(start + idx * step);
     }
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
-    T                      start;
-    U                      step;
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(start);
+    }
+    T start;
+    U step;
   };
   template<typename T, typename U = T> struct reverse_ramp
   {
@@ -1368,9 +1743,12 @@ namespace tts
     {
       return as_value<D>(start - idx * step);
     }
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
-    T                      start;
-    U                      step;
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(start);
+    }
+    T start;
+    U step;
   };
   template<typename T, typename U = T> struct between
   {
@@ -1386,9 +1764,12 @@ namespace tts
       auto step = (sz - 1) ? (w2 - w1) / as_value<D>(sz - 1) : 0;
       return _::min(as_value<D>(w1 + idx * step), w2);
     }
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(first_); }
-    T                      first_;
-    U                      last_;
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(first_);
+    }
+    T first_;
+    U last_;
   };
   template<typename Mx, typename Mn> struct randoms
   {
@@ -1420,7 +1801,10 @@ namespace tts::_
         : name(id)
     {
     }
-    auto        operator+(auto body) const { return test::acknowledge({name, body}); }
+    auto operator+(auto body) const
+    {
+      return test::acknowledge({name, body});
+    }
     char const* name;
   };
   inline text current_type = {};
@@ -1437,8 +1821,8 @@ namespace tts::_
                                 {
                                   (((current_type = as_text(typename_<Types>)),
                                     (::tts::_::is_verbose && !::tts::_::is_quiet
-                                         ? printf(">  With <T = %s>\n", current_type.data())
-                                         : 0),
+                                     ? printf(">  With <T = %s>\n", current_type.data())
+                                     : 0),
                                     body(type<Types>())),
                                    ...);
                                   current_type = text {""};
@@ -1446,9 +1830,7 @@ namespace tts::_
     }
     char const* name;
   };
-  template<template<typename...> typename List, typename... Types>
-    requires(!requires(List<Types...>) { typename List<Types...>::types_list; })
-  struct captures<List<Types...>> : captures<Types...>
+  template<typename... Types> struct captures<types<Types...>> : captures<Types...>
   {
   };
   template<typename Generator>
@@ -1488,22 +1870,22 @@ namespace tts::_
 #else
 #define TTS_CASE(ID)                                                                               \
   [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                                \
-      ::tts::_::capture {ID} + +[]() 
+  ::tts::_::capture {ID} + +[]() 
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_TPL(ID, ...)
 #else
 #define TTS_CASE_TPL(ID, ...)                                                                      \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-      ::tts::_::captures<__VA_ARGS__> {ID} + [] 
+  ::tts::_::captures<__VA_ARGS__> {ID} + [] 
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_WITH(ID, TYPES, ...)
 #else
 #define TTS_CASE_WITH(ID, TYPES, ...)                                                              \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-      ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID} \
-      << [] 
+  ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
+  << [] 
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT(EXPR, ...)
@@ -1556,7 +1938,8 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR, FAILURE)                                                       \
   ::tts::global_logger_status = false;                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     constexpr auto local_tts_expr = EXPR;                                                          \
     if constexpr(local_tts_expr)                                                                   \
     {                                                                                              \
@@ -1569,7 +1952,10 @@ namespace tts::_
       ::tts::global_logger_status = true;                                                          \
     }                                                                                              \
   } while(0);                                                                                      \
-  ::tts::_::logger { ::tts::global_logger_status }
+  ::tts::_::logger                                                                                 \
+  {                                                                                                \
+    ::tts::global_logger_status                                                                    \
+  }
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...)
 #else
@@ -1579,7 +1965,8 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                   \
   ::tts::global_logger_status = false;                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     constexpr auto local_tts_expr = EXPR;                                                          \
     if constexpr(!local_tts_expr)                                                                  \
     {                                                                                              \
@@ -1593,7 +1980,10 @@ namespace tts::_
       ::tts::global_logger_status = true;                                                          \
     }                                                                                              \
   } while(0);                                                                                      \
-  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  ::tts::_::logger                                                                                 \
+  {                                                                                                \
+    ::tts::global_logger_status                                                                    \
+  }                                                                                                \
   
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                   \
   [ & ]()                                                                                          \
@@ -1817,7 +2207,10 @@ namespace tts::_
               ::tts::typename_<type_b>.data());                                                    \
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
-    else { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                            \
+    else                                                                                           \
+    {                                                                                              \
+      TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                   \
+    }                                                                                              \
   }(A, B) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_EQUAL(LHS, RHS, ...)
@@ -1857,10 +2250,14 @@ namespace tts::_
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
   ::tts::global_logger_status = false;                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                               \
   } while(0);                                                                                      \
-  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  ::tts::_::logger                                                                                 \
+  {                                                                                                \
+    ::tts::global_logger_status                                                                    \
+  }                                                                                                \
 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
@@ -1904,7 +2301,8 @@ namespace tts::_
   TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
   ::tts::global_logger_status = false;                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     using type_a = std::remove_cvref_t<decltype(A)>;                                               \
     using type_b = std::remove_cvref_t<decltype(B)>;                                               \
                                                                                                    \
@@ -1920,9 +2318,15 @@ namespace tts::_
               ::tts::typename_<type_b>.data());                                                    \
       ::tts::global_logger_status = false;                                                         \
     }                                                                                              \
-    else { TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                      \
+    else                                                                                           \
+    {                                                                                              \
+      TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                             \
+    }                                                                                              \
   } while(0);                                                                                      \
-  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  ::tts::_::logger                                                                                 \
+  {                                                                                                \
+    ::tts::global_logger_status                                                                    \
+  }                                                                                                \
   
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
@@ -2067,9 +2471,9 @@ namespace tts
       else
       {
         static_assert(
-            std::is_floating_point_v<T> || std::is_integral_v<T>,
-            "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
-            "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?");
+        std::is_floating_point_v<T> || std::is_integral_v<T>,
+        "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
+        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?");
       }
     }
     else
@@ -2102,9 +2506,9 @@ namespace tts
       else
       {
         static_assert(
-            std::is_floating_point_v<T> || std::is_integral_v<T>,
-            "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
-            "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?");
+        std::is_floating_point_v<T> || std::is_integral_v<T>,
+        "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
+        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?");
       }
     }
     else
@@ -2125,8 +2529,14 @@ namespace tts
       else if constexpr(std::is_floating_point_v<T>)
       {
         using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
-        if((a == b) || (_::is_nan(a) && _::is_nan(b))) { return 0.; }
-        else if(_::is_unordered(a, b)) { return std::numeric_limits<double>::infinity(); }
+        if((a == b) || (_::is_nan(a) && _::is_nan(b)))
+        {
+          return 0.;
+        }
+        else if(_::is_unordered(a, b))
+        {
+          return std::numeric_limits<double>::infinity();
+        }
         else
         {
           auto aa = _::bitinteger(a);
@@ -2162,7 +2572,10 @@ namespace tts
     {
       return (a == b) || (_::is_nan(a) && _::is_nan(b));
     }
-    else { return _::eq(a, b); }
+    else
+    {
+      return _::eq(a, b);
+    }
   }
 }
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)                                 \
@@ -2254,8 +2667,8 @@ namespace tts::_
     else
     {
       static_assert(
-          requires { c.size(); } || requires { size(c); },
-          "[TTS] Container type must support .size() or ADL size()");
+      requires { c.size(); } || requires { size(c); },
+      "[TTS] Container type must support .size() or ADL size()");
     }
   }
   template<typename T> constexpr auto begin(T const& c) noexcept
@@ -2265,8 +2678,8 @@ namespace tts::_
     else
     {
       static_assert(
-          requires { c.begin(); } || requires { begin(c); },
-          "[TTS] Container type must support .begin() or ADL begin()");
+      requires { c.begin(); } || requires { begin(c); },
+      "[TTS] Container type must support .begin() or ADL begin()");
     }
   }
   template<typename T> constexpr auto end(T const& c) noexcept
@@ -2276,8 +2689,8 @@ namespace tts::_
     else
     {
       static_assert(
-          requires { c.end(); } || requires { end(c); },
-          "[TTS] Container type must support .end() or ADL end()");
+      requires { c.end(); } || requires { end(c); },
+      "[TTS] Container type must support .end() or ADL end()");
     }
   }
   template<typename T, typename U> struct failure
@@ -2400,10 +2813,11 @@ namespace tts::_
 #define TTS_WHEN(STORY)                                                                            \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW(                                                                      \
-      ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);          \
+  ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);              \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count;                                 \
       tts_count -= 0 == tts_section++)                                                             \
-    for(tts::_::only_once tts_only_once_setup {}; tts_only_once_setup;) TTS_DISABLE_WARNING_POP    \
+    for(tts::_::only_once tts_only_once_setup {}; tts_only_once_setup;)                            \
+      TTS_DISABLE_WARNING_POP                                                                      \
 
 #endif
 #define TTS_AND_THEN_IMPL(TTS_LOCAL_ID, MESSAGE)                                                   \
@@ -2429,8 +2843,14 @@ namespace tts
     {
       *dst++ = f(*src++);
     }
-    static auto retrieve(Base const* src) noexcept { return *src; }
-    static void display(Base const& v) noexcept { printf("%s", as_text(v).data()); }
+    static auto retrieve(Base const* src) noexcept
+    {
+      return *src;
+    }
+    static void display(Base const& v) noexcept
+    {
+      printf("%s", as_text(v).data());
+    }
   };
   namespace _
   {
@@ -2446,7 +2866,8 @@ namespace tts
       auto in  = inputs.data();
       auto end = inputs.data() + inputs.size();
       auto out = outputs.data();
-      while(in != end) adapter<Type>::run(in, out, fn);
+      while(in != end)
+        adapter<Type>::run(in, out, fn);
     }
     inline std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
     {
@@ -2494,9 +2915,9 @@ namespace tts
   template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
   double ulp_histogram(Generator g, RefFun reference, NewFun challenger)
   {
-    using out_type            = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
-    using nout_type           = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
-    std::size_t         count = ::tts::arguments().value(4096, "--block");
+    using out_type  = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
+    using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
+    std::size_t count = ::tts::arguments().value(4096, "--block");
     _::buffer<out_type> ref_out(count), new_out(count);
     _::buffer<RefType>  inputs(count);
     for(std::size_t i = 0; i < inputs.size(); ++i)
@@ -2547,7 +2968,7 @@ namespace tts
         _::results(-1., -1, -1., "instead of: ", ref);
         if(!_::is_quiet)
           printf(
-              "--------------------------------------------------------------------------------\n");
+          "--------------------------------------------------------------------------------\n");
       }
     }
     return max_ulp;
@@ -2572,10 +2993,13 @@ namespace tts
     double tts_ulp_max         = Ulpmax;                                                           \
     double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
     double local_tts_max_ulp =                                                                     \
-        ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(              \
-            generator, RefFunc, NewFunc);                                                          \
+    ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(                  \
+    generator, RefFunc, NewFunc);                                                                  \
                                                                                                    \
-    if(local_tts_max_ulp <= local_tts_threshold) { ::tts::global_runtime.pass(); }                 \
+    if(local_tts_max_ulp <= local_tts_threshold)                                                   \
+    {                                                                                              \
+      ::tts::global_runtime.pass();                                                                \
+    }                                                                                              \
     else                                                                                           \
     {                                                                                              \
       TTS_FAIL("Expecting: %s similar to %s within %s ULP but found: %s ULP instead",              \
@@ -2595,7 +3019,10 @@ namespace tts
         , maxi(mx)
     {
     }
-    T                operator()(auto, auto, auto) const { return ::tts::random_value(mini, maxi); }
+    T operator()(auto, auto, auto) const
+    {
+      return ::tts::random_value(mini, maxi);
+    }
     friend tts::text to_text(realistic_generator const& s)
     {
       return tts::text {"realistic_generator<%s>(%s,%s)",
