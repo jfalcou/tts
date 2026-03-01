@@ -525,7 +525,7 @@ namespace tts
   //====================================================================================================================
   template<typename G> struct as_integer
   {
-    constexpr as_integer(G g)
+    constexpr explicit as_integer(G g)
         : generator_(g)
     {
     }
@@ -553,7 +553,7 @@ namespace tts
   //====================================================================================================================
   template<typename G> struct as_signed_integer
   {
-    constexpr as_signed_integer(G g)
+    constexpr explicit as_signed_integer(G g)
         : generator_(g)
     {
     }

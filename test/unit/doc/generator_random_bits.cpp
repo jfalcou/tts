@@ -11,7 +11,7 @@
 #include <tts/tts.hpp>
 
 TTS_CASE_WITH("random bits generator example", tts::arithmetic_types, tts::random_bits)
-(auto v)
+<typename T>(T)
 {
-  TTS_EXPECT(std::is_unsigned_v<decltype(v)>);
+  TTS_EXPECT(std::is_unsigned_v<T>);
 };
