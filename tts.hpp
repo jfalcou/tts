@@ -1638,6 +1638,44 @@ namespace tts
 #include <limits>
 namespace tts
 {
+  namespace _
+  {
+    template<std::size_t N, bool Signed> struct sized_integer;
+    template<> struct sized_integer<1, true>
+    {
+      using type = std::int8_t;
+    };
+    template<> struct sized_integer<2, true>
+    {
+      using type = std::int16_t;
+    };
+    template<> struct sized_integer<4, true>
+    {
+      using type = std::int32_t;
+    };
+    template<> struct sized_integer<8, true>
+    {
+      using type = std::int64_t;
+    };
+    template<> struct sized_integer<1, false>
+    {
+      using type = std::uint8_t;
+    };
+    template<> struct sized_integer<2, false>
+    {
+      using type = std::uint16_t;
+    };
+    template<> struct sized_integer<4, false>
+    {
+      using type = std::uint32_t;
+    };
+    template<> struct sized_integer<8, false>
+    {
+      using type = std::uint64_t;
+    };
+    template<typename T, bool Signed = false>
+    using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
+  }
   template<typename T, typename V> auto as_value(V const& v)
   {
     return static_cast<T>(v);
@@ -1676,6 +1714,11 @@ namespace tts
     using type = T;
   };
   template<typename T> using base_type_t = typename base_type<T>::type;
+  template<typename T> struct boolean_type
+  {
+    using type = bool;
+  };
+  template<typename T> using boolean_type_t = typename boolean_type<T>::type;
   namespace _
   {
     struct empty_limits
@@ -1731,6 +1774,24 @@ namespace tts
       return as_value<D>(seed);
     }
     T seed;
+  };
+  template<typename T, typename U = T> struct logicals
+  {
+    constexpr logicals(T v, U k)
+        : start(v)
+        , range(k)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>) const
+    {
+      return as_value<tts::boolean_type_t<D>>(false);
+    }
+    template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
+    {
+      return as_value<tts::boolean_type_t<D>>(((start + idx) % range) == 0);
+    }
+    T start;
+    U range;
   };
   template<typename T, typename U = T> struct ramp
   {
@@ -1820,6 +1881,41 @@ namespace tts
     Mn mini;
     Mx maxi;
   };
+  struct random_bits
+  {
+    template<typename D> auto operator()(tts::type<D>, auto...)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return tts::random_value<i_t>(0, 8 * sizeof(i_t) - 1);
+    }
+  };
+  template<typename G> struct as_integer
+  {
+    constexpr explicit as_integer(G g)
+        : generator_(g)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>, auto... args)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return generator_(tts::type<i_t> {}, args...);
+    }
+    G generator_;
+  };
+  template<typename G> struct as_signed_integer
+  {
+    constexpr explicit as_signed_integer(G g)
+        : generator_(g)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>, auto... args)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>, true>;
+      tts::type<i_t> tgt {};
+      return generator_(tgt, args...);
+    }
+    G generator_;
+  };
 }
 namespace tts::_
 {
@@ -1888,7 +1984,11 @@ namespace tts::_
       current_type = as_text(typename_<T>);
       if(::tts::_::is_verbose && !::tts::_::is_quiet)
         printf(">  With <T = %s>\n", current_type.data());
-      (body(produce(type<T> {}, Generators)...));
+      process_call(body, produce(type<T> {}, Generators)...);
+    }
+    template<typename... Args> static void process_call(auto body, Args&&... args)
+    {
+      body(std::forward<Args>(args)...);
     }
     char const* name;
   };
