@@ -201,7 +201,7 @@ namespace tts::_
   }
 #endif
 
-  constexpr inline std::size_t log2(std::size_t n)
+  constexpr std::size_t log2(std::size_t n)
   {
     return n ? std::bit_width(n) - 1 : 0;
   }
