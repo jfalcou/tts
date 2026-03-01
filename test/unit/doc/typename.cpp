@@ -11,7 +11,8 @@
 #include <tts/tts.hpp>
 #include <vector>
 
-TTS_CASE_TPL("Check typename_ utility", int, float, std::vector<double>)<typename T>(tts::type<T>)
+TTS_CASE_TPL("Check typename_ utility", int, float, std::vector<double>)
+<typename T>(tts::type<T>)
 {
   TTS_PASS("Type name: '" + tts::as_text(tts::typename_<T>) + "'");
 };
@@ -25,5 +26,8 @@ TTS_CASE_TPL("Check typename_ utility", int, float, std::vector<double>)<typenam
 #include <vector>
 
 TTS_CASE_WITH("Check name() utility", (int, float, std::vector<double>), tts::value {37})
-(auto const& args) { TTS_PASS("tts::name(args) = '" + tts::as_text(tts::name(args)) + "'"); };
+(auto const& args)
+{
+  TTS_PASS("tts::name(args) = '" + tts::as_text(tts::name(args)) + "'");
+};
 //! [snippet2]

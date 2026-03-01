@@ -275,7 +275,10 @@
               ::tts::typename_<type_b>.data());                                                    \
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
-    else { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                            \
+    else                                                                                           \
+    {                                                                                              \
+      TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                   \
+    }                                                                                              \
   }(A, B) /**/
 
 //======================================================================================================================
@@ -419,10 +422,14 @@ same.
 
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
   ::tts::global_logger_status = false;                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                               \
   } while(0);                                                                                      \
-  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  ::tts::_::logger                                                                                 \
+  {                                                                                                \
+    ::tts::global_logger_status                                                                    \
+  }                                                                                                \
 /**/
 
 //======================================================================================================================
@@ -568,7 +575,8 @@ same.
 
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
   ::tts::global_logger_status = false;                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     using type_a = std::remove_cvref_t<decltype(A)>;                                               \
     using type_b = std::remove_cvref_t<decltype(B)>;                                               \
                                                                                                    \
@@ -584,9 +592,15 @@ same.
               ::tts::typename_<type_b>.data());                                                    \
       ::tts::global_logger_status = false;                                                         \
     }                                                                                              \
-    else { TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE) }                                      \
+    else                                                                                           \
+    {                                                                                              \
+      TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                             \
+    }                                                                                              \
   } while(0);                                                                                      \
-  ::tts::_::logger { ::tts::global_logger_status }                                                 \
+  ::tts::_::logger                                                                                 \
+  {                                                                                                \
+    ::tts::global_logger_status                                                                    \
+  }                                                                                                \
   /**/
 
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \

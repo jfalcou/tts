@@ -94,5 +94,8 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int    report(int fails, int invalids) { return global_runtime.report(fails, invalids); }
+  inline int report(int fails, int invalids)
+  {
+    return global_runtime.report(fails, invalids);
+  }
 }

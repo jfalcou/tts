@@ -44,7 +44,8 @@ namespace tts::_
 #define TTS_PASS(...)
 #else
 #define TTS_PASS(...)                                                                              \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     ::tts::global_runtime.pass();                                                                  \
     ::tts::_::report_pass(::tts::_::source_location::current().data(),                             \
                           ::tts::text {__VA_ARGS__}.data());                                       \
@@ -68,7 +69,8 @@ namespace tts::_
 #define TTS_FAIL(...)
 #else
 #define TTS_FAIL(...)                                                                              \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     ::tts::global_runtime.fail();                                                                  \
     if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
     ::tts::_::report_fail(::tts::_::source_location::current().data(),                             \
@@ -93,7 +95,8 @@ namespace tts::_
 #define TTS_FATAL(...)
 #else
 #define TTS_FATAL(...)                                                                             \
-  do {                                                                                             \
+  do                                                                                               \
+  {                                                                                                \
     ::tts::global_runtime.fail();                                                                  \
     if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
     ::tts::_::report_fatal(::tts::_::source_location::current().data(),                            \

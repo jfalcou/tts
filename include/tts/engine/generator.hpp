@@ -10,6 +10,7 @@
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/random.hpp>
 #include <tts/tools/types.hpp>
+#include <limits>
 
 namespace tts
 {
@@ -41,7 +42,10 @@ namespace tts
     @return A value of type `T` obtained by conversion of `v`.
   **/
   //====================================================================================================================
-  template<typename T, typename V> auto as_value(V const& v) { return static_cast<T>(v); }
+  template<typename T, typename V> auto as_value(V const& v)
+  {
+    return static_cast<T>(v);
+  }
 
   //====================================================================================================================
   /**
@@ -115,11 +119,128 @@ namespace tts
 
   //====================================================================================================================
   /**
+    @brief Base type extraction
+
+    This structure is used to extract the base type of a type `T`. By default, the base type is `T`
+    itself, but this structure can be specialized for user-defined types to provide a different base
+    type. The base type is used to determine the limits and special values for the type `T` when
+    generating test data.
+
+    **Helper types:**
+    - `base_type_t<T>`: Alias for `typename base_type<T>::type`
+
+    @tparam T Type for which to extract the base type.
+  **/
+  //====================================================================================================================
+  template<typename T> struct base_type
+  {
+    using type = T;
+  };
+
+  template<typename T> using base_type_t = typename base_type<T>::type;
+
+  namespace _
+  {
+    struct empty_limits
+    {
+    };
+
+    template<typename T> struct common_limits
+    {
+      using b_t = base_type_t<T>;
+      static_assert(std::numeric_limits<b_t>::is_specialized,
+                    "Base type must have std::numeric_limits specialized");
+
+      T valmax = static_cast<T>(std::numeric_limits<b_t>::max());
+      T valmin = static_cast<T>(std::numeric_limits<b_t>::lowest());
+      T zero   = static_cast<T>(0);
+      T one    = static_cast<T>(1);
+    };
+
+    template<typename T> struct float_limits
+    {
+      using b_t = base_type_t<T>;
+
+      static constexpr b_t get_maxflint()
+      {
+        if constexpr(sizeof(b_t) == 4) return static_cast<b_t>(0x1p+24);
+        else return static_cast<b_t>(0x1p+53);
+      }
+
+      T nan            = static_cast<T>(std::numeric_limits<b_t>::quiet_NaN());
+      T inf            = static_cast<T>(std::numeric_limits<b_t>::infinity());
+      T minf           = static_cast<T>(-std::numeric_limits<b_t>::infinity());
+      T mzero          = static_cast<T>(-0.0);
+      T maxflint       = static_cast<T>(get_maxflint());
+      T mindenormal    = static_cast<T>(std::numeric_limits<b_t>::denorm_min());
+      T smallestposval = static_cast<T>(std::numeric_limits<b_t>::min());
+      T mone           = static_cast<T>(-1.0);
+    };
+  }
+
+  //====================================================================================================================
+  /**
     @defgroup tools-generators-class Data Generators
     @brief Generators to produce data samples for testing.
     @{
   **/
   //====================================================================================================================
+
+  //====================================================================================================================
+  /**
+    @brief Defines a set of limits for a type `T`.
+
+    This structure provides a set of limits and special values for the type `T` that can be used for
+    generating test data that covers edge cases and special values. The actual limits provided
+    depend on the type `T` and its base type.
+
+    The provided limits include:
+    - `valmax`: The maximum representable value of the base type.
+    - `valmin`: The minimum representable value of the base type.
+    - `zero`: The value representing zero.
+    - `one`: The value representing one.
+
+    For floating-point types, additional limits include:
+    - `nan`: Not-a-Number value.
+    - `inf`: Positive infinity.
+    - `minf`: Negative infinity.
+    - `maxflint`: The largest integer value that can be exactly represented in the type.
+    - `mindenormal`: The smallest positive subnormal value.
+    - `smallestposval`: The smallest positive normal value.
+    - `mzero`: Negative zero.
+    - `mone`: The value representing negative one.
+
+    This class can be specialized for user-defined types to provide custom limits.
+
+    @groupheader{Examples}
+    @snippet doc/limits.cpp snippet
+
+    @tparam T Type for which to provide limits for.
+  **/
+  //====================================================================================================================
+  template<typename T>
+  struct limits_set
+      : _::common_limits<T>
+      , std::conditional_t<std::floating_point<base_type_t<T>>, _::float_limits<T>, _::empty_limits>
+  {
+    using type = T;
+  };
+
+  //====================================================================================================================
+  /**
+    @brief Provides a set of limits for the type `T`.
+
+    This function returns a structure containing various limits and special values for the type `T`
+  that can be used for generating test data that covers edge cases and special values.
+
+    @tparam T Type for which to provide limits
+    @return A instance of `limits_set<T>` containing limits and special values for type `T`.
+  **/
+  //====================================================================================================================
+  template<typename T> inline auto limits(tts::type<T>)
+  {
+    return limits_set<T> {};
+  }
 
   //====================================================================================================================
   /**
@@ -140,9 +261,12 @@ namespace tts
     {
     }
 
-    template<typename D> D operator()(tts::type<D>, auto...) const { return as_value<D>(seed); }
+    template<typename D> D operator()(tts::type<D>, auto...) const
+    {
+      return as_value<D>(seed);
+    }
 
-    T                      seed;
+    T seed;
   };
 
   //====================================================================================================================
@@ -178,10 +302,13 @@ namespace tts
       return as_value<D>(start + idx * step);
     }
 
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(start);
+    }
 
-    T                      start;
-    U                      step;
+    T start;
+    U step;
   };
 
   //====================================================================================================================
@@ -217,10 +344,13 @@ namespace tts
       return as_value<D>(start - idx * step);
     }
 
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(start); }
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(start);
+    }
 
-    T                      start;
-    U                      step;
+    T start;
+    U step;
   };
 
   //====================================================================================================================
@@ -256,10 +386,13 @@ namespace tts
       return _::min(as_value<D>(w1 + idx * step), w2);
     }
 
-    template<typename D> D operator()(tts::type<D>) const { return as_value<D>(first_); }
+    template<typename D> D operator()(tts::type<D>) const
+    {
+      return as_value<D>(first_);
+    }
 
-    T                      first_;
-    U                      last_;
+    T first_;
+    U last_;
   };
 
   //====================================================================================================================

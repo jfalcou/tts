@@ -62,35 +62,9 @@ TTS_CASE("Check display of pointer types")
 #endif
 };
 
-namespace space
-{
-  struct some_type
-  {
-    int i;
-  };
-
-  tts::text to_text(some_type const& s) { return "some_type[" + tts::as_text(s.i) + "]"; }
-
-  struct some_other_type
-  {
-    int              j;
-
-    friend tts::text to_text(some_other_type const& s) { return "[[" + tts::as_text(s.j) + "]]"; }
-  };
-}
-
-TTS_CASE("Check display of type with specific as_text")
-{
-  TTS_EQUAL(tts::as_text(space::some_type {42}), "some_type[42]");
-  TTS_EQUAL(tts::as_text(space::some_other_type {63}), "[[63]]");
-};
-
 TTS_CASE("Check display of sequence type")
 {
   TTS_EQUAL(tts::as_text(std::list<int> {1, 2, 3, 4}), "{ 1 2 3 4 }");
-  TTS_EQUAL(
-      tts::as_text(std::vector<space::some_type> {space::some_type {13}, space::some_type {34}}),
-      "{ some_type[13] some_type[34] }");
 };
 
 TTS_CASE("Check display of std::optional")

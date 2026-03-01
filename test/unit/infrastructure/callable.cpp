@@ -14,7 +14,10 @@ TTS_CASE("Check empty callable behavior")
 };
 
 inline int outside_data = 0;
-void       outside_function() { outside_data = 99; }
+void       outside_function()
+{
+  outside_data = 99;
+}
 
 TTS_CASE("Check callable using a function")
 {

@@ -17,9 +17,9 @@ A large body of work (https://github.com/jfalcou/tts/pull/105) has been done to 
 ### Bug Fixes
   * Added static_assert to catch unsupported types in TTS_ABSOLUTE/RELATIVE/ULP_EQUAL (https://github.com/jfalcou/tts/pull/78)
   * Fix #82 - Make FATAL error log their messages (https://github.com/jfalcou/tts/pull/85)
-  * fixed uint types not in integral_types by @SadiinsoSnowfall in https://github.com/jfalcou/tts/pull/99
+  * fixed uint types not in integral_types by **SadiinsoSnowfall** in https://github.com/jfalcou/tts/pull/99
   * Fix #100 - TTS doesn't generate -Wshadow warnings (https://github.com/jfalcou/tts/pull/102)
-  * Make produce(sequence) use produce(scalar) to allow for easier non-standard type production by @SadiinsoSnowfall (https://github.com/jfalcou/tts/pull/110)
+  * Make produce(sequence) use produce(scalar) to allow for easier non-standard type production by **SadiinsoSnowfall** (https://github.com/jfalcou/tts/pull/110)
 
 ### New Features
   * Decorrelate IEEE_EQUAL from ULP_DISTANCE (https://github.com/jfalcou/tts/pull/89)
@@ -31,7 +31,7 @@ A large body of work (https://github.com/jfalcou/tts/pull/105) has been done to 
   * Added the `-q/--quiet` CLI option to remove all output but summary  (https://github.com/jfalcou/tts/pull/105)
 
 ### New Contributors
-* @SadiinsoSnowfall
+* **SadiinsoSnowfall**
 
 ### Detective who?
 [Beatrice Adela Bradley](https://en.wikipedia.org/wiki/Mrs_Bradley).

@@ -35,7 +35,10 @@ namespace tts::_
       return strncmp(token, f, position) == 0;
     }
 
-    bool                   is_valid() const { return position > 0; }
+    bool is_valid() const
+    {
+      return position > 0;
+    }
 
     template<typename T> T get(T const& def = T {}) const
     {
@@ -64,7 +67,10 @@ namespace tts::_
 
         if(n != 1) that = def;
       }
-      else { that = def; }
+      else
+      {
+        that = def;
+      }
 
       return that;
     }
@@ -121,7 +127,10 @@ namespace tts
   struct options
   {
     /// Checks if the flag `f` is set on the command line
-    bool operator[](char const* f) const { return find(f).is_valid(); }
+    bool operator[](char const* f) const
+    {
+      return find(f).is_valid();
+    }
 
     /// Checks if qny flag `fs` is set on the command line
     template<std::same_as<char const*>... Flags> bool operator()(Flags... fs) const
@@ -145,7 +154,10 @@ namespace tts
     }
 
     /// Checks if current options set is not empty
-    bool         is_valid() { return argc && argv != nullptr; }
+    bool is_valid() const
+    {
+      return argc && argv != nullptr;
+    }
 
     int          argc;
     char const** argv;
@@ -207,7 +219,10 @@ namespace tts
       @return The pre-processed command line arguments as a reference to a tts::options instance.
   **/
   //====================================================================================================================
-  inline options const& arguments() { return _::current_arguments; }
+  inline options const& arguments()
+  {
+    return _::current_arguments;
+  }
 
   //====================================================================================================================
   /**
@@ -227,7 +242,7 @@ namespace tts
       @return The current random seed used by TTS.
   **/
   //====================================================================================================================
-  inline int            random_seed(int base_seed = -1)
+  inline int random_seed(int base_seed = -1)
   {
     if(_::current_seed == -1)
     {
@@ -249,7 +264,10 @@ namespace tts
             Verbose mode is enabled when the `--verbose` or `-v` command line argument is provided.
   **/
   //====================================================================================================================
-  inline bool is_verbose() { return _::is_verbose; }
+  inline bool is_verbose()
+  {
+    return _::is_verbose;
+  }
 }
 
 TTS_DISABLE_WARNING_POP

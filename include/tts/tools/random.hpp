@@ -36,9 +36,9 @@ namespace tts
       else
       {
         constexpr unsigned int SHIFT_MAX =
-            (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
+        (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
         unsigned int r =
-            (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
+        (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
         return {r, SHIFT_MAX};
       }
     }
@@ -60,7 +60,8 @@ namespace tts
         unsigned int limit       = bucket_size * static_cast<unsigned int>(range);
 
         unsigned int r;
-        do {
+        do
+        {
           r = static_cast<unsigned int>(std::rand());
         } while(r >= limit);
 
@@ -70,14 +71,20 @@ namespace tts
       auto [ r_raw, r_max ] = rand30();
 
       // Fallback for huge ranges exceeding our 30-bit generator
-      if(range > r_max) { return M + static_cast<T>(r_raw % range); }
+      if(range > r_max)
+      {
+        return M + static_cast<T>(r_raw % range);
+      }
 
       // Rejection Sampling: discard the "tail" of the random range
       U            bucket_size = r_max / range;
       U            limit       = bucket_size * range;
 
       unsigned int r           = r_raw;
-      while(r >= limit) { r = rand30().val; }
+      while(r >= limit)
+      {
+        r = rand30().val;
+      }
 
       return M + static_cast<T>(r / bucket_size);
     }
@@ -92,11 +99,14 @@ namespace tts
       auto [ r_raw, r_max ] = rand30();
 
       // Normalize exactly to [0, 1] based on actual generator capability
-      double uniform_01     = static_cast<double>(r_raw) / static_cast<double>(r_max);
+      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
       return static_cast<T>(M + uniform_01 * (N - M));
     }
 
-    template<std::integral T> T       roll_random(T mini, T maxi) { return _::roll(mini, maxi); }
+    template<std::integral T> T roll_random(T mini, T maxi)
+    {
+      return _::roll(mini, maxi);
+    }
 
     // Floating point complex logic (Logarithmic distribution)
     template<std::floating_point T> T roll_random(T mini, T maxi)
@@ -117,8 +127,8 @@ namespace tts
       // Handle Zero-Crossing Ranges [-A, +B]
       if(mini < 0 && maxi > 0)
       {
-        T    abs_min       = _::abs(mini);
-        T    abs_max       = _::abs(maxi);
+        T abs_min = _::abs(mini);
+        T abs_max = _::abs(maxi);
 
         // Weight probability by magnitude
         T    total_mag     = abs_min + abs_max;
@@ -155,7 +165,10 @@ namespace tts
         T log_val = _::roll(log_min, log_max);
         value     = -_::exp10(log_val);
       }
-      else { return quiet_nan; }
+      else
+      {
+        return quiet_nan;
+      }
 
       return value;
     }
@@ -168,9 +181,8 @@ namespace tts
     @ingroup tools-random
 
     This function generates a random value of type `T` between the specified `mini` and `maxi`
-  bounds using an uniform distribution for integral types and a log-uniform distribution for
-  floating-point types. The seed is derived from the
-    @ref tts::random_seed function.
+    bounds using an uniform distribution for integral types and a log-uniform distribution for
+    floating-point types. The seed is derived from the tts::random_seed function.
 
     @groupheader{Example}
     @snippet doc/random.cpp snippet
@@ -182,5 +194,8 @@ namespace tts
     @see tts::randoms
   **/
   //====================================================================================================================
-  template<typename T> T random_value(T mini, T maxi) { return _::roll_random(mini, maxi); }
+  template<typename T> T random_value(T mini, T maxi)
+  {
+    return _::roll_random(mini, maxi);
+  }
 }

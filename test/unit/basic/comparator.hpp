@@ -6,22 +6,27 @@
 */
 //==================================================================================================
 
-//! [snippet]
-#define TTS_MAIN // No need for main()
-#include <tts/tts.hpp>
-
-float ok_x(float x)
+constexpr bool eq(int a, int b)
 {
-  return x;
+  return a == b;
 }
-float bad_x(float x)
+constexpr bool neq(int a, int b)
 {
-  return x + x * 1e-7f;
+  return a != b;
 }
-
-TTS_CASE("Test range check")
+constexpr bool lt(int a, int b)
 {
-  TTS_ULP_RANGE_CHECK(
-  [](auto, auto i, auto c) { return (100.f * i) / c; }, float, float, ok_x, bad_x, 2.);
-};
-//! [snippet]
+  return a < b;
+}
+constexpr bool gt(int a, int b)
+{
+  return a > b;
+}
+constexpr bool lte(int a, int b)
+{
+  return a <= b;
+}
+constexpr bool gte(int a, int b)
+{
+  return a >= b;
+}

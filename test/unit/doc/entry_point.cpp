@@ -12,7 +12,10 @@
 #include <tts/tts.hpp>
 #include <iostream>
 
-TTS_CASE("Tautological test") { TTS_EXPECT_NOT(false == true); };
+TTS_CASE("Tautological test")
+{
+  TTS_EXPECT_NOT(false == true);
+};
 
 int main(int argc, char const** argv)
 {

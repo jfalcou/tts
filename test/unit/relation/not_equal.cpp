@@ -16,9 +16,15 @@ TTS_CASE("Check correctness of inequality tests")
   TTS_NOT_EQUAL(a, b);
 };
 
-constexpr int f() { return 45; }
+constexpr int f()
+{
+  return 45;
+}
 
-TTS_CASE("Check correctness of constexpr inequality tests") { TTS_CONSTEXPR_NOT_EQUAL(63, f()); };
+TTS_CASE("Check correctness of constexpr inequality tests")
+{
+  TTS_CONSTEXPR_NOT_EQUAL(63, f());
+};
 
 TTS_CASE("Check correctness of typed inequality tests")
 {

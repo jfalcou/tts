@@ -48,7 +48,10 @@ namespace sample
     constexpr bool operator==(payload const&) const = default;
   };
 
-  tts::text to_text(payload const& p) { return tts::text("payload(%f)[%d][%d]", p.d, p.i, p.j); }
+  tts::text to_text(payload const& p)
+  {
+    return tts::text("payload(%f)[%d][%d]", p.d, p.i, p.j);
+  }
 }
 
 TTS_CASE("Display another type with custom to_text")

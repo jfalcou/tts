@@ -6,25 +6,26 @@
 AlignConsecutiveAssignments:
   Enabled: true
   AcrossEmptyLines: true
-  AcrossComments: true
+  AcrossComments: false
   AlignCompound: true
   AlignFunctionPointers: false
   PadOperators: true
 AlignConsecutiveDeclarations:
   Enabled: true
   AcrossEmptyLines: true
-  AcrossComments: true
+  AcrossComments: false
   AlignCompound: true
   AlignFunctionPointers: false
   PadOperators: true
 AlignEscapedNewlines: Right
 AlignTrailingComments: true
 AlignAfterOpenBracket: Align
-AllowShortBlocksOnASingleLine: Always
+AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-AllowShortLoopsOnASingleLine: true
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: MultiLine
 BreakBeforeBraces: Allman
 BreakBeforeTernaryOperators: true
@@ -32,6 +33,8 @@ BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 ColumnLimit: 100
 Cpp11BracedListStyle: true
+CommentPragmas: '^ [^@]'
+ContinuationIndentWidth: 0
 FixNamespaceComments: false
 IncludeBlocks: Regroup
 IndentCaseLabels: false
@@ -41,6 +44,7 @@ KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: All
 PointerAlignment: Left
+ReflowComments: true
 SortIncludes: Never
 SortUsingDeclarations: true
 SpaceAfterTemplateKeyword: false
@@ -73,7 +77,12 @@ AlignConsecutiveMacros:
   PadOperators: true
 AllowShortCaseExpressionOnASingleLine: true
 AllowShortEnumsOnASingleLine: true
-AllowShortLambdasOnASingleLine: All
 BreakBeforeConceptDeclarations: Always
 InsertNewlineAtEOF: true
 Language: Cpp
+StatementMacros:
+  - TTS_CASE
+  - TTS_CASE_TPL
+  - TTS_CASE_WITH
+  - TTS_WHEN
+  - TTS_AND_THEN

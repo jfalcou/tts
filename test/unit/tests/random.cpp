@@ -31,10 +31,8 @@ template<typename T> double compute_variance(std::vector<T> const& data, double 
   return sum_sq_diff / data.size();
 }
 
-TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]",
-             int,
-             long,
-             unsigned int)<typename T>(tts::type<T>)
+TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]", int, long, unsigned int)
+<typename T>(tts::type<T>)
 {
   T                   min_v   = 10;
   T                   max_v   = 30;
@@ -62,7 +60,8 @@ TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]",
   TTS_RELATIVE_EQUAL(actual_var, expected_var, 5.0);
 };
 
-TTS_CASE_TPL("Check Float Log-Uniformity", float, double)<typename T>(tts::type<T>)
+TTS_CASE_TPL("Check Float Log-Uniformity", float, double)
+<typename T>(tts::type<T>)
 {
   T                   min_v   = 1;
   T                   max_v   = 1000;
@@ -85,7 +84,8 @@ TTS_CASE_TPL("Check Float Log-Uniformity", float, double)<typename T>(tts::type<
   TTS_RELATIVE_EQUAL(actual_log_mean, expected_log_mean, 1.0);
 };
 
-TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)<typename T>(tts::type<T>)
+TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)
+<typename T>(tts::type<T>)
 {
   T           min_v          = -20;
   T           max_v          = 80;

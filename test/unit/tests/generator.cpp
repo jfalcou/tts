@@ -28,13 +28,14 @@ TTS_CASE_WITH("Check behavior for scalar types",
               tts::reverse_ramp {10},
               tts::reverse_ramp {100, 2},
               tts::between {0, 100},
-              tts::randoms {0., 100.})<typename T>(T const&    value,
-                                                   T const&    rmp,
-                                                   T const&    rmps,
-                                                   T const&    rrmp,
-                                                   T const&    rrmps,
-                                                   T const&    btw,
-                                                   auto const& rng)
+              tts::randoms {0., 100.})
+<typename T>(T const&    value,
+             T const&    rmp,
+             T const&    rmps,
+             T const&    rrmp,
+             T const&    rrmps,
+             T const&    btw,
+             auto const& rng)
 {
   T value_ref = 37, rmp_ref = 65, rmps_ref = 1, rrmp_ref = 10, rrmps_ref = 100;
   T btw_ref = 0;
@@ -66,17 +67,18 @@ TTS_CASE_WITH("Check behavior for non-scalar types",
               tts::reverse_ramp {10},
               tts::reverse_ramp {100, 2},
               tts::between {0, 128},
-              tts::randoms {0., 100.})<typename T>(T const&    value,
-                                                   T const&    rmp,
-                                                   T const&    rmps,
-                                                   T const&    rrmp,
-                                                   T const&    rrmps,
-                                                   T const&    btw,
-                                                   auto const& rng)
+              tts::randoms {0., 100.})
+<typename T>(T const&    value,
+             T const&    rmp,
+             T const&    rmps,
+             T const&    rrmp,
+             T const&    rrmps,
+             T const&    btw,
+             auto const& rng)
 {
   T value_ref {37, 37, 37, 37, 37, 37, 37, 37, 37}, rmp_ref {65, 66, 67, 68, 69, 70, 71, 72, 73},
-      rmps_ref {1, 3, 5, 7, 9, 11, 13, 15, 17}, rrmp_ref {10, 9, 8, 7, 6, 5, 4, 3, 2},
-      rrmps_ref {100, 98, 96, 94, 92, 90, 88, 86, 84};
+  rmps_ref {1, 3, 5, 7, 9, 11, 13, 15, 17}, rrmp_ref {10, 9, 8, 7, 6, 5, 4, 3, 2},
+  rrmps_ref {100, 98, 96, 94, 92, 90, 88, 86, 84};
 
   using v_t = typename T::value_type;
   auto w1   = static_cast<v_t>(0);

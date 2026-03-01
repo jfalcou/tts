@@ -110,19 +110,25 @@ namespace tts
   //====================================================================================================================
   template<typename T> struct type
   {
-    friend text                       to_text(type) { return as_text(typename_<T>); }
+    friend text to_text(type)
+    {
+      return as_text(typename_<T>);
+    }
 
-    template<_::stream OS> friend OS& operator<<(OS& os, type const&) { return os << typename_<T>; }
+    template<_::stream OS> friend OS& operator<<(OS& os, type const&)
+    {
+      return os << typename_<T>;
+    }
   };
 
   /// Types list containing all standard floating point types.
-  using real_types     = types<double, float>;
+  using real_types = types<double, float>;
 
   /// Types list containing all standard signed integer types.
-  using int_types      = types<std::int64_t, std::int32_t, std::int16_t, std::int8_t>;
+  using int_types = types<std::int64_t, std::int32_t, std::int16_t, std::int8_t>;
 
   /// Types list containing all standard unsigned types.
-  using uint_types     = types<std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t>;
+  using uint_types = types<std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t>;
 
   /// Types list containing all standard integer types.
   using integral_types = types<std::int64_t,
