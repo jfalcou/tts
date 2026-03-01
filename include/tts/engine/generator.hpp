@@ -16,30 +16,50 @@ namespace tts
 {
   namespace _
   {
-    template<typename T, bool Signed> struct sized_integer;
+    template<std::size_t N, bool Signed> struct sized_integer;
 
-    template<typename T> struct sized_integer<T, true>
+    template<> struct sized_integer<1, true>
     {
-      using type = std::conditional_t<
-      sizeof(T) == 1,
-      std::int8_t,
-      std::conditional_t<sizeof(T) == 2,
-                         std::int16_t,
-                         std::conditional_t<sizeof(T) == 4, std::int32_t, std::int64_t>>>;
+      using type = std::int8_t;
     };
 
-    template<typename T> struct sized_integer<T, false>
+    template<> struct sized_integer<2, true>
     {
-      using type = std::conditional_t<
-      sizeof(T) == 1,
-      std::uint8_t,
-      std::conditional_t<sizeof(T) == 2,
-                         std::uint16_t,
-                         std::conditional_t<sizeof(T) == 4, std::uint32_t, std::uint64_t>>>;
+      using type = std::int16_t;
+    };
+
+    template<> struct sized_integer<4, true>
+    {
+      using type = std::int32_t;
+    };
+
+    template<> struct sized_integer<8, true>
+    {
+      using type = std::int64_t;
+    };
+
+    template<> struct sized_integer<1, false>
+    {
+      using type = std::uint8_t;
+    };
+
+    template<> struct sized_integer<2, false>
+    {
+      using type = std::uint16_t;
+    };
+
+    template<> struct sized_integer<4, false>
+    {
+      using type = std::uint32_t;
+    };
+
+    template<> struct sized_integer<8, false>
+    {
+      using type = std::uint64_t;
     };
 
     template<typename T, bool Signed = false>
-    using sized_integer_t = typename sized_integer<T, Signed>::type;
+    using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
   }
 
   //====================================================================================================================
@@ -488,6 +508,63 @@ namespace tts
   **/
   //====================================================================================================================
   inline constexpr _::random_bits_t random_bits = {};
+
+  //====================================================================================================================
+  /**
+    @brief Converts a generator to produce integer values
+
+    This generator adapter takes a generator `g` and produces integer values by generating values
+    using `g` and converting them to integers. The conversion is done by interpreting the generated
+    values as integers of the same size as the base type of the target type.
+
+    @groupheader{Example}
+    @snippet doc/generator_as_integer.cpp snippet
+
+    @tparam G Type of the generator to adapt
+  **/
+  //====================================================================================================================
+  template<typename G> struct as_integer
+  {
+    constexpr as_integer(G g)
+        : generator_(g)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>, auto... args)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return generator_(tts::type<i_t> {}, args...);
+    }
+    G generator_;
+  };
+
+  //====================================================================================================================
+  /**
+    @brief Converts a generator to produce integer values
+
+    This generator adapter takes a generator `g` and produces signed integer values by generating
+  values using `g` and converting them to integers. The conversion is done by interpreting the
+  generated values as integers of the same size as the base type of the target type.
+
+    @groupheader{Example}
+    @snippet doc/generator_as_signed_integer.cpp snippet
+
+    @tparam G Type of the generator to adapt
+  **/
+  //====================================================================================================================
+  template<typename G> struct as_signed_integer
+  {
+    constexpr as_signed_integer(G g)
+        : generator_(g)
+    {
+    }
+    template<typename D> auto operator()(tts::type<D>, auto... args)
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>, true>;
+      tts::type<i_t> tgt {};
+      return generator_(tgt, args...);
+    }
+    G generator_;
+  };
 
   //====================================================================================================================
   /// @}
