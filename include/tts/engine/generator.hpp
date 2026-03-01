@@ -328,7 +328,7 @@ namespace tts
   //====================================================================================================================
   template<typename T> struct value
   {
-    constexpr value(T v)
+    constexpr explicit value(T v)
         : seed(v)
     {
     }
@@ -395,7 +395,7 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U = T> struct ramp
   {
-    constexpr ramp(T s)
+    constexpr explicit ramp(T s)
         : start(s)
         , step(1)
     {
@@ -437,7 +437,7 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U = T> struct reverse_ramp
   {
-    constexpr reverse_ramp(T s)
+    constexpr explicit reverse_ramp(T s)
         : start(s)
         , step(1)
     {

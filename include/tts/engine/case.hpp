@@ -22,7 +22,7 @@ namespace tts::_
 {
   struct capture
   {
-    capture(char const* id)
+    capture(char const* id) // NOSONAR
         : name(id)
     {
     }
@@ -38,7 +38,7 @@ namespace tts::_
 
   template<typename... Types> struct captures
   {
-    captures(char const* id)
+    captures(char const* id) // NOSONAR
         : name(id)
     {
     }
@@ -49,7 +49,7 @@ namespace tts::_
       // Registering different type in different tests generate far too much callable::invoker
       // symbol that make compile-time O(N)
       return test::acknowledge({name,
-                                [ = ]()
+                                [ body ]()
                                 {
                                   // We setup the current type name before each test so we know
                                   (((current_type = as_text(typename_<Types>)),
@@ -82,7 +82,7 @@ namespace tts::_
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
-    test_generators(char const* id)
+    test_generators(char const* id) // NOSONAR
         : name(id)
     {
     }

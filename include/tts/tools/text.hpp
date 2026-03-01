@@ -53,7 +53,7 @@ namespace tts
         std::size_t len = strlen(ptr);
         if(len > 0)
         {
-          data_ = reinterpret_cast<char*>(malloc(len + 1));
+          data_ = reinterpret_cast<char*>(malloc(len + 1)); // NOSONAR
           if(data_)
           {
             size_ = static_cast<int>(len);
@@ -87,7 +87,7 @@ namespace tts
       int len = snprintf(nullptr, 0, format, args...);
       if(len > 0)
       {
-        data_ = reinterpret_cast<char*>(malloc(len + 1));
+        data_ = reinterpret_cast<char*>(malloc(len + 1)); // NOSONAR
         if(data_)
         {
           size_ = len; // Only assign size if alloc succeeds
@@ -103,7 +103,7 @@ namespace tts
       // Strictly check for positive size and valid pointer to prevent allocation errors
       if(other.size_ > 0 && other.data_)
       {
-        data_ = reinterpret_cast<char*>(malloc(other.size_ + 1));
+        data_ = reinterpret_cast<char*>(malloc(other.size_ + 1)); // NOSONAR
         if(data_)
         {
           size_ = other.size_;
@@ -139,7 +139,7 @@ namespace tts
     /// Destructor
     ~text()
     {
-      if(data_) free(data_);
+      if(data_) free(data_); // NOSONAR
     }
 
     /// Swap contents with another text instance

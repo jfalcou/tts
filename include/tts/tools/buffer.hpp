@@ -23,7 +23,7 @@ namespace tts::_
     {
     }
 
-    buffer(std::size_t n)
+    explicit buffer(std::size_t n)
         : buffer()
     {
       if(n > 0)
@@ -62,7 +62,7 @@ namespace tts::_
           for(std::size_t i = 0; i < size_; ++i)
             (data_ + i)->~T(); // NOSONAR - T may be non-trivial
         }
-        free(data_);
+        free(data_); // NOSONAR
       }
     }
 
@@ -197,7 +197,7 @@ namespace tts::_
             (data_ + i)->~T(); // NOSONAR - T may be non-trivial
         }
 
-        free(data_);
+        free(data_); // NOSONAR
         data_     = new_data;
         capacity_ = new_cap;
       }

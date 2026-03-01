@@ -13,7 +13,7 @@
 
 struct flip_values
 {
-  constexpr flip_values(int p = 1)
+  constexpr explicit flip_values(int p = 1)
       : period_(p)
       , value_(-1)
   {
