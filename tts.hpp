@@ -437,7 +437,7 @@ namespace tts::_
   struct option
   {
     option() = default;
-    option(char const* arg)
+    explicit option(char const* arg)
         : token(arg)
         , position(-1)
     {
@@ -559,7 +559,7 @@ namespace tts
     if(_::current_seed == -1)
     {
       auto s = arguments().value(base_seed, "--seed");
-      if(s == -1) s = static_cast<int>(time(0));
+      if(s == -1) s = static_cast<int>(time(nullptr));
       _::current_seed = s;
     }
     return _::current_seed;
@@ -850,7 +850,7 @@ namespace tts::_
   };
   struct logger
   {
-    logger(bool status = true)
+    explicit logger(bool status = true)
         : display(status)
         , done(false)
     {
@@ -889,7 +889,7 @@ namespace tts::_
         , data_(nullptr)
     {
     }
-    buffer(std::size_t n)
+    explicit buffer(std::size_t n)
         : buffer()
     {
       if(n > 0)
@@ -1768,7 +1768,7 @@ namespace tts
   }
   template<typename T> struct value
   {
-    constexpr value(T v)
+    constexpr explicit value(T v)
         : seed(v)
     {
     }
@@ -1798,7 +1798,7 @@ namespace tts
   };
   template<typename T, typename U = T> struct ramp
   {
-    constexpr ramp(T s)
+    constexpr explicit ramp(T s)
         : start(s)
         , step(1)
     {
@@ -1821,7 +1821,7 @@ namespace tts
   };
   template<typename T, typename U = T> struct reverse_ramp
   {
-    constexpr reverse_ramp(T s)
+    constexpr explicit reverse_ramp(T s)
         : start(s)
         , step(1)
     {
@@ -1944,7 +1944,7 @@ namespace tts::_
     auto operator+(auto body) const
     {
       return test::acknowledge({name,
-                                [ = ]()
+                                [ body ]()
                                 {
                                   (((current_type = as_text(typename_<Types>)),
                                     (::tts::_::is_verbose && !::tts::_::is_quiet
