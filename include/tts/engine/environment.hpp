@@ -45,25 +45,29 @@ namespace tts::_
       auto pass_txt = success_count > 1 ? "es" : "";
       auto fail_txt = failure_count > 1 ? "s" : "";
       auto inv_txt  = invalid_count > 1 ? "s" : "";
-      auto passes   = (fails || invalids) ? 0 : test_count;
 
       puts("----------------------------------------------------------------");
-      printf("Results: %d test%s - %d/%d (%2.2f%%) success%s - %d/%d (%2.2f%%) failure%s - %d/%d "
-             "(%2.2f%%) invalid%s\n",
-             test_count,
-             test_txt,
-             success_count,
-             passes,
-             100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
-             pass_txt,
-             failure_count,
-             fails,
-             100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
-             fail_txt,
-             invalid_count,
-             invalids,
-             100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
-             inv_txt);
+      printf("Results: %d test%s ", test_count, test_txt);
+      if(success_count != 0)
+        printf("- %d/%d (%2.2f%%) success%s ",
+               success_count,
+               test_count,
+               100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
+               pass_txt);
+      if(failure_count != 0)
+        printf("- %d/%d (%2.2f%%) failure%s ",
+               failure_count,
+               test_count,
+               100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
+               fail_txt);
+      if(invalid_count != 0)
+        printf("- %d/%d (%2.2f%%) invalid%s ",
+               invalid_count,
+               test_count,
+               100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
+               inv_txt);
+
+      printf("\n");
 
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
