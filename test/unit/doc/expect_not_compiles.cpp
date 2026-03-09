@@ -10,7 +10,7 @@
 #define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
-TTS_CASE("Check that expression can compile properly")
+TTS_CASE("Check that expression cannot compile properly")
 {
   double d, e;
 
