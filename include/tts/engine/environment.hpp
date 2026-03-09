@@ -45,7 +45,6 @@ namespace tts::_
       auto pass_txt = success_count > 1 ? "es" : "";
       auto fail_txt = failure_count > 1 ? "s" : "";
       auto inv_txt  = invalid_count > 1 ? "s" : "";
-      //      auto passes   = (fails || invalids) ? 0 : test_count;
 
       puts("----------------------------------------------------------------");
       printf("Results: %d test%s ", test_count, test_txt);
