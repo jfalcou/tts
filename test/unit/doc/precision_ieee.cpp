@@ -24,7 +24,7 @@ namespace sample
     printf("%f vs %f\n", ra, rb);
     return tts::ieee_check(ra, rb);
   }
-};
+}
 
 TTS_CASE("Compare values with custom IEEE distance computation")
 {

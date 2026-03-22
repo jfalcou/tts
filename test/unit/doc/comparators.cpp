@@ -22,7 +22,7 @@ namespace sample
   {
     return l.value == r.value;
   }
-};
+}
 
 TTS_CASE("Compare values with custom equality")
 {
@@ -57,7 +57,7 @@ namespace sample
   {
     return std::abs(l.value) < std::abs(r.value);
   }
-};
+}
 
 TTS_CASE("Compare values with custom comparisons")
 {

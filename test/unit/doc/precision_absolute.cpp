@@ -24,7 +24,7 @@ namespace sample
 
     return tts::absolute_check(ra, rb);
   }
-};
+}
 
 TTS_CASE("Compare values with custom absolute distance computation")
 {
