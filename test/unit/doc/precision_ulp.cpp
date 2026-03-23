@@ -24,7 +24,7 @@ namespace sample
 
     return tts::ulp_check(ra, rb);
   }
-};
+}
 
 TTS_CASE("Compare values with custom ULP distance computation")
 {

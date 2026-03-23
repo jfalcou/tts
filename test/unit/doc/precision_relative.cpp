@@ -24,7 +24,7 @@ namespace sample
 
     return tts::relative_check(ra, rb);
   }
-};
+}
 
 TTS_CASE("Compare values with custom relative distance computation")
 {
