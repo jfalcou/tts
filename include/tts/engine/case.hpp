@@ -72,7 +72,7 @@ namespace tts::_
 
   // Specialisation for types list generator
   template<typename Generator>
-    requires requires(Generator) { typename Generator::types_list; }
+    requires requires { typename Generator::types_list; }
   struct captures<Generator> : captures<typename Generator::types_list>
   {
   };

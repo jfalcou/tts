@@ -39,7 +39,7 @@ namespace tts
         (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
         unsigned int r =
         (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
-        return {r, SHIFT_MAX};
+        return rand_result {r, SHIFT_MAX};
       }
     }
 
