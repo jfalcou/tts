@@ -699,7 +699,7 @@ namespace tts
     using type = types<T...>;
   };
   template<typename T>
-    requires requires(T) { typename T::types_list; }
+    requires requires { typename T::types_list; }
   struct as_type_list<T>
   {
     using type = typename T::types_list;
@@ -1544,7 +1544,7 @@ namespace tts
         (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
         unsigned int r =
         (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
-        return {r, SHIFT_MAX};
+        return rand_result {r, SHIFT_MAX};
       }
     }
     template<std::integral T> T roll(T M, T N)
@@ -1964,7 +1964,7 @@ namespace tts::_
   {
   };
   template<typename Generator>
-    requires requires(Generator) { typename Generator::types_list; }
+    requires requires { typename Generator::types_list; }
   struct captures<Generator> : captures<typename Generator::types_list>
   {
   };
