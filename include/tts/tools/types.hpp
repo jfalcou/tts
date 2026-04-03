@@ -43,7 +43,7 @@ namespace tts
   };
 
   template<typename T>
-    requires requires(T) { typename T::types_list; }
+    requires requires { typename T::types_list; }
   struct as_type_list<T>
   {
     using type = typename T::types_list;
