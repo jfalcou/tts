@@ -16,19 +16,19 @@ copa_make_single_unit ( INTERFACE     tts_test
                                       unit/infrastructure/display.cpp
                                       unit/infrastructure/main.cpp
                         ROOT          ${root}
-                        NAME          unit.infrastructure.basic.cpp
+                        NAME          unit/infrastructure/basic.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
                         FILES         unit/infrastructure/random.cpp
                         ROOT          ${root}
-                        NAME          unit.infrastructure.random.cpp
+                        NAME          unit/infrastructure/random.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
                         FILES         unit/infrastructure/failure.cpp
                         ROOT          ${root}
-                        NAME          unit.infrastructure.failure.cpp
+                        NAME          unit/infrastructure/failure.cpp
                       )
 
 ##======================================================================================================================
@@ -38,7 +38,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  unit.infrastructure.exe
                         FILES         unit/basic/expect.cpp unit/basic/expect_not.cpp unit/basic/main.cpp
                         ROOT          ${root}
-                        NAME          unit.basic.cpp
+                        NAME          unit/basic.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
@@ -49,7 +49,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                                       unit/precision/relative.cpp
                                       unit/precision/ulp.cpp
                         ROOT          ${root}
-                        NAME          unit.precision.cpp
+                        NAME          unit/precision.cpp
                       )
 
 copa_make_single_unit ( INTERFACE     tts_test
@@ -63,7 +63,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                                       unit/relation/less_equal.cpp
                                       unit/relation/not_equal.cpp
                         ROOT          ${root}
-                        NAME          unit.relation.cpp
+                        NAME          unit/relation.cpp
                       )
 
 copa_glob_unit( QUIET PATTERN "unit/tests/*.cpp"

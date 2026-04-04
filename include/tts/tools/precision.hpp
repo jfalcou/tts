@@ -62,6 +62,7 @@ namespace tts
         std::is_floating_point_v<T> || std::is_integral_v<T>,
         "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
         "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?");
+        return 0.;
       }
     }
     else
@@ -115,6 +116,7 @@ namespace tts
         std::is_floating_point_v<T> || std::is_integral_v<T>,
         "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
         "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?");
+        return 0.;
       }
     }
     else
@@ -185,6 +187,7 @@ namespace tts
         static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>,
                       "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
                       "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_check ?");
+        return 0.;
       }
     }
     else

@@ -1,0 +1,55 @@
+##======================================================================================================================
+##  TTS - Tiny Test System
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
+##======================================================================================================================
+name: TTS Unit Tests
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: tts-unit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ##################################################################################################
+  ## Preserve pre-commit checks
+  ##################################################################################################
+  precommit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install pre-commit
+        run: pip install pre-commit
+      - name: Run pre-commit checks
+        run: pre-commit run --all-files --show-diff-on-failure --color=always
+
+  ##################################################################################################
+  ## Unit Tests
+  ##################################################################################################
+  linux-tests:
+    name: Linux Unit Tests
+    needs: precommit
+    uses: ./.github/workflows/linux.yml
+
+  macos-tests:
+    name: MacOS Unit Tests
+    needs: precommit
+    uses: ./.github/workflows/macos.yml
+
+  windows-tests:
+    name: Windows Unit Tests
+    needs: precommit
+    uses: ./.github/workflows/windows.yml
+
+  #nvidia-tests:
+  #  name: Nvidia Unit Tests
+  #  needs: precommit
+  #  uses: ./.github/workflows/nvidia.yml

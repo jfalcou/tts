@@ -1,0 +1,55 @@
+##======================================================================================================================
+##  TTS - Tiny Test System
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
+##======================================================================================================================
+name: TTS Nvidia Tests
+on:
+  workflow_call:
+
+jobs:
+  linux:
+    name: ${{ matrix.compiler.name }} (${{ matrix.options }})
+    runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - &nvcc {
+              name: "NVCC x NVC++",
+              device: "nvcc"
+            }
+          - &nvc++ {
+              name: "NVC++",
+              host: "nvc++"
+            }
+          - &clang {
+              name: "NVCC x clang++",
+              host: "clang++"
+            }
+          - &gcc {
+              name: "NVCC x g++",
+              host: "g++"
+            }
+          #- &clang {
+          #    name: "clang++",
+          #    bin: "clang++",
+          #    flags: "--cuda-gpu-arch=sm_75 -lcudart_static -L/opt/cuda/lib64/ -ldl -lrt -pthread"
+          #  }
+    steps:
+      - name:  Fetch current branch
+        uses: actions/checkout@v6.0.2
+
+      - name: Configure CMake
+        run: |
+          cmake -S . -B build -G Ninja                            \
+          -DCMAKE_CUDA_COMPILER=${{ matrix.compiler.device }}     \
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler.host }}        \
+          -DCMAKE_CXX_FLAGS="${{ matrix.compiler.flags }}"        \
+          -DCMAKE_CUDA_FLAGS="${{ matrix.compiler.flags_cuda }}"
+
+      - name: Compile Unit Tests
+        run: cmake --build build --target tts-test -j 2
+
+      - name: Run Tests
+        run: ctest --test-dir build --output-on-failure -j 2

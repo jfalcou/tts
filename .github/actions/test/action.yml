@@ -1,0 +1,46 @@
+##======================================================================================================================
+##  TTS - Tiny Test System
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
+##======================================================================================================================
+name: 'TTS Test'
+description: 'Runs CTest for a specific preset'
+
+inputs:
+  preset:
+    description: 'Preset name (must exist in both configure and build presets)'
+    required: true
+
+  config:
+    description: 'Build configuration'
+    default: ''
+
+  memcheck:
+    description: 'Run MemCheck (valgrind)'
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Unit Tests
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+        CONFIG: ${{ inputs.config }}
+      run: |
+        if [ -n "$CONFIG" ]; then
+          ctest --preset "$PRESET" --build-config "$CONFIG"
+        else
+          ctest --preset "$PRESET"
+        fi
+
+    # MemCheck puts ctest in a mode that is not compatible with how presets are
+    # currently made. This is a workaround
+    - name: Run MemCheck
+      if: inputs.memcheck == 'true'
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+      run: |
+        cd "build/$PRESET"
+        ctest -T MemCheck --output-on-failure -j 2

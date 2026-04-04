@@ -1,0 +1,52 @@
+##======================================================================================================================
+##  TTS - Tiny Test System
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
+##======================================================================================================================
+name: TTS Linux Tests
+on:
+  workflow_call:
+
+jobs:
+  linux:
+    name: ${{ matrix.compiler.preset }} (${{ matrix.options }})
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.compiler.image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - { preset: "gcc"             , image: "ghcr.io/jfalcou/compilers:v10" }
+          - { preset: "gcc14"           , image: "ghcr.io/jfalcou/compilers:v10" }
+          - { preset: "clang"           , image: "ghcr.io/jfalcou/compilers:v10" }
+          - { preset: "clang20"         , image: "ghcr.io/jfalcou/compilers:v10" }
+          - { preset: "clang-libc++"    , image: "ghcr.io/jfalcou/compilers:v10" }
+          - { preset: "clang20-libc++"  , image: "ghcr.io/jfalcou/compilers:v10" }
+          - { preset: "wasm"            , image: "ghcr.io/jfalcou/compilers:v10"    , wrapper: "emcmake" }
+          - { preset: "icpx"            , image: "ghcr.io/jfalcou/compilers:sycl-v1", setup: "/opt/intel/oneapi/setvars.sh" }
+
+        options: ["-O0", "-O3 -flto -DNDEBUG"]
+
+    steps:
+      - name: Fetch current branch
+        uses: actions/checkout@v6.0.2
+
+      - name: Configure CMake and Build
+        uses: ./.github/actions/config
+        with:
+          preset: ${{ matrix.compiler.preset }}
+          flags: ${{ matrix.options }}
+          setup-script: ${{ matrix.compiler.setup }}
+          wrapper: ${{ matrix.compiler.wrapper }}
+
+      - name: Run Unit Tests
+        uses: ./.github/actions/test
+        with:
+          preset: ${{ matrix.compiler.preset }}
+
+      - name: Run MemCheck
+        uses: ./.github/actions/test
+        with:
+          preset: ${{ matrix.compiler.preset }}
+          memcheck: ${{ matrix.compiler.preset != 'icpx' }}
