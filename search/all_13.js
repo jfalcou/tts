@@ -7,7 +7,7 @@ var searchData=
   ['setup_20with_20cpm_4',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
   ['short_20example_5',['A Short Example',['../index.html#autotoc_md34',1,'']]],
   ['signed_5ftypes_6',['signed_types',['../group__tools-types.html#ga2eee6023454e5652e937f8028c1ac129',1,'tts']]],
-  ['size_7',['size',['../structtts_1_1text.html#aa67422042d8e978b4c9d75eee86cc04c',1,'tts::text']]],
+  ['size_7',['size',['../structtts_1_1text.html#a717e8bad55cb2c4b9cc969335bb59b58',1,'tts::text']]],
   ['source_8',['Install from the source',['../setup.html#setup-source',1,'']]],
   ['specify_20a_20test_20case_9',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
   ['standalone_20setup_10',['Standalone setup',['../setup.html#setup-standalone',1,'']]],

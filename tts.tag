@@ -265,10 +265,10 @@
       <arglist>(text const &amp;other)</arglist>
     </member>
     <member kind="function">
-      <type>int</type>
+      <type>size_t</type>
       <name>size</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>aa67422042d8e978b4c9d75eee86cc04c</anchor>
+      <anchor>a717e8bad55cb2c4b9cc969335bb59b58</anchor>
       <arglist>() const</arglist>
     </member>
     <member kind="function">

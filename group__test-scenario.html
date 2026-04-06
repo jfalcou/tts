@@ -299,7 +299,7 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check types using a types list&quot;</span>, <a class="code hl_struct" href="structtts_1_1types.html">tts::types&lt;float, double&gt;</a>)</div>
 <div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(1 / T {2}, T {0.5});</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(1 / T {2}, <span class="keyword">static_cast&lt;</span>T<span class="keyword">&gt;</span>(0.5));</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// A Types Generator is any type exposing a types_list internal type</span></div>
@@ -385,15 +385,15 @@ $(document).ready(function(){initNavTree('group__test-scenario.html',''); initRe
 <div class="line">              <a class="code hl_struct" href="structtts_1_1value.html">tts::value</a> {37},</div>
 <div class="line">              <a class="code hl_struct" href="structtts_1_1between.html">tts::between</a> {0, 100},</div>
 <div class="line">              <a class="code hl_struct" href="structtts_1_1randoms.html">tts::randoms</a> {0., 10.})</div>
-<div class="line">(<span class="keyword">auto</span> v, <span class="keyword">auto</span> b, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r)</div>
+<div class="line">&lt;<span class="keyword">typename</span> V, <span class="keyword">typename</span> B, <span class="keyword">typename</span> R&gt;(V v, B b, R <span class="keyword">const</span>&amp; r)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(v, 37);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(v, V {37});</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(b, 0);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(b, 100);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(b, B {0});</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(b, B {100});</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(r, 0);</div>
-<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(r, 10);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(r, R {0});</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(r, R {10});</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-relation_html_ga1439009af7ca90350dfe8859bde88926"><div class="ttname"><a href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a></div><div class="ttdeci">#define TTS_LESS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs less-or-equal-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:218</div></div>
 <div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:207</div></div>

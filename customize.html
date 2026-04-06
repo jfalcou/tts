@@ -318,8 +318,8 @@ ULP Distance</h2>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> ulp_distance(ratio a, ratio b)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / a.d;</div>
-<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / b.d;</div>
+<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.d);</div>
+<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.d);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf">tts::ulp_check</a>(ra, rb);</div>
 <div class="line">  }</div>
@@ -347,10 +347,10 @@ IEEE Comparison</h2>
 <div class="line">    <span class="keywordtype">int</span> n, d;</div>
 <div class="line">  };</div>
 <div class="line"> </div>
-<div class="line">  <span class="keywordtype">double</span> ieee_equal(ratio a, ratio b)</div>
+<div class="line">  <span class="keywordtype">bool</span> ieee_equal(ratio a, ratio b)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / a.d;</div>
-<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / b.d;</div>
+<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.d);</div>
+<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.d);</div>
 <div class="line">    printf(<span class="stringliteral">&quot;%f vs %f\n&quot;</span>, ra, rb);</div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3">tts::ieee_check</a>(ra, rb);</div>
 <div class="line">  }</div>
@@ -381,8 +381,8 @@ Relative Comparison</h2>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> relative_distance(ratio a, ratio b)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / a.d;</div>
-<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / b.d;</div>
+<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.d);</div>
+<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.d);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1">tts::relative_check</a>(ra, rb);</div>
 <div class="line">  }</div>
@@ -412,8 +412,8 @@ Absolute Comparison</h2>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">double</span> absolute_distance(ratio a, ratio b)</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / a.d;</div>
-<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / b.d;</div>
+<div class="line">    <span class="keyword">auto</span> ra = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(a.d);</div>
+<div class="line">    <span class="keyword">auto</span> rb = <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.n) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(b.d);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> <a class="code hl_function" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014">tts::absolute_check</a>(ra, rb);</div>
 <div class="line">  }</div>
@@ -462,11 +462,11 @@ Data Generator</h1>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a>(<span class="stringliteral">&quot;Test custom generator&quot;</span>, (std::array&lt;float, 10&gt;, std::array&lt;int, 4&gt;), flip_values {3})</div>
-<div class="line">(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; args)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T, std::size_t N&gt;(std::array&lt;T, N&gt; <span class="keyword">const</span>&amp; args)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keywordflow">for</span>(std::size_t i = 0; i &lt; args.size(); ++i)</div>
 <div class="line">  {</div>
-<div class="line">    <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(args[ i ], ((i % 3 == 0) ? 1.0f : -1.0f));</div>
+<div class="line">    <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(args[ i ], ((i % 3 == 0) ? T {1} : T {-1}));</div>
 <div class="line">  }</div>
 <div class="line">};</div>
 <div class="ttc" id="agroup__test-scenario_html_ga0a60c7376c3894c5d3b7c5be8201478f"><div class="ttname"><a href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a></div><div class="ttdeci">#define TTS_CASE_WITH(ID, TYPES,...)</div><div class="ttdoc">Introduces a template test case providing dynamically generated data to the test code.</div><div class="ttdef"><b>Definition</b> case.hpp:207</div></div>
