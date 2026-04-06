@@ -12,6 +12,28 @@
 #include <map>
 #include <cmath>
 
+// Helper function to extract and calculate the average variation from the sampled buckets
+inline float compute_average_variation(std::map<int, int> const& samples, int nb)
+{
+  // The number of values per bucket should, in average, vary very little
+  std::vector<int> input;
+  for(auto const& [ b, v ]: samples)
+    input.push_back(v);
+
+  std::vector<float> output(input.size());
+  std::adjacent_difference(input.begin(),
+                           input.end(),
+                           output.begin(),
+                           [](auto a, auto b)
+                           { return static_cast<float>(std::abs(a) - std::abs(b)); });
+
+  float average_variation_per_bucket = 0;
+  for(std::size_t i = 1; i < output.size() - 1; ++i)
+    average_variation_per_bucket += output[ i ];
+
+  return average_variation_per_bucket / static_cast<float>(nb);
+}
+
 TTS_CASE("Check realistic integral distribution")
 {
   int                mini = -10'000;
@@ -27,24 +49,8 @@ TTS_CASE("Check realistic integral distribution")
     samples[ bucket ]++;
   }
 
-  // The number of values per bucket should, in average, vary very little
-  std::vector<int> input;
-  for(auto [ b, v ]: samples)
-    input.push_back(v);
-
-  std::vector<float> output(input.size());
-  std::adjacent_difference(input.begin(),
-                           input.end(),
-                           output.begin(),
-                           [](auto a, auto b)
-                           { return static_cast<float>(std::abs(a) - std::abs(b)); });
-
-  float average_variation_per_bucket = 0;
-  for(std::size_t i = 1; i < output.size() - 1; ++i)
-    average_variation_per_bucket += output[ i ];
-  average_variation_per_bucket /= static_cast<float>(nb);
-
-  TTS_LESS(average_variation_per_bucket, 0.5f);
+  float avg_variation = compute_average_variation(samples, nb);
+  TTS_LESS(avg_variation, 0.5f);
 };
 
 TTS_CASE_TPL("Check realistic real distribution", float, double)
@@ -54,7 +60,7 @@ TTS_CASE_TPL("Check realistic real distribution", float, double)
   Type               maxi = +10'000;
 
   std::map<int, int> samples;
-  int                nb = 16'000;
+  int const          nb = 16'000;
 
   for(int i = 0; i < nb; ++i)
   {
@@ -64,22 +70,6 @@ TTS_CASE_TPL("Check realistic real distribution", float, double)
     samples[ exp ]++;
   }
 
-  // The number of values per bucket should, in average, vary very little
-  std::vector<int> input;
-  for(auto [ b, v ]: samples)
-    input.push_back(v);
-
-  std::vector<float> output(input.size());
-  std::adjacent_difference(input.begin(),
-                           input.end(),
-                           output.begin(),
-                           [](auto a, auto b)
-                           { return static_cast<float>(std::abs(a) - std::abs(b)); });
-
-  float average_variation_per_bucket = 0;
-  for(std::size_t i = 1; i < output.size() - 1; ++i)
-    average_variation_per_bucket += output[ i ];
-  average_variation_per_bucket /= static_cast<float>(nb);
-
-  TTS_LESS(average_variation_per_bucket, 0.25f);
+  float avg_variation = compute_average_variation(samples, nb);
+  TTS_LESS(avg_variation, 0.25f);
 };

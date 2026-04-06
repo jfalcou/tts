@@ -87,8 +87,8 @@ namespace tts
       int len = snprintf(nullptr, 0, format, args...);
       if(len > 0)
       {
-        size_t sz = static_cast<std::size_t>(len);
-        data_     = reinterpret_cast<char*>(malloc(sz + 1)); // NOSONAR
+        auto sz = static_cast<std::size_t>(len);
+        data_   = reinterpret_cast<char*>(malloc(sz + 1)); // NOSONAR
         if(data_)
         {
           size_ = sz; // Only assign size if alloc succeeds
