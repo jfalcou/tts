@@ -19,8 +19,8 @@ namespace sample
 
   double absolute_distance(ratio a, ratio b)
   {
-    auto ra = static_cast<float>(a.n) / a.d;
-    auto rb = static_cast<float>(b.n) / b.d;
+    auto ra = static_cast<float>(a.n) / static_cast<float>(a.d);
+    auto rb = static_cast<float>(b.n) / static_cast<float>(b.d);
 
     return tts::absolute_check(ra, rb);
   }

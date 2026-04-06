@@ -12,8 +12,8 @@
 
 TTS_CASE("Check correctness of constexpr less-or-equal-than tests")
 {
-  constexpr float a = 4.5f;
-  constexpr int   b = 45;
+  constexpr int a = 4;
+  constexpr int b = 45;
 
   TTS_CONSTEXPR_LESS_EQUAL(a, b);
   TTS_CONSTEXPR_LESS_EQUAL(a, a);

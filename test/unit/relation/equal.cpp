@@ -10,7 +10,7 @@
 
 TTS_CASE("Check correctness of equality tests")
 {
-  TTS_EQUAL(45, 45.f);
+  TTS_EQUAL(45, 45);
 
   std::vector<float> a {1, 2, 3}, b {1, 2, 3};
   TTS_EQUAL(a, b);

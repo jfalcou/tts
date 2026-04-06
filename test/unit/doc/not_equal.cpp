@@ -13,7 +13,7 @@
 
 TTS_CASE("Check correctness of inequality tests")
 {
-  TTS_NOT_EQUAL(42, 69.f);
+  TTS_NOT_EQUAL(42, 69);
 
   std::vector<float> a {1, 2, 3}, b {7, 9};
   TTS_NOT_EQUAL(a, b);

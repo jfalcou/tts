@@ -117,7 +117,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 
   auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
-  srand(tts::random_seed());
+  srand(static_cast<unsigned int>(tts::random_seed()));
 
   try
   {

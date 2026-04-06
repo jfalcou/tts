@@ -17,10 +17,10 @@ namespace sample
     int n, d;
   };
 
-  double ieee_equal(ratio a, ratio b)
+  bool ieee_equal(ratio a, ratio b)
   {
-    auto ra = static_cast<float>(a.n) / a.d;
-    auto rb = static_cast<float>(b.n) / b.d;
+    auto ra = static_cast<float>(a.n) / static_cast<float>(a.d);
+    auto rb = static_cast<float>(b.n) / static_cast<float>(b.d);
     printf("%f vs %f\n", ra, rb);
     return tts::ieee_check(ra, rb);
   }

@@ -66,7 +66,7 @@ TTS_CASE_WITH("Check behavior for non-scalar types",
               tts::ramp {1, 2},
               tts::reverse_ramp {10},
               tts::reverse_ramp {100, 2},
-              tts::between {0, 128},
+              tts::between {0, 64},
               tts::randoms {0., 100.})
 <typename T>(T const&    value,
              T const&    rmp,
@@ -81,13 +81,13 @@ TTS_CASE_WITH("Check behavior for non-scalar types",
   rrmps_ref {100, 98, 96, 94, 92, 90, 88, 86, 84};
 
   using v_t = typename T::value_type;
-  auto w1   = static_cast<v_t>(0);
-  auto w2   = static_cast<v_t>(128);
-  auto step = (w2 - w1) / 8;
-  T    btw_ref;
+  v_t w1 {0};
+  v_t w2 {64};
+  v_t step {8};
+  T   btw_ref;
   for(std::size_t i = 0; i < btw.size(); ++i)
   {
-    btw_ref[ i ] = std::min(static_cast<v_t>(w1 + i * step), w2);
+    btw_ref[ i ] = std::min(static_cast<v_t>(w1 + static_cast<v_t>(i) * step), w2);
   }
 
   TTS_EXPR_IS(value, (std::array<v_t, 9> const&));

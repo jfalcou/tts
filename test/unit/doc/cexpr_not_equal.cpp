@@ -12,8 +12,8 @@
 
 TTS_CASE("Check correctness of constexpr equality tests")
 {
-  constexpr float a = 4.5f;
-  constexpr int   b = 45;
+  constexpr int a = 4;
+  constexpr int b = 45;
 
   TTS_CONSTEXPR_NOT_EQUAL(a, b);
 };

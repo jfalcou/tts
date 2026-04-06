@@ -16,7 +16,7 @@ template<typename T> double compute_mean(std::vector<T> const& data)
 {
   if(data.empty()) return 0.0;
   double sum = std::accumulate(data.begin(), data.end(), 0.0);
-  return sum / data.size();
+  return sum / static_cast<double>(data.size());
 }
 
 template<typename T> double compute_variance(std::vector<T> const& data, double mean)
@@ -28,7 +28,7 @@ template<typename T> double compute_variance(std::vector<T> const& data, double 
     double diff  = val - mean;
     sum_sq_diff += diff * diff;
   }
-  return sum_sq_diff / data.size();
+  return sum_sq_diff / static_cast<double>(data.size());
 }
 
 TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]", int, long, unsigned int)
@@ -50,7 +50,7 @@ TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]", int, long, unsigned i
     TTS_EXPECT(val <= max_v);
   }
 
-  double expected_mean = (static_cast<double>(min_v) + max_v) / 2.0;
+  double expected_mean = static_cast<double>(min_v + max_v) / 2.0;
   double actual_mean   = compute_mean(results);
   TTS_RELATIVE_EQUAL(actual_mean, expected_mean, 1.0);
 
@@ -98,7 +98,7 @@ TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)
     if(val > 0) positive_count++;
   }
 
-  double positive_ratio = static_cast<double>(positive_count) / samples;
+  double positive_ratio = static_cast<double>(positive_count) / static_cast<double>(samples);
 
   TTS_RELATIVE_EQUAL(positive_ratio, 0.8, 1.0);
 };

@@ -31,12 +31,12 @@ TTS_CASE("Check that forced broken expectation fails")
 TTS_CASE("Check that forced broken relation tests fails")
 {
   int x = 0;
-  TTS_EQUAL(1.0123456789, x);
+  TTS_EQUAL(1, x);
   TTS_NOT_EQUAL(x, x);
-  TTS_LESS(1.95f, x);
-  TTS_GREATER(x, 1.789);
+  TTS_LESS(195, x);
+  TTS_GREATER(x, 1789);
   TTS_LESS_EQUAL(2, x);
-  TTS_GREATER_EQUAL(x, 3.5f);
+  TTS_GREATER_EQUAL(x, 35);
 };
 
 TTS_CASE("Check that forced broken typed relation tests fails")
