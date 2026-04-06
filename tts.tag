@@ -926,6 +926,13 @@
       <anchor>ga9dc5772b5c94d78eb16251df77ce161f</anchor>
       <arglist>(T mini, T maxi)</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>tts::set_random_seed</name>
+      <anchorfile>group__tools-random.html</anchorfile>
+      <anchor>gab46b37834a81a463a45c3065688f6479</anchor>
+      <arglist>(std::uint64_t seed)</arglist>
+    </member>
   </compound>
   <compound kind="page">
     <name>changelog</name>
