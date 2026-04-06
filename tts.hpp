@@ -259,7 +259,7 @@ namespace tts
           data_ = reinterpret_cast<char*>(malloc(len + 1));
           if(data_)
           {
-            size_ = static_cast<int>(len);
+            size_ = len;
             memcpy(data_, ptr, size_);
             data_[ size_ ] = '\0';
           }
@@ -278,10 +278,11 @@ namespace tts
       int len = snprintf(nullptr, 0, format, args...);
       if(len > 0)
       {
-        data_ = reinterpret_cast<char*>(malloc(len + 1));
+        auto sz = static_cast<std::size_t>(len);
+        data_   = reinterpret_cast<char*>(malloc(sz + 1));
         if(data_)
         {
-          size_ = len;
+          size_ = sz;
           snprintf(data_, size_ + 1, format, args...);
         }
       }
@@ -350,7 +351,7 @@ namespace tts
     {
       if(t.data_)
       {
-        for(int i = 0; i < t.size_; ++i)
+        for(size_t i = 0; i < t.size_; ++i)
           os << t.data_[ i ];
       }
       return os;
@@ -359,7 +360,7 @@ namespace tts
     {
       return size_ == 0;
     }
-    int size() const
+    size_t size() const
     {
       return size_;
     }
@@ -407,8 +408,8 @@ namespace tts
       if(a.is_empty() && b.is_empty()) return std::strong_ordering::equal;
       if(a.is_empty()) return std::strong_ordering::less;
       if(b.is_empty()) return std::strong_ordering::greater;
-      int const size = a.size_ < b.size_ ? a.size_ : b.size_;
-      int const cmp  = strncmp(a.data_, b.data_, size);
+      size_t const size = a.size_ < b.size_ ? a.size_ : b.size_;
+      int const    cmp  = strncmp(a.data_, b.data_, size);
       if(cmp != 0) return cmp <=> 0;
       return a.size_ <=> b.size_;
     }
@@ -417,8 +418,8 @@ namespace tts
       return a <=> text {b};
     }
   private:
-    char* data_;
-    int   size_;
+    char*  data_;
+    size_t size_;
   };
   inline text operator+(text const& lhs, char const* rhs)
   {
@@ -446,7 +447,7 @@ namespace tts::_
     {
       assert(arg && "Token cannot be null");
       auto it  = strchr(arg, '=');
-      position = static_cast<int>(it ? (it - token) : strlen(token));
+      position = it ? static_cast<int>(it - token) : static_cast<int>(strlen(token));
     }
     bool has_flag(char const* f) const
     {
@@ -454,7 +455,7 @@ namespace tts::_
       if(position == -1) return false;
       int len = static_cast<int>(strlen(f));
       if(len > position) return false;
-      return strncmp(token, f, position) == 0;
+      return strncmp(token, f, static_cast<size_t>(position)) == 0;
     }
     bool is_valid() const
     {
@@ -1213,7 +1214,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::_::is_quiet     = ::tts::arguments()("-q", "--quiet");
   auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
-  srand(tts::random_seed());
+  srand(static_cast<unsigned int>(tts::random_seed()));
   try
   {
     for(auto& t: ::tts::_::suite())
@@ -1517,7 +1518,7 @@ namespace tts::_
 #endif
   constexpr std::size_t log2(std::size_t n)
   {
-    return n ? std::bit_width(n) - 1 : 0;
+    return n ? static_cast<std::size_t>(std::bit_width(n) - 1) : std::size_t {0};
   }
   template<typename T> T exp10(T a)
   {
@@ -1570,8 +1571,8 @@ namespace tts
       {
         return M + static_cast<T>(r_raw % range);
       }
-      U            bucket_size = r_max / range;
-      U            limit       = bucket_size * range;
+      auto         bucket_size = static_cast<U>(r_max / range);
+      auto         limit       = static_cast<U>(bucket_size * range);
       unsigned int r           = r_raw;
       while(r >= limit)
       {
@@ -1854,10 +1855,10 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      auto w1   = as_value<D>(first_);
-      auto w2   = as_value<D>(last_);
-      auto step = (sz - 1) ? (w2 - w1) / as_value<D>(sz - 1) : 0;
-      return _::min(as_value<D>(w1 + idx * step), w2);
+      D w1   = as_value<D>(first_);
+      D w2   = as_value<D>(last_);
+      D step = (sz - 1) ? as_value<D>(last_ - first_) / as_value<D>(sz - 1) : as_value<D>(0);
+      return _::min(as_value<D>(w1 + as_value<D>(idx) * as_value<D>(step)), w2);
     }
     template<typename D> D operator()(tts::type<D>) const
     {
@@ -2329,7 +2330,7 @@ namespace tts::_
     using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                     \
     using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                     \
                                                                                                    \
-    if(!std::same_as<type_a, type_b>)                                                              \
+    if constexpr(!std::same_as<type_a, type_b>)                                                    \
     {                                                                                              \
       FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
               TTS_STRING(A),                                                                       \
@@ -2678,13 +2679,13 @@ namespace tts
           if(aa > bb) std::swap(aa, bb);
           auto z = static_cast<ui_t>(bb - aa);
           if(_::signbit(a) != _::signbit(b)) ++z;
-          return z / 2.;
+          return static_cast<double>(z) / 2.;
         }
       }
       else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
       {
         using u_t = typename std::make_unsigned<T>::type;
-        return ((a < b) ? u_t(b - a) : u_t(a - b)) / 2.;
+        return static_cast<double>((a < b) ? u_t(b - a) : u_t(a - b)) / 2.;
       }
       else
       {
@@ -3053,12 +3054,12 @@ namespace tts
   {
     using out_type  = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
     using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
-    std::size_t count = ::tts::arguments().value(4096, "--block");
+    std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
     _::buffer<out_type> ref_out(count), new_out(count);
     _::buffer<RefType>  inputs(count);
     for(std::size_t i = 0; i < inputs.size(); ++i)
       inputs[ i ] = produce(type<RefType> {}, g, i, count);
-    std::size_t             repetition = ::tts::arguments().value(1, "--loop");
+    std::size_t             repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
     double                  max_ulp    = 0.;
     std::size_t             nb_buckets = 2 + 1 + 16;
     std::size_t             nb_ulps    = 0;
@@ -3094,14 +3095,14 @@ namespace tts
       if(ulp_map[ i ] != 0)
       {
         double ulps  = 0;
-        ratio       += (100. * ulp_map[ i ]) / nb_ulps;
-        if(i <= 3) ulps = i / 2.0;
+        ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
+        if(i <= 3) ulps = static_cast<double>(i) / 2.0;
         else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
         else ulps = 1 << (i - 4);
         auto [ s, in, out, ref ] = samples[ i ];
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-        _::results(-1., -1, -1., "Found:      ", out);
-        _::results(-1., -1, -1., "instead of: ", ref);
+        _::results(-1., 1, -1., "Found:      ", out);
+        _::results(-1., 1, -1., "instead of: ", ref);
         if(!_::is_quiet)
           printf(
           "--------------------------------------------------------------------------------\n");
