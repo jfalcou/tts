@@ -20,7 +20,7 @@ TTS_CASE_TPL("Check types using variadic list", char, short, int, double, void*)
 TTS_CASE_TPL("Check types using a types list", tts::types<float, double>)
 <typename T>(tts::type<T>)
 {
-  TTS_EQUAL(1 / T {2}, T {0.5});
+  TTS_EQUAL(1 / T {2}, static_cast<T>(0.5));
 };
 
 // A Types Generator is any type exposing a types_list internal type
