@@ -1160,171 +1160,6 @@ namespace tts::_
     return true;
   }
 }
-#if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_CUSTOM_DRIVER_FUNCTION
-#define TTS_MAIN
-#endif
-#if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
-#define TTS_CUSTOM_DRIVER_FUNCTION main
-namespace tts::_
-{
-  inline constexpr bool use_main = true;
-}
-#else
-namespace tts::_
-{
-  inline constexpr bool use_main = false;
-}
-#endif
-#if defined(TTS_MAIN)
-namespace tts::_
-{
-  void report_pass(char const* location, char const* message)
-  {
-    if(::tts::_::is_verbose && !::tts::_::is_quiet)
-    {
-      printf("  [+] %s : %s\n", location, message);
-    }
-  }
-  void report_fail(char const* location, char const* message, ::tts::text const& type)
-  {
-    if(!::tts::_::is_verbose)
-    {
-      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
-    }
-    if(!::tts::_::is_quiet)
-    {
-      printf("  [X] %s : ** FAILURE ** : %s\n", location, message);
-    }
-  }
-  void report_fatal(char const* location, char const* message, ::tts::text const& type)
-  {
-    if(!::tts::_::is_verbose)
-    {
-      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
-    }
-    printf("  [@] %s : @@ FATAL @@ : %s\n", location, message);
-  }
-}
-int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
-{
-  ::tts::initialize(argc, argv);
-  if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
-  ::tts::_::is_verbose   = ::tts::arguments()("-v", "--verbose");
-  ::tts::_::is_quiet     = ::tts::arguments()("-q", "--quiet");
-  auto        nb_tests   = ::tts::_::suite().size();
-  std::size_t done_tests = 0;
-  srand(static_cast<unsigned int>(tts::random_seed()));
-  try
-  {
-    for(auto& t: ::tts::_::suite())
-    {
-      auto test_count                   = ::tts::global_runtime.test_count;
-      auto failure_count                = ::tts::global_runtime.failure_count;
-      ::tts::global_runtime.fail_status = false;
-      if(!::tts::_::is_quiet) printf("TEST: '%s'\n", t.name);
-      fflush(stdout);
-      t();
-      done_tests++;
-      if(test_count == ::tts::global_runtime.test_count)
-      {
-        ::tts::global_runtime.invalid();
-        if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
-        fflush(stdout);
-      }
-      else if(failure_count == ::tts::global_runtime.failure_count)
-      {
-        if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
-        fflush(stdout);
-      }
-    }
-  }
-  catch(::tts::_::fatal_signal&)
-  {
-    if(!::tts::_::is_quiet)
-      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",
-             static_cast<int>(nb_tests - done_tests - 1));
-  }
-  if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
-  else return 0;
-}
-#endif
-namespace tts::_
-{
-  class source_location
-  {
-  public:
-    [[nodiscard]] static auto current(char const* file = __builtin_FILE(),
-                                      int         line = __builtin_LINE()) noexcept
-    {
-      int  offset = 0;
-      auto end    = strrchr(file, '/');
-      if(end) offset = static_cast<int>(end - file + 1);
-      source_location that {};
-      that.desc_ = text {"[%s:%d]", file + offset, line};
-      return that;
-    }
-    friend text to_text(source_location const& s)
-    {
-      return s.desc_;
-    }
-    decltype(auto) data() const
-    {
-      return desc_.data();
-    }
-    template<_::stream OS> friend OS& operator<<(OS& os, source_location const& s)
-    {
-      return os << s.desc_;
-    }
-  private:
-    text desc_ {"[unknown:?]"};
-  };
-}
-namespace tts::_
-{
-  void report_pass(char const* location, char const* message);
-  void report_fail(char const* location, char const* message, ::tts::text const& type);
-  void report_fatal(char const* location, char const* message, ::tts::text const& type);
-}
-#if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_PASS(...)
-#else
-#define TTS_PASS(...)                                                                              \
-  do                                                                                               \
-  {                                                                                                \
-    ::tts::global_runtime.pass();                                                                  \
-    ::tts::_::report_pass(::tts::_::source_location::current().data(),                             \
-                          ::tts::text {__VA_ARGS__}.data());                                       \
-  } while(0) 
-#endif
-#if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_FAIL(...)
-#else
-#define TTS_FAIL(...)                                                                              \
-  do                                                                                               \
-  {                                                                                                \
-    ::tts::global_runtime.fail();                                                                  \
-    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
-    ::tts::_::report_fail(::tts::_::source_location::current().data(),                             \
-                          ::tts::text {__VA_ARGS__}.data(),                                        \
-                          ::tts::_::current_type);                                                 \
-  } while(0) 
-#endif
-#if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_FATAL(...)
-#else
-#define TTS_FATAL(...)                                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    ::tts::global_runtime.fail();                                                                  \
-    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
-    ::tts::_::report_fatal(::tts::_::source_location::current().data(),                            \
-                           ::tts::text {__VA_ARGS__}.data(),                                       \
-                           ::tts::_::current_type);                                                \
-    ::tts::fatal_error_status = true;                                                              \
-    [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \
-  } while(0) 
-#endif
 namespace tts::_
 {
   inline auto as_int(float a)
@@ -1525,68 +1360,50 @@ namespace tts::_
     return tts::_::pow(T(10), a);
   }
 }
+#include <cstdint>
+#include <limits>
+#include <concepts>
+#include <algorithm>
 namespace tts
 {
   namespace _
   {
-    struct rand_result
+    inline thread_local std::uint64_t prng_state = 0x853c49e6748fea9bULL;
+    inline std::uint64_t next_random()
     {
-      unsigned int val, max;
-    };
-    inline rand_result rand30()
-    {
-      if constexpr(RAND_MAX >= 2147483647)
-      {
-        return {static_cast<unsigned int>(std::rand()), static_cast<unsigned int>(RAND_MAX)};
-      }
-      else
-      {
-        constexpr unsigned int SHIFT_MAX =
-        (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
-        unsigned int r =
-        (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
-        return rand_result {r, SHIFT_MAX};
-      }
+      std::uint64_t z = (prng_state += 0x9e3779b97f4a7c15ULL);
+      z               = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+      z               = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+      return z ^ (z >> 31);
     }
     template<std::integral T> T roll(T M, T N)
     {
       if(M == N) return M;
       if(M > N) std::swap(M, N);
       using U = std::make_unsigned_t<T>;
-      U range = static_cast<U>(N - M) + 1;
-      if(range <= static_cast<U>(RAND_MAX))
+      U diff  = static_cast<U>(N) - static_cast<U>(M);
+      if(diff == std::numeric_limits<U>::max())
       {
-        unsigned int r_max       = static_cast<unsigned int>(RAND_MAX);
-        unsigned int bucket_size = r_max / static_cast<unsigned int>(range);
-        unsigned int limit       = bucket_size * static_cast<unsigned int>(range);
-        unsigned int r;
-        do
-        {
-          r = static_cast<unsigned int>(std::rand());
-        } while(r >= limit);
-        return M + static_cast<T>(r / bucket_size);
+        return static_cast<T>(next_random());
       }
-      auto [ r_raw, r_max ] = rand30();
-      if(range > r_max)
+      U             range       = diff + 1;
+      std::uint64_t r_max       = std::numeric_limits<std::uint64_t>::max();
+      std::uint64_t bucket_size = r_max / range;
+      std::uint64_t limit       = bucket_size * range;
+      std::uint64_t r;
+      do
       {
-        return M + static_cast<T>(r_raw % range);
-      }
-      auto         bucket_size = static_cast<U>(r_max / range);
-      auto         limit       = static_cast<U>(bucket_size * range);
-      unsigned int r           = r_raw;
-      while(r >= limit)
-      {
-        r = rand30().val;
-      }
+        r = next_random();
+      } while(r >= limit);
       return M + static_cast<T>(r / bucket_size);
     }
     template<std::floating_point T> T roll(T M, T N)
     {
       if(M == N) return M;
       if(M > N) std::swap(M, N);
-      auto [ r_raw, r_max ] = rand30();
-      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
-      return static_cast<T>(M + uniform_01 * (N - M));
+      T uniform_01 =
+      static_cast<T>(next_random()) / static_cast<T>(std::numeric_limits<std::uint64_t>::max());
+      return (T(1.0) - uniform_01) * M + uniform_01 * N;
     }
     template<std::integral T> T roll_random(T mini, T maxi)
     {
@@ -1637,11 +1454,180 @@ namespace tts
       return value;
     }
   }
+  inline void set_random_seed(std::uint64_t seed)
+  {
+    _::prng_state = seed;
+  }
   template<typename T> T random_value(T mini, T maxi)
   {
     return _::roll_random(mini, maxi);
   }
 }
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CUSTOM_DRIVER_FUNCTION
+#define TTS_MAIN
+#endif
+#if !defined(TTS_CUSTOM_DRIVER_FUNCTION)
+#define TTS_CUSTOM_DRIVER_FUNCTION main
+namespace tts::_
+{
+  inline constexpr bool use_main = true;
+}
+#else
+namespace tts::_
+{
+  inline constexpr bool use_main = false;
+}
+#endif
+#if defined(TTS_MAIN)
+namespace tts::_
+{
+  void report_pass(char const* location, char const* message)
+  {
+    if(::tts::_::is_verbose && !::tts::_::is_quiet)
+    {
+      printf("  [+] %s : %s\n", location, message);
+    }
+  }
+  void report_fail(char const* location, char const* message, ::tts::text const& type)
+  {
+    if(!::tts::_::is_verbose)
+    {
+      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
+    }
+    if(!::tts::_::is_quiet)
+    {
+      printf("  [X] %s : ** FAILURE ** : %s\n", location, message);
+    }
+  }
+  void report_fatal(char const* location, char const* message, ::tts::text const& type)
+  {
+    if(!::tts::_::is_verbose)
+    {
+      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
+    }
+    printf("  [@] %s : @@ FATAL @@ : %s\n", location, message);
+  }
+}
+int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
+{
+  ::tts::initialize(argc, argv);
+  if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
+  ::tts::_::is_verbose   = ::tts::arguments()("-v", "--verbose");
+  ::tts::_::is_quiet     = ::tts::arguments()("-q", "--quiet");
+  auto        nb_tests   = ::tts::_::suite().size();
+  std::size_t done_tests = 0;
+  ::tts::set_random_seed(static_cast<std::uint64_t>(tts::random_seed()));
+  try
+  {
+    for(auto& t: ::tts::_::suite())
+    {
+      auto test_count                   = ::tts::global_runtime.test_count;
+      auto failure_count                = ::tts::global_runtime.failure_count;
+      ::tts::global_runtime.fail_status = false;
+      if(!::tts::_::is_quiet) printf("TEST: '%s'\n", t.name);
+      fflush(stdout);
+      t();
+      done_tests++;
+      if(test_count == ::tts::global_runtime.test_count)
+      {
+        ::tts::global_runtime.invalid();
+        if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
+        fflush(stdout);
+      }
+      else if(failure_count == ::tts::global_runtime.failure_count)
+      {
+        if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
+        fflush(stdout);
+      }
+    }
+  }
+  catch(::tts::_::fatal_signal&)
+  {
+    if(!::tts::_::is_quiet)
+      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",
+             static_cast<int>(nb_tests - done_tests - 1));
+  }
+  if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
+  else return 0;
+}
+#endif
+namespace tts::_
+{
+  class source_location
+  {
+  public:
+    [[nodiscard]] static auto current(char const* file = __builtin_FILE(),
+                                      int         line = __builtin_LINE()) noexcept
+    {
+      int  offset = 0;
+      auto end    = strrchr(file, '/');
+      if(end) offset = static_cast<int>(end - file + 1);
+      source_location that {};
+      that.desc_ = text {"[%s:%d]", file + offset, line};
+      return that;
+    }
+    friend text to_text(source_location const& s)
+    {
+      return s.desc_;
+    }
+    decltype(auto) data() const
+    {
+      return desc_.data();
+    }
+    template<_::stream OS> friend OS& operator<<(OS& os, source_location const& s)
+    {
+      return os << s.desc_;
+    }
+  private:
+    text desc_ {"[unknown:?]"};
+  };
+}
+namespace tts::_
+{
+  void report_pass(char const* location, char const* message);
+  void report_fail(char const* location, char const* message, ::tts::text const& type);
+  void report_fatal(char const* location, char const* message, ::tts::text const& type);
+}
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_PASS(...)
+#else
+#define TTS_PASS(...)                                                                              \
+  do                                                                                               \
+  {                                                                                                \
+    ::tts::global_runtime.pass();                                                                  \
+    ::tts::_::report_pass(::tts::_::source_location::current().data(),                             \
+                          ::tts::text {__VA_ARGS__}.data());                                       \
+  } while(0) 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_FAIL(...)
+#else
+#define TTS_FAIL(...)                                                                              \
+  do                                                                                               \
+  {                                                                                                \
+    ::tts::global_runtime.fail();                                                                  \
+    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
+    ::tts::_::report_fail(::tts::_::source_location::current().data(),                             \
+                          ::tts::text {__VA_ARGS__}.data(),                                        \
+                          ::tts::_::current_type);                                                 \
+  } while(0) 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_FATAL(...)
+#else
+#define TTS_FATAL(...)                                                                             \
+  do                                                                                               \
+  {                                                                                                \
+    ::tts::global_runtime.fail();                                                                  \
+    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \
+    ::tts::_::report_fatal(::tts::_::source_location::current().data(),                            \
+                           ::tts::text {__VA_ARGS__}.data(),                                       \
+                           ::tts::_::current_type);                                                \
+    ::tts::fatal_error_status = true;                                                              \
+    [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \
+  } while(0) 
+#endif
 #include <limits>
 namespace tts
 {
