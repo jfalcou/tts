@@ -56,7 +56,7 @@ namespace tts
           data_ = reinterpret_cast<char*>(malloc(len + 1)); // NOSONAR
           if(data_)
           {
-            size_ = static_cast<int>(len);
+            size_ = len;
             memcpy(data_, ptr, size_);
             data_[ size_ ] = '\0';
           }
@@ -87,10 +87,11 @@ namespace tts
       int len = snprintf(nullptr, 0, format, args...);
       if(len > 0)
       {
-        data_ = reinterpret_cast<char*>(malloc(len + 1)); // NOSONAR
+        auto sz = static_cast<std::size_t>(len);
+        data_   = reinterpret_cast<char*>(malloc(sz + 1)); // NOSONAR
         if(data_)
         {
-          size_ = len; // Only assign size if alloc succeeds
+          size_ = sz; // Only assign size if alloc succeeds
           snprintf(data_, size_ + 1, format, args...);
         }
       }
@@ -180,7 +181,7 @@ namespace tts
     {
       if(t.data_)
       {
-        for(int i = 0; i < t.size_; ++i)
+        for(size_t i = 0; i < t.size_; ++i)
           os << t.data_[ i ];
       }
       return os;
@@ -193,7 +194,7 @@ namespace tts
     }
 
     /// Get the size of the text
-    int size() const
+    size_t size() const
     {
       return size_;
     }
@@ -262,8 +263,8 @@ namespace tts
       if(a.is_empty()) return std::strong_ordering::less;
       if(b.is_empty()) return std::strong_ordering::greater;
 
-      int const size = a.size_ < b.size_ ? a.size_ : b.size_;
-      int const cmp  = strncmp(a.data_, b.data_, size);
+      size_t const size = a.size_ < b.size_ ? a.size_ : b.size_;
+      int const    cmp  = strncmp(a.data_, b.data_, size);
 
       if(cmp != 0) return cmp <=> 0;
       return a.size_ <=> b.size_;
@@ -276,8 +277,8 @@ namespace tts
     }
 
   private:
-    char* data_;
-    int   size_;
+    char*  data_;
+    size_t size_;
   };
 
   /// Concatenate text with C-style string

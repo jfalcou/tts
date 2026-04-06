@@ -203,7 +203,7 @@ namespace tts::_
 
   constexpr std::size_t log2(std::size_t n)
   {
-    return n ? std::bit_width(n) - 1 : 0;
+    return n ? static_cast<std::size_t>(std::bit_width(n) - 1) : std::size_t {0};
   }
   template<typename T> T exp10(T a)
   {

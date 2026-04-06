@@ -170,7 +170,7 @@ namespace tts
           auto z = static_cast<ui_t>(bb - aa);
 
           if(_::signbit(a) != _::signbit(b)) ++z;
-          return z / 2.;
+          return static_cast<double>(z) / 2.;
         }
       }
       else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
@@ -178,7 +178,7 @@ namespace tts
         using u_t = typename std::make_unsigned<T>::type;
 
         // TODO: Fix overflow in case of very huge integral value
-        return ((a < b) ? u_t(b - a) : u_t(a - b)) / 2.;
+        return static_cast<double>((a < b) ? u_t(b - a) : u_t(a - b)) / 2.;
       }
       else
       {

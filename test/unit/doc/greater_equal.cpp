@@ -13,7 +13,7 @@
 
 TTS_CASE("Check correctness of greater-equal comparison tests")
 {
-  TTS_GREATER_EQUAL(69LL, 42.f);
+  TTS_GREATER_EQUAL(69, 42);
   TTS_GREATER_EQUAL(69., 69);
 
   std::vector<float> a {12, 3}, b {7, 9, 11};

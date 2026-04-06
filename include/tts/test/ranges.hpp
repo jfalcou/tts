@@ -103,7 +103,7 @@ namespace tts
     using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
 
     //-- Find how many elements in a block
-    std::size_t count = ::tts::arguments().value(4096, "--block");
+    std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
 
     //-- Prepare blocks
     _::buffer<out_type> ref_out(count), new_out(count);
@@ -112,7 +112,7 @@ namespace tts
     for(std::size_t i = 0; i < inputs.size(); ++i)
       inputs[ i ] = produce(type<RefType> {}, g, i, count);
 
-    std::size_t             repetition = ::tts::arguments().value(1, "--loop");
+    std::size_t             repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
 
     double                  max_ulp    = 0.;
     std::size_t             nb_buckets = 2 + 1 + 16;
@@ -160,17 +160,17 @@ namespace tts
       if(ulp_map[ i ] != 0)
       {
         double ulps  = 0;
-        ratio       += (100. * ulp_map[ i ]) / nb_ulps;
+        ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
 
-        if(i <= 3) ulps = i / 2.0;
+        if(i <= 3) ulps = static_cast<double>(i) / 2.0;
         else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
         else ulps = 1 << (i - 4);
 
         auto [ s, in, out, ref ] = samples[ i ];
 
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-        _::results(-1., -1, -1., "Found:      ", out);
-        _::results(-1., -1, -1., "instead of: ", ref);
+        _::results(-1., 1, -1., "Found:      ", out);
+        _::results(-1., 1, -1., "instead of: ", ref);
         if(!_::is_quiet)
           printf(
           "--------------------------------------------------------------------------------\n");

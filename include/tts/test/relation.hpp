@@ -263,7 +263,7 @@
     using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                     \
     using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                     \
                                                                                                    \
-    if(!std::same_as<type_a, type_b>)                                                              \
+    if constexpr(!std::same_as<type_a, type_b>)                                                    \
     {                                                                                              \
       FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
               TTS_STRING(A),                                                                       \

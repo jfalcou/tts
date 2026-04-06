@@ -15,14 +15,14 @@ TTS_CASE_WITH("Check behavior for scalar types",
               tts::value {37},
               tts::between {0, 100},
               tts::randoms {0., 10.})
-(auto v, auto b, auto const& r)
+<typename V, typename B, typename R>(V v, B b, R const& r)
 {
-  TTS_EQUAL(v, 37);
+  TTS_EQUAL(v, V {37});
 
-  TTS_GREATER_EQUAL(b, 0);
-  TTS_LESS_EQUAL(b, 100);
+  TTS_GREATER_EQUAL(b, B {0});
+  TTS_LESS_EQUAL(b, B {100});
 
-  TTS_GREATER_EQUAL(r, 0);
-  TTS_LESS_EQUAL(r, 10);
+  TTS_GREATER_EQUAL(r, R {0});
+  TTS_LESS_EQUAL(r, R {10});
 };
 //! [snippet]

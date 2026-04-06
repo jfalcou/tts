@@ -25,10 +25,10 @@ TTS_CASE_WITH("Test tts::between generator",
     using value_type = typename T::value_type;
     for(std::size_t i = 0; i < args.size(); ++i)
     {
-      TTS_ULP_EQUAL(
-      args[ i ],
-      static_cast<value_type>(-4 + i * 8 / static_cast<value_type>((args.size() - 1))),
-      4);
+      TTS_ULP_EQUAL(args[ i ],
+                    static_cast<value_type>(-4 + static_cast<value_type>(i) * value_type {8} /
+                                                 static_cast<value_type>((args.size() - 1))),
+                    4);
     }
   }
 };

@@ -24,7 +24,7 @@ namespace tts::_
     {
       assert(arg && "Token cannot be null");
       auto it  = strchr(arg, '=');
-      position = static_cast<int>(it ? (it - token) : strlen(token)); // NOSONAR
+      position = it ? static_cast<int>(it - token) : static_cast<int>(strlen(token)); // NOSONAR
     }
 
     bool has_flag(char const* f) const
@@ -35,7 +35,7 @@ namespace tts::_
       int len = static_cast<int>(strlen(f)); // NOSONAR
       if(len > position) return false;
 
-      return strncmp(token, f, position) == 0;
+      return strncmp(token, f, static_cast<size_t>(position)) == 0;
     }
 
     bool is_valid() const

@@ -77,8 +77,8 @@ namespace tts
       }
 
       // Rejection Sampling: discard the "tail" of the random range
-      U            bucket_size = r_max / range;
-      U            limit       = bucket_size * range;
+      auto         bucket_size = static_cast<U>(r_max / range);
+      auto         limit       = static_cast<U>(bucket_size * range);
 
       unsigned int r           = r_raw;
       while(r >= limit)
