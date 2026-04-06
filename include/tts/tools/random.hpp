@@ -26,7 +26,7 @@ namespace tts
   namespace _
   {
     // SplitMix64 PRNG State
-    inline std::uint64_t prng_state = 0x853c49e6748fea9bULL;
+    inline thread_local std::uint64_t prng_state = 0x853c49e6748fea9bULL;
 
     // SplitMix64 generator: extremely fast, statistically robust,  reproducible
     inline std::uint64_t next_random()
