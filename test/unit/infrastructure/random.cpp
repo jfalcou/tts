@@ -16,16 +16,15 @@
 inline float compute_average_variation(std::map<int, int> const& samples, int nb)
 {
   // The number of values per bucket should, in average, vary very little
-  std::vector<int> input;
+  std::vector<float> input;
   for(auto const& [ b, v ]: samples)
-    input.push_back(v);
+    input.push_back(static_cast<float>(v));
 
   std::vector<float> output(input.size());
   std::adjacent_difference(input.begin(),
                            input.end(),
                            output.begin(),
-                           [](auto a, auto b)
-                           { return static_cast<float>(std::abs(a) - std::abs(b)); });
+                           [](auto a, auto b) { return std::abs(a) - std::abs(b); });
 
   float average_variation_per_bucket = 0;
   for(std::size_t i = 1; i < output.size() - 1; ++i)

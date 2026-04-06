@@ -15,8 +15,8 @@
 template<typename T> double compute_mean(std::vector<T> const& data)
 {
   if(data.empty()) return 0.0;
-  double sum = std::accumulate(data.begin(), data.end(), 0.0);
-  return sum / static_cast<double>(data.size());
+  T sum = std::accumulate(data.begin(), data.end(), T {0});
+  return static_cast<double>(sum) / static_cast<double>(data.size());
 }
 
 template<typename T> double compute_variance(std::vector<T> const& data, double mean)
