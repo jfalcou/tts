@@ -103,7 +103,7 @@ namespace tts
     using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
 
     //-- Find how many elements in a block
-    std::size_t count = ::tts::arguments().value(4096ULL, "--block");
+    std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
 
     //-- Prepare blocks
     _::buffer<out_type> ref_out(count), new_out(count);
@@ -112,7 +112,7 @@ namespace tts
     for(std::size_t i = 0; i < inputs.size(); ++i)
       inputs[ i ] = produce(type<RefType> {}, g, i, count);
 
-    std::size_t             repetition = ::tts::arguments().value(1ULL, "--loop");
+    std::size_t             repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
 
     double                  max_ulp    = 0.;
     std::size_t             nb_buckets = 2 + 1 + 16;
