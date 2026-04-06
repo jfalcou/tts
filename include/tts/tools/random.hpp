@@ -9,6 +9,10 @@
 #pragma once
 
 #include <tts/engine/math.hpp>
+#include <cstdint>
+#include <limits>
+#include <concepts>
+#include <algorithm>
 
 namespace tts
 {
@@ -21,86 +25,62 @@ namespace tts
 
   namespace _
   {
-    // RAND_MAX can be very small on some paltrform (like 32767) so we need to ensure enough bits
-    struct rand_result
-    {
-      unsigned int val, max;
-    };
+    // SplitMix64 PRNG State
+    inline std::uint64_t prng_state = 0x853c49e6748fea9bULL;
 
-    inline rand_result rand30()
+    // SplitMix64 generator: extremely fast, statistically robust,  reproducible
+    inline std::uint64_t next_random()
     {
-      if constexpr(RAND_MAX >= 2147483647)
-      {
-        return {static_cast<unsigned int>(std::rand()), static_cast<unsigned int>(RAND_MAX)};
-      }
-      else
-      {
-        constexpr unsigned int SHIFT_MAX =
-        (static_cast<unsigned int>(RAND_MAX) << 15) | static_cast<unsigned int>(RAND_MAX);
-        unsigned int r =
-        (static_cast<unsigned int>(std::rand()) << 15) | static_cast<unsigned int>(std::rand());
-        return rand_result {r, SHIFT_MAX};
-      }
+      std::uint64_t z = (prng_state += 0x9e3779b97f4a7c15ULL);
+      z               = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+      z               = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+      return z ^ (z >> 31);
     }
 
     // Unbiased Integer Roll
-    // Uses Rejection Sampling to fix modulo bias and extend range
+    // Uses Rejection Sampling to fix modulo bias and extend range for full 64-bit capability
     template<std::integral T> T roll(T M, T N)
     {
       if(M == N) return M;
       if(M > N) std::swap(M, N);
 
       using U = std::make_unsigned_t<T>;
-      U range = static_cast<U>(N - M) + 1;
+      U diff  = static_cast<U>(N) - static_cast<U>(M);
 
-      if(range <= static_cast<U>(RAND_MAX))
+      // If the range spans the absolute maximum of the data type (e.g., 0 to UINT64_MAX)
+      if(diff == std::numeric_limits<U>::max())
       {
-        unsigned int r_max       = static_cast<unsigned int>(RAND_MAX);
-        unsigned int bucket_size = r_max / static_cast<unsigned int>(range);
-        unsigned int limit       = bucket_size * static_cast<unsigned int>(range);
-
-        unsigned int r;
-        do
-        {
-          r = static_cast<unsigned int>(std::rand());
-        } while(r >= limit);
-
-        return M + static_cast<T>(r / bucket_size);
+        return static_cast<T>(next_random());
       }
 
-      auto [ r_raw, r_max ] = rand30();
+      U             range       = diff + 1;
+      std::uint64_t r_max       = std::numeric_limits<std::uint64_t>::max();
+      std::uint64_t bucket_size = r_max / range;
+      std::uint64_t limit       = bucket_size * range;
 
-      // Fallback for huge ranges exceeding our 30-bit generator
-      if(range > r_max)
+      std::uint64_t r;
+      do
       {
-        return M + static_cast<T>(r_raw % range);
-      }
-
-      // Rejection Sampling: discard the "tail" of the random range
-      auto         bucket_size = static_cast<U>(r_max / range);
-      auto         limit       = static_cast<U>(bucket_size * range);
-
-      unsigned int r           = r_raw;
-      while(r >= limit)
-      {
-        r = rand30().val;
-      }
+        r = next_random();
+      } while(r >= limit);
 
       return M + static_cast<T>(r / bucket_size);
     }
 
     // High-Resolution Float Roll
-    // Uses 30-bit precision to avoid quantization errors (step artifacts)
+    // Uses full 64-bit precision to avoid quantization errors (step artifacts)
     template<std::floating_point T> T roll(T M, T N)
     {
       if(M == N) return M;
       if(M > N) std::swap(M, N);
 
-      auto [ r_raw, r_max ] = rand30();
+      // Normalize exactly to [0, 1] based on full 64-bit precision
+      T uniform_01 =
+      static_cast<T>(next_random()) / static_cast<T>(std::numeric_limits<std::uint64_t>::max());
 
-      // Normalize exactly to [0, 1] based on actual generator capability
-      double uniform_01 = static_cast<double>(r_raw) / static_cast<double>(r_max);
-      return static_cast<T>(M + uniform_01 * (N - M));
+      // Use proportional interpolation to avoid N - M overflow
+      // (e.g., when N = numeric_limits::max and M = numeric_limits::lowest)
+      return (T(1.0) - uniform_01) * M + uniform_01 * N;
     }
 
     template<std::integral T> T roll_random(T mini, T maxi)
@@ -177,12 +157,26 @@ namespace tts
   //====================================================================================================================
   /**
     @public
+    @brief Sets the seed for the internal PRNG to guarantee reproducibility.
+    @ingroup tools-random
+
+    @param seed The 64-bit seed value to initialize the generator state.
+  **/
+  //====================================================================================================================
+  inline void set_random_seed(std::uint64_t seed)
+  {
+    _::prng_state = seed;
+  }
+
+  //====================================================================================================================
+  /**
+    @public
     @brief Generates a random value between two bounds.
     @ingroup tools-random
 
     This function generates a random value of type `T` between the specified `mini` and `maxi`
     bounds using an uniform distribution for integral types and a log-uniform distribution for
-    floating-point types. The seed is derived from the tts::random_seed function.
+    floating-point types.
 
     @groupheader{Example}
     @snippet doc/random.cpp snippet
