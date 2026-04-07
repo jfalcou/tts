@@ -3,7 +3,7 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##======================================================================================================================
-name: TTS Unit Tests
+name: Unit Tests
 on:
   pull_request:
     branches:
@@ -35,21 +35,21 @@ jobs:
   ## Unit Tests
   ##################################################################################################
   linux-tests:
-    name: Linux Unit Tests
+    name: Linux
     needs: precommit
     uses: ./.github/workflows/linux.yml
 
   macos-tests:
-    name: MacOS Unit Tests
+    name: MacOS
     needs: precommit
     uses: ./.github/workflows/macos.yml
 
   windows-tests:
-    name: Windows Unit Tests
+    name: Windows
     needs: precommit
     uses: ./.github/workflows/windows.yml
 
   nvidia-tests:
-    name: Nvidia Unit Tests
+    name: Nvidia
     needs: precommit
     uses: ./.github/workflows/nvidia.yml
