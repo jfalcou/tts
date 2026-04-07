@@ -41,7 +41,7 @@ TTS_CASE_TPL("ULP distance between integers",
              std::int64_t)
 <typename T>(::tts::type<T>)
 {
-  T a = 65, b = a + 5;
+  T a = 65, b = static_cast<T>(a + 5);
 
   TTS_ULP_EQUAL(a, a, 0.);
   TTS_ULP_EQUAL(a, b, 5.);

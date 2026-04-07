@@ -66,7 +66,7 @@ TTS_CASE_TPL("Absolute distance between integers",
              std::int64_t)
 <typename T>(::tts::type<T>)
 {
-  T a = 65, b = a + 5;
+  T a = 65, b = static_cast<T>(a + 5);
 
   TTS_ABSOLUTE_EQUAL(a, a, 0.);
   TTS_ABSOLUTE_EQUAL(a, b, 5.1);

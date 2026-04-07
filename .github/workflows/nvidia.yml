@@ -9,47 +9,33 @@ on:
 
 jobs:
   linux:
-    name: ${{ matrix.compiler.name }} (${{ matrix.options }})
+    name: ${{ matrix.compiler.preset }} (${{ matrix.options }})
     runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
         compiler:
-          - &nvcc {
-              name: "NVCC x NVC++",
-              device: "nvcc"
-            }
-          - &nvc++ {
-              name: "NVC++",
-              host: "nvc++"
-            }
-          - &clang {
-              name: "NVCC x clang++",
-              host: "clang++"
-            }
-          - &gcc {
-              name: "NVCC x g++",
-              host: "g++"
-            }
-          #- &clang {
-          #    name: "clang++",
-          #    bin: "clang++",
-          #    flags: "--cuda-gpu-arch=sm_75 -lcudart_static -L/opt/cuda/lib64/ -ldl -lrt -pthread"
-          #  }
+          - { preset: "clang-cuda"                                }
+          - { preset: "nvcc"                                      }
+          - { preset: "nvc++", setup: "./.github/scripts/cuda.sh" }
+          - { preset: "nvcc-g++"                                  }
+          - { preset: "nvcc-clang++"                              }
+
+        options: [Debug, Release]
+
     steps:
-      - name:  Fetch current branch
-        uses: actions/checkout@v6.0.2
+      - name: Fetch current branch
+        uses: actions/checkout@v6
 
-      - name: Configure CMake
-        run: |
-          cmake -S . -B build -G Ninja                            \
-          -DCMAKE_CUDA_COMPILER=${{ matrix.compiler.device }}     \
-          -DCMAKE_CXX_COMPILER=${{ matrix.compiler.host }}        \
-          -DCMAKE_CXX_FLAGS="${{ matrix.compiler.flags }}"        \
-          -DCMAKE_CUDA_FLAGS="${{ matrix.compiler.flags_cuda }}"
+      - name: Configure CMake and Build
+        uses: ./.github/actions/config
+        with:
+          config: ${{ matrix.options }}
+          preset: ${{ matrix.compiler.preset }}
+          setup-script: ${{ matrix.compiler.setup }}
 
-      - name: Compile Unit Tests
-        run: cmake --build build --target tts-test -j 2
-
-      - name: Run Tests
-        run: ctest --test-dir build --output-on-failure -j 2
+      - name: Run Unit Tests
+        uses: ./.github/actions/test
+        with:
+          config: ${{ matrix.options }}
+          preset: ${{ matrix.compiler.preset }}

@@ -489,9 +489,10 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      D w1   = as_value<D>(first_);
-      D w2   = as_value<D>(last_);
-      D step = (sz - 1) ? as_value<D>(last_ - first_) / as_value<D>(sz - 1) : as_value<D>(0);
+      D w1 = as_value<D>(first_);
+      D w2 = as_value<D>(last_);
+      D step =
+      (sz - 1) ? static_cast<D>(as_value<D>(last_ - first_) / as_value<D>(sz - 1)) : as_value<D>(0);
       return _::min(as_value<D>(w1 + as_value<D>(idx) * as_value<D>(step)), w2);
     }
 

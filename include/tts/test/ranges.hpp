@@ -169,8 +169,8 @@ namespace tts
         auto [ s, in, out, ref ] = samples[ i ];
 
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-        _::results(-1., static_cast<unsigned int>(-1), -1., "Found:      ", out);
-        _::results(-1., static_cast<unsigned int>(-1), -1., "instead of: ", ref);
+        _::results(-1., 0, 0., "Found:      ", out);
+        _::results(-1., 0, 0., "instead of: ", ref);
         if(!_::is_quiet)
           printf(
           "--------------------------------------------------------------------------------\n");

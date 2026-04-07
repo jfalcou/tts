@@ -34,7 +34,7 @@ TTS_CASE_TPL("Relative distance between integers",
              std::int64_t)
 <typename T>(::tts::type<T>)
 {
-  T a = 65, b = a + 5;
+  T a = 65, b = static_cast<T>(a + 5);
 
   TTS_RELATIVE_EQUAL(a, a, 0.);
   TTS_RELATIVE_EQUAL(a, b, 7.15);

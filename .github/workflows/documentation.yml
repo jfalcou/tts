@@ -13,12 +13,12 @@ jobs:
   generate-doc:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/jfalcou/compilers:v9
+      image: ghcr.io/jfalcou/compilers:v10
     strategy:
       fail-fast: false
     steps:
       - name: Fetch current branch
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v6
       - name: Prepare TTS for documentation
         run: |
           mkdir build && cd build

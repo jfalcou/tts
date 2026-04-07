@@ -38,4 +38,4 @@ runs:
       env:
         PRESET: ${{ inputs.preset }}
         CONFIG: ${{ inputs.config }}
-      run: ctest --test-dir "build/$PRESET" --preset "$PRESET" -C "$CONFIG" -T MemCheck
+      run: ctest --test-dir "build/$PRESET" --preset "$PRESET" --build-config "$CONFIG" -T MemCheck -j 2

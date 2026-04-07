@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Fetch current branch
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6
 
       - name: Configure CMake and Build
         uses: ./.github/actions/config
@@ -36,3 +36,4 @@ jobs:
         uses: ./.github/actions/test
         with:
           preset: ${{ matrix.compiler.preset }}
+          config: ${{ matrix.options }}
