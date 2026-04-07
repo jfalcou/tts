@@ -15,23 +15,21 @@
         "TTS_BUILD_TEST": "ON",
         "CMAKE_CXX_SCAN_FOR_MODULES": "OFF",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_CXX_FLAGS": "$env{EXTRA_CXX_FLAGS}"
+        "CMAKE_CXX_FLAGS": "$env{EXTRA_CXX_FLAGS}",
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_DEFAULT_BUILD_TYPE": "Debug"
       }
     },
     {
       "name": "unix-base",
       "hidden": true,
-      "inherits": [
-        "base"
-      ],
-      "generator": "Ninja"
+      "inherits": ["base"],
+      "generator": "Ninja Multi-Config"
     },
     {
       "name": "win-base",
       "hidden": true,
-      "inherits": [
-        "base"
-      ],
+      "inherits": ["base"],
       "generator": "Visual Studio 17 2022",
       "architecture": "x64"
     },
@@ -45,65 +43,49 @@
     },
     {
       "name": "gcc",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "g++"
       }
     },
     {
       "name": "gcc14",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "g++-14"
       }
     },
     {
       "name": "clang",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++"
       }
     },
     {
       "name": "clang20",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++-20"
       }
     },
     {
       "name": "clang-libc++",
-      "inherits": [
-        "libcxx",
-        "unix-base"
-      ],
+      "inherits": ["libcxx","unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++"
       }
     },
     {
       "name": "clang20-libc++",
-      "inherits": [
-        "libcxx",
-        "unix-base"
-      ],
+      "inherits": ["libcxx","unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "clang++-20"
       }
     },
     {
       "name": "icpx",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "icpx",
         "CMAKE_CXX_FLAGS": "-fp-model=precise $env{EXTRA_CXX_FLAGS}"
@@ -111,9 +93,7 @@
     },
     {
       "name": "wasm",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "em++",
         "CMAKE_CXX_FLAGS": "-sNO_DISABLE_EXCEPTION_CATCHING $env{EXTRA_CXX_FLAGS}",
@@ -122,9 +102,7 @@
     },
     {
       "name": "android-arm64",
-      "inherits": [
-        "unix-base"
-      ],
+      "inherits": ["unix-base"],
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake",
         "ANDROID_ABI": "arm64-v8a"
@@ -134,14 +112,7 @@
     { "name": "clangcl" , "inherits": ["win-base"], "toolset": "ClangCL"    }
   ],
   "buildPresets": [
-    {
-      "name": "base-build",
-      "hidden": true,
-      "jobs": 2,
-      "targets": [
-        "tts-test"
-      ]
-    },
+    { "name": "base-build", "hidden": true, "targets": ["tts-test"] },
     { "name": "gcc"             , "inherits": "base-build", "configurePreset": "gcc"            },
     { "name": "gcc14"           , "inherits": "base-build", "configurePreset": "gcc14"          },
     { "name": "clang"           , "inherits": "base-build", "configurePreset": "clang"          },
@@ -155,7 +126,7 @@
     { "name": "clangcl"         , "inherits": "base-build", "configurePreset": "clangcl"        }
   ],
   "testPresets": [
-    { "name": "base-test", "hidden": true, "execution": { "jobs": 2 }, "output": { "outputOnFailure": true } },
+    { "name": "base-test", "hidden": true,  "output": { "outputOnFailure": true }, "configuration": "Debug" },
     { "name": "gcc"             , "inherits": "base-test", "configurePreset": "gcc"             },
     { "name": "gcc14"           , "inherits": "base-test", "configurePreset": "gcc14"           },
     { "name": "clang"           , "inherits": "base-test", "configurePreset": "clang"           },

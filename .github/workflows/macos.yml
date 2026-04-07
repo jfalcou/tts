@@ -19,7 +19,7 @@ jobs:
           - { name: "apple-clang libc++", preset: "clang-libc++"  }
           - { name: "Android"           , preset: "android-arm64" }
 
-        options: ["-O0", "-O3 -flto -DNDEBUG"]
+        options: [Debug, Release]
 
     steps:
       - name: Fetch current branch
@@ -29,7 +29,7 @@ jobs:
         uses: ./.github/actions/config
         with:
           preset: ${{ matrix.compiler.preset }}
-          flags: ${{ matrix.options }}
+          config: ${{ matrix.options }}
 
       - name: Run Unit Tests
         if: matrix.compiler.preset != 'android-arm64' # Skip executing cross-compiled binaries

@@ -13,6 +13,7 @@ inputs:
 
   config:
     description: 'Build configuration'
+    required: true
     default: ''
 
   memcheck:
@@ -27,12 +28,7 @@ runs:
       env:
         PRESET: ${{ inputs.preset }}
         CONFIG: ${{ inputs.config }}
-      run: |
-        if [ -n "$CONFIG" ]; then
-          ctest --preset "$PRESET" --build-config "$CONFIG"
-        else
-          ctest --preset "$PRESET"
-        fi
+      run: ctest --preset "$PRESET" --build-config "$CONFIG" -j 2
 
     # MemCheck puts ctest in a mode that is not compatible with how presets are
     # currently made. This is a workaround
@@ -41,6 +37,5 @@ runs:
       shell: bash
       env:
         PRESET: ${{ inputs.preset }}
-      run: |
-        cd "build/$PRESET"
-        ctest -T MemCheck --output-on-failure -j 2
+        CONFIG: ${{ inputs.config }}
+      run: ctest --test-dir "build/$PRESET" --preset "$PRESET" -C "$CONFIG" -T MemCheck

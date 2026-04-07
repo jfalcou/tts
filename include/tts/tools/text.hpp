@@ -206,12 +206,6 @@ namespace tts
       return data_ ? data_ : "";
     }
 
-    /// Get a pointer to the underlying character data
-    [[nodiscard]] char* data()
-    {
-      return data_;
-    }
-
     /// Get a const iterator to the beginning of the text
     decltype(auto) begin() const
     {

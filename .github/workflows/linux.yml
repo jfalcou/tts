@@ -26,7 +26,7 @@ jobs:
           - { preset: "wasm"            , image: "ghcr.io/jfalcou/compilers:v10"    , wrapper: "emcmake" }
           - { preset: "icpx"            , image: "ghcr.io/jfalcou/compilers:sycl-v1", setup: "/opt/intel/oneapi/setvars.sh" }
 
-        options: ["-O0", "-O3 -flto -DNDEBUG"]
+        options: [Debug, Release]
 
     steps:
       - name: Fetch current branch
@@ -36,7 +36,7 @@ jobs:
         uses: ./.github/actions/config
         with:
           preset: ${{ matrix.compiler.preset }}
-          flags: ${{ matrix.options }}
+          config: ${{ matrix.options }}
           setup-script: ${{ matrix.compiler.setup }}
           wrapper: ${{ matrix.compiler.wrapper }}
 

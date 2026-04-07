@@ -11,13 +11,10 @@ inputs:
     description: 'Preset name (must exist in both configure and build presets)'
     required: true
 
-  flags:
-    description: 'Extra C++ compiler flags'
-    default: ''
-
   config:
     description: 'Build configuration'
     default: ''
+    required: true
 
   wrapper:
     description: 'Compiler wrapper (e.g., emcmake)'
@@ -53,8 +50,4 @@ runs:
           cmake --preset "$PRESET"
         fi
 
-        if [ -n "$CONFIG" ]; then
-          cmake --build --preset "$PRESET" --config "$CONFIG"
-        else
-          cmake --build --preset "$PRESET"
-        fi
+        cmake --build --preset "$PRESET" --config "$CONFIG" -j 2
