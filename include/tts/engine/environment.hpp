@@ -73,7 +73,7 @@ namespace tts::_
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
-    int  test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0, invalid_count = 0;
+    std::uint64_t test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0, invalid_count = 0;
     bool fail_status = false;
   };
 }
