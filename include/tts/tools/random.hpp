@@ -44,8 +44,8 @@ namespace tts
       if(M == N) return M;
       if(M > N) std::swap(M, N);
 
-      using U = std::make_unsigned_t<T>;
-      U diff  = static_cast<U>(N) - static_cast<U>(M);
+      using U   = std::make_unsigned_t<T>;
+      auto diff = static_cast<U>(static_cast<U>(N) - static_cast<U>(M));
 
       // If the range spans the absolute maximum of the data type (e.g., 0 to UINT64_MAX)
       if(diff == std::numeric_limits<U>::max())
@@ -53,7 +53,7 @@ namespace tts
         return static_cast<T>(next_random());
       }
 
-      U             range       = diff + 1;
+      auto          range       = static_cast<U>(diff + 1);
       std::uint64_t r_max       = std::numeric_limits<std::uint64_t>::max();
       std::uint64_t bucket_size = r_max / range;
       std::uint64_t limit       = bucket_size * range;
@@ -64,7 +64,7 @@ namespace tts
         r = next_random();
       } while(r >= limit);
 
-      return M + static_cast<T>(r / bucket_size);
+      return static_cast<T>(M + static_cast<T>(r / bucket_size));
     }
 
     // High-Resolution Float Roll
