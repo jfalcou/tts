@@ -165,7 +165,21 @@ namespace tts::_
 }
 #define TTS_MOVE(...) static_cast<std::remove_reference_t<decltype(__VA_ARGS__)>&&>(__VA_ARGS__)
 #define TTS_FWD(...)  static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
-#if defined(_MSC_VER)
+#if (defined(__NVCC__) || defined(__CUDACC__)) && defined(__NVCC_DIAG_PRAGMA_SUPPORT__)
+#define TTS_DO_PRAGMA(X)                   _Pragma(#X)
+#define TTS_DISABLE_WARNING_PUSH           TTS_DO_PRAGMA(nv_diagnostic push)
+#define TTS_DISABLE_WARNING_POP            TTS_DO_PRAGMA(nv_diagnostic pop)
+#define TTS_DISABLE_WARNING(warningNumber) TTS_DO_PRAGMA(nv_diag_suppress warningNumber)
+#define TTS_DISABLE_WARNING_SHADOW         TTS_DISABLE_WARNING(1349)
+#define TTS_DISABLE_WARNING_CRT_SECURE
+#elif defined(__EDG__) || defined(__EDG_VERSION__)
+#define TTS_DO_PRAGMA(X)                   _Pragma(#X)
+#define TTS_DISABLE_WARNING_PUSH           TTS_DO_PRAGMA(diag_push)
+#define TTS_DISABLE_WARNING_POP            TTS_DO_PRAGMA(diag_pop)
+#define TTS_DISABLE_WARNING(warningNumber) TTS_DO_PRAGMA(diag_suppress warningNumber)
+#define TTS_DISABLE_WARNING_SHADOW         TTS_DISABLE_WARNING(1349)
+#define TTS_DISABLE_WARNING_CRT_SECURE
+#elif defined(_MSC_VER)
 #define TTS_DISABLE_WARNING_PUSH           __pragma(warning(push))
 #define TTS_DISABLE_WARNING_POP            __pragma(warning(pop))
 #define TTS_DISABLE_WARNING(warningNumber) __pragma(warning(disable : warningNumber))
@@ -367,10 +381,6 @@ namespace tts
     [[nodiscard]] char const* data() const
     {
       return data_ ? data_ : "";
-    }
-    [[nodiscard]] char* data()
-    {
-      return data_;
     }
     decltype(auto) begin() const
     {
@@ -1380,13 +1390,13 @@ namespace tts
     {
       if(M == N) return M;
       if(M > N) std::swap(M, N);
-      using U = std::make_unsigned_t<T>;
-      U diff  = static_cast<U>(N) - static_cast<U>(M);
+      using U   = std::make_unsigned_t<T>;
+      auto diff = static_cast<U>(static_cast<U>(N) - static_cast<U>(M));
       if(diff == std::numeric_limits<U>::max())
       {
         return static_cast<T>(next_random());
       }
-      U             range       = diff + 1;
+      auto          range       = static_cast<U>(diff + 1);
       std::uint64_t r_max       = std::numeric_limits<std::uint64_t>::max();
       std::uint64_t bucket_size = r_max / range;
       std::uint64_t limit       = bucket_size * range;
@@ -1395,7 +1405,7 @@ namespace tts
       {
         r = next_random();
       } while(r >= limit);
-      return M + static_cast<T>(r / bucket_size);
+      return static_cast<T>(M + static_cast<T>(r / bucket_size));
     }
     template<std::floating_point T> T roll(T M, T N)
     {
@@ -1841,9 +1851,10 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      D w1   = as_value<D>(first_);
-      D w2   = as_value<D>(last_);
-      D step = (sz - 1) ? as_value<D>(last_ - first_) / as_value<D>(sz - 1) : as_value<D>(0);
+      D w1 = as_value<D>(first_);
+      D w2 = as_value<D>(last_);
+      D step =
+      (sz - 1) ? static_cast<D>(as_value<D>(last_ - first_) / as_value<D>(sz - 1)) : as_value<D>(0);
       return _::min(as_value<D>(w1 + as_value<D>(idx) * as_value<D>(step)), w2);
     }
     template<typename D> D operator()(tts::type<D>) const
@@ -1959,9 +1970,21 @@ namespace tts::_
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
+    char const* name;
     test_generators(char const* id)
         : name(id)
     {
+    }
+    template<typename... Args> static void process_call(auto body, Args&&... args)
+    {
+      body(std::forward<Args>(args)...);
+    }
+    template<typename T> static void process_type(auto body)
+    {
+      current_type = as_text(typename_<T>);
+      if(::tts::_::is_verbose && !::tts::_::is_quiet)
+        printf(">  With <T = %s>\n", current_type.data());
+      process_call(body, produce(type<T> {}, Generators)...);
     }
     friend auto operator<<(test_generators tg, auto body)
     {
@@ -1972,18 +1995,6 @@ namespace tts::_
                                   current_type = text {""};
                                 }});
     }
-    template<typename T> static void process_type(auto body)
-    {
-      current_type = as_text(typename_<T>);
-      if(::tts::_::is_verbose && !::tts::_::is_quiet)
-        printf(">  With <T = %s>\n", current_type.data());
-      process_call(body, produce(type<T> {}, Generators)...);
-    }
-    template<typename... Args> static void process_call(auto body, Args&&... args)
-    {
-      body(std::forward<Args>(args)...);
-    }
-    char const* name;
   };
 }
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -2595,6 +2606,7 @@ namespace tts
         std::is_floating_point_v<T> || std::is_integral_v<T>,
         "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
         "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?");
+        return 0.;
       }
     }
     else
@@ -2630,6 +2642,7 @@ namespace tts
         std::is_floating_point_v<T> || std::is_integral_v<T>,
         "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
         "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?");
+        return 0.;
       }
     }
     else
@@ -2678,6 +2691,7 @@ namespace tts
         static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>,
                       "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
                       "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_check ?");
+        return 0.;
       }
     }
     else
@@ -3087,8 +3101,8 @@ namespace tts
         else ulps = 1 << (i - 4);
         auto [ s, in, out, ref ] = samples[ i ];
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-        _::results(-1., 1, -1., "Found:      ", out);
-        _::results(-1., 1, -1., "instead of: ", ref);
+        _::results(-1., 0, 0., "Found:      ", out);
+        _::results(-1., 0, 0., "instead of: ", ref);
         if(!_::is_quiet)
           printf(
           "--------------------------------------------------------------------------------\n");
