@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<tagfile doxygen_version="1.9.8">
+<tagfile doxygen_version="1.16.1" doxygen_gitid="669aeeefca743c148e2d935b3d3c69535c7491e6">
   <compound kind="struct">
     <name>tts::as_integer</name>
     <filename>structtts_1_1as__integer.html</filename>
@@ -193,13 +193,6 @@
       <anchorfile>structtts_1_1text.html</anchorfile>
       <anchor>a5e0c31a5270a9d660d013bbec9d95f2b</anchor>
       <arglist>() const</arglist>
-    </member>
-    <member kind="function">
-      <type>char *</type>
-      <name>data</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a9f452f6739ede5e9b52f660d91057094</anchor>
-      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>char const *</type>
@@ -862,42 +855,42 @@
       <type>types&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</type>
       <name>tts::arithmetic_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>gac7ad808d0a55e6d494d2a92b8c9c8392</anchor>
+      <anchor>ga61be1d2d747e57cd85b8317dea1efcc6</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;</type>
       <name>tts::int_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>gae047727aacfb9f51b00c48322c061bef</anchor>
+      <anchor>gadc998a2d00a61bdc9de24e8631429bfe</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</type>
       <name>tts::integral_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga4deed4d1187eb9f1ac35581d25ebb0c5</anchor>
+      <anchor>ga508d14441e28f0181a9925440f955837</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; double, float &gt;</type>
       <name>tts::real_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga4b791474bc15107f8dc20ed5414852d3</anchor>
+      <anchor>ga584bcaa6595ac8c0b1ca5258c9d16b15</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;</type>
       <name>tts::signed_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>ga2eee6023454e5652e937f8028c1ac129</anchor>
+      <anchor>ga82e948f13d728b23b380fc8c9201ace1</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>types&lt; std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;</type>
       <name>tts::uint_types</name>
       <anchorfile>group__tools-types.html</anchorfile>
-      <anchor>gac45179d8434bfa60371601f8a35cbbd4</anchor>
+      <anchor>ga4412c8ffabd206e559eda4f1ebdd4996</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -938,6 +931,7 @@
     <name>changelog</name>
     <title>Change Log</title>
     <filename>changelog.html</filename>
+    <docanchor file="changelog.html" title="/__w/tts/tts/doc/changelog.md">md__2____w_2tts_2tts_2doc_2changelog</docanchor>
   </compound>
   <compound kind="page">
     <name>cli</name>
@@ -957,6 +951,7 @@
     <name>licence</name>
     <title>Licence</title>
     <filename>licence.html</filename>
+    <docanchor file="licence.html" title="/__w/tts/tts/doc/licence.md">md__2____w_2tts_2tts_2doc_2licence</docanchor>
   </compound>
   <compound kind="page">
     <name>rationale</name>

@@ -7,9 +7,9 @@ var searchData=
   ['testing_20ulps_4',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
   ['tests_20definition_20macros_5',['Tests definition macros',['../group__test-scenario.html',1,'']]],
   ['tests_20driver_6',['Tests Driver',['../customize.html#customize-driver',1,'']]],
-  ['tests_20macros_7',['tests macros',['../group__test-basic.html',1,'Basic Tests Macros'],['../group__test-exceptions.html',1,'Exception Tests Macros'],['../group__test-precision.html',1,'Precision Tests Macros'],['../group__test-relation.html',1,'Relation Tests Macros'],['../group__test-sequence.html',1,'Sequence Tests Macros'],['../group__test-types.html',1,'Type Tests Macros']]],
+  ['tests_20macros_7',['Tests Macros',['../group__test-basic.html',1,'Basic Tests Macros'],['../group__test-exceptions.html',1,'Exception Tests Macros'],['../group__test-precision.html',1,'Precision Tests Macros'],['../group__test-relation.html',1,'Relation Tests Macros'],['../group__test-sequence.html',1,'Sequence Tests Macros'],['../group__test-types.html',1,'Type Tests Macros']]],
   ['tests_20parameters_8',['Tests Parameters',['../cli.html#autotoc_md26',1,'']]],
-  ['text_9',['text',['../structtts_1_1text.html#ab95c0e58193d02e295ec8123775e6feb',1,'tts::text::text(text const &amp;other)'],['../structtts_1_1text.html#a5b915ebebca894fba4802d64936b6d47',1,'tts::text::text(text &amp;&amp;other) noexcept'],['../structtts_1_1text.html#a7b439a33411d4f65c4b4fb577ca24edb',1,'tts::text::text()'],['../structtts_1_1text.html',1,'tts::text'],['../structtts_1_1text.html#afad159ee022f1f9eb56d64fe88a85210',1,'tts::text::text(char const *format, Args... args)'],['../structtts_1_1text.html#a1c7b28a8843dc1a8644d2311905f381d',1,'tts::text::text(char const (&amp;data)[N])'],['../structtts_1_1text.html#aae99c638e7a882ae6a57bc84a1229a5a',1,'tts::text::text(char const *ptr)']]],
+  ['text_9',['text',['../structtts_1_1text.html',1,'tts::text'],['../structtts_1_1text.html#a7b439a33411d4f65c4b4fb577ca24edb',1,'tts::text::text()'],['../structtts_1_1text.html#aae99c638e7a882ae6a57bc84a1229a5a',1,'tts::text::text(char const *ptr)'],['../structtts_1_1text.html#a1c7b28a8843dc1a8644d2311905f381d',1,'tts::text::text(char const (&amp;data)[N])'],['../structtts_1_1text.html#afad159ee022f1f9eb56d64fe88a85210',1,'tts::text::text(char const *format, Args... args)'],['../structtts_1_1text.html#ab95c0e58193d02e295ec8123775e6feb',1,'tts::text::text(text const &amp;other)'],['../structtts_1_1text.html#a5b915ebebca894fba4802d64936b6d47',1,'tts::text::text(text &amp;&amp;other) noexcept']]],
   ['text_20utilities_10',['Text Utilities',['../group__tools-text.html',1,'']]],
   ['the_20source_11',['Install from the source',['../setup.html#setup-source',1,'']]],
   ['the_20tiny_20test_20system_12',['The Tiny Test System',['../index.html',1,'']]],
@@ -70,5 +70,13 @@ var searchData=
   ['type_20tests_20macros_67',['Type Tests Macros',['../group__test-types.html',1,'']]],
   ['type_20utilities_68',['Type Utilities',['../group__tools-types.html',1,'']]],
   ['typename_5f_69',['typename_',['../group__tools-types.html#ga812107840eb150e332662cedfb176c10',1,'tts']]],
-  ['types_70',['types',['../structtts_1_1types.html',1,'tts']]]
+  ['types_70',['types',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20double_2c_20float_20_3e_71',['types&lt; double, float &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20double_2c_20float_2c_20std_3a_3aint64_5ft_2c_20std_3a_3aint32_5ft_2c_20std_3a_3aint16_5ft_2c_20std_3a_3aint8_5ft_20_3e_72',['types&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20double_2c_20float_2c_20std_3a_3aint64_5ft_2c_20std_3a_3aint32_5ft_2c_20std_3a_3aint16_5ft_2c_20std_3a_3aint8_5ft_2c_20std_3a_3auint64_5ft_2c_20std_3a_3auint32_5ft_2c_20std_3a_3auint16_5ft_2c_20std_3a_3auint8_5ft_20_3e_73',['types&lt; double, float, std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20std_3a_3aint64_5ft_2c_20std_3a_3aint32_5ft_2c_20std_3a_3aint16_5ft_2c_20std_3a_3aint8_5ft_20_3e_74',['types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20std_3a_3aint64_5ft_2c_20std_3a_3aint32_5ft_2c_20std_3a_3aint16_5ft_2c_20std_3a_3aint8_5ft_2c_20std_3a_3auint64_5ft_2c_20std_3a_3auint32_5ft_2c_20std_3a_3auint16_5ft_2c_20std_3a_3auint8_5ft_20_3e_75',['types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20std_3a_3auint64_5ft_2c_20std_3a_3auint32_5ft_2c_20std_3a_3auint16_5ft_2c_20std_3a_3auint8_5ft_20_3e_76',['types&lt; std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20t_2e_2e_2e_20_3e_77',['types&lt; T... &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20types_3c_20t_2c_20us_20_3e_2e_2e_2e_20_3e_78',['types&lt; types&lt; T, Us &gt;... &gt;',['../structtts_1_1types.html',1,'tts']]]
 ];

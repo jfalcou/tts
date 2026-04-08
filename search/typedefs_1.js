@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['int_5ftypes_0',['int_types',['../group__tools-types.html#gae047727aacfb9f51b00c48322c061bef',1,'tts']]],
-  ['integral_5ftypes_1',['integral_types',['../group__tools-types.html#ga4deed4d1187eb9f1ac35581d25ebb0c5',1,'tts']]]
+  ['int_5ftypes_0',['int_types',['../group__tools-types.html#gadc998a2d00a61bdc9de24e8631429bfe',1,'tts']]],
+  ['integral_5ftypes_1',['integral_types',['../group__tools-types.html#ga508d14441e28f0181a9925440f955837',1,'tts']]]
 ];
