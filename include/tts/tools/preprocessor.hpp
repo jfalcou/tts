@@ -26,7 +26,21 @@ namespace tts::_
 //======================================================================================================================
 // Portable PRAGMA Handler
 //======================================================================================================================
-#if defined(_MSC_VER)
+#if (defined(__NVCC__) || defined(__CUDACC__)) && defined(__NVCC_DIAG_PRAGMA_SUPPORT__)
+#define TTS_DO_PRAGMA(X)                   _Pragma(#X)
+#define TTS_DISABLE_WARNING_PUSH           TTS_DO_PRAGMA(nv_diagnostic push)
+#define TTS_DISABLE_WARNING_POP            TTS_DO_PRAGMA(nv_diagnostic pop)
+#define TTS_DISABLE_WARNING(warningNumber) TTS_DO_PRAGMA(nv_diag_suppress warningNumber)
+#define TTS_DISABLE_WARNING_SHADOW         TTS_DISABLE_WARNING(1349)
+#define TTS_DISABLE_WARNING_CRT_SECURE
+#elif defined(__EDG__) || defined(__EDG_VERSION__)
+#define TTS_DO_PRAGMA(X)                   _Pragma(#X)
+#define TTS_DISABLE_WARNING_PUSH           TTS_DO_PRAGMA(diag_push)
+#define TTS_DISABLE_WARNING_POP            TTS_DO_PRAGMA(diag_pop)
+#define TTS_DISABLE_WARNING(warningNumber) TTS_DO_PRAGMA(diag_suppress warningNumber)
+#define TTS_DISABLE_WARNING_SHADOW         TTS_DISABLE_WARNING(1349)
+#define TTS_DISABLE_WARNING_CRT_SECURE
+#elif defined(_MSC_VER)
 #define TTS_DISABLE_WARNING_PUSH           __pragma(warning(push))
 #define TTS_DISABLE_WARNING_POP            __pragma(warning(pop))
 #define TTS_DISABLE_WARNING(warningNumber) __pragma(warning(disable : warningNumber))

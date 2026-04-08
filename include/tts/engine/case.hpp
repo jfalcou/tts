@@ -82,18 +82,16 @@ namespace tts::_
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
+    char const* name;
+
     test_generators(char const* id) // NOSONAR
         : name(id)
     {
     }
-    friend auto operator<<(test_generators tg, auto body)
+
+    template<typename... Args> static void process_call(auto body, Args&&... args)
     {
-      return test::acknowledge({tg.name,
-                                [ body ]() mutable
-                                {
-                                  (process_type<Type>(body), ...);
-                                  current_type = text {""};
-                                }});
+      body(std::forward<Args>(args)...);
     }
 
     template<typename T> static void process_type(auto body)
@@ -104,11 +102,15 @@ namespace tts::_
       process_call(body, produce(type<T> {}, Generators)...);
     }
 
-    template<typename... Args> static void process_call(auto body, Args&&... args)
+    friend auto operator<<(test_generators tg, auto body)
     {
-      body(std::forward<Args>(args)...);
+      return test::acknowledge({tg.name,
+                                [ body ]() mutable
+                                {
+                                  (process_type<Type>(body), ...);
+                                  current_type = text {""};
+                                }});
     }
-    char const* name;
   };
 }
 

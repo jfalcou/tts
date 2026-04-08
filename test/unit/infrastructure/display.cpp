@@ -51,7 +51,7 @@ TTS_CASE("Check display of pointer types")
   TTS_EQUAL(tts::as_text((float*)(0)), "0000000000000000 (float *)");
   TTS_EQUAL(tts::as_text((void*)(0)), "0000000000000000 (void *)");
   TTS_EQUAL(tts::as_text((char*)(0)), "0000000000000000 (char *)");
-#elif defined(__clang__)
+#elif defined(__clang__) || defined(__EDG__)
   TTS_EQUAL(tts::as_text((float*)(0)), "(nil) (float *)");
   TTS_EQUAL(tts::as_text((void*)(0)), "(nil) (void *)");
   TTS_EQUAL(tts::as_text((char*)(0)), "(nil) (char *)");

@@ -3,8 +3,13 @@
 ##  Copyright : TTS Contributors & Maintainers
 ##  SPDX-License-Identifier: BSL-1.0
 ##======================================================================================================================
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.28)
 project(TTS LANGUAGES CXX)
+
+if(DEFINED CMAKE_CUDA_COMPILER)
+  enable_language(CUDA)
+endif()
+
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
