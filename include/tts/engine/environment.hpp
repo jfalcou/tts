@@ -39,7 +39,7 @@ namespace tts::_
       invalid_count++;
     }
 
-    int report(int fails, int invalids) const
+    int report(std::uint64_t fails, std::uint64_t invalids) const
     {
       auto test_txt = test_count > 1 ? "s" : "";
       auto pass_txt = success_count > 1 ? "es" : "";
@@ -47,21 +47,21 @@ namespace tts::_
       auto inv_txt  = invalid_count > 1 ? "s" : "";
 
       puts("----------------------------------------------------------------");
-      printf("Results: %d test%s ", test_count, test_txt);
+      printf("Results: %lu test%s ", test_count, test_txt);
       if(success_count != 0)
-        printf("- %d/%d (%2.2f%%) success%s ",
+        printf("- %lu/%lu (%2.2f%%) success%s ",
                success_count,
                test_count,
                100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
                pass_txt);
       if(failure_count != 0)
-        printf("- %d/%d (%2.2f%%) failure%s ",
+        printf("- %lu/%lu (%2.2f%%) failure%s ",
                failure_count,
                test_count,
                100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
                fail_txt);
       if(invalid_count != 0)
-        printf("- %d/%d (%2.2f%%) invalid%s ",
+        printf("- %lu/%lu (%2.2f%%) invalid%s ",
                invalid_count,
                test_count,
                100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
@@ -99,7 +99,7 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int report(int fails, int invalids)
+  inline int report(std::uint64_t fails, std::uint64_t invalids)
   {
     return global_runtime.report(fails, invalids);
   }
