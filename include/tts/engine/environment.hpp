@@ -39,7 +39,7 @@ namespace tts::_
       invalid_count++;
     }
 
-    int report(int fails, int invalids) const
+    int report(unsigned long long fails, unsigned long long invalids) const
     {
       auto test_txt = test_count > 1 ? "s" : "";
       auto pass_txt = success_count > 1 ? "es" : "";
@@ -47,21 +47,21 @@ namespace tts::_
       auto inv_txt  = invalid_count > 1 ? "s" : "";
 
       puts("----------------------------------------------------------------");
-      printf("Results: %d test%s ", test_count, test_txt);
+      printf("Results: %llu test%s ", test_count, test_txt);
       if(success_count != 0)
-        printf("- %d/%d (%2.2f%%) success%s ",
+        printf("- %llu/%llu (%2.2f%%) success%s ",
                success_count,
                test_count,
                100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
                pass_txt);
       if(failure_count != 0)
-        printf("- %d/%d (%2.2f%%) failure%s ",
+        printf("- %llu/%llu (%2.2f%%) failure%s ",
                failure_count,
                test_count,
                100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
                fail_txt);
       if(invalid_count != 0)
-        printf("- %d/%d (%2.2f%%) invalid%s ",
+        printf("- %llu/%llu (%2.2f%%) invalid%s ",
                invalid_count,
                test_count,
                100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
@@ -73,8 +73,9 @@ namespace tts::_
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
-    int  test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0, invalid_count = 0;
-    bool fail_status = false;
+    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
+                       invalid_count = 0;
+    bool fail_status                 = false;
   };
 }
 
@@ -98,7 +99,7 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int report(int fails, int invalids)
+  inline int report(unsigned long long fails, unsigned long long invalids)
   {
     return global_runtime.report(fails, invalids);
   }
