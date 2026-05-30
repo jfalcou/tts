@@ -425,8 +425,8 @@
       <type>int</type>
       <name>tts::report</name>
       <anchorfile>group__customization-points.html</anchorfile>
-      <anchor>ga7181b42fe16159a0d60df9880d8da4c3</anchor>
-      <arglist>(int fails, int invalids)</arglist>
+      <anchor>gaab7070a86258a19d84e431fe122c2e25</anchor>
+      <arglist>(unsigned long long fails, unsigned long long invalids)</arglist>
     </member>
   </compound>
   <compound kind="group">

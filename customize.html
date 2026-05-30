@@ -126,7 +126,7 @@ $(function(){initNavTree('customize.html','',''); });
 <div class="textblock"><h1 class="doxsection"><a class="anchor" id="customize-driver"></a>
 Tests Driver</h1>
 <p>By default, <b>TTS</b> provides an entry point function for the listed tests. However, it may be required to handle such an entry point. In this case, one can define the <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> preprocessor symbol to a name of their own entry-point function as shown below.</p>
-<p>After defining the <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> symbol, tests can be added as usual. Then, a regular <span class="tt">main</span> function is to be defined. This function will then perform any special operations required, then call the specified entry point function. Finally, the <span class="tt">main</span> function will call <a class="el" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3" title="tts::report">tts::report</a> which will aggregate test results and validate the whole tests with respect to expected numbers of failures and invalid tests.</p>
+<p>After defining the <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> symbol, tests can be added as usual. Then, a regular <span class="tt">main</span> function is to be defined. This function will then perform any special operations required, then call the specified entry point function. Finally, the <span class="tt">main</span> function will call <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="tts::report">tts::report</a> which will aggregate test results and validate the whole tests with respect to expected numbers of failures and invalid tests.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN</span></div>
 <div class="line"><span class="preprocessor">#define TTS_CUSTOM_DRIVER_FUNCTION custom_entry_point</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
@@ -141,7 +141,7 @@ Tests Driver</h1>
 <div class="line">{</div>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Welcome to a special test driver !\n&quot;</span>;</div>
 <div class="line">  custom_entry_point(argc, argv);</div>
-<div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a>(0, 0);</div>
+<div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">tts::report</a>(0, 0);</div>
 <div class="line">}</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="customize-display"></a>
 Data display</h1>

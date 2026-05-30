@@ -135,8 +135,8 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga8b25d232b7bc19668349b1defdc1e7f9" id="r_ga8b25d232b7bc19668349b1defdc1e7f9"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ga8b25d232b7bc19668349b1defdc1e7f9">tts::initialize</a> (int argc, char const **argv)</td></tr>
 <tr class="memdesc:ga8b25d232b7bc19668349b1defdc1e7f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a TTS test suite.  <br /></td></tr>
-<tr class="memitem:ga7181b42fe16159a0d60df9880d8da4c3" id="r_ga7181b42fe16159a0d60df9880d8da4c3"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#ga7181b42fe16159a0d60df9880d8da4c3">tts::report</a> (int fails, int invalids)</td></tr>
-<tr class="memdesc:ga7181b42fe16159a0d60df9880d8da4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test reporting customization point.  <br /></td></tr>
+<tr class="memitem:gaab7070a86258a19d84e431fe122c2e25" id="r_gaab7070a86258a19d84e431fe122c2e25"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#gaab7070a86258a19d84e431fe122c2e25">tts::report</a> (unsigned long long fails, unsigned long long invalids)</td></tr>
+<tr class="memdesc:gaab7070a86258a19d84e431fe122c2e25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test reporting customization point.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="gac451ae42ba6d30988c42480129c8bb59" name="gac451ae42ba6d30988c42480129c8bb59"></a>
@@ -159,7 +159,7 @@ Functions</h2></td></tr>
 <dd>
 <a class="el" href="#ga8b25d232b7bc19668349b1defdc1e7f9" title="Initializes a TTS test suite.">tts::initialize</a> </dd>
 <dd>
-<a class="el" href="#ga7181b42fe16159a0d60df9880d8da4c3" title="Test reporting customization point.">tts::report</a></dd></dl>
+<a class="el" href="#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report</a></dd></dl>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN</span></div>
 <div class="line"><span class="preprocessor">#define TTS_CUSTOM_DRIVER_FUNCTION my_test_main</span></div>
@@ -247,8 +247,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga7181b42fe16159a0d60df9880d8da4c3" name="ga7181b42fe16159a0d60df9880d8da4c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7181b42fe16159a0d60df9880d8da4c3">&#9670;&#160;</a></span>report()</h2>
+<a id="gaab7070a86258a19d84e431fe122c2e25" name="gaab7070a86258a19d84e431fe122c2e25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab7070a86258a19d84e431fe122c2e25">&#9670;&#160;</a></span>report()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -259,12 +259,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int tts::report </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>fails</em></span>, </td>
+          <td class="paramtype">unsigned long long</td>          <td class="paramname"><span class="paramname"><em>fails</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>invalids</em></span>&#160;)</td>
+          <td class="paramtype">unsigned long long</td>          <td class="paramname"><span class="paramname"><em>invalids</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
