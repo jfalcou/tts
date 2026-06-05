@@ -103,6 +103,20 @@ namespace tts::_
       return static_cast<int>(str - begin);
     }
 
+    // Helper to find the last occurrence of a character
+    constexpr static int find_last(char const* str, char c)
+    {
+      int last_pos = -1;
+      for(int i = 0; str[ i ] != '\0'; ++i)
+      {
+        if(str[ i ] == c)
+        {
+          last_pos = i;
+        }
+      }
+      return last_pos;
+    }
+
     //==================================================================================================================
     // extract type name from easy-to-parse function
     //==================================================================================================================
@@ -118,7 +132,7 @@ namespace tts::_
 #else
       that.data  = __PRETTY_FUNCTION__;
       auto i     = find(that.data, "=") + 2;
-      that.size  = find(that.data, "]") - i;
+      that.size  = find_last(that.data, ']') - i;
       that.data += i;
 #endif
       return that;
