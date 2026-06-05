@@ -291,7 +291,7 @@ namespace tts
 
   inline namespace literals
   {
-    auto operator""_txt(char const* ptr, std::size_t sz)
+    inline auto operator""_txt(char const* ptr, std::size_t sz)
     {
       return text("%.*s", sz, ptr);
     }
