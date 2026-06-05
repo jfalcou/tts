@@ -31,8 +31,10 @@ TTS_CASE("Check display of integral types")
 TTS_CASE("Check display of string types")
 {
   using namespace std::literals;
+  using namespace tts::literals;
   TTS_EQUAL(tts::as_text("some string"s), "'some string'");
   TTS_EQUAL(tts::as_text("some string_view"sv), "'some string_view'");
+  TTS_EQUAL(tts::as_text("some string"_txt), "some string");
 };
 
 TTS_CASE("Check display of pointer types")
