@@ -442,6 +442,13 @@ namespace tts
     text that(lhs);
     return that += rhs;
   }
+  inline namespace literals
+  {
+    inline auto operator""_txt(char const* ptr, std::size_t sz)
+    {
+      return text("%.*s", sz, ptr);
+    }
+  }
 }
 TTS_DISABLE_WARNING_POP
 #include <cassert>
@@ -893,7 +900,7 @@ namespace tts::_
 }
 #include <type_traits>
 #include <cassert>
-namespace tts::_
+namespace tts
 {
   template<typename T> class buffer
   {
@@ -3056,21 +3063,21 @@ namespace tts
     using out_type  = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
     using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
     std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
-    _::buffer<out_type> ref_out(count), new_out(count);
-    _::buffer<RefType>  inputs(count);
+    buffer<out_type> ref_out(count), new_out(count);
+    buffer<RefType>  inputs(count);
     for(std::size_t i = 0; i < inputs.size(); ++i)
       inputs[ i ] = produce(type<RefType> {}, g, i, count);
-    std::size_t             repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
-    double                  max_ulp    = 0.;
-    std::size_t             nb_buckets = 2 + 1 + 16;
-    std::size_t             nb_ulps    = 0;
-    _::buffer<unsigned int> ulp_map(nb_buckets, 0);
-    _::buffer<_::histogram_entry<NewType, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
+    std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+    double               max_ulp    = 0.;
+    std::size_t          nb_buckets = 2 + 1 + 16;
+    std::size_t          nb_ulps    = 0;
+    buffer<unsigned int> ulp_map(nb_buckets, 0);
+    buffer<_::histogram_entry<NewType, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
     for(std::size_t r = 0; r < repetition; ++r)
     {
       _::compute<RefType>(inputs, ref_out, reference);
       _::compute<NewType>(inputs, new_out, challenger);
-      _::buffer<double> ulpdists(count);
+      buffer<double> ulpdists(count);
       for(std::size_t i = 0; i < ulpdists.size(); ++i)
       {
         nb_ulps++;
