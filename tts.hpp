@@ -673,6 +673,18 @@ namespace tts::_
       }
       return static_cast<int>(str - begin);
     }
+    constexpr static int find_last(char const* str, char c)
+    {
+      int last_pos = -1;
+      for(int i = 0; str[ i ] != '\0'; ++i)
+      {
+        if(str[ i ] == c)
+        {
+          last_pos = i;
+        }
+      }
+      return last_pos;
+    }
     constexpr static auto typename_impl_value()
     {
       data_t that = {};
@@ -684,7 +696,7 @@ namespace tts::_
 #else
       that.data  = __PRETTY_FUNCTION__;
       auto i     = find(that.data, "=") + 2;
-      that.size  = find(that.data, "]") - i;
+      that.size  = find_last(that.data, ']') - i;
       that.data += i;
 #endif
       return that;
