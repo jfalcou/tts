@@ -106,20 +106,20 @@ namespace tts
     std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
 
     //-- Prepare blocks
-    _::buffer<out_type> ref_out(count), new_out(count);
-    _::buffer<RefType>  inputs(count);
+    buffer<out_type> ref_out(count), new_out(count);
+    buffer<RefType>  inputs(count);
 
     for(std::size_t i = 0; i < inputs.size(); ++i)
       inputs[ i ] = produce(type<RefType> {}, g, i, count);
 
-    std::size_t             repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+    std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
 
-    double                  max_ulp    = 0.;
-    std::size_t             nb_buckets = 2 + 1 + 16;
-    std::size_t             nb_ulps    = 0;
-    _::buffer<unsigned int> ulp_map(nb_buckets, 0);
+    double               max_ulp    = 0.;
+    std::size_t          nb_buckets = 2 + 1 + 16;
+    std::size_t          nb_ulps    = 0;
+    buffer<unsigned int> ulp_map(nb_buckets, 0);
 
-    _::buffer<_::histogram_entry<NewType, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
+    buffer<_::histogram_entry<NewType, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
 
     for(std::size_t r = 0; r < repetition; ++r)
     {
@@ -128,7 +128,7 @@ namespace tts
       _::compute<NewType>(inputs, new_out, challenger);
 
       //--- Compute ulp distances
-      _::buffer<double> ulpdists(count);
+      buffer<double> ulpdists(count);
 
       for(std::size_t i = 0; i < ulpdists.size(); ++i)
       {
