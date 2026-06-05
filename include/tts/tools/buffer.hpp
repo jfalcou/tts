@@ -11,7 +11,7 @@
 #include <type_traits>
 #include <cassert>
 
-namespace tts::_
+namespace tts
 {
   template<typename T> class buffer
   {
