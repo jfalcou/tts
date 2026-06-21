@@ -7,12 +7,6 @@
 //======================================================================================================================
 #pragma once
 #include <tts/tools/bitcast.hpp>
-#include <bit>
-
-#if !defined(__GNUC__) && !defined(__clang__)
-#define TTS_USE_STDMATH
-#include <math.h>
-#endif
 
 namespace tts::_
 {

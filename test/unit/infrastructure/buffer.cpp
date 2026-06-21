@@ -31,6 +31,37 @@ TTS_CASE("Check sized buffer")
     TTS_EQUAL(e, 1);
 };
 
+TTS_CASE("Check buffer with initializer list")
+{
+  constexpr std::size_t n = 7;
+  tts::buffer<int>      b {
+       {1, 2, 3, 4, 5, 6, 7}
+  };
+
+  TTS_EQUAL(b.size(), n);
+  TTS_EQUAL(b.capacity(), n);
+  TTS_EQUAL(b.end(), b.begin() + n);
+
+  for(auto& e: b)
+    e = 1;
+  for(auto e: b)
+    TTS_EQUAL(e, 1);
+
+  tts::buffer<int> a {
+  {1, 2}
+  };
+
+  // Ensure not ambiguous with other init
+  TTS_EQUAL(a.size(), 2UL);
+  TTS_EQUAL(a.capacity(), 2UL);
+  TTS_EQUAL(a.end(), a.begin() + 2);
+
+  for(auto& e: a)
+    e = 1;
+  for(auto e: a)
+    TTS_EQUAL(e, 1);
+};
+
 TTS_CASE("Check buffer copy semantic")
 {
   constexpr std::size_t n = 7;

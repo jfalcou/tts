@@ -10,10 +10,6 @@
 
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/preprocessor.hpp>
-#include <compare>
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE

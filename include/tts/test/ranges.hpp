@@ -8,8 +8,6 @@
 //======================================================================================================================
 #pragma once
 
-#include <cassert>
-
 namespace tts
 {
   template<typename Base> struct adapter

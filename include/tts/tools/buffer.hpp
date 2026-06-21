@@ -8,8 +8,6 @@
 #pragma once
 
 #include <tts/tools/preprocessor.hpp>
-#include <type_traits>
-#include <cassert>
 
 namespace tts
 {
@@ -50,6 +48,24 @@ namespace tts
         capacity_ = n;
         for(std::size_t i = 0; i < n; ++i)
           new(data_ + i) T(val);
+      }
+    }
+
+    template<typename... Ts>
+    buffer(std::initializer_list<T> init)
+        : buffer()
+    {
+      std::size_t n = init.size();
+      if(n > 0)
+      {
+        data_ = static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR
+        assert(data_ && "tts::buffer out of memory");
+
+        size_         = n;
+        capacity_     = n;
+        std::size_t i = 0;
+        for(auto const& v: init)
+          new(data_ + (i++)) T(v);
       }
     }
 
