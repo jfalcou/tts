@@ -8,7 +8,6 @@
 //======================================================================================================================
 #pragma once
 #include <tts/tools/preprocessor.hpp>
-#include <cassert>
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
