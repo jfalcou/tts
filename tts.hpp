@@ -23,6 +23,7 @@ namespace tts
 #include <bit>
 #include <cassert>
 #include <concepts>
+#include <compare>
 #include <cstdint>
 #include <limits>
 #include <new>
@@ -32,6 +33,11 @@ namespace tts
 #include <time.h>
 #include <type_traits>
 #include <utility>
+#include <initializer_list>
+#if !defined(__GNUC__) && !defined(__clang__)
+#define TTS_USE_STDMATH
+#include <math.h>
+#endif
 namespace tts::_
 {
   inline constexpr auto usage_text =
@@ -248,10 +254,6 @@ namespace tts::_
 #define TTS_MAYBE_STRIP_PARENS_1(x)          x
 #define TTS_MAYBE_STRIP_PARENS_2(x)          TTS_APPLY(TTS_MAYBE_STRIP_PARENS_2_I, x)
 #define TTS_MAYBE_STRIP_PARENS_2_I(...)      __VA_ARGS__
-#include <compare>
-#include <cstdio>
-#include <cstring>
-#include <cstdlib>
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts
@@ -451,7 +453,6 @@ namespace tts
   }
 }
 TTS_DISABLE_WARNING_POP
-#include <cassert>
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts::_
@@ -910,8 +911,6 @@ namespace tts::_
     bool display, done;
   };
 }
-#include <type_traits>
-#include <cassert>
 namespace tts
 {
   template<typename T> class buffer
@@ -947,6 +946,22 @@ namespace tts
         capacity_ = n;
         for(std::size_t i = 0; i < n; ++i)
           new(data_ + i) T(val);
+      }
+    }
+    template<typename... Ts>
+    buffer(std::initializer_list<T> init)
+        : buffer()
+    {
+      std::size_t n = init.size();
+      if(n > 0)
+      {
+        data_ = static_cast<T*>(malloc(sizeof(T) * n));
+        assert(data_ && "tts::buffer out of memory");
+        size_         = n;
+        capacity_     = n;
+        std::size_t i = 0;
+        for(auto const& v: init)
+          new(data_ + (i++)) T(v);
       }
     }
     ~buffer()
@@ -1208,11 +1223,6 @@ namespace tts::_
     return ((ia & mask) == mask) ? mask - ia : ia;
   }
 }
-#include <bit>
-#if !defined(__GNUC__) && !defined(__clang__)
-#define TTS_USE_STDMATH
-#include <math.h>
-#endif
 namespace tts::_
 {
 #if defined(__FAST_MATH__)
@@ -1390,10 +1400,6 @@ namespace tts::_
     return tts::_::pow(T(10), a);
   }
 }
-#include <cstdint>
-#include <limits>
-#include <concepts>
-#include <algorithm>
 namespace tts
 {
   namespace _
@@ -1658,7 +1664,6 @@ namespace tts::_
     [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \
   } while(0) 
 #endif
-#include <limits>
 namespace tts
 {
   namespace _
@@ -2210,7 +2215,6 @@ namespace tts::_
 #endif
 #define TTS_NO_THROW_(EXPR)         TTS_NO_THROW_IMPL(EXPR, TTS_FAIL)
 #define TTS_NO_THROW_REQUIRED(EXPR) TTS_NO_THROW_IMPL(EXPR, TTS_FATAL)
-#include <cstring>
 namespace tts::_
 {
   template<typename L, typename R>
@@ -2990,7 +2994,6 @@ namespace tts::_
 #else
 #define TTS_AND_THEN(MESSAGE) TTS_AND_THEN_IMPL(TTS_UNIQUE(id), MESSAGE)
 #endif
-#include <cassert>
 namespace tts
 {
   template<typename Base> struct adapter
