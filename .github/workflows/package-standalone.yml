@@ -26,12 +26,11 @@ jobs:
       - name: Configure TTS
         run: |
           git config --global --add safe.directory /__w/tts/tts
-          mkdir build && cd build
-          cmake .. -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=OFF
+          cmake -S . -B build -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=OFF
 
       - name: Generate standalone TTS header
         run: |
-          cd build && ninja tts-standalone
+          cmake --build build --target tts-standalone
 
       - name: Update standalone branch
         run: |
