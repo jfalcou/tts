@@ -53,3 +53,26 @@ jobs:
     name: Nvidia
     needs: precommit
     uses: ./.github/workflows/nvidia.yml
+
+  ##======================================================================================================================
+  ## Ensure Standalone is viable
+  ##======================================================================================================================
+  standalone-generation:
+    name: Standalone Generation
+    needs: [precommit]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/jfalcou/compilers:v10
+    steps:
+      - name: Fetch current branch
+        uses: actions/checkout@v6
+
+      - name: Generate standalone header
+        run: |
+          cmake -S . -B build -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=OFF
+          cmake --build build --target tts-standalone
+
+      - name: Test standalone header
+        run: |
+          cd build
+          g++ -std=c++20 -S -I. ../test/integration/main.cpp -DTTS_STANDALONE
