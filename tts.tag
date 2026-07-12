@@ -33,11 +33,6 @@
     <templarg>typename L2</templarg>
   </compound>
   <compound kind="struct">
-    <name>tts::converter</name>
-    <filename>structtts_1_1converter.html</filename>
-    <templarg>typename T</templarg>
-  </compound>
-  <compound kind="struct">
     <name>tts::filter</name>
     <filename>structtts_1_1filter.html</filename>
     <templarg>template&lt; typename &gt; typename Pred</templarg>
@@ -460,8 +455,14 @@
     <name>tools-generators-custom</name>
     <title>Data Generators Customization Points</title>
     <filename>group__tools-generators-custom.html</filename>
-    <class kind="struct">tts::converter</class>
     <class kind="struct">tts::rebuild</class>
+    <member kind="function">
+      <type>auto</type>
+      <name>tts::convert_as</name>
+      <anchorfile>group__tools-generators-custom.html</anchorfile>
+      <anchor>gaab0ecf513cd7c017ecbb918bcf60f091</anchor>
+      <arglist>(V const &amp;v, type&lt; T &gt; const &amp;)</arglist>
+    </member>
     <member kind="function">
       <type>auto</type>
       <name>tts::produce</name>
