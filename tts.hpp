@@ -1704,13 +1704,10 @@ namespace tts
     template<typename T, bool Signed = false>
     using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
   }
-  template<typename T> struct converter
+  template<typename T, typename V> auto convert_as(V const& v, type<T> const&)
   {
-    template<typename V> static auto value(V const& v)
-    {
-      return static_cast<T>(v);
-    }
-  };
+    return static_cast<T>(v);
+  }
   template<tts::_::sequence Seq, typename U> struct rebuild;
   template<template<typename, typename...> typename Seq, typename T, typename... S, typename U>
   struct rebuild<Seq<T, S...>, U>
@@ -1802,7 +1799,7 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto...) const
     {
-      return converter<D>::value(seed);
+      return convert_as(seed, type<D> {});
     }
     T seed;
   };
@@ -1815,11 +1812,11 @@ namespace tts
     }
     template<typename D> auto operator()(tts::type<D>) const
     {
-      return converter<tts::boolean_type_t<D>>::value(false);
+      return convert_as(false, type<tts::boolean_type_t<D>> {});
     }
     template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
     {
-      return converter<tts::boolean_type_t<D>>::value(((start + idx) % range) == 0);
+      return convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
     }
     T start;
     U range;
@@ -1838,11 +1835,11 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return converter<D>::value(start + idx * step);
+      return convert_as(start + idx * step, type<D> {});
     }
     template<typename D> D operator()(tts::type<D>) const
     {
-      return converter<D>::value(start);
+      return convert_as(start, type<D> {});
     }
     T start;
     U step;
@@ -1861,11 +1858,11 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return converter<D>::value(start - idx * step);
+      return convert_as(start - idx * step, type<D> {});
     }
     template<typename D> D operator()(tts::type<D>) const
     {
-      return converter<D>::value(start);
+      return convert_as(start, type<D> {});
     }
     T start;
     U step;
@@ -1879,17 +1876,18 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      D w1   = converter<D>::value(first_);
-      D w2   = converter<D>::value(last_);
-      D step = (sz - 1)
-               ? static_cast<D>(converter<D>::value(last_ - first_) / converter<D>::value(sz - 1))
-               : converter<D>::value(0);
-      return _::min(converter<D>::value(w1 + converter<D>::value(idx) * converter<D>::value(step)),
-                    w2);
+      auto w1 = convert_as(first_, type<D> {});
+      auto w2 = convert_as(last_, type<D> {});
+      D    step =
+      (sz - 1)
+         ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
+         : convert_as(0, type<D> {});
+      return _::min(
+      convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {}), w2);
     }
     template<typename D> D operator()(tts::type<D>) const
     {
-      return converter<D>::value(first_);
+      return convert_as(first_, type<D> {});
     }
     T first_;
     U last_;
@@ -1910,7 +1908,7 @@ namespace tts
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(converter<D>::value(mini), converter<D>::value(maxi));
+      return random_value(convert_as(mini, type<D> {}), convert_as(maxi, type<D> {}));
     }
     Mn mini;
     Mx maxi;
