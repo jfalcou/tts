@@ -81,18 +81,18 @@ namespace tts
   /**
     @brief Single value evaluation customization point
 
-    This function generate a `T` from a value `v`. Default behavior is to convert but this function
-  can be overloaded to handle user-defined type.
+    This class provides a function that convert generator input to the proper value type.
 
-    @tparam T Target data type
-    @param  v Value used ot generate the data sample
-    @return A value of type `T` obtained by conversion of `v`.
+    @tparam T Data type to adapt
   **/
   //====================================================================================================================
-  template<typename T, typename V> auto as_value(V const& v)
+  template<typename T> struct converter
   {
-    return static_cast<T>(v);
-  }
+    template<typename V> static auto value(V const& v)
+    {
+      return static_cast<T>(v);
+    }
+  };
 
   //====================================================================================================================
   /**
@@ -334,7 +334,7 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...) const
     {
-      return as_value<D>(seed);
+      return converter<D>::value(seed);
     }
 
     T seed;
@@ -365,12 +365,12 @@ namespace tts
 
     template<typename D> auto operator()(tts::type<D>) const
     {
-      return as_value<tts::boolean_type_t<D>>(false);
+      return converter<tts::boolean_type_t<D>>::value(false);
     }
 
     template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
     {
-      return as_value<tts::boolean_type_t<D>>(((start + idx) % range) == 0);
+      return converter<tts::boolean_type_t<D>>::value(((start + idx) % range) == 0);
     }
 
     T start;
@@ -407,12 +407,12 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return as_value<D>(start + idx * step);
+      return converter<D>::value(start + idx * step);
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return as_value<D>(start);
+      return converter<D>::value(start);
     }
 
     T start;
@@ -449,12 +449,12 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return as_value<D>(start - idx * step);
+      return converter<D>::value(start - idx * step);
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return as_value<D>(start);
+      return converter<D>::value(start);
     }
 
     T start;
@@ -488,16 +488,18 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      D w1 = as_value<D>(first_);
-      D w2 = as_value<D>(last_);
-      D step =
-      (sz - 1) ? static_cast<D>(as_value<D>(last_ - first_) / as_value<D>(sz - 1)) : as_value<D>(0);
-      return _::min(as_value<D>(w1 + as_value<D>(idx) * as_value<D>(step)), w2);
+      D w1   = converter<D>::value(first_);
+      D w2   = converter<D>::value(last_);
+      D step = (sz - 1)
+               ? static_cast<D>(converter<D>::value(last_ - first_) / converter<D>::value(sz - 1))
+               : converter<D>::value(0);
+      return _::min(converter<D>::value(w1 + converter<D>::value(idx) * converter<D>::value(step)),
+                    w2);
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return as_value<D>(first_);
+      return converter<D>::value(first_);
     }
 
     T first_;
@@ -536,7 +538,7 @@ namespace tts
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(as_value<D>(mini), as_value<D>(maxi));
+      return random_value(converter<D>::value(mini), converter<D>::value(maxi));
     }
 
     Mn mini;
