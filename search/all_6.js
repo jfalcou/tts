@@ -13,8 +13,9 @@ var searchData=
   ['computing_20ulp_10',['Computing ULP',['../rationale.html#ulp-computing',1,'']]],
   ['configuration_20utilities_11',['Configuration Utilities',['../group__tools-config.html',1,'']]],
   ['contributors_12',['New Contributors',['../changelog.html#autotoc_md5',1,'']]],
-  ['cordelia_20gray_13',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md13',1,'']]],
-  ['cpm_14',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['customization_20points_15',['Customization Points',['../group__customization-points.html',1,'Customization Points'],['../group__tools-generators-custom.html',1,'Data Generators Customization Points']]],
-  ['customizing_20tts_20behaviour_16',['Customizing TTS Behaviour',['../customize.html',1,'']]]
+  ['converter_13',['converter',['../structtts_1_1converter.html',1,'tts']]],
+  ['cordelia_20gray_14',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md13',1,'']]],
+  ['cpm_15',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
+  ['customization_20points_16',['Customization Points',['../group__customization-points.html',1,'Customization Points'],['../group__tools-generators-custom.html',1,'Data Generators Customization Points']]],
+  ['customizing_20tts_20behaviour_17',['Customizing TTS Behaviour',['../customize.html',1,'']]]
 ];

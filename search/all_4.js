@@ -11,6 +11,5 @@ var searchData=
   ['as_5finteger_8',['as_integer',['../structtts_1_1as__integer.html',1,'tts']]],
   ['as_5fsigned_5finteger_9',['as_signed_integer',['../structtts_1_1as__signed__integer.html',1,'tts']]],
   ['as_5ftext_10',['as_text',['../group__tools-text.html#ga044124276e1b1e518a746121e16b0fad',1,'tts']]],
-  ['as_5fvalue_11',['as_value',['../group__tools-generators-custom.html#gabda75718fc9250b5bbe3731531eed0ae',1,'tts']]],
-  ['aubrey_20bradimore_12',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]]
+  ['aubrey_20bradimore_11',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]]
 ];
