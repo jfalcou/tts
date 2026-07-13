@@ -11,9 +11,11 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="godbolt.js"></script>
-<script type="text/javascript" src="fragment.js"></script>
-<script type="text/javascript" src="paragraph.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
 <script type="text/javascript">
+  DoxygenAwesomeTabs.init()
   DoxygenAwesomeParagraphLink.init()
   DoxygenAwesomeFragmentCopyButton.init()
   SendToGodbolt.init("tts","clang1600","-O3 -std=c++20 -DNEDBUG")
@@ -36,10 +38,10 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="custom.css" rel="stylesheet" type="text/css"/>
-<link href="color.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="color.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <a href="https://github.com/jfalcou/tts" class="github-corner" title="View source on GitHub" target="_blank">
@@ -123,6 +125,39 @@ $(function(){initNavTree('customize.html','',''); });
   <div class="headertitle"><div class="title">Customizing TTS Behaviour </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="toc"><h3>Table of Contents</h3>
+<ul>
+  <li class="level1">
+    <a href="#customize-driver">Tests Driver </a>
+  </li>
+  <li class="level1">
+    <a href="#customize-display">Data display </a>
+  </li>
+  <li class="level1">
+    <a href="#customize-comparison">Equality and Ordering </a>
+  </li>
+  <li class="level1">
+    <a href="#customize-precision">Precision Measurement </a>
+    <ul>
+      <li class="level2">
+        <a href="#autotoc_md28">ULP Distance </a>
+      </li>
+      <li class="level2">
+        <a href="#autotoc_md29">IEEE Comparison </a>
+      </li>
+      <li class="level2">
+        <a href="#autotoc_md30">Relative Comparison </a>
+      </li>
+      <li class="level2">
+        <a href="#autotoc_md31">Absolute Comparison </a>
+      </li>
+    </ul>
+  </li>
+  <li class="level1">
+    <a href="#autotoc_md32">Data Generator </a>
+  </li>
+</ul>
+</div>
 <div class="textblock"><h1 class="doxsection"><a class="anchor" id="customize-driver"></a>
 Tests Driver</h1>
 <p>By default, <b>TTS</b> provides an entry point function for the listed tests. However, it may be required to handle such an entry point. In this case, one can define the <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> preprocessor symbol to a name of their own entry-point function as shown below.</p>
@@ -438,13 +473,6 @@ Data Generator</h1>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
-<div id="page-nav" class="page-nav-panel">
-<div id="page-nav-resize-handle"></div>
-<div id="page-nav-tree">
-<div id="page-nav-contents">
-</div><!-- page-nav-contents -->
-</div><!-- page-nav-tree -->
-</div><!-- page-nav -->
 </div><!-- container -->
 <!-- HTML footer for doxygen 1.8.20-->
 <!-- start footer part -->

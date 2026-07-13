@@ -11,9 +11,11 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
 <script type="text/javascript" src="godbolt.js"></script>
-<script type="text/javascript" src="fragment.js"></script>
-<script type="text/javascript" src="paragraph.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
 <script type="text/javascript">
+  DoxygenAwesomeTabs.init()
   DoxygenAwesomeParagraphLink.init()
   DoxygenAwesomeFragmentCopyButton.init()
   SendToGodbolt.init("tts","clang1600","-O3 -std=c++20 -DNEDBUG")
@@ -36,10 +38,10 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="custom.css" rel="stylesheet" type="text/css"/>
-<link href="color.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="color.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <a href="https://github.com/jfalcou/tts" class="github-corner" title="View source on GitHub" target="_blank">
@@ -123,6 +125,16 @@ $(function(){initNavTree('tts101.html','',''); });
   <div class="headertitle"><div class="title">Getting Started </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="toc"><h3>Table of Contents</h3>
+<ul>
+  <li class="level1">
+    <a href="#tuto-test-case">Specify a Test Case </a>
+  </li>
+  <li class="level1">
+    <a href="#tuto-macro">Testing Macros </a>
+  </li>
+</ul>
+</div>
 <div class="textblock"><p>Unit Tests are usually organised into <b>scenarios</b> that test the specific behaviour of a software component. Such scenarios are usually implemented in separate executables. Each scenario is decomposed into <b>test suites</b>, i.e., a group of related tests verifying that the software component correctly services the current scenario. Test suites are themselves composed of at least one test case.</p>
 <p>With <b>TTS</b>, this decomposition (scenario/suite/test) is supported by various macros.</p>
 <p>Let's dive into the details of how <b>TTS</b> manages and reports tests.</p>
@@ -159,13 +171,6 @@ Testing Macros</h1>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
-<div id="page-nav" class="page-nav-panel">
-<div id="page-nav-resize-handle"></div>
-<div id="page-nav-tree">
-<div id="page-nav-contents">
-</div><!-- page-nav-contents -->
-</div><!-- page-nav-tree -->
-</div><!-- page-nav -->
 </div><!-- container -->
 <!-- HTML footer for doxygen 1.8.20-->
 <!-- start footer part -->
