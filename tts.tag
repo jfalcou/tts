@@ -265,15 +265,8 @@
       <type></type>
       <name>text</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a7b439a33411d4f65c4b4fb577ca24edb</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a1c7b28a8843dc1a8644d2311905f381d</anchor>
-      <arglist>(char const (&amp;data)[N])</arglist>
+      <anchor>a9f145d97347d401600c729daa6db7016</anchor>
+      <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type></type>

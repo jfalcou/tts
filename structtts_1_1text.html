@@ -152,13 +152,9 @@ $(function(){initNavTree('structtts_1_1text.html','','structtts_1_1text-members'
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7b439a33411d4f65c4b4fb577ca24edb" id="r_a7b439a33411d4f65c4b4fb577ca24edb"><td class="memItemLeft"><a id="a7b439a33411d4f65c4b4fb577ca24edb" name="a7b439a33411d4f65c4b4fb577ca24edb"></a>
-&#160;</td><td class="memItemRight"><b>text</b> ()</td></tr>
-<tr class="memdesc:a7b439a33411d4f65c4b4fb577ca24edb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
-<tr class="memitem:a1c7b28a8843dc1a8644d2311905f381d" id="r_a1c7b28a8843dc1a8644d2311905f381d"><td class="memTemplParams" colspan="2"><a id="a1c7b28a8843dc1a8644d2311905f381d" name="a1c7b28a8843dc1a8644d2311905f381d"></a>
-template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:a1c7b28a8843dc1a8644d2311905f381d template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>text</b> (char const (&amp;<a class="el" href="#a1bed9847e3611c55dd670a502cedc93d">data</a>)[N])</td></tr>
-<tr class="memdesc:a1c7b28a8843dc1a8644d2311905f381d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from fixed-size C-style string. <br /></td></tr>
+<tr class="memitem:a9f145d97347d401600c729daa6db7016" id="r_a9f145d97347d401600c729daa6db7016"><td class="memItemLeft"><a id="a9f145d97347d401600c729daa6db7016" name="a9f145d97347d401600c729daa6db7016"></a>
+&#160;</td><td class="memItemRight"><b>text</b> ()=default</td></tr>
+<tr class="memdesc:a9f145d97347d401600c729daa6db7016"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
 <tr class="memitem:afad159ee022f1f9eb56d64fe88a85210" id="r_afad159ee022f1f9eb56d64fe88a85210"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:afad159ee022f1f9eb56d64fe88a85210 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#afad159ee022f1f9eb56d64fe88a85210">text</a> (char const *format, Args... args)</td></tr>
 <tr class="memdesc:afad159ee022f1f9eb56d64fe88a85210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from formatted string.  <br /></td></tr>
@@ -191,46 +187,46 @@ decltype(auto)&#160;</td><td class="memItemRight"><b>end</b> () const</td></tr>
 bool&#160;</td><td class="memItemRight"><b>is_empty</b> () const</td></tr>
 <tr class="memdesc:a179150a2fec58fe69d3cfecefd034842"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the text is empty. <br /></td></tr>
 <tr class="memitem:ac14b492db7e2f184e2f2d25a7f1ccdac" id="r_ac14b492db7e2f184e2f2d25a7f1ccdac"><td class="memItemLeft"><a id="ac14b492db7e2f184e2f2d25a7f1ccdac" name="ac14b492db7e2f184e2f2d25a7f1ccdac"></a>
-<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a>&#160;</td><td class="memItemRight"><b>operator+</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;other) const</td></tr>
+<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a>&#160;</td><td class="memItemRight"><b>operator+</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;other) const</td></tr>
 <tr class="memdesc:ac14b492db7e2f184e2f2d25a7f1ccdac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenate and return a new text instance. <br /></td></tr>
 <tr class="memitem:aff9e4812e78307ed288f044575d60586" id="r_aff9e4812e78307ed288f044575d60586"><td class="memItemLeft"><a id="aff9e4812e78307ed288f044575d60586" name="aff9e4812e78307ed288f044575d60586"></a>
-<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator+=</b> (char const *other)</td></tr>
+<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator+=</b> (char const *other)</td></tr>
 <tr class="memdesc:aff9e4812e78307ed288f044575d60586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenate a C-style string. <br /></td></tr>
 <tr class="memitem:ac229fb794ee24caf1c1829e53da68bef" id="r_ac229fb794ee24caf1c1829e53da68bef"><td class="memItemLeft"><a id="ac229fb794ee24caf1c1829e53da68bef" name="ac229fb794ee24caf1c1829e53da68bef"></a>
-<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator+=</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;other)</td></tr>
+<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator+=</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;other)</td></tr>
 <tr class="memdesc:ac229fb794ee24caf1c1829e53da68bef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenate another text instance. <br /></td></tr>
 <tr class="memitem:a9cbef17a36a80da358be2cfebdc57496" id="r_a9cbef17a36a80da358be2cfebdc57496"><td class="memItemLeft"><a id="a9cbef17a36a80da358be2cfebdc57496" name="a9cbef17a36a80da358be2cfebdc57496"></a>
-<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> &amp;&amp;other) noexcept</td></tr>
+<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> &amp;&amp;other) noexcept</td></tr>
 <tr class="memdesc:a9cbef17a36a80da358be2cfebdc57496"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator. <br /></td></tr>
 <tr class="memitem:a8bc9cf2f63accfa8938fb597d26067f1" id="r_a8bc9cf2f63accfa8938fb597d26067f1"><td class="memItemLeft"><a id="a8bc9cf2f63accfa8938fb597d26067f1" name="a8bc9cf2f63accfa8938fb597d26067f1"></a>
-<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;other)</td></tr>
+<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;other)</td></tr>
 <tr class="memdesc:a8bc9cf2f63accfa8938fb597d26067f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment operator. <br /></td></tr>
 <tr class="memitem:a717e8bad55cb2c4b9cc969335bb59b58" id="r_a717e8bad55cb2c4b9cc969335bb59b58"><td class="memItemLeft"><a id="a717e8bad55cb2c4b9cc969335bb59b58" name="a717e8bad55cb2c4b9cc969335bb59b58"></a>
 size_t&#160;</td><td class="memItemRight"><b>size</b> () const</td></tr>
 <tr class="memdesc:a717e8bad55cb2c4b9cc969335bb59b58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the text. <br /></td></tr>
 <tr class="memitem:ab5678b661ead194b1045172bee5e8b96" id="r_ab5678b661ead194b1045172bee5e8b96"><td class="memItemLeft"><a id="ab5678b661ead194b1045172bee5e8b96" name="ab5678b661ead194b1045172bee5e8b96"></a>
-void&#160;</td><td class="memItemRight"><b>swap</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> &amp;o) noexcept</td></tr>
+void&#160;</td><td class="memItemRight"><b>swap</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> &amp;o) noexcept</td></tr>
 <tr class="memdesc:ab5678b661ead194b1045172bee5e8b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap contents with another text instance. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:a4200922544af112763d493c8021e7d3c" id="r_a4200922544af112763d493c8021e7d3c"><td class="memTemplParams" colspan="2"><a id="a4200922544af112763d493c8021e7d3c" name="a4200922544af112763d493c8021e7d3c"></a>
 template&lt;_::stream OS&gt; </td></tr>
-<tr class="memitem:a4200922544af112763d493c8021e7d3c template"><td class="memItemLeft">OS &amp;&#160;</td><td class="memItemRight"><b>operator&lt;&lt;</b> (OS &amp;os, <a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;t)</td></tr>
+<tr class="memitem:a4200922544af112763d493c8021e7d3c template"><td class="memItemLeft">OS &amp;&#160;</td><td class="memItemRight"><b>operator&lt;&lt;</b> (OS &amp;os, <a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;t)</td></tr>
 <tr class="memdesc:a4200922544af112763d493c8021e7d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream output operator. <br /></td></tr>
 <tr class="memitem:a899617a31b5a1a6ec53f3f8bb828fdc2" id="r_a899617a31b5a1a6ec53f3f8bb828fdc2"><td class="memTemplParams" colspan="2"><a id="a899617a31b5a1a6ec53f3f8bb828fdc2" name="a899617a31b5a1a6ec53f3f8bb828fdc2"></a>
 template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:a899617a31b5a1a6ec53f3f8bb828fdc2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>operator&lt;=&gt;</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;a, char const (&amp;b)[N]) noexcept</td></tr>
+<tr class="memitem:a899617a31b5a1a6ec53f3f8bb828fdc2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>operator&lt;=&gt;</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;a, char const (&amp;b)[N]) noexcept</td></tr>
 <tr class="memdesc:a899617a31b5a1a6ec53f3f8bb828fdc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way comparison operator with C-style string. <br /></td></tr>
 <tr class="memitem:a5017f7f566c30b51b64afc273cd328ec" id="r_a5017f7f566c30b51b64afc273cd328ec"><td class="memItemLeft"><a id="a5017f7f566c30b51b64afc273cd328ec" name="a5017f7f566c30b51b64afc273cd328ec"></a>
-std::strong_ordering&#160;</td><td class="memItemRight"><b>operator&lt;=&gt;</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;a, <a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;b) noexcept</td></tr>
+std::strong_ordering&#160;</td><td class="memItemRight"><b>operator&lt;=&gt;</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;a, <a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;b) noexcept</td></tr>
 <tr class="memdesc:a5017f7f566c30b51b64afc273cd328ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way comparison operator with other text instance. <br /></td></tr>
 <tr class="memitem:a9657802a107531ee24f60e585ae80fa9" id="r_a9657802a107531ee24f60e585ae80fa9"><td class="memTemplParams" colspan="2"><a id="a9657802a107531ee24f60e585ae80fa9" name="a9657802a107531ee24f60e585ae80fa9"></a>
 template&lt;std::size_t N&gt; </td></tr>
-<tr class="memitem:a9657802a107531ee24f60e585ae80fa9 template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><b>operator==</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;a, char const (&amp;b)[N]) noexcept</td></tr>
+<tr class="memitem:a9657802a107531ee24f60e585ae80fa9 template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><b>operator==</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;a, char const (&amp;b)[N]) noexcept</td></tr>
 <tr class="memdesc:a9657802a107531ee24f60e585ae80fa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator with C-style string. <br /></td></tr>
 <tr class="memitem:a80ccce1207f2c1cbee1e0def444710af" id="r_a80ccce1207f2c1cbee1e0def444710af"><td class="memItemLeft"><a id="a80ccce1207f2c1cbee1e0def444710af" name="a80ccce1207f2c1cbee1e0def444710af"></a>
-bool&#160;</td><td class="memItemRight"><b>operator==</b> (<a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;a, <a class="el" href="#a7b439a33411d4f65c4b4fb577ca24edb">text</a> const &amp;b) noexcept</td></tr>
+bool&#160;</td><td class="memItemRight"><b>operator==</b> (<a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;a, <a class="el" href="#a9f145d97347d401600c729daa6db7016">text</a> const &amp;b) noexcept</td></tr>
 <tr class="memdesc:a80ccce1207f2c1cbee1e0def444710af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality comparison operator. <br /></td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
