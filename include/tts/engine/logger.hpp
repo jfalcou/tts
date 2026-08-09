@@ -30,18 +30,18 @@ namespace tts::_
       {
         if(!done)
         {
-          printf("     >> Additional information: \n     ");
+          ::tts::output().write("     >> Additional information: \n     ");
           done = true;
         }
 
-        printf("%s", as_text(d).data());
+        ::tts::output().write(as_text(d));
       }
       return *this;
     }
 
     ~logger() noexcept(false)
     {
-      if(display && done) puts("");
+      if(display && done) ::tts::output().writeln();
       if(::tts::fatal_error_status) throw ::tts::_::fatal_signal();
     }
 

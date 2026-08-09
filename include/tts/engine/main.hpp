@@ -78,33 +78,33 @@ namespace tts::_
 {
   void report_pass(char const* location, char const* message)
   {
-    if(::tts::_::is_verbose && !::tts::_::is_quiet)
+    if(::tts::_::current_verbosity.verbose && !::tts::_::current_verbosity.quiet)
     {
-      printf("  [+] %s : %s\n", location, message);
+      ::tts::output().writeln("  [+] %s : %s", location, message);
     }
   }
 
   void report_fail(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::_::is_verbose)
+    if(!::tts::_::current_verbosity.verbose)
     {
-      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
+      if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
     }
 
-    if(!::tts::_::is_quiet)
+    if(!::tts::_::current_verbosity.quiet)
     {
-      printf("  [X] %s : ** FAILURE ** : %s\n", location, message);
+      ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
   }
 
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::_::is_verbose)
+    if(!::tts::_::current_verbosity.verbose)
     {
-      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
+      if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
     }
 
-    printf("  [@] %s : @@ FATAL @@ : %s\n", location, message);
+    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
 }
 
@@ -113,11 +113,11 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
 
-  ::tts::_::is_verbose   = ::tts::arguments()("-v", "--verbose");
-  ::tts::_::is_quiet     = ::tts::arguments()("-q", "--quiet");
+  ::tts::_::current_verbosity.verbose = ::tts::arguments()("-v", "--verbose");
+  ::tts::_::current_verbosity.quiet   = ::tts::arguments()("-q", "--quiet");
 
-  auto        nb_tests   = ::tts::_::suite().size();
-  std::size_t done_tests = 0;
+  auto        nb_tests                = ::tts::_::suite().size();
+  std::size_t done_tests              = 0;
   ::tts::set_random_seed(static_cast<std::uint64_t>(tts::random_seed()));
 
   try
@@ -128,7 +128,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
-      if(!::tts::_::is_quiet) printf("TEST: '%s'\n", t.name);
+      if(!::tts::_::current_verbosity.quiet) ::tts::output().writeln("TEST: '%s'", t.name);
       fflush(stdout);
       t();
       done_tests++;
@@ -136,21 +136,22 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
+        if(!::tts::_::current_verbosity.quiet) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
         fflush(stdout);
       }
       else if(failure_count == ::tts::global_runtime.failure_count)
       {
-        if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
+        if(!::tts::_::current_verbosity.quiet)
+          ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
         fflush(stdout);
       }
     }
   }
   catch(::tts::_::fatal_signal&)
   {
-    if(!::tts::_::is_quiet)
-      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",
-             static_cast<int>(nb_tests - done_tests - 1));
+    if(!::tts::_::current_verbosity.quiet)
+      ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
+                              static_cast<int>(nb_tests - done_tests - 1));
   }
 
   if constexpr(::tts::_::use_main) return ::tts::report(0, 0);

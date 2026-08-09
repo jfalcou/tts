@@ -22,7 +22,7 @@ namespace tts
     }
     static void display(Base const& v) noexcept
     {
-      printf("%s", as_text(v).data());
+      output().write(as_text(v));
     }
   };
 
@@ -69,28 +69,28 @@ namespace tts
 
     template<typename... S> void header(S const&... s)
     {
-      if(::tts::_::is_quiet) return;
-      ((printf("%-*s", 16, s)), ...);
-      puts("");
+      if(::tts::_::current_verbosity.quiet) return;
+      ((::tts::output().write("%-*s", 16, s)), ...);
+      ::tts::output().writeln();
     }
 
     template<typename U, typename R, typename V>
     void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
       assert(desc && "Description cannot be null");
-      if(::tts::_::is_quiet) return;
-      if(ulp != -1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
-      else printf("%*s", static_cast<int>(48 + strlen(desc)), desc); // NOSONAR
+      if(::tts::_::current_verbosity.quiet) return;
+      if(ulp != -1) ::tts::output().write("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
+      else ::tts::output().write("%*s", static_cast<int>(48 + strlen(desc)), desc); // NOSONAR
       adapter<V>::display(v);
-      printf("\n");
+      ::tts::output().writeln();
     }
 
     template<typename P> void print_producer(P const& prod, auto alt)
     {
-      if(::tts::_::is_quiet) return;
+      if(::tts::_::current_verbosity.quiet) return;
       if constexpr(requires(P const& p) { to_text(p); })
-        printf("%s\n", ::tts::as_text(prod).data());
-      else printf("%s\n", alt);
+        ::tts::output().writeln(::tts::as_text(prod));
+      else ::tts::output().writeln(alt);
     }
   }
 
@@ -148,8 +148,9 @@ namespace tts
     }
 
     _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-    if(!_::is_quiet)
-      printf("--------------------------------------------------------------------------------\n");
+    if(!_::current_verbosity.quiet)
+      ::tts::output().writeln(
+      "--------------------------------------------------------------------------------");
 
     double ratio = 0.;
 
@@ -169,9 +170,9 @@ namespace tts
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
         _::results(-1., 0, 0., "Found:      ", out);
         _::results(-1., 0, 0., "instead of: ", ref);
-        if(!_::is_quiet)
-          printf(
-          "--------------------------------------------------------------------------------\n");
+        if(!_::current_verbosity.quiet)
+          ::tts::output().writeln(
+          "--------------------------------------------------------------------------------");
       }
     }
 
@@ -205,12 +206,12 @@ namespace tts
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                  \
   [ & ]()                                                                                          \
   {                                                                                                \
-    if(!::tts::_::is_quiet)                                                                        \
-      printf("Comparing: %s<%s> with %s<%s> using ",                                               \
-             TTS_STRING(RefFunc),                                                                  \
-             TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                               \
-             TTS_STRING(NewFunc),                                                                  \
-             TTS_STRING(TTS_REMOVE_PARENS(NewType)));                                              \
+    if(!::tts::_::current_verbosity.quiet)                                                         \
+      ::tts::output().write("Comparing: %s<%s> with %s<%s> using ",                                \
+                            TTS_STRING(RefFunc),                                                   \
+                            TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                \
+                            TTS_STRING(NewFunc),                                                   \
+                            TTS_STRING(TTS_REMOVE_PARENS(NewType)));                               \
                                                                                                    \
     auto generator = TTS_REMOVE_PARENS(Producer);                                                  \
     ::tts::_::print_producer(generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));                  \

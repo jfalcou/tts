@@ -9,6 +9,7 @@
 #pragma once
 
 #include <tts/engine/deps.hpp>
+#include <tts/tools/output.hpp>
 
 //======================================================================================================================
 // Test environment
@@ -41,33 +42,35 @@ namespace tts::_
 
     int report(unsigned long long fails, unsigned long long invalids) const
     {
-      auto test_txt = test_count > 1 ? "s" : "";
-      auto pass_txt = success_count > 1 ? "es" : "";
-      auto fail_txt = failure_count > 1 ? "s" : "";
-      auto inv_txt  = invalid_count > 1 ? "s" : "";
+      auto  test_txt = test_count > 1 ? "s" : "";
+      auto  pass_txt = success_count > 1 ? "es" : "";
+      auto  fail_txt = failure_count > 1 ? "s" : "";
+      auto  inv_txt  = invalid_count > 1 ? "s" : "";
 
-      puts("----------------------------------------------------------------");
-      printf("Results: %llu test%s ", test_count, test_txt);
+      auto& out      = ::tts::output();
+
+      out.writeln("----------------------------------------------------------------");
+      out.write("Results: %llu test%s ", test_count, test_txt);
       if(success_count != 0)
-        printf("- %llu/%llu (%2.2f%%) success%s ",
-               success_count,
-               test_count,
-               100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
-               pass_txt);
+        out.write("- %llu/%llu (%2.2f%%) success%s ",
+                  success_count,
+                  test_count,
+                  100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
+                  pass_txt);
       if(failure_count != 0)
-        printf("- %llu/%llu (%2.2f%%) failure%s ",
-               failure_count,
-               test_count,
-               100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
-               fail_txt);
+        out.write("- %llu/%llu (%2.2f%%) failure%s ",
+                  failure_count,
+                  test_count,
+                  100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
+                  fail_txt);
       if(invalid_count != 0)
-        printf("- %llu/%llu (%2.2f%%) invalid%s ",
-               invalid_count,
-               test_count,
-               100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
-               inv_txt);
+        out.write("- %llu/%llu (%2.2f%%) invalid%s ",
+                  invalid_count,
+                  test_count,
+                  100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
+                  inv_txt);
 
-      printf("\n");
+      out.writeln();
 
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;

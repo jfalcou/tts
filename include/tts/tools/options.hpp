@@ -7,6 +7,7 @@
 */
 //======================================================================================================================
 #pragma once
+#include <tts/tools/output.hpp>
 #include <tts/tools/preprocessor.hpp>
 
 TTS_DISABLE_WARNING_PUSH
@@ -186,8 +187,6 @@ namespace tts
   {
     inline options current_arguments = {0, nullptr};
     inline int     current_seed      = -1;
-    inline bool    is_verbose        = false;
-    inline bool    is_quiet          = false;
   }
 
   //====================================================================================================================
@@ -268,7 +267,7 @@ namespace tts
   //====================================================================================================================
   inline bool is_verbose()
   {
-    return _::is_verbose;
+    return _::current_verbosity.verbose;
   }
 }
 

@@ -28,7 +28,8 @@ namespace tts::_
 
     bool check(char const* desc)
     {
-      if(id == section && desc && is_verbose) printf("  And then: %s\n", desc);
+      if(id == section && desc && current_verbosity.verbose)
+        ::tts::output().writeln("  And then: %s", desc);
       return id == section;
     }
   };
@@ -75,7 +76,9 @@ namespace tts::_
 #define TTS_WHEN(STORY)                                                                            \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW(                                                                      \
-  ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);              \
+  ::tts::_::current_verbosity.verbose                                                              \
+  ? (::tts::output().writeln("When      : %s", ::tts::text {STORY}.data()), 0)                     \
+  : 0);                                                                                            \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count;                                 \
       tts_count -= 0 == tts_section++)                                                             \
     for(tts::_::only_once tts_only_once_setup {}; tts_only_once_setup;)                            \
