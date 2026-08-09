@@ -556,7 +556,7 @@ namespace tts
     template<typename D> auto operator()(tts::type<D>, auto...)
     {
       using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
-      return tts::random_value<i_t>(0, 8 * sizeof(i_t) - 1);
+      return tts::random_value<i_t>(0, std::numeric_limits<i_t>::max());
     }
   };
 
