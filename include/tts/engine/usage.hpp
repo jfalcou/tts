@@ -18,6 +18,7 @@ Flags:
   -v, --verbose     Display tests results regardless of their status.
   -q, --quiet       Display only test failures percentage.
   --allow-empty     Do not fail when the test suite registered zero test.
+  --dry             Print registered test names without running them.
 
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
