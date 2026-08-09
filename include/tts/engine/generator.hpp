@@ -487,8 +487,11 @@ namespace tts
       (sz - 1)
          ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
          : convert_as(0, type<D> {});
-      return _::min(
-      convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {}), w2);
+      auto value =
+      convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {});
+
+      // Clamp rounding overshoot back to the last bound, whichever direction the range runs in.
+      return (w1 <= w2) ? _::min(value, w2) : _::max(value, w2);
     }
 
     template<typename D> D operator()(tts::type<D>) const
