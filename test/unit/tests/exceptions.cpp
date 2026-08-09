@@ -20,6 +20,7 @@ void foo()
 TTS_CASE("Check that we can capture thrown exceptions")
 {
   TTS_THROW(foo(), some_exception_type);
+  TTS_THROW(foo(), some_exception_type, REQUIRED);
 };
 
 void bar() noexcept
@@ -32,4 +33,5 @@ void bar() noexcept
 TTS_CASE("Check that nothrow function are detected as such")
 {
   TTS_NO_THROW(bar());
+  TTS_NO_THROW(bar(), REQUIRED);
 };

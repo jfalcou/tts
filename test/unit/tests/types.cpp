@@ -13,6 +13,7 @@
 TTS_CASE("Check that types can be tested for equality")
 {
   TTS_TYPE_IS(std::add_pointer<float const>::type, float const*);
+  TTS_TYPE_IS(std::add_pointer<float const>::type, float const*, REQUIRED);
 };
 
 TTS_CASE("Check that expression types can be tested for equality")
@@ -22,6 +23,7 @@ TTS_CASE("Check that expression types can be tested for equality")
   TTS_EXPR_IS(&d + 5, double*);
   TTS_EXPR_IS(std::move(d), double&&);
   TTS_EXPR_IS(std::swap(d, d), void);
+  TTS_EXPR_IS(&d + 5, double*, REQUIRED);
 };
 
 TTS_CASE("Check that expression types can be tested for compilation status")

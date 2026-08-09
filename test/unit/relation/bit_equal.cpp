@@ -14,6 +14,16 @@ TTS_CASE("test bit_equal for basic types")
   TTS_BIT_EQUAL(true, std::uint8_t {1});
   TTS_BIT_EQUAL(false, std::uint8_t {0});
   TTS_BIT_EQUAL('A', std::uint8_t {65});
+
+  TTS_BIT_EQUAL(1.f, 0x3F800000, REQUIRED);
+};
+
+TTS_CASE("test bit_not_equal for basic types")
+{
+  TTS_BIT_NOT_EQUAL(1.f, 0x3F800001);
+  TTS_BIT_NOT_EQUAL(true, std::uint8_t {0});
+
+  TTS_BIT_NOT_EQUAL(1.f, 0x3F800001, REQUIRED);
 };
 
 struct ab

@@ -14,6 +14,8 @@ TTS_CASE("Check correctness of inequality tests")
 
   std::vector<float> a {1, 2, 3}, b {7, 9};
   TTS_NOT_EQUAL(a, b);
+
+  TTS_NOT_EQUAL(42, 69, REQUIRED);
 };
 
 constexpr int f()
@@ -24,6 +26,7 @@ constexpr int f()
 TTS_CASE("Check correctness of constexpr inequality tests")
 {
   TTS_CONSTEXPR_NOT_EQUAL(63, f());
+  TTS_CONSTEXPR_NOT_EQUAL(63, f(), REQUIRED);
 };
 
 TTS_CASE("Check correctness of typed inequality tests")
@@ -32,11 +35,14 @@ TTS_CASE("Check correctness of typed inequality tests")
 
   std::vector<float> a {1, 2, 3}, b {1, 2};
   TTS_TYPED_NOT_EQUAL(a, b);
+
+  TTS_TYPED_NOT_EQUAL(45.f, 7.7f, REQUIRED);
 };
 
 TTS_CASE("Check correctness of constexpr typed inequality tests")
 {
   TTS_TYPED_CONSTEXPR_NOT_EQUAL(77, f());
+  TTS_TYPED_CONSTEXPR_NOT_EQUAL(77, f(), REQUIRED);
 };
 
 #include "foo.hpp"

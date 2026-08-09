@@ -16,6 +16,8 @@ TTS_CASE("Check correctness of less-equal comparison tests")
   std::vector<float> a {1, 2, 3}, b {7, 9};
   TTS_LESS_EQUAL(a, b);
   TTS_LESS_EQUAL(a, a);
+
+  TTS_LESS_EQUAL(42., 69, REQUIRED);
 };
 
 constexpr int f()
@@ -27,6 +29,19 @@ TTS_CASE("Check correctness of constexpr less or equal than comparison tests")
 {
   TTS_CONSTEXPR_LESS_EQUAL(17, f());
   TTS_CONSTEXPR_LESS_EQUAL(45, f());
+  TTS_CONSTEXPR_LESS_EQUAL(45, f(), REQUIRED);
+};
+
+TTS_CASE("Check correctness of typed less-equal comparison tests")
+{
+  TTS_TYPED_LESS_EQUAL(45.f, 45.f);
+  TTS_TYPED_LESS_EQUAL(45.f, 45.f, REQUIRED);
+};
+
+TTS_CASE("Check correctness of constexpr typed less-equal comparison tests")
+{
+  TTS_TYPED_CONSTEXPR_LESS_EQUAL(45, f());
+  TTS_TYPED_CONSTEXPR_LESS_EQUAL(45, f(), REQUIRED);
 };
 
 #include "foo.hpp"

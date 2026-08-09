@@ -11,6 +11,7 @@ TTS_CASE("Absolute distance")
 {
   TTS_ABSOLUTE_EQUAL(-2., 2.f, 4.);
   TTS_ABSOLUTE_EQUAL('A', 80LL, 15);
+  TTS_ABSOLUTE_EQUAL(-2., 2.f, 4., REQUIRED);
 };
 
 TTS_CASE_TPL("Absolute distance between floating point", double, float)

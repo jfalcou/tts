@@ -16,6 +16,7 @@ TTS_CASE("ULP distance")
   TTS_ULP_EQUAL(1.f, 1.f + eps, 0.5);
   TTS_ULP_EQUAL(pi, static_cast<float>(pi), 9.84293e+07);
   TTS_ULP_EQUAL(1., short {1}, 0.);
+  TTS_ULP_EQUAL('A', 80LL, 15., REQUIRED);
 };
 
 TTS_CASE("ULP distance between boolean")
