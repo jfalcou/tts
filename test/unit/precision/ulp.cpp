@@ -82,6 +82,17 @@ TTS_CASE_TPL("ULP distance between floating points", double, float)
 #endif
 };
 
+TTS_CASE("ULP distance avoids signed overflow near a large integral type's limits")
+{
+  auto lo       = std::numeric_limits<std::int64_t>::min();
+  auto hi       = std::numeric_limits<std::int64_t>::max();
+
+  auto expected = static_cast<double>(std::numeric_limits<std::uint64_t>::max()) / 2.;
+
+  TTS_EQUAL(tts::ulp_check(lo, hi), expected);
+  TTS_EQUAL(tts::ulp_check(hi, lo), expected);
+};
+
 #include "my_real.hpp"
 
 TTS_CASE("ULP distance of type with custom ulpdist")

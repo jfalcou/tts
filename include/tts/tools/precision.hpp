@@ -179,8 +179,9 @@ namespace tts
       {
         using u_t = typename std::make_unsigned<T>::type;
 
-        // TODO: Fix overflow in case of very huge integral value
-        return static_cast<double>((a < b) ? u_t(b - a) : u_t(a - b)) / 2.;
+        auto ua   = static_cast<u_t>(a);
+        auto ub   = static_cast<u_t>(b);
+        return static_cast<double>((a < b) ? (ub - ua) : (ua - ub)) / 2.;
       }
       else
       {
