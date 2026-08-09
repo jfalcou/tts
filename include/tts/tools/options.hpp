@@ -18,6 +18,8 @@ namespace tts::_
   struct option
   {
     option() = default;
+
+    // Parses a raw CLI argument, e.g. "--capture=report.txt" or "--verbose".
     explicit option(char const* arg)
         : token(arg)
         , position(-1)
@@ -25,6 +27,17 @@ namespace tts::_
       assert(arg && "Token cannot be null");
       auto it  = strchr(arg, '=');
       position = it ? static_cast<int>(it - token) : static_cast<int>(strlen(token)); // NOSONAR
+    }
+
+    // Wraps an already-split name/value pair (e.g. a flag and the environment variable value
+    // standing in for it) - no '='-parsing needed, name and value are independent pointers.
+    option(char const* name, char const* value)
+        : token(name)
+        , position(static_cast<int>(strlen(name))) // NOSONAR
+        , env_value(value)
+    {
+      assert(name && "Name cannot be null");
+      assert(value && "Value cannot be null");
     }
 
     bool has_flag(char const* f) const
@@ -49,23 +62,24 @@ namespace tts::_
 
       if(is_valid())
       {
-        int n = 0;
+        char const* raw = env_value ? env_value : token + position + 1;
+        int         n   = 0;
         if constexpr(std::integral<T>)
         {
           decltype(sizeof(void*)) v;
-          n    = sscanf(token + position + 1, "%zu", &v);
+          n    = sscanf(raw, "%zu", &v);
           that = static_cast<T>(v);
         }
         else if constexpr(std::floating_point<T>)
         {
           double v;
-          n    = sscanf(token + position + 1, "%lf", &v);
+          n    = sscanf(raw, "%lf", &v);
           that = static_cast<T>(v);
         }
         else
         {
           n    = 1;
-          that = T {token + position + 1};
+          that = T {raw};
         }
 
         if(n != 1) that = def;
@@ -78,9 +92,33 @@ namespace tts::_
       return that;
     }
 
-    char const* token    = "";
-    int         position = -1;
+    char const* token     = "";
+    int         position  = -1;
+    char const* env_value = nullptr;
   };
+
+  // Derives "TTS_<NAME>" from a long-form flag like "--shard" (-> "TTS_SHARD") or
+  // "--allow-empty" (-> "TTS_ALLOW_EMPTY"). Returns an empty text for short flags (single
+  // dash, e.g. "-v") since those don't map to a sensible environment variable name.
+  inline text env_var_name(char const* flag)
+  {
+    if(!flag || flag[ 0 ] != '-' || flag[ 1 ] != '-' || flag[ 2 ] == '\0') return text {};
+
+    char buffer[ 64 ] = "TTS_"; // NOSONAR - avoids std::string, this project avoids that header
+    std::size_t pos   = 4;
+    for(char const* p = flag + 2; *p; ++p)
+    {
+      if(pos >= sizeof(buffer) - 1) break;
+
+      char c = *p;
+      if(c == '-') c = '_';
+      else if(c >= 'a' && c <= 'z') c = static_cast<char>(c - 'a' + 'A');
+      buffer[ pos++ ] = c;
+    }
+    buffer[ pos ] = '\0';
+
+    return text {buffer};
+  }
 }
 
 namespace tts
@@ -177,6 +215,16 @@ namespace tts
         {
           if(o.has_flag(f)) return o;
         }
+      }
+
+      // No matching CLI flag: fall back to a TTS_<FLAG_NAME> environment variable, if set.
+      // CLI always takes precedence over the environment.
+      for(auto f: flags)
+      {
+        auto name = _::env_var_name(f);
+        if(name.is_empty()) continue;
+
+        if(char const* value = getenv(name.data())) return _::option {f, value};
       }
 
       return _::option {};
