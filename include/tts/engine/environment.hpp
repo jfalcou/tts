@@ -49,7 +49,7 @@ namespace tts::_
 
       auto& out      = ::tts::output();
 
-      out.writeln("----------------------------------------------------------------");
+      ::tts::_::separator();
       out.write("Results: %llu test%s ", test_count, test_txt);
       if(success_count != 0)
         out.write("- %llu/%llu (%2.2f%%) success%s ",

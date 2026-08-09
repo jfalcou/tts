@@ -24,6 +24,26 @@ namespace tts::_
   };
 
   inline verbosity current_verbosity = {};
+
+  //====================================================================================================================
+  // RAII guard saving current_verbosity on construction and restoring it on destruction. Meant for
+  // tests that need to exercise a specific verbose/quiet combination without leaking that state
+  // into the rest of the running test suite, even if the test exits early.
+  //====================================================================================================================
+  struct verbosity_scope
+  {
+    verbosity_scope()
+        : saved(current_verbosity)
+    {
+    }
+
+    ~verbosity_scope()
+    {
+      current_verbosity = saved;
+    }
+
+    verbosity saved;
+  };
 }
 
 namespace tts
@@ -234,4 +254,19 @@ namespace tts
   //====================================================================================================================
   //! @}
   //====================================================================================================================
+}
+
+namespace tts::_
+{
+  //====================================================================================================================
+  // Shared separator line for display helpers to visually delimit sections of output (see
+  // tts::_::header/results in ranges.hpp). printable lets a caller fold its own display condition
+  // (e.g. !tts::is_quiet()) into the call instead of guarding it at every call site.
+  //====================================================================================================================
+  inline void separator(bool printable = true)
+  {
+    if(printable)
+      ::tts::output().writeln(
+      "--------------------------------------------------------------------------------");
+  }
 }

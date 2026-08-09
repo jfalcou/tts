@@ -148,9 +148,7 @@ namespace tts
     }
 
     _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-    if(!::tts::is_quiet())
-      ::tts::output().writeln(
-      "--------------------------------------------------------------------------------");
+    _::separator(!::tts::is_quiet());
 
     double ratio = 0.;
 
@@ -170,9 +168,7 @@ namespace tts
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
         _::results(-1., 0, 0., "Found:      ", out);
         _::results(-1., 0, 0., "instead of: ", ref);
-        if(!::tts::is_quiet())
-          ::tts::output().writeln(
-          "--------------------------------------------------------------------------------");
+        _::separator(!::tts::is_quiet());
       }
     }
 
