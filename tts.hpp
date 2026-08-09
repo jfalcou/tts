@@ -54,6 +54,7 @@ Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
   --capture=path    Capture this run's output and write it to path instead of stdout
+  --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
 Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)
   --loop=arg        Repeat each range checks arg times
@@ -742,7 +743,8 @@ namespace tts::_
                   100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
                   inv_txt);
       out.writeln();
-      if(test_count == 0 && !::tts::arguments()("--allow-empty")) return 1;
+      if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
+        return 1;
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
@@ -1717,6 +1719,39 @@ namespace tts::_
     report_type_hint(type);
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
+  struct shard_spec
+  {
+    bool         active = false;
+    unsigned int index  = 0;
+    unsigned int total  = 1;
+    bool         selects(std::size_t position) const
+    {
+      return !active || (position % total == index);
+    }
+    std::size_t count(std::size_t suite_size) const
+    {
+      if(!active) return suite_size;
+      if(suite_size <= index) return 0;
+      return (suite_size - index - 1) / total + 1;
+    }
+  };
+  TTS_DISABLE_WARNING_PUSH
+  TTS_DISABLE_WARNING_CRT_SECURE
+  inline shard_spec parse_shard(bool& ok)
+  {
+    ok              = true;
+    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
+    if(raw.is_empty()) return {};
+    unsigned int i = 0;
+    unsigned int n = 0;
+    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
+    {
+      ok = false;
+      return {};
+    }
+    return {true, i, n};
+  }
+  TTS_DISABLE_WARNING_POP
 }
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
@@ -1724,10 +1759,20 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 {
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
+  bool shard_ok = true;
+  auto shard    = ::tts::_::parse_shard(shard_ok);
+  if(!shard_ok)
+  {
+    ::tts::output().writeln("Invalid --shard value, expected i/n with 0 <= i < n");
+    return 1;
+  }
+  if constexpr(!::tts::_::use_main) shard.active = false;
   if(::tts::arguments()("--dry"))
   {
+    std::size_t position = 0;
     for(auto const& t: ::tts::_::suite())
     {
+      if(!shard.selects(position++)) continue;
       if(t.types.is_empty()) ::tts::output().writeln(t.name);
       else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
     }
@@ -1748,16 +1793,24 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   }
   ::tts::gathering_sink capture_sink;
   if(capture_file) ::tts::output().sink(capture_sink);
-  auto        nb_tests   = ::tts::_::suite().size();
+  auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
   auto        seed       = ::tts::random_seed();
   ::tts::set_random_seed(static_cast<std::uint64_t>(seed));
   ::tts::output().writeln(
   "Random seed: %d (rerun with --seed=%d to reproduce this run)", seed, seed);
+  if(shard.active)
+    ::tts::output().writeln("Shard: %u/%u (%zu test%s selected)",
+                            shard.index,
+                            shard.total,
+                            nb_tests,
+                            nb_tests > 1 ? "s" : "");
   try
   {
+    std::size_t position = 0;
     for(auto& t: ::tts::_::suite())
     {
+      if(!shard.selects(position++)) continue;
       auto test_count                   = ::tts::global_runtime.test_count;
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
