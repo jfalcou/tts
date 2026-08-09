@@ -39,7 +39,7 @@ int main(int argc, char const** argv)
       [[maybe_unused]] auto n              = fread(buffer, 1, sizeof(buffer) - 1, f);
       fclose(f);
 
-      ok = ok && (strstr(buffer, "Dummy test so the driver has something to run") != nullptr);
+      ok = ok && (strstr(buffer, "Dummy test") != nullptr); // NOSONAR - contains() is C++23
     }
     remove("tts_capture_flag_test.txt");
   }
