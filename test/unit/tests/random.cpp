@@ -31,6 +31,26 @@ template<typename T> double compute_variance(std::vector<T> const& data, double 
   return sum_sq_diff / static_cast<double>(data.size());
 }
 
+// Checks results' mean and variance against the theoretical values for a discrete uniform
+// distribution over [lo, hi]. Relative error of both estimators is independent of the range's
+// magnitude (signal and sampling noise both scale with the range and cancel out in the ratio),
+// so the same tolerances are valid whether [lo, hi] spans a handful of values or a 64-bit range.
+void check_uniform_moments(std::vector<double> const& results,
+                           double                     lo,
+                           double                     hi,
+                           double                     mean_tol,
+                           double                     var_tol)
+{
+  double expected_mean = (lo + hi) / 2.0;
+  double actual_mean   = compute_mean(results);
+  TTS_RELATIVE_EQUAL(actual_mean, expected_mean, mean_tol);
+
+  double range_n      = hi - lo + 1.0;
+  double expected_var = ((range_n * range_n) - 1.0) / 12.0;
+  double actual_var   = compute_variance(results, actual_mean);
+  TTS_RELATIVE_EQUAL(actual_var, expected_var, var_tol);
+}
+
 TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]", int, long, unsigned int)
 <typename T>(tts::type<T>)
 {
@@ -50,14 +70,7 @@ TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]", int, long, unsigned i
     TTS_EXPECT(val <= max_v);
   }
 
-  double expected_mean = static_cast<double>(min_v + max_v) / 2.0;
-  double actual_mean   = compute_mean(results);
-  TTS_RELATIVE_EQUAL(actual_mean, expected_mean, 1.0);
-
-  double range_n      = static_cast<double>(max_v - min_v + 1);
-  double expected_var = ((range_n * range_n) - 1.0) / 12.0;
-  double actual_var   = compute_variance(results, actual_mean);
-  TTS_RELATIVE_EQUAL(actual_var, expected_var, 5.0);
+  check_uniform_moments(results, static_cast<double>(min_v), static_cast<double>(max_v), 1.0, 5.0);
 };
 
 TTS_CASE_TPL("Check Float Log-Uniformity", float, double)
@@ -103,20 +116,18 @@ TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)
   TTS_RELATIVE_EQUAL(positive_ratio, 0.8, 1.0);
 };
 
-TTS_CASE_TPL("Check random_bits spans the full range of its target type", tts::uint_types)
+TTS_CASE_TPL("Check random_bits Uniformity [Mean & Variance]", tts::uint_types)
 <typename T>(tts::type<T>)
 {
-  tts::random_bits gen;
-  T                bit_width = 8 * sizeof(T);
-  T                max_v     = 0;
+  tts::random_bits    gen;
+  std::size_t         samples = 100000;
 
-  for(std::size_t i = 0; i < 20000; ++i)
-  {
-    T val = gen(tts::type<T> {});
-    if(val > max_v) max_v = val;
-  }
+  std::vector<double> results;
+  results.reserve(samples);
 
-  // The bug this guards against only ever produced values in [0, bit_width - 1];
-  // a correct generator must be able to exceed that bound.
-  TTS_EXPECT(max_v > bit_width - 1);
+  for(std::size_t i = 0; i < samples; ++i)
+    results.push_back(static_cast<double>(gen(tts::type<T> {})));
+
+  double n = std::pow(2.0, static_cast<double>(8 * sizeof(T)));
+  check_uniform_moments(results, 0.0, n - 1.0, 1.0, 5.0);
 };
