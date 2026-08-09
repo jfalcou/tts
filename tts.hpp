@@ -559,6 +559,14 @@ namespace tts::_
       auto it  = strchr(arg, '=');
       position = it ? static_cast<int>(it - token) : static_cast<int>(strlen(token));
     }
+    option(char const* name, char const* value)
+        : token(name)
+        , position(static_cast<int>(strlen(name)))
+        , env_value(value)
+    {
+      assert(name && "Name cannot be null");
+      assert(value && "Value cannot be null");
+    }
     bool has_flag(char const* f) const
     {
       assert(f && "Flag cannot be null");
@@ -576,23 +584,24 @@ namespace tts::_
       T that = {};
       if(is_valid())
       {
-        int n = 0;
+        char const* raw = env_value ? env_value : token + position + 1;
+        int         n   = 0;
         if constexpr(std::integral<T>)
         {
           decltype(sizeof(void*)) v;
-          n    = sscanf(token + position + 1, "%zu", &v);
+          n    = sscanf(raw, "%zu", &v);
           that = static_cast<T>(v);
         }
         else if constexpr(std::floating_point<T>)
         {
           double v;
-          n    = sscanf(token + position + 1, "%lf", &v);
+          n    = sscanf(raw, "%lf", &v);
           that = static_cast<T>(v);
         }
         else
         {
           n    = 1;
-          that = T {token + position + 1};
+          that = T {raw};
         }
         if(n != 1) that = def;
       }
@@ -602,9 +611,26 @@ namespace tts::_
       }
       return that;
     }
-    char const* token    = "";
-    int         position = -1;
+    char const* token     = "";
+    int         position  = -1;
+    char const* env_value = nullptr;
   };
+  inline text env_var_name(char const* flag)
+  {
+    if(!flag || flag[ 0 ] != '-' || flag[ 1 ] != '-' || flag[ 2 ] == '\0') return text {};
+    char buffer[ 64 ] = "TTS_";
+    std::size_t pos   = 4;
+    for(char const* p = flag + 2; *p; ++p)
+    {
+      if(pos >= sizeof(buffer) - 1) break;
+      char c = *p;
+      if(c == '-') c = '_';
+      else if(c >= 'a' && c <= 'z') c = static_cast<char>(c - 'a' + 'A');
+      buffer[ pos++ ] = c;
+    }
+    buffer[ pos ] = '\0';
+    return text {buffer};
+  }
 }
 namespace tts
 {
@@ -646,6 +672,12 @@ namespace tts
         {
           if(o.has_flag(f)) return o;
         }
+      }
+      for(auto f: flags)
+      {
+        auto name = _::env_var_name(f);
+        if(name.is_empty()) continue;
+        if(char const* value = getenv(name.data())) return _::option {f, value};
       }
       return _::option {};
     }
