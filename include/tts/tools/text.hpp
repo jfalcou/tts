@@ -60,13 +60,6 @@ namespace tts
       }
     }
 
-    /// Construct from fixed-size C-style string
-    template<std::size_t N>
-    explicit text(char const (&data)[ N ])
-        : text("%.s*", N, &data[ 0 ])
-    {
-    }
-
     /**
       @brief Construct from formatted string
 
