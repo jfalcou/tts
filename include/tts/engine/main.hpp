@@ -120,7 +120,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 
   auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
-  ::tts::set_random_seed(static_cast<std::uint64_t>(tts::random_seed()));
+  auto        seed       = ::tts::random_seed();
+  ::tts::set_random_seed(static_cast<std::uint64_t>(seed));
+  ::tts::output().writeln(
+  "Random seed: %d (rerun with --seed=%d to reproduce this run)", seed, seed);
 
   try
   {
