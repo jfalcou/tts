@@ -6,6 +6,7 @@
 */
 //==================================================================================================
 #include <tts/tts.hpp>
+#include <cmath>
 
 TTS_CASE("Relative distance")
 {
@@ -73,6 +74,17 @@ TTS_CASE_TPL("Relative distance between floating point", float, double)
   TTS_RELATIVE_EQUAL(a, minf, inf);
   TTS_RELATIVE_EQUAL(minf, a, inf);
   TTS_RELATIVE_EQUAL(minf, minf, inf);
+#endif
+};
+
+TTS_CASE("relative_check treats exactly one NaN operand as infinitely far")
+{
+#if !defined(__FAST_MATH__)
+  double qnan = std::numeric_limits<double>::quiet_NaN();
+
+  TTS_EXPECT(!std::isfinite(tts::relative_check(qnan, 5.)));
+  TTS_EXPECT(!std::isfinite(tts::relative_check(5., qnan)));
+  TTS_EQUAL(tts::relative_check(qnan, qnan), 0.);
 #endif
 };
 
