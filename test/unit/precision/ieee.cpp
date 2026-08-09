@@ -17,6 +17,7 @@ TTS_CASE("IEEE equality")
   TTS_IEEE_EQUAL(1.f, 1.f);
   TTS_IEEE_EQUAL(2., 2.);
   TTS_IEEE_EQUAL(65, 'A');
+  TTS_IEEE_EQUAL(1.f, 1.f, REQUIRED);
 };
 
 #include "my_real.hpp"

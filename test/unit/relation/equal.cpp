@@ -14,6 +14,8 @@ TTS_CASE("Check correctness of equality tests")
 
   std::vector<float> a {1, 2, 3}, b {1, 2, 3};
   TTS_EQUAL(a, b);
+
+  TTS_EQUAL(45, 45, REQUIRED);
 };
 
 constexpr int f()
@@ -25,6 +27,7 @@ TTS_CASE("Check correctness of constexpr equality tests")
 {
   constexpr int value = 45;
   TTS_CONSTEXPR_EQUAL(value, f());
+  TTS_CONSTEXPR_EQUAL(value, f(), REQUIRED);
 };
 
 TTS_CASE("Check correctness of typed equality tests")
@@ -33,11 +36,14 @@ TTS_CASE("Check correctness of typed equality tests")
 
   std::vector<float> a {1, 2, 3}, b {1, 2, 3};
   TTS_TYPED_EQUAL(a, b);
+
+  TTS_TYPED_EQUAL(45.f, 45.f, REQUIRED);
 };
 
 TTS_CASE("Check correctness of constexpr typed equality tests")
 {
   TTS_TYPED_CONSTEXPR_EQUAL(45, f());
+  TTS_TYPED_CONSTEXPR_EQUAL(45, f(), REQUIRED);
 };
 
 #include "foo.hpp"

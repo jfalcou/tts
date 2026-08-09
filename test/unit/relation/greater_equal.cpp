@@ -16,6 +16,8 @@ TTS_CASE("Check correctness of greater-equal comparison tests")
   std::vector<float> a {12, 3}, b {7, 9, 11};
   TTS_GREATER_EQUAL(a, b);
   TTS_GREATER_EQUAL(a, a);
+
+  TTS_GREATER_EQUAL(69LL, 42LL, REQUIRED);
 };
 
 constexpr int f()
@@ -27,6 +29,19 @@ TTS_CASE("Check correctness of constexpr greater or equal than comparison tests"
 {
   TTS_CONSTEXPR_GREATER_EQUAL(17, f());
   TTS_CONSTEXPR_GREATER_EQUAL(9, f());
+  TTS_CONSTEXPR_GREATER_EQUAL(9, f(), REQUIRED);
+};
+
+TTS_CASE("Check correctness of typed greater-equal comparison tests")
+{
+  TTS_TYPED_GREATER_EQUAL(45.f, 45.f);
+  TTS_TYPED_GREATER_EQUAL(45.f, 45.f, REQUIRED);
+};
+
+TTS_CASE("Check correctness of constexpr typed greater-equal comparison tests")
+{
+  TTS_TYPED_CONSTEXPR_GREATER_EQUAL(9, f());
+  TTS_TYPED_CONSTEXPR_GREATER_EQUAL(9, f(), REQUIRED);
 };
 
 #include "foo.hpp"
