@@ -34,11 +34,7 @@ namespace tts
   struct text
   {
     /// Default constructor
-    text()
-        : data_(nullptr)
-        , size_(0)
-    {
-    }
+    text() = default;
 
     /// Construct from C-style string
     explicit text(char const* ptr)
@@ -58,13 +54,6 @@ namespace tts
           }
         }
       }
-    }
-
-    /// Construct from fixed-size C-style string
-    template<std::size_t N>
-    explicit text(char const (&data)[ N ])
-        : text("%.s*", N, &data[ 0 ])
-    {
     }
 
     /**
@@ -267,8 +256,8 @@ namespace tts
     }
 
   private:
-    char*  data_;
-    size_t size_;
+    char*  data_ = nullptr;
+    size_t size_ = 0;
   };
 
   /// Concatenate text with C-style string
