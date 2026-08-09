@@ -73,7 +73,10 @@ namespace tts::_
 
       out.writeln();
 
-      if(test_count == 0 && !::tts::arguments()("--allow-empty")) return 1;
+      // A shard landing on zero tests is an expected partition outcome, not a build/
+      // registration bug, so --shard implicitly behaves like --allow-empty here.
+      if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
+        return 1;
 
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
