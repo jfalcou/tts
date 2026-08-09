@@ -34,11 +34,12 @@ int main(int argc, char const** argv)
     ok                          = ok && (f != nullptr);
     if(f)
     {
-      char buffer[ 4096 ] = {};
+      char buffer[ 4096 ] = {}; // NOSONAR - avoids std::string, this project avoids that header
       auto n              = fread(buffer, 1, sizeof(buffer) - 1, f);
       fclose(f);
 
       std::string_view captured {buffer, n};
+      // string_view::contains is C++23; this project targets C++20. NOSONAR
       ok = ok && (captured.find("Dummy test so the driver has something to run") !=
                   std::string_view::npos);
     }
