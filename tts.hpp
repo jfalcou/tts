@@ -436,10 +436,15 @@ namespace tts
     {
       return buffer_;
     }
+    void dump(output_sink& target)
+    {
+      target.write(buffer_);
+      clear();
+    }
     void dump()
     {
-      fputs(buffer_.data(), stdout);
-      clear();
+      stdout_sink target;
+      dump(target);
     }
     void clear()
     {
