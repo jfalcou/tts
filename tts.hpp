@@ -2793,7 +2793,7 @@ namespace tts
       }
       else if constexpr(std::is_floating_point_v<T>)
       {
-        if((a == b) || (_::is_nan(a) && _::is_nan(a))) return 0.;
+        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
         if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
           return std::numeric_limits<double>::infinity();
         return 100. * (_::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b))));
