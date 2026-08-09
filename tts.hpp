@@ -67,76 +67,6 @@ Range specifics Parameters:
 }
 namespace tts::_
 {
-  struct env
-  {
-    void pass()
-    {
-      test_count++;
-      success_count++;
-    }
-    void fail()
-    {
-      test_count++;
-      failure_count++;
-    }
-    void fatal()
-    {
-      test_count++;
-      failure_count++;
-      fatal_count++;
-    }
-    void invalid()
-    {
-      test_count++;
-      invalid_count++;
-    }
-    int report(unsigned long long fails, unsigned long long invalids) const
-    {
-      auto test_txt = test_count > 1 ? "s" : "";
-      auto pass_txt = success_count > 1 ? "es" : "";
-      auto fail_txt = failure_count > 1 ? "s" : "";
-      auto inv_txt  = invalid_count > 1 ? "s" : "";
-      puts("----------------------------------------------------------------");
-      printf("Results: %llu test%s ", test_count, test_txt);
-      if(success_count != 0)
-        printf("- %llu/%llu (%2.2f%%) success%s ",
-               success_count,
-               test_count,
-               100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
-               pass_txt);
-      if(failure_count != 0)
-        printf("- %llu/%llu (%2.2f%%) failure%s ",
-               failure_count,
-               test_count,
-               100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
-               fail_txt);
-      if(invalid_count != 0)
-        printf("- %llu/%llu (%2.2f%%) invalid%s ",
-               invalid_count,
-               test_count,
-               100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
-               inv_txt);
-      printf("\n");
-      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
-      else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
-    }
-    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
-                       invalid_count = 0;
-    bool fail_status                 = false;
-  };
-}
-namespace tts
-{
-  inline _::env global_runtime       = {};
-  inline bool   fatal_error_status   = false;
-  inline bool   global_logger_status = false;
-  inline int report(unsigned long long fails, unsigned long long invalids)
-  {
-    return global_runtime.report(fails, invalids);
-  }
-}
-namespace tts::_
-{
   template<typename T>
   concept stream = requires(T& os) {
     { os.copyfmt(os) };
@@ -453,6 +383,209 @@ namespace tts
   }
 }
 TTS_DISABLE_WARNING_POP
+namespace tts::_
+{
+  struct verbosity
+  {
+    bool verbose = false;
+    bool quiet   = false;
+  };
+  inline verbosity current_verbosity = {};
+  inline void set_verbose(bool verbose)
+  {
+    current_verbosity.verbose = verbose;
+  }
+  inline void set_quiet(bool quiet)
+  {
+    current_verbosity.quiet = quiet;
+  }
+  struct verbosity_scope
+  {
+    verbosity_scope() = default;
+    ~verbosity_scope()
+    {
+      current_verbosity = saved;
+    }
+    verbosity_scope(verbosity_scope const&)            = delete;
+    verbosity_scope& operator=(verbosity_scope const&) = delete;
+    verbosity_scope(verbosity_scope&&)                 = delete;
+    verbosity_scope& operator=(verbosity_scope&&)      = delete;
+    verbosity        saved                             = current_verbosity;
+  };
+}
+namespace tts
+{
+  struct output_sink
+  {
+    virtual void write(text const& t) = 0;
+    virtual ~output_sink()            = default;
+  };
+  struct stdout_sink : output_sink
+  {
+    void write(text const& t) override
+    {
+      fputs(t.data(), stdout);
+    }
+  };
+  struct gathering_sink : output_sink
+  {
+    void write(text const& t) override
+    {
+      buffer_ += t;
+    }
+    text const& content() const
+    {
+      return buffer_;
+    }
+    void dump()
+    {
+      fputs(buffer_.data(), stdout);
+      clear();
+    }
+    void clear()
+    {
+      buffer_ = text {};
+    }
+  private:
+    text buffer_;
+  };
+  class output_handler
+  {
+  public:
+    explicit output_handler(output_sink& s = default_sink())
+        : sink_(&s)
+    {
+    }
+    void write(text const& t)
+    {
+      sink_->write(t);
+    }
+    void write(char const* s)
+    {
+      sink_->write(text(s));
+    }
+    template<typename... Args> void write(char const* format, Args const&... args)
+    {
+      sink_->write(text(format, args...));
+    }
+    void writeln(text const& t = text {})
+    {
+      sink_->write(t);
+      sink_->write(text("\n"));
+    }
+    void writeln(char const* s)
+    {
+      writeln(text(s));
+    }
+    template<typename... Args> void writeln(char const* format, Args const&... args)
+    {
+      writeln(text(format, args...));
+    }
+    void sink(output_sink& s)
+    {
+      sink_ = &s;
+    }
+    output_sink& sink() const
+    {
+      return *sink_;
+    }
+    static stdout_sink& default_sink()
+    {
+      static stdout_sink that = {};
+      return that;
+    }
+  private:
+    output_sink* sink_;
+  };
+  namespace _
+  {
+    inline output_handler current_output {};
+  }
+  inline output_handler& output()
+  {
+    return _::current_output;
+  }
+}
+namespace tts::_
+{
+  inline void separator(bool printable = true)
+  {
+    if(printable)
+      ::tts::output().writeln(
+      "--------------------------------------------------------------------------------");
+  }
+}
+namespace tts::_
+{
+  struct env
+  {
+    void pass()
+    {
+      test_count++;
+      success_count++;
+    }
+    void fail()
+    {
+      test_count++;
+      failure_count++;
+    }
+    void fatal()
+    {
+      test_count++;
+      failure_count++;
+      fatal_count++;
+    }
+    void invalid()
+    {
+      test_count++;
+      invalid_count++;
+    }
+    int report(unsigned long long fails, unsigned long long invalids) const
+    {
+      auto  test_txt = test_count > 1 ? "s" : "";
+      auto  pass_txt = success_count > 1 ? "es" : "";
+      auto  fail_txt = failure_count > 1 ? "s" : "";
+      auto  inv_txt  = invalid_count > 1 ? "s" : "";
+      auto& out      = ::tts::output();
+      ::tts::_::separator();
+      out.write("Results: %llu test%s ", test_count, test_txt);
+      if(success_count != 0)
+        out.write("- %llu/%llu (%2.2f%%) success%s ",
+                  success_count,
+                  test_count,
+                  100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
+                  pass_txt);
+      if(failure_count != 0)
+        out.write("- %llu/%llu (%2.2f%%) failure%s ",
+                  failure_count,
+                  test_count,
+                  100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
+                  fail_txt);
+      if(invalid_count != 0)
+        out.write("- %llu/%llu (%2.2f%%) invalid%s ",
+                  invalid_count,
+                  test_count,
+                  100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
+                  inv_txt);
+      out.writeln();
+      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
+      else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
+    }
+    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
+                       invalid_count = 0;
+    bool fail_status                 = false;
+  };
+}
+namespace tts
+{
+  inline _::env global_runtime       = {};
+  inline bool   fatal_error_status   = false;
+  inline bool   global_logger_status = false;
+  inline int report(unsigned long long fails, unsigned long long invalids)
+  {
+    return global_runtime.report(fails, invalids);
+  }
+}
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts::_
@@ -563,8 +696,6 @@ namespace tts
   {
     inline options current_arguments = {0, nullptr};
     inline int     current_seed      = -1;
-    inline bool    is_verbose        = false;
-    inline bool    is_quiet          = false;
   }
   inline void initialize(int argc, char const** argv)
   {
@@ -589,7 +720,15 @@ namespace tts
   }
   inline bool is_verbose()
   {
-    return _::is_verbose;
+    return _::current_verbosity.verbose;
+  }
+  inline bool is_quiet()
+  {
+    return _::current_verbosity.quiet;
+  }
+  inline bool is_detailed()
+  {
+    return is_verbose() && !is_quiet();
   }
 }
 TTS_DISABLE_WARNING_POP
@@ -896,16 +1035,16 @@ namespace tts::_
       {
         if(!done)
         {
-          printf("     >> Additional information: \n     ");
+          ::tts::output().write("     >> Additional information: \n     ");
           done = true;
         }
-        printf("%s", as_text(d).data());
+        ::tts::output().write(as_text(d));
       }
       return *this;
     }
     ~logger() noexcept(false)
     {
-      if(display && done) puts("");
+      if(display && done) ::tts::output().writeln();
       if(::tts::fatal_error_status) throw ::tts::_::fatal_signal();
     }
     bool display, done;
@@ -1518,39 +1657,38 @@ namespace tts::_
 #if defined(TTS_MAIN)
 namespace tts::_
 {
+  void report_type_hint(::tts::text const& type)
+  {
+    if(!::tts::is_verbose() && !type.is_empty())
+      ::tts::output().writeln(">  With <T = %s>", type.data());
+  }
   void report_pass(char const* location, char const* message)
   {
-    if(::tts::_::is_verbose && !::tts::_::is_quiet)
+    if(::tts::is_detailed())
     {
-      printf("  [+] %s : %s\n", location, message);
+      ::tts::output().writeln("  [+] %s : %s", location, message);
     }
   }
   void report_fail(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::_::is_verbose)
+    report_type_hint(type);
+    if(!::tts::is_quiet())
     {
-      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
-    }
-    if(!::tts::_::is_quiet)
-    {
-      printf("  [X] %s : ** FAILURE ** : %s\n", location, message);
+      ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
   }
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::_::is_verbose)
-    {
-      if(!type.is_empty()) printf(">  With <T = %s>\n", type.data());
-    }
-    printf("  [@] %s : @@ FATAL @@ : %s\n", location, message);
+    report_type_hint(type);
+    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
 }
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
-  ::tts::_::is_verbose   = ::tts::arguments()("-v", "--verbose");
-  ::tts::_::is_quiet     = ::tts::arguments()("-q", "--quiet");
+  ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
+  ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
   auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
   ::tts::set_random_seed(static_cast<std::uint64_t>(tts::random_seed()));
@@ -1561,28 +1699,28 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto test_count                   = ::tts::global_runtime.test_count;
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
-      if(!::tts::_::is_quiet) printf("TEST: '%s'\n", t.name);
+      if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       fflush(stdout);
       t();
       done_tests++;
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        if(!::tts::_::is_quiet) printf("  [!!]: EMPTY TEST CASE\n");
+        if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
         fflush(stdout);
       }
       else if(failure_count == ::tts::global_runtime.failure_count)
       {
-        if(!::tts::_::is_quiet) printf("TEST: '%s' - [PASSED]\n", t.name);
+        if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
         fflush(stdout);
       }
     }
   }
   catch(::tts::_::fatal_signal&)
   {
-    if(!::tts::_::is_quiet)
-      printf("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run\n",
-             static_cast<int>(nb_tests - done_tests - 1));
+    if(!::tts::is_quiet())
+      ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
+                              static_cast<int>(nb_tests - done_tests - 1));
   }
   if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
   else return 0;
@@ -1972,17 +2110,18 @@ namespace tts::_
     }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name,
-                                [ body ]()
-                                {
-                                  (((current_type = as_text(typename_<Types>)),
-                                    (::tts::_::is_verbose && !::tts::_::is_quiet
-                                     ? printf(">  With <T = %s>\n", current_type.data())
-                                     : 0),
-                                    body(type<Types>())),
-                                   ...);
-                                  current_type = text {""};
-                                }});
+      return test::acknowledge(
+      {name,
+       [ body ]()
+       {
+         (((current_type = as_text(typename_<Types>)),
+           (::tts::is_detailed()
+            ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
+            : 0),
+           body(type<Types>())),
+          ...);
+         current_type = text {""};
+       }});
     }
     char const* name;
   };
@@ -2010,8 +2149,7 @@ namespace tts::_
     template<typename T> static void process_type(auto body)
     {
       current_type = as_text(typename_<T>);
-      if(::tts::_::is_verbose && !::tts::_::is_quiet)
-        printf(">  With <T = %s>\n", current_type.data());
+      if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
       process_call(body, produce(type<T> {}, Generators)...);
     }
     friend auto operator<<(test_generators tg, auto body)
@@ -2954,7 +3092,8 @@ namespace tts::_
     }
     bool check(char const* desc)
     {
-      if(id == section && desc && is_verbose) printf("  And then: %s\n", desc);
+      if(id == section && desc && ::tts::is_verbose())
+        ::tts::output().writeln("  And then: %s", desc);
       return id == section;
     }
   };
@@ -2975,7 +3114,8 @@ namespace tts::_
 #define TTS_WHEN(STORY)                                                                            \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW(                                                                      \
-  ::tts::_::is_verbose ? printf("When      : %s\n", ::tts::text {STORY}.data()) : 0);              \
+  ::tts::is_verbose() ? (::tts::output().writeln("When      : %s", ::tts::text {STORY}.data()), 0) \
+                      : 0);                                                                        \
   for(int tts_section = 0, tts_count = 1; tts_section < tts_count;                                 \
       tts_count -= 0 == tts_section++)                                                             \
     for(tts::_::only_once tts_only_once_setup {}; tts_only_once_setup;)                            \
@@ -3011,7 +3151,7 @@ namespace tts
     }
     static void display(Base const& v) noexcept
     {
-      printf("%s", as_text(v).data());
+      output().write(as_text(v));
     }
   };
   namespace _
@@ -3053,26 +3193,26 @@ namespace tts
     }
     template<typename... S> void header(S const&... s)
     {
-      if(::tts::_::is_quiet) return;
-      ((printf("%-*s", 16, s)), ...);
-      puts("");
+      if(::tts::is_quiet()) return;
+      ((::tts::output().write("%-*s", 16, s)), ...);
+      ::tts::output().writeln();
     }
     template<typename U, typename R, typename V>
     void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
       assert(desc && "Description cannot be null");
-      if(::tts::_::is_quiet) return;
-      if(ulp != -1) printf("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
-      else printf("%*s", static_cast<int>(48 + strlen(desc)), desc);
+      if(::tts::is_quiet()) return;
+      if(ulp != -1) ::tts::output().write("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
+      else ::tts::output().write("%*s", static_cast<int>(48 + strlen(desc)), desc);
       adapter<V>::display(v);
-      printf("\n");
+      ::tts::output().writeln();
     }
     template<typename P> void print_producer(P const& prod, auto alt)
     {
-      if(::tts::_::is_quiet) return;
+      if(::tts::is_quiet()) return;
       if constexpr(requires(P const& p) { to_text(p); })
-        printf("%s\n", ::tts::as_text(prod).data());
-      else printf("%s\n", alt);
+        ::tts::output().writeln(::tts::as_text(prod));
+      else ::tts::output().writeln(alt);
     }
   }
   template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
@@ -3113,8 +3253,7 @@ namespace tts
       }
     }
     _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-    if(!_::is_quiet)
-      printf("--------------------------------------------------------------------------------\n");
+    _::separator(!::tts::is_quiet());
     double ratio = 0.;
     for(std::size_t i = 0; i < ulp_map.size(); ++i)
     {
@@ -3129,9 +3268,7 @@ namespace tts
         _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
         _::results(-1., 0, 0., "Found:      ", out);
         _::results(-1., 0, 0., "instead of: ", ref);
-        if(!_::is_quiet)
-          printf(
-          "--------------------------------------------------------------------------------\n");
+        _::separator(!::tts::is_quiet());
       }
     }
     return max_ulp;
@@ -3143,12 +3280,12 @@ namespace tts
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                  \
   [ & ]()                                                                                          \
   {                                                                                                \
-    if(!::tts::_::is_quiet)                                                                        \
-      printf("Comparing: %s<%s> with %s<%s> using ",                                               \
-             TTS_STRING(RefFunc),                                                                  \
-             TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                               \
-             TTS_STRING(NewFunc),                                                                  \
-             TTS_STRING(TTS_REMOVE_PARENS(NewType)));                                              \
+    if(!::tts::is_quiet())                                                                         \
+      ::tts::output().write("Comparing: %s<%s> with %s<%s> using ",                                \
+                            TTS_STRING(RefFunc),                                                   \
+                            TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                \
+                            TTS_STRING(NewFunc),                                                   \
+                            TTS_STRING(TTS_REMOVE_PARENS(NewType)));                               \
                                                                                                    \
     auto generator = TTS_REMOVE_PARENS(Producer);                                                  \
     ::tts::_::print_producer(generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));                  \
