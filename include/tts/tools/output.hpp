@@ -94,7 +94,13 @@ namespace tts
   {
     /// Writes t to this sink's destination.
     virtual void write(text const& t) = 0;
-    virtual ~output_sink()            = default;
+
+    /// Flushes this sink's destination, if that means anything for it. No-op by default.
+    virtual void flush()
+    {
+    }
+
+    virtual ~output_sink() = default;
   };
 
   //====================================================================================================================
@@ -111,6 +117,11 @@ namespace tts
     void write(text const& t) override
     {
       fputs(t.data(), stdout);
+    }
+
+    void flush() override
+    {
+      fflush(stdout);
     }
   };
 
@@ -224,6 +235,12 @@ namespace tts
     template<typename... Args> void writeln(char const* format, Args const&... args)
     {
       writeln(text(format, args...));
+    }
+
+    /// Flushes the current output_sink, if that means anything for it.
+    void flush()
+    {
+      sink_->flush();
     }
 
     /// Installs s as the output_sink every subsequent write goes to.
