@@ -6,6 +6,42 @@
 
   @tableofcontents
 
+  # Environment Variable Fallback
+
+  Every long-form option below (`--xxx` or `--xxx=value`) can also be set via a matching
+  `TTS_XXX` environment variable instead of a command line flag - derived by uppercasing the
+  flag name and replacing `-` with `_`. Short forms (`-v`, `-q`, ...) have no environment
+  variable equivalent. A CLI flag always takes precedence over its environment variable when
+  both are set.
+
+  This exists mainly for CI systems where the test command itself is fixed (e.g. `ctest`
+  invokes every registered binary through a command line set once at configure time) and
+  can't easily template a different flag value per parallel job, but can set a different
+  environment variable per job instead:
+
+  @code{sh}
+  TTS_SHARD=0/4 ./my_test   # same as ./my_test --shard=0/4
+  @endcode
+
+  Environment Variable | Equivalent Option
+  --------------------- | -----------------
+  `TTS_HELP`            | `--help` / `-h`
+  `TTS_HEX`             | `--hex` / `-x`
+  `TTS_SCIENTIFIC`      | `--scientific` / `-s`
+  `TTS_VERBOSE`         | `--verbose` / `-v`
+  `TTS_QUIET`           | `--quiet` / `-q`
+  `TTS_DRY`             | `--dry`
+  `TTS_ALLOW_EMPTY`     | `--allow-empty`
+  `TTS_CAPTURE`         | `--capture=path`
+  `TTS_SHARD`           | `--shard=i/n`
+  `TTS_PRECISION`       | `--precision=N`
+  `TTS_SEED`            | `--seed=N`
+  `TTS_BLOCK`           | `--block=N`
+  `TTS_LOOP`            | `--loop=N`
+  `TTS_ULPMAX`          | `--ulpmax=N`
+  `TTS_VALMIN`          | `--valmin=N`
+  `TTS_VALMAX`          | `--valmax=N`
+
   # Display Options
 
   The following options modify how the tests are run and the results displayed.

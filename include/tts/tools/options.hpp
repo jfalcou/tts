@@ -96,6 +96,27 @@ namespace tts::_
     int         position  = -1;
     char const* env_value = nullptr;
   };
+
+  // Derives "TTS_<NAME>" from a long-form flag like "--shard" (-> "TTS_SHARD") or
+  // "--allow-empty" (-> "TTS_ALLOW_EMPTY"). Returns an empty text for short flags (single
+  // dash, e.g. "-v") since those don't map to a sensible environment variable name.
+  inline text env_var_name(char const* flag)
+  {
+    if(!flag || flag[ 0 ] != '-' || flag[ 1 ] != '-' || flag[ 2 ] == '\0') return text {};
+
+    char        buffer[ 64 ] = "TTS_";
+    std::size_t pos          = 4;
+    for(char const* p = flag + 2; *p && pos < sizeof(buffer) - 1; ++p)
+    {
+      char c = *p;
+      if(c == '-') c = '_';
+      else if(c >= 'a' && c <= 'z') c = static_cast<char>(c - 'a' + 'A');
+      buffer[ pos++ ] = c;
+    }
+    buffer[ pos ] = '\0';
+
+    return text {buffer};
+  }
 }
 
 namespace tts
@@ -192,6 +213,16 @@ namespace tts
         {
           if(o.has_flag(f)) return o;
         }
+      }
+
+      // No matching CLI flag: fall back to a TTS_<FLAG_NAME> environment variable, if set.
+      // CLI always takes precedence over the environment.
+      for(auto f: flags)
+      {
+        auto name = _::env_var_name(f);
+        if(name.is_empty()) continue;
+
+        if(char const* value = getenv(name.data())) return _::option {f, value};
       }
 
       return _::option {};
