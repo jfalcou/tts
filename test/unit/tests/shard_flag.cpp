@@ -17,7 +17,9 @@ TTS_CASE("shard_spec partitions round-robin and stays balanced")
   tts::_::shard_spec    s2 {true, 2, 3};
 
   constexpr std::size_t n  = 17;
-  std::size_t           c0 = 0, c1 = 0, c2 = 0;
+  std::size_t           c0 = 0;
+  std::size_t           c1 = 0;
+  std::size_t           c2 = 0;
 
   for(std::size_t k = 0; k < n; ++k)
   {
@@ -39,8 +41,9 @@ TTS_CASE("shard_spec partitions round-robin and stays balanced")
 
 namespace
 {
-  bool first_dummy_ran  = false;
-  bool second_dummy_ran = false;
+  // Intentionally mutable: set from within the test bodies below to prove they ran.
+  bool first_dummy_ran  = false; // NOSONAR
+  bool second_dummy_ran = false; // NOSONAR
 }
 
 TTS_CASE("First dummy test so shard_flag_main has something to (not) filter")

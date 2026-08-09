@@ -141,7 +141,8 @@ namespace tts::_
     ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
     if(raw.is_empty()) return {};
 
-    unsigned int i = 0, n = 0;
+    unsigned int i = 0;
+    unsigned int n = 0;
     if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
     {
       ok = false;
@@ -179,11 +180,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     std::size_t position = 0;
     for(auto const& t: ::tts::_::suite())
     {
-      if(shard.selects(position++))
-      {
-        if(t.types.is_empty()) ::tts::output().writeln(t.name);
-        else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
-      }
+      if(!shard.selects(position++)) continue;
+
+      if(t.types.is_empty()) ::tts::output().writeln(t.name);
+      else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
     }
     return 0;
   }
