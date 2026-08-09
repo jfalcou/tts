@@ -119,7 +119,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 
   if(::tts::arguments()("--dry"))
   {
-    for(auto& t: ::tts::_::suite())
+    for(auto const& t: ::tts::_::suite())
     {
       if(t.types.is_empty()) ::tts::output().writeln(t.name);
       else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
