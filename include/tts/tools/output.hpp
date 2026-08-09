@@ -56,7 +56,12 @@ namespace tts::_
       current_verbosity = saved;
     }
 
-    verbosity saved;
+    verbosity_scope(verbosity_scope const&)            = delete;
+    verbosity_scope& operator=(verbosity_scope const&) = delete;
+    verbosity_scope(verbosity_scope&&)                 = delete;
+    verbosity_scope& operator=(verbosity_scope&&)      = delete;
+
+    verbosity        saved;
   };
 }
 
