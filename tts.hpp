@@ -48,6 +48,7 @@ Flags:
   -s, --scientific  Print the floating results in scientific mode
   -v, --verbose     Display tests results regardless of their status.
   -q, --quiet       Display only test failures percentage.
+  --allow-empty     Do not fail when the test suite registered zero test.
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
@@ -506,77 +507,6 @@ namespace tts::_
       "--------------------------------------------------------------------------------");
   }
 }
-namespace tts::_
-{
-  struct env
-  {
-    void pass()
-    {
-      test_count++;
-      success_count++;
-    }
-    void fail()
-    {
-      test_count++;
-      failure_count++;
-    }
-    void fatal()
-    {
-      test_count++;
-      failure_count++;
-      fatal_count++;
-    }
-    void invalid()
-    {
-      test_count++;
-      invalid_count++;
-    }
-    int report(unsigned long long fails, unsigned long long invalids) const
-    {
-      auto  test_txt = test_count > 1 ? "s" : "";
-      auto  pass_txt = success_count > 1 ? "es" : "";
-      auto  fail_txt = failure_count > 1 ? "s" : "";
-      auto  inv_txt  = invalid_count > 1 ? "s" : "";
-      auto& out      = ::tts::output();
-      ::tts::_::separator();
-      out.write("Results: %llu test%s ", test_count, test_txt);
-      if(success_count != 0)
-        out.write("- %llu/%llu (%2.2f%%) success%s ",
-                  success_count,
-                  test_count,
-                  100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
-                  pass_txt);
-      if(failure_count != 0)
-        out.write("- %llu/%llu (%2.2f%%) failure%s ",
-                  failure_count,
-                  test_count,
-                  100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
-                  fail_txt);
-      if(invalid_count != 0)
-        out.write("- %llu/%llu (%2.2f%%) invalid%s ",
-                  invalid_count,
-                  test_count,
-                  100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
-                  inv_txt);
-      out.writeln();
-      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
-      else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
-    }
-    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
-                       invalid_count = 0;
-    bool fail_status                 = false;
-  };
-}
-namespace tts
-{
-  inline _::env global_runtime       = {};
-  inline bool   fatal_error_status   = false;
-  inline bool   global_logger_status = false;
-  inline int report(unsigned long long fails, unsigned long long invalids)
-  {
-    return global_runtime.report(fails, invalids);
-  }
-}
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts::_
@@ -723,6 +653,78 @@ namespace tts
   }
 }
 TTS_DISABLE_WARNING_POP
+namespace tts::_
+{
+  struct env
+  {
+    void pass()
+    {
+      test_count++;
+      success_count++;
+    }
+    void fail()
+    {
+      test_count++;
+      failure_count++;
+    }
+    void fatal()
+    {
+      test_count++;
+      failure_count++;
+      fatal_count++;
+    }
+    void invalid()
+    {
+      test_count++;
+      invalid_count++;
+    }
+    int report(unsigned long long fails, unsigned long long invalids) const
+    {
+      auto  test_txt = test_count > 1 ? "s" : "";
+      auto  pass_txt = success_count > 1 ? "es" : "";
+      auto  fail_txt = failure_count > 1 ? "s" : "";
+      auto  inv_txt  = invalid_count > 1 ? "s" : "";
+      auto& out      = ::tts::output();
+      ::tts::_::separator();
+      out.write("Results: %llu test%s ", test_count, test_txt);
+      if(success_count != 0)
+        out.write("- %llu/%llu (%2.2f%%) success%s ",
+                  success_count,
+                  test_count,
+                  100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
+                  pass_txt);
+      if(failure_count != 0)
+        out.write("- %llu/%llu (%2.2f%%) failure%s ",
+                  failure_count,
+                  test_count,
+                  100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
+                  fail_txt);
+      if(invalid_count != 0)
+        out.write("- %llu/%llu (%2.2f%%) invalid%s ",
+                  invalid_count,
+                  test_count,
+                  100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
+                  inv_txt);
+      out.writeln();
+      if(test_count == 0 && !::tts::arguments()("--allow-empty")) return 1;
+      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
+      else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
+    }
+    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
+                       invalid_count = 0;
+    bool fail_status                 = false;
+  };
+}
+namespace tts
+{
+  inline _::env global_runtime       = {};
+  inline bool   fatal_error_status   = false;
+  inline bool   global_logger_status = false;
+  inline int report(unsigned long long fails, unsigned long long invalids)
+  {
+    return global_runtime.report(fails, invalids);
+  }
+}
 namespace tts::_
 {
   template<typename T> struct typename_impl
