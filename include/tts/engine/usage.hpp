@@ -22,6 +22,7 @@ Flags:
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
+  --capture=path    Capture this run's output and write it to path instead of stdout
 
 Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)
