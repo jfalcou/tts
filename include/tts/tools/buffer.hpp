@@ -51,7 +51,6 @@ namespace tts
       }
     }
 
-    template<typename... Ts>
     buffer(std::initializer_list<T> init)
         : buffer()
     {
