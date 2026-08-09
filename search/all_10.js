@@ -8,7 +8,7 @@ var searchData=
   ['operator_3d_5',['operator=',['../structtts_1_1text.html#a8bc9cf2f63accfa8938fb597d26067f1',1,'tts::text::operator=(text const &amp;other)'],['../structtts_1_1text.html#a9cbef17a36a80da358be2cfebdc57496',1,'tts::text::operator=(text &amp;&amp;other) noexcept']]],
   ['operator_3d_3d_6',['operator==',['../structtts_1_1text.html#a80ccce1207f2c1cbee1e0def444710af',1,'tts::text::operator==(text const &amp;a, text const &amp;b) noexcept'],['../structtts_1_1text.html#a9657802a107531ee24f60e585ae80fa9',1,'tts::text::operator==(text const &amp;a, char const (&amp;b)[N]) noexcept']]],
   ['operator_5b_5d_7',['operator[]',['../structtts_1_1options.html#a0eab710faf43ec53f037b07c4d94cead',1,'tts::options']]],
-  ['options_8',['Display Options',['../cli.html#autotoc_md25',1,'']]],
+  ['options_8',['Display Options',['../cli.html#autotoc_md26',1,'']]],
   ['options_9',['options',['../structtts_1_1options.html',1,'tts']]],
   ['ordering_10',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['output_11',['output',['../group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45',1,'tts']]],

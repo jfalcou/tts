@@ -8,7 +8,7 @@ var searchData=
   ['setup_5',['Setup',['../setup.html',1,'']]],
   ['setup_6',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
   ['setup_20with_20cpm_7',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['short_20example_8',['A Short Example',['../index.html#autotoc_md35',1,'']]],
+  ['short_20example_8',['A Short Example',['../index.html#autotoc_md36',1,'']]],
   ['signed_5ftypes_9',['signed_types',['../group__tools-types.html#ga82e948f13d728b23b380fc8c9201ace1',1,'tts']]],
   ['sink_10',['sink',['../classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7',1,'tts::output_handler::sink(output_sink &amp;s)'],['../classtts_1_1output__handler.html#abea2abab38f19fb2cbecab986a18d7d3',1,'tts::output_handler::sink() const']]],
   ['size_11',['size',['../structtts_1_1text.html#a717e8bad55cb2c4b9cc969335bb59b58',1,'tts::text']]],
@@ -17,7 +17,7 @@ var searchData=
   ['standalone_20setup_14',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
   ['started_15',['Getting Started',['../tts101.html',1,'']]],
   ['stdout_5fsink_16',['stdout_sink',['../structtts_1_1stdout__sink.html',1,'tts']]],
-  ['supported_20compilers_17',['Supported Compilers',['../index.html#autotoc_md34',1,'']]],
+  ['supported_20compilers_17',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
   ['swap_18',['swap',['../structtts_1_1text.html#ab5678b661ead194b1045172bee5e8b96',1,'tts::text']]],
   ['system_19',['The Tiny Test System',['../index.html',1,'']]]
 ];
