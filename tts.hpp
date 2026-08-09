@@ -190,11 +190,7 @@ namespace tts
 {
   struct text
   {
-    text()
-        : data_(nullptr)
-        , size_(0)
-    {
-    }
+    text() = default;
     explicit text(char const* ptr)
         : text()
     {
@@ -212,11 +208,6 @@ namespace tts
           }
         }
       }
-    }
-    template<std::size_t N>
-    explicit text(char const (&data)[ N ])
-        : text("%.s*", N, &data[ 0 ])
-    {
     }
     template<typename... Args>
     explicit text(char const* format, Args... args)
@@ -361,8 +352,8 @@ namespace tts
       return a <=> text {b};
     }
   private:
-    char*  data_;
-    size_t size_;
+    char*  data_ = nullptr;
+    size_t size_ = 0;
   };
   inline text operator+(text const& lhs, char const* rhs)
   {
@@ -1087,7 +1078,6 @@ namespace tts
           new(data_ + i) T(val);
       }
     }
-    template<typename... Ts>
     buffer(std::initializer_list<T> init)
         : buffer()
     {
