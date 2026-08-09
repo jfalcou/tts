@@ -14,8 +14,9 @@ include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
 ##======================================================================================================================
-option( TTS_BUILD_TEST          "Build tests for TTS"   ON  )
-option( TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF )
+option( TTS_BUILD_TEST          "Build tests for TTS"                                          ON  )
+option( TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS"                                        OFF )
+option( TTS_ENABLE_SANITIZERS   "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF )
 
 ##======================================================================================================================
 ## Project setup via copacabana
@@ -33,6 +34,7 @@ if(NOT TTS_QUIET)
   endif()
   message(STATUS "[${PROJECT_NAME}] - Unit tests : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
   message(STATUS "[${PROJECT_NAME}] - Doxygen    : ${TTS_BUILD_DOCUMENTATION} (via TTS_BUILD_DOCUMENTATION)")
+  message(STATUS "[${PROJECT_NAME}] - Sanitizers : ${TTS_ENABLE_SANITIZERS} (via TTS_ENABLE_SANITIZERS)")
   set(QUIET_OPTION "")
 else()
   set(QUIET_OPTION "QUIET")
@@ -71,6 +73,10 @@ endif()
 ## Tests setup
 ##======================================================================================================================
 if(TTS_BUILD_TEST)
+  if(TTS_ENABLE_SANITIZERS)
+    copa_setup_sanitizers(tts_test ENABLE_ASAN ENABLE_UBSAN)
+  endif()
+
   include(CTest)
   enable_testing()
   add_custom_target(tts-unit)
