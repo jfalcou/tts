@@ -59,6 +59,21 @@ TTS_CASE_WITH("Check behavior for scalar types",
   TTS_LESS_EQUAL(rng, T(100));
 };
 
+TTS_CASE("Check tts::between supports both ascending and descending ranges")
+{
+  tts::between ascending {-4.0, 4.0};
+  tts::between descending {10.0, 0.0};
+
+  double       ascending_ref[]  = {-4., -2., 0., 2., 4.};
+  double       descending_ref[] = {10., 7.5, 5., 2.5, 0.};
+
+  for(std::size_t i = 0; i < 5; ++i)
+  {
+    TTS_ULP_EQUAL(ascending(tts::type<double> {}, i, 5UL), ascending_ref[ i ], 0.5);
+    TTS_ULP_EQUAL(descending(tts::type<double> {}, i, 5UL), descending_ref[ i ], 0.5);
+  }
+};
+
 TTS_CASE_WITH("Check behavior for non-scalar types",
               array_of<::tts::arithmetic_types>,
               tts::value {37},
