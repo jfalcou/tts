@@ -18,6 +18,8 @@ namespace tts::_
   struct option
   {
     option() = default;
+
+    // Parses a raw CLI argument, e.g. "--capture=report.txt" or "--verbose".
     explicit option(char const* arg)
         : token(arg)
         , position(-1)
@@ -25,6 +27,17 @@ namespace tts::_
       assert(arg && "Token cannot be null");
       auto it  = strchr(arg, '=');
       position = it ? static_cast<int>(it - token) : static_cast<int>(strlen(token)); // NOSONAR
+    }
+
+    // Wraps an already-split name/value pair (e.g. a flag and the environment variable value
+    // standing in for it) - no '='-parsing needed, name and value are independent pointers.
+    option(char const* name, char const* value)
+        : token(name)
+        , position(static_cast<int>(strlen(name))) // NOSONAR
+        , env_value(value)
+    {
+      assert(name && "Name cannot be null");
+      assert(value && "Value cannot be null");
     }
 
     bool has_flag(char const* f) const
@@ -49,23 +62,24 @@ namespace tts::_
 
       if(is_valid())
       {
-        int n = 0;
+        char const* raw = env_value ? env_value : token + position + 1;
+        int         n   = 0;
         if constexpr(std::integral<T>)
         {
           decltype(sizeof(void*)) v;
-          n    = sscanf(token + position + 1, "%zu", &v);
+          n    = sscanf(raw, "%zu", &v);
           that = static_cast<T>(v);
         }
         else if constexpr(std::floating_point<T>)
         {
           double v;
-          n    = sscanf(token + position + 1, "%lf", &v);
+          n    = sscanf(raw, "%lf", &v);
           that = static_cast<T>(v);
         }
         else
         {
           n    = 1;
-          that = T {token + position + 1};
+          that = T {raw};
         }
 
         if(n != 1) that = def;
@@ -78,8 +92,9 @@ namespace tts::_
       return that;
     }
 
-    char const* token    = "";
-    int         position = -1;
+    char const* token     = "";
+    int         position  = -1;
+    char const* env_value = nullptr;
   };
 }
 
