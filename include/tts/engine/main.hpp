@@ -108,6 +108,49 @@ namespace tts::_
 
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
+
+  // Splits the suite in `total` round-robin shards (test at registration index k belongs to
+  // shard k % total), so a slow binary can be spread across parallel CI workers without
+  // splitting source files. See --shard in doc/cli.hpp.
+  struct shard_spec
+  {
+    bool         active = false;
+    unsigned int index  = 0;
+    unsigned int total  = 1;
+
+    bool         selects(std::size_t position) const
+    {
+      return !active || (position % total == index);
+    }
+
+    std::size_t count(std::size_t suite_size) const
+    {
+      if(!active) return suite_size;
+      if(suite_size <= index) return 0;
+      return (suite_size - index - 1) / total + 1;
+    }
+  };
+
+  // Parses --shard=i/n. `ok` is set to false if the flag is present but malformed or out of
+  // range (n == 0 or i >= n); the returned shard_spec is then meaningless and must be ignored.
+  TTS_DISABLE_WARNING_PUSH
+  TTS_DISABLE_WARNING_CRT_SECURE
+  inline shard_spec parse_shard(bool& ok)
+  {
+    ok              = true;
+    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
+    if(raw.is_empty()) return {};
+
+    unsigned int i = 0, n = 0;
+    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
+    {
+      ok = false;
+      return {};
+    }
+
+    return {true, i, n};
+  }
+  TTS_DISABLE_WARNING_POP
 }
 
 TTS_DISABLE_WARNING_PUSH
@@ -117,12 +160,30 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
 
+  bool shard_ok = true;
+  auto shard    = ::tts::_::parse_shard(shard_ok);
+  if(!shard_ok)
+  {
+    ::tts::output().writeln("Invalid --shard value, expected i/n with 0 <= i < n");
+    return 1;
+  }
+
+  // --shard only makes sense for the default "everything that ran must pass" driver: a custom
+  // driver's caller typically expects a fixed, whole-suite fail/invalid count from
+  // tts::report(fails, invalids), which round-robin partitioning has no way to redistribute
+  // correctly, so --shard is a no-op there instead of risking a spurious pass or failure.
+  if constexpr(!::tts::_::use_main) shard.active = false;
+
   if(::tts::arguments()("--dry"))
   {
+    std::size_t position = 0;
     for(auto const& t: ::tts::_::suite())
     {
-      if(t.types.is_empty()) ::tts::output().writeln(t.name);
-      else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
+      if(shard.selects(position++))
+      {
+        if(t.types.is_empty()) ::tts::output().writeln(t.name);
+        else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
+      }
     }
     return 0;
   }
@@ -146,17 +207,26 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::gathering_sink capture_sink;
   if(capture_file) ::tts::output().sink(capture_sink);
 
-  auto        nb_tests   = ::tts::_::suite().size();
+  auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
   auto        seed       = ::tts::random_seed();
   ::tts::set_random_seed(static_cast<std::uint64_t>(seed));
   ::tts::output().writeln(
   "Random seed: %d (rerun with --seed=%d to reproduce this run)", seed, seed);
+  if(shard.active)
+    ::tts::output().writeln("Shard: %u/%u (%zu test%s selected)",
+                            shard.index,
+                            shard.total,
+                            nb_tests,
+                            nb_tests > 1 ? "s" : "");
 
   try
   {
+    std::size_t position = 0;
     for(auto& t: ::tts::_::suite())
     {
+      if(!shard.selects(position++)) continue;
+
       auto test_count                   = ::tts::global_runtime.test_count;
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;

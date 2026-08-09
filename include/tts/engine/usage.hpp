@@ -24,6 +24,7 @@ Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
   --capture=path    Capture this run's output and write it to path instead of stdout
+  --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
 
 Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)
