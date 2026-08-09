@@ -34,11 +34,10 @@ int main(int argc, char const** argv)
   ::tts::initialize(argc, argv);
 
   prefixed_sink sink;
-  tts::output().sink(sink); // Install our custom sink...
-
-  custom_sink_main(argc, argv); // ...run the test suite through it...
-
-  tts::output().sink(tts::output_handler::default_sink()); // ...then restore the default one.
+  {
+    tts::scoped_sink scope(sink); // Install our custom sink for this scope...
+    custom_sink_main(argc, argv); // ...run the test suite through it...
+  } // ...then automatically restore the previous one.
 
   printf("Our custom output_sink received %d message(s)\n", sink.messages);
 

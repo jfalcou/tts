@@ -20,11 +20,10 @@ int main(int argc, char const** argv)
   ::tts::initialize(argc, argv);
 
   tts::gathering_sink gs;
-  tts::output().sink(gs);
-
-  seed_reporting_main(argc, argv);
-
-  tts::output().sink(tts::output_handler::default_sink());
+  {
+    tts::scoped_sink scope(gs);
+    seed_reporting_main(argc, argv);
+  }
 
   tts::text        needle {"Random seed: %d", tts::random_seed()};
   std::string_view captured {gs.content().data()};
