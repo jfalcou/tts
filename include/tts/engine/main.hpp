@@ -110,6 +110,8 @@ namespace tts::_
   }
 }
 
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc, argv);
@@ -117,6 +119,22 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
+
+  ::tts::text capture_path = ::tts::arguments().value<::tts::text>("--capture");
+  FILE*       capture_file = nullptr;
+
+  if(!capture_path.is_empty())
+  {
+    capture_file = fopen(capture_path.data(), "w"); // NOSONAR
+    if(!capture_file)
+    {
+      ::tts::output().writeln("Unable to open '%s' for writing (--capture)", capture_path.data());
+      return 1;
+    }
+  }
+
+  ::tts::gathering_sink capture_sink;
+  if(capture_file) ::tts::output().sink(capture_sink);
 
   auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
@@ -158,8 +176,16 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
                               static_cast<int>(nb_tests - done_tests - 1));
   }
 
+  if(capture_file)
+  {
+    ::tts::output().sink(::tts::output_handler::default_sink());
+    fputs(capture_sink.content().data(), capture_file); // NOSONAR
+    fclose(capture_file);                               // NOSONAR
+  }
+
   if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
   else return 0;
 }
+TTS_DISABLE_WARNING_POP
 
 #endif
