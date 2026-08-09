@@ -228,7 +228,7 @@ overload.
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_ALL_EQUAL(L, R, ...)
 #else
-#define TTS_ALL_EQUAL(L, R, ...) TTS_ALL_ABSOLUTE_EQUAL(L, R, 0 __VA_ARGS__)
+#define TTS_ALL_EQUAL(L, R, ...) TTS_ALL_ABSOLUTE_EQUAL(L, R, 0, __VA_ARGS__)
 #endif
 
 //======================================================================================================================

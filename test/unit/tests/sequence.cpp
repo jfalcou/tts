@@ -20,6 +20,7 @@ TTS_CASE("Equality over sequence")
   TTS_ALL_ABSOLUTE_EQUAL(v, v, 0);
   TTS_ALL_ABSOLUTE_EQUAL(v, w, 0);
   TTS_ALL_ABSOLUTE_EQUAL(v, z, 3);
+  TTS_ALL_ABSOLUTE_EQUAL(v, w, 0, REQUIRED);
 };
 
 TTS_CASE("Exact equality over sequence")
@@ -29,6 +30,7 @@ TTS_CASE("Exact equality over sequence")
 
   TTS_ALL_EQUAL(v, v);
   TTS_ALL_EQUAL(v, w);
+  TTS_ALL_EQUAL(v, w, REQUIRED);
 };
 
 TTS_CASE("Relative equality over sequence")
@@ -40,6 +42,7 @@ TTS_CASE("Relative equality over sequence")
   TTS_ALL_RELATIVE_EQUAL(v, v, 0);
   TTS_ALL_RELATIVE_EQUAL(v, w, 0);
   TTS_ALL_RELATIVE_EQUAL(v, z, 3.33);
+  TTS_ALL_RELATIVE_EQUAL(v, w, 0, REQUIRED);
 };
 
 TTS_CASE("ULP equality over sequence")
@@ -51,6 +54,7 @@ TTS_CASE("ULP equality over sequence")
   TTS_ALL_ULP_EQUAL(v, v, 0);
   TTS_ALL_ULP_EQUAL(v, w, 0.5);
   TTS_ALL_ULP_EQUAL(v, z, 10);
+  TTS_ALL_ULP_EQUAL(v, w, 0.5, REQUIRED);
 };
 
 TTS_CASE("Strict IEEE equality over sequence")
@@ -60,4 +64,5 @@ TTS_CASE("Strict IEEE equality over sequence")
 
   TTS_ALL_IEEE_EQUAL(v, v);
   TTS_ALL_IEEE_EQUAL(v, w);
+  TTS_ALL_IEEE_EQUAL(v, w, REQUIRED);
 };
