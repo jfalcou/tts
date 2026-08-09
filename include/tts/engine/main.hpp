@@ -80,10 +80,8 @@ namespace tts::_
   // anywhere else, so it gets reported here instead.
   void report_type_hint(::tts::text const& type)
   {
-    if(!::tts::is_verbose())
-    {
-      if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
-    }
+    if(!::tts::is_verbose() && !type.is_empty())
+      ::tts::output().writeln(">  With <T = %s>", type.data());
   }
 
   void report_pass(char const* location, char const* message)
