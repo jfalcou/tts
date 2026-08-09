@@ -182,6 +182,7 @@ TTS_CASE("Check output_handler::flush dispatches to the current output_sink")
     int  flushes = 0;
     void write(tts::text const&) override
     {
+      // Unused: this test only exercises flush().
     }
     void flush() override
     {

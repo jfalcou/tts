@@ -98,6 +98,7 @@ namespace tts
     /// Flushes this sink's destination, if that means anything for it. No-op by default.
     virtual void flush()
     {
+      // Intentionally empty: most sinks (e.g. gathering_sink) have nothing meaningful to flush.
     }
 
     virtual ~output_sink() = default;
