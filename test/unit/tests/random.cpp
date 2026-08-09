@@ -102,3 +102,21 @@ TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)
 
   TTS_RELATIVE_EQUAL(positive_ratio, 0.8, 1.0);
 };
+
+TTS_CASE_TPL("Check random_bits spans the full range of its target type", tts::uint_types)
+<typename T>(tts::type<T>)
+{
+  tts::random_bits gen;
+  T                bit_width = 8 * sizeof(T);
+  T                max_v     = 0;
+
+  for(std::size_t i = 0; i < 20000; ++i)
+  {
+    T val = gen(tts::type<T> {});
+    if(val > max_v) max_v = val;
+  }
+
+  // The bug this guards against only ever produced values in [0, bit_width - 1];
+  // a correct generator must be able to exceed that bound.
+  TTS_EXPECT(max_v > bit_width - 1);
+};
