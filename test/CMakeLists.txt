@@ -14,6 +14,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                                       unit/infrastructure/buffer.cpp
                                       unit/infrastructure/callable.cpp
                                       unit/infrastructure/display.cpp
+                                      unit/infrastructure/output.cpp
                                       unit/infrastructure/main.cpp
                         ROOT          ${root}
                         NAME          unit.infrastructure.basic.cpp

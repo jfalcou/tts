@@ -48,19 +48,20 @@ namespace tts::_
       // We register all the types in a single test to keep the compile-time O(1)
       // Registering different type in different tests generate far too much callable::invoker
       // symbol that make compile-time O(N)
-      return test::acknowledge({name,
-                                [ body ]()
-                                {
-                                  // We setup the current type name before each test so we know
-                                  (((current_type = as_text(typename_<Types>)),
-                                    (::tts::_::is_verbose && !::tts::_::is_quiet
-                                     ? printf(">  With <T = %s>\n", current_type.data())
-                                     : 0),
-                                    body(type<Types>())),
-                                   ...);
-                                  // Clear the current type
-                                  current_type = text {""};
-                                }});
+      return test::acknowledge(
+      {name,
+       [ body ]()
+       {
+         // We setup the current type name before each test so we know
+         (((current_type = as_text(typename_<Types>)),
+           (::tts::is_detailed()
+            ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
+            : 0),
+           body(type<Types>())),
+          ...);
+         // Clear the current type
+         current_type = text {""};
+       }});
     }
     char const* name;
   };
@@ -97,8 +98,7 @@ namespace tts::_
     template<typename T> static void process_type(auto body)
     {
       current_type = as_text(typename_<T>);
-      if(::tts::_::is_verbose && !::tts::_::is_quiet)
-        printf(">  With <T = %s>\n", current_type.data());
+      if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
       process_call(body, produce(type<T> {}, Generators)...);
     }
 
