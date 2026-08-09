@@ -119,3 +119,54 @@ TTS_CASE("Check output_handler dispatches to a power user defined output_sink")
   TTS_EQUAL(custom.calls, 1);
   TTS_EQUAL(custom.last, "custom output");
 };
+
+TTS_CASE("Check report_fail only shows the failing type outside verbose mode")
+{
+  bool const          previous_verbose = ::tts::_::current_verbosity.verbose;
+  bool const          previous_quiet   = ::tts::_::current_verbosity.quiet;
+
+  tts::gathering_sink gs;
+  auto&               out      = tts::output();
+  auto&               previous = out.sink();
+  out.sink(gs);
+
+  // Quiet hides the "[X] ... FAILURE ..." line so only the type hint remains, isolating it.
+  ::tts::_::current_verbosity.verbose = false;
+  ::tts::_::current_verbosity.quiet   = true;
+  ::tts::_::report_fail("[loc]", "msg", ::tts::text {"int"});
+  TTS_EQUAL(gs.content(), ">  With <T = int>\n");
+
+  gs.clear();
+  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::report_fail("[loc]", "msg", ::tts::text {"int"});
+  TTS_EXPECT(gs.content().is_empty());
+
+  out.sink(previous);
+  ::tts::_::current_verbosity.verbose = previous_verbose;
+  ::tts::_::current_verbosity.quiet   = previous_quiet;
+};
+
+TTS_CASE("Check report_fatal shares the same type hint behavior as report_fail")
+{
+  bool const          previous_verbose = ::tts::_::current_verbosity.verbose;
+  bool const          previous_quiet   = ::tts::_::current_verbosity.quiet;
+
+  tts::gathering_sink gs;
+  auto&               out      = tts::output();
+  auto&               previous = out.sink();
+  out.sink(gs);
+
+  ::tts::_::current_verbosity.verbose = false;
+  ::tts::_::current_verbosity.quiet   = false;
+  ::tts::_::report_fatal("[loc]", "msg", ::tts::text {"int"});
+  TTS_EQUAL(gs.content(), ">  With <T = int>\n  [@] [loc] : @@ FATAL @@ : msg\n");
+
+  gs.clear();
+  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::report_fatal("[loc]", "msg", ::tts::text {"int"});
+  TTS_EQUAL(gs.content(), "  [@] [loc] : @@ FATAL @@ : msg\n");
+
+  out.sink(previous);
+  ::tts::_::current_verbosity.verbose = previous_verbose;
+  ::tts::_::current_verbosity.quiet   = previous_quiet;
+};

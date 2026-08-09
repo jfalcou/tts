@@ -76,6 +76,16 @@ namespace tts::_
 //======================================================================================================================
 namespace tts::_
 {
+  // Shared by report_fail/report_fatal: outside of verbose mode, the failing type isn't shown
+  // anywhere else, so it gets reported here instead.
+  void report_type_hint(::tts::text const& type)
+  {
+    if(!::tts::is_verbose())
+    {
+      if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
+    }
+  }
+
   void report_pass(char const* location, char const* message)
   {
     if(::tts::is_detailed())
@@ -86,10 +96,7 @@ namespace tts::_
 
   void report_fail(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::is_verbose())
-    {
-      if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
-    }
+    report_type_hint(type);
 
     if(!::tts::is_quiet())
     {
@@ -99,10 +106,7 @@ namespace tts::_
 
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::is_verbose())
-    {
-      if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
-    }
+    report_type_hint(type);
 
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
