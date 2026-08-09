@@ -44,21 +44,21 @@ namespace tts::_
   // tests that need to exercise a specific verbose/quiet combination without leaking that state
   // into the rest of the running test suite, even if the test exits early.
   //====================================================================================================================
-  struct verbosity_scope
+  struct scoped_verbosity
   {
-    verbosity_scope() = default;
+    scoped_verbosity() = default;
 
-    ~verbosity_scope()
+    ~scoped_verbosity()
     {
       current_verbosity = saved;
     }
 
-    verbosity_scope(verbosity_scope const&)            = delete;
-    verbosity_scope& operator=(verbosity_scope const&) = delete;
-    verbosity_scope(verbosity_scope&&)                 = delete;
-    verbosity_scope& operator=(verbosity_scope&&)      = delete;
+    scoped_verbosity(scoped_verbosity const&)            = delete;
+    scoped_verbosity& operator=(scoped_verbosity const&) = delete;
+    scoped_verbosity(scoped_verbosity&&)                 = delete;
+    scoped_verbosity& operator=(scoped_verbosity&&)      = delete;
 
-    verbosity        saved                             = current_verbosity;
+    verbosity         saved                              = current_verbosity;
   };
 }
 
@@ -284,6 +284,45 @@ namespace tts
   {
     return _::current_output;
   }
+
+  //====================================================================================================================
+  /**
+    @public
+    @brief RAII guard installing an output_sink for its scope, restoring the previous one on exit.
+
+    Saves whichever output_sink is currently installed on tts::output(), installs `s`, then restores
+    the saved one once the guard goes out of scope - even through an early return or an exception.
+
+    @groupheader{Example}
+    @snippet doc/custom_output_sink.cpp snippet
+
+    @see tts::output_sink
+    @see tts::output_handler
+  **/
+  //====================================================================================================================
+  class scoped_sink
+  {
+  public:
+    /// Installs s as the current output_sink, saving whichever one was previously installed.
+    explicit scoped_sink(output_sink& s)
+        : saved_(output().sink())
+    {
+      output().sink(s);
+    }
+
+    ~scoped_sink()
+    {
+      output().sink(saved_);
+    }
+
+    scoped_sink(scoped_sink const&)            = delete;
+    scoped_sink& operator=(scoped_sink const&) = delete;
+    scoped_sink(scoped_sink&&)                 = delete;
+    scoped_sink& operator=(scoped_sink&&)      = delete;
+
+  private:
+    output_sink& saved_;
+  };
 
   //====================================================================================================================
   //! @}
