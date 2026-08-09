@@ -20,6 +20,12 @@ TTS_CASE("Second dummy test for --dry")
   TTS_EXPECT(1 == 1);
 };
 
+TTS_CASE_TPL("Templated dummy test for --dry", std::int32_t, double)
+<typename T>(::tts::type<T>)
+{
+  TTS_EXPECT(1 == 1);
+};
+
 int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
@@ -42,6 +48,11 @@ int main(int argc, char const** argv)
 
   ok = ok && (strstr(gs.content().data(), "First dummy test for --dry") != nullptr);  // NOSONAR
   ok = ok && (strstr(gs.content().data(), "Second dummy test for --dry") != nullptr); // NOSONAR
+
+  // TTS_CASE_TPL entries must list their types, without pinning down the exact spelling
+  // (e.g. int32_t vs int) since that's compiler/platform dependent.
+  ok =
+  ok && (strstr(gs.content().data(), "Templated dummy test for --dry <") != nullptr); // NOSONAR
 
   return ok ? 0 : 1;
 }

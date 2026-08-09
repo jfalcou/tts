@@ -18,6 +18,40 @@
   `--verbose`     | `-v`     | Display tests results regardless of their status. `./my_test --verbose`
   `--quiet`       | `-q`     | Remove all tests results regardless of their status. `./my_test --quiet`
 
+  # Execution Control
+  These options change what actually gets run and how results are reported, mostly useful for
+  CI integration. Those options have no short form.
+
+  Options           | Description
+  ----------------- | -----------------------------------------------------------------------
+  `--dry`           | Print registered test names without running them. `./my_test --dry`
+  `--allow-empty`   | Do not fail when the test suite registered zero test. `./my_test --allow-empty`
+  `--capture=path`  | Capture this run's output and write it to `path` instead of stdout. `./my_test --capture=report.txt`
+
+  @note `--dry` only prints what's known without running any test: registered @ref TTS_CASE /
+  @ref TTS_CASE_TPL / @ref TTS_CASE_WITH names, plus their types for the latter two. It cannot
+  list @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since those only exist as runtime control
+  flow inside a test's body - which `--dry` never executes. For example, given:
+
+  @code{cpp}
+  TTS_CASE_TPL("Check stack behavior", std::int32_t, double)
+  <typename T>(::tts::type<T>)
+  {
+    TTS_WHEN("a stack of T is empty")
+    {
+      TTS_AND_THEN("push increases its size") { };
+      TTS_AND_THEN("pop is a no-op")          { };
+    };
+  };
+  @endcode
+
+  `./my_test --dry` prints the case name with its types, but the `WHEN`/`AND_THEN`
+  sub-scenarios stay invisible:
+
+  @code{sh}
+  Check stack behavior <int, double>
+  @endcode
+
   # Tests Parameters
   These options are provided to control the specifics of the tests parameters. Those
   options require a value and have no short form.

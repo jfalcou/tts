@@ -36,6 +36,24 @@ namespace tts::_
   // Global storage for current type used in a given test
   inline text current_type = {};
 
+  // Builds a ", "-joined list of type names, known at registration time so --dry can display it
+  // without running the test.
+  inline text joined_type_names()
+  {
+    return text {};
+  }
+
+  template<typename T, typename... Rest> inline text joined_type_names()
+  {
+    text out = as_text(typename_<T>);
+    if constexpr(sizeof...(Rest) > 0)
+    {
+      out += ", ";
+      out += joined_type_names<Rest...>();
+    }
+    return out;
+  }
+
   template<typename... Types> struct captures
   {
     captures(char const* id) // NOSONAR
@@ -61,7 +79,8 @@ namespace tts::_
           ...);
          // Clear the current type
          current_type = text {""};
-       }});
+       },
+       joined_type_names<Types...>()});
     }
     char const* name;
   };
@@ -109,7 +128,8 @@ namespace tts::_
                                 {
                                   (process_type<Type>(body), ...);
                                   current_type = text {""};
-                                }});
+                                },
+                                joined_type_names<Type...>()});
     }
   };
 }
