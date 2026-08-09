@@ -9,7 +9,6 @@
 #define TTS_CUSTOM_DRIVER_FUNCTION capture_flag_main
 #include <tts/tts.hpp>
 #include <array>
-#include <string_view>
 
 TTS_CASE("Dummy test so the driver has something to run")
 {
@@ -36,14 +35,11 @@ int main(int argc, char const** argv)
     ok                          = ok && (f != nullptr);
     if(f)
     {
-      char buffer[ 4096 ] = {}; // NOSONAR - avoids std::string, this project avoids that header
-      auto n              = fread(buffer, 1, sizeof(buffer) - 1, f);
+      char                  buffer[ 4096 ] = {}; // NOSONAR - avoids std::string
+      [[maybe_unused]] auto n              = fread(buffer, 1, sizeof(buffer) - 1, f);
       fclose(f);
 
-      std::string_view captured {buffer, n};
-      // string_view::contains is C++23; this project targets C++20. NOSONAR
-      ok = ok && (captured.find("Dummy test so the driver has something to run") !=
-                  std::string_view::npos);
+      ok = ok && (strstr(buffer, "Dummy test so the driver has something to run") != nullptr);
     }
     remove("tts_capture_flag_test.txt");
   }
