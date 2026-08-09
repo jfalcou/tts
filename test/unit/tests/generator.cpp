@@ -64,8 +64,8 @@ TTS_CASE("Check tts::between supports both ascending and descending ranges")
   tts::between ascending {-4.0, 4.0};
   tts::between descending {10.0, 0.0};
 
-  double       ascending_ref[]  = {-4., -2., 0., 2., 4.};
-  double       descending_ref[] = {10., 7.5, 5., 2.5, 0.};
+  double       ascending_ref[]  = {-4., -2., 0., 2., 4.};  // NOSONAR
+  double       descending_ref[] = {10., 7.5, 5., 2.5, 0.}; // NOSONAR
 
   for(std::size_t i = 0; i < 5; ++i)
   {
