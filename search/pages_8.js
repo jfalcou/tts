@@ -1,5 +1,6 @@
 var searchData=
 [
   ['equality_20and_20ordering_0',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
-  ['example_1',['A Short Example',['../index.html#autotoc_md34',1,'']]]
+  ['example_1',['A Short Example',['../index.html#autotoc_md35',1,'']]],
+  ['execution_20control_2',['Execution Control',['../cli.html#autotoc_md26',1,'']]]
 ];

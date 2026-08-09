@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['a_20short_20example_0',['A Short Example',['../index.html#autotoc_md34',1,'']]],
+  ['a_20short_20example_0',['A Short Example',['../index.html#autotoc_md35',1,'']]],
   ['a_20test_20case_1',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
-  ['absolute_20comparison_2',['Absolute Comparison',['../customize.html#autotoc_md31',1,'']]],
+  ['absolute_20comparison_2',['Absolute Comparison',['../customize.html#autotoc_md32',1,'']]],
   ['absolute_5fcheck_3',['absolute_check',['../group__tools-precision.html#ga839002675e78cc93d0c421beeb976014',1,'tts']]],
   ['adela_20bradley_4',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]],
   ['and_20ordering_5',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],

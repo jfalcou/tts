@@ -131,10 +131,13 @@ $(function(){initNavTree('cli.html','',''); });
     <a href="#autotoc_md25">Display Options </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md26">Tests Parameters </a>
+    <a href="#autotoc_md26">Execution Control </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md27">Range Parameters </a>
+    <a href="#autotoc_md27">Tests Parameters </a>
+  </li>
+  <li class="level1">
+    <a href="#autotoc_md28">Range Parameters </a>
   </li>
 </ul>
 </div>
@@ -156,6 +159,35 @@ Display Options</h1>
 <td class="markdownTableBodyNone"><span class="tt">--quiet</span>  </td><td class="markdownTableBodyNone"><span class="tt">-q</span>  </td><td class="markdownTableBodyNone">Remove all tests results regardless of their status. <span class="tt">./my_test --quiet</span>  </td></tr>
 </table>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+Execution Control</h1>
+<p>These options change what actually gets run and how results are reported, mostly useful for CI integration. Those options have no short form.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Options  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">--dry</span>  </td><td class="markdownTableBodyNone">Print registered test names without running them. <span class="tt">./my_test --dry</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">--allow-empty</span>  </td><td class="markdownTableBodyNone">Do not fail when the test suite registered zero test. <span class="tt">./my_test --allow-empty</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">--capture=path</span>  </td><td class="markdownTableBodyNone">Capture this run's output and write it to <span class="tt">path</span> instead of stdout. <span class="tt">./my_test --capture=report.txt</span>  </td></tr>
+</table>
+<dl class="section note"><dt>Note</dt><dd><span class="tt">--dry</span> only prints what's known without running any test: registered <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> names, plus their types for the latter two. It cannot list <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those only exist as runtime control flow inside a test's body - which <span class="tt">--dry</span> never executes. For example, given:</dd></dl>
+<div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check stack behavior&quot;</span>, std::int32_t, <span class="keywordtype">double</span>)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">::tts::type&lt;T&gt;</a>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a>(<span class="stringliteral">&quot;a stack of T is empty&quot;</span>)</div>
+<div class="line">  {</div>
+<div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;push increases its size&quot;</span>) { };</div>
+<div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;pop is a no-op&quot;</span>)          { };</div>
+<div class="line">  };</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:198</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga36226295afb27d17e36249a61a3864af"><div class="ttname"><a href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(MESSAGE)</div><div class="ttdoc">Add a scoped tests to current scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:115</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga70b895c13fd5ab455fb7c46226fdc6b3"><div class="ttname"><a href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a></div><div class="ttdeci">#define TTS_WHEN(STORY)</div><div class="ttdoc">Start a block of scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:74</div></div>
+<div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
+</div><!-- fragment --><p><span class="tt">./my_test --dry</span> prints the case name with its types, but the <span class="tt">WHEN</span>/<span class="tt">AND_THEN</span> sub-scenarios stay invisible:</p>
+<div class="fragment"><div class="line">Check stack behavior &lt;int, double&gt;</div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Tests Parameters</h1>
 <p>These options are provided to control the specifics of the tests parameters. Those options require a value and have no short form.</p>
 <table class="markdownTable">
@@ -166,7 +198,7 @@ Tests Parameters</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">--seed=N</span>  </td><td class="markdownTableBodyNone">Set the PRNG seeds (default is time-based) <span class="tt">./my_test --valmin=-100</span>  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Range Parameters</h1>
 <p>This set of options controls the specifics of the range check tests. Those options require a value and have no short form.</p>
 <table class="markdownTable">
