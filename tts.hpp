@@ -410,13 +410,20 @@ namespace tts
   struct output_sink
   {
     virtual void write(text const& t) = 0;
-    virtual ~output_sink()            = default;
+    virtual void flush()
+    {
+    }
+    virtual ~output_sink() = default;
   };
   struct stdout_sink : output_sink
   {
     void write(text const& t) override
     {
       fputs(t.data(), stdout);
+    }
+    void flush() override
+    {
+      fflush(stdout);
     }
   };
   struct gathering_sink : output_sink
@@ -472,6 +479,10 @@ namespace tts
     template<typename... Args> void writeln(char const* format, Args const&... args)
     {
       writeln(text(format, args...));
+    }
+    void flush()
+    {
+      sink_->flush();
     }
     void sink(output_sink& s)
     {
@@ -1701,19 +1712,19 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
-      fflush(stdout);
+      ::tts::output().flush();
       t();
       done_tests++;
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
         if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
-        fflush(stdout);
+        ::tts::output().flush();
       }
       else if(failure_count == ::tts::global_runtime.failure_count)
       {
         if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
-        fflush(stdout);
+        ::tts::output().flush();
       }
     }
   }
