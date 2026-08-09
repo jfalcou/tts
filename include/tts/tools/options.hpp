@@ -104,10 +104,12 @@ namespace tts::_
   {
     if(!flag || flag[ 0 ] != '-' || flag[ 1 ] != '-' || flag[ 2 ] == '\0') return text {};
 
-    char        buffer[ 64 ] = "TTS_";
-    std::size_t pos          = 4;
-    for(char const* p = flag + 2; *p && pos < sizeof(buffer) - 1; ++p)
+    char buffer[ 64 ] = "TTS_"; // NOSONAR - avoids std::string, this project avoids that header
+    std::size_t pos   = 4;
+    for(char const* p = flag + 2; *p; ++p)
     {
+      if(pos >= sizeof(buffer) - 1) break;
+
       char c = *p;
       if(c == '-') c = '_';
       else if(c >= 'a' && c <= 'z') c = static_cast<char>(c - 'a' + 'A');
