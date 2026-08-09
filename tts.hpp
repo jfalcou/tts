@@ -52,6 +52,7 @@ Flags:
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
+  --capture=path    Capture this run's output and write it to path instead of stdout
 Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)
   --loop=arg        Repeat each range checks arg times
@@ -1715,12 +1716,27 @@ namespace tts::_
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
 }
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
+  ::tts::text capture_path = ::tts::arguments().value<::tts::text>("--capture");
+  FILE*       capture_file = nullptr;
+  if(!capture_path.is_empty())
+  {
+    capture_file = fopen(capture_path.data(), "w");
+    if(!capture_file)
+    {
+      ::tts::output().writeln("Unable to open '%s' for writing (--capture)", capture_path.data());
+      return 1;
+    }
+  }
+  ::tts::gathering_sink capture_sink;
+  if(capture_file) ::tts::output().sink(capture_sink);
   auto        nb_tests   = ::tts::_::suite().size();
   std::size_t done_tests = 0;
   auto        seed       = ::tts::random_seed();
@@ -1757,9 +1773,16 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
                               static_cast<int>(nb_tests - done_tests - 1));
   }
+  if(capture_file)
+  {
+    ::tts::output().sink(::tts::output_handler::default_sink());
+    fputs(capture_sink.content().data(), capture_file);
+    fclose(capture_file);
+  }
   if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
   else return 0;
 }
+TTS_DISABLE_WARNING_POP
 #endif
 namespace tts::_
 {
