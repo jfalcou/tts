@@ -391,18 +391,18 @@ namespace tts::_
   {
     current_verbosity.quiet = quiet;
   }
-  struct verbosity_scope
+  struct scoped_verbosity
   {
-    verbosity_scope() = default;
-    ~verbosity_scope()
+    scoped_verbosity() = default;
+    ~scoped_verbosity()
     {
       current_verbosity = saved;
     }
-    verbosity_scope(verbosity_scope const&)            = delete;
-    verbosity_scope& operator=(verbosity_scope const&) = delete;
-    verbosity_scope(verbosity_scope&&)                 = delete;
-    verbosity_scope& operator=(verbosity_scope&&)      = delete;
-    verbosity        saved                             = current_verbosity;
+    scoped_verbosity(scoped_verbosity const&)            = delete;
+    scoped_verbosity& operator=(scoped_verbosity const&) = delete;
+    scoped_verbosity(scoped_verbosity&&)                 = delete;
+    scoped_verbosity& operator=(scoped_verbosity&&)      = delete;
+    verbosity         saved                              = current_verbosity;
   };
 }
 namespace tts
@@ -508,6 +508,24 @@ namespace tts
   {
     return _::current_output;
   }
+  class scoped_sink
+  {
+  public:
+    explicit scoped_sink(output_sink& s)
+    {
+      output().sink(s);
+    }
+    ~scoped_sink()
+    {
+      output().sink(saved_);
+    }
+    scoped_sink(scoped_sink const&)            = delete;
+    scoped_sink& operator=(scoped_sink const&) = delete;
+    scoped_sink(scoped_sink&&)                 = delete;
+    scoped_sink& operator=(scoped_sink&&)      = delete;
+  private:
+    output_sink& saved_ = output().sink();
+  };
 }
 namespace tts::_
 {
