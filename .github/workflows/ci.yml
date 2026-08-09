@@ -39,6 +39,14 @@ jobs:
     needs: precommit
     uses: ./.github/workflows/linux.yml
 
+  ##################################################################################################
+  ## Sanitizers (ASan+UBSan) - runs after the normal Linux matrix (tests + MemCheck) has passed
+  ##################################################################################################
+  sanitizer-tests:
+    name: Sanitizers
+    needs: linux-tests
+    uses: ./.github/workflows/sanitizers.yml
+
   macos-tests:
     name: MacOS
     needs: precommit
