@@ -175,6 +175,42 @@ TTS_CASE("Check output_handler dispatches to a power user defined output_sink")
   TTS_EQUAL(custom.last, "custom output");
 };
 
+TTS_CASE("Check output_handler::flush dispatches to the current output_sink")
+{
+  struct flushable_sink : tts::output_sink
+  {
+    int  flushes = 0;
+    void write(tts::text const&) override
+    {
+      // Unused: this test only exercises flush().
+    }
+    void flush() override
+    {
+      flushes++;
+    }
+  };
+
+  flushable_sink sink;
+  auto&          out      = tts::output();
+  auto&          previous = out.sink();
+
+  out.sink(sink);
+  out.flush();
+  out.sink(previous);
+
+  TTS_EQUAL(sink.flushes, 1);
+};
+
+TTS_CASE("Check output_sink::flush defaults to a no-op")
+{
+  tts::gathering_sink gs;
+  gs.write(tts::text {"kept"});
+
+  gs.flush();
+
+  TTS_EQUAL(gs.content(), "kept");
+};
+
 TTS_CASE("Check report_fail only shows the failing type outside verbose mode")
 {
   ::tts::_::verbosity_scope scope;

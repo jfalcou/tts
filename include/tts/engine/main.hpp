@@ -134,7 +134,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       ::tts::global_runtime.fail_status = false;
 
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
-      fflush(stdout);
+      ::tts::output().flush();
       t();
       done_tests++;
 
@@ -142,12 +142,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       {
         ::tts::global_runtime.invalid();
         if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
-        fflush(stdout);
+        ::tts::output().flush();
       }
       else if(failure_count == ::tts::global_runtime.failure_count)
       {
         if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
-        fflush(stdout);
+        ::tts::output().flush();
       }
     }
   }
