@@ -9,6 +9,7 @@
 
 #include <tts/tools/buffer.hpp>
 #include <tts/tools/callable.hpp>
+#include <tts/tools/text.hpp>
 
 namespace tts::_
 {
@@ -25,6 +26,7 @@ namespace tts::_
 
     char const*        name;
     tts::_::callable   behaviour;
+    tts::text          types = {};
   };
 
   // Global tests suite

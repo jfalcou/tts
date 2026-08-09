@@ -117,6 +117,16 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
 
+  if(::tts::arguments()("--dry"))
+  {
+    for(auto const& t: ::tts::_::suite())
+    {
+      if(t.types.is_empty()) ::tts::output().writeln(t.name);
+      else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
+    }
+    return 0;
+  }
+
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
 
