@@ -49,6 +49,7 @@ Flags:
   -v, --verbose     Display tests results regardless of their status.
   -q, --quiet       Display only test failures percentage.
   --allow-empty     Do not fail when the test suite registered zero test.
+  --dry             Print registered test names without running them.
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
@@ -1365,6 +1366,7 @@ namespace tts::_
     static inline bool acknowledge(test&& f);
     char const*        name;
     tts::_::callable   behaviour;
+    tts::text          types = {};
   };
   inline buffer<test>& suite()
   {
@@ -1722,6 +1724,15 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 {
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
+  if(::tts::arguments()("--dry"))
+  {
+    for(auto const& t: ::tts::_::suite())
+    {
+      if(t.types.is_empty()) ::tts::output().writeln(t.name);
+      else ::tts::output().writeln("%s <%s>", t.name, t.types.data());
+    }
+    return 0;
+  }
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
   ::tts::text capture_path = ::tts::arguments().value<::tts::text>("--capture");
@@ -2161,6 +2172,20 @@ namespace tts::_
     char const* name;
   };
   inline text current_type = {};
+  inline text joined_type_names()
+  {
+    return text {};
+  }
+  template<typename T, typename... Rest> inline text joined_type_names()
+  {
+    text out = as_text(typename_<T>);
+    if constexpr(sizeof...(Rest) > 0)
+    {
+      out += ", ";
+      out += joined_type_names<Rest...>();
+    }
+    return out;
+  }
   template<typename... Types> struct captures
   {
     captures(char const* id)
@@ -2180,7 +2205,8 @@ namespace tts::_
            body(type<Types>())),
           ...);
          current_type = text {""};
-       }});
+       },
+       joined_type_names<Types...>()});
     }
     char const* name;
   };
@@ -2218,7 +2244,8 @@ namespace tts::_
                                 {
                                   (process_type<Type>(body), ...);
                                   current_type = text {""};
-                                }});
+                                },
+                                joined_type_names<Type...>()});
     }
   };
 }
