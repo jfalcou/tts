@@ -7,17 +7,39 @@
 //==================================================================================================
 #include <tts/tts.hpp>
 
+TTS_CASE("Check set_verbose and set_quiet are the only writers of current_verbosity")
+{
+  ::tts::_::verbosity_scope scope;
+
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(false);
+  TTS_EXPECT_NOT(::tts::_::current_verbosity.verbose);
+  TTS_EXPECT_NOT(::tts::_::current_verbosity.quiet);
+
+  ::tts::_::set_verbose(true);
+  TTS_EXPECT(::tts::_::current_verbosity.verbose);
+  TTS_EXPECT_NOT(::tts::_::current_verbosity.quiet);
+
+  ::tts::_::set_quiet(true);
+  TTS_EXPECT(::tts::_::current_verbosity.verbose);
+  TTS_EXPECT(::tts::_::current_verbosity.quiet);
+
+  ::tts::_::set_verbose(false);
+  TTS_EXPECT_NOT(::tts::_::current_verbosity.verbose);
+  TTS_EXPECT(::tts::_::current_verbosity.quiet);
+};
+
 TTS_CASE("Check verbosity_scope saves and restores current_verbosity")
 {
   ::tts::_::verbosity_scope outer; // restores whatever was in place before this test ran
 
-  ::tts::_::current_verbosity.verbose = false;
-  ::tts::_::current_verbosity.quiet   = true;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(true);
 
   {
     ::tts::_::verbosity_scope inner;
-    ::tts::_::current_verbosity.verbose = true;
-    ::tts::_::current_verbosity.quiet   = false;
+    ::tts::_::set_verbose(true);
+    ::tts::_::set_quiet(false);
     TTS_EXPECT(tts::is_verbose());
     TTS_EXPECT_NOT(tts::is_quiet());
   }
@@ -30,16 +52,16 @@ TTS_CASE("Check is_verbose and is_quiet reflect the current verbosity state")
 {
   ::tts::_::verbosity_scope scope;
 
-  ::tts::_::current_verbosity.verbose = false;
-  ::tts::_::current_verbosity.quiet   = false;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(false);
   TTS_EXPECT_NOT(tts::is_verbose());
   TTS_EXPECT_NOT(tts::is_quiet());
 
-  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::set_verbose(true);
   TTS_EXPECT(tts::is_verbose());
   TTS_EXPECT_NOT(tts::is_quiet());
 
-  ::tts::_::current_verbosity.quiet = true;
+  ::tts::_::set_quiet(true);
   TTS_EXPECT(tts::is_verbose());
   TTS_EXPECT(tts::is_quiet());
 };
@@ -48,20 +70,20 @@ TTS_CASE("Check is_detailed is true only when verbose is set and quiet is not")
 {
   ::tts::_::verbosity_scope scope;
 
-  ::tts::_::current_verbosity.verbose = false;
-  ::tts::_::current_verbosity.quiet   = false;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(false);
   TTS_EXPECT_NOT(tts::is_detailed());
 
-  ::tts::_::current_verbosity.verbose = true;
-  ::tts::_::current_verbosity.quiet   = false;
+  ::tts::_::set_verbose(true);
+  ::tts::_::set_quiet(false);
   TTS_EXPECT(tts::is_detailed());
 
-  ::tts::_::current_verbosity.verbose = true;
-  ::tts::_::current_verbosity.quiet   = true;
+  ::tts::_::set_verbose(true);
+  ::tts::_::set_quiet(true);
   TTS_EXPECT_NOT(tts::is_detailed());
 
-  ::tts::_::current_verbosity.verbose = false;
-  ::tts::_::current_verbosity.quiet   = true;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(true);
   TTS_EXPECT_NOT(tts::is_detailed());
 };
 
@@ -163,13 +185,13 @@ TTS_CASE("Check report_fail only shows the failing type outside verbose mode")
   out.sink(gs);
 
   // Quiet hides the "[X] ... FAILURE ..." line so only the type hint remains, isolating it.
-  ::tts::_::current_verbosity.verbose = false;
-  ::tts::_::current_verbosity.quiet   = true;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(true);
   ::tts::_::report_fail("[loc]", "msg", ::tts::text {"int"});
   TTS_EQUAL(gs.content(), ">  With <T = int>\n");
 
   gs.clear();
-  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::set_verbose(true);
   ::tts::_::report_fail("[loc]", "msg", ::tts::text {"int"});
   TTS_EXPECT(gs.content().is_empty());
 
@@ -185,13 +207,13 @@ TTS_CASE("Check report_fatal shares the same type hint behavior as report_fail")
   auto&                     previous = out.sink();
   out.sink(gs);
 
-  ::tts::_::current_verbosity.verbose = false;
-  ::tts::_::current_verbosity.quiet   = false;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(false);
   ::tts::_::report_fatal("[loc]", "msg", ::tts::text {"int"});
   TTS_EQUAL(gs.content(), ">  With <T = int>\n  [@] [loc] : @@ FATAL @@ : msg\n");
 
   gs.clear();
-  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::set_verbose(true);
   ::tts::_::report_fatal("[loc]", "msg", ::tts::text {"int"});
   TTS_EQUAL(gs.content(), "  [@] [loc] : @@ FATAL @@ : msg\n");
 

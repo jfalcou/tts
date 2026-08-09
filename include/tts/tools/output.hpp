@@ -26,6 +26,20 @@ namespace tts::_
   inline verbosity current_verbosity = {};
 
   //====================================================================================================================
+  // Sole writers for current_verbosity: every read goes through is_verbose()/is_quiet()/
+  // is_detailed(), so every write is funneled through these instead of poking the fields directly.
+  //====================================================================================================================
+  inline void set_verbose(bool verbose)
+  {
+    current_verbosity.verbose = verbose;
+  }
+
+  inline void set_quiet(bool quiet)
+  {
+    current_verbosity.quiet = quiet;
+  }
+
+  //====================================================================================================================
   // RAII guard saving current_verbosity on construction and restoring it on destruction. Meant for
   // tests that need to exercise a specific verbose/quiet combination without leaking that state
   // into the rest of the running test suite, even if the test exits early.

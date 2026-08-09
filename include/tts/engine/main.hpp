@@ -117,11 +117,11 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::initialize(argc, argv);
   if(::tts::arguments()("-h", "--help")) return ::tts::_::usage(argv[ 0 ]);
 
-  ::tts::_::current_verbosity.verbose = ::tts::arguments()("-v", "--verbose");
-  ::tts::_::current_verbosity.quiet   = ::tts::arguments()("-q", "--quiet");
+  ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
+  ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
 
-  auto        nb_tests                = ::tts::_::suite().size();
-  std::size_t done_tests              = 0;
+  auto        nb_tests   = ::tts::_::suite().size();
+  std::size_t done_tests = 0;
   ::tts::set_random_seed(static_cast<std::uint64_t>(tts::random_seed()));
 
   try
