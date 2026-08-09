@@ -110,6 +110,8 @@ namespace tts::_
   }
 }
 
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
 {
   ::tts::initialize(argc, argv);
@@ -184,5 +186,6 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
   else return 0;
 }
+TTS_DISABLE_WARNING_POP
 
 #endif

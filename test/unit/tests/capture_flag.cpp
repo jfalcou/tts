@@ -16,6 +16,8 @@ TTS_CASE("Dummy test so the driver has something to run")
   TTS_EXPECT(1 == 1);
 };
 
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
 int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
@@ -59,3 +61,4 @@ int main(int argc, char const** argv)
 
   return ok ? 0 : 1;
 }
+TTS_DISABLE_WARNING_POP
