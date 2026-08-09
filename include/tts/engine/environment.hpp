@@ -9,6 +9,7 @@
 #pragma once
 
 #include <tts/engine/deps.hpp>
+#include <tts/tools/options.hpp>
 #include <tts/tools/output.hpp>
 
 //======================================================================================================================
@@ -71,6 +72,8 @@ namespace tts::_
                   inv_txt);
 
       out.writeln();
+
+      if(test_count == 0 && !::tts::arguments()("--allow-empty")) return 1;
 
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
