@@ -23,7 +23,7 @@ namespace tts::_
     bool quiet   = false;
   };
 
-  inline verbosity current_verbosity = {};
+  inline verbosity current_verbosity = {}; // NOSONAR
 
   //====================================================================================================================
   // Sole writers for current_verbosity: every read goes through is_verbose()/is_quiet()/
