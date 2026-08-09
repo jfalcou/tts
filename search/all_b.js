@@ -8,7 +8,9 @@ var searchData=
   ['int_5ftypes_5',['int_types',['../group__tools-types.html#gadc998a2d00a61bdc9de24e8631429bfe',1,'tts']]],
   ['integral_5ftypes_6',['integral_types',['../group__tools-types.html#ga508d14441e28f0181a9925440f955837',1,'tts']]],
   ['interface_7',['Command Line Interface',['../cli.html',1,'']]],
-  ['is_5fempty_8',['is_empty',['../structtts_1_1text.html#a179150a2fec58fe69d3cfecefd034842',1,'tts::text']]],
-  ['is_5fvalid_9',['is_valid',['../structtts_1_1options.html#ac8155f76d1b47eeddc7594fb2682090b',1,'tts::options']]],
-  ['is_5fverbose_10',['is_verbose',['../group__tools-config.html#ga111c01e89ab08e5cbdce117148636b27',1,'tts']]]
+  ['is_5fdetailed_8',['is_detailed',['../group__tools-config.html#ga62a3ebe910e7837385bce5f304a1a887',1,'tts']]],
+  ['is_5fempty_9',['is_empty',['../structtts_1_1text.html#a179150a2fec58fe69d3cfecefd034842',1,'tts::text']]],
+  ['is_5fquiet_10',['is_quiet',['../group__tools-config.html#ga922a003493831d59784364d170f0c57d',1,'tts']]],
+  ['is_5fvalid_11',['is_valid',['../structtts_1_1options.html#ac8155f76d1b47eeddc7594fb2682090b',1,'tts::options']]],
+  ['is_5fverbose_12',['is_verbose',['../group__tools-config.html#ga111c01e89ab08e5cbdce117148636b27',1,'tts']]]
 ];

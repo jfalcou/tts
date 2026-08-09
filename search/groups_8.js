@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['sequence_20tests_20macros_0',['Sequence Tests Macros',['../group__test-sequence.html',1,'']]]
+  ['related_20tools_0',['Data Generators related tools',['../group__tools-generators.html',1,'']]],
+  ['relation_20tests_20macros_1',['Relation Tests Macros',['../group__test-relation.html',1,'']]]
 ];

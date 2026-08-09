@@ -7,10 +7,12 @@ var searchData=
   ['data_20generators_4',['Data Generators',['../group__tools-generators-class.html',1,'']]],
   ['data_20generators_20customization_20points_5',['Data Generators Customization Points',['../group__tools-generators-custom.html',1,'']]],
   ['data_20generators_20related_20tools_6',['Data Generators related tools',['../group__tools-generators.html',1,'']]],
-  ['definition_20macros_7',['Tests definition macros',['../group__test-scenario.html',1,'']]],
-  ['detective_20who_8',['Detective who',['../changelog.html#autotoc_md6',1,'Detective who?'],['../changelog.html#autotoc_md12',1,'Detective who?'],['../changelog.html#autotoc_md15',1,'Detective who?'],['../changelog.html#autotoc_md17',1,'Detective who?'],['../changelog.html#autotoc_md19',1,'Detective who?'],['../changelog.html#autotoc_md21',1,'Detective who?'],['../changelog.html#autotoc_md24',1,'Detective who?']]],
-  ['display_9',['Data display',['../customize.html#customize-display',1,'']]],
-  ['display_20options_10',['Display Options',['../cli.html#autotoc_md25',1,'']]],
-  ['distance_11',['ULP Distance',['../customize.html#autotoc_md28',1,'']]],
-  ['driver_12',['Tests Driver',['../customize.html#customize-driver',1,'']]]
+  ['default_5fsink_7',['default_sink',['../classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb',1,'tts::output_handler']]],
+  ['definition_20macros_8',['Tests definition macros',['../group__test-scenario.html',1,'']]],
+  ['detective_20who_9',['Detective who',['../changelog.html#autotoc_md6',1,'Detective who?'],['../changelog.html#autotoc_md12',1,'Detective who?'],['../changelog.html#autotoc_md15',1,'Detective who?'],['../changelog.html#autotoc_md17',1,'Detective who?'],['../changelog.html#autotoc_md19',1,'Detective who?'],['../changelog.html#autotoc_md21',1,'Detective who?'],['../changelog.html#autotoc_md24',1,'Detective who?']]],
+  ['display_10',['Data display',['../customize.html#customize-display',1,'']]],
+  ['display_20options_11',['Display Options',['../cli.html#autotoc_md25',1,'']]],
+  ['distance_12',['ULP Distance',['../customize.html#autotoc_md28',1,'']]],
+  ['driver_13',['Tests Driver',['../customize.html#customize-driver',1,'']]],
+  ['dump_14',['dump',['../structtts_1_1gathering__sink.html#a4d2de4a99c8f613124b9457231a7c142',1,'tts::gathering_sink']]]
 ];

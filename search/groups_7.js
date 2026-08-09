@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['related_20tools_0',['Data Generators related tools',['../group__tools-generators.html',1,'']]],
-  ['relation_20tests_20macros_1',['Relation Tests Macros',['../group__test-relation.html',1,'']]]
+  ['points_0',['Points',['../group__customization-points.html',1,'Customization Points'],['../group__tools-generators-custom.html',1,'Data Generators Customization Points']]],
+  ['precision_20tests_20macros_1',['Precision Tests Macros',['../group__test-precision.html',1,'']]],
+  ['precision_20utilities_2',['Precision Utilities',['../group__tools-precision.html',1,'']]]
 ];

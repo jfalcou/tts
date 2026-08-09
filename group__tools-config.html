@@ -138,6 +138,10 @@ Classes</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga1e9e78ed104b86ad669dbb9bc9471343" id="r_ga1e9e78ed104b86ad669dbb9bc9471343"><td class="memItemLeft"><a class="el" href="structtts_1_1options.html">options</a> const &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ga1e9e78ed104b86ad669dbb9bc9471343">tts::arguments</a> ()</td></tr>
 <tr class="memdesc:ga1e9e78ed104b86ad669dbb9bc9471343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current list of command line argument.  <br /></td></tr>
+<tr class="memitem:ga62a3ebe910e7837385bce5f304a1a887" id="r_ga62a3ebe910e7837385bce5f304a1a887"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ga62a3ebe910e7837385bce5f304a1a887">tts::is_detailed</a> ()</td></tr>
+<tr class="memdesc:ga62a3ebe910e7837385bce5f304a1a887"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if verbose-only details should be reported.  <br /></td></tr>
+<tr class="memitem:ga922a003493831d59784364d170f0c57d" id="r_ga922a003493831d59784364d170f0c57d"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ga922a003493831d59784364d170f0c57d">tts::is_quiet</a> ()</td></tr>
+<tr class="memdesc:ga922a003493831d59784364d170f0c57d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if quiet mode is enabled.  <br /></td></tr>
 <tr class="memitem:ga111c01e89ab08e5cbdce117148636b27" id="r_ga111c01e89ab08e5cbdce117148636b27"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#ga111c01e89ab08e5cbdce117148636b27">tts::is_verbose</a> ()</td></tr>
 <tr class="memdesc:ga111c01e89ab08e5cbdce117148636b27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if verbose mode is enabled.  <br /></td></tr>
 </table>
@@ -170,6 +174,66 @@ Functions</h2></td></tr>
 <p>Retrieve the current list of command line argument. </p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="structtts_1_1options.html" title="Command line arguments lightweight processor.">options</a> </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The pre-processed command line arguments as a reference to a <a class="el" href="structtts_1_1options.html" title="Command line arguments lightweight processor.">tts::options</a> instance. </dd></dl>
+
+</div>
+</div>
+<a id="ga62a3ebe910e7837385bce5f304a1a887" name="ga62a3ebe910e7837385bce5f304a1a887"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga62a3ebe910e7837385bce5f304a1a887">&#9670;&#160;</a></span>is_detailed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tts::is_detailed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/tools/options.hpp&gt;</code></p>
+
+<p>Check if verbose-only details should be reported. </p>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if verbose mode is enabled and quiet mode is not, <span class="tt">false</span> otherwise. This is the condition under which extra detail lines - like passing test confirmations or type hints - get reported: quiet mode always takes precedence over verbose mode. </dd></dl>
+
+</div>
+</div>
+<a id="ga922a003493831d59784364d170f0c57d" name="ga922a003493831d59784364d170f0c57d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga922a003493831d59784364d170f0c57d">&#9670;&#160;</a></span>is_quiet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tts::is_quiet </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/tools/options.hpp&gt;</code></p>
+
+<p>Check if quiet mode is enabled. </p>
+<dl class="section return"><dt>Returns</dt><dd><span class="tt">true</span> if quiet mode is enabled, <span class="tt">false</span> otherwise. Quiet mode is enabled when the <span class="tt">--quiet</span> or <span class="tt">-q</span> command line argument is provided. </dd></dl>
 
 </div>
 </div>

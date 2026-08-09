@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TTS: tts::realistic_generator&lt; T &gt; Struct Template Reference</title>
+<title>TTS: tts::output_sink Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,7 +96,7 @@ $(function() { codefold.init(); });
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structtts_1_1realistic__generator.html','','structtts_1_1realistic__generator-members'); });
+$(function(){initNavTree('structtts_1_1output__sink.html','','structtts_1_1output__sink-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -123,48 +123,75 @@ $(function(){initNavTree('structtts_1_1realistic__generator.html','','structtts_
 
 <div class="header">
   <div class="summary">
-<a href="structtts_1_1realistic__generator-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">tts::realistic_generator&lt; T &gt; Struct Template Reference</div></div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="structtts_1_1output__sink-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">tts::output_sink Struct Reference<span class="mlabels"><span class="mlabel abstract">abstract</span></span><div class="ingroups"><a class="el" href="group__tools-output.html">Output Utilities</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Data generator using a realistic random distribution.  
+<p>Customization point for where TTS output actually goes.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-struct tts::realistic_generator&lt; T &gt;</div><p>Data generator using a realistic random distribution. </p>
+<div class="textblock"><p>Customization point for where TTS output actually goes. </p>
+<p>All non-usage related output produced while running a test suite - tests progress, pass/fail/ fatal reports, additional logging information and the final results report - is written through the <a class="el" href="classtts_1_1output__handler.html" title="Centralizes all TTS runtime output and dispatches it to the current output_sink.">tts::output_handler</a> currently in use, which itself forwards every message to an <a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a>. Deriving from <a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> and overriding <a class="el" href="#ab46511dfaa6b2693d7003064c93f9060" title="Writes t to this sink&#39;s destination.">write()</a> lets power users redirect that output wherever they need to: a file, a GUI widget, a socket, another logging system...</p>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN  </span><span class="comment">// No need for main()</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN</span></div>
+<div class="line"><span class="preprocessor">#define TTS_CUSTOM_DRIVER_FUNCTION custom_sink_main</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">float</span> ok_x (<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x; }</div>
-<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x + x*1e-7f; }</div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>( <span class="stringliteral">&quot;Test range check&quot;</span> )</div>
+<div class="line"><span class="comment">// A power-user output_sink prefixing every message TTS writes before forwarding it to stdout.</span></div>
+<div class="line"><span class="keyword">struct </span>prefixed_sink : <a class="code hl_struct" href="structtts_1_1output__sink.html">tts::output_sink</a></div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a> ( <a class="code hl_struct" href="structtts_1_1realistic__generator.html">tts::realistic_generator&lt;float&gt;</a>(-100.f,+100.f)</div>
-<div class="line">                      , <span class="keywordtype">float</span>, <span class="keywordtype">float</span> , ok_x, bad_x</div>
-<div class="line">                      , 2.</div>
-<div class="line">                      );</div>
+<div class="line">  <span class="keywordtype">int</span>  messages = 0;</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordtype">void</span> <a class="code hl_function" href="#ab46511dfaa6b2693d7003064c93f9060">write</a>(tts::text <span class="keyword">const</span>&amp; t)<span class="keyword"> override</span></div>
+<div class="line"><span class="keyword">  </span>{</div>
+<div class="line">    messages++;</div>
+<div class="line">    <span class="keywordflow">if</span>(t != <span class="stringliteral">&quot;\n&quot;</span>) fputs(<span class="stringliteral">&quot;[MY-TTS] &quot;</span>, stdout);</div>
+<div class="line">    fputs(t.<a class="code hl_function" href="structtts_1_1text.html#a1bed9847e3611c55dd670a502cedc93d">data</a>(), stdout);</div>
+<div class="line">  }</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-precision_html_ga7de5e8bb8cb6f1397f2a0a2505def241"><div class="ttname"><a href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a></div><div class="ttdeci">#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</div><div class="ttdoc">Generate a range based test between two functions.</div><div class="ttdef"><b>Definition</b> ranges.hpp:200</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:147</div></div>
-<div class="ttc" id="astructtts_1_1realistic__generator_html"><div class="ttname"><a href="structtts_1_1realistic__generator.html">tts::realistic_generator</a></div><div class="ttdoc">Data generator using a realistic random distribution.</div><div class="ttdef"><b>Definition</b> ranges.hpp:265</div></div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd>realistic_distribution </dd></dl>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type of data to generate </td></tr>
-  </table>
-  </dd>
-</dl>
-</div></div><!-- contents -->
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Some test running through our custom output_sink&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(1 == 1);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> <span class="keyword">const</span>** argv)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_function" href="group__customization-points.html#ga8b25d232b7bc19668349b1defdc1e7f9">::tts::initialize</a>(argc, argv);</div>
+<div class="line"> </div>
+<div class="line">  prefixed_sink sink;</div>
+<div class="line">  <a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(sink); <span class="comment">// Install our custom sink...</span></div>
+<div class="line"> </div>
+<div class="line">  custom_sink_main(argc, argv); <span class="comment">// ...run the test suite through it...</span></div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(<a class="code hl_function" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb">tts::output_handler::default_sink</a>()); <span class="comment">// ...then restore the default one.</span></div>
+<div class="line"> </div>
+<div class="line">  printf(<span class="stringliteral">&quot;Our custom output_sink received %d message(s)\n&quot;</span>, sink.messages);</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">tts::report</a>(0, 0);</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtts_1_1output__handler.html" title="Centralizes all TTS runtime output and dispatches it to the current output_sink.">tts::output_handler</a> </dd>
+<dd>
+<a class="el" href="structtts_1_1stdout__sink.html" title="Default output_sink, streaming every message straight to stdout.">tts::stdout_sink</a> </dd>
+<dd>
+<a class="el" href="structtts_1_1gathering__sink.html" title="output_sink gathering every message into a single retrievable buffer.">tts::gathering_sink</a> </dd></dl>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ab46511dfaa6b2693d7003064c93f9060" id="r_ab46511dfaa6b2693d7003064c93f9060"><td class="memItemLeft"><a id="ab46511dfaa6b2693d7003064c93f9060" name="ab46511dfaa6b2693d7003064c93f9060"></a>
+virtual void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;t)=0</td></tr>
+<tr class="memdesc:ab46511dfaa6b2693d7003064c93f9060"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes t to this sink's destination. <br /></td></tr>
+</table>
+</div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- HTML footer for doxygen 1.8.20-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1realistic__generator.html">realistic_generator</a></li>
+    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1output__sink.html">output_sink</a></li>
   </ul>
 </div>
 </div> <!-- DOXYSTRAP RELATED -->

@@ -39,6 +39,39 @@
     <templarg>typename Type</templarg>
   </compound>
   <compound kind="struct">
+    <name>tts::gathering_sink</name>
+    <filename>structtts_1_1gathering__sink.html</filename>
+    <base>tts::output_sink</base>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>structtts_1_1gathering__sink.html</anchorfile>
+      <anchor>a6c8880d803778193c99a7b95d877a1d1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>text const &amp;</type>
+      <name>content</name>
+      <anchorfile>structtts_1_1gathering__sink.html</anchorfile>
+      <anchor>a9d2a181f4d6a9d95c9e8ff008b0120d2</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dump</name>
+      <anchorfile>structtts_1_1gathering__sink.html</anchorfile>
+      <anchor>a4d2de4a99c8f613124b9457231a7c142</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1gathering__sink.html</anchorfile>
+      <anchor>a5c262543e72018b6795d69fc939fb6cc</anchor>
+      <arglist>(text const &amp;t) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tts::limits_set</name>
     <filename>structtts_1_1limits__set.html</filename>
     <templarg>typename T</templarg>
@@ -95,6 +128,91 @@
       <arglist>(T that, Flags... fs) const</arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>tts::output_handler</name>
+    <filename>classtts_1_1output__handler.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>output_handler</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>af9136631b1485d7dde14f729368f91ab</anchor>
+      <arglist>(output_sink &amp;s=default_sink())</arglist>
+    </member>
+    <member kind="function">
+      <type>output_sink &amp;</type>
+      <name>sink</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>abea2abab38f19fb2cbecab986a18d7d3</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>sink</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a18bdc2a08396ba4646b54ffc2786eef7</anchor>
+      <arglist>(output_sink &amp;s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a55ecc437d26dc421a6c410ee1ac890cb</anchor>
+      <arglist>(char const *format, Args const &amp;... args)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>adb5821cd9941eb02015b603adad21f75</anchor>
+      <arglist>(char const *s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>aeb3b543499bba1f7a3f834c1ede258c4</anchor>
+      <arglist>(text const &amp;t)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>writeln</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>aad23d3ed5c47930796b7ad6baa8c6d3d</anchor>
+      <arglist>(char const *format, Args const &amp;... args)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>writeln</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>addf3ae46dc858d1ae9bda3858c523083</anchor>
+      <arglist>(char const *s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>writeln</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a1420b5c7e012e043872c5ef58367be0c</anchor>
+      <arglist>(text const &amp;t=text {})</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static stdout_sink &amp;</type>
+      <name>default_sink</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>ae3e6642f0bda714bdd8712a91650d1eb</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tts::output_sink</name>
+    <filename>structtts_1_1output__sink.html</filename>
+    <member kind="function" virtualness="pure">
+      <type>virtual void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ab46511dfaa6b2693d7003064c93f9060</anchor>
+      <arglist>(text const &amp;t)=0</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tts::ramp</name>
     <filename>structtts_1_1ramp.html</filename>
@@ -127,6 +245,18 @@
     <filename>structtts_1_1reverse__ramp.html</filename>
     <templarg>typename T</templarg>
     <templarg>typename U</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tts::stdout_sink</name>
+    <filename>structtts_1_1stdout__sink.html</filename>
+    <base>tts::output_sink</base>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1stdout__sink.html</anchorfile>
+      <anchor>a632effef57bc8f6680ac7927525f7b31</anchor>
+      <arglist>(text const &amp;t) override</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tts::text</name>
@@ -390,6 +520,20 @@
     </member>
     <member kind="function">
       <type>bool</type>
+      <name>tts::is_detailed</name>
+      <anchorfile>group__tools-config.html</anchorfile>
+      <anchor>ga62a3ebe910e7837385bce5f304a1a887</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>tts::is_quiet</name>
+      <anchorfile>group__tools-config.html</anchorfile>
+      <anchor>ga922a003493831d59784364d170f0c57d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
       <name>tts::is_verbose</name>
       <anchorfile>group__tools-config.html</anchorfile>
       <anchor>ga111c01e89ab08e5cbdce117148636b27</anchor>
@@ -497,6 +641,22 @@
       <anchorfile>group__test-exceptions.html</anchorfile>
       <anchor>ga55820a3f048b29e7e4f33d0730d072c8</anchor>
       <arglist>(EXPR, EXCEPTION,...)</arglist>
+    </member>
+  </compound>
+  <compound kind="group">
+    <name>tools-output</name>
+    <title>Output Utilities</title>
+    <filename>group__tools-output.html</filename>
+    <class kind="struct">tts::gathering_sink</class>
+    <class kind="class">tts::output_handler</class>
+    <class kind="struct">tts::output_sink</class>
+    <class kind="struct">tts::stdout_sink</class>
+    <member kind="function">
+      <type>output_handler &amp;</type>
+      <name>tts::output</name>
+      <anchorfile>group__tools-output.html</anchorfile>
+      <anchor>gab7cd9133e9d54bc84a3f33ca93f3ba45</anchor>
+      <arglist>()</arglist>
     </member>
   </compound>
   <compound kind="group">
