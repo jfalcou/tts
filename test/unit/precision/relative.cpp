@@ -76,6 +76,18 @@ TTS_CASE_TPL("Relative distance between floating point", float, double)
 #endif
 };
 
+TTS_CASE("relative_check treats exactly one NaN operand as infinitely far")
+{
+#if !defined(__FAST_MATH__)
+  double qnan = std::numeric_limits<double>::quiet_NaN();
+  double inf  = std::numeric_limits<double>::infinity();
+
+  TTS_EQUAL(tts::relative_check(qnan, 5.), inf);
+  TTS_EQUAL(tts::relative_check(5., qnan), inf);
+  TTS_EQUAL(tts::relative_check(qnan, qnan), 0.);
+#endif
+};
+
 #include "my_real.hpp"
 
 TTS_CASE("Relative distance of type with custom reldist")

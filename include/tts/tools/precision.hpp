@@ -98,7 +98,7 @@ namespace tts
       }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
-        if((a == b) || (_::is_nan(a) && _::is_nan(a))) return 0.;
+        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
 
         if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
           return std::numeric_limits<double>::infinity();
