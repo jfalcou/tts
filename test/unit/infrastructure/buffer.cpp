@@ -162,3 +162,32 @@ TTS_CASE("Check buffer with non trivially destructible type")
 
   TTS_EQUAL(dtor_count, 3);
 };
+
+TTS_CASE("Check const operator[] returns a reference, not a copy")
+{
+  tts::buffer<int>        b(3);
+  tts::buffer<int> const& cb = b;
+
+  b[ 1 ]                     = 42;
+
+  TTS_EQUAL(&cb[ 1 ], &b[ 1 ]);
+  TTS_EQUAL(cb[ 1 ], 42);
+};
+
+TTS_CASE("Check const operator[] works for a non-copyable type")
+{
+  struct non_copyable
+  {
+    non_copyable()                               = default;
+    non_copyable(non_copyable const&)            = delete;
+    non_copyable& operator=(non_copyable const&) = delete;
+    int           value                          = 0;
+  };
+
+  tts::buffer<non_copyable>        b(1);
+  tts::buffer<non_copyable> const& cb = b;
+
+  b[ 0 ].value                        = 69;
+
+  TTS_EQUAL(cb[ 0 ].value, 69);
+};

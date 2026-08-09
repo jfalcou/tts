@@ -134,7 +134,7 @@ namespace tts
       new(data_ + size_++) T(TTS_FWD(args)...);
     }
 
-    T operator[](std::size_t i) const
+    T const& operator[](std::size_t i) const
     {
       return data_[ i ];
     }
@@ -198,9 +198,15 @@ namespace tts
     {
       if(new_capacity > capacity_)
       {
+        assert(capacity_ <= std::numeric_limits<std::size_t>::max() / 2 &&
+               "tts::buffer requested capacity overflows size_t");
         std::size_t new_cap = capacity_ == 0 ? 1 : capacity_ * 2;
         while(new_cap < new_capacity)
+        {
+          assert(new_cap <= std::numeric_limits<std::size_t>::max() / 2 &&
+                 "tts::buffer requested capacity overflows size_t");
           new_cap *= 2;
+        }
 
         auto new_data = static_cast<T*>(malloc(sizeof(T) * new_cap)); // NOSONAR
         assert(new_data && "tts::buffer out of memory");
