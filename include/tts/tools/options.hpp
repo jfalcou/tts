@@ -269,6 +269,37 @@ namespace tts
   {
     return _::current_verbosity.verbose;
   }
+
+  //====================================================================================================================
+  /**
+    @ingroup tools-config
+    @public
+    @brief Check if quiet mode is enabled
+
+    @return `true` if quiet mode is enabled, `false` otherwise.
+            Quiet mode is enabled when the `--quiet` or `-q` command line argument is provided.
+  **/
+  //====================================================================================================================
+  inline bool is_quiet()
+  {
+    return _::current_verbosity.quiet;
+  }
+
+  //====================================================================================================================
+  /**
+    @ingroup tools-config
+    @public
+    @brief Check if verbose-only details should be reported
+
+    @return `true` if verbose mode is enabled and quiet mode is not, `false` otherwise. This is the
+            condition under which extra detail lines - like passing test confirmations or type
+            hints - get reported: quiet mode always takes precedence over verbose mode.
+  **/
+  //====================================================================================================================
+  inline bool is_detailed()
+  {
+    return is_verbose() && !is_quiet();
+  }
 }
 
 TTS_DISABLE_WARNING_POP

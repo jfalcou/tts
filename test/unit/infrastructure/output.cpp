@@ -7,6 +7,53 @@
 //==================================================================================================
 #include <tts/tts.hpp>
 
+TTS_CASE("Check is_verbose and is_quiet reflect the current verbosity state")
+{
+  bool const previous_verbose         = ::tts::_::current_verbosity.verbose;
+  bool const previous_quiet           = ::tts::_::current_verbosity.quiet;
+
+  ::tts::_::current_verbosity.verbose = false;
+  ::tts::_::current_verbosity.quiet   = false;
+  TTS_EXPECT_NOT(tts::is_verbose());
+  TTS_EXPECT_NOT(tts::is_quiet());
+
+  ::tts::_::current_verbosity.verbose = true;
+  TTS_EXPECT(tts::is_verbose());
+  TTS_EXPECT_NOT(tts::is_quiet());
+
+  ::tts::_::current_verbosity.quiet = true;
+  TTS_EXPECT(tts::is_verbose());
+  TTS_EXPECT(tts::is_quiet());
+
+  ::tts::_::current_verbosity.verbose = previous_verbose;
+  ::tts::_::current_verbosity.quiet   = previous_quiet;
+};
+
+TTS_CASE("Check is_detailed is true only when verbose is set and quiet is not")
+{
+  bool const previous_verbose         = ::tts::_::current_verbosity.verbose;
+  bool const previous_quiet           = ::tts::_::current_verbosity.quiet;
+
+  ::tts::_::current_verbosity.verbose = false;
+  ::tts::_::current_verbosity.quiet   = false;
+  TTS_EXPECT_NOT(tts::is_detailed());
+
+  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::current_verbosity.quiet   = false;
+  TTS_EXPECT(tts::is_detailed());
+
+  ::tts::_::current_verbosity.verbose = true;
+  ::tts::_::current_verbosity.quiet   = true;
+  TTS_EXPECT_NOT(tts::is_detailed());
+
+  ::tts::_::current_verbosity.verbose = false;
+  ::tts::_::current_verbosity.quiet   = true;
+  TTS_EXPECT_NOT(tts::is_detailed());
+
+  ::tts::_::current_verbosity.verbose = previous_verbose;
+  ::tts::_::current_verbosity.quiet   = previous_quiet;
+};
+
 TTS_CASE("Check output_handler defaults to tts::output_handler::default_sink")
 {
   TTS_EXPECT(&tts::output().sink() == &tts::output_handler::default_sink());

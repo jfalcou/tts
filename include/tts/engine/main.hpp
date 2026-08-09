@@ -78,7 +78,7 @@ namespace tts::_
 {
   void report_pass(char const* location, char const* message)
   {
-    if(::tts::_::current_verbosity.verbose && !::tts::_::current_verbosity.quiet)
+    if(::tts::is_detailed())
     {
       ::tts::output().writeln("  [+] %s : %s", location, message);
     }
@@ -86,12 +86,12 @@ namespace tts::_
 
   void report_fail(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::_::current_verbosity.verbose)
+    if(!::tts::is_verbose())
     {
       if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
     }
 
-    if(!::tts::_::current_verbosity.quiet)
+    if(!::tts::is_quiet())
     {
       ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
@@ -99,7 +99,7 @@ namespace tts::_
 
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
-    if(!::tts::_::current_verbosity.verbose)
+    if(!::tts::is_verbose())
     {
       if(!type.is_empty()) ::tts::output().writeln(">  With <T = %s>", type.data());
     }
@@ -128,7 +128,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
-      if(!::tts::_::current_verbosity.quiet) ::tts::output().writeln("TEST: '%s'", t.name);
+      if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       fflush(stdout);
       t();
       done_tests++;
@@ -136,20 +136,19 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       if(test_count == ::tts::global_runtime.test_count)
       {
         ::tts::global_runtime.invalid();
-        if(!::tts::_::current_verbosity.quiet) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
+        if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
         fflush(stdout);
       }
       else if(failure_count == ::tts::global_runtime.failure_count)
       {
-        if(!::tts::_::current_verbosity.quiet)
-          ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
+        if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
         fflush(stdout);
       }
     }
   }
   catch(::tts::_::fatal_signal&)
   {
-    if(!::tts::_::current_verbosity.quiet)
+    if(!::tts::is_quiet())
       ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
                               static_cast<int>(nb_tests - done_tests - 1));
   }

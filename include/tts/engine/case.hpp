@@ -54,7 +54,7 @@ namespace tts::_
        {
          // We setup the current type name before each test so we know
          (((current_type = as_text(typename_<Types>)),
-           (::tts::_::current_verbosity.verbose && !::tts::_::current_verbosity.quiet
+           (::tts::is_detailed()
             ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
             : 0),
            body(type<Types>())),
@@ -98,8 +98,7 @@ namespace tts::_
     template<typename T> static void process_type(auto body)
     {
       current_type = as_text(typename_<T>);
-      if(::tts::_::current_verbosity.verbose && !::tts::_::current_verbosity.quiet)
-        ::tts::output().writeln(">  With <T = %s>", current_type.data());
+      if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
       process_call(body, produce(type<T> {}, Generators)...);
     }
 
