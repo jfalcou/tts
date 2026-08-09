@@ -64,6 +64,12 @@ TTS_CASE("Check option::get from a separate name/value pair parses integrals and
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 
+// putenv() doesn't copy its argument, it stores the pointer directly in the environment -
+// passing it a pointer to an automatic (stack) variable is undefined behavior once that
+// variable goes out of scope (CERT POS34-C). Every call below is safe because it's given a
+// string literal, which has static storage duration for the whole program - never copy this
+// pattern with a dynamically-built buffer without also giving it static/longer storage.
+
 TTS_CASE("Check options falls back to a TTS_<FLAG> environment variable when no CLI flag matches")
 {
   putenv(const_cast<char*>("TTS_QUX_TEST_FLAG=1")); // NOSONAR
