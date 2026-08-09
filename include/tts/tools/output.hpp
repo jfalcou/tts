@@ -46,10 +46,7 @@ namespace tts::_
   //====================================================================================================================
   struct verbosity_scope
   {
-    verbosity_scope()
-        : saved(current_verbosity)
-    {
-    }
+    verbosity_scope() = default;
 
     ~verbosity_scope()
     {
@@ -61,7 +58,7 @@ namespace tts::_
     verbosity_scope(verbosity_scope&&)                 = delete;
     verbosity_scope& operator=(verbosity_scope&&)      = delete;
 
-    verbosity        saved;
+    verbosity        saved                             = current_verbosity;
   };
 }
 
