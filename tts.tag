@@ -267,6 +267,17 @@
     <templarg>typename T</templarg>
     <templarg>typename U</templarg>
   </compound>
+  <compound kind="class">
+    <name>tts::scoped_sink</name>
+    <filename>classtts_1_1scoped__sink.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>scoped_sink</name>
+      <anchorfile>classtts_1_1scoped__sink.html</anchorfile>
+      <anchor>a9305cf1fca0500167abb89c53e176f1c</anchor>
+      <arglist>(output_sink &amp;s)</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>tts::stdout_sink</name>
     <filename>structtts_1_1stdout__sink.html</filename>
@@ -671,6 +682,7 @@
     <class kind="struct">tts::gathering_sink</class>
     <class kind="class">tts::output_handler</class>
     <class kind="struct">tts::output_sink</class>
+    <class kind="class">tts::scoped_sink</class>
     <class kind="struct">tts::stdout_sink</class>
     <member kind="function">
       <type>output_handler &amp;</type>
