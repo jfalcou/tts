@@ -63,6 +63,13 @@
       <anchor>a4d2de4a99c8f613124b9457231a7c142</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dump</name>
+      <anchorfile>structtts_1_1gathering__sink.html</anchorfile>
+      <anchor>a004222a1ffb1316cab23fa7c17d67de4</anchor>
+      <arglist>(output_sink &amp;target)</arglist>
+    </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
       <name>flush</name>

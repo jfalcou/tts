@@ -14,5 +14,5 @@ var searchData=
   ['display_20options_11',['Display Options',['../cli.html#autotoc_md25',1,'']]],
   ['distance_12',['ULP Distance',['../customize.html#autotoc_md28',1,'']]],
   ['driver_13',['Tests Driver',['../customize.html#customize-driver',1,'']]],
-  ['dump_14',['dump',['../structtts_1_1gathering__sink.html#a4d2de4a99c8f613124b9457231a7c142',1,'tts::gathering_sink']]]
+  ['dump_14',['dump',['../structtts_1_1gathering__sink.html#a004222a1ffb1316cab23fa7c17d67de4',1,'tts::gathering_sink::dump(output_sink &amp;target)'],['../structtts_1_1gathering__sink.html#a4d2de4a99c8f613124b9457231a7c142',1,'tts::gathering_sink::dump()']]]
 ];
