@@ -63,6 +63,13 @@
       <anchor>a4d2de4a99c8f613124b9457231a7c142</anchor>
       <arglist>()</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>write</name>
@@ -139,6 +146,13 @@
       <arglist>(output_sink &amp;s=default_sink())</arglist>
     </member>
     <member kind="function">
+      <type>void</type>
+      <name>flush</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a76252835b1ef185ad29e4bcda75caab5</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>output_sink &amp;</type>
       <name>sink</name>
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
@@ -205,6 +219,13 @@
   <compound kind="struct">
     <name>tts::output_sink</name>
     <filename>structtts_1_1output__sink.html</filename>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
       <name>write</name>
@@ -250,6 +271,13 @@
     <name>tts::stdout_sink</name>
     <filename>structtts_1_1stdout__sink.html</filename>
     <base>tts::output_sink</base>
+    <member kind="function">
+      <type>void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1stdout__sink.html</anchorfile>
+      <anchor>aef426f5b59aa7606833c7b3704494ad1</anchor>
+      <arglist>() override</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>write</name>
