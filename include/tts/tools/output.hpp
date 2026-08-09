@@ -305,7 +305,6 @@ namespace tts
   public:
     /// Installs s as the current output_sink, saving whichever one was previously installed.
     explicit scoped_sink(output_sink& s)
-        : saved_(output().sink())
     {
       output().sink(s);
     }
@@ -321,7 +320,7 @@ namespace tts
     scoped_sink& operator=(scoped_sink&&)      = delete;
 
   private:
-    output_sink& saved_;
+    output_sink& saved_ = output().sink();
   };
 
   //====================================================================================================================
