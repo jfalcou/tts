@@ -145,6 +145,18 @@ TTS_CASE("Check gathering_sink::dump streams then clears the gathered content")
   TTS_EXPECT(gs.content().is_empty());
 };
 
+TTS_CASE("Check gathering_sink::dump(sink) forwards content to it then clears the source")
+{
+  tts::gathering_sink source;
+  tts::gathering_sink target;
+
+  source.write(tts::text {"forwarded content"});
+  source.dump(target);
+
+  TTS_EQUAL(target.content(), "forwarded content");
+  TTS_EXPECT(source.content().is_empty());
+};
+
 TTS_CASE("Check output_handler dispatches to a power user defined output_sink")
 {
   struct counting_sink : tts::output_sink

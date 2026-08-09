@@ -142,7 +142,9 @@ namespace tts
 
     // ... run the test suite ...
 
-    report.dump();                        // stream everything gathered so far at once
+    report.dump();                        // stream everything gathered so far to stdout
+    // or
+    report.dump(some_other_sink);         // forward it to another output_sink instead
     // or
     do_something_with(report.content());  // retrieve it to do something else entirely
     @endcode
@@ -161,11 +163,18 @@ namespace tts
       return buffer_;
     }
 
+    /// Forwards everything gathered so far to target, then clears the buffer.
+    void dump(output_sink& target)
+    {
+      target.write(buffer_);
+      clear();
+    }
+
     /// Streams everything gathered so far to `stdout`, then clears the buffer.
     void dump()
     {
-      fputs(buffer_.data(), stdout);
-      clear();
+      stdout_sink target;
+      dump(target);
     }
 
     /// Discards everything gathered so far.
