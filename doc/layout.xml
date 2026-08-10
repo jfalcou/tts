@@ -36,6 +36,7 @@
     </tab>
     <tab type="usergroup" visible="yes" title="Informations">
        <tab type="user" url="@ref rationale" title="Rationale"/>
+       <tab type="user" url="@ref compile-time" title="Compile-Time Discipline"/>
        <tab type="user" url="@ref changelog" title="Changelog"/>
        <tab type="user" url="@ref licence" title="Licence"/>
     </tab>
