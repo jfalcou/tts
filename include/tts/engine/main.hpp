@@ -12,10 +12,11 @@
 #include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/environment.hpp>
+#include <tts/engine/shard.hpp>
+#include <tts/engine/sink_selection.hpp>
 #include <tts/tools/file.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/random.hpp>
-#include <array>
 
 #if defined(TTS_DOXYGEN_INVOKED)
 //======================================================================================================================
@@ -113,71 +114,6 @@ namespace tts::_
     ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
 
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
-  }
-
-  // Splits the suite in `total` round-robin shards (test at registration index k belongs to
-  // shard k % total), so a slow binary can be spread across parallel CI workers without
-  // splitting source files. See --shard in doc/cli.hpp.
-  struct shard_spec
-  {
-    bool         active = false;
-    unsigned int index  = 0;
-    unsigned int total  = 1;
-
-    bool         selects(std::size_t position) const
-    {
-      return !active || (position % total == index);
-    }
-
-    std::size_t count(std::size_t suite_size) const
-    {
-      if(!active) return suite_size;
-      if(suite_size <= index) return 0;
-      return (suite_size - index - 1) / total + 1;
-    }
-  };
-
-  // Parses --shard=i/n. `ok` is set to false if the flag is present but malformed or out of
-  // range (n == 0 or i >= n); the returned shard_spec is then meaningless and must be ignored.
-  TTS_DISABLE_WARNING_PUSH
-  TTS_DISABLE_WARNING_CRT_SECURE
-  inline shard_spec parse_shard(bool& ok)
-  {
-    ok              = true;
-    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
-    if(raw.is_empty()) return {};
-
-    unsigned int i = 0;
-    unsigned int n = 0;
-    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
-    {
-      ok = false;
-      return {};
-    }
-
-    return {true, i, n};
-  }
-  TTS_DISABLE_WARNING_POP
-
-  // Every accepted --sink=name value - also drives the "expected one of: ..." error message
-  // below, so adding a new sink here is the only place that needs updating.
-  inline constexpr std::array<char const*, 3> sink_names {"colored", "tap", "diagnostics"};
-
-  // Validates --sink=name (read from the current tts::arguments()). ok is set to false for an
-  // unknown, non-empty name, in which case the returned text is ready to print as an error.
-  inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
-  {
-    ok = name.is_empty();
-    for(auto candidate: sink_names)
-      ok = ok || (name == ::tts::text {candidate});
-    if(ok) return {};
-
-    ::tts::text expected;
-    for(std::size_t i = 0; i < sink_names.size(); ++i)
-      expected += ::tts::text {i ? ", %s" : "%s", sink_names[ i ]};
-
-    return ::tts::text {
-    "Unknown --sink value '%s', expected one of: %s", name.data(), expected.data()};
   }
 }
 
