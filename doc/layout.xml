@@ -7,6 +7,7 @@
       <tab type="user" url="@ref setup"   title="Setup"/>
       <tab type="user" url="@ref tts101"  title="Getting Started"/>
       <tab type="user" url="@ref cli"     title="Command Line Interface"/>
+      <tab type="user" url="@ref output-sinks" title="Built-in Output Sinks"/>
       <tab type="usergroup" visible="yes" title="Customizing TTS">
         <tab type="user" url="@ref customize"               title="General Behaviour"/>
         <tab type="user" url="@ref tools-generators-custom" title="Generators"/>
