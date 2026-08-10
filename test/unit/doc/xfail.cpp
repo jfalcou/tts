@@ -7,7 +7,7 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
 TTS_CASE(TTS_XFAIL("Known, not-yet-fixed rounding bug"))

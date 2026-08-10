@@ -7,7 +7,7 @@
 //==================================================================================================
 
 //! [snippet]
-#define TTS_MAIN
+#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
 TTS_CASE(TTS_XINVALID("Placeholder for a scenario not written yet"))
