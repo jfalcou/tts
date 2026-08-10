@@ -20,7 +20,9 @@ TTS_CASE("Failing case for structured hooks")
 };
 
 TTS_CASE("Invalid case for structured hooks")
-{};
+{
+// Expect to be invalid because of missing assertion
+};
 
 namespace
 {
