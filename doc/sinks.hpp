@@ -21,8 +21,12 @@
   breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since those don't have their own
   hook.
 
-  On a plain @ref TTS_MAIN binary (no custom driver), the `--sink=name` CLI flag installs any of
-  the three below without writing any C++ at all - see @ref cli.
+  @note On a plain @ref TTS_MAIN binary (no custom driver), the `--sink=name` CLI flag installs
+  any of the three below without writing any C++ at all - `--sink=colored`, `--sink=tap`, or
+  `--sink=diagnostics`. It composes with `--capture=path`: `--sink=tap --capture=report.tap`
+  writes TAP-formatted output to the file instead of stdout. Like `--shard`, it's a no-op for
+  binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which already manages its own sink - see
+  @ref cli for the full flag reference.
 
   Sink                       | Purpose
   -------------------------- | -----------------------------------------------------------------
