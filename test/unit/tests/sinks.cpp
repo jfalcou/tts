@@ -102,6 +102,8 @@ int main(int argc, char const** argv)
     ok = ok && (strstr(content, "\"name\":\"Failing case for sink tests\"") != nullptr); // NOSONAR
     ok = ok && (strstr(content, "\"status\":\"failed\"") != nullptr);                    // NOSONAR
     ok =
+    ok && (strstr(content, "\"location\":{\"file\":\"sinks.cpp\",\"line\":") != nullptr); // NOSONAR
+    ok =
     ok && (strstr(content, "\"message\":\"Expression: 1 == 2 evaluates to false.\"") != // NOSONAR
            nullptr);
     ok =

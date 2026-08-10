@@ -81,16 +81,25 @@ namespace tts
 
     void assertion_failed(text const& location, text const& message, bool fatal) override
     {
-      // location is already "[file:line]" (see tts::_::source_location) - strip the brackets.
-      char const* loc = location.data();
-      std::size_t len = strlen(loc); // NOSONAR - loc always comes from a well-formed tts::text
+      // location is "[file:line]" (see tts::_::source_location) - strip the brackets, then split
+      // file from line so consumers get a real integer instead of a string to parse themselves.
+      char const* loc      = location.data();
+      std::size_t len      = strlen(loc); // NOSONAR - loc always comes from a well-formed tts::text
+      text        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};
+
+      char const* colon    = strrchr(stripped.data(), ':'); // NOSONAR - stripped always has one
+      text        file =
+      colon ? text {"%.*s", static_cast<int>(colon - stripped.data()), stripped.data()} : stripped;
+      int line = 0;
+      if(colon) sscanf(colon + 1, "%d", &line); // NOSONAR - colon+1 is always digits here
 
       if(!current_failures_.is_empty()) current_failures_ += ",";
-      current_failures_ +=
-      text {"{\"location\":\"%s\",\"message\":\"%s\",\"fatal\":%s}",
-            _::json_escape(text {"%.*s", static_cast<int>(len - 2), loc + 1}).data(),
-            _::json_escape(message).data(),
-            fatal ? "true" : "false"};
+      current_failures_ += text {"{\"location\":{\"file\":\"%s\",\"line\":%d},\"message\":\"%s\","
+                                 "\"fatal\":%s}",
+                                 _::json_escape(file).data(),
+                                 line,
+                                 _::json_escape(message).data(),
+                                 fatal ? "true" : "false"};
     }
 
     void test_finished(text const&        name,

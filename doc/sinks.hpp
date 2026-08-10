@@ -203,9 +203,16 @@
 
   Field       | Type    | Description
   ----------- | ------- | ------------------------------------------------------------------------
-  `location`  | string  | `path:line` of the assertion, as reported in the human-readable output.
+  `location`  | object  | Where the assertion is, split into `file`/`line` (see below).
   `message`   | string  | The assertion's failure message.
   `fatal`     | boolean | `true` if this came from @ref TTS_FATAL (which then aborts the whole suite - see `summary` note below).
+
+  `location`:
+
+  Field   | Type    | Description
+  ------- | ------- | ----------------------------------------------------------------------------
+  `file`  | string  | Source file name, as reported in the human-readable output (basename only).
+  `line`  | integer | Line number within `file`.
 
   `summary`:
 
@@ -250,7 +257,7 @@
       {
         "name": "Check that expectation can be met",
         "status": "passed",
-        "duration_ns": 864,
+        "duration_ns": 917,
         "failures": []
       },
       {
@@ -262,10 +269,13 @@
       {
         "name": "Check that expectation fails",
         "status": "failed",
-        "duration_ns": 8110,
+        "duration_ns": 11030,
         "failures": [
           {
-            "location": "expect.cpp:15",
+            "location": {
+              "file": "expect.cpp",
+              "line": 15
+            },
             "message": "Expression: 1 == 2 evaluates to false.",
             "fatal": false
           }
@@ -277,7 +287,7 @@
       "passed": 1,
       "failed": 1,
       "invalid": 1,
-      "duration_ns": 9042
+      "duration_ns": 12015
     }
   }
   @endcode
