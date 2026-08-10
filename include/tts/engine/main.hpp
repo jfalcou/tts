@@ -238,6 +238,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   if(!sink_ok)
   {
     ::tts::output().writeln(sink_error);
+    if(capture_file) fclose(capture_file); // NOSONAR
     return 1;
   }
 
