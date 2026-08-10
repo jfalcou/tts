@@ -21,6 +21,9 @@
   breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since those don't have their own
   hook.
 
+  On a plain @ref TTS_MAIN binary (no custom driver), the `--sink=name` CLI flag installs any of
+  the three below without writing any C++ at all - see @ref cli.
+
   Sink                       | Purpose
   -------------------------- | -----------------------------------------------------------------
   `tts::colorized_sink`      | Wraps another sink, coloring pass/fail/fatal lines with ANSI escapes.
@@ -46,6 +49,8 @@
   // ... run the test suite ...
   @endcode
 
+  Or, without a custom driver: `./my_test --sink=colored`.
+
   A failing run then looks like the usual TTS output, except `[PASSED]` lines are wrapped in
   `\033[32m...\033[0m` (green), failure/fatal lines in `\033[31m...\033[0m` (red), the `Results:`
   line and separator in `\033[1m...\033[0m` (bold), and each of its outcome segments in
@@ -65,6 +70,9 @@
 
   tap.dump(); // stream the TAP-formatted report to stdout
   @endcode
+
+  Or, without a custom driver: `./my_test --sink=tap` - `dump()` then happens automatically once
+  the run finishes.
 
   Given a suite with one passing and one failing case, `tap.dump()` prints:
 
@@ -89,6 +97,8 @@
 
   // ... run the test suite ...
   @endcode
+
+  Or, without a custom driver: `./my_test --sink=diagnostics`.
 
   A failing @ref TTS_CASE then prints the diagnostic line, immediately followed by its usual one:
 

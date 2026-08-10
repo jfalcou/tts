@@ -156,6 +156,17 @@ namespace tts::_
     return {true, i, n};
   }
   TTS_DISABLE_WARNING_POP
+
+  // Validates --sink=name (read from the current tts::arguments()). ok is set to false for an
+  // unknown, non-empty name, in which case the returned text is ready to print as an error.
+  inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
+  {
+    ok = name.is_empty() || name == "colored" || name == "tap" || name == "diagnostics";
+    if(ok) return {};
+
+    return ::tts::text {"Unknown --sink value '%s', expected one of: colored, tap, diagnostics",
+                        name.data()};
+  }
 }
 
 TTS_DISABLE_WARNING_PUSH
@@ -208,8 +219,38 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     }
   }
 
+  // Format (--sink) and destination (--capture) are orthogonal: every candidate sink below
+  // targets capture_target, so --sink=X --capture=path writes X-formatted output to the file
+  // exactly like --sink=X alone writes it to stdout.
   ::tts::gathering_sink capture_sink;
-  if(capture_file) ::tts::output().sink(capture_sink);
+  ::tts::output_sink& capture_target = capture_file ? static_cast<::tts::output_sink&>(capture_sink)
+                                                    : ::tts::output_handler::default_sink();
+
+  // Like --shard, --sink only makes sense for the default TTS_MAIN driver: a custom driver
+  // already manages its own sink lifecycle (installing it, dumping accumulate-style ones, ...),
+  // so letting --sink install a different one out from under it, or finish() below fire on
+  // whatever it installed, would fight that instead of helping.
+  ::tts::text sink_name = ::tts::arguments().value<::tts::text>("--sink");
+  if constexpr(!::tts::_::use_main) sink_name = ::tts::text {};
+
+  bool        sink_ok    = true;
+  ::tts::text sink_error = ::tts::_::validate_sink_name(sink_name, sink_ok);
+  if(!sink_ok)
+  {
+    ::tts::output().writeln(sink_error);
+    return 1;
+  }
+
+  ::tts::colorized_sink   colorized_candidate {capture_target};
+  ::tts::tap_sink         tap_candidate {capture_target};
+  ::tts::diagnostics_sink diagnostics_candidate {capture_target};
+
+  // Neither flag given: leave whatever sink the caller already installed alone, exactly as
+  // before --sink existed - only touch output().sink() when there's an actual reason to.
+  if(sink_name.is_empty() && capture_file) ::tts::output().sink(capture_sink);
+  else if(sink_name == "colored") ::tts::output().sink(colorized_candidate);
+  else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
+  else if(sink_name == "diagnostics") ::tts::output().sink(diagnostics_candidate);
 
   auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
@@ -270,6 +311,15 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
                               static_cast<int>(nb_tests - done_tests - 1));
   }
 
+  // finish() is part of the same TTS_MAIN-only convenience as --sink above: a custom driver's own
+  // code decides when (or whether) to dump an accumulate-style sink it installed itself.
+  int exit_code = 0;
+  if constexpr(::tts::_::use_main)
+  {
+    exit_code = ::tts::report(0, 0);
+    ::tts::output().finish();
+  }
+
   if(capture_file)
   {
     ::tts::output().sink(::tts::output_handler::default_sink());
@@ -277,8 +327,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     fclose(capture_file);                               // NOSONAR
   }
 
-  if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
-  else return 0;
+  return exit_code;
 }
 TTS_DISABLE_WARNING_POP
 

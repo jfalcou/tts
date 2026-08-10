@@ -34,6 +34,7 @@
   `TTS_ALLOW_EMPTY`     | `--allow-empty`
   `TTS_CAPTURE`         | `--capture=path`
   `TTS_SHARD`           | `--shard=i/n`
+  `TTS_SINK`            | `--sink=name`
   `TTS_PRECISION`       | `--precision=N`
   `TTS_SEED`            | `--seed=N`
   `TTS_BLOCK`           | `--block=N`
@@ -64,6 +65,12 @@
   `--allow-empty`   | Do not fail when the test suite registered zero test. `./my_test --allow-empty`
   `--capture=path`  | Capture this run's output and write it to `path` instead of stdout. `./my_test --capture=report.txt`
   `--shard=i/n`     | Only run the tests in shard `i` of `n` (`0 <= i < n`). `./my_test --shard=1/3`
+  `--sink=name`     | Format output as `name` (`colored`, `tap`, or `diagnostics`). `./my_test --sink=tap`
+
+  @note `--sink=name` installs the matching built-in @ref output-sinks "output_sink" - no custom
+  `main()` needed. It composes with `--capture=path`: `--sink=tap --capture=report.tap` writes
+  TAP-formatted output to the file instead of stdout. Like `--shard`, it's a no-op for binaries
+  using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which already manages its own sink.
 
   @note `--shard=i/n` partitions tests by registration index, round-robin (test at index `k`
   belongs to shard `k % n`), not by contiguous blocks - this keeps shards balanced even when
