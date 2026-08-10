@@ -45,13 +45,15 @@ namespace tts::_
 
   inline char const* tag_name(::tts::expected_outcome tag)
   {
+    using enum ::tts::expected_outcome;
     switch(tag)
     {
-    case ::tts::expected_outcome::xfail: return "XFAIL";
-    case ::tts::expected_outcome::may_fail: return "MAYFAIL";
-    case ::tts::expected_outcome::xinvalid: return "XINVALID";
-    default: return "PASS";
+    case pass: return "PASS";
+    case xfail: return "XFAIL";
+    case may_fail: return "MAYFAIL";
+    case xinvalid: return "XINVALID";
     }
+    return ""; // NOSONAR - unreachable, expected_outcome only ever holds one of the 4 cases above
   }
 
   struct test
