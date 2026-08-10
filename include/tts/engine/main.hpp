@@ -100,6 +100,8 @@ namespace tts::_
     {
       ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
+
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
   }
 
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
@@ -107,6 +109,8 @@ namespace tts::_
     report_type_hint(type);
 
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
+
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
   }
 
   // Splits the suite in `total` round-robin shards (test at registration index k belongs to
@@ -231,22 +235,29 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto failure_count                = ::tts::global_runtime.failure_count;
       ::tts::global_runtime.fail_status = false;
 
+      ::tts::output().test_started(::tts::text {t.name});
+
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       ::tts::output().flush();
       t();
       done_tests++;
 
-      if(test_count == ::tts::global_runtime.test_count)
+      bool invalid = (test_count == ::tts::global_runtime.test_count);
+      bool passed  = !invalid && (failure_count == ::tts::global_runtime.failure_count);
+
+      if(invalid)
       {
         ::tts::global_runtime.invalid();
         if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
         ::tts::output().flush();
       }
-      else if(failure_count == ::tts::global_runtime.failure_count)
+      else if(passed)
       {
         if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
         ::tts::output().flush();
       }
+
+      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
     }
   }
   catch(::tts::_::fatal_signal&)

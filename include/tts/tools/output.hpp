@@ -101,6 +101,33 @@ namespace tts
       // Intentionally empty: most sinks (e.g. gathering_sink) have nothing meaningful to flush.
     }
 
+    /// Called when a @ref TTS_CASE / @ref TTS_CASE_TPL / @ref TTS_CASE_WITH is about to run.
+    /// No-op by default - opt-in for sinks that want structured per-test events instead of (or
+    /// in addition to) parsing the formatted text stream.
+    virtual void test_started([[maybe_unused]] text const& name)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
+    /// Called once per failing/fatal assertion, right before the corresponding text is written.
+    /// No-op by default. Not called for passing assertions - test_finished()'s `passed` already
+    /// covers that case, and most consumers of this hook don't want one event per assertion.
+    virtual void assertion_failed([[maybe_unused]] text const& location,
+                                  [[maybe_unused]] text const& message,
+                                  [[maybe_unused]] bool        fatal)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
+    /// Called once a @ref TTS_CASE / @ref TTS_CASE_TPL / @ref TTS_CASE_WITH has finished
+    /// running, with its outcome. No-op by default.
+    virtual void test_finished([[maybe_unused]] text const& name,
+                               [[maybe_unused]] bool        passed,
+                               [[maybe_unused]] bool        invalid)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
     virtual ~output_sink() = default;
   };
 
@@ -251,6 +278,24 @@ namespace tts
     void flush()
     {
       sink_->flush();
+    }
+
+    /// Notifies the current output_sink that a test is about to run.
+    void test_started(text const& name)
+    {
+      sink_->test_started(name);
+    }
+
+    /// Notifies the current output_sink that an assertion failed.
+    void assertion_failed(text const& location, text const& message, bool fatal)
+    {
+      sink_->assertion_failed(location, message, fatal);
+    }
+
+    /// Notifies the current output_sink that a test has finished running.
+    void test_finished(text const& name, bool passed, bool invalid)
+    {
+      sink_->test_finished(name, passed, invalid);
     }
 
     /// Installs s as the output_sink every subsequent write goes to.
