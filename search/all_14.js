@@ -3,7 +3,7 @@ var searchData=
   ['tap_5fsink_0',['tap_sink',['../structtts_1_1tap__sink.html',1,'tts']]],
   ['test_20case_1',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
   ['test_20system_2',['The Tiny Test System',['../index.html',1,'']]],
-  ['test_5ffinished_3',['test_finished',['../structtts_1_1colorized__sink.html#abe72692799b7674258c03002c5a36579',1,'tts::colorized_sink::test_finished()'],['../structtts_1_1tap__sink.html#a0002a63d87841e4b712ad80a20a311ad',1,'tts::tap_sink::test_finished()'],['../structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b',1,'tts::output_sink::test_finished()'],['../classtts_1_1output__handler.html#ac2c90555ce6036f12586dca2ac645177',1,'tts::output_handler::test_finished()']]],
+  ['test_5ffinished_3',['test_finished',['../structtts_1_1colorized__sink.html#a61cc7e7c3650c2be30a01ae34bccc5a6',1,'tts::colorized_sink::test_finished()'],['../structtts_1_1tap__sink.html#a1f6a62278d8ef5e382878258468e4e16',1,'tts::tap_sink::test_finished()'],['../structtts_1_1output__sink.html#afa36c549d9f9108eef4534e1befc314b',1,'tts::output_sink::test_finished()'],['../classtts_1_1output__handler.html#acbcd9c47a6597cccf5153d4ce258942f',1,'tts::output_handler::test_finished()']]],
   ['test_5fstarted_4',['test_started',['../structtts_1_1colorized__sink.html#aae180344a2ee12d4a12e4f745dae2cc6',1,'tts::colorized_sink::test_started()'],['../structtts_1_1output__sink.html#ac8d28651a9c70c0b30c46c9ffaf83bdc',1,'tts::output_sink::test_started()'],['../classtts_1_1output__handler.html#a4901ee7fdab3ead6e5b5d8fcbe63ea11',1,'tts::output_handler::test_started()']]],
   ['testing_5',['Precision testing',['../rationale.html#ulp',1,'']]],
   ['testing_20macros_6',['Testing Macros',['../tts101.html#tuto-macro',1,'']]],

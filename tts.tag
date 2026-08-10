@@ -82,8 +82,8 @@
       <type>void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
-      <anchor>abe72692799b7674258c03002c5a36579</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid) override</arglist>
+      <anchor>a61cc7e7c3650c2be30a01ae34bccc5a6</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns) override</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -150,8 +150,8 @@
       <type>virtual void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
-      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+      <anchor>afa36c549d9f9108eef4534e1befc314b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -252,8 +252,8 @@
       <type>virtual void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
-      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+      <anchor>afa36c549d9f9108eef4534e1befc314b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -397,8 +397,8 @@
       <type>void</type>
       <name>test_finished</name>
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
-      <anchor>ac2c90555ce6036f12586dca2ac645177</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+      <anchor>acbcd9c47a6597cccf5153d4ce258942f</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -506,8 +506,8 @@
       <type>virtual void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
-      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+      <anchor>afa36c549d9f9108eef4534e1befc314b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -618,8 +618,8 @@
       <type>virtual void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
-      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+      <anchor>afa36c549d9f9108eef4534e1befc314b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -714,8 +714,8 @@
       <type>void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1tap__sink.html</anchorfile>
-      <anchor>a0002a63d87841e4b712ad80a20a311ad</anchor>
-      <arglist>(text const &amp;name, bool passed, bool invalid) override</arglist>
+      <anchor>a1f6a62278d8ef5e382878258468e4e16</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns) override</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>

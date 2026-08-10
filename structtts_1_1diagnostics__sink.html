@@ -137,8 +137,8 @@ $(function(){initNavTree('structtts_1_1diagnostics__sink.html','','structtts_1_1
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a> diagnostics;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(diagnostics);</div>
-<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:378</div></div>
-<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:413</div></div>
+<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:379</div></div>
+<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:414</div></div>
 <div class="ttc" id="astructtts_1_1diagnostics__sink_html"><div class="ttname"><a href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></div><div class="ttdoc">output_sink adding compiler-style diagnostics for every failing/fatal assertion.</div><div class="ttdef"><b>Definition</b> diagnostics.hpp:37</div></div>
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -151,7 +151,7 @@ void&#160;</td><td class="memItemRight"><b>flush</b> () override</td></tr>
 <tr class="memitem:a74ebf02b3020462a3916e8667db58a2a" id="r_a74ebf02b3020462a3916e8667db58a2a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a74ebf02b3020462a3916e8667db58a2a">suite_aborted</a> ()</td></tr>
 <tr class="memitem:afd5d4793ba03fda092974ee32ad41ed9" id="r_afd5d4793ba03fda092974ee32ad41ed9"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afd5d4793ba03fda092974ee32ad41ed9">suite_finished</a> (unsigned long long fail_count, unsigned long long invalid_count)</td></tr>
 <tr class="memitem:afc2c9f4966da5cb2a65b8c9bb8a3d9d2" id="r_afc2c9f4966da5cb2a65b8c9bb8a3d9d2"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">suite_metric</a> (<a class="el" href="group__tools-output.html#gaa00ed0d043ef3899719ef14750d8a7b5">outcome</a> kind, unsigned long long count, unsigned long long total)</td></tr>
-<tr class="memitem:a97ce3b30dc52a9e424f2289c93b1359b" id="r_a97ce3b30dc52a9e424f2289c93b1359b"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">test_finished</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>, bool passed, bool invalid)</td></tr>
+<tr class="memitem:afa36c549d9f9108eef4534e1befc314b" id="r_afa36c549d9f9108eef4534e1befc314b"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afa36c549d9f9108eef4534e1befc314b">test_finished</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>, bool passed, bool invalid, unsigned long long duration_ns)</td></tr>
 <tr class="memitem:ac8d28651a9c70c0b30c46c9ffaf83bdc" id="r_ac8d28651a9c70c0b30c46c9ffaf83bdc"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#ac8d28651a9c70c0b30c46c9ffaf83bdc">test_started</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>)</td></tr>
 <tr class="memitem:a0463defe1e87083fbcad932cf3191cf3" id="r_a0463defe1e87083fbcad932cf3191cf3"><td class="memItemLeft"><a id="a0463defe1e87083fbcad932cf3191cf3" name="a0463defe1e87083fbcad932cf3191cf3"></a>
 void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;t) override</td></tr>
@@ -189,7 +189,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
+<p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="structtts_1_1output__sink.html#afa36c549d9f9108eef4534e1befc314b">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
 
 <p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66">tts::output_sink</a>.</p>
 
@@ -320,8 +320,8 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
 
 </div>
 </div>
-<a id="a97ce3b30dc52a9e424f2289c93b1359b" name="a97ce3b30dc52a9e424f2289c93b1359b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97ce3b30dc52a9e424f2289c93b1359b">&#9670;&#160;</a></span>test_finished()</h2>
+<a id="afa36c549d9f9108eef4534e1befc314b" name="afa36c549d9f9108eef4534e1befc314b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa36c549d9f9108eef4534e1befc314b">&#9670;&#160;</a></span>test_finished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -342,7 +342,12 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>invalid</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>invalid</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned long long</td>          <td class="paramname"><span class="paramname"><em>duration_ns</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -351,9 +356,9 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Called once a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> has finished running, always and before its corresponding text (if any - suppressed under -q), with its outcome. No-op by default. </p>
+<p>Called once a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> has finished running, always and before its corresponding text (if any - suppressed under -q), with its outcome and how long it took to run, in nanoseconds. No-op by default. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#abe72692799b7674258c03002c5a36579">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1tap__sink.html#a0002a63d87841e4b712ad80a20a311ad">tts::tap_sink</a>.</p>
+<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a61cc7e7c3650c2be30a01ae34bccc5a6">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1tap__sink.html#a1f6a62278d8ef5e382878258468e4e16">tts::tap_sink</a>.</p>
 
 </div>
 </div>
