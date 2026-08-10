@@ -95,11 +95,12 @@ namespace tts
                       [[maybe_unused]] unsigned long long count,
                       [[maybe_unused]] unsigned long long total) override
     {
+      using enum outcome;
       switch(kind)
       {
-      case outcome::success: set_color("\033[1;32m"); break; // bold green - NOSONAR
-      case outcome::failure: set_color("\033[1;31m"); break; // bold red - NOSONAR
-      case outcome::invalid: set_color("\033[1;33m"); break; // bold yellow - NOSONAR
+      case success: set_color("\033[1;32m"); break; // bold green - NOSONAR
+      case failure: set_color("\033[1;31m"); break; // bold red - NOSONAR
+      case invalid: set_color("\033[1;33m"); break; // bold yellow - NOSONAR
       }
     }
 
