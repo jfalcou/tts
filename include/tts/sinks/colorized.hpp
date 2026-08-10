@@ -67,36 +67,31 @@ namespace tts
 
     void test_started([[maybe_unused]] text const& name) override
     {
-      active_color_  = nullptr;
-      color_applied_ = false;
+      set_color(nullptr);
     }
 
     void assertion_failed([[maybe_unused]] text const& location,
                           [[maybe_unused]] text const& message,
                           [[maybe_unused]] bool        fatal) override
     {
-      active_color_  = "\033[31m"; // red - NOSONAR, \o{} is C++23-only
-      color_applied_ = false;
+      set_color("\033[31m"); // red - NOSONAR, \o{} is C++23-only
     }
 
     void test_finished([[maybe_unused]] text const& name, bool passed, bool invalid) override
     {
-      if(invalid) active_color_ = "\033[33m";     // yellow - NOSONAR, \o{} is C++23-only
-      else if(passed) active_color_ = "\033[32m"; // green - NOSONAR, \o{} is C++23-only
-      else active_color_ = nullptr; // plain failure - assertion_failed() already colored its line
-      color_applied_ = false;
+      if(invalid) set_color("\033[33m");     // yellow - NOSONAR, \o{} is C++23-only
+      else if(passed) set_color("\033[32m"); // green - NOSONAR, \o{} is C++23-only
+      else set_color(nullptr); // plain failure - assertion_failed() already colored its line
     }
 
     void suite_finished(unsigned long long fail_count, unsigned long long invalid_count) override
     {
-      active_color_  = (fail_count || invalid_count) ? "\033[31m" : "\033[32m"; // NOSONAR
-      color_applied_ = false;
+      set_color((fail_count || invalid_count) ? "\033[31m" : "\033[32m"); // NOSONAR
     }
 
     void suite_aborted() override
     {
-      active_color_  = "\033[31m"; // red - NOSONAR, \o{} is C++23-only
-      color_applied_ = false;
+      set_color("\033[31m"); // red - NOSONAR, \o{} is C++23-only
     }
 
     void flush() override
@@ -105,6 +100,12 @@ namespace tts
     }
 
   private:
+    void set_color(char const* color)
+    {
+      active_color_  = color;
+      color_applied_ = false;
+    }
+
     output_sink* target_;
     char const*  active_color_  = nullptr;
     bool         color_applied_ = false;
