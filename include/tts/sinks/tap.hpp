@@ -16,7 +16,8 @@ namespace tts
   /**
     @ingroup tools-sinks
     @public
-    @brief output_sink rendering the run as TAP (Test Anything Protocol).
+    @brief output_sink rendering the run as [TAP](https://testanything.org/) (Test Anything
+    Protocol).
 
     Built from @ref output_sink's structured `test_finished` hook rather than by parsing the
     human-readable text @ref tts::stdout_sink prints, so it reports one "ok N - name" / "not ok

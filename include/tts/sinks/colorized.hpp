@@ -18,11 +18,9 @@ namespace tts
     @public
     @brief output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.
 
-    Forwards every message to a target sink (tts::output_handler::default_sink() by default),
-    wrapping a failure/fatal/invalid/pass line, the separator and `Results: ...` prefix (bold,
-    color-neutral), or each of its outcome segments (bold green/red/yellow), in the corresponding
-    ANSI color - decided from @ref output_sink's structured hooks, not by parsing text. Opt-in:
-    not every terminal or CI log renders ANSI escapes usefully.
+    Wraps a target sink (tts::output_handler::default_sink() by default). Opt-in: not every
+    terminal or CI log renders ANSI escapes usefully. See @ref output-sinks for a colored example
+    of a full run.
 
     @groupheader{Example}
     @code
