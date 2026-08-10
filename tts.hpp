@@ -399,9 +399,10 @@ namespace tts
                                   [[maybe_unused]] bool        fatal)
     {
     }
-    virtual void test_finished([[maybe_unused]] text const& name,
-                               [[maybe_unused]] bool        passed,
-                               [[maybe_unused]] bool        invalid)
+    virtual void test_finished([[maybe_unused]] text const&        name,
+                               [[maybe_unused]] bool               passed,
+                               [[maybe_unused]] bool               invalid,
+                               [[maybe_unused]] unsigned long long duration_ns)
     {
     }
     virtual void suite_finished([[maybe_unused]] unsigned long long fail_count,
@@ -503,9 +504,9 @@ namespace tts
     {
       sink_->assertion_failed(location, message, fatal);
     }
-    void test_finished(text const& name, bool passed, bool invalid)
+    void test_finished(text const& name, bool passed, bool invalid, unsigned long long duration_ns)
     {
-      sink_->test_finished(name, passed, invalid);
+      sink_->test_finished(name, passed, invalid, duration_ns);
     }
     void suite_finished(unsigned long long fail_count, unsigned long long invalid_count)
     {
@@ -599,6 +600,12 @@ namespace tts
         color_applied_ = true;
       }
       target_->write(t);
+      if(revert_to_)
+      {
+        active_color_  = revert_to_;
+        color_applied_ = false;
+        revert_to_     = nullptr;
+      }
     }
     void test_started([[maybe_unused]] text const& name) override
     {
@@ -610,7 +617,10 @@ namespace tts
     {
       set_color("\033[31m");
     }
-    void test_finished([[maybe_unused]] text const& name, bool passed, bool invalid) override
+    void test_finished([[maybe_unused]] text const&        name,
+                       bool                                passed,
+                       bool                                invalid,
+                       [[maybe_unused]] unsigned long long duration_ns) override
     {
       if(invalid) set_color("\033[33m");
       else if(passed) set_color("\033[32m");
@@ -626,6 +636,7 @@ namespace tts
                       [[maybe_unused]] unsigned long long total) override
     {
       using enum outcome;
+      revert_to_ = active_color_;
       switch(kind)
       {
       case success: set_color("\033[1;32m"); break;
@@ -650,6 +661,7 @@ namespace tts
     output_sink* target_;
     char const*  active_color_  = nullptr;
     bool         color_applied_ = false;
+    char const*  revert_to_     = nullptr;
   };
 }
 namespace tts
@@ -693,7 +705,10 @@ namespace tts
     void write(text const&) override
     {
     }
-    void test_finished(text const& name, bool passed, [[maybe_unused]] bool invalid) override
+    void test_finished(text const&                         name,
+                       bool                                passed,
+                       [[maybe_unused]] bool               invalid,
+                       [[maybe_unused]] unsigned long long duration_ns) override
     {
       ++count_;
       body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
@@ -757,6 +772,40 @@ Range specifics Parameters:
     printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
     puts(usage_text);
     return 0;
+  }
+}
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#include <profileapi.h>
+#else
+#include <time.h>
+#endif
+namespace tts::_
+{
+  inline unsigned long long now_ns()
+  {
+#if defined(_WIN32)
+    LARGE_INTEGER freq;
+    LARGE_INTEGER count;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&count);
+    return static_cast<unsigned long long>(static_cast<double>(count.QuadPart) * 1e9 /
+                                           static_cast<double>(freq.QuadPart));
+#else
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return static_cast<unsigned long long>(ts.tv_sec) * 1'000'000'000ULL +
+           static_cast<unsigned long long>(ts.tv_nsec);
+#endif
+  }
+  inline ::tts::text format_duration(double duration_ns)
+  {
+    if(duration_ns < 999.5) return ::tts::text {"%.0f ns", duration_ns};
+    if(duration_ns < 999'999.5) return ::tts::text {"%.3f us", duration_ns / 1'000.0};
+    if(duration_ns < 999'999'500.0) return ::tts::text {"%.3f ms", duration_ns / 1'000'000.0};
+    return ::tts::text {"%.3f s", duration_ns / 1'000'000'000.0};
   }
 }
 TTS_DISABLE_WARNING_PUSH
@@ -1000,14 +1049,23 @@ namespace tts::_
                   inv_txt);
       }
       out.writeln();
+      double avg_duration_ns =
+      test_count ? static_cast<double>(total_duration_ns) / static_cast<double>(test_count) : 0.0;
+      out.writeln("Total Time: %s - %s/test",
+                  ::tts::_::format_duration(static_cast<double>(total_duration_ns)).data(),
+                  ::tts::_::format_duration(avg_duration_ns).data());
       if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
         return 1;
       if(!fails && !invalids) return test_count == success_count ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
-    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
-                       invalid_count = 0;
-    bool fail_status                 = false;
+    unsigned long long test_count        = 0;
+    unsigned long long success_count     = 0;
+    unsigned long long failure_count     = 0;
+    unsigned long long fatal_count       = 0;
+    unsigned long long invalid_count     = 0;
+    unsigned long long total_duration_ns = 0;
+    bool               fail_status       = false;
   };
 }
 namespace tts
@@ -2166,20 +2224,42 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       ::tts::output().test_started(::tts::text {t.name});
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       ::tts::output().flush();
+      auto start_ns = ::tts::_::now_ns();
       t();
+      auto duration_ns = ::tts::_::now_ns() - start_ns;
       done_tests++;
-      bool invalid = (test_count == ::tts::global_runtime.test_count);
-      bool passed  = !invalid && (failure_count == ::tts::global_runtime.failure_count);
+      ::tts::global_runtime.total_duration_ns += duration_ns;
+      bool invalid                             = (test_count == ::tts::global_runtime.test_count);
+      bool passed = !invalid && (failure_count == ::tts::global_runtime.failure_count);
       if(invalid) ::tts::global_runtime.invalid();
-      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
+      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid, duration_ns);
+      ::tts::text duration_txt = ::tts::_::format_duration(static_cast<double>(duration_ns));
       if(invalid)
       {
-        if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
+        if(!::tts::is_quiet())
+        {
+          ::tts::text line = ::tts::is_verbose()
+                             ? ::tts::text {"  [!!]: EMPTY TEST CASE (%s)", duration_txt.data()}
+                             : ::tts::text {"  [!!]: EMPTY TEST CASE"};
+          ::tts::output().writeln(line);
+        }
         ::tts::output().flush();
       }
       else if(passed)
       {
-        if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
+        if(!::tts::is_quiet())
+        {
+          ::tts::text line =
+          ::tts::is_verbose()
+          ? ::tts::text {"TEST: '%s' - [PASSED] (%s)", t.name, duration_txt.data()}
+          : ::tts::text {"TEST: '%s' - [PASSED]", t.name};
+          ::tts::output().writeln(line);
+        }
+        ::tts::output().flush();
+      }
+      else if(::tts::is_verbose() && !::tts::is_quiet())
+      {
+        ::tts::output().writeln("TEST: '%s' - (%s)", t.name, duration_txt.data());
         ::tts::output().flush();
       }
     }
