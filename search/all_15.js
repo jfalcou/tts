@@ -3,7 +3,7 @@ var searchData=
   ['s_20changed_0',['s Changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md8',1,'What&apos;s Changed'],['../changelog.html#autotoc_md14',1,'What&apos;s Changed']]],
   ['s_20fine_20to_20use_1',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
   ['scarpetta_2',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]],
-  ['schema_3',['Schema',['../output-sinks.html#autotoc_md57',1,'']]],
+  ['schema_3',['Schema',['../output-sinks.html#autotoc_md57',1,'Schema'],['../output-sinks.html#autotoc_md63',1,'Schema']]],
   ['scoped_5fsink_4',['scoped_sink',['../classtts_1_1scoped__sink.html',1,'tts::scoped_sink'],['../classtts_1_1scoped__sink.html#a9305cf1fca0500167abb89c53e176f1c',1,'tts::scoped_sink::scoped_sink()']]],
   ['sequence_20tests_20macros_5',['Sequence Tests Macros',['../group__test-sequence.html',1,'']]],
   ['set_5frandom_5fseed_6',['set_random_seed',['../group__tools-random.html#gab46b37834a81a463a45c3065688f6479',1,'tts']]],

@@ -19,5 +19,6 @@ var searchData=
   ['tts_3a_3acolorized_5fsink_16',['tts::colorized_sink',['../output-sinks.html#autotoc_md39',1,'']]],
   ['tts_3a_3adiagnostics_5fsink_17',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md49',1,'']]],
   ['tts_3a_3ajson_5fsink_18',['tts::json_sink',['../output-sinks.html#autotoc_md55',1,'']]],
-  ['tts_3a_3atap_5fsink_19',['tts::tap_sink',['../output-sinks.html#autotoc_md44',1,'']]]
+  ['tts_3a_3ajunit_5fsink_19',['tts::junit_sink',['../output-sinks.html#autotoc_md61',1,'']]],
+  ['tts_3a_3atap_5fsink_20',['tts::tap_sink',['../output-sinks.html#autotoc_md44',1,'']]]
 ];

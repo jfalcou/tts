@@ -367,6 +367,102 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tts::junit_sink</name>
+    <filename>structtts_1_1junit__sink.html</filename>
+    <base>tts::output_sink</base>
+    <member kind="function">
+      <type>void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>aba10c391b306796c68ff3e7fcb110edb</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>a087cc19fede7a034228f51ee60453b96</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dump</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>a42510e478691369dc3912f7da8dbfb50</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dump</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>af6cbe0581e3884e07f9d9446761b25c8</anchor>
+      <arglist>(output_sink &amp;target)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>a27aee3352949c1bc60913e4bcef6a25d</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>text</type>
+      <name>render</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>a5988d09b37fca392117401c29148c4cb</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a74ebf02b3020462a3916e8667db58a2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afd5d4793ba03fda092974ee32ad41ed9</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afc2c9f4966da5cb2a65b8c9bb8a3d9d2</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>a6229607557af3abd161900caa3712601</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid, unsigned long long duration_ns) override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ac8d28651a9c70c0b30c46c9ffaf83bdc</anchor>
+      <arglist>(text const &amp;name)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1junit__sink.html</anchorfile>
+      <anchor>a7f7005d32ace753ed70100cc5595197f</anchor>
+      <arglist>(text const &amp;) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tts::limits_set</name>
     <filename>structtts_1_1limits__set.html</filename>
     <templarg>typename T</templarg>
@@ -1213,6 +1309,7 @@
     <class kind="struct">tts::colorized_sink</class>
     <class kind="struct">tts::diagnostics_sink</class>
     <class kind="struct">tts::json_sink</class>
+    <class kind="struct">tts::junit_sink</class>
     <class kind="struct">tts::tap_sink</class>
   </compound>
   <compound kind="group">

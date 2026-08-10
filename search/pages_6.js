@@ -4,7 +4,7 @@ var searchData=
   ['case_1',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
   ['change_20log_2',['Change Log',['../changelog.html',1,'']]],
   ['changed_3',['Changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md8',1,'What&apos;s Changed'],['../changelog.html#autotoc_md14',1,'What&apos;s Changed']]],
-  ['cli_20flag_4',['CLI Flag',['../output-sinks.html#autotoc_md42',1,'CLI Flag'],['../output-sinks.html#autotoc_md47',1,'CLI Flag'],['../output-sinks.html#autotoc_md52',1,'CLI Flag'],['../output-sinks.html#autotoc_md59',1,'CLI Flag']]],
+  ['cli_20flag_4',['CLI Flag',['../output-sinks.html#autotoc_md42',1,'CLI Flag'],['../output-sinks.html#autotoc_md47',1,'CLI Flag'],['../output-sinks.html#autotoc_md52',1,'CLI Flag'],['../output-sinks.html#autotoc_md59',1,'CLI Flag'],['../output-sinks.html#autotoc_md65',1,'CLI Flag']]],
   ['cmake_20fetchcontent_5',['CMake FetchContent',['../setup.html#setup-fetchcontent',1,'']]],
   ['codebase_6',['Precedent in this codebase',['../compile-time.html#compile-time-precedent',1,'']]],
   ['command_20line_20interface_7',['Command Line Interface',['../cli.html',1,'']]],
