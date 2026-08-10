@@ -30,7 +30,6 @@
         <tab type="user" url="@ref tools-output"            title="Output Utilities"/>
         <tab type="user" url="@ref tools-precision"         title="Precision Utilities"/>
         <tab type="user" url="@ref tools-random"            title="PRNG Utilities"/>
-        <tab type="user" url="@ref tools-sinks"             title="Output Sink Classes"/>
         <tab type="user" url="@ref tools-text"              title="Text Utilities"/>
         <tab type="user" url="@ref tools-types"             title="Type Utilities"/>
       </tab>
