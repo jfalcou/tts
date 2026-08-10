@@ -41,6 +41,10 @@ namespace tts::_
       test_count++;
       invalid_count++;
     }
+    void unexpected()
+    {
+      unexpected_count++;
+    }
 
     int report(unsigned long long fails, unsigned long long invalids) const
     {
@@ -100,7 +104,11 @@ namespace tts::_
       if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
         return 1;
 
-      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
+      // No explicit fails/invalids given: fall back to per-case expected-outcome tracking
+      // (TTS_XFAIL/TTS_MAYFAIL/TTS_XINVALID) instead of the raw success count - for a plain,
+      // untagged suite this is equivalent, since only a case that didn't pass raises
+      // unexpected_count.
+      if(!fails && !invalids) return unexpected_count == 0 ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
@@ -109,6 +117,7 @@ namespace tts::_
     unsigned long long failure_count     = 0;
     unsigned long long fatal_count       = 0;
     unsigned long long invalid_count     = 0;
+    unsigned long long unexpected_count  = 0;
     unsigned long long total_duration_ns = 0;
     bool               fail_status       = false;
   };
