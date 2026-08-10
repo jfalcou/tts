@@ -40,37 +40,6 @@ namespace tts
 #endif
 namespace tts::_
 {
-  inline constexpr auto usage_text =
-  R"(
-Flags:
-  -h, --help        Display this help message
-  -x, --hex         Print the floating results in hexfloat mode
-  -s, --scientific  Print the floating results in scientific mode
-  -v, --verbose     Display tests results regardless of their status.
-  -q, --quiet       Display only test failures percentage.
-  --allow-empty     Do not fail when the test suite registered zero test.
-  --dry             Print registered test names without running them.
-Parameters:
-  --precision=arg   Set the precision for displaying floating pint values
-  --seed=arg        Set the PRNG seeds (default is time-based)
-  --capture=path    Capture this run's output and write it to path instead of stdout
-  --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
-Range specifics Parameters:
-  --block=arg       Set size of range checks samples (min. 32)
-  --loop=arg        Repeat each range checks arg times
-  --ulpmax=arg      Set global failure ulp threshold for range tests (default is 2.0)
-  --valmax=arg      Set maximal value for range tests (default is code)
-  --valmin=arg      Set minimal value for range tests (default is code)
-)";
-  inline int usage(char const* name)
-  {
-    printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
-    puts(usage_text);
-    return 0;
-  }
-}
-namespace tts::_
-{
   template<typename T>
   concept stream = requires(T& os) {
     { os.copyfmt(os) };
@@ -447,6 +416,9 @@ namespace tts
     virtual void suite_aborted()
     {
     }
+    virtual void finish()
+    {
+    }
     virtual ~output_sink() = default;
   };
   struct stdout_sink : output_sink
@@ -547,6 +519,10 @@ namespace tts
     {
       sink_->suite_aborted();
     }
+    void finish()
+    {
+      sink_->finish();
+    }
     void sink(output_sink& s)
     {
       sink_ = &s;
@@ -597,6 +573,190 @@ namespace tts::_
     if(printable)
       ::tts::output().writeln(
       "--------------------------------------------------------------------------------");
+  }
+}
+namespace tts
+{
+  struct colorized_sink : output_sink
+  {
+    explicit colorized_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const& t) override
+    {
+      char const* s = t.data();
+      if(strcmp(s, "\n") == 0)
+      {
+        if(color_applied_) target_->write(text {"\033[0m"});
+        color_applied_ = false;
+        target_->write(t);
+        return;
+      }
+      if(active_color_ && !color_applied_)
+      {
+        target_->write(text {active_color_});
+        color_applied_ = true;
+      }
+      target_->write(t);
+    }
+    void test_started([[maybe_unused]] text const& name) override
+    {
+      set_color(nullptr);
+    }
+    void assertion_failed([[maybe_unused]] text const& location,
+                          [[maybe_unused]] text const& message,
+                          [[maybe_unused]] bool        fatal) override
+    {
+      set_color("\033[31m");
+    }
+    void test_finished([[maybe_unused]] text const& name, bool passed, bool invalid) override
+    {
+      if(invalid) set_color("\033[33m");
+      else if(passed) set_color("\033[32m");
+      else set_color(nullptr);
+    }
+    void suite_finished([[maybe_unused]] unsigned long long fail_count,
+                        [[maybe_unused]] unsigned long long invalid_count) override
+    {
+      set_color("\033[1m");
+    }
+    void suite_metric(outcome                             kind,
+                      [[maybe_unused]] unsigned long long count,
+                      [[maybe_unused]] unsigned long long total) override
+    {
+      using enum outcome;
+      switch(kind)
+      {
+      case success: set_color("\033[1;32m"); break;
+      case failure: set_color("\033[1;31m"); break;
+      case invalid: set_color("\033[1;33m"); break;
+      }
+    }
+    void suite_aborted() override
+    {
+      set_color("\033[31m");
+    }
+    void flush() override
+    {
+      target_->flush();
+    }
+  private:
+    void set_color(char const* color)
+    {
+      active_color_  = color;
+      color_applied_ = false;
+    }
+    output_sink* target_;
+    char const*  active_color_  = nullptr;
+    bool         color_applied_ = false;
+  };
+}
+namespace tts
+{
+  struct diagnostics_sink : output_sink
+  {
+    explicit diagnostics_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const& t) override
+    {
+      target_->write(t);
+    }
+    void assertion_failed(text const& location, text const& message, bool fatal) override
+    {
+      char const* loc = location.data();
+      std::size_t len = strlen(loc);
+      target_->write(text {"%.*s: %s: %s\n",
+                           static_cast<int>(len - 2),
+                           loc + 1,
+                           fatal ? "fatal error" : "error",
+                           message.data()});
+    }
+    void flush() override
+    {
+      target_->flush();
+    }
+  private:
+    output_sink* target_;
+  };
+}
+namespace tts
+{
+  struct tap_sink : output_sink
+  {
+    explicit tap_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const&) override
+    {
+    }
+    void test_finished(text const& name, bool passed, [[maybe_unused]] bool invalid) override
+    {
+      ++count_;
+      body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
+                      : text {"not ok %zu - %s\n", count_, name.data()};
+    }
+    text render() const
+    {
+      return text {"1..%zu\n", count_} + body_;
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_  = text {};
+      count_ = 0;
+    }
+    void finish() override
+    {
+      dump(*target_);
+    }
+  private:
+    output_sink* target_;
+    text         body_;
+    std::size_t  count_ = 0;
+  };
+}
+namespace tts::_
+{
+  inline constexpr auto usage_text =
+  R"(
+Flags:
+  -h, --help        Display this help message
+  -x, --hex         Print the floating results in hexfloat mode
+  -s, --scientific  Print the floating results in scientific mode
+  -v, --verbose     Display tests results regardless of their status.
+  -q, --quiet       Display only test failures percentage.
+  --allow-empty     Do not fail when the test suite registered zero test.
+  --dry             Print registered test names without running them.
+Parameters:
+  --precision=arg   Set the precision for displaying floating pint values
+  --seed=arg        Set the PRNG seeds (default is time-based)
+  --capture=path    Capture this run's output and write it to path instead of stdout
+  --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
+Range specifics Parameters:
+  --block=arg       Set size of range checks samples (min. 32)
+  --loop=arg        Repeat each range checks arg times
+  --ulpmax=arg      Set global failure ulp threshold for range tests (default is 2.0)
+  --valmax=arg      Set maximal value for range tests (default is code)
+  --valmin=arg      Set minimal value for range tests (default is code)
+)";
+  inline int usage(char const* name)
+  {
+    printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
+    puts(usage_text);
+    return 0;
   }
 }
 TTS_DISABLE_WARNING_PUSH
@@ -1480,6 +1640,112 @@ namespace tts::_
 }
 namespace tts::_
 {
+  struct shard_spec
+  {
+    bool         active = false;
+    unsigned int index  = 0;
+    unsigned int total  = 1;
+    bool         selects(std::size_t position) const
+    {
+      return !active || (position % total == index);
+    }
+    std::size_t count(std::size_t suite_size) const
+    {
+      if(!active) return suite_size;
+      if(suite_size <= index) return 0;
+      return (suite_size - index - 1) / total + 1;
+    }
+  };
+  TTS_DISABLE_WARNING_PUSH
+  TTS_DISABLE_WARNING_CRT_SECURE
+  inline shard_spec parse_shard(bool& ok)
+  {
+    ok              = true;
+    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
+    if(raw.is_empty()) return {};
+    unsigned int i = 0;
+    unsigned int n = 0;
+    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
+    {
+      ok = false;
+      return {};
+    }
+    return {true, i, n};
+  }
+  TTS_DISABLE_WARNING_POP
+}
+#include <array>
+namespace tts::_
+{
+  inline constexpr std::array<char const*, 3> sink_names {"colored", "tap", "diagnostics"};
+  inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
+  {
+    ok = name.is_empty();
+    for(auto candidate: sink_names)
+      ok = ok || (name == ::tts::text {candidate});
+    if(ok) return {};
+    ::tts::text expected;
+    for(std::size_t i = 0; i < sink_names.size(); ++i)
+      expected += ::tts::text {i ? ", %s" : "%s", sink_names[ i ]};
+    return ::tts::text {
+    "Unknown --sink value '%s', expected one of: %s", name.data(), expected.data()};
+  }
+}
+#include <cstdio>
+namespace tts::_
+{
+  TTS_DISABLE_WARNING_PUSH
+  TTS_DISABLE_WARNING_CRT_SECURE
+  class file_guard
+  {
+  public:
+    file_guard() = default;
+    explicit file_guard(FILE* f)
+        : file_(f)
+    {
+    }
+    file_guard(file_guard const&)            = delete;
+    file_guard& operator=(file_guard const&) = delete;
+    file_guard(file_guard&& other) noexcept
+        : file_guard()
+    {
+      swap(other);
+    }
+    file_guard& operator=(file_guard&& other) noexcept
+    {
+      file_guard {TTS_MOVE(other)}.swap(*this);
+      return *this;
+    }
+    ~file_guard()
+    {
+      close();
+    }
+    void swap(file_guard& other) noexcept
+    {
+      FILE* tmp   = file_;
+      file_       = other.file_;
+      other.file_ = tmp;
+    }
+    FILE* get() const
+    {
+      return file_;
+    }
+    explicit operator bool() const
+    {
+      return file_ != nullptr;
+    }
+  private:
+    void close()
+    {
+      if(file_) fclose(file_);
+      file_ = nullptr;
+    }
+    FILE* file_ = nullptr;
+  };
+  TTS_DISABLE_WARNING_POP
+}
+namespace tts::_
+{
   inline auto as_int(float a)
   {
     return std::bit_cast<std::uint32_t>(a);
@@ -1818,39 +2084,6 @@ namespace tts::_
     ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
-  struct shard_spec
-  {
-    bool         active = false;
-    unsigned int index  = 0;
-    unsigned int total  = 1;
-    bool         selects(std::size_t position) const
-    {
-      return !active || (position % total == index);
-    }
-    std::size_t count(std::size_t suite_size) const
-    {
-      if(!active) return suite_size;
-      if(suite_size <= index) return 0;
-      return (suite_size - index - 1) / total + 1;
-    }
-  };
-  TTS_DISABLE_WARNING_PUSH
-  TTS_DISABLE_WARNING_CRT_SECURE
-  inline shard_spec parse_shard(bool& ok)
-  {
-    ok              = true;
-    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
-    if(raw.is_empty()) return {};
-    unsigned int i = 0;
-    unsigned int n = 0;
-    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
-    {
-      ok = false;
-      return {};
-    }
-    return {true, i, n};
-  }
-  TTS_DISABLE_WARNING_POP
 }
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
@@ -1879,11 +2112,11 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   }
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
-  ::tts::text capture_path = ::tts::arguments().value<::tts::text>("--capture");
-  FILE*       capture_file = nullptr;
+  ::tts::text          capture_path = ::tts::arguments().value<::tts::text>("--capture");
+  ::tts::_::file_guard capture_file;
   if(!capture_path.is_empty())
   {
-    capture_file = fopen(capture_path.data(), "w");
+    capture_file = ::tts::_::file_guard {fopen(capture_path.data(), "w")};
     if(!capture_file)
     {
       ::tts::output().writeln("Unable to open '%s' for writing (--capture)", capture_path.data());
@@ -1891,7 +2124,24 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     }
   }
   ::tts::gathering_sink capture_sink;
-  if(capture_file) ::tts::output().sink(capture_sink);
+  ::tts::output_sink& capture_target = capture_file ? static_cast<::tts::output_sink&>(capture_sink)
+                                                    : ::tts::output_handler::default_sink();
+  ::tts::text sink_name = ::tts::arguments().value<::tts::text>("--sink");
+  if constexpr(!::tts::_::use_main) sink_name = ::tts::text {};
+  bool        sink_ok    = true;
+  ::tts::text sink_error = ::tts::_::validate_sink_name(sink_name, sink_ok);
+  if(!sink_ok)
+  {
+    ::tts::output().writeln(sink_error);
+    return 1;
+  }
+  ::tts::colorized_sink   colorized_candidate {capture_target};
+  ::tts::tap_sink         tap_candidate {capture_target};
+  ::tts::diagnostics_sink diagnostics_candidate {capture_target};
+  if(sink_name.is_empty() && capture_file) ::tts::output().sink(capture_sink);
+  else if(sink_name == "colored") ::tts::output().sink(colorized_candidate);
+  else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
+  else if(sink_name == "diagnostics") ::tts::output().sink(diagnostics_candidate);
   auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
   auto        seed       = ::tts::random_seed();
@@ -1941,14 +2191,18 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
                               static_cast<int>(nb_tests - done_tests - 1));
   }
+  int exit_code = 0;
+  if constexpr(::tts::_::use_main)
+  {
+    exit_code = ::tts::report(0, 0);
+    ::tts::output().finish();
+  }
   if(capture_file)
   {
     ::tts::output().sink(::tts::output_handler::default_sink());
-    fputs(capture_sink.content().data(), capture_file);
-    fclose(capture_file);
+    fputs(capture_sink.content().data(), capture_file.get());
   }
-  if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
-  else return 0;
+  return exit_code;
 }
 TTS_DISABLE_WARNING_POP
 #endif
@@ -2428,150 +2682,6 @@ namespace tts::_
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
   << [] 
 #endif
-namespace tts
-{
-  struct colorized_sink : output_sink
-  {
-    explicit colorized_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const& t) override
-    {
-      char const* s = t.data();
-      if(strcmp(s, "\n") == 0)
-      {
-        if(color_applied_) target_->write(text {"\033[0m"});
-        color_applied_ = false;
-        target_->write(t);
-        return;
-      }
-      if(active_color_ && !color_applied_)
-      {
-        target_->write(text {active_color_});
-        color_applied_ = true;
-      }
-      target_->write(t);
-    }
-    void test_started([[maybe_unused]] text const& name) override
-    {
-      set_color(nullptr);
-    }
-    void assertion_failed([[maybe_unused]] text const& location,
-                          [[maybe_unused]] text const& message,
-                          [[maybe_unused]] bool        fatal) override
-    {
-      set_color("\033[31m");
-    }
-    void test_finished([[maybe_unused]] text const& name, bool passed, bool invalid) override
-    {
-      if(invalid) set_color("\033[33m");
-      else if(passed) set_color("\033[32m");
-      else set_color(nullptr);
-    }
-    void suite_finished([[maybe_unused]] unsigned long long fail_count,
-                        [[maybe_unused]] unsigned long long invalid_count) override
-    {
-      set_color("\033[1m");
-    }
-    void suite_metric(outcome                             kind,
-                      [[maybe_unused]] unsigned long long count,
-                      [[maybe_unused]] unsigned long long total) override
-    {
-      using enum outcome;
-      switch(kind)
-      {
-      case success: set_color("\033[1;32m"); break;
-      case failure: set_color("\033[1;31m"); break;
-      case invalid: set_color("\033[1;33m"); break;
-      }
-    }
-    void suite_aborted() override
-    {
-      set_color("\033[31m");
-    }
-    void flush() override
-    {
-      target_->flush();
-    }
-  private:
-    void set_color(char const* color)
-    {
-      active_color_  = color;
-      color_applied_ = false;
-    }
-    output_sink* target_;
-    char const*  active_color_  = nullptr;
-    bool         color_applied_ = false;
-  };
-}
-namespace tts
-{
-  struct diagnostics_sink : output_sink
-  {
-    explicit diagnostics_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const& t) override
-    {
-      target_->write(t);
-    }
-    void assertion_failed(text const& location, text const& message, bool fatal) override
-    {
-      char const* loc = location.data();
-      std::size_t len = strlen(loc);
-      target_->write(text {"%.*s: %s: %s\n",
-                           static_cast<int>(len - 2),
-                           loc + 1,
-                           fatal ? "fatal error" : "error",
-                           message.data()});
-    }
-    void flush() override
-    {
-      target_->flush();
-    }
-  private:
-    output_sink* target_;
-  };
-}
-namespace tts
-{
-  struct tap_sink : output_sink
-  {
-    void write(text const&) override
-    {
-    }
-    void test_finished(text const& name, bool passed, [[maybe_unused]] bool invalid) override
-    {
-      ++count_;
-      body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
-                      : text {"not ok %zu - %s\n", count_, name.data()};
-    }
-    text render() const
-    {
-      return text {"1..%zu\n", count_} + body_;
-    }
-    void dump(output_sink& target)
-    {
-      target.write(render());
-      clear();
-    }
-    void dump()
-    {
-      stdout_sink target;
-      dump(target);
-    }
-    void clear()
-    {
-      body_  = text {};
-      count_ = 0;
-    }
-  private:
-    text        body_;
-    std::size_t count_ = 0;
-  };
-}
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT(EXPR, ...)
 #else
