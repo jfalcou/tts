@@ -1011,6 +1011,10 @@ namespace tts::_
       test_count++;
       invalid_count++;
     }
+    void unexpected()
+    {
+      unexpected_count++;
+    }
     int report(unsigned long long fails, unsigned long long invalids) const
     {
       auto  test_txt = test_count > 1 ? "s" : "";
@@ -1056,7 +1060,7 @@ namespace tts::_
                   ::tts::_::format_duration(avg_duration_ns).data());
       if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
         return 1;
-      if(!fails && !invalids) return test_count == success_count ? 0 : 1;
+      if(!fails && !invalids) return unexpected_count == 0 ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
     unsigned long long test_count        = 0;
@@ -1064,6 +1068,7 @@ namespace tts::_
     unsigned long long failure_count     = 0;
     unsigned long long fatal_count       = 0;
     unsigned long long invalid_count     = 0;
+    unsigned long long unexpected_count  = 0;
     unsigned long long total_duration_ns = 0;
     bool               fail_status       = false;
   };
@@ -1670,9 +1675,36 @@ namespace tts::_
     }
   };
 }
+namespace tts
+{
+  enum class expected_outcome
+  {
+    pass,
+    xfail,
+    may_fail,
+    xinvalid
+  };
+}
 namespace tts::_
 {
   inline char const* current_test = "";
+  struct tagged_id
+  {
+    char const*             name;
+    ::tts::expected_outcome tag;
+  };
+  inline char const* tag_name(::tts::expected_outcome tag)
+  {
+    using enum ::tts::expected_outcome;
+    switch(tag)
+    {
+    case pass: return "PASS";
+    case xfail: return "XFAIL";
+    case may_fail: return "MAYFAIL";
+    case xinvalid: return "XINVALID";
+    }
+    return "";
+  }
   struct test
   {
     void operator()()
@@ -1680,10 +1712,11 @@ namespace tts::_
       current_test = name;
       behaviour();
     }
-    static inline bool acknowledge(test&& f);
-    char const*        name;
-    tts::_::callable   behaviour;
-    tts::text          types = {};
+    static inline bool      acknowledge(test&& f);
+    char const*             name;
+    tts::_::callable        behaviour;
+    tts::text               types = {};
+    ::tts::expected_outcome tag   = ::tts::expected_outcome::pass;
   };
   inline buffer<test>& suite()
   {
@@ -1694,6 +1727,21 @@ namespace tts::_
   {
     suite().emplace_back(TTS_MOVE(f));
     return true;
+  }
+}
+namespace tts
+{
+  inline _::tagged_id expect_fail(char const* id)
+  {
+    return {id, expected_outcome::xfail};
+  }
+  inline _::tagged_id may_fail(char const* id)
+  {
+    return {id, expected_outcome::may_fail};
+  }
+  inline _::tagged_id expect_invalid(char const* id)
+  {
+    return {id, expected_outcome::xinvalid};
   }
 }
 namespace tts::_
@@ -2231,10 +2279,29 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       ::tts::global_runtime.total_duration_ns += duration_ns;
       bool invalid                             = (test_count == ::tts::global_runtime.test_count);
       bool passed = !invalid && (failure_count == ::tts::global_runtime.failure_count);
+      bool matches_expectation = false;
+      using enum ::tts::expected_outcome;
+      switch(t.tag)
+      {
+      case pass: matches_expectation = passed; break;
+      case xfail: matches_expectation = !invalid && !passed; break;
+      case may_fail: matches_expectation = !invalid; break;
+      case xinvalid: matches_expectation = invalid; break;
+      }
       if(invalid) ::tts::global_runtime.invalid();
+      if(!matches_expectation) ::tts::global_runtime.unexpected();
       ::tts::output().test_finished(::tts::text {t.name}, passed, invalid, duration_ns);
       ::tts::text duration_txt = ::tts::_::format_duration(static_cast<double>(duration_ns));
-      if(invalid)
+      if(t.tag != pass && !matches_expectation)
+      {
+        if(!::tts::is_quiet())
+          ::tts::output().writeln("TEST: '%s' - ** UNEXPECTED ** (tagged %s) (%s)",
+                                  t.name,
+                                  ::tts::_::tag_name(t.tag),
+                                  duration_txt.data());
+        ::tts::output().flush();
+      }
+      else if(invalid)
       {
         if(!::tts::is_quiet())
         {
@@ -2656,11 +2723,17 @@ namespace tts::_
         : name(id)
     {
     }
+    capture(tagged_id id)
+        : name(id.name)
+        , tag(id.tag)
+    {
+    }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name, body});
+      return test::acknowledge({name, body,  {}, tag});
     }
-    char const* name;
+    char const*             name;
+    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
   };
   inline text current_type = {};
   inline text joined_type_names()
@@ -2683,6 +2756,11 @@ namespace tts::_
         : name(id)
     {
     }
+    captures(tagged_id id)
+        : name(id.name)
+        , tag(id.tag)
+    {
+    }
     auto operator+(auto body) const
     {
       return test::acknowledge(
@@ -2697,9 +2775,11 @@ namespace tts::_
           ...);
          current_type = text {""};
        },
-       joined_type_names<Types...>()});
+       joined_type_names<Types...>(),
+       tag});
     }
-    char const* name;
+    char const*             name;
+    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
   };
   template<typename... Types> struct captures<types<Types...>> : captures<Types...>
   {
@@ -2713,9 +2793,15 @@ namespace tts::_
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
-    char const* name;
+    char const*             name;
+    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
     test_generators(char const* id)
         : name(id)
+    {
+    }
+    test_generators(tagged_id id)
+        : name(id.name)
+        , tag(id.tag)
     {
     }
     template<typename... Args> static void process_call(auto body, Args&&... args)
@@ -2736,7 +2822,8 @@ namespace tts::_
                                   (process_type<Type>(body), ...);
                                   current_type = text {""};
                                 },
-                                joined_type_names<Type...>()});
+                                joined_type_names<Type...>(),
+                                tg.tag});
     }
   };
 }
@@ -2761,6 +2848,21 @@ namespace tts::_
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
   << [] 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_XFAIL(ID)
+#else
+#define TTS_XFAIL(ID) ::tts::expect_fail(ID)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_MAYFAIL(ID)
+#else
+#define TTS_MAYFAIL(ID) ::tts::may_fail(ID)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_XINVALID(ID)
+#else
+#define TTS_XINVALID(ID) ::tts::expect_invalid(ID)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT(EXPR, ...)
