@@ -60,7 +60,7 @@ int main(int argc, char const** argv)
     ok = ok && (strstr(content, "not ok 2 - Failing case for sink tests") != nullptr); // NOSONAR
   }
 
-  // diagnostics_sink rewrites failure lines as "file:line: error: message".
+  // diagnostics_sink adds a "file:line: error: message" line per failing/fatal assertion.
   {
     tts::gathering_sink   target;
     tts::diagnostics_sink diagnostics {target};

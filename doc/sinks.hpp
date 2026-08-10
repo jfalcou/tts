@@ -14,18 +14,19 @@
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
   needed.
 
-  `tts::colorized_sink` and `tts::diagnostics_sink` work directly on the human-readable text
-  `tts::stdout_sink` already prints, recognizing TTS's own wording ("[PASSED]", "** FAILURE **",
-  ...). `tts::tap_sink` instead draws from @ref output_sink's structured `test_finished()` hook,
-  so it stays correct regardless of `-v`/`-q`. None of them currently reflect
-  @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since
-  those don't have their own hook or a distinct line of their own to key off of.
+  `tts::colorized_sink` works directly on the human-readable text `tts::stdout_sink` already
+  prints, recognizing TTS's own wording ("[PASSED]", "** FAILURE **", ...). `tts::tap_sink` and
+  `tts::diagnostics_sink` instead draw from @ref tts::output_sink's structured `test_finished()` /
+  `assertion_failed()` hooks, so they stay correct regardless of `-v`/`-q`. None of them currently
+  reflect @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN
+  sub-scenarios, since those don't have their own hook or a distinct line of their own to key off
+  of.
 
   Sink                       | Purpose
   -------------------------- | -----------------------------------------------------------------
   `tts::colorized_sink`      | Wraps another sink, coloring pass/fail/fatal lines with ANSI escapes.
   `tts::tap_sink`            | Gathers the run, then renders it as TAP (Test Anything Protocol).
-  `tts::diagnostics_sink`    | Rewrites failure/fatal lines as compiler-style diagnostics.
+  `tts::diagnostics_sink`    | Adds compiler-style diagnostics for failure/fatal assertions.
 
   # tts::colorized_sink
 
@@ -71,11 +72,12 @@
 
   # tts::diagnostics_sink
 
-  Wraps a target sink and rewrites lines that look like a @ref TTS_CASE failure or fatal error -
-  which already embed a `[file:line]` location - into `file:line: error: message` /
-  `file:line: fatal error: message`, so editors/IDEs with a GCC/Clang-style problem matcher
-  (VSCode's `$gcc`, vim's quickfix, ...) can jump straight to the failing assertion. Every other
-  message passes through unchanged.
+  Wraps a target sink, forwarding every message unchanged, and additionally prints one
+  `file:line: error: message` / `file:line: fatal error: message` line per failing/fatal
+  assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's
+  quickfix, ...) can jump straight to it. Since it comes from the same structured hook
+  `tts::tap_sink` uses, it still fires under `-q`, when the raw failure line it complements is
+  itself suppressed.
 
   @code{cpp}
   tts::diagnostics_sink diagnostics;
@@ -84,15 +86,10 @@
   // ... run the test suite ...
   @endcode
 
-  A failure that would normally print as:
+  A failing @ref TTS_CASE then prints its usual line, immediately followed by the diagnostic one:
 
   @code{sh}
     [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.
-  @endcode
-
-  instead prints as:
-
-  @code{sh}
   expect.cpp:15: error: Expression: 1 == 2 evaluates to false.
   @endcode
 

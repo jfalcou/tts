@@ -109,9 +109,10 @@ namespace tts
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
 
-    /// Called once per failing/fatal assertion, right before the corresponding text is written.
-    /// No-op by default. Not called for passing assertions - test_finished()'s `passed` already
-    /// covers that case, and most consumers of this hook don't want one event per assertion.
+    /// Called once per failing/fatal assertion, always - even under -q, where the corresponding
+    /// text (if any) is suppressed instead of being written first. No-op by default. Not called
+    /// for passing assertions - test_finished()'s `passed` already covers that case, and most
+    /// consumers of this hook don't want one event per assertion.
     virtual void assertion_failed([[maybe_unused]] text const& location,
                                   [[maybe_unused]] text const& message,
                                   [[maybe_unused]] bool        fatal)

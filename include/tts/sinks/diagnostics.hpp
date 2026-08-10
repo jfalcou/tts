@@ -15,13 +15,14 @@ namespace tts
   //====================================================================================================================
   /**
     @public
-    @brief output_sink rewriting failure/fatal lines as compiler-style diagnostics.
+    @brief output_sink adding compiler-style diagnostics for every failing/fatal assertion.
 
-    Forwards every message to a target sink (tts::output_handler::default_sink() by default),
-    rewriting lines that look like a @ref TTS_CASE failure or fatal error - which already embed a
-    `[file:line]` location - into `file:line: error: message` / `file:line: fatal error: message`,
-    so editors/IDEs with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's quickfix, ...)
-    can jump straight to the failing assertion. Every other message passes through unchanged.
+    Forwards every message to a target sink (tts::output_handler::default_sink() by default)
+    unchanged, and additionally prints one `file:line: error: message` /
+    `file:line: fatal error: message` line per failing/fatal assertion - built from
+    @ref output_sink's structured `assertion_failed()` hook, not by parsing text - so editors/IDEs
+    with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's quickfix, ...) can jump straight
+    to it. Prints even under `-q`, when the raw failure line it complements is itself suppressed.
 
     @groupheader{Example}
     @code
@@ -39,36 +40,19 @@ namespace tts
 
     void write(text const& t) override
     {
-      char const* s      = t.data();
-      char const* marker = "** FAILURE **";
-      char const* level  = "error";
-      char const* found  = strstr(s, marker);
+      target_->write(t);
+    }
 
-      if(!found)
-      {
-        marker = "@@ FATAL @@";
-        level  = "fatal error";
-        found  = strstr(s, marker);
-      }
-
-      // The line looks like "  [X] [file:line] : ** FAILURE ** : message" (or [@] / FATAL) -
-      // find the second bracketed group, the first one being the "[X]"/"[@]" status marker.
-      char const* p1 = found ? strchr(s, '[') : nullptr;
-      char const* e1 = p1 ? strchr(p1, ']') : nullptr;
-      char const* p2 = e1 ? strchr(e1 + 1, '[') : nullptr;
-      char const* e2 = p2 ? strchr(p2, ']') : nullptr;
-
-      if(p2 && e2)
-      {
-        text        location {"%.*s", static_cast<int>(e2 - p2 - 1), p2 + 1}; // NOSONAR
-        char const* msg =
-        found + strlen(marker) + 3; // skip "marker : " - NOSONAR, marker is always a literal
-        target_->write(text {"%s: %s: %s", location.data(), level, msg});
-      }
-      else
-      {
-        target_->write(t);
-      }
+    void assertion_failed(text const& location, text const& message, bool fatal) override
+    {
+      // location is already "[file:line]" (see tts::_::source_location) - strip the brackets.
+      char const* loc = location.data();
+      std::size_t len = strlen(loc);
+      target_->write(text {"%.*s: %s: %s\n",
+                           static_cast<int>(len - 2),
+                           loc + 1,
+                           fatal ? "fatal error" : "error",
+                           message.data()});
     }
 
     void flush() override
