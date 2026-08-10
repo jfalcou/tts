@@ -15,10 +15,11 @@
   needed.
 
   All three draw from @ref tts::output_sink's structured hooks (`test_started()`,
-  `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_aborted()`) rather than by
-  parsing the text `tts::stdout_sink` prints, so they stay correct regardless of `-v`/`-q`. None
-  of them currently reflect @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN /
-  @ref TTS_AND_THEN sub-scenarios, since those don't have their own hook.
+  `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_metric()`,
+  `suite_aborted()`) rather than by parsing the text `tts::stdout_sink` prints, so they stay
+  correct regardless of `-v`/`-q`. None of them currently reflect @ref TTS_CASE_TPL's per-type
+  breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since those don't have their own
+  hook.
 
   Sink                       | Purpose
   -------------------------- | -----------------------------------------------------------------
@@ -29,13 +30,14 @@
   # tts::colorized_sink
 
   Wraps a target sink (`tts::output_handler::default_sink()` by default) and colors a pass
-  confirmation (green), a failure/fatal/abort (red), an invalid test (yellow), or the final
-  `Results: ...` summary and the separator line right above it (green if everything passed, red
-  otherwise) - forwarding everything else unchanged. A color stays active across consecutive
-  lines until the next hook changes it, which is why the separator picks up the same color as the
-  `Results: ...` line that follows it. Opt-in: not every terminal or CI log renders ANSI escapes
-  usefully, and on Windows it additionally depends on the host console having Virtual Terminal
-  Processing enabled (most modern terminals already do).
+  confirmation (green), a failure/fatal/abort (red), an invalid test (yellow) - forwarding
+  everything else unchanged. The separator and the `Results: ...` prefix are bold and color-
+  neutral; only the `- N/M (P%) <label>` segment for each outcome category (success, failure,
+  invalid) is colored, in bold green/red/yellow respectively - so a run with both failures and
+  invalids shows each count in its own color rather than the whole line in one. A color stays
+  active across consecutive lines/segments until the next hook changes it. Opt-in: not every
+  terminal or CI log renders ANSI escapes usefully, and on Windows it additionally depends on the
+  host console having Virtual Terminal Processing enabled (most modern terminals already do).
 
   @code{cpp}
   tts::colorized_sink colorized;
@@ -45,8 +47,10 @@
   @endcode
 
   A failing run then looks like the usual TTS output, except `[PASSED]` lines are wrapped in
-  `\033[32m...\033[0m` (green), failure/fatal lines in `\033[31m...\033[0m` (red), and so on -
-  exactly what a terminal needs to render them in color.
+  `\033[32m...\033[0m` (green), failure/fatal lines in `\033[31m...\033[0m` (red), the `Results:`
+  line and separator in `\033[1m...\033[0m` (bold), and each of its outcome segments in
+  `\033[1;32m`/`\033[1;31m`/`\033[1;33m` (bold green/red/yellow) - exactly what a terminal needs
+  to render them in color.
 
   # tts::tap_sink
 

@@ -59,23 +59,32 @@ namespace tts::_
       ::tts::_::separator();
       out.write("Results: %llu test%s ", test_count, test_txt);
       if(success_count != 0)
+      {
+        out.suite_metric(::tts::outcome::success, success_count, test_count);
         out.write("- %llu/%llu (%2.2f%%) success%s ",
                   success_count,
                   test_count,
                   100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
                   pass_txt);
+      }
       if(failure_count != 0)
+      {
+        out.suite_metric(::tts::outcome::failure, failure_count, test_count);
         out.write("- %llu/%llu (%2.2f%%) failure%s ",
                   failure_count,
                   test_count,
                   100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
                   fail_txt);
+      }
       if(invalid_count != 0)
+      {
+        out.suite_metric(::tts::outcome::invalid, invalid_count, test_count);
         out.write("- %llu/%llu (%2.2f%%) invalid%s ",
                   invalid_count,
                   test_count,
                   100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
                   inv_txt);
+      }
 
       out.writeln();
 

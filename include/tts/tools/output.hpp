@@ -74,6 +74,20 @@ namespace tts
   //====================================================================================================================
   /**
     @public
+    @brief The three ways a @ref TTS_CASE outcome is tallied in the `Results: ...` summary.
+    @see output_sink::suite_metric
+  **/
+  //====================================================================================================================
+  enum class outcome
+  {
+    success,
+    failure,
+    invalid
+  };
+
+  //====================================================================================================================
+  /**
+    @public
     @brief Customization point for where TTS output actually goes.
 
     All non-usage related output produced while running a test suite - tests progress, pass/fail/
@@ -134,6 +148,15 @@ namespace tts
     /// outcome, always - even under -q. No-op by default.
     virtual void suite_finished([[maybe_unused]] unsigned long long fail_count,
                                 [[maybe_unused]] unsigned long long invalid_count)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
+    /// Called once per non-zero outcome category, right before its "N/M (P%) <label>" segment is
+    /// printed as part of the `Results: ...` summary. No-op by default.
+    virtual void suite_metric([[maybe_unused]] outcome            kind,
+                              [[maybe_unused]] unsigned long long count,
+                              [[maybe_unused]] unsigned long long total)
     {
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
@@ -319,6 +342,12 @@ namespace tts
     void suite_finished(unsigned long long fail_count, unsigned long long invalid_count)
     {
       sink_->suite_finished(fail_count, invalid_count);
+    }
+
+    /// Notifies the current output_sink that a Results: outcome category is about to print.
+    void suite_metric(outcome kind, unsigned long long count, unsigned long long total)
+    {
+      sink_->suite_metric(kind, count, total);
     }
 
     /// Notifies the current output_sink that the suite aborted early on a fatal failure.

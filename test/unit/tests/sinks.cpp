@@ -43,9 +43,12 @@ int main(int argc, char const** argv)
     ok = ok && (strstr(content, "Passing case for sink tests") != nullptr); // NOSONAR
     ok = ok && (strstr(content, "Failing case for sink tests") != nullptr); // NOSONAR
 
-    // The Results: summary itself (not just some earlier line) must be red, since this suite has
-    // a failure - it stays active color across the separator right above it too.
-    ok = ok && (strstr(content, "\033[31mResults:") != nullptr); // NOSONAR
+    // The separator and the "Results:" prefix are bold neutral, not tied to pass/fail; only each
+    // score segment (success/failure/invalid) is colored, per its own category.
+    ok = ok && (strstr(content, "\033[1m--------") != nullptr); // NOSONAR
+    ok = ok && (strstr(content, "\033[1mResults:") != nullptr); // NOSONAR
+    ok = ok && (strstr(content, "\033[1;32m- 1/2") != nullptr); // NOSONAR - success
+    ok = ok && (strstr(content, "\033[1;31m- 1/2") != nullptr); // NOSONAR - failure
   }
 
   // tap_sink renders "1..N" / "ok" / "not ok" lines from the structured test_finished() events.

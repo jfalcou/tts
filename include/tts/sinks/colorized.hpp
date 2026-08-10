@@ -18,9 +18,10 @@ namespace tts
     @brief output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.
 
     Forwards every message to a target sink (tts::output_handler::default_sink() by default),
-    wrapping a failure/fatal/invalid/pass line, or the final `Results: ...` summary, in the
-    corresponding ANSI color - decided from @ref output_sink's structured hooks, not by parsing
-    text. Opt-in: not every terminal or CI log renders ANSI escapes usefully.
+    wrapping a failure/fatal/invalid/pass line, the separator and `Results: ...` prefix (bold,
+    color-neutral), or each of its outcome segments (bold green/red/yellow), in the corresponding
+    ANSI color - decided from @ref output_sink's structured hooks, not by parsing text. Opt-in:
+    not every terminal or CI log renders ANSI escapes usefully.
 
     @groupheader{Example}
     @code
@@ -84,9 +85,22 @@ namespace tts
       else set_color(nullptr); // plain failure - assertion_failed() already colored its line
     }
 
-    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count) override
+    void suite_finished([[maybe_unused]] unsigned long long fail_count,
+                        [[maybe_unused]] unsigned long long invalid_count) override
     {
-      set_color((fail_count || invalid_count) ? "\033[31m" : "\033[32m"); // NOSONAR
+      set_color("\033[1m"); // bold, neutral - NOSONAR, \o{} is C++23-only
+    }
+
+    void suite_metric(outcome                             kind,
+                      [[maybe_unused]] unsigned long long count,
+                      [[maybe_unused]] unsigned long long total) override
+    {
+      switch(kind)
+      {
+      case outcome::success: set_color("\033[1;32m"); break; // bold green - NOSONAR
+      case outcome::failure: set_color("\033[1;31m"); break; // bold red - NOSONAR
+      case outcome::invalid: set_color("\033[1;33m"); break; // bold yellow - NOSONAR
+      }
     }
 
     void suite_aborted() override
