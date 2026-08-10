@@ -15,7 +15,11 @@ namespace tts::_
 {
   // Every accepted --sink=name value - also drives the "expected one of: ..." error message
   // below, so adding a new sink here is the only place that needs updating.
-  inline constexpr std::array<char const*, 4> sink_names {"colored", "tap", "diagnostics", "json"};
+  inline constexpr std::array<char const*, 5> sink_names {"colored",
+                                                          "tap",
+                                                          "diagnostics",
+                                                          "json",
+                                                          "junit"};
 
   // Validates --sink=name (read from the current tts::arguments()). ok is set to false for an
   // unknown, non-empty name, in which case the returned text is ready to print as an error.

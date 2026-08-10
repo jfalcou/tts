@@ -110,5 +110,30 @@ int main(int argc, char const** argv)
     ok                  = ok && (strstr(content, summary) != nullptr); // NOSONAR
   }
 
+  // junit_sink renders one <testcase> per TTS_CASE inside a single <testsuite>, with a
+  // <failure> child gathering every failing assertion for a failed case.
+  {
+    tts::junit_sink junit;
+    {
+      tts::scoped_sink scope(junit);
+      sinks_test_main(argc, argv);
+    }
+
+    tts::gathering_sink target;
+    junit.dump(target);
+    char const* content      = target.content().data();
+
+    char const* suite_header = R"(<testsuite name="TTS" tests="2" failures="1" errors="0")"
+                               R"( skipped="0")";
+    ok                       = ok && (strstr(content, suite_header) != nullptr); // NOSONAR
+    ok                       = ok &&
+         (strstr(content, R"(<testcase name="Passing case for sink tests")") != nullptr); // NOSONAR
+    ok = ok &&
+         (strstr(content, R"(<testcase name="Failing case for sink tests")") != nullptr); // NOSONAR
+    ok = ok && (strstr(content,
+                       R"(<failure message="Expression: 1 == 2 evaluates to false.")" // NOSONAR
+                       R"(>sinks.cpp:)") != nullptr);
+  }
+
   return ok ? 0 : 1;
 }
