@@ -43,7 +43,7 @@ int main(int argc, char const** argv)
     ok = ok && (strstr(content, "Failing case for sink tests") != nullptr); // NOSONAR
   }
 
-  // tap_sink reconstructs "1..N" / "ok" / "not ok" lines from the captured text.
+  // tap_sink renders "1..N" / "ok" / "not ok" lines from the structured test_finished() events.
   {
     tts::tap_sink tap;
     {

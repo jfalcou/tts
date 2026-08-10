@@ -14,11 +14,12 @@
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
   needed.
 
-  Every one of them is derived from the same human-readable text `tts::stdout_sink` already
-  prints - there is no structured per-test event to draw from (name, status, timing, ...) yet -
-  so they recognize TTS's own wording ("TEST: 'name'", "[PASSED]", "** FAILURE **", ...) rather
-  than a stable machine format. In particular none of them currently reflect
-  @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios.
+  `tts::colorized_sink` and `tts::diagnostics_sink` work directly on the human-readable text
+  `tts::stdout_sink` already prints, recognizing TTS's own wording ("[PASSED]", "** FAILURE **",
+  ...). `tts::tap_sink` instead draws from @ref output_sink's structured `test_finished()` hook,
+  so it stays correct regardless of `-v`/`-q`. None of them currently reflect
+  @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since
+  those don't have their own hook or a distinct line of their own to key off of.
 
   Sink                       | Purpose
   -------------------------- | -----------------------------------------------------------------
@@ -48,9 +49,8 @@
 
   # tts::tap_sink
 
-  Accumulates the run's output like `tts::gathering_sink`, then `dump()` reconstructs one
-  `ok N - name` / `not ok N - name` line per @ref TTS_CASE, followed by a trailing `1..N` plan
-  line.
+  Listens to `test_finished()` and accumulates one `ok N - name` / `not ok N - name` line per
+  @ref TTS_CASE, then `dump()` streams them out preceded by a leading `1..N` plan line.
 
   @code{cpp}
   tts::tap_sink tap;
