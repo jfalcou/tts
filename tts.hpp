@@ -694,6 +694,133 @@ namespace tts
     output_sink* target_;
   };
 }
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
+namespace tts::_
+{
+  inline ::tts::text json_escape(::tts::text const& t)
+  {
+    ::tts::text out;
+    for(char c: t)
+    {
+      switch(c)
+      {
+      case '"': out += R"(\")"; break;
+      case '\\': out += R"(\\)"; break;
+      case '\n': out += "\\n"; break;
+      case '\r': out += "\\r"; break;
+      case '\t': out += "\\t"; break;
+      default:
+        if(static_cast<unsigned char>(c) < 0x20)
+          out += ::tts::text {"\\u%04x", static_cast<unsigned>(static_cast<unsigned char>(c))};
+        else out += ::tts::text {"%c", c};
+        break;
+      }
+    }
+    return out;
+  }
+}
+namespace tts
+{
+  struct json_sink : output_sink
+  {
+    explicit json_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const&) override
+    {
+    }
+    void assertion_failed(text const& location, text const& message, bool fatal) override
+    {
+      char const* loc      = location.data();
+      std::size_t len      = strlen(loc);
+      auto        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};
+      char const* colon    = strrchr(stripped.data(), ':');
+      text        file =
+      colon ? text {"%.*s", static_cast<int>(colon - stripped.data()), stripped.data()} : stripped;
+      int line = 0;
+      if(colon) sscanf(colon + 1, "%d", &line);
+      if(!current_failures_.is_empty()) current_failures_ += ",";
+      current_failures_ += text {R"({"location":{"file":"%s","line":%d},"message":"%s",)"
+                                 R"("fatal":%s})",
+                                 _::json_escape(file).data(),
+                                 line,
+                                 _::json_escape(message).data(),
+                                 fatal ? "true" : "false"};
+    }
+    void test_finished(text const&        name,
+                       bool               passed,
+                       bool               invalid,
+                       unsigned long long duration_ns) override
+    {
+      char const* status = "failed";
+      if(invalid)
+      {
+        status = "invalid";
+        ++invalid_count_;
+      }
+      else if(passed)
+      {
+        status = "passed";
+        ++passed_count_;
+      }
+      else ++failed_count_;
+      total_duration_ns_ += duration_ns;
+      if(!body_.is_empty()) body_ += ",";
+      body_ += text {R"({"name":"%s","status":"%s","duration_ns":%llu,"failures":[%s]})",
+                     _::json_escape(name).data(),
+                     status,
+                     duration_ns,
+                     current_failures_.data()};
+      current_failures_ = text {};
+    }
+    text render() const
+    {
+      unsigned long long total = passed_count_ + failed_count_ + invalid_count_;
+      return text {R"({"tests":[%s],"summary":{"total":%llu,"passed":%llu,"failed":%llu,)"
+                   R"("invalid":%llu,"duration_ns":%llu}})",
+                   body_.data(),
+                   total,
+                   passed_count_,
+                   failed_count_,
+                   invalid_count_,
+                   total_duration_ns_};
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_              = text {};
+      current_failures_  = text {};
+      passed_count_      = 0;
+      failed_count_      = 0;
+      invalid_count_     = 0;
+      total_duration_ns_ = 0;
+    }
+    void finish() override
+    {
+      dump(*target_);
+    }
+  private:
+    output_sink*       target_;
+    text               body_;
+    text               current_failures_;
+    unsigned long long passed_count_      = 0;
+    unsigned long long failed_count_      = 0;
+    unsigned long long invalid_count_     = 0;
+    unsigned long long total_duration_ns_ = 0;
+  };
+}
+TTS_DISABLE_WARNING_POP
 namespace tts
 {
   struct tap_sink : output_sink
@@ -1783,7 +1910,7 @@ namespace tts::_
 #include <array>
 namespace tts::_
 {
-  inline constexpr std::array<char const*, 3> sink_names {"colored", "tap", "diagnostics"};
+  inline constexpr std::array<char const*, 4> sink_names {"colored", "tap", "diagnostics", "json"};
   inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
   {
     ok = name.is_empty();
@@ -2244,10 +2371,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::colorized_sink   colorized_candidate {capture_target};
   ::tts::tap_sink         tap_candidate {capture_target};
   ::tts::diagnostics_sink diagnostics_candidate {capture_target};
+  ::tts::json_sink        json_candidate {capture_target};
   if(sink_name.is_empty() && capture_file) ::tts::output().sink(capture_sink);
   else if(sink_name == "colored") ::tts::output().sink(colorized_candidate);
   else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
   else if(sink_name == "diagnostics") ::tts::output().sink(diagnostics_candidate);
+  else if(sink_name == "json") ::tts::output().sink(json_candidate);
   auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
   auto        seed       = ::tts::random_seed();
@@ -2363,7 +2492,9 @@ namespace tts::_
                                       int         line = __builtin_LINE()) noexcept
     {
       int  offset = 0;
-      auto end    = strrchr(file, '/');
+      auto slash  = strrchr(file, '/');
+      auto bslash = strrchr(file, '\\');
+      auto end    = (bslash && (!slash || bslash > slash)) ? bslash : slash;
       if(end) offset = static_cast<int>(end - file + 1);
       source_location that {};
       that.desc_ = text {"[%s:%d]", file + offset, line};
