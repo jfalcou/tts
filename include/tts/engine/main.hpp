@@ -12,6 +12,7 @@
 #include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/environment.hpp>
+#include <tts/tools/file.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/random.hpp>
 
@@ -206,12 +207,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
 
-  ::tts::text capture_path = ::tts::arguments().value<::tts::text>("--capture");
-  FILE*       capture_file = nullptr;
+  ::tts::text          capture_path = ::tts::arguments().value<::tts::text>("--capture");
+  ::tts::_::file_guard capture_file;
 
   if(!capture_path.is_empty())
   {
-    capture_file = fopen(capture_path.data(), "w"); // NOSONAR
+    capture_file = ::tts::_::file_guard {fopen(capture_path.data(), "w")}; // NOSONAR
     if(!capture_file)
     {
       ::tts::output().writeln("Unable to open '%s' for writing (--capture)", capture_path.data());
@@ -238,7 +239,6 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   if(!sink_ok)
   {
     ::tts::output().writeln(sink_error);
-    if(capture_file) fclose(capture_file); // NOSONAR
     return 1;
   }
 
@@ -324,8 +324,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   if(capture_file)
   {
     ::tts::output().sink(::tts::output_handler::default_sink());
-    fputs(capture_sink.content().data(), capture_file); // NOSONAR
-    fclose(capture_file);                               // NOSONAR
+    fputs(capture_sink.content().data(), capture_file.get()); // NOSONAR
   }
 
   return exit_code;
