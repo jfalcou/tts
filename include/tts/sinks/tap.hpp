@@ -14,15 +14,18 @@ namespace tts
 {
   //====================================================================================================================
   /**
+    @ingroup tools-sinks
     @public
-    @brief output_sink rendering the run as TAP (Test Anything Protocol).
+    @brief output_sink rendering the run as [TAP](https://testanything.org/) (Test Anything
+    Protocol).
 
     Built from @ref output_sink's structured `test_finished` hook rather than by parsing the
     human-readable text @ref tts::stdout_sink prints, so it reports one "ok N - name" / "not ok
     N - name" line per @ref TTS_CASE regardless of `-v`/`-q`, followed by a trailing "1..N" plan
-    line once dump()ed. It does not (currently) reflect @ref TTS_CASE_TPL's per-type breakdown or
-    @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since those don't have their own hook - only
-    the enclosing @ref TTS_CASE does.
+    line once dump()ed - or automatically, via `finish()`, to the target given at construction
+    (`tts::output_handler::default_sink()` by default). It does not (currently) reflect
+    @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios,
+    since those don't have their own hook - only the enclosing @ref TTS_CASE does.
 
     @groupheader{Example}
     @code
@@ -37,6 +40,11 @@ namespace tts
   //====================================================================================================================
   struct tap_sink : output_sink
   {
+    explicit tap_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+
     void write(text const&) override
     {
       // Intentionally empty: TAP output is built entirely from test_finished() below.
@@ -76,8 +84,15 @@ namespace tts
       count_ = 0;
     }
 
+    /// Dumps the TAP-rendered report to the target given at construction.
+    void finish() override
+    {
+      dump(*target_);
+    }
+
   private:
-    text        body_;
-    std::size_t count_ = 0;
+    output_sink* target_;
+    text         body_;
+    std::size_t  count_ = 0;
   };
 }

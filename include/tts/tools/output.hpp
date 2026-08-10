@@ -168,6 +168,18 @@ namespace tts
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
 
+    /// Called once, after tts::report() returns - every other hook has already fired by then - so
+    /// an accumulate-style sink (e.g. tts::tap_sink) can render and flush its buffered content to
+    /// its own destination. No-op by default: pass-through sinks that already forward write() as
+    /// it happens (e.g. tts::colorized_sink) have nothing left to do here. Like `--shard`, this is
+    /// only called by the default driver (@ref TTS_MAIN) - a @ref TTS_CUSTOM_DRIVER_FUNCTION
+    /// manages whichever sink it installed itself, including dumping it, so its driver never calls
+    /// finish() on its own.
+    virtual void finish()
+    {
+      // Intentionally empty: most sinks stream their output as it happens, nothing to flush.
+    }
+
     virtual ~output_sink() = default;
   };
 
@@ -354,6 +366,12 @@ namespace tts
     void suite_aborted()
     {
       sink_->suite_aborted();
+    }
+
+    /// Notifies the current output_sink that tts::report() has returned.
+    void finish()
+    {
+      sink_->finish();
     }
 
     /// Installs s as the output_sink every subsequent write goes to.

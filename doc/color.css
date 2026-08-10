@@ -15,3 +15,16 @@ p, div, table, dl
 {
   text-align: justify; !important
 }
+
+/* ANSI-like colors for hand-written terminal output examples (see doc/sinks.hpp) */
+.ansi-bold   { font-weight: bold; }
+.ansi-green  { color: #1a7f37; }
+.ansi-red    { color: #cf222e; }
+.ansi-yellow { color: #9a6700; }
+
+@media (prefers-color-scheme: dark)
+{
+  .ansi-green  { color: #3fb950; }
+  .ansi-red    { color: #f85149; }
+  .ansi-yellow { color: #d29922; }
+}

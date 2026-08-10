@@ -14,15 +14,17 @@ namespace tts
 {
   //====================================================================================================================
   /**
+    @ingroup tools-sinks
     @public
     @brief output_sink adding compiler-style diagnostics for every failing/fatal assertion.
 
     Forwards every message to a target sink (tts::output_handler::default_sink() by default)
-    unchanged, and additionally prints one `file:line: error: message` /
-    `file:line: fatal error: message` line per failing/fatal assertion - built from
+    unchanged, and additionally prints one `path:line: error: message` /
+    `path:line: fatal error: message` line per failing/fatal assertion - built from
     @ref output_sink's structured `assertion_failed()` hook, not by parsing text - so editors/IDEs
-    with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's quickfix, ...) can jump straight
-    to it. Prints even under `-q`, when the raw failure line it complements is itself suppressed.
+    with a GCC/Clang-style problem matcher (VS Code's C/C++ extension provides `$gcc`, vim has
+    quickfix, ...) can jump straight to it. Prints even under `-q`, when the raw failure line it
+    complements is itself suppressed.
 
     @groupheader{Example}
     @code

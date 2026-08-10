@@ -12,6 +12,9 @@
 #include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/environment.hpp>
+#include <tts/engine/shard.hpp>
+#include <tts/engine/sink_selection.hpp>
+#include <tts/tools/file.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/random.hpp>
 
@@ -112,50 +115,6 @@ namespace tts::_
 
     ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
-
-  // Splits the suite in `total` round-robin shards (test at registration index k belongs to
-  // shard k % total), so a slow binary can be spread across parallel CI workers without
-  // splitting source files. See --shard in doc/cli.hpp.
-  struct shard_spec
-  {
-    bool         active = false;
-    unsigned int index  = 0;
-    unsigned int total  = 1;
-
-    bool         selects(std::size_t position) const
-    {
-      return !active || (position % total == index);
-    }
-
-    std::size_t count(std::size_t suite_size) const
-    {
-      if(!active) return suite_size;
-      if(suite_size <= index) return 0;
-      return (suite_size - index - 1) / total + 1;
-    }
-  };
-
-  // Parses --shard=i/n. `ok` is set to false if the flag is present but malformed or out of
-  // range (n == 0 or i >= n); the returned shard_spec is then meaningless and must be ignored.
-  TTS_DISABLE_WARNING_PUSH
-  TTS_DISABLE_WARNING_CRT_SECURE
-  inline shard_spec parse_shard(bool& ok)
-  {
-    ok              = true;
-    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
-    if(raw.is_empty()) return {};
-
-    unsigned int i = 0;
-    unsigned int n = 0;
-    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
-    {
-      ok = false;
-      return {};
-    }
-
-    return {true, i, n};
-  }
-  TTS_DISABLE_WARNING_POP
 }
 
 TTS_DISABLE_WARNING_PUSH
@@ -195,12 +154,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::_::set_verbose(::tts::arguments()("-v", "--verbose"));
   ::tts::_::set_quiet(::tts::arguments()("-q", "--quiet"));
 
-  ::tts::text capture_path = ::tts::arguments().value<::tts::text>("--capture");
-  FILE*       capture_file = nullptr;
+  ::tts::text          capture_path = ::tts::arguments().value<::tts::text>("--capture");
+  ::tts::_::file_guard capture_file;
 
   if(!capture_path.is_empty())
   {
-    capture_file = fopen(capture_path.data(), "w"); // NOSONAR
+    capture_file = ::tts::_::file_guard {fopen(capture_path.data(), "w")}; // NOSONAR
     if(!capture_file)
     {
       ::tts::output().writeln("Unable to open '%s' for writing (--capture)", capture_path.data());
@@ -208,8 +167,38 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     }
   }
 
+  // Format (--sink) and destination (--capture) are orthogonal: every candidate sink below
+  // targets capture_target, so --sink=X --capture=path writes X-formatted output to the file
+  // exactly like --sink=X alone writes it to stdout.
   ::tts::gathering_sink capture_sink;
-  if(capture_file) ::tts::output().sink(capture_sink);
+  ::tts::output_sink& capture_target = capture_file ? static_cast<::tts::output_sink&>(capture_sink)
+                                                    : ::tts::output_handler::default_sink();
+
+  // Like --shard, --sink only makes sense for the default TTS_MAIN driver: a custom driver
+  // already manages its own sink lifecycle (installing it, dumping accumulate-style ones, ...),
+  // so letting --sink install a different one out from under it, or finish() below fire on
+  // whatever it installed, would fight that instead of helping.
+  ::tts::text sink_name = ::tts::arguments().value<::tts::text>("--sink");
+  if constexpr(!::tts::_::use_main) sink_name = ::tts::text {};
+
+  bool        sink_ok    = true;
+  ::tts::text sink_error = ::tts::_::validate_sink_name(sink_name, sink_ok);
+  if(!sink_ok)
+  {
+    ::tts::output().writeln(sink_error);
+    return 1;
+  }
+
+  ::tts::colorized_sink   colorized_candidate {capture_target};
+  ::tts::tap_sink         tap_candidate {capture_target};
+  ::tts::diagnostics_sink diagnostics_candidate {capture_target};
+
+  // Neither flag given: leave whatever sink the caller already installed alone, exactly as
+  // before --sink existed - only touch output().sink() when there's an actual reason to.
+  if(sink_name.is_empty() && capture_file) ::tts::output().sink(capture_sink);
+  else if(sink_name == "colored") ::tts::output().sink(colorized_candidate);
+  else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
+  else if(sink_name == "diagnostics") ::tts::output().sink(diagnostics_candidate);
 
   auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
@@ -270,15 +259,22 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
                               static_cast<int>(nb_tests - done_tests - 1));
   }
 
+  // finish() is part of the same TTS_MAIN-only convenience as --sink above: a custom driver's own
+  // code decides when (or whether) to dump an accumulate-style sink it installed itself.
+  int exit_code = 0;
+  if constexpr(::tts::_::use_main)
+  {
+    exit_code = ::tts::report(0, 0);
+    ::tts::output().finish();
+  }
+
   if(capture_file)
   {
     ::tts::output().sink(::tts::output_handler::default_sink());
-    fputs(capture_sink.content().data(), capture_file); // NOSONAR
-    fclose(capture_file);                               // NOSONAR
+    fputs(capture_sink.content().data(), capture_file.get()); // NOSONAR
   }
 
-  if constexpr(::tts::_::use_main) return ::tts::report(0, 0);
-  else return 0;
+  return exit_code;
 }
 TTS_DISABLE_WARNING_POP
 

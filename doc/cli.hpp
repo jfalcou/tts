@@ -34,6 +34,7 @@
   `TTS_ALLOW_EMPTY`     | `--allow-empty`
   `TTS_CAPTURE`         | `--capture=path`
   `TTS_SHARD`           | `--shard=i/n`
+  `TTS_SINK`            | `--sink=name`
   `TTS_PRECISION`       | `--precision=N`
   `TTS_SEED`            | `--seed=N`
   `TTS_BLOCK`           | `--block=N`
@@ -64,20 +65,22 @@
   `--allow-empty`   | Do not fail when the test suite registered zero test. `./my_test --allow-empty`
   `--capture=path`  | Capture this run's output and write it to `path` instead of stdout. `./my_test --capture=report.txt`
   `--shard=i/n`     | Only run the tests in shard `i` of `n` (`0 <= i < n`). `./my_test --shard=1/3`
+  `--sink=name`     | Format output as `name` (`colored`, `tap`, or `diagnostics`) - see @ref output-sinks. `./my_test --sink=tap`
 
   @note `--shard=i/n` partitions tests by registration index, round-robin (test at index `k`
   belongs to shard `k % n`), not by contiguous blocks - this keeps shards balanced even when
   slow tests cluster together in source order. A shard landing on zero tests (e.g. `n` larger
   than the suite's size) is not treated as a build error: `--shard` implicitly behaves like
   `--allow-empty` for that case. It composes with `--dry`, which then only lists the tests
-  that shard would actually run.
+  that shard would actually run. Like `--sink`, it's a no-op for binaries using a
+  @ref TTS_CUSTOM_DRIVER_FUNCTION - those typically assert a fixed, whole-suite fail/invalid
+  count via `tts::report(fails, invalids)` from outside the driver loop, and round-robin
+  partitioning has no way to know how many of that fixed total fall in a given shard, so
+  shard-filtering them could spuriously pass or fail. See #187 for a possible future per-test
+  expected-outcome mechanism that would lift this restriction.
 
-  @note `--shard` is a no-op for binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION - it only
-  applies to the default driver. Those binaries typically assert a fixed, whole-suite fail/
-  invalid count via `tts::report(fails, invalids)` from outside the driver loop, and
-  round-robin partitioning has no way to know how many of that fixed total fall in a given
-  shard, so shard-filtering them could spuriously pass or fail. See #187 for a possible future
-  per-test expected-outcome mechanism that would lift this restriction.
+  `--dry` prints registered test names without running anything - here's exactly what it does and
+  doesn't cover.
 
   @note `--dry` only prints what's known without running any test: registered @ref TTS_CASE /
   @ref TTS_CASE_TPL / @ref TTS_CASE_WITH names, plus their types for the latter two. It cannot
