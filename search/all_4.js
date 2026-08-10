@@ -11,5 +11,6 @@ var searchData=
   ['as_5finteger_8',['as_integer',['../structtts_1_1as__integer.html',1,'tts']]],
   ['as_5fsigned_5finteger_9',['as_signed_integer',['../structtts_1_1as__signed__integer.html',1,'tts']]],
   ['as_5ftext_10',['as_text',['../group__tools-text.html#ga044124276e1b1e518a746121e16b0fad',1,'tts']]],
-  ['aubrey_20bradimore_11',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]]
+  ['assertion_5ffailed_11',['assertion_failed',['../structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66',1,'tts::output_sink::assertion_failed()'],['../classtts_1_1output__handler.html#a6782aab6fbb564e637cd769e9e9f1c44',1,'tts::output_handler::assertion_failed()']]],
+  ['aubrey_20bradimore_12',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]]
 ];

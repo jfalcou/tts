@@ -42,6 +42,13 @@
     <name>tts::gathering_sink</name>
     <filename>structtts_1_1gathering__sink.html</filename>
     <base>tts::output_sink</base>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a9124eaa6eed5ab0702d2a16e2ccacc66</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal)</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>clear</name>
@@ -76,6 +83,20 @@
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
       <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ac8d28651a9c70c0b30c46c9ffaf83bdc</anchor>
+      <arglist>(text const &amp;name)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -154,6 +175,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>assertion_failed</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a6782aab6fbb564e637cd769e9e9f1c44</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>flush</name>
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
       <anchor>a76252835b1ef185ad29e4bcda75caab5</anchor>
@@ -172,6 +200,20 @@
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
       <anchor>a18bdc2a08396ba4646b54ffc2786eef7</anchor>
       <arglist>(output_sink &amp;s)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>test_finished</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>ac2c90555ce6036f12586dca2ac645177</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>test_started</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a4901ee7fdab3ead6e5b5d8fcbe63ea11</anchor>
+      <arglist>(text const &amp;name)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -228,10 +270,31 @@
     <filename>structtts_1_1output__sink.html</filename>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a9124eaa6eed5ab0702d2a16e2ccacc66</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>flush</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
       <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ac8d28651a9c70c0b30c46c9ffaf83bdc</anchor>
+      <arglist>(text const &amp;name)</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual void</type>
@@ -289,12 +352,33 @@
     <name>tts::stdout_sink</name>
     <filename>structtts_1_1stdout__sink.html</filename>
     <base>tts::output_sink</base>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a9124eaa6eed5ab0702d2a16e2ccacc66</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal)</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>flush</name>
       <anchorfile>structtts_1_1stdout__sink.html</anchorfile>
       <anchor>aef426f5b59aa7606833c7b3704494ad1</anchor>
       <arglist>() override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ac8d28651a9c70c0b30c46c9ffaf83bdc</anchor>
+      <arglist>(text const &amp;name)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
