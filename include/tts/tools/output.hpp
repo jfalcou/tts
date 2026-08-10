@@ -74,6 +74,20 @@ namespace tts
   //====================================================================================================================
   /**
     @public
+    @brief The three ways a @ref TTS_CASE outcome is tallied in the `Results: ...` summary.
+    @see output_sink::suite_metric
+  **/
+  //====================================================================================================================
+  enum class outcome
+  {
+    success,
+    failure,
+    invalid
+  };
+
+  //====================================================================================================================
+  /**
+    @public
     @brief Customization point for where TTS output actually goes.
 
     All non-usage related output produced while running a test suite - tests progress, pass/fail/
@@ -109,9 +123,10 @@ namespace tts
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
 
-    /// Called once per failing/fatal assertion, right before the corresponding text is written.
-    /// No-op by default. Not called for passing assertions - test_finished()'s `passed` already
-    /// covers that case, and most consumers of this hook don't want one event per assertion.
+    /// Called once per failing/fatal assertion, always and before the corresponding text (if
+    /// any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op
+    /// by default. Not called for passing assertions - test_finished()'s `passed` already covers
+    /// that case, and most consumers of this hook don't want one event per assertion.
     virtual void assertion_failed([[maybe_unused]] text const& location,
                                   [[maybe_unused]] text const& message,
                                   [[maybe_unused]] bool        fatal)
@@ -120,10 +135,35 @@ namespace tts
     }
 
     /// Called once a @ref TTS_CASE / @ref TTS_CASE_TPL / @ref TTS_CASE_WITH has finished
-    /// running, with its outcome. No-op by default.
+    /// running, always and before its corresponding text (if any - suppressed under -q), with
+    /// its outcome. No-op by default.
     virtual void test_finished([[maybe_unused]] text const& name,
                                [[maybe_unused]] bool        passed,
                                [[maybe_unused]] bool        invalid)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
+    /// Called once the whole suite has finished running (from tts::report()), with its aggregate
+    /// outcome, always - even under -q. No-op by default.
+    virtual void suite_finished([[maybe_unused]] unsigned long long fail_count,
+                                [[maybe_unused]] unsigned long long invalid_count)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
+    /// Called once per non-zero outcome category, right before its "N/M (P%) <label>" segment is
+    /// printed as part of the `Results: ...` summary. No-op by default.
+    virtual void suite_metric([[maybe_unused]] outcome            kind,
+                              [[maybe_unused]] unsigned long long count,
+                              [[maybe_unused]] unsigned long long total)
+    {
+      // Intentionally empty: most sinks only care about the formatted text stream.
+    }
+
+    /// Called if the suite aborts early due to a @ref TTS_FATAL failure, before tts::report()
+    /// (and thus suite_finished()) runs. No-op by default.
+    virtual void suite_aborted()
     {
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
@@ -296,6 +336,24 @@ namespace tts
     void test_finished(text const& name, bool passed, bool invalid)
     {
       sink_->test_finished(name, passed, invalid);
+    }
+
+    /// Notifies the current output_sink that the whole suite has finished running.
+    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count)
+    {
+      sink_->suite_finished(fail_count, invalid_count);
+    }
+
+    /// Notifies the current output_sink that a Results: outcome category is about to print.
+    void suite_metric(outcome kind, unsigned long long count, unsigned long long total)
+    {
+      sink_->suite_metric(kind, count, total);
+    }
+
+    /// Notifies the current output_sink that the suite aborted early on a fatal failure.
+    void suite_aborted()
+    {
+      sink_->suite_aborted();
     }
 
     /// Installs s as the output_sink every subsequent write goes to.

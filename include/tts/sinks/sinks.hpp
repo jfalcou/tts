@@ -1,0 +1,13 @@
+//======================================================================================================================
+//! @file
+/*
+  TTS - Tiny Test System
+  Copyright : TTS Contributors & Maintainers
+  SPDX-License-Identifier: BSL-1.0
+*/
+//======================================================================================================================
+#pragma once
+
+#include <tts/sinks/colorized.hpp>
+#include <tts/sinks/diagnostics.hpp>
+#include <tts/sinks/tap.hpp>

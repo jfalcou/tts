@@ -26,6 +26,7 @@ namespace tts
 #include <tts/engine/deps.hpp>
 #include <tts/engine/main.hpp>
 #include <tts/engine/case.hpp>
+#include <tts/sinks/sinks.hpp>
 
 #include <tts/test/basic.hpp>
 #include <tts/test/exceptions.hpp>
