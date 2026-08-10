@@ -17,6 +17,8 @@
 #include <time.h>
 #endif
 
+#include <tts/tools/text.hpp>
+
 namespace tts::_
 {
   // Monotonic timestamp in nanoseconds, for measuring elapsed durations between two calls - never
@@ -40,5 +42,17 @@ namespace tts::_
     return static_cast<unsigned long long>(ts.tv_sec) * 1'000'000'000ULL +
            static_cast<unsigned long long>(ts.tv_nsec);
 #endif
+  }
+
+  // Picks whichever of ns/us/ms/s keeps the displayed value in a readable range, instead of a
+  // fixed unit that reads as "0.000ms" for a trivial test or "15455566.123ms" for a slow suite.
+  // Thresholds sit half a displayed-digit below each power of 1000, so a value that would round
+  // up to e.g. "1000.000 ms" bumps to the next unit ("1.000 s") instead of showing four digits.
+  inline ::tts::text format_duration(double duration_ns)
+  {
+    if(duration_ns < 999.5) return ::tts::text {"%.0f ns", duration_ns};
+    if(duration_ns < 999'999.5) return ::tts::text {"%.3f us", duration_ns / 1'000.0};
+    if(duration_ns < 999'999'500.0) return ::tts::text {"%.3f ms", duration_ns / 1'000'000.0};
+    return ::tts::text {"%.3f s", duration_ns / 1'000'000'000.0};
   }
 }

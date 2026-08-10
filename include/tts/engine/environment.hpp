@@ -9,6 +9,7 @@
 #pragma once
 
 #include <tts/engine/deps.hpp>
+#include <tts/tools/clock.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/output.hpp>
 
@@ -88,9 +89,11 @@ namespace tts::_
 
       out.writeln();
 
-      double total_ms = static_cast<double>(total_duration_ns) / 1'000'000.0;
-      double avg_ms   = test_count ? total_ms / static_cast<double>(test_count) : 0.0;
-      out.writeln("Total Time: %.3f ms - %.3f ms/test", total_ms, avg_ms);
+      double avg_duration_ns =
+      test_count ? static_cast<double>(total_duration_ns) / static_cast<double>(test_count) : 0.0;
+      out.writeln("Total Time: %s - %s/test",
+                  ::tts::_::format_duration(static_cast<double>(total_duration_ns)).data(),
+                  ::tts::_::format_duration(avg_duration_ns).data());
 
       // A shard landing on zero tests is an expected partition outcome, not a build/
       // registration bug, so --shard implicitly behaves like --allow-empty here.
