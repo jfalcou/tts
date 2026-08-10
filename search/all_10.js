@@ -13,9 +13,10 @@ var searchData=
   ['ordering_10',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['outcome_11',['outcome',['../group__tools-output.html#gaa00ed0d043ef3899719ef14750d8a7b5',1,'tts']]],
   ['output_12',['output',['../group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45',1,'tts']]],
-  ['output_20sinks_13',['Built-in Output Sinks',['../output-sinks.html',1,'']]],
-  ['output_20utilities_14',['Output Utilities',['../group__tools-output.html',1,'']]],
-  ['output_5fhandler_15',['output_handler',['../classtts_1_1output__handler.html',1,'tts::output_handler'],['../classtts_1_1output__handler.html#af9136631b1485d7dde14f729368f91ab',1,'tts::output_handler::output_handler()']]],
-  ['output_5fsink_16',['output_sink',['../structtts_1_1output__sink.html',1,'tts']]],
-  ['overview_17',['Overview',['../output-sinks.html#autotoc_md37',1,'']]]
+  ['output_20sink_20classes_13',['Output Sink Classes',['../group__tools-sinks.html',1,'']]],
+  ['output_20sinks_14',['Built-in Output Sinks',['../output-sinks.html',1,'']]],
+  ['output_20utilities_15',['Output Utilities',['../group__tools-output.html',1,'']]],
+  ['output_5fhandler_16',['output_handler',['../classtts_1_1output__handler.html',1,'tts::output_handler'],['../classtts_1_1output__handler.html#af9136631b1485d7dde14f729368f91ab',1,'tts::output_handler::output_handler()']]],
+  ['output_5fsink_17',['output_sink',['../structtts_1_1output__sink.html',1,'tts']]],
+  ['overview_18',['Overview',['../output-sinks.html#autotoc_md37',1,'']]]
 ];

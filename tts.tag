@@ -43,6 +43,13 @@
       <anchor>a806ad2d30a231df71c134781b1eb6ab6</anchor>
       <arglist>(text const &amp;location, text const &amp;message, bool fatal) override</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>aeab503254af214d6ce09abe1c638e18c</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>flush</name>
@@ -103,6 +110,13 @@
       <anchorfile>structtts_1_1diagnostics__sink.html</anchorfile>
       <anchor>a15356d5ab0183990f681e07ba15b5b03</anchor>
       <arglist>(text const &amp;location, text const &amp;message, bool fatal) override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>aeab503254af214d6ce09abe1c638e18c</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -198,6 +212,13 @@
       <anchorfile>structtts_1_1gathering__sink.html</anchorfile>
       <anchor>a004222a1ffb1316cab23fa7c17d67de4</anchor>
       <arglist>(output_sink &amp;target)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>aeab503254af214d6ce09abe1c638e18c</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -325,6 +346,13 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>finish</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>ad976b36d7b17185e34df88b81fadad3d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>flush</name>
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
       <anchor>a76252835b1ef185ad29e4bcda75caab5</anchor>
@@ -441,6 +469,13 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>aeab503254af214d6ce09abe1c638e18c</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>flush</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
       <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
@@ -544,6 +579,13 @@
       <anchor>a9124eaa6eed5ab0702d2a16e2ccacc66</anchor>
       <arglist>(text const &amp;location, text const &amp;message, bool fatal)</arglist>
     </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>aeab503254af214d6ce09abe1c638e18c</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>flush</name>
@@ -625,6 +667,13 @@
       <anchorfile>structtts_1_1tap__sink.html</anchorfile>
       <anchor>a84ca0493f51619330fc93bb995b8b4f5</anchor>
       <arglist>(output_sink &amp;target)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>finish</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>a53e7fab0a5ac918a2ba72f4ac07e0c73</anchor>
+      <arglist>() override</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -1062,9 +1111,18 @@
     </member>
   </compound>
   <compound kind="group">
+    <name>tools-sinks</name>
+    <title>Output Sink Classes</title>
+    <filename>group__tools-sinks.html</filename>
+    <class kind="struct">tts::colorized_sink</class>
+    <class kind="struct">tts::diagnostics_sink</class>
+    <class kind="struct">tts::tap_sink</class>
+  </compound>
+  <compound kind="group">
     <name>tools-output</name>
     <title>Output Utilities</title>
     <filename>group__tools-output.html</filename>
+    <subgroup>tools-sinks</subgroup>
     <class kind="struct">tts::gathering_sink</class>
     <class kind="class">tts::output_handler</class>
     <class kind="struct">tts::output_sink</class>

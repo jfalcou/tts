@@ -125,7 +125,7 @@ $(function(){initNavTree('structtts_1_1colorized__sink.html','','structtts_1_1co
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structtts_1_1colorized__sink-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">tts::colorized_sink Struct Reference</div></div>
+  <div class="headertitle"><div class="title">tts::colorized_sink Struct Reference<div class="ingroups"><a class="el" href="group__tools-output.html">Output Utilities</a> &raquo; <a class="el" href="group__tools-sinks.html">Output Sink Classes</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -133,17 +133,18 @@ $(function(){initNavTree('structtts_1_1colorized__sink.html','','structtts_1_1co
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes. </p>
-<p>Forwards every message to a target sink (<a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a> by default), wrapping a failure/fatal/invalid/pass line, the separator and <span class="tt">Results: ...</span> prefix (bold, color-neutral), or each of its outcome segments (bold green/red/yellow), in the corresponding ANSI color - decided from <a class="el" href="structtts_1_1output__sink.html" title="output_sink">output_sink</a>'s structured hooks, not by parsing text. Opt-in: not every terminal or CI log renders ANSI escapes usefully.</p>
+<p>Wraps a target sink (<a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a> by default). Opt-in: not every terminal or CI log renders ANSI escapes usefully. See <a class="el" href="output-sinks.html" title="Built-in Output Sinks">Built-in Output Sinks</a> for a colored example of a full run.</p>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1colorized__sink.html">tts::colorized_sink</a> colorized;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(colorized);</div>
-<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:360</div></div>
-<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:395</div></div>
-<div class="ttc" id="astructtts_1_1colorized__sink_html"><div class="ttname"><a href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></div><div class="ttdoc">output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.</div><div class="ttdef"><b>Definition</b> colorized.hpp:34</div></div>
+<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:378</div></div>
+<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:413</div></div>
+<div class="ttc" id="astructtts_1_1colorized__sink_html"><div class="ttname"><a href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></div><div class="ttdoc">output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.</div><div class="ttdef"><b>Definition</b> colorized.hpp:33</div></div>
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a806ad2d30a231df71c134781b1eb6ab6" id="r_a806ad2d30a231df71c134781b1eb6ab6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a806ad2d30a231df71c134781b1eb6ab6">assertion_failed</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;location, <a class="el" href="structtts_1_1text.html">text</a> const &amp;message, bool fatal) override</td></tr>
+<tr class="memitem:aeab503254af214d6ce09abe1c638e18c" id="r_aeab503254af214d6ce09abe1c638e18c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#aeab503254af214d6ce09abe1c638e18c">finish</a> ()</td></tr>
 <tr class="memitem:ae296d9f78a31916ca50674f5fb9579b5" id="r_ae296d9f78a31916ca50674f5fb9579b5"><td class="memItemLeft"><a id="ae296d9f78a31916ca50674f5fb9579b5" name="ae296d9f78a31916ca50674f5fb9579b5"></a>
 void&#160;</td><td class="memItemRight"><b>flush</b> () override</td></tr>
 <tr class="memdesc:ae296d9f78a31916ca50674f5fb9579b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes this sink's destination, if that means anything for it. No-op by default. <br /></td></tr>
@@ -191,6 +192,34 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
 <p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="#abe72692799b7674258c03002c5a36579">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
 
 <p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66">tts::output_sink</a>.</p>
+
+</div>
+</div>
+<a id="aeab503254af214d6ce09abe1c638e18c" name="aeab503254af214d6ce09abe1c638e18c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeab503254af214d6ce09abe1c638e18c">&#9670;&#160;</a></span>finish()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tts::output_sink::finish </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Called once, after <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report()</a> returns - every other hook has already fired by then - so an accumulate-style sink (e.g. <a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a>) can render and flush its buffered content to its own destination. No-op by default: pass-through sinks that already forward <a class="el" href="#a5cb5722659d032485fe2d2d7042f6470" title="Writes t to this sink&#39;s destination.">write()</a> as it happens (e.g. <a class="el" href="structtts_1_1colorized__sink.html" title="output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.">tts::colorized_sink</a>) have nothing left to do here. Like <span class="tt">--shard</span>, this is only called by the default driver (<a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a>) - a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> manages whichever sink it installed itself, including dumping it, so its driver never calls <a class="el" href="structtts_1_1output__sink.html#aeab503254af214d6ce09abe1c638e18c">finish()</a> on its own. </p>
+
+<p>Reimplemented in <a class="el" href="structtts_1_1tap__sink.html#a53e7fab0a5ac918a2ba72f4ac07e0c73">tts::tap_sink</a>.</p>
 
 </div>
 </div>

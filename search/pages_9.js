@@ -6,5 +6,6 @@ var searchData=
   ['fetchcontent_3',['CMake FetchContent',['../setup.html#setup-fetchcontent',1,'']]],
   ['first_20public_20release_4',['First public release.',['../changelog.html#autotoc_md23',1,'']]],
   ['fixes_5',['Fixes',['../changelog.html#autotoc_md3',1,'Bug Fixes'],['../changelog.html#autotoc_md11',1,'Bug Fixes']]],
-  ['from_20the_20source_6',['Install from the source',['../setup.html#setup-source',1,'']]]
+  ['format_20sinks_6',['Simple Format Sinks',['../output-sinks.html#autotoc_md38',1,'']]],
+  ['from_20the_20source_7',['Install from the source',['../setup.html#setup-source',1,'']]]
 ];

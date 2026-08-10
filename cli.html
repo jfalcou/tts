@@ -171,18 +171,20 @@ Environment Variable Fallback</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">TTS_SHARD</span>  </td><td class="markdownTableBodyNone"><span class="tt">--shard=i/n</span>  </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">TTS_SINK</span>  </td><td class="markdownTableBodyNone"><span class="tt">--sink=name</span>  </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">TTS_PRECISION</span>  </td><td class="markdownTableBodyNone"><span class="tt">--precision=N</span>  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">TTS_SEED</span>  </td><td class="markdownTableBodyNone"><span class="tt">--seed=N</span>  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">TTS_BLOCK</span>  </td><td class="markdownTableBodyNone"><span class="tt">--block=N</span>  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">TTS_LOOP</span>  </td><td class="markdownTableBodyNone"><span class="tt">--loop=N</span>  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">TTS_ULPMAX</span>  </td><td class="markdownTableBodyNone"><span class="tt">--ulpmax=N</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">TTS_VALMIN</span>  </td><td class="markdownTableBodyNone"><span class="tt">--valmin=N</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">TTS_ULPMAX</span>  </td><td class="markdownTableBodyNone"><span class="tt">--ulpmax=N</span>  </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">TTS_VALMIN</span>  </td><td class="markdownTableBodyNone"><span class="tt">--valmin=N</span>  </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">TTS_VALMAX</span>  </td><td class="markdownTableBodyNone"><span class="tt">--valmax=N</span>  </td></tr>
 </table>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
@@ -216,12 +218,12 @@ Execution Control</h1>
 <td class="markdownTableBodyNone"><span class="tt">--capture=path</span>  </td><td class="markdownTableBodyNone">Capture this run's output and write it to <span class="tt">path</span> instead of stdout. <span class="tt">./my_test --capture=report.txt</span>  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">--shard=i/n</span>  </td><td class="markdownTableBodyNone">Only run the tests in shard <span class="tt">i</span> of <span class="tt">n</span> (<span class="tt">0 &lt;= i &lt; n</span>). <span class="tt">./my_test --shard=1/3</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">--sink=name</span>  </td><td class="markdownTableBodyNone">Format output as <span class="tt">name</span> (<span class="tt">colored</span>, <span class="tt">tap</span>, or <span class="tt">diagnostics</span>) - see <a class="el" href="output-sinks.html" title="Built-in Output Sinks">Built-in Output Sinks</a>. <span class="tt">./my_test --sink=tap</span>  </td></tr>
 </table>
-<dl class="section note"><dt>Note</dt><dd><span class="tt">--shard=i/n</span> partitions tests by registration index, round-robin (test at index <span class="tt">k</span> belongs to shard <span class="tt">k % n</span>), not by contiguous blocks - this keeps shards balanced even when slow tests cluster together in source order. A shard landing on zero tests (e.g. <span class="tt">n</span> larger than the suite's size) is not treated as a build error: <span class="tt">--shard</span> implicitly behaves like <span class="tt">--allow-empty</span> for that case. It composes with <span class="tt">--dry</span>, which then only lists the tests that shard would actually run.</dd>
-<dd>
-<span class="tt">--shard</span> is a no-op for binaries using a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> - it only applies to the default driver. Those binaries typically assert a fixed, whole-suite fail/ invalid count via <span class="tt">tts::report(fails, invalids)</span> from outside the driver loop, and round-robin partitioning has no way to know how many of that fixed total fall in a given shard, so shard-filtering them could spuriously pass or fail. See #187 for a possible future per-test expected-outcome mechanism that would lift this restriction.</dd>
-<dd>
-<span class="tt">--dry</span> only prints what's known without running any test: registered <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> names, plus their types for the latter two. It cannot list <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those only exist as runtime control flow inside a test's body - which <span class="tt">--dry</span> never executes. For example, given:</dd></dl>
+<dl class="section note"><dt>Note</dt><dd><span class="tt">--shard=i/n</span> partitions tests by registration index, round-robin (test at index <span class="tt">k</span> belongs to shard <span class="tt">k % n</span>), not by contiguous blocks - this keeps shards balanced even when slow tests cluster together in source order. A shard landing on zero tests (e.g. <span class="tt">n</span> larger than the suite's size) is not treated as a build error: <span class="tt">--shard</span> implicitly behaves like <span class="tt">--allow-empty</span> for that case. It composes with <span class="tt">--dry</span>, which then only lists the tests that shard would actually run. Like <span class="tt">--sink</span>, it's a no-op for binaries using a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> - those typically assert a fixed, whole-suite fail/invalid count via <span class="tt">tts::report(fails, invalids)</span> from outside the driver loop, and round-robin partitioning has no way to know how many of that fixed total fall in a given shard, so shard-filtering them could spuriously pass or fail. See #187 for a possible future per-test expected-outcome mechanism that would lift this restriction.</dd></dl>
+<p><span class="tt">--dry</span> prints registered test names without running anything - here's exactly what it does and doesn't cover.</p>
+<dl class="section note"><dt>Note</dt><dd><span class="tt">--dry</span> only prints what's known without running any test: registered <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> names, plus their types for the latter two. It cannot list <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those only exist as runtime control flow inside a test's body - which <span class="tt">--dry</span> never executes. For example, given:</dd></dl>
 <div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<span class="stringliteral">&quot;Check stack behavior&quot;</span>, std::int32_t, <span class="keywordtype">double</span>)</div>
 <div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_struct" href="structtts_1_1type.html">::tts::type&lt;T&gt;</a>)</div>
 <div class="line">{</div>

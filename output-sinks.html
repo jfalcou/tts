@@ -131,71 +131,82 @@ $(function(){initNavTree('output-sinks.html','',''); });
     <a href="#autotoc_md37">Overview </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md38"><a class="el" href="structtts_1_1colorized__sink.html" title="output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.">tts::colorized_sink</a> </a>
-  </li>
-  <li class="level1">
-    <a href="#autotoc_md39"><a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a> </a>
-  </li>
-  <li class="level1">
-    <a href="#autotoc_md40"><a class="el" href="structtts_1_1diagnostics__sink.html" title="output_sink adding compiler-style diagnostics for every failing/fatal assertion.">tts::diagnostics_sink</a> </a>
+    <a href="#autotoc_md38">Simple Format Sinks </a>
+    <ul>
+      <li class="level2">
+        <a href="#autotoc_md39">tts::colorized_sink </a>
+      </li>
+      <li class="level2">
+        <a href="#autotoc_md40">tts::tap_sink </a>
+      </li>
+      <li class="level2">
+        <a href="#autotoc_md41">tts::diagnostics_sink </a>
+      </li>
+    </ul>
   </li>
 </ul>
 </div>
 <div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Overview</h1>
-<p>TTS has an extensible <a class="el" href="structtts_1_1output__sink.html" title="tts::output_sink">tts::output_sink</a> customization point (see <a class="el" href="group__tools-config.html" title="Configuration Utilities">Configuration Utilities</a> and the <span class="tt"><a class="el" href="structtts_1_1gathering__sink.html" title="output_sink gathering every message into a single retrievable buffer.">tts::gathering_sink</a></span> example) - everything a test suite prints goes through whichever sink is currently installed. Beyond writing your own, TTS ships a small set of ready-to-use sinks under <span class="tt">include/tts/sinks/</span>, already available through <span class="tt">#include &lt;tts/tts.hpp&gt;</span> with no extra include needed.</p>
+<p>TTS has an extensible <a class="el" href="structtts_1_1output__sink.html" title="tts::output_sink">tts::output_sink</a> customization point (see <a class="el" href="group__tools-output.html" title="Output Utilities">Output Utilities</a> and the <span class="tt"><a class="el" href="structtts_1_1gathering__sink.html" title="output_sink gathering every message into a single retrievable buffer.">tts::gathering_sink</a></span> example) - everything a test suite prints goes through whichever sink is currently installed. Beyond writing your own, TTS ships a small set of ready-to-use sinks under <span class="tt">include/tts/sinks/</span>, already available through <span class="tt">#include &lt;tts/tts.hpp&gt;</span> with no extra include needed.</p>
 <p>All three draw from <a class="el" href="structtts_1_1output__sink.html" title="tts::output_sink">tts::output_sink</a>'s structured hooks (<span class="tt">test_started()</span>, <span class="tt">assertion_failed()</span>, <span class="tt">test_finished()</span>, <span class="tt">suite_finished()</span>, <span class="tt">suite_metric()</span>, <span class="tt">suite_aborted()</span>) rather than by parsing the text <span class="tt"><a class="el" href="structtts_1_1stdout__sink.html" title="Default output_sink, streaming every message straight to stdout.">tts::stdout_sink</a></span> prints, so they stay correct regardless of <span class="tt">-v</span>/<span class="tt">-q</span>. None of them currently reflect <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>'s per-type breakdown or <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those don't have their own hook.</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Sink  </th><th class="markdownTableHeadNone">Purpose  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="structtts_1_1colorized__sink.html" title="output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.">tts::colorized_sink</a></span>  </td><td class="markdownTableBodyNone">Wraps another sink, coloring pass/fail/fatal lines with ANSI escapes.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a></span>  </td><td class="markdownTableBodyNone">Gathers the run, then renders it as TAP (Test Anything Protocol).  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="structtts_1_1diagnostics__sink.html" title="output_sink adding compiler-style diagnostics for every failing/fatal assertion.">tts::diagnostics_sink</a></span>  </td><td class="markdownTableBodyNone">Adds compiler-style diagnostics for failure/fatal assertions.  </td></tr>
-</table>
+<dl class="section note"><dt>Note</dt><dd>On a plain <a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> binary (no custom driver), the <span class="tt">--sink=name</span> CLI flag installs any of the three below without writing any C++ at all - <span class="tt">--sink=colored</span>, <span class="tt">--sink=tap</span>, or <span class="tt">--sink=diagnostics</span>. It composes with <span class="tt">--capture=path</span>: <span class="tt">--sink=tap --capture=report.tap</span> writes TAP-formatted output to the file instead of stdout. Like <span class="tt">--shard</span>, it's a no-op for binaries using a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a>, which already manages its own sink - see <a class="el" href="cli.html" title="Command Line Interface">Command Line Interface</a> for the full flag reference.</dd></dl>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
-tts::colorized_sink</h1>
-<p>Wraps a target sink (<span class="tt"><a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a></span> by default) and colors a pass confirmation (green), a failure/fatal/abort (red), an invalid test (yellow) - forwarding everything else unchanged. The separator and the <span class="tt">Results: ...</span> prefix are bold and color- neutral; only the <span class="tt">- N/M (P%) &lt;label&gt;</span> segment for each outcome category (success, failure, invalid) is colored, in bold green/red/yellow respectively - so a run with both failures and invalids shows each count in its own color rather than the whole line in one. A color stays active across consecutive lines/segments until the next hook changes it. Opt-in: not every terminal or CI log renders ANSI escapes usefully, and on Windows it additionally depends on the host console having Virtual Terminal Processing enabled (most modern terminals already do).</p>
+Simple Format Sinks</h1>
+<p>Each of these produces plain, line-oriented text - as opposed to a hypothetical structured- format sink (JSON, JUnit XML, ...), which would need to assemble a single well-formed document with its own schema instead of just lines of text.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+tts::colorized_sink</h2>
+<p>Wraps a target sink (<span class="tt"><a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a></span> by default), coloring pass/fail/ invalid lines and the <span class="tt">Results: ...</span> summary with ANSI escapes - forwarding everything else unchanged. Opt-in: not every terminal or CI log renders ANSI escapes usefully, and on Windows it additionally depends on the host console having Virtual Terminal Processing enabled (most modern terminals already do).</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1colorized__sink.html">tts::colorized_sink</a> colorized;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(colorized);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... run the test suite ...</span></div>
-<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:360</div></div>
-<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:395</div></div>
-<div class="ttc" id="astructtts_1_1colorized__sink_html"><div class="ttname"><a href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></div><div class="ttdoc">output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.</div><div class="ttdef"><b>Definition</b> colorized.hpp:34</div></div>
-</div><!-- fragment --><p>A failing run then looks like the usual TTS output, except <span class="tt">[PASSED]</span> lines are wrapped in <span class="tt">\033[32m...\033[0m</span> (green), failure/fatal lines in <span class="tt">\033[31m...\033[0m</span> (red), the <span class="tt">Results:</span> line and separator in <span class="tt">\033[1m...\033[0m</span> (bold), and each of its outcome segments in <span class="tt">\033[1;32m</span>/<span class="tt">\033[1;31m</span>/<span class="tt">\033[1;33m</span> (bold green/red/yellow) - exactly what a terminal needs to render them in color.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
-tts::tap_sink</h1>
-<p>Listens to <span class="tt">test_finished()</span> and accumulates one <span class="tt">ok N - name</span> / <span class="tt">not ok N - name</span> line per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a>, then <span class="tt">dump()</span> streams them out preceded by a leading <span class="tt">1..N</span> plan line.</p>
+<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:378</div></div>
+<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:413</div></div>
+<div class="ttc" id="astructtts_1_1colorized__sink_html"><div class="ttname"><a href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></div><div class="ttdoc">output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.</div><div class="ttdef"><b>Definition</b> colorized.hpp:33</div></div>
+</div><!-- fragment --><p>Or, without a custom driver: <span class="tt">./my_test --sink=colored</span>.</p>
+<p>A run with one passing, one invalid and one failing case then looks like this:</p>
+<p> 
+<pre style="background-color:var(--fragment-background);color:var(--fragment-foreground);
+padding:10px;border-radius:6px;font-family:var(--font-family-monospace);font-size:13px;
+line-height:1.4;overflow-x:auto;">TEST: 'Check that expectation can be met'
+<span class="ansi-green">TEST: 'Check that expectation can be met' - [PASSED]</span>
+TEST: 'Check invalid detection'
+<span class="ansi-yellow">  [!!]: EMPTY TEST CASE</span>
+TEST: 'Check that expectation fails'
+<span class="ansi-red">  [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.</span>
+<span class="ansi-bold">--------------------------------------------------------------------------------
+Results: 3 tests <span class="ansi-green">- 1/3 (33.33%) success </span><span class="ansi-red">- 1/3 (33.33%) failure </span><span class="ansi-yellow">- 1/3 (33.33%) invalid </span></span></pre>
+</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+tts::tap_sink</h2>
+<p><a href="https://testanything.org/">TAP</a> (Test Anything Protocol) is a simple, language-agnostic text format for reporting test results, understood by many CI dashboards and test harnesses. <span class="tt"><a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a></span> listens to <span class="tt">test_finished()</span> and accumulates one <span class="tt">ok N - name</span> / <span class="tt">not ok N - name</span> line per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a>, then <span class="tt">dump()</span> streams them out preceded by a leading <span class="tt">1..N</span> plan line.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1tap__sink.html">tts::tap_sink</a> tap;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(tap);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... run the test suite ...</span></div>
 <div class="line"> </div>
 <div class="line">tap.<a class="code hl_function" href="structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5">dump</a>(); <span class="comment">// stream the TAP-formatted report to stdout</span></div>
-<div class="ttc" id="astructtts_1_1tap__sink_html"><div class="ttname"><a href="structtts_1_1tap__sink.html">tts::tap_sink</a></div><div class="ttdoc">output_sink rendering the run as TAP (Test Anything Protocol).</div><div class="ttdef"><b>Definition</b> tap.hpp:39</div></div>
-<div class="ttc" id="astructtts_1_1tap__sink_html_a84ca0493f51619330fc93bb995b8b4f5"><div class="ttname"><a href="structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5">tts::tap_sink::dump</a></div><div class="ttdeci">void dump(output_sink &amp;target)</div><div class="ttdoc">Forwards the TAP-rendered report to target, then clears the gathered results.</div><div class="ttdef"><b>Definition</b> tap.hpp:59</div></div>
-</div><!-- fragment --><p>Given a suite with one passing and one failing case, <span class="tt">tap.dump()</span> prints:</p>
+<div class="ttc" id="astructtts_1_1tap__sink_html"><div class="ttname"><a href="structtts_1_1tap__sink.html">tts::tap_sink</a></div><div class="ttdoc">output_sink rendering the run as TAP (Test Anything Protocol).</div><div class="ttdef"><b>Definition</b> tap.hpp:42</div></div>
+<div class="ttc" id="astructtts_1_1tap__sink_html_a84ca0493f51619330fc93bb995b8b4f5"><div class="ttname"><a href="structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5">tts::tap_sink::dump</a></div><div class="ttdeci">void dump(output_sink &amp;target)</div><div class="ttdoc">Forwards the TAP-rendered report to target, then clears the gathered results.</div><div class="ttdef"><b>Definition</b> tap.hpp:67</div></div>
+</div><!-- fragment --><p>Or, without a custom driver: <span class="tt">./my_test --sink=tap</span> - <span class="tt">dump()</span> then happens automatically once the run finishes.</p>
+<p>Given a suite with one passing and one failing case, <span class="tt">tap.dump()</span> prints:</p>
 <div class="fragment"><div class="line">1..2</div>
 <div class="line">ok 1 - Check that expectation can be met</div>
 <div class="line">not ok 2 - Check that expectation fails</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
-tts::diagnostics_sink</h1>
-<p>Wraps a target sink, forwarding every message unchanged, and additionally prints one <span class="tt"><a href="file:line:">file:line:</a> error: message</span> / <span class="tt"><a href="file:line:">file:line:</a> fatal error: message</span> line per failing/fatal assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VSCode's <span class="tt">$gcc</span>, vim's quickfix, ...) can jump straight to it. <span class="tt">assertion_failed()</span> fires before its corresponding text, so the diagnostic line prints first; it still fires under <span class="tt">-q</span>, when that raw line is itself suppressed.</p>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+tts::diagnostics_sink</h2>
+<p>Wraps a target sink, forwarding every message unchanged, and additionally prints one <span class="tt">path:line: error: message</span> / <span class="tt">path:line: fatal error: message</span> line per failing/fatal assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VS Code's C/C++ extension provides <span class="tt">$gcc</span>, vim has quickfix, ...) can jump straight to it. <span class="tt">assertion_failed()</span> fires before its corresponding text, so the diagnostic line prints first; it still fires under <span class="tt">-q</span>, when that raw line is itself suppressed.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a> diagnostics;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(diagnostics);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... run the test suite ...</span></div>
-<div class="ttc" id="astructtts_1_1diagnostics__sink_html"><div class="ttname"><a href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></div><div class="ttdoc">output_sink adding compiler-style diagnostics for every failing/fatal assertion.</div><div class="ttdef"><b>Definition</b> diagnostics.hpp:35</div></div>
-</div><!-- fragment --><p>A failing <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> then prints the diagnostic line, immediately followed by its usual one:</p>
+<div class="ttc" id="astructtts_1_1diagnostics__sink_html"><div class="ttname"><a href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></div><div class="ttdoc">output_sink adding compiler-style diagnostics for every failing/fatal assertion.</div><div class="ttdef"><b>Definition</b> diagnostics.hpp:37</div></div>
+</div><!-- fragment --><p>Or, without a custom driver: <span class="tt">./my_test --sink=diagnostics</span>.</p>
+<p>A failing <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> then prints the diagnostic line, immediately followed by its usual one:</p>
 <div class="fragment"><div class="line">expect.cpp:15: error: Expression: 1 == 2 evaluates to false.</div>
 <div class="line">  [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.</div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">tts::output_sink</a> </dd>
-<dd>
-<a class="el" href="classtts_1_1output__handler.html" title="Centralizes all TTS runtime output and dispatches it to the current output_sink.">tts::output_handler</a> </dd></dl>
-</div></div><!-- contents -->
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 </div><!-- container -->

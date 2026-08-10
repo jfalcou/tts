@@ -11,7 +11,7 @@ var searchData=
   ['the_20tiny_20test_20system_8',['The Tiny Test System',['../index.html',1,'']]],
   ['tiny_20test_20system_9',['The Tiny Test System',['../index.html',1,'']]],
   ['tts_20behaviour_10',['Customizing TTS Behaviour',['../customize.html',1,'']]],
-  ['tts_3a_3acolorized_5fsink_11',['tts::colorized_sink',['../output-sinks.html#autotoc_md38',1,'']]],
-  ['tts_3a_3adiagnostics_5fsink_12',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md40',1,'']]],
-  ['tts_3a_3atap_5fsink_13',['tts::tap_sink',['../output-sinks.html#autotoc_md39',1,'']]]
+  ['tts_3a_3acolorized_5fsink_11',['tts::colorized_sink',['../output-sinks.html#autotoc_md39',1,'']]],
+  ['tts_3a_3adiagnostics_5fsink_12',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md41',1,'']]],
+  ['tts_3a_3atap_5fsink_13',['tts::tap_sink',['../output-sinks.html#autotoc_md40',1,'']]]
 ];

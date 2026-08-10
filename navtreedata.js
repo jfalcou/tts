@@ -50,6 +50,7 @@ var NAVTREE =
       [ "Tools and Helpers", "usergroup4.html", [
         [ "Configuration", "group__tools-config.html", null ],
         [ "Data Generators", "group__tools-generators-class.html", null ],
+        [ "Output Utilities", "group__tools-output.html", null ],
         [ "Precision Utilities", "group__tools-precision.html", null ],
         [ "PRNG Utilities", "group__tools-random.html", null ],
         [ "Text Utilities", "group__tools-text.html", null ],

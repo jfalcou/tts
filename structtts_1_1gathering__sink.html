@@ -145,10 +145,10 @@ $(function(){initNavTree('structtts_1_1gathering__sink.html','','structtts_1_1ga
 <div class="line"><a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>.dump(some_other_sink);         <span class="comment">// forward it to another output_sink instead</span></div>
 <div class="line"><span class="comment">// or</span></div>
 <div class="line">do_something_with(<a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>.content());  <span class="comment">// retrieve it to do something else entirely</span></div>
-<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:360</div></div>
+<div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:378</div></div>
 <div class="ttc" id="agroup__customization-points_html_gaab7070a86258a19d84e431fe122c2e25"><div class="ttname"><a href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">tts::report</a></div><div class="ttdeci">int report(unsigned long long fails, unsigned long long invalids)</div><div class="ttdoc">Test reporting customization point.</div><div class="ttdef"><b>Definition</b> environment.hpp:126</div></div>
-<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:395</div></div>
-<div class="ttc" id="astructtts_1_1gathering__sink_html"><div class="ttname"><a href="structtts_1_1gathering__sink.html">tts::gathering_sink</a></div><div class="ttdoc">output_sink gathering every message into a single retrievable buffer.</div><div class="ttdef"><b>Definition</b> output.hpp:221</div></div>
+<div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:413</div></div>
+<div class="ttc" id="astructtts_1_1gathering__sink_html"><div class="ttname"><a href="structtts_1_1gathering__sink.html">tts::gathering_sink</a></div><div class="ttdoc">output_sink gathering every message into a single retrievable buffer.</div><div class="ttdef"><b>Definition</b> output.hpp:233</div></div>
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -165,6 +165,7 @@ void&#160;</td><td class="memItemRight"><b>dump</b> ()</td></tr>
 <tr class="memitem:a004222a1ffb1316cab23fa7c17d67de4" id="r_a004222a1ffb1316cab23fa7c17d67de4"><td class="memItemLeft"><a id="a004222a1ffb1316cab23fa7c17d67de4" name="a004222a1ffb1316cab23fa7c17d67de4"></a>
 void&#160;</td><td class="memItemRight"><b>dump</b> (<a class="el" href="structtts_1_1output__sink.html">output_sink</a> &amp;target)</td></tr>
 <tr class="memdesc:a004222a1ffb1316cab23fa7c17d67de4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards everything gathered so far to target, then clears the buffer. <br /></td></tr>
+<tr class="memitem:aeab503254af214d6ce09abe1c638e18c" id="r_aeab503254af214d6ce09abe1c638e18c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#aeab503254af214d6ce09abe1c638e18c">finish</a> ()</td></tr>
 <tr class="memitem:a81ed096099acf5015d76fb31eff4acff" id="r_a81ed096099acf5015d76fb31eff4acff"><td class="memItemLeft"><a id="a81ed096099acf5015d76fb31eff4acff" name="a81ed096099acf5015d76fb31eff4acff"></a>
 virtual void&#160;</td><td class="memItemRight"><b>flush</b> ()</td></tr>
 <tr class="memdesc:a81ed096099acf5015d76fb31eff4acff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes this sink's destination, if that means anything for it. No-op by default. <br /></td></tr>
@@ -212,6 +213,34 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
 <p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
 
 <p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a806ad2d30a231df71c134781b1eb6ab6">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03">tts::diagnostics_sink</a>.</p>
+
+</div>
+</div>
+<a id="aeab503254af214d6ce09abe1c638e18c" name="aeab503254af214d6ce09abe1c638e18c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeab503254af214d6ce09abe1c638e18c">&#9670;&#160;</a></span>finish()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tts::output_sink::finish </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Called once, after <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report()</a> returns - every other hook has already fired by then - so an accumulate-style sink (e.g. <a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a>) can render and flush its buffered content to its own destination. No-op by default: pass-through sinks that already forward <a class="el" href="#a5c262543e72018b6795d69fc939fb6cc" title="Writes t to this sink&#39;s destination.">write()</a> as it happens (e.g. <a class="el" href="structtts_1_1colorized__sink.html" title="output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.">tts::colorized_sink</a>) have nothing left to do here. Like <span class="tt">--shard</span>, this is only called by the default driver (<a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a>) - a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> manages whichever sink it installed itself, including dumping it, so its driver never calls <a class="el" href="structtts_1_1output__sink.html#aeab503254af214d6ce09abe1c638e18c">finish()</a> on its own. </p>
+
+<p>Reimplemented in <a class="el" href="structtts_1_1tap__sink.html#a53e7fab0a5ac918a2ba72f4ac07e0c73">tts::tap_sink</a>.</p>
 
 </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TTS: Member List</title>
+<title>TTS: Output Sink Classes</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,7 +96,7 @@ $(function() { codefold.init(); });
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structtts_1_1diagnostics__sink.html','',''); });
+$(function(){initNavTree('group__tools-sinks.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -122,22 +122,25 @@ $(function(){initNavTree('structtts_1_1diagnostics__sink.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">tts::diagnostics_sink Member List</div></div>
+  <div class="summary">
+<a href="#nested-classes">Classes</a>  </div>
+  <div class="headertitle"><div class="title">Output Sink Classes <div class="ingroups"><a class="el" href="group__tools-output.html">Output Utilities</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is the complete list of members for <a class="el" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a>, including all inherited members.</p>
-<table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03">assertion_failed</a>(text const &amp;location, text const &amp;message, bool fatal) override</td><td class="entry"><a class="el" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtts_1_1output__sink.html#aeab503254af214d6ce09abe1c638e18c">finish</a>()</td><td class="entry"><a class="el" href="structtts_1_1output__sink.html">tts::output_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtts_1_1diagnostics__sink.html#a792e71f757af9d2e70be378b4097fd64">flush</a>() override</td><td class="entry"><a class="el" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtts_1_1output__sink.html#a74ebf02b3020462a3916e8667db58a2a">suite_aborted</a>()</td><td class="entry"><a class="el" href="structtts_1_1output__sink.html">tts::output_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtts_1_1output__sink.html#afd5d4793ba03fda092974ee32ad41ed9">suite_finished</a>(unsigned long long fail_count, unsigned long long invalid_count)</td><td class="entry"><a class="el" href="structtts_1_1output__sink.html">tts::output_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtts_1_1output__sink.html#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">suite_metric</a>(outcome kind, unsigned long long count, unsigned long long total)</td><td class="entry"><a class="el" href="structtts_1_1output__sink.html">tts::output_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">test_finished</a>(text const &amp;name, bool passed, bool invalid)</td><td class="entry"><a class="el" href="structtts_1_1output__sink.html">tts::output_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtts_1_1output__sink.html#ac8d28651a9c70c0b30c46c9ffaf83bdc">test_started</a>(text const &amp;name)</td><td class="entry"><a class="el" href="structtts_1_1output__sink.html">tts::output_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtts_1_1diagnostics__sink.html#a0463defe1e87083fbcad932cf3191cf3">write</a>(text const &amp;t) override</td><td class="entry"><a class="el" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">virtual</span></td></tr>
-</table></div><!-- contents -->
+<p>Built-in output_sink implementations, also selectable from the CLI via <span class="tt">--sink=name</span>.  
+<a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:tts_3A_3Acolorized_5Fsink" id="r_tts_3A_3Acolorized_5Fsink"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.  <a href="structtts_1_1colorized__sink.html#details">More...</a><br /></td></tr>
+<tr class="memitem:tts_3A_3Adiagnostics_5Fsink" id="r_tts_3A_3Adiagnostics_5Fsink"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> adding compiler-style diagnostics for every failing/fatal assertion.  <a href="structtts_1_1diagnostics__sink.html#details">More...</a><br /></td></tr>
+<tr class="memitem:tts_3A_3Atap_5Fsink" id="r_tts_3A_3Atap_5Fsink"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1tap__sink.html">tts::tap_sink</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> rendering the run as <a href="https://testanything.org/">TAP</a> (Test Anything Protocol).  <a href="structtts_1_1tap__sink.html#details">More...</a><br /></td></tr>
+</table>
+</div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- HTML footer for doxygen 1.8.20-->

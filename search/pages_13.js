@@ -6,11 +6,12 @@ var searchData=
   ['setup_3',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
   ['setup_20with_20cpm_4',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
   ['short_20example_5',['A Short Example',['../index.html#autotoc_md36',1,'']]],
-  ['sinks_6',['Built-in Output Sinks',['../output-sinks.html',1,'']]],
-  ['source_7',['Install from the source',['../setup.html#setup-source',1,'']]],
-  ['specify_20a_20test_20case_8',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
-  ['standalone_20setup_9',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
-  ['started_10',['Getting Started',['../tts101.html',1,'']]],
-  ['supported_20compilers_11',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
-  ['system_12',['The Tiny Test System',['../index.html',1,'']]]
+  ['simple_20format_20sinks_6',['Simple Format Sinks',['../output-sinks.html#autotoc_md38',1,'']]],
+  ['sinks_7',['Sinks',['../output-sinks.html',1,'Built-in Output Sinks'],['../output-sinks.html#autotoc_md38',1,'Simple Format Sinks']]],
+  ['source_8',['Install from the source',['../setup.html#setup-source',1,'']]],
+  ['specify_20a_20test_20case_9',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
+  ['standalone_20setup_10',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
+  ['started_11',['Getting Started',['../tts101.html',1,'']]],
+  ['supported_20compilers_12',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
+  ['system_13',['The Tiny Test System',['../index.html',1,'']]]
 ];
