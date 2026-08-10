@@ -2333,6 +2333,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   }
   catch(::tts::_::fatal_signal&)
   {
+    ::tts::global_runtime.unexpected();
     ::tts::output().suite_aborted();
     if(!::tts::is_quiet())
       ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
