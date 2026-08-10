@@ -135,12 +135,79 @@ $(function(){initNavTree('output-sinks.html','',''); });
     <ul>
       <li class="level2">
         <a href="#autotoc_md39">tts::colorized_sink </a>
+        <ul>
+          <li class="level3">
+            <a href="#autotoc_md40">Effect </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md41">Manual Usage </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md42">CLI Flag </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md43">Example </a>
+          </li>
+        </ul>
       </li>
       <li class="level2">
-        <a href="#autotoc_md40">tts::tap_sink </a>
+        <a href="#autotoc_md44">tts::tap_sink </a>
+        <ul>
+          <li class="level3">
+            <a href="#autotoc_md45">Effect </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md46">Manual Usage </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md47">CLI Flag </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md48">Example </a>
+          </li>
+        </ul>
       </li>
       <li class="level2">
-        <a href="#autotoc_md41">tts::diagnostics_sink </a>
+        <a href="#autotoc_md49">tts::diagnostics_sink </a>
+        <ul>
+          <li class="level3">
+            <a href="#autotoc_md50">Effect </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md51">Manual Usage </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md52">CLI Flag </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md53">Example </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li class="level1">
+    <a href="#autotoc_md54">Structured Format Sinks </a>
+    <ul>
+      <li class="level2">
+        <a href="#autotoc_md55">tts::json_sink </a>
+        <ul>
+          <li class="level3">
+            <a href="#autotoc_md56">Effect </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md57">Schema </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md58">Manual Usage </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md59">CLI Flag </a>
+          </li>
+          <li class="level3">
+            <a href="#autotoc_md60">Example </a>
+          </li>
+        </ul>
       </li>
     </ul>
   </li>
@@ -149,14 +216,34 @@ $(function(){initNavTree('output-sinks.html','',''); });
 <div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Overview</h1>
 <p>TTS has an extensible <a class="el" href="structtts_1_1output__sink.html" title="tts::output_sink">tts::output_sink</a> customization point (see <a class="el" href="group__tools-output.html" title="Output Utilities">Output Utilities</a> and the <span class="tt"><a class="el" href="structtts_1_1gathering__sink.html" title="output_sink gathering every message into a single retrievable buffer.">tts::gathering_sink</a></span> example) - everything a test suite prints goes through whichever sink is currently installed. Beyond writing your own, TTS ships a small set of ready-to-use sinks under <span class="tt">include/tts/sinks/</span>, already available through <span class="tt">#include &lt;tts/tts.hpp&gt;</span> with no extra include needed.</p>
-<p>All three draw from <a class="el" href="structtts_1_1output__sink.html" title="tts::output_sink">tts::output_sink</a>'s structured hooks (<span class="tt">test_started()</span>, <span class="tt">assertion_failed()</span>, <span class="tt">test_finished()</span>, <span class="tt">suite_finished()</span>, <span class="tt">suite_metric()</span>, <span class="tt">suite_aborted()</span>) rather than by parsing the text <span class="tt"><a class="el" href="structtts_1_1stdout__sink.html" title="Default output_sink, streaming every message straight to stdout.">tts::stdout_sink</a></span> prints, so they stay correct regardless of <span class="tt">-v</span>/<span class="tt">-q</span>. None of them currently reflect <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>'s per-type breakdown or <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those don't have their own hook.</p>
-<dl class="section note"><dt>Note</dt><dd>On a plain <a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> binary (no custom driver), the <span class="tt">--sink=name</span> CLI flag installs any of the three below without writing any C++ at all - <span class="tt">--sink=colored</span>, <span class="tt">--sink=tap</span>, or <span class="tt">--sink=diagnostics</span>. It composes with <span class="tt">--capture=path</span>: <span class="tt">--sink=tap --capture=report.tap</span> writes TAP-formatted output to the file instead of stdout. Like <span class="tt">--shard</span>, it's a no-op for binaries using a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a>, which already manages its own sink - see <a class="el" href="cli.html" title="Command Line Interface">Command Line Interface</a> for the full flag reference.</dd></dl>
+<p>All four draw from <a class="el" href="structtts_1_1output__sink.html" title="tts::output_sink">tts::output_sink</a>'s structured hooks (<span class="tt">test_started()</span>, <span class="tt">assertion_failed()</span>, <span class="tt">test_finished()</span>, <span class="tt">suite_finished()</span>, <span class="tt">suite_metric()</span>, <span class="tt">suite_aborted()</span>) rather than by parsing the text <span class="tt"><a class="el" href="structtts_1_1stdout__sink.html" title="Default output_sink, streaming every message straight to stdout.">tts::stdout_sink</a></span> prints, so they stay correct regardless of <span class="tt">-v</span>/<span class="tt">-q</span>. None of them currently reflect <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>'s per-type breakdown or <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those don't have their own hook.</p>
+<p>Every "Example" below runs this same sample suite - one passing case, one invalid (empty) case, and one failing case:</p>
+<div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that expectation can be met&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(1 == 1);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check invalid detection&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check that expectation fails&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(1 == 2);</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:43</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:187</div></div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>On a plain <a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> binary (no custom driver), the <span class="tt">--sink=name</span> CLI flag installs any of the four below without writing any C++ at all - <span class="tt">--sink=colored</span>, <span class="tt">--sink=tap</span>, <span class="tt">--sink=diagnostics</span>, or <span class="tt">--sink=json</span>. It composes with <span class="tt">--capture=path</span>: <span class="tt">--sink=tap --capture=report.tap</span> writes TAP-formatted output to the file instead of stdout. Like <span class="tt">--shard</span>, it's a no-op for binaries using a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a>, which already manages its own sink - see <a class="el" href="cli.html" title="Command Line Interface">Command Line Interface</a> for the full flag reference.</dd></dl>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Simple Format Sinks</h1>
-<p>Each of these produces plain, line-oriented text - as opposed to a hypothetical structured- format sink (JSON, JUnit XML, ...), which would need to assemble a single well-formed document with its own schema instead of just lines of text.</p>
+<p>Each of these produces plain, line-oriented text - as opposed to a structured-format sink like <a class="el" href="structtts_1_1json__sink.html" title="tts::json_sink">tts::json_sink</a> below, which assembles a single well-formed document with its own schema instead of just lines of text.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 tts::colorized_sink</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+Effect</h3>
 <p>Wraps a target sink (<span class="tt"><a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a></span> by default), coloring pass/fail/ invalid lines and the <span class="tt">Results: ...</span> summary with ANSI escapes - forwarding everything else unchanged. Opt-in: not every terminal or CI log renders ANSI escapes usefully, and on Windows it additionally depends on the host console having Virtual Terminal Processing enabled (most modern terminals already do).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+Manual Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1colorized__sink.html">tts::colorized_sink</a> colorized;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(colorized);</div>
 <div class="line"> </div>
@@ -164,8 +251,12 @@ tts::colorized_sink</h2>
 <div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:379</div></div>
 <div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:414</div></div>
 <div class="ttc" id="astructtts_1_1colorized__sink_html"><div class="ttname"><a href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></div><div class="ttdoc">output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.</div><div class="ttdef"><b>Definition</b> colorized.hpp:33</div></div>
-</div><!-- fragment --><p>Or, without a custom driver: <span class="tt">./my_test --sink=colored</span>.</p>
-<p>A run with one passing, one invalid and one failing case then looks like this:</p>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+CLI Flag</h3>
+<p><span class="tt">./my_test --sink=colored</span></p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+Example</h3>
+<p>Running the sample suite above then looks like this:</p>
 <p> 
 <pre style="background-color:var(--fragment-background);color:var(--fragment-foreground);
 padding:10px;border-radius:6px;font-family:var(--font-family-monospace);font-size:13px;
@@ -178,9 +269,13 @@ TEST: 'Check that expectation fails'
 <span class="ansi-bold">--------------------------------------------------------------------------------
 Results: 3 tests <span class="ansi-green">- 1/3 (33.33%) success </span><span class="ansi-red">- 1/3 (33.33%) failure </span><span class="ansi-yellow">- 1/3 (33.33%) invalid </span></span></pre>
 </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 tts::tap_sink</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+Effect</h3>
 <p><a href="https://testanything.org/">TAP</a> (Test Anything Protocol) is a simple, language-agnostic text format for reporting test results, understood by many CI dashboards and test harnesses. <span class="tt"><a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a></span> listens to <span class="tt">test_finished()</span> and accumulates one <span class="tt">ok N - name</span> / <span class="tt">not ok N - name</span> line per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a>, then <span class="tt">dump()</span> streams them out preceded by a leading <span class="tt">1..N</span> plan line.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
+Manual Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1tap__sink.html">tts::tap_sink</a> tap;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(tap);</div>
 <div class="line"> </div>
@@ -189,23 +284,158 @@ tts::tap_sink</h2>
 <div class="line">tap.<a class="code hl_function" href="structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5">dump</a>(); <span class="comment">// stream the TAP-formatted report to stdout</span></div>
 <div class="ttc" id="astructtts_1_1tap__sink_html"><div class="ttname"><a href="structtts_1_1tap__sink.html">tts::tap_sink</a></div><div class="ttdoc">output_sink rendering the run as TAP (Test Anything Protocol).</div><div class="ttdef"><b>Definition</b> tap.hpp:42</div></div>
 <div class="ttc" id="astructtts_1_1tap__sink_html_a84ca0493f51619330fc93bb995b8b4f5"><div class="ttname"><a href="structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5">tts::tap_sink::dump</a></div><div class="ttdeci">void dump(output_sink &amp;target)</div><div class="ttdoc">Forwards the TAP-rendered report to target, then clears the gathered results.</div><div class="ttdef"><b>Definition</b> tap.hpp:70</div></div>
-</div><!-- fragment --><p>Or, without a custom driver: <span class="tt">./my_test --sink=tap</span> - <span class="tt">dump()</span> then happens automatically once the run finishes.</p>
-<p>Given a suite with one passing and one failing case, <span class="tt">tap.dump()</span> prints:</p>
-<div class="fragment"><div class="line">1..2</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+CLI Flag</h3>
+<p><span class="tt">./my_test --sink=tap</span> - <span class="tt">dump()</span> then happens automatically once the run finishes.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+Example</h3>
+<p>Running the sample suite above, <span class="tt">tap.dump()</span> prints - note that TAP has no third state, so the invalid case comes out indistinguishable from a genuine failure:</p>
+<div class="fragment"><div class="line">1..3</div>
 <div class="line">ok 1 - Check that expectation can be met</div>
-<div class="line">not ok 2 - Check that expectation fails</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+<div class="line">not ok 2 - Check invalid detection</div>
+<div class="line">not ok 3 - Check that expectation fails</div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
 tts::diagnostics_sink</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+Effect</h3>
 <p>Wraps a target sink, forwarding every message unchanged, and additionally prints one <span class="tt">path:line: error: message</span> / <span class="tt">path:line: fatal error: message</span> line per failing/fatal assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VS Code's C/C++ extension provides <span class="tt">$gcc</span>, vim has quickfix, ...) can jump straight to it. <span class="tt">assertion_failed()</span> fires before its corresponding text, so the diagnostic line prints first; it still fires under <span class="tt">-q</span>, when that raw line is itself suppressed.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+Manual Usage</h3>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a> diagnostics;</div>
 <div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(diagnostics);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... run the test suite ...</span></div>
 <div class="ttc" id="astructtts_1_1diagnostics__sink_html"><div class="ttname"><a href="structtts_1_1diagnostics__sink.html">tts::diagnostics_sink</a></div><div class="ttdoc">output_sink adding compiler-style diagnostics for every failing/fatal assertion.</div><div class="ttdef"><b>Definition</b> diagnostics.hpp:37</div></div>
-</div><!-- fragment --><p>Or, without a custom driver: <span class="tt">./my_test --sink=diagnostics</span>.</p>
-<p>A failing <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> then prints the diagnostic line, immediately followed by its usual one:</p>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+CLI Flag</h3>
+<p><span class="tt">./my_test --sink=diagnostics</span></p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+Example</h3>
+<p>Running the sample suite above, the failing case prints the diagnostic line, immediately followed by its usual one - the passing and invalid cases are unaffected, since neither triggers <span class="tt">assertion_failed()</span>:</p>
 <div class="fragment"><div class="line">expect.cpp:15: error: Expression: 1 == 2 evaluates to false.</div>
 <div class="line">  [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.</div>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+Structured Format Sinks</h1>
+<p>Unlike the simple sinks above, this one assembles its output into a single well-formed document with its own schema instead of printing independent lines - so it only ever produces output once the whole run has finished, via <span class="tt">dump()</span> or <span class="tt">finish()</span>, never incrementally.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+tts::json_sink</h2>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
+Effect</h3>
+<p>Accumulates one JSON object per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> from <span class="tt">test_finished()</span> and <span class="tt">assertion_failed()</span>, plus a <span class="tt">summary</span> counting passed/failed/invalid cases - counted directly as cases finish, not from the suite's raw assertion totals, so the number of entries in <span class="tt">tests</span> always matches <span class="tt">summary.total</span>. No JSON library involved: escaping is hand-rolled in <span class="tt">tts::_::json_escape()</span>, in keeping with <a class="el" href="compile-time.html" title="Compile-Time Discipline">Compile-Time Discipline</a>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+Schema</h3>
+<p>The document is a single object with two fields:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Field  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">tests</span>  </td><td class="markdownTableBodyNone">array of object  </td><td class="markdownTableBodyNone">One entry per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> that finished running, in run order.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">summary</span>  </td><td class="markdownTableBodyNone">object  </td><td class="markdownTableBodyNone">Aggregate counts over every entry in <span class="tt">tests</span>.  </td></tr>
+</table>
+<p>Each entry in <span class="tt">tests</span>:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Field  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">name</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">The case's ID, exactly as given to <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a>.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">status</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">One of <span class="tt">"passed"</span>, <span class="tt">"failed"</span>, <span class="tt">"invalid"</span> (registered no assertion at all).  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">duration_ns</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Wall-clock time the case took to run, in nanoseconds.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">failures</span>  </td><td class="markdownTableBodyNone">array of object  </td><td class="markdownTableBodyNone">One entry per failing/fatal assertion. Empty unless <span class="tt">status</span> is <span class="tt">"failed"</span>.  </td></tr>
+</table>
+<p>Each entry in a <span class="tt">failures</span> array:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Field  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">location</span>  </td><td class="markdownTableBodyNone">object  </td><td class="markdownTableBodyNone">Where the assertion is, split into <span class="tt">file</span>/<span class="tt">line</span> (see below).  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">message</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">The assertion's failure message.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">fatal</span>  </td><td class="markdownTableBodyNone">boolean  </td><td class="markdownTableBodyNone"><span class="tt">true</span> if this came from <a class="el" href="group__test-basic.html#gacce7003b6dde780e39e20c3fecdc08bb" title="TTS_FATAL">TTS_FATAL</a> (which then aborts the whole suite - see <span class="tt">summary</span> note below).  </td></tr>
+</table>
+<p><span class="tt">location</span>:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Field  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">file</span>  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">Source file name, as reported in the human-readable output (basename only).  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">line</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Line number within <span class="tt">file</span>.  </td></tr>
+</table>
+<p><span class="tt">summary</span>:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Field  </th><th class="markdownTableHeadNone">Type  </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">total</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Number of entries in <span class="tt">tests</span> (<span class="tt">passed</span> + <span class="tt">failed</span> + <span class="tt">invalid</span>).  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">passed</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Number of cases with <span class="tt">status: "passed"</span>.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">failed</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Number of cases with <span class="tt">status: "failed"</span>.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">invalid</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Number of cases with <span class="tt">status: "invalid"</span>.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">duration_ns</span>  </td><td class="markdownTableBodyNone">integer  </td><td class="markdownTableBodyNone">Sum of every case's <span class="tt">duration_ns</span>.  </td></tr>
+</table>
+<dl class="section note"><dt>Note</dt><dd>A <a class="el" href="group__test-basic.html#gacce7003b6dde780e39e20c3fecdc08bb" title="TTS_FATAL">TTS_FATAL</a> assertion aborts the whole suite immediately - the case it happened in never finishes running, so it never reaches <span class="tt">test_finished()</span> and does <b>not</b> appear in <span class="tt">tests</span> at all, not even as a <span class="tt">"failed"</span> entry. <span class="tt">summary.total</span> then undercounts the suite's actual registered case count. This mirrors how <a class="el" href="structtts_1_1tap__sink.html" title="tts::tap_sink">tts::tap_sink</a> and the plain text output behave for the same reason: the driver loop's per-case bookkeeping only runs for a case that returns normally.</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
+Manual Usage</h3>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1json__sink.html">tts::json_sink</a> json;</div>
+<div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(json);</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// ... run the test suite ...</span></div>
+<div class="line"> </div>
+<div class="line">json.<a class="code hl_function" href="structtts_1_1json__sink.html#a9862535380285bcb51f648e5d6b560da">dump</a>(); <span class="comment">// stream the JSON report to stdout</span></div>
+<div class="ttc" id="astructtts_1_1json__sink_html"><div class="ttname"><a href="structtts_1_1json__sink.html">tts::json_sink</a></div><div class="ttdoc">output_sink rendering the run as a single structured JSON document.</div><div class="ttdef"><b>Definition</b> json.hpp:74</div></div>
+<div class="ttc" id="astructtts_1_1json__sink_html_a9862535380285bcb51f648e5d6b560da"><div class="ttname"><a href="structtts_1_1json__sink.html#a9862535380285bcb51f648e5d6b560da">tts::json_sink::dump</a></div><div class="ttdeci">void dump(output_sink &amp;target)</div><div class="ttdoc">Forwards the JSON-rendered report to target, then clears the gathered results.</div><div class="ttdef"><b>Definition</b> json.hpp:152</div></div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+CLI Flag</h3>
+<p><span class="tt">./my_test --sink=json</span></p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
+Example</h3>
+<p>Running the sample suite above via <span class="tt">--sink=json</span> produces (pretty-printed here for readability):</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;tests&quot;: [</div>
+<div class="line">    {</div>
+<div class="line">      &quot;name&quot;: &quot;Check that expectation can be met&quot;,</div>
+<div class="line">      &quot;status&quot;: &quot;passed&quot;,</div>
+<div class="line">      &quot;duration_ns&quot;: 917,</div>
+<div class="line">      &quot;failures&quot;: []</div>
+<div class="line">    },</div>
+<div class="line">    {</div>
+<div class="line">      &quot;name&quot;: &quot;Check invalid detection&quot;,</div>
+<div class="line">      &quot;status&quot;: &quot;invalid&quot;,</div>
+<div class="line">      &quot;duration_ns&quot;: 68,</div>
+<div class="line">      &quot;failures&quot;: []</div>
+<div class="line">    },</div>
+<div class="line">    {</div>
+<div class="line">      &quot;name&quot;: &quot;Check that expectation fails&quot;,</div>
+<div class="line">      &quot;status&quot;: &quot;failed&quot;,</div>
+<div class="line">      &quot;duration_ns&quot;: 11030,</div>
+<div class="line">      &quot;failures&quot;: [</div>
+<div class="line">        {</div>
+<div class="line">          &quot;location&quot;: {</div>
+<div class="line">            &quot;file&quot;: &quot;expect.cpp&quot;,</div>
+<div class="line">            &quot;line&quot;: 15</div>
+<div class="line">          },</div>
+<div class="line">          &quot;message&quot;: &quot;Expression: 1 == 2 evaluates to false.&quot;,</div>
+<div class="line">          &quot;fatal&quot;: false</div>
+<div class="line">        }</div>
+<div class="line">      ]</div>
+<div class="line">    }</div>
+<div class="line">  ],</div>
+<div class="line">  &quot;summary&quot;: {</div>
+<div class="line">    &quot;total&quot;: 3,</div>
+<div class="line">    &quot;passed&quot;: 1,</div>
+<div class="line">    &quot;failed&quot;: 1,</div>
+<div class="line">    &quot;invalid&quot;: 1,</div>
+<div class="line">    &quot;duration_ns&quot;: 12015</div>
+<div class="line">  }</div>
+<div class="line">}</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

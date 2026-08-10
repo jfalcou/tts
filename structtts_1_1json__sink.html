@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TTS: tts::tap_sink Struct Reference</title>
+<title>TTS: tts::json_sink Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,7 +96,7 @@ $(function() { codefold.init(); });
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structtts_1_1tap__sink.html','','structtts_1_1tap__sink-members'); });
+$(function(){initNavTree('structtts_1_1json__sink.html','','structtts_1_1json__sink-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -124,62 +124,61 @@ $(function(){initNavTree('structtts_1_1tap__sink.html','','structtts_1_1tap__sin
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structtts_1_1tap__sink-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">tts::tap_sink Struct Reference<div class="ingroups"><a class="el" href="group__tools-output.html">Output Utilities</a> &raquo; <a class="el" href="group__tools-sinks.html">Output Sink Classes</a></div></div></div>
+<a href="structtts_1_1json__sink-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">tts::json_sink Struct Reference<div class="ingroups"><a class="el" href="group__tools-output.html">Output Utilities</a> &raquo; <a class="el" href="group__tools-sinks.html">Output Sink Classes</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> rendering the run as <a href="https://testanything.org/">TAP</a> (Test Anything Protocol).  
+<p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> rendering the run as a single structured JSON document.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> rendering the run as <a href="https://testanything.org/">TAP</a> (Test Anything Protocol). </p>
-<p>Built from <a class="el" href="structtts_1_1output__sink.html" title="output_sink">output_sink</a>'s structured <span class="tt"><a class="el" href="#a1f6a62278d8ef5e382878258468e4e16">test_finished</a></span> hook rather than by parsing the human-readable text <a class="el" href="structtts_1_1stdout__sink.html" title="tts::stdout_sink">tts::stdout_sink</a> prints, so it reports one "ok N - name" / "not ok
-N - name" line per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> regardless of <span class="tt">-v</span>/<span class="tt">-q</span>, followed by a trailing "1..N" plan line once <a class="el" href="#ad5e25cdee27327fd819e76af711e31a6" title="Streams the TAP-rendered report to stdout, then clears the gathered results.">dump()</a>ed - or automatically, via <span class="tt"><a class="el" href="#a53e7fab0a5ac918a2ba72f4ac07e0c73" title="Dumps the TAP-rendered report to the target given at construction.">finish()</a></span>, to the target given at construction (<span class="tt"><a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a></span> by default). It does not (currently) reflect <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>'s per-type breakdown or <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those don't have their own hook - only the enclosing <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> does.</p>
+<div class="textblock"><p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> rendering the run as a single structured JSON document. </p>
+<p>Built from <a class="el" href="structtts_1_1output__sink.html" title="output_sink">output_sink</a>'s structured hooks rather than by parsing the human-readable text <a class="el" href="structtts_1_1stdout__sink.html" title="tts::stdout_sink">tts::stdout_sink</a> prints, so it stays correct regardless of <span class="tt">-v</span>/<span class="tt">-q</span>. Every <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> becomes one entry in a <span class="tt">"tests"</span> array (name, status, duration in nanoseconds, and any failing/fatal assertions gathered while it ran), summarized by a <span class="tt">"summary"</span> object counting passed/failed/invalid cases - counted from <span class="tt"><a class="el" href="#a167a55fd1debccbc4ec69258b21d5f76">test_finished()</a></span> directly, not from the suite's raw assertion totals, so <span class="tt">tests.length</span> always matches <span class="tt">summary.total</span>. Rendered by <span class="tt"><a class="el" href="#adc7759b861e843d8bb0211ee49ed1f9b" title="Streams the JSON-rendered report to stdout, then clears the gathered results.">dump()</a></span>, or automatically via <span class="tt"><a class="el" href="#ac23a903b273bcf41c77366c8e284cac0" title="Dumps the JSON-rendered report to the target given at construction.">finish()</a></span>, to the target given at construction (<span class="tt"><a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a></span> by default). It does not (currently) reflect <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>'s per-type breakdown or <a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="TTS_WHEN">TTS_WHEN</a> / <a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="TTS_AND_THEN">TTS_AND_THEN</a> sub-scenarios, since those don't have their own hook - only the enclosing <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> does.</p>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1tap__sink.html">tts::tap_sink</a> tap;</div>
-<div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(tap);</div>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1json__sink.html">tts::json_sink</a> json;</div>
+<div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(json);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// ... run the test suite ...</span></div>
 <div class="line"> </div>
-<div class="line">tap.<a class="code hl_function" href="#a84ca0493f51619330fc93bb995b8b4f5">dump</a>(); <span class="comment">// stream the TAP-formatted report to stdout</span></div>
+<div class="line">json.<a class="code hl_function" href="#a9862535380285bcb51f648e5d6b560da">dump</a>(); <span class="comment">// stream the JSON report to stdout</span></div>
 <div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:379</div></div>
 <div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:414</div></div>
-<div class="ttc" id="astructtts_1_1tap__sink_html"><div class="ttname"><a href="structtts_1_1tap__sink.html">tts::tap_sink</a></div><div class="ttdoc">output_sink rendering the run as TAP (Test Anything Protocol).</div><div class="ttdef"><b>Definition</b> tap.hpp:42</div></div>
-<div class="ttc" id="astructtts_1_1tap__sink_html_a84ca0493f51619330fc93bb995b8b4f5"><div class="ttname"><a href="#a84ca0493f51619330fc93bb995b8b4f5">tts::tap_sink::dump</a></div><div class="ttdeci">void dump(output_sink &amp;target)</div><div class="ttdoc">Forwards the TAP-rendered report to target, then clears the gathered results.</div><div class="ttdef"><b>Definition</b> tap.hpp:70</div></div>
+<div class="ttc" id="astructtts_1_1json__sink_html"><div class="ttname"><a href="structtts_1_1json__sink.html">tts::json_sink</a></div><div class="ttdoc">output_sink rendering the run as a single structured JSON document.</div><div class="ttdef"><b>Definition</b> json.hpp:74</div></div>
+<div class="ttc" id="astructtts_1_1json__sink_html_a9862535380285bcb51f648e5d6b560da"><div class="ttname"><a href="#a9862535380285bcb51f648e5d6b560da">tts::json_sink::dump</a></div><div class="ttdeci">void dump(output_sink &amp;target)</div><div class="ttdoc">Forwards the JSON-rendered report to target, then clears the gathered results.</div><div class="ttdef"><b>Definition</b> json.hpp:152</div></div>
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9124eaa6eed5ab0702d2a16e2ccacc66" id="r_a9124eaa6eed5ab0702d2a16e2ccacc66"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66">assertion_failed</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;location, <a class="el" href="structtts_1_1text.html">text</a> const &amp;message, bool fatal)</td></tr>
-<tr class="memitem:adf7651758a0da8c0e813b53dacec8356" id="r_adf7651758a0da8c0e813b53dacec8356"><td class="memItemLeft"><a id="adf7651758a0da8c0e813b53dacec8356" name="adf7651758a0da8c0e813b53dacec8356"></a>
+<tr class="memitem:afd20e61e1ad28e22d99602472be4e014" id="r_afd20e61e1ad28e22d99602472be4e014"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afd20e61e1ad28e22d99602472be4e014">assertion_failed</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;location, <a class="el" href="structtts_1_1text.html">text</a> const &amp;message, bool fatal) override</td></tr>
+<tr class="memitem:a1cc5ede76e87da13226b9d41c3e656fd" id="r_a1cc5ede76e87da13226b9d41c3e656fd"><td class="memItemLeft"><a id="a1cc5ede76e87da13226b9d41c3e656fd" name="a1cc5ede76e87da13226b9d41c3e656fd"></a>
 void&#160;</td><td class="memItemRight"><b>clear</b> ()</td></tr>
-<tr class="memdesc:adf7651758a0da8c0e813b53dacec8356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards everything gathered so far. <br /></td></tr>
-<tr class="memitem:ad5e25cdee27327fd819e76af711e31a6" id="r_ad5e25cdee27327fd819e76af711e31a6"><td class="memItemLeft"><a id="ad5e25cdee27327fd819e76af711e31a6" name="ad5e25cdee27327fd819e76af711e31a6"></a>
+<tr class="memdesc:a1cc5ede76e87da13226b9d41c3e656fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards everything gathered so far. <br /></td></tr>
+<tr class="memitem:adc7759b861e843d8bb0211ee49ed1f9b" id="r_adc7759b861e843d8bb0211ee49ed1f9b"><td class="memItemLeft"><a id="adc7759b861e843d8bb0211ee49ed1f9b" name="adc7759b861e843d8bb0211ee49ed1f9b"></a>
 void&#160;</td><td class="memItemRight"><b>dump</b> ()</td></tr>
-<tr class="memdesc:ad5e25cdee27327fd819e76af711e31a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Streams the TAP-rendered report to <span class="tt">stdout</span>, then clears the gathered results. <br /></td></tr>
-<tr class="memitem:a84ca0493f51619330fc93bb995b8b4f5" id="r_a84ca0493f51619330fc93bb995b8b4f5"><td class="memItemLeft"><a id="a84ca0493f51619330fc93bb995b8b4f5" name="a84ca0493f51619330fc93bb995b8b4f5"></a>
+<tr class="memdesc:adc7759b861e843d8bb0211ee49ed1f9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Streams the JSON-rendered report to <span class="tt">stdout</span>, then clears the gathered results. <br /></td></tr>
+<tr class="memitem:a9862535380285bcb51f648e5d6b560da" id="r_a9862535380285bcb51f648e5d6b560da"><td class="memItemLeft"><a id="a9862535380285bcb51f648e5d6b560da" name="a9862535380285bcb51f648e5d6b560da"></a>
 void&#160;</td><td class="memItemRight"><b>dump</b> (<a class="el" href="structtts_1_1output__sink.html">output_sink</a> &amp;target)</td></tr>
-<tr class="memdesc:a84ca0493f51619330fc93bb995b8b4f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards the TAP-rendered report to target, then clears the gathered results. <br /></td></tr>
-<tr class="memitem:a53e7fab0a5ac918a2ba72f4ac07e0c73" id="r_a53e7fab0a5ac918a2ba72f4ac07e0c73"><td class="memItemLeft"><a id="a53e7fab0a5ac918a2ba72f4ac07e0c73" name="a53e7fab0a5ac918a2ba72f4ac07e0c73"></a>
+<tr class="memdesc:a9862535380285bcb51f648e5d6b560da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards the JSON-rendered report to target, then clears the gathered results. <br /></td></tr>
+<tr class="memitem:ac23a903b273bcf41c77366c8e284cac0" id="r_ac23a903b273bcf41c77366c8e284cac0"><td class="memItemLeft"><a id="ac23a903b273bcf41c77366c8e284cac0" name="ac23a903b273bcf41c77366c8e284cac0"></a>
 void&#160;</td><td class="memItemRight"><b>finish</b> () override</td></tr>
-<tr class="memdesc:a53e7fab0a5ac918a2ba72f4ac07e0c73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps the TAP-rendered report to the target given at construction. <br /></td></tr>
+<tr class="memdesc:ac23a903b273bcf41c77366c8e284cac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dumps the JSON-rendered report to the target given at construction. <br /></td></tr>
 <tr class="memitem:a81ed096099acf5015d76fb31eff4acff" id="r_a81ed096099acf5015d76fb31eff4acff"><td class="memItemLeft"><a id="a81ed096099acf5015d76fb31eff4acff" name="a81ed096099acf5015d76fb31eff4acff"></a>
 virtual void&#160;</td><td class="memItemRight"><b>flush</b> ()</td></tr>
 <tr class="memdesc:a81ed096099acf5015d76fb31eff4acff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes this sink's destination, if that means anything for it. No-op by default. <br /></td></tr>
-<tr class="memitem:a56cb72dd1c63ce2f714c612f34bd8b9a" id="r_a56cb72dd1c63ce2f714c612f34bd8b9a"><td class="memItemLeft"><a id="a56cb72dd1c63ce2f714c612f34bd8b9a" name="a56cb72dd1c63ce2f714c612f34bd8b9a"></a>
+<tr class="memitem:a69bfa3afc19c8a5c841639b4178d6af9" id="r_a69bfa3afc19c8a5c841639b4178d6af9"><td class="memItemLeft"><a id="a69bfa3afc19c8a5c841639b4178d6af9" name="a69bfa3afc19c8a5c841639b4178d6af9"></a>
 <a class="el" href="structtts_1_1text.html">text</a>&#160;</td><td class="memItemRight"><b>render</b> () const</td></tr>
-<tr class="memdesc:a56cb72dd1c63ce2f714c612f34bd8b9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders everything gathered so far as TAP-formatted text. <br /></td></tr>
+<tr class="memdesc:a69bfa3afc19c8a5c841639b4178d6af9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders everything gathered so far as a single JSON document. <br /></td></tr>
 <tr class="memitem:a74ebf02b3020462a3916e8667db58a2a" id="r_a74ebf02b3020462a3916e8667db58a2a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a74ebf02b3020462a3916e8667db58a2a">suite_aborted</a> ()</td></tr>
 <tr class="memitem:afd5d4793ba03fda092974ee32ad41ed9" id="r_afd5d4793ba03fda092974ee32ad41ed9"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afd5d4793ba03fda092974ee32ad41ed9">suite_finished</a> (unsigned long long fail_count, unsigned long long invalid_count)</td></tr>
 <tr class="memitem:afc2c9f4966da5cb2a65b8c9bb8a3d9d2" id="r_afc2c9f4966da5cb2a65b8c9bb8a3d9d2"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">suite_metric</a> (<a class="el" href="group__tools-output.html#gaa00ed0d043ef3899719ef14750d8a7b5">outcome</a> kind, unsigned long long count, unsigned long long total)</td></tr>
-<tr class="memitem:a1f6a62278d8ef5e382878258468e4e16" id="r_a1f6a62278d8ef5e382878258468e4e16"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1f6a62278d8ef5e382878258468e4e16">test_finished</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>, bool passed, bool invalid, unsigned long long duration_ns) override</td></tr>
+<tr class="memitem:a167a55fd1debccbc4ec69258b21d5f76" id="r_a167a55fd1debccbc4ec69258b21d5f76"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a167a55fd1debccbc4ec69258b21d5f76">test_finished</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>, bool passed, bool invalid, unsigned long long duration_ns) override</td></tr>
 <tr class="memitem:ac8d28651a9c70c0b30c46c9ffaf83bdc" id="r_ac8d28651a9c70c0b30c46c9ffaf83bdc"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#ac8d28651a9c70c0b30c46c9ffaf83bdc">test_started</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>)</td></tr>
-<tr class="memitem:aaf99a598457ca716548be7e144392ef4" id="r_aaf99a598457ca716548be7e144392ef4"><td class="memItemLeft"><a id="aaf99a598457ca716548be7e144392ef4" name="aaf99a598457ca716548be7e144392ef4"></a>
+<tr class="memitem:a6aa68da36c195e4132a21bdea1c8505b" id="r_a6aa68da36c195e4132a21bdea1c8505b"><td class="memItemLeft"><a id="a6aa68da36c195e4132a21bdea1c8505b" name="a6aa68da36c195e4132a21bdea1c8505b"></a>
 void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;) override</td></tr>
-<tr class="memdesc:aaf99a598457ca716548be7e144392ef4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes t to this sink's destination. <br /></td></tr>
+<tr class="memdesc:a6aa68da36c195e4132a21bdea1c8505b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes t to this sink's destination. <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a9124eaa6eed5ab0702d2a16e2ccacc66" name="a9124eaa6eed5ab0702d2a16e2ccacc66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9124eaa6eed5ab0702d2a16e2ccacc66">&#9670;&#160;</a></span>assertion_failed()</h2>
+<a id="afd20e61e1ad28e22d99602472be4e014" name="afd20e61e1ad28e22d99602472be4e014"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd20e61e1ad28e22d99602472be4e014">&#9670;&#160;</a></span>assertion_failed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,7 +187,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::assertion_failed </td>
+          <td class="memname">void tts::json_sink::assertion_failed </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtts_1_1text.html">text</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>location</em></span>, </td>
         </tr>
@@ -205,13 +204,13 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="#a1f6a62278d8ef5e382878258468e4e16">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
+<p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="#a167a55fd1debccbc4ec69258b21d5f76">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a806ad2d30a231df71c134781b1eb6ab6">tts::colorized_sink</a>, <a class="el" href="structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03">tts::diagnostics_sink</a>, and <a class="el" href="structtts_1_1json__sink.html#afd20e61e1ad28e22d99602472be4e014">tts::json_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66">tts::output_sink</a>.</p>
 
 </div>
 </div>
@@ -312,8 +311,8 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
 
 </div>
 </div>
-<a id="a1f6a62278d8ef5e382878258468e4e16" name="a1f6a62278d8ef5e382878258468e4e16"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f6a62278d8ef5e382878258468e4e16">&#9670;&#160;</a></span>test_finished()</h2>
+<a id="a167a55fd1debccbc4ec69258b21d5f76" name="a167a55fd1debccbc4ec69258b21d5f76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a167a55fd1debccbc4ec69258b21d5f76">&#9670;&#160;</a></span>test_finished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +321,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void tts::tap_sink::test_finished </td>
+          <td class="memname">void tts::json_sink::test_finished </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtts_1_1text.html">text</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
@@ -389,7 +388,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1tap__sink.html">tap_sink</a></li>
+    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1json__sink.html">json_sink</a></li>
   </ul>
 </div>
 </div> <!-- DOXYSTRAP RELATED -->

@@ -227,7 +227,7 @@ virtual void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href
 </div><div class="memdoc">
 <p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="#afa36c549d9f9108eef4534e1befc314b">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a806ad2d30a231df71c134781b1eb6ab6">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03">tts::diagnostics_sink</a>.</p>
+<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a806ad2d30a231df71c134781b1eb6ab6">tts::colorized_sink</a>, <a class="el" href="structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03">tts::diagnostics_sink</a>, and <a class="el" href="structtts_1_1json__sink.html#afd20e61e1ad28e22d99602472be4e014">tts::json_sink</a>.</p>
 
 </div>
 </div>
@@ -255,7 +255,7 @@ virtual void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href
 </div><div class="memdoc">
 <p>Called once, after <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report()</a> returns - every other hook has already fired by then - so an accumulate-style sink (e.g. <a class="el" href="structtts_1_1tap__sink.html" title="output_sink rendering the run as TAP (Test Anything Protocol).">tts::tap_sink</a>) can render and flush its buffered content to its own destination. No-op by default: pass-through sinks that already forward <a class="el" href="#ab46511dfaa6b2693d7003064c93f9060" title="Writes t to this sink&#39;s destination.">write()</a> as it happens (e.g. <a class="el" href="structtts_1_1colorized__sink.html" title="output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.">tts::colorized_sink</a>) have nothing left to do here. Like <span class="tt">--shard</span>, this is only called by the default driver (<a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a>) - a <a class="el" href="group__customization-points.html#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> manages whichever sink it installed itself, including dumping it, so its driver never calls <a class="el" href="#aeab503254af214d6ce09abe1c638e18c">finish()</a> on its own. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1tap__sink.html#a53e7fab0a5ac918a2ba72f4ac07e0c73">tts::tap_sink</a>.</p>
+<p>Reimplemented in <a class="el" href="structtts_1_1json__sink.html#ac23a903b273bcf41c77366c8e284cac0">tts::json_sink</a>, and <a class="el" href="structtts_1_1tap__sink.html#a53e7fab0a5ac918a2ba72f4ac07e0c73">tts::tap_sink</a>.</p>
 
 </div>
 </div>
@@ -394,7 +394,7 @@ virtual void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href
 </div><div class="memdoc">
 <p>Called once a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> has finished running, always and before its corresponding text (if any - suppressed under -q), with its outcome and how long it took to run, in nanoseconds. No-op by default. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a61cc7e7c3650c2be30a01ae34bccc5a6">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1tap__sink.html#a1f6a62278d8ef5e382878258468e4e16">tts::tap_sink</a>.</p>
+<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a61cc7e7c3650c2be30a01ae34bccc5a6">tts::colorized_sink</a>, <a class="el" href="structtts_1_1json__sink.html#a167a55fd1debccbc4ec69258b21d5f76">tts::json_sink</a>, and <a class="el" href="structtts_1_1tap__sink.html#a1f6a62278d8ef5e382878258468e4e16">tts::tap_sink</a>.</p>
 
 </div>
 </div>

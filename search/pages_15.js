@@ -17,6 +17,7 @@ var searchData=
   ['to_20use_14',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
   ['tts_20behaviour_15',['Customizing TTS Behaviour',['../customize.html',1,'']]],
   ['tts_3a_3acolorized_5fsink_16',['tts::colorized_sink',['../output-sinks.html#autotoc_md39',1,'']]],
-  ['tts_3a_3adiagnostics_5fsink_17',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md41',1,'']]],
-  ['tts_3a_3atap_5fsink_18',['tts::tap_sink',['../output-sinks.html#autotoc_md40',1,'']]]
+  ['tts_3a_3adiagnostics_5fsink_17',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md49',1,'']]],
+  ['tts_3a_3ajson_5fsink_18',['tts::json_sink',['../output-sinks.html#autotoc_md55',1,'']]],
+  ['tts_3a_3atap_5fsink_19',['tts::tap_sink',['../output-sinks.html#autotoc_md44',1,'']]]
 ];

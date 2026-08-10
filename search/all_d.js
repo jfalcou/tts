@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['kate_20fansler_0',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md20',1,'']]],
-  ['kay_20scarpetta_1',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]]
+  ['json_5fsink_0',['json_sink',['../structtts_1_1json__sink.html',1,'tts']]]
 ];

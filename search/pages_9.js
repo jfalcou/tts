@@ -7,6 +7,7 @@ var searchData=
   ['fine_20to_20use_4',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
   ['first_20public_20release_5',['First public release.',['../changelog.html#autotoc_md23',1,'']]],
   ['fixes_6',['Fixes',['../changelog.html#autotoc_md3',1,'Bug Fixes'],['../changelog.html#autotoc_md11',1,'Bug Fixes']]],
-  ['format_20sinks_7',['Simple Format Sinks',['../output-sinks.html#autotoc_md38',1,'']]],
-  ['from_20the_20source_8',['Install from the source',['../setup.html#setup-source',1,'']]]
+  ['flag_7',['Flag',['../output-sinks.html#autotoc_md42',1,'CLI Flag'],['../output-sinks.html#autotoc_md47',1,'CLI Flag'],['../output-sinks.html#autotoc_md52',1,'CLI Flag'],['../output-sinks.html#autotoc_md59',1,'CLI Flag']]],
+  ['format_20sinks_8',['Format Sinks',['../output-sinks.html#autotoc_md38',1,'Simple Format Sinks'],['../output-sinks.html#autotoc_md54',1,'Structured Format Sinks']]],
+  ['from_20the_20source_9',['Install from the source',['../setup.html#setup-source',1,'']]]
 ];

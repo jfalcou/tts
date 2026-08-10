@@ -1,13 +1,12 @@
 var searchData=
 [
-  ['we_20avoid_20and_20what_20they_20cost_0',['Headers we avoid, and what they cost',['../compile-time.html#compile-time-cost',1,'']]],
-  ['what_20it_20costs_20if_20you_20ever_20need_20one_20anyway_1',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]],
-  ['what_20s_20changed_2',['What s Changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md8',1,'What&apos;s Changed'],['../changelog.html#autotoc_md14',1,'What&apos;s Changed']]],
-  ['what_20s_20fine_20to_20use_3',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
-  ['what_20they_20cost_4',['Headers we avoid, and what they cost',['../compile-time.html#compile-time-cost',1,'']]],
-  ['who_5',['who',['../changelog.html#autotoc_md6',1,'Detective who?'],['../changelog.html#autotoc_md12',1,'Detective who?'],['../changelog.html#autotoc_md15',1,'Detective who?'],['../changelog.html#autotoc_md17',1,'Detective who?'],['../changelog.html#autotoc_md19',1,'Detective who?'],['../changelog.html#autotoc_md21',1,'Detective who?'],['../changelog.html#autotoc_md24',1,'Detective who?']]],
-  ['why_20this_20matters_6',['Why this matters',['../compile-time.html#compile-time-why',1,'']]],
-  ['with_20cpm_7',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['write_8',['write',['../structtts_1_1colorized__sink.html#a5cb5722659d032485fe2d2d7042f6470',1,'tts::colorized_sink::write()'],['../structtts_1_1diagnostics__sink.html#a0463defe1e87083fbcad932cf3191cf3',1,'tts::diagnostics_sink::write()'],['../structtts_1_1tap__sink.html#aaf99a598457ca716548be7e144392ef4',1,'tts::tap_sink::write()'],['../structtts_1_1output__sink.html#ab46511dfaa6b2693d7003064c93f9060',1,'tts::output_sink::write()'],['../structtts_1_1stdout__sink.html#a632effef57bc8f6680ac7927525f7b31',1,'tts::stdout_sink::write()'],['../structtts_1_1gathering__sink.html#a5c262543e72018b6795d69fc939fb6cc',1,'tts::gathering_sink::write()'],['../classtts_1_1output__handler.html#aeb3b543499bba1f7a3f834c1ede258c4',1,'tts::output_handler::write(text const &amp;t)'],['../classtts_1_1output__handler.html#adb5821cd9941eb02015b603adad21f75',1,'tts::output_handler::write(char const *s)'],['../classtts_1_1output__handler.html#a55ecc437d26dc421a6c410ee1ac890cb',1,'tts::output_handler::write(char const *format, Args const &amp;... args)']]],
-  ['writeln_9',['writeln',['../classtts_1_1output__handler.html#a1420b5c7e012e043872c5ef58367be0c',1,'tts::output_handler::writeln(text const &amp;t=text {})'],['../classtts_1_1output__handler.html#addf3ae46dc858d1ae9bda3858c523083',1,'tts::output_handler::writeln(char const *s)'],['../classtts_1_1output__handler.html#aad23d3ed5c47930796b7ad6baa8c6d3d',1,'tts::output_handler::writeln(char const *format, Args const &amp;... args)']]]
+  ['value_0',['value',['../structtts_1_1value.html',1,'tts::value&lt; T &gt;'],['../structtts_1_1options.html#a5d81b726f243339369a0ec200ff47e39',1,'tts::options::value(Flags... fs) const'],['../structtts_1_1options.html#a2a8bd8d2664640331cea88043df3c319',1,'tts::options::value(T that, Flags... fs) const']]],
+  ['variable_20fallback_1',['Environment Variable Fallback',['../cli.html#autotoc_md25',1,'']]],
+  ['version_200_201_20cadfael_2',['Version 0.1 - Cadfael',['../changelog.html#autotoc_md22',1,'']]],
+  ['version_200_202_20kate_20fansler_3',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md20',1,'']]],
+  ['version_201_200_20phoebe_20daring_4',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md18',1,'']]],
+  ['version_202_200_20kay_20scarpetta_5',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]],
+  ['version_202_201_20cordelia_20gray_6',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md13',1,'']]],
+  ['version_202_202_20aubrey_20bradimore_7',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]],
+  ['version_203_200_20beatrice_20adela_20bradley_8',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]]
 ];

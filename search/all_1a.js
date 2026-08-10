@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_7etext_0',['~text',['../structtts_1_1text.html#a3d2428a18170d89744f048ba757559e0',1,'tts::text']]]
+  ['you_20add_20a_20header_0',['Before you add a header',['../compile-time.html#compile-time-checklist',1,'']]],
+  ['you_20ever_20need_20one_20anyway_1',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]]
 ];
