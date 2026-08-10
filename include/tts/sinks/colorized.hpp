@@ -44,7 +44,7 @@ namespace tts
       // keep the color active across all of them until the "\n" that ends the line.
       if(strcmp(s, "\n") == 0) // NOSONAR - avoids std::string
       {
-        if(active_color_) target_->write(text {"\033[0m"});
+        if(active_color_) target_->write(text {"\033[0m"}); // NOSONAR - \o{} is C++23-only
         active_color_ = nullptr;
         target_->write(t);
         return;
@@ -52,12 +52,15 @@ namespace tts
 
       if(!active_color_)
       {
-        if(strstr(s, "** FAILURE **") || strstr(s, "@@ FATAL @@") || strstr(s, "@@ ABORTING"))
-          active_color_ = "\033[31m";                                     // red
-        else if(strstr(s, "EMPTY TEST CASE")) active_color_ = "\033[33m"; // yellow
-        else if(strstr(s, "[PASSED]")) active_color_ = "\033[32m";        // green
+        // .contains()/\o{} are C++23-only, project targets C++20
+        if(strstr(s, "** FAILURE **") || strstr(s, "@@ FATAL @@") ||      // NOSONAR
+           strstr(s, "@@ ABORTING"))                                      // NOSONAR
+          active_color_ = "\033[31m";                                     // red - NOSONAR
+        else if(strstr(s, "EMPTY TEST CASE")) active_color_ = "\033[33m"; // yellow - NOSONAR
+        else if(strstr(s, "[PASSED]")) active_color_ = "\033[32m";        // green - NOSONAR
         else if(strncmp(s, "Results:", 8) == 0) // NOSONAR - avoids std::string
-          active_color_ = (strstr(s, "failure") || strstr(s, "invalid")) ? "\033[31m" : "\033[32m";
+          active_color_ =
+          (strstr(s, "failure") || strstr(s, "invalid")) ? "\033[31m" : "\033[32m"; // NOSONAR
 
         if(active_color_) target_->write(text {active_color_});
       }

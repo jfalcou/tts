@@ -61,7 +61,8 @@ namespace tts
       if(p2 && e2)
       {
         text        location {"%.*s", static_cast<int>(e2 - p2 - 1), p2 + 1}; // NOSONAR
-        char const* msg = found + strlen(marker) + 3;                         // skip "marker : "
+        char const* msg =
+        found + strlen(marker) + 3; // skip "marker : " - NOSONAR, marker is always a literal
         target_->write(text {"%s: %s: %s", location.data(), level, msg});
       }
       else
