@@ -36,15 +36,11 @@
 
   # tts::colorized_sink
 
-  Wraps a target sink (`tts::output_handler::default_sink()` by default) and colors a pass
-  confirmation (green), a failure/fatal/abort (red), an invalid test (yellow) - forwarding
-  everything else unchanged. The separator and the `Results: ...` prefix are bold and color-
-  neutral; only the `- N/M (P%) <label>` segment for each outcome category (success, failure,
-  invalid) is colored, in bold green/red/yellow respectively - so a run with both failures and
-  invalids shows each count in its own color rather than the whole line in one. A color stays
-  active across consecutive lines/segments until the next hook changes it. Opt-in: not every
-  terminal or CI log renders ANSI escapes usefully, and on Windows it additionally depends on the
-  host console having Virtual Terminal Processing enabled (most modern terminals already do).
+  Wraps a target sink (`tts::output_handler::default_sink()` by default), coloring pass/fail/
+  invalid lines and the `Results: ...` summary with ANSI escapes - forwarding everything else
+  unchanged. Opt-in: not every terminal or CI log renders ANSI escapes usefully, and on Windows
+  it additionally depends on the host console having Virtual Terminal Processing enabled (most
+  modern terminals already do).
 
   @code{cpp}
   tts::colorized_sink colorized;
