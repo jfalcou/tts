@@ -302,6 +302,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   }
   catch(::tts::_::fatal_signal&)
   {
+    // The aborted case's own tag was never compared against its (nonexistent) actual outcome -
+    // t() never returned, so the driver loop's per-case bookkeeping above never ran for it. A
+    // fatal abort is always unexpected for the suite regardless of that case's tag, so count it
+    // here instead - otherwise a suite that aborts via TTS_FATAL could still report success.
+    ::tts::global_runtime.unexpected();
+
     ::tts::output().suite_aborted();
 
     if(!::tts::is_quiet())
