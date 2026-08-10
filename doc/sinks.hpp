@@ -95,8 +95,9 @@
 
   Wraps a target sink, forwarding every message unchanged, and additionally prints one
   `path:line: error: message` / `path:line: fatal error: message` line per failing/fatal
-  assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's
-  quickfix, ...) can jump straight to it. `assertion_failed()` fires before its corresponding
+  assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VS Code's C/C++ extension
+  provides `$gcc`, vim has quickfix, ...) can jump straight to it. `assertion_failed()` fires
+  before its corresponding
   text, so the diagnostic line prints first; it still fires under `-q`, when that raw line is
   itself suppressed.
 
