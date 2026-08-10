@@ -28,12 +28,6 @@
   binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which already manages its own sink - see
   @ref cli for the full flag reference.
 
-  Sink                       | Purpose
-  -------------------------- | -----------------------------------------------------------------
-  `tts::colorized_sink`      | Wraps another sink, coloring pass/fail/fatal lines with ANSI escapes.
-  `tts::tap_sink`            | Gathers the run, then renders it as TAP (Test Anything Protocol).
-  `tts::diagnostics_sink`    | Adds compiler-style diagnostics for failure/fatal assertions.
-
   # Simple Format Sinks
 
   Each of these produces plain, line-oriented text - as opposed to a hypothetical structured-
