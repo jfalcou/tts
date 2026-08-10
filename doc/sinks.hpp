@@ -70,9 +70,9 @@
 
   [TAP](https://testanything.org/) (Test Anything Protocol) is a simple, language-agnostic text
   format for reporting test results, understood by many CI dashboards and test harnesses.
-  `tts::tap_sink` listens to `test_finished()` and accumulates one `ok N - name` / `not ok N -
-  name` line per @ref TTS_CASE, then `dump()` streams them out preceded by a leading `1..N` plan
-  line.
+  `tts::tap_sink` listens to `test_finished()` and accumulates one `ok N - name` /
+  `not ok N - name` line per @ref TTS_CASE, then `dump()` streams them out preceded by a leading
+  `1..N` plan line.
 
   @code{cpp}
   tts::tap_sink tap;
