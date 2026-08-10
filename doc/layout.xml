@@ -27,6 +27,7 @@
       <tab type="usergroup" visible="yes" title="Tools and Helpers" intro="">
         <tab type="user" url="@ref tools-config"            title="Configuration"/>
         <tab type="user" url="@ref tools-generators-class"  title="Data Generators"/>
+        <tab type="user" url="@ref tools-output"            title="Output Utilities"/>
         <tab type="user" url="@ref tools-precision"         title="Precision Utilities"/>
         <tab type="user" url="@ref tools-random"            title="PRNG Utilities"/>
         <tab type="user" url="@ref tools-text"              title="Text Utilities"/>
