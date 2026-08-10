@@ -194,6 +194,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::tap_sink         tap_candidate {capture_target};
   ::tts::diagnostics_sink diagnostics_candidate {capture_target};
   ::tts::json_sink        json_candidate {capture_target};
+  ::tts::junit_sink       junit_candidate {capture_target};
 
   // Neither flag given: leave whatever sink the caller already installed alone, exactly as
   // before --sink existed - only touch output().sink() when there's an actual reason to.
@@ -202,6 +203,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
   else if(sink_name == "diagnostics") ::tts::output().sink(diagnostics_candidate);
   else if(sink_name == "json") ::tts::output().sink(json_candidate);
+  else if(sink_name == "junit") ::tts::output().sink(junit_candidate);
 
   auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
