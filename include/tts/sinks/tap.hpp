@@ -14,6 +14,7 @@ namespace tts
 {
   //====================================================================================================================
   /**
+    @ingroup tools-sinks
     @public
     @brief output_sink rendering the run as TAP (Test Anything Protocol).
 

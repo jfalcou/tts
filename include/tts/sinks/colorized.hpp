@@ -14,6 +14,7 @@ namespace tts
 {
   //====================================================================================================================
   /**
+    @ingroup tools-sinks
     @public
     @brief output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.
 

@@ -14,6 +14,7 @@ namespace tts
 {
   //====================================================================================================================
   /**
+    @ingroup tools-sinks
     @public
     @brief output_sink adding compiler-style diagnostics for every failing/fatal assertion.
 
