@@ -11,9 +11,10 @@ var searchData=
   ['definition_20macros_8',['Tests definition macros',['../group__test-scenario.html',1,'']]],
   ['detective_20who_9',['Detective who',['../changelog.html#autotoc_md6',1,'Detective who?'],['../changelog.html#autotoc_md12',1,'Detective who?'],['../changelog.html#autotoc_md15',1,'Detective who?'],['../changelog.html#autotoc_md17',1,'Detective who?'],['../changelog.html#autotoc_md19',1,'Detective who?'],['../changelog.html#autotoc_md21',1,'Detective who?'],['../changelog.html#autotoc_md24',1,'Detective who?']]],
   ['diagnostics_5fsink_10',['diagnostics_sink',['../structtts_1_1diagnostics__sink.html',1,'tts']]],
-  ['display_11',['Data display',['../customize.html#customize-display',1,'']]],
-  ['display_20options_12',['Display Options',['../cli.html#autotoc_md26',1,'']]],
-  ['distance_13',['ULP Distance',['../customize.html#autotoc_md30',1,'']]],
-  ['driver_14',['Tests Driver',['../customize.html#customize-driver',1,'']]],
-  ['dump_15',['dump',['../structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5',1,'tts::tap_sink::dump(output_sink &amp;target)'],['../structtts_1_1tap__sink.html#ad5e25cdee27327fd819e76af711e31a6',1,'tts::tap_sink::dump()'],['../structtts_1_1gathering__sink.html#a004222a1ffb1316cab23fa7c17d67de4',1,'tts::gathering_sink::dump(output_sink &amp;target)'],['../structtts_1_1gathering__sink.html#a4d2de4a99c8f613124b9457231a7c142',1,'tts::gathering_sink::dump()']]]
+  ['discipline_11',['Compile-Time Discipline',['../compile-time.html',1,'']]],
+  ['display_12',['Data display',['../customize.html#customize-display',1,'']]],
+  ['display_20options_13',['Display Options',['../cli.html#autotoc_md26',1,'']]],
+  ['distance_14',['ULP Distance',['../customize.html#autotoc_md30',1,'']]],
+  ['driver_15',['Tests Driver',['../customize.html#customize-driver',1,'']]],
+  ['dump_16',['dump',['../structtts_1_1tap__sink.html#a84ca0493f51619330fc93bb995b8b4f5',1,'tts::tap_sink::dump(output_sink &amp;target)'],['../structtts_1_1tap__sink.html#ad5e25cdee27327fd819e76af711e31a6',1,'tts::tap_sink::dump()'],['../structtts_1_1gathering__sink.html#a004222a1ffb1316cab23fa7c17d67de4',1,'tts::gathering_sink::dump(output_sink &amp;target)'],['../structtts_1_1gathering__sink.html#a4d2de4a99c8f613124b9457231a7c142',1,'tts::gathering_sink::dump()']]]
 ];

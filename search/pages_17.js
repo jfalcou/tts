@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['what_20s_20changed_0',['What s Changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md8',1,'What&apos;s Changed'],['../changelog.html#autotoc_md14',1,'What&apos;s Changed']]],
-  ['who_1',['who',['../changelog.html#autotoc_md6',1,'Detective who?'],['../changelog.html#autotoc_md12',1,'Detective who?'],['../changelog.html#autotoc_md15',1,'Detective who?'],['../changelog.html#autotoc_md17',1,'Detective who?'],['../changelog.html#autotoc_md19',1,'Detective who?'],['../changelog.html#autotoc_md21',1,'Detective who?'],['../changelog.html#autotoc_md24',1,'Detective who?']]],
-  ['with_20cpm_2',['Setup with CPM',['../setup.html#setup-cpm',1,'']]]
+  ['variable_20fallback_0',['Environment Variable Fallback',['../cli.html#autotoc_md25',1,'']]],
+  ['version_200_201_20cadfael_1',['Version 0.1 - Cadfael',['../changelog.html#autotoc_md22',1,'']]],
+  ['version_200_202_20kate_20fansler_2',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md20',1,'']]],
+  ['version_201_200_20phoebe_20daring_3',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md18',1,'']]],
+  ['version_202_200_20kay_20scarpetta_4',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]],
+  ['version_202_201_20cordelia_20gray_5',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md13',1,'']]],
+  ['version_202_202_20aubrey_20bradimore_6',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]],
+  ['version_203_200_20beatrice_20adela_20bradley_7',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]]
 ];

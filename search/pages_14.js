@@ -1,17 +1,18 @@
 var searchData=
 [
-  ['test_20case_0',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
-  ['test_20system_1',['The Tiny Test System',['../index.html',1,'']]],
-  ['testing_2',['Precision testing',['../rationale.html#ulp',1,'']]],
-  ['testing_20macros_3',['Testing Macros',['../tts101.html#tuto-macro',1,'']]],
-  ['testing_20ulps_4',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
-  ['tests_20driver_5',['Tests Driver',['../customize.html#customize-driver',1,'']]],
-  ['tests_20parameters_6',['Tests Parameters',['../cli.html#autotoc_md28',1,'']]],
-  ['the_20source_7',['Install from the source',['../setup.html#setup-source',1,'']]],
-  ['the_20tiny_20test_20system_8',['The Tiny Test System',['../index.html',1,'']]],
-  ['tiny_20test_20system_9',['The Tiny Test System',['../index.html',1,'']]],
-  ['tts_20behaviour_10',['Customizing TTS Behaviour',['../customize.html',1,'']]],
-  ['tts_3a_3acolorized_5fsink_11',['tts::colorized_sink',['../output-sinks.html#autotoc_md39',1,'']]],
-  ['tts_3a_3adiagnostics_5fsink_12',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md41',1,'']]],
-  ['tts_3a_3atap_5fsink_13',['tts::tap_sink',['../output-sinks.html#autotoc_md40',1,'']]]
+  ['s_20changed_0',['s Changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md8',1,'What&apos;s Changed'],['../changelog.html#autotoc_md14',1,'What&apos;s Changed']]],
+  ['s_20fine_20to_20use_1',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
+  ['scarpetta_2',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]],
+  ['setup_3',['Setup',['../setup.html',1,'']]],
+  ['setup_4',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
+  ['setup_20with_20cpm_5',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
+  ['short_20example_6',['A Short Example',['../index.html#autotoc_md36',1,'']]],
+  ['simple_20format_20sinks_7',['Simple Format Sinks',['../output-sinks.html#autotoc_md38',1,'']]],
+  ['sinks_8',['Sinks',['../output-sinks.html',1,'Built-in Output Sinks'],['../output-sinks.html#autotoc_md38',1,'Simple Format Sinks']]],
+  ['source_9',['Install from the source',['../setup.html#setup-source',1,'']]],
+  ['specify_20a_20test_20case_10',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
+  ['standalone_20setup_11',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
+  ['started_12',['Getting Started',['../tts101.html',1,'']]],
+  ['supported_20compilers_13',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
+  ['system_14',['The Tiny Test System',['../index.html',1,'']]]
 ];

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['new_20contributors_0',['New Contributors',['../changelog.html#autotoc_md5',1,'']]],
-  ['new_20features_1',['New Features',['../changelog.html#autotoc_md4',1,'New Features'],['../changelog.html#autotoc_md10',1,'New Features']]]
+  ['macros_0',['Testing Macros',['../tts101.html#tuto-macro',1,'']]],
+  ['matters_1',['Why this matters',['../compile-time.html#compile-time-why',1,'']]],
+  ['measurement_2',['Precision Measurement',['../customize.html#customize-precision',1,'']]],
+  ['metric_3',['Precision metric',['../rationale.html#ulp-metric',1,'']]]
 ];

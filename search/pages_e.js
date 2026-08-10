@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['macros_0',['Testing Macros',['../tts101.html#tuto-macro',1,'']]],
-  ['measurement_1',['Precision Measurement',['../customize.html#customize-precision',1,'']]],
-  ['metric_2',['Precision metric',['../rationale.html#ulp-metric',1,'']]]
+  ['licence_0',['Licence',['../licence.html',1,'']]],
+  ['line_20interface_1',['Command Line Interface',['../cli.html',1,'']]],
+  ['log_2',['Change Log',['../changelog.html',1,'']]]
 ];

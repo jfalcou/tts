@@ -1,7 +1,8 @@
 var NAVTREEINDEX0 =
 {
-"changelog.html":[3,1],
+"changelog.html":[3,2],
 "cli.html":[1,2],
+"compile-time.html":[3,1],
 "customize.html":[1,4,0],
 "group__customization-points.html":[1,4,2],
 "group__test-basic.html":[2,0,1],
@@ -23,7 +24,7 @@ var NAVTREEINDEX0 =
 "index.html":[0],
 "index.html#autotoc_md35":[0,0],
 "index.html#autotoc_md36":[0,1],
-"licence.html":[3,2],
+"licence.html":[3,3],
 "output-sinks.html":[1,3],
 "pages.html":[],
 "rationale.html":[3,0],

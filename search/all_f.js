@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['name_0',['name',['../group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88',1,'tts']]],
-  ['new_20contributors_1',['New Contributors',['../changelog.html#autotoc_md5',1,'']]],
-  ['new_20features_2',['New Features',['../changelog.html#autotoc_md4',1,'New Features'],['../changelog.html#autotoc_md10',1,'New Features']]]
+  ['macros_0',['Macros',['../group__test-basic.html',1,'Basic Tests Macros'],['../group__test-exceptions.html',1,'Exception Tests Macros'],['../group__test-precision.html',1,'Precision Tests Macros'],['../group__test-relation.html',1,'Relation Tests Macros'],['../group__test-sequence.html',1,'Sequence Tests Macros'],['../tts101.html#tuto-macro',1,'Testing Macros'],['../group__test-types.html',1,'Type Tests Macros']]],
+  ['macros_1',['Tests definition macros',['../group__test-scenario.html',1,'']]],
+  ['matters_2',['Why this matters',['../compile-time.html#compile-time-why',1,'']]],
+  ['measurement_3',['Precision Measurement',['../customize.html#customize-precision',1,'']]],
+  ['metric_4',['Precision metric',['../rationale.html#ulp-metric',1,'']]]
 ];

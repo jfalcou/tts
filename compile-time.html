@@ -1,0 +1,232 @@
+<!-- HTML header for doxygen 1.9.5-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>TTS: Compile-Time Discipline</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="godbolt.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript">
+  DoxygenAwesomeTabs.init()
+  DoxygenAwesomeParagraphLink.init()
+  DoxygenAwesomeFragmentCopyButton.init()
+  SendToGodbolt.init("tts","clang1600","-O3 -std=c++20 -DNEDBUG")
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="color.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<a href="https://github.com/jfalcou/tts" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<!-- BEGIN TITLEAREA-->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr  style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
+  <td id="projectalign">
+   <div id="projectname">TTS<span id="projectnumber">&#160;v3.0.0</span>
+   </div>
+   <div id="projectbrief">The Tiny Test System</div>
+  </td>
+ </tr>
+   <tr><td colspan="2" style="padding: 20px 0px 0px 0px;">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- END TITLEAREA-->
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('compile-time.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div><div class="header">
+  <div class="headertitle"><div class="title">Compile-Time Discipline </div></div>
+</div><!--header-->
+<div class="contents">
+<div class="toc"><h3>Table of Contents</h3>
+<ul>
+  <li class="level1">
+    <a href="#compile-time-why">Why this matters </a>
+  </li>
+  <li class="level1">
+    <a href="#compile-time-cost">Headers we avoid, and what they cost </a>
+  </li>
+  <li class="level1">
+    <a href="#compile-time-hypothetical">What it costs if you ever need one anyway </a>
+  </li>
+  <li class="level1">
+    <a href="#compile-time-fine">What's fine to use </a>
+  </li>
+  <li class="level1">
+    <a href="#compile-time-checklist">Before you add a header </a>
+  </li>
+  <li class="level1">
+    <a href="#compile-time-precedent">Precedent in this codebase </a>
+  </li>
+</ul>
+</div>
+<div class="textblock"><h1 class="doxsection"><a class="anchor" id="compile-time-why"></a>
+Why this matters</h1>
+<p>TTS is header-only, and it targets test suites - which typically means dozens or hundreds of small translation units, each <span class="tt">#include &lt;tts/tts.hpp&gt;</span>-ing the whole library on its own. There is no separately-compiled <span class="tt">.o</span> to amortize a header's parsing cost over: every header TTS pulls in is paid, in full, by every test file, in every project that uses it, on every build. This project's own CI matrix alone rebuilds the test suite across more than a dozen compiler/OS/standard-library combinations per pull request - a single heavy header added to a commonly-included file is not a one-time cost, it is a cost multiplied by every one of those builds, forever.</p>
+<p>This is why TTS reimplements small, purpose-built pieces of what it needs (a minimal string type, a monotonic clock, a move-only file wrapper, ...) instead of reaching for the equivalent standard library facility: the value proposition of a <em>tiny</em> test system depends on it staying cheap to include.</p>
+<h1 class="doxsection"><a class="anchor" id="compile-time-cost"></a>
+Headers we avoid, and what they cost</h1>
+<p>Intuition about which headers are "heavy" is unreliable - some innocuous-looking ones aren't free, and some that look expensive on paper measure as free in practice. Only measuring settles it. The numbers below come from timing a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit with and without each header added, <span class="tt">g++ 13</span> and <span class="tt">clang++ 18</span>, <span class="tt">-std=c++20</span>, best-of-8 runs (see <a class="el" href="#compile-time-checklist" title="Before you add a header">Before you add a header</a> for the exact method):</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">Added cost (g++)  </th><th class="markdownTableHeadNone">Added cost (clang++)  </th><th class="markdownTableHeadNone">Avoided via  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;chrono&gt;</span>  </td><td class="markdownTableBodyNone">+460ms (~4x)  </td><td class="markdownTableBodyNone">+680ms (~6x)  </td><td class="markdownTableBodyNone"><span class="tt">tools/clock.hpp</span>'s <span class="tt">now_ns()</span>, built on <span class="tt">clock_gettime</span>/<span class="tt">QueryPerformanceCounter</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;memory&gt;</span>  </td><td class="markdownTableBodyNone">+170ms (~2x)  </td><td class="markdownTableBodyNone">+210ms (~2.5x)  </td><td class="markdownTableBodyNone"><span class="tt">tools/file.hpp</span>'s <span class="tt">file_guard</span>, a hand-rolled move-only RAII wrapper instead of <span class="tt">std::unique_ptr</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;sstream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+190ms  </td><td class="markdownTableBodyNone"><span class="tt">tools/text.hpp</span> builds strings via <span class="tt">malloc</span>/<span class="tt">snprintf</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;iostream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+170ms  </td><td class="markdownTableBodyNone">output goes through <span class="tt">FILE*</span>/<span class="tt">fputs</span>, not <span class="tt">std::cout</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;functional&gt;</span>  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">never - <span class="tt">tools/callable.hpp</span>'s type-erased <span class="tt">callable</span> is what every single <span class="tt"><a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="Introduces a new test scenario and registers it into the current test driver.">TTS_CASE</a></span> body is wrapped in, the hottest path in the whole library, so this one doesn't get a "genuinely needed" exception  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;string&gt;</span>  </td><td class="markdownTableBodyNone">+90ms  </td><td class="markdownTableBodyNone">+110ms  </td><td class="markdownTableBodyNone"><a class="el" href="structtts_1_1text.html" title="tts::text">tts::text</a> is TTS's own minimal string type  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;unordered_map&gt;</span>  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone">avoided unless genuinely needed  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;vector&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone"><span class="tt">tools/buffer.hpp</span>'s <span class="tt">tts::buffer</span>, a minimal <span class="tt">malloc</span>-based dynamic array  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;map&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">avoided unless genuinely needed  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">~0ms (noise)  </td><td class="markdownTableBodyNone">~0ms (noise)  </td><td class="markdownTableBodyNone">fine to use - see below  </td></tr>
+</table>
+<h1 class="doxsection"><a class="anchor" id="compile-time-hypothetical"></a>
+What it costs if you ever need one anyway</h1>
+<p>TTS doesn't need the two headers below for anything today, so there's no "avoided via" to point at - but if a future feature genuinely calls for one, here's what you'd be signing up for. Measure again before merging: these numbers drift with compiler version, and being unused today doesn't make them free tomorrow.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">Added cost (g++)  </th><th class="markdownTableHeadNone">Added cost (clang++)  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;regex&gt;</span>  </td><td class="markdownTableBodyNone">+270ms (~3x)  </td><td class="markdownTableBodyNone">+350ms (~3.5x)  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;thread&gt;</span>  </td><td class="markdownTableBodyNone">+200ms (~2.3x)  </td><td class="markdownTableBodyNone">+240ms (~2.8x)  </td></tr>
+</table>
+<h1 class="doxsection"><a class="anchor" id="compile-time-fine"></a>
+What's fine to use</h1>
+<p>Being on this page isn't a blanket ban on the standard library - it's a reminder to check before assuming. Two examples that already got measured and cleared:</p>
+<ul>
+<li><span class="tt">&lt;array&gt;</span> measures as free (no cost above run-to-run noise) with both compilers above, and is used where a bounded, compile-time-sized container earns its keep.</li>
+<li><span class="tt">&lt;windows.h&gt;</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span> and included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, was measured on real <span class="tt">cl.exe</span> and found free relative to an empty translation unit - lighter, in fact, than the fragile forward-declare-the-three-functions-we-need workaround that seemed safer on paper. Platform-gated code still gets measured on that platform, not assumed safe or assumed expensive.</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="compile-time-checklist"></a>
+Before you add a header</h1>
+<ol type="1">
+<li>Check whether what you need is already available. <span class="tt">engine/deps.hpp</span> is included by essentially every TTS header and already pulls in <span class="tt">&lt;cstdio&gt;</span>, <span class="tt">&lt;cstdlib&gt;</span>, <span class="tt">&lt;cstring&gt;</span>, <span class="tt">&lt;type_traits&gt;</span>, <span class="tt">&lt;utility&gt;</span>, <span class="tt">&lt;initializer_list&gt;</span>, <span class="tt">&lt;cassert&gt;</span>, <span class="tt">&lt;bit&gt;</span>, <span class="tt">&lt;compare&gt;</span>, <span class="tt">&lt;concepts&gt;</span>, <span class="tt">&lt;cstdint&gt;</span>, <span class="tt">&lt;limits&gt;</span> and <span class="tt">&lt;new&gt;</span> - reusing one of those costs nothing further.</li>
+<li>If a new header genuinely seems necessary, measure it, don't guess. Write two near-identical translation units, one with the header and one without, and time both: <div class="fragment"><div class="line">time g++ -std=c++20 -I include -c file.cpp -o /dev/null</div>
+</div><!-- fragment --> Repeat several times (5-8 runs is usually enough to see past scheduler noise) and compare the best or average time against the baseline. Do this on more than one compiler if you can - the table above shows the same header can cost meaningfully different amounts on <span class="tt">g++</span> versus <span class="tt">clang++</span>.</li>
+<li>For a change spread across several files, <span class="tt">git worktree add ../tts-baseline main</span> gives you an untouched copy of <span class="tt">main</span> to diff against without disturbing your own working tree - build and time the same representative translation unit from both trees.</li>
+<li>Report the actual numbers in the pull request. "I checked and it's fine" asks a reviewer to either trust that blindly or redo the measurement themselves; the before/after numbers let them just read the answer.</li>
+</ol>
+<h1 class="doxsection"><a class="anchor" id="compile-time-precedent"></a>
+Precedent in this codebase</h1>
+<p>A few places in TTS exist specifically because of a header that didn't clear this bar - useful reading before writing a new one from scratch:</p>
+<ul>
+<li><span class="tt">tools/clock.hpp</span> - a portable monotonic-nanosecond timer, not <span class="tt">std::chrono</span>.</li>
+<li><span class="tt">tools/file.hpp</span> - <span class="tt">file_guard</span>, a move-only RAII <span class="tt">FILE*</span> wrapper, not <span class="tt">std::unique_ptr</span>.</li>
+<li><span class="tt">tools/text.hpp</span> - <span class="tt"><a class="el" href="structtts_1_1text.html" title="Lightweight string-like object.">tts::text</a></span>, a minimal <span class="tt">malloc</span>/<span class="tt">snprintf</span>-based string type, not <span class="tt">std::string</span>. </li>
+</ul>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- HTML footer for doxygen 1.8.20-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+  </ul>
+</div>
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</body>
+</html>

@@ -59,6 +59,7 @@ var NAVTREE =
     ] ],
     [ "Informations", "usergroup5.html", [
       [ "Rationale", "rationale.html", null ],
+      [ "Compile-Time Discipline", "compile-time.html", null ],
       [ "Changelog", "changelog.html", null ],
       [ "Licence", "licence.html", null ]
     ] ]

@@ -1586,6 +1586,17 @@
     <filename>cli.html</filename>
   </compound>
   <compound kind="page">
+    <name>compile-time</name>
+    <title>Compile-Time Discipline</title>
+    <filename>compile-time.html</filename>
+    <docanchor file="compile-time.html" title="Why this matters">compile-time-why</docanchor>
+    <docanchor file="compile-time.html" title="Headers we avoid, and what they cost">compile-time-cost</docanchor>
+    <docanchor file="compile-time.html" title="What it costs if you ever need one anyway">compile-time-hypothetical</docanchor>
+    <docanchor file="compile-time.html" title="What&apos;s fine to use">compile-time-fine</docanchor>
+    <docanchor file="compile-time.html" title="Before you add a header">compile-time-checklist</docanchor>
+    <docanchor file="compile-time.html" title="Precedent in this codebase">compile-time-precedent</docanchor>
+  </compound>
+  <compound kind="page">
     <name>customize</name>
     <title>Customizing TTS Behaviour</title>
     <filename>customize.html</filename>
