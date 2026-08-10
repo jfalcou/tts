@@ -28,7 +28,7 @@ runs:
       env:
         PRESET: ${{ inputs.preset }}
         CONFIG: ${{ inputs.config }}
-      run: ctest --preset "$PRESET" --build-config "$CONFIG" -j 2
+      run: ctest --preset "$PRESET" --build-config "$CONFIG" -j 2 --output-on-failure
 
     # MemCheck puts ctest in a mode that is not compatible with how presets are
     # currently made. This is a workaround
