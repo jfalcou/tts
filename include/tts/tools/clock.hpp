@@ -21,11 +21,7 @@
 
 namespace tts::_
 {
-  // Monotonic timestamp in nanoseconds, for measuring elapsed durations between two calls - never
-  // a meaningful absolute point in time on its own. Not std::chrono: measured empirically at
-  // ~0.55-0.6s (5-6x) of extra compile time per translation unit, unacceptable in a header
-  // included by every user's test binary. windows.h with WIN32_LEAN_AND_MEAN/NOMINMAX measured
-  // as free (no significant cost vs. an empty translation unit) with cl.exe.
+  // Monotonic elapsed-time only, not std::chrono - see doc/compile_time.hpp.
   inline unsigned long long now_ns()
   {
 #if defined(_WIN32)
@@ -43,10 +39,7 @@ namespace tts::_
 #endif
   }
 
-  // Picks whichever of ns/us/ms/s keeps the displayed value in a readable range, instead of a
-  // fixed unit that reads as "0.000ms" for a trivial test or "15455566.123ms" for a slow suite.
-  // Thresholds sit half a displayed-digit below each power of 1000, so a value that would round
-  // up to e.g. "1000.000 ms" bumps to the next unit ("1.000 s") instead of showing four digits.
+  // Thresholds sit just below each power of 1000 so rounding can't show e.g. "1000.000 ms".
   inline ::tts::text format_duration(double duration_ns)
   {
     if(duration_ns < 999.5) return ::tts::text {"%.0f ns", duration_ns};

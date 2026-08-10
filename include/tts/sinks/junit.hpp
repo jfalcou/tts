@@ -12,8 +12,7 @@
 
 namespace tts::_
 {
-  // Escapes t for embedding in XML text/attribute content - test names and failure messages are
-  // arbitrary user text, so this is the only thing standing between them and invalid XML.
+  // Test names and failure messages are arbitrary user text - this is what keeps them valid XML.
   inline ::tts::text xml_escape(::tts::text const& t)
   {
     ::tts::text out;
@@ -27,8 +26,7 @@ namespace tts::_
       case '"': out += "&quot;"; break;
       case '\'': out += "&apos;"; break;
       default:
-        // XML 1.0 forbids raw control characters outright (no valid escape for them) except
-        // tab/newline/CR - drop the rest instead of producing a document no parser can read.
+        // XML 1.0 has no valid escape for raw control chars except tab/newline/CR - drop the rest.
         if(static_cast<unsigned char>(c) >= 0x20 || c == '\t' || c == '\n' || c == '\r')
           out += ::tts::text {"%c", c};
         break;
@@ -84,8 +82,7 @@ namespace tts
                           text const&           message,
                           [[maybe_unused]] bool fatal) override
     {
-      // location is "[file:line]" (see tts::_::source_location) - strip the brackets to match
-      // tts::diagnostics_sink's own "file:line: message" convention.
+      // Strip the brackets to match tts::diagnostics_sink's "file:line: message" convention.
       char const* loc = location.data();
       std::size_t len = strlen(loc); // NOSONAR - loc always comes from a well-formed tts::text
 

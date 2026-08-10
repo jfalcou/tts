@@ -55,10 +55,7 @@ namespace tts::_
 
       auto& out      = ::tts::output();
 
-      // Fires before separator() too, not just before "Results:" - colorized_sink keeps a color
-      // active across several consecutive lines until the next hook, so this also (deliberately)
-      // colors the separator, and overwrites any color a sink left dangling from the last test if
-      // that test's own closing line was suppressed by -q.
+      // Also cleans up a color colorized_sink left dangling by -q, not just "Results:".
       out.suite_finished(failure_count, invalid_count);
 
       ::tts::_::separator();
@@ -99,15 +96,11 @@ namespace tts::_
                   ::tts::_::format_duration(static_cast<double>(total_duration_ns)).data(),
                   ::tts::_::format_duration(avg_duration_ns).data());
 
-      // A shard landing on zero tests is an expected partition outcome, not a build/
-      // registration bug, so --shard implicitly behaves like --allow-empty here.
+      // A shard landing on zero tests is expected, not a bug - behaves like --allow-empty here.
       if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
         return 1;
 
-      // No explicit fails/invalids given: fall back to per-case expected-outcome tracking
-      // (TTS_XFAIL/TTS_MAYFAIL/TTS_XINVALID) instead of the raw success count - for a plain,
-      // untagged suite this is equivalent, since only a case that didn't pass raises
-      // unexpected_count.
+      // No explicit fails/invalids: unexpected_count alone decides pass/fail.
       if(!fails && !invalids) return unexpected_count == 0 ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }

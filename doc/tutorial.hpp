@@ -41,7 +41,7 @@
 
   Notice the `#define TTS_MAIN` line. This is used to notify **TTS** that the current translation unit will contain
   the **TTS** main entry point. You can use **TTS** in multiple translation units, but only one of them must have the
-  @ref TTS_MAIN macro enabled.
+  @ref TTS_MAIN macro enabled.
 
   The unit test reports the total number of tests performed, the number of passing tests, the number of failing tests
   and the number of invalid tests. In this case, unsurprisingly, our empty test is reported as invalid, as we consider

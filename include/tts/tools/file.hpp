@@ -13,10 +13,7 @@
 
 namespace tts::_
 {
-  // Move-only RAII wrapper around FILE*, closing it on destruction - so a caller's file stays
-  // closed on every return path, present or future, without having to remember to do it by hand
-  // at each one. Not std::unique_ptr: this project avoids <memory> for compile-time budget
-  // reasons (see doc/rationale.hpp).
+  // Not std::unique_ptr: avoids <memory> - see doc/compile_time.hpp.
   TTS_DISABLE_WARNING_PUSH
   TTS_DISABLE_WARNING_CRT_SECURE
   class file_guard

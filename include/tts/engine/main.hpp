@@ -80,8 +80,7 @@ namespace tts::_
 //======================================================================================================================
 namespace tts::_
 {
-  // Shared by report_fail/report_fatal: outside of verbose mode, the failing type isn't shown
-  // anywhere else, so it gets reported here instead.
+  // Shared by report_fail/report_fatal - the only place the failing type shows up outside verbose.
   void report_type_hint(::tts::text const& type)
   {
     if(!::tts::is_verbose() && !type.is_empty())
@@ -133,10 +132,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     return 1;
   }
 
-  // --shard only makes sense for the default "everything that ran must pass" driver: a custom
-  // driver's caller typically expects a fixed, whole-suite fail/invalid count from
-  // tts::report(fails, invalids), which round-robin partitioning has no way to redistribute
-  // correctly, so --shard is a no-op there instead of risking a spurious pass or failure.
+  // No-op for a custom driver: tts::report(fails, invalids) expects the whole suite's count.
   if constexpr(!::tts::_::use_main) shard.active = false;
 
   if(::tts::arguments()("--dry"))
@@ -168,17 +164,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
     }
   }
 
-  // Format (--sink) and destination (--capture) are orthogonal: every candidate sink below
-  // targets capture_target, so --sink=X --capture=path writes X-formatted output to the file
-  // exactly like --sink=X alone writes it to stdout.
+  // --sink and --capture are orthogonal - every candidate sink below targets capture_target.
   ::tts::gathering_sink capture_sink;
   ::tts::output_sink& capture_target = capture_file ? static_cast<::tts::output_sink&>(capture_sink)
                                                     : ::tts::output_handler::default_sink();
 
-  // Like --shard, --sink only makes sense for the default TTS_MAIN driver: a custom driver
-  // already manages its own sink lifecycle (installing it, dumping accumulate-style ones, ...),
-  // so letting --sink install a different one out from under it, or finish() below fire on
-  // whatever it installed, would fight that instead of helping.
+  // Like --shard, no-op for a custom driver: it already manages its own sink lifecycle.
   ::tts::text sink_name = ::tts::arguments().value<::tts::text>("--sink");
   if constexpr(!::tts::_::use_main) sink_name = ::tts::text {};
 
@@ -196,8 +187,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::json_sink        json_candidate {capture_target};
   ::tts::junit_sink       junit_candidate {capture_target};
 
-  // Neither flag given: leave whatever sink the caller already installed alone, exactly as
-  // before --sink existed - only touch output().sink() when there's an actual reason to.
+  // Neither flag given: leave whatever sink is already installed alone.
   if(sink_name.is_empty() && capture_file) ::tts::output().sink(capture_sink);
   else if(sink_name == "colored") ::tts::output().sink(colorized_candidate);
   else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
@@ -234,8 +224,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       ::tts::output().flush();
 
-      // Always measured, regardless of --verbose: sinks (and the aggregate Total Time: line)
-      // need it even when the per-test text display below doesn't show it.
+      // Always measured regardless of --verbose - sinks and the Total Time: line need it either way.
       auto start_ns = ::tts::_::now_ns();
       t();
       auto duration_ns = ::tts::_::now_ns() - start_ns;
@@ -246,8 +235,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       bool invalid                             = (test_count == ::tts::global_runtime.test_count);
       bool passed = !invalid && (failure_count == ::tts::global_runtime.failure_count);
 
-      // What actually happened (invalid/passed above) never changes based on the case's tag -
-      // only whether that actual result is what the case itself declared to expect does.
+      // invalid/passed reflect what happened, not the tag - only the comparison below does.
       bool matches_expectation = false;
       using enum ::tts::expected_outcome;
       switch(t.tag)
@@ -306,10 +294,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   }
   catch(::tts::_::fatal_signal&)
   {
-    // The aborted case's own tag was never compared against its (nonexistent) actual outcome -
-    // t() never returned, so the driver loop's per-case bookkeeping above never ran for it. A
-    // fatal abort is always unexpected for the suite regardless of that case's tag, so count it
-    // here instead - otherwise a suite that aborts via TTS_FATAL could still report success.
+    // t() never returned, so per-case bookkeeping above never ran - count the abort here instead.
     ::tts::global_runtime.unexpected();
 
     ::tts::output().suite_aborted();
@@ -319,8 +304,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
                               static_cast<int>(nb_tests - done_tests - 1));
   }
 
-  // finish() is part of the same TTS_MAIN-only convenience as --sink above: a custom driver's own
-  // code decides when (or whether) to dump an accumulate-style sink it installed itself.
+  // finish() is TTS_MAIN-only, like --sink - a custom driver decides for itself when to dump its own sink.
   int exit_code = 0;
   if constexpr(::tts::_::use_main)
   {
