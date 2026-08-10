@@ -33,25 +33,27 @@ namespace tts::_
     file_guard& operator=(file_guard const&) = delete;
 
     file_guard(file_guard&& other) noexcept
-        : file_(other.file_)
+        : file_guard()
     {
-      other.file_ = nullptr;
+      swap(other);
     }
 
     file_guard& operator=(file_guard&& other) noexcept
     {
-      if(this != &other)
-      {
-        close();
-        file_       = other.file_;
-        other.file_ = nullptr;
-      }
+      file_guard {TTS_MOVE(other)}.swap(*this);
       return *this;
     }
 
     ~file_guard()
     {
       close();
+    }
+
+    void swap(file_guard& other) noexcept
+    {
+      FILE* tmp   = file_;
+      file_       = other.file_;
+      other.file_ = tmp;
     }
 
     FILE* get() const
