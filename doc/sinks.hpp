@@ -55,11 +55,20 @@
 
   Or, without a custom driver: `./my_test --sink=colored`.
 
-  A failing run then looks like the usual TTS output, except `[PASSED]` lines are wrapped in
-  `\033[32m...\033[0m` (green), failure/fatal lines in `\033[31m...\033[0m` (red), the `Results:`
-  line and separator in `\033[1m...\033[0m` (bold), and each of its outcome segments in
-  `\033[1;32m`/`\033[1;31m`/`\033[1;33m` (bold green/red/yellow) - exactly what a terminal needs
-  to render them in color.
+  A run with one passing, one invalid and one failing case then looks like this:
+
+  @htmlonly
+  <pre style="background-color:var(--fragment-background);color:var(--fragment-foreground);
+  padding:10px;border-radius:6px;font-family:var(--font-family-monospace);font-size:13px;
+  line-height:1.4;overflow-x:auto;">TEST: 'Check that expectation can be met'
+  <span class="ansi-green">TEST: 'Check that expectation can be met' - [PASSED]</span>
+  TEST: 'Check invalid detection'
+  <span class="ansi-yellow">  [!!]: EMPTY TEST CASE</span>
+  TEST: 'Check that expectation fails'
+  <span class="ansi-red">  [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.</span>
+  <span class="ansi-bold">--------------------------------------------------------------------------------
+  Results: 3 tests <span class="ansi-green">- 1/3 (33.33%) success </span><span class="ansi-red">- 1/3 (33.33%) failure </span><span class="ansi-yellow">- 1/3 (33.33%) invalid </span></span></pre>
+  @endhtmlonly
 
   # tts::tap_sink
 
@@ -89,7 +98,7 @@
   # tts::diagnostics_sink
 
   Wraps a target sink, forwarding every message unchanged, and additionally prints one
-  `file:line: error: message` / `file:line: fatal error: message` line per failing/fatal
+  `path:line: error: message` / `path:line: fatal error: message` line per failing/fatal
   assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's
   quickfix, ...) can jump straight to it. `assertion_failed()` fires before its corresponding
   text, so the diagnostic line prints first; it still fires under `-q`, when that raw line is
