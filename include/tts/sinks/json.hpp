@@ -10,6 +10,9 @@
 
 #include <tts/tools/output.hpp>
 
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
+
 namespace tts::_
 {
   // Escapes t for embedding in a JSON string literal - test names and failure messages are
@@ -21,8 +24,8 @@ namespace tts::_
     {
       switch(c)
       {
-      case '"': out += "\\\""; break;
-      case '\\': out += "\\\\"; break;
+      case '"': out += R"(\")"; break;
+      case '\\': out += R"(\\)"; break;
       case '\n': out += "\\n"; break;
       case '\r': out += "\\r"; break;
       case '\t': out += "\\t"; break;
@@ -85,7 +88,7 @@ namespace tts
       // file from line so consumers get a real integer instead of a string to parse themselves.
       char const* loc      = location.data();
       std::size_t len      = strlen(loc); // NOSONAR - loc always comes from a well-formed tts::text
-      text        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};
+      auto        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};
 
       char const* colon    = strrchr(stripped.data(), ':'); // NOSONAR - stripped always has one
       text        file =
@@ -94,8 +97,8 @@ namespace tts
       if(colon) sscanf(colon + 1, "%d", &line); // NOSONAR - colon+1 is always digits here
 
       if(!current_failures_.is_empty()) current_failures_ += ",";
-      current_failures_ += text {"{\"location\":{\"file\":\"%s\",\"line\":%d},\"message\":\"%s\","
-                                 "\"fatal\":%s}",
+      current_failures_ += text {R"({"location":{"file":"%s","line":%d},"message":"%s",)"
+                                 R"("fatal":%s})",
                                  _::json_escape(file).data(),
                                  line,
                                  _::json_escape(message).data(),
@@ -107,14 +110,22 @@ namespace tts
                        bool               invalid,
                        unsigned long long duration_ns) override
     {
-      char const* status = invalid ? "invalid" : passed ? "passed" : "failed";
-      if(invalid) ++invalid_count_;
-      else if(passed) ++passed_count_;
+      char const* status = "failed";
+      if(invalid)
+      {
+        status = "invalid";
+        ++invalid_count_;
+      }
+      else if(passed)
+      {
+        status = "passed";
+        ++passed_count_;
+      }
       else ++failed_count_;
       total_duration_ns_ += duration_ns;
 
       if(!body_.is_empty()) body_ += ",";
-      body_ += text {"{\"name\":\"%s\",\"status\":\"%s\",\"duration_ns\":%llu,\"failures\":[%s]}",
+      body_ += text {R"({"name":"%s","status":"%s","duration_ns":%llu,"failures":[%s]})",
                      _::json_escape(name).data(),
                      status,
                      duration_ns,
@@ -127,8 +138,8 @@ namespace tts
     text render() const
     {
       unsigned long long total = passed_count_ + failed_count_ + invalid_count_;
-      return text {"{\"tests\":[%s],\"summary\":{\"total\":%llu,\"passed\":%llu,\"failed\":%llu,"
-                   "\"invalid\":%llu,\"duration_ns\":%llu}}",
+      return text {R"({"tests":[%s],"summary":{"total":%llu,"passed":%llu,"failed":%llu,)"
+                   R"("invalid":%llu,"duration_ns":%llu}})",
                    body_.data(),
                    total,
                    passed_count_,
@@ -178,3 +189,5 @@ namespace tts
     unsigned long long total_duration_ns_ = 0;
   };
 }
+
+TTS_DISABLE_WARNING_POP

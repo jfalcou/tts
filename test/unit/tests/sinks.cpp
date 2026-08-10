@@ -106,10 +106,8 @@ int main(int argc, char const** argv)
     ok =
     ok && (strstr(content, "\"message\":\"Expression: 1 == 2 evaluates to false.\"") != // NOSONAR
            nullptr);
-    ok =
-    ok && (strstr(content,
-                  "\"summary\":{\"total\":2,\"passed\":1,\"failed\":1,\"invalid\":0,") != // NOSONAR
-           nullptr);
+    char const* summary = "\"total\":2,\"passed\":1,\"failed\":1,\"invalid\":0";
+    ok                  = ok && (strstr(content, summary) != nullptr); // NOSONAR
   }
 
   return ok ? 0 : 1;
