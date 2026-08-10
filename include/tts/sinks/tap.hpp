@@ -50,7 +50,10 @@ namespace tts
       // Intentionally empty: TAP output is built entirely from test_finished() below.
     }
 
-    void test_finished(text const& name, bool passed, [[maybe_unused]] bool invalid) override
+    void test_finished(text const&                         name,
+                       bool                                passed,
+                       [[maybe_unused]] bool               invalid,
+                       [[maybe_unused]] unsigned long long duration_ns) override
     {
       ++count_;
       body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}

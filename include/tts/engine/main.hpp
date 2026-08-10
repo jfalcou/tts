@@ -14,6 +14,7 @@
 #include <tts/engine/environment.hpp>
 #include <tts/engine/shard.hpp>
 #include <tts/engine/sink_selection.hpp>
+#include <tts/tools/clock.hpp>
 #include <tts/tools/file.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/random.hpp>
@@ -228,24 +229,51 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
 
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       ::tts::output().flush();
+
+      // Always measured, regardless of --verbose: sinks (and the aggregate Total Time: line)
+      // need it even when the per-test text display below doesn't show it.
+      auto start_ns = ::tts::_::now_ns();
       t();
+      auto duration_ns = ::tts::_::now_ns() - start_ns;
       done_tests++;
 
-      bool invalid = (test_count == ::tts::global_runtime.test_count);
-      bool passed  = !invalid && (failure_count == ::tts::global_runtime.failure_count);
+      ::tts::global_runtime.total_duration_ns += duration_ns;
+
+      bool invalid                             = (test_count == ::tts::global_runtime.test_count);
+      bool passed = !invalid && (failure_count == ::tts::global_runtime.failure_count);
 
       if(invalid) ::tts::global_runtime.invalid();
 
-      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
+      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid, duration_ns);
+
+      ::tts::text duration_txt = ::tts::_::format_duration(static_cast<double>(duration_ns));
 
       if(invalid)
       {
-        if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
+        if(!::tts::is_quiet())
+        {
+          ::tts::text line = ::tts::is_verbose()
+                             ? ::tts::text {"  [!!]: EMPTY TEST CASE (%s)", duration_txt.data()}
+                             : ::tts::text {"  [!!]: EMPTY TEST CASE"};
+          ::tts::output().writeln(line);
+        }
         ::tts::output().flush();
       }
       else if(passed)
       {
-        if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
+        if(!::tts::is_quiet())
+        {
+          ::tts::text line =
+          ::tts::is_verbose()
+          ? ::tts::text {"TEST: '%s' - [PASSED] (%s)", t.name, duration_txt.data()}
+          : ::tts::text {"TEST: '%s' - [PASSED]", t.name};
+          ::tts::output().writeln(line);
+        }
+        ::tts::output().flush();
+      }
+      else if(::tts::is_verbose() && !::tts::is_quiet())
+      {
+        ::tts::output().writeln("TEST: '%s' - (%s)", t.name, duration_txt.data());
         ::tts::output().flush();
       }
     }
