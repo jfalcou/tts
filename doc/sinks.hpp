@@ -34,7 +34,7 @@
   format sink (JSON, JUnit XML, ...), which would need to assemble a single well-formed document
   with its own schema instead of just lines of text.
 
-  ## tts::colorized_sink
+  ## %tts::colorized_sink
 
   Wraps a target sink (`tts::output_handler::default_sink()` by default), coloring pass/fail/
   invalid lines and the `Results: ...` summary with ANSI escapes - forwarding everything else
@@ -66,7 +66,7 @@
   Results: 3 tests <span class="ansi-green">- 1/3 (33.33%) success </span><span class="ansi-red">- 1/3 (33.33%) failure </span><span class="ansi-yellow">- 1/3 (33.33%) invalid </span></span></pre>
   @endhtmlonly
 
-  ## tts::tap_sink
+  ## %tts::tap_sink
 
   [TAP](https://testanything.org/) (Test Anything Protocol) is a simple, language-agnostic text
   format for reporting test results, understood by many CI dashboards and test harnesses.
@@ -94,7 +94,7 @@
   not ok 2 - Check that expectation fails
   @endcode
 
-  ## tts::diagnostics_sink
+  ## %tts::diagnostics_sink
 
   Wraps a target sink, forwarding every message unchanged, and additionally prints one
   `path:line: error: message` / `path:line: fatal error: message` line per failing/fatal
