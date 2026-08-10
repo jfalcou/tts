@@ -119,8 +119,5 @@
   expect.cpp:15: error: Expression: 1 == 2 evaluates to false.
     [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.
   @endcode
-
-  @see tts::output_sink
-  @see tts::output_handler
 **/
 //==================================================================================================
