@@ -9,5 +9,6 @@ var searchData=
   ['boolean_5ftype_6',['boolean_type',['../structtts_1_1boolean__type.html',1,'tts']]],
   ['bradimore_7',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]],
   ['bradley_8',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]],
-  ['bug_20fixes_9',['Bug Fixes',['../changelog.html#autotoc_md3',1,'Bug Fixes'],['../changelog.html#autotoc_md11',1,'Bug Fixes']]]
+  ['bug_20fixes_9',['Bug Fixes',['../changelog.html#autotoc_md3',1,'Bug Fixes'],['../changelog.html#autotoc_md11',1,'Bug Fixes']]],
+  ['built_20in_20output_20sinks_10',['Built-in Output Sinks',['../output-sinks.html',1,'']]]
 ];

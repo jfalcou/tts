@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TTS: tts::gathering_sink Struct Reference</title>
+<title>TTS: tts::colorized_sink Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -96,7 +96,7 @@ $(function() { codefold.init(); });
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structtts_1_1gathering__sink.html','','structtts_1_1gathering__sink-members'); });
+$(function(){initNavTree('structtts_1_1colorized__sink.html','','structtts_1_1colorized__sink-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -124,62 +124,41 @@ $(function(){initNavTree('structtts_1_1gathering__sink.html','','structtts_1_1ga
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="structtts_1_1gathering__sink-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">tts::gathering_sink Struct Reference<div class="ingroups"><a class="el" href="group__tools-output.html">Output Utilities</a></div></div></div>
+<a href="structtts_1_1colorized__sink-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">tts::colorized_sink Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> gathering every message into a single retrievable buffer.  
+<p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> gathering every message into a single retrievable buffer. </p>
-<p>Instead of streaming messages as they are written, <a class="el" href="structtts_1_1gathering__sink.html" title="output_sink gathering every message into a single retrievable buffer.">gathering_sink</a> accumulates them into a single <a class="el" href="structtts_1_1text.html" title="Lightweight string-like object.">tts::text</a>. That buffer can be inspected at any time via <a class="el" href="#a9d2a181f4d6a9d95c9e8ff008b0120d2" title="Retrieves everything gathered so far.">content()</a>, streamed out at once via <a class="el" href="#a4d2de4a99c8f613124b9457231a7c142" title="Streams everything gathered so far to stdout, then clears the buffer.">dump()</a>, or discarded via <a class="el" href="#a6c8880d803778193c99a7b95d877a1d1" title="Discards everything gathered so far.">clear()</a>.</p>
+<div class="textblock"><p><a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a> wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes. </p>
+<p>Forwards every message to a target sink (<a class="el" href="classtts_1_1output__handler.html#ae3e6642f0bda714bdd8712a91650d1eb" title="The output_sink TTS uses unless a power user installs another one.">tts::output_handler::default_sink()</a> by default), wrapping a failure/fatal/invalid/pass line, the separator and <span class="tt">Results: ...</span> prefix (bold, color-neutral), or each of its outcome segments (bold green/red/yellow), in the corresponding ANSI color - decided from <a class="el" href="structtts_1_1output__sink.html" title="output_sink">output_sink</a>'s structured hooks, not by parsing text. Opt-in: not every terminal or CI log renders ANSI escapes usefully.</p>
 <h2 class="groupheader">Example </h2>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1gathering__sink.html">tts::gathering_sink</a> <a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>;</div>
-<div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(<a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>);</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// ... run the test suite ...</span></div>
-<div class="line"> </div>
-<div class="line"><a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>.dump();                        <span class="comment">// stream everything gathered so far to stdout</span></div>
-<div class="line"><span class="comment">// or</span></div>
-<div class="line"><a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>.dump(some_other_sink);         <span class="comment">// forward it to another output_sink instead</span></div>
-<div class="line"><span class="comment">// or</span></div>
-<div class="line">do_something_with(<a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">report</a>.content());  <span class="comment">// retrieve it to do something else entirely</span></div>
+<div class="fragment"><div class="line"><a class="code hl_struct" href="structtts_1_1colorized__sink.html">tts::colorized_sink</a> colorized;</div>
+<div class="line"><a class="code hl_function" href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a>().<a class="code hl_function" href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">sink</a>(colorized);</div>
 <div class="ttc" id="aclasstts_1_1output__handler_html_a18bdc2a08396ba4646b54ffc2786eef7"><div class="ttname"><a href="classtts_1_1output__handler.html#a18bdc2a08396ba4646b54ffc2786eef7">tts::output_handler::sink</a></div><div class="ttdeci">void sink(output_sink &amp;s)</div><div class="ttdoc">Installs s as the output_sink every subsequent write goes to.</div><div class="ttdef"><b>Definition</b> output.hpp:360</div></div>
-<div class="ttc" id="agroup__customization-points_html_gaab7070a86258a19d84e431fe122c2e25"><div class="ttname"><a href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">tts::report</a></div><div class="ttdeci">int report(unsigned long long fails, unsigned long long invalids)</div><div class="ttdoc">Test reporting customization point.</div><div class="ttdef"><b>Definition</b> environment.hpp:126</div></div>
 <div class="ttc" id="agroup__tools-output_html_gab7cd9133e9d54bc84a3f33ca93f3ba45"><div class="ttname"><a href="group__tools-output.html#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a></div><div class="ttdeci">output_handler &amp; output()</div><div class="ttdoc">Retrieves the current TTS output_handler.</div><div class="ttdef"><b>Definition</b> output.hpp:395</div></div>
-<div class="ttc" id="astructtts_1_1gathering__sink_html"><div class="ttname"><a href="structtts_1_1gathering__sink.html">tts::gathering_sink</a></div><div class="ttdoc">output_sink gathering every message into a single retrievable buffer.</div><div class="ttdef"><b>Definition</b> output.hpp:221</div></div>
+<div class="ttc" id="astructtts_1_1colorized__sink_html"><div class="ttname"><a href="structtts_1_1colorized__sink.html">tts::colorized_sink</a></div><div class="ttdoc">output_sink wrapping another sink, colorizing pass/fail/fatal lines with ANSI escapes.</div><div class="ttdef"><b>Definition</b> colorized.hpp:34</div></div>
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9124eaa6eed5ab0702d2a16e2ccacc66" id="r_a9124eaa6eed5ab0702d2a16e2ccacc66"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66">assertion_failed</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;location, <a class="el" href="structtts_1_1text.html">text</a> const &amp;message, bool fatal)</td></tr>
-<tr class="memitem:a6c8880d803778193c99a7b95d877a1d1" id="r_a6c8880d803778193c99a7b95d877a1d1"><td class="memItemLeft"><a id="a6c8880d803778193c99a7b95d877a1d1" name="a6c8880d803778193c99a7b95d877a1d1"></a>
-void&#160;</td><td class="memItemRight"><b>clear</b> ()</td></tr>
-<tr class="memdesc:a6c8880d803778193c99a7b95d877a1d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Discards everything gathered so far. <br /></td></tr>
-<tr class="memitem:a9d2a181f4d6a9d95c9e8ff008b0120d2" id="r_a9d2a181f4d6a9d95c9e8ff008b0120d2"><td class="memItemLeft"><a id="a9d2a181f4d6a9d95c9e8ff008b0120d2" name="a9d2a181f4d6a9d95c9e8ff008b0120d2"></a>
-<a class="el" href="structtts_1_1text.html">text</a> const &amp;&#160;</td><td class="memItemRight"><b>content</b> () const</td></tr>
-<tr class="memdesc:a9d2a181f4d6a9d95c9e8ff008b0120d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves everything gathered so far. <br /></td></tr>
-<tr class="memitem:a4d2de4a99c8f613124b9457231a7c142" id="r_a4d2de4a99c8f613124b9457231a7c142"><td class="memItemLeft"><a id="a4d2de4a99c8f613124b9457231a7c142" name="a4d2de4a99c8f613124b9457231a7c142"></a>
-void&#160;</td><td class="memItemRight"><b>dump</b> ()</td></tr>
-<tr class="memdesc:a4d2de4a99c8f613124b9457231a7c142"><td class="mdescLeft">&#160;</td><td class="mdescRight">Streams everything gathered so far to <span class="tt">stdout</span>, then clears the buffer. <br /></td></tr>
-<tr class="memitem:a004222a1ffb1316cab23fa7c17d67de4" id="r_a004222a1ffb1316cab23fa7c17d67de4"><td class="memItemLeft"><a id="a004222a1ffb1316cab23fa7c17d67de4" name="a004222a1ffb1316cab23fa7c17d67de4"></a>
-void&#160;</td><td class="memItemRight"><b>dump</b> (<a class="el" href="structtts_1_1output__sink.html">output_sink</a> &amp;target)</td></tr>
-<tr class="memdesc:a004222a1ffb1316cab23fa7c17d67de4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards everything gathered so far to target, then clears the buffer. <br /></td></tr>
-<tr class="memitem:a81ed096099acf5015d76fb31eff4acff" id="r_a81ed096099acf5015d76fb31eff4acff"><td class="memItemLeft"><a id="a81ed096099acf5015d76fb31eff4acff" name="a81ed096099acf5015d76fb31eff4acff"></a>
-virtual void&#160;</td><td class="memItemRight"><b>flush</b> ()</td></tr>
-<tr class="memdesc:a81ed096099acf5015d76fb31eff4acff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes this sink's destination, if that means anything for it. No-op by default. <br /></td></tr>
-<tr class="memitem:a74ebf02b3020462a3916e8667db58a2a" id="r_a74ebf02b3020462a3916e8667db58a2a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a74ebf02b3020462a3916e8667db58a2a">suite_aborted</a> ()</td></tr>
-<tr class="memitem:afd5d4793ba03fda092974ee32ad41ed9" id="r_afd5d4793ba03fda092974ee32ad41ed9"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afd5d4793ba03fda092974ee32ad41ed9">suite_finished</a> (unsigned long long fail_count, unsigned long long invalid_count)</td></tr>
-<tr class="memitem:afc2c9f4966da5cb2a65b8c9bb8a3d9d2" id="r_afc2c9f4966da5cb2a65b8c9bb8a3d9d2"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">suite_metric</a> (<a class="el" href="group__tools-output.html#gaa00ed0d043ef3899719ef14750d8a7b5">outcome</a> kind, unsigned long long count, unsigned long long total)</td></tr>
-<tr class="memitem:a97ce3b30dc52a9e424f2289c93b1359b" id="r_a97ce3b30dc52a9e424f2289c93b1359b"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">test_finished</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>, bool passed, bool invalid)</td></tr>
-<tr class="memitem:ac8d28651a9c70c0b30c46c9ffaf83bdc" id="r_ac8d28651a9c70c0b30c46c9ffaf83bdc"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1output__sink.html#ac8d28651a9c70c0b30c46c9ffaf83bdc">test_started</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>)</td></tr>
-<tr class="memitem:a5c262543e72018b6795d69fc939fb6cc" id="r_a5c262543e72018b6795d69fc939fb6cc"><td class="memItemLeft"><a id="a5c262543e72018b6795d69fc939fb6cc" name="a5c262543e72018b6795d69fc939fb6cc"></a>
+<tr class="memitem:a806ad2d30a231df71c134781b1eb6ab6" id="r_a806ad2d30a231df71c134781b1eb6ab6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a806ad2d30a231df71c134781b1eb6ab6">assertion_failed</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;location, <a class="el" href="structtts_1_1text.html">text</a> const &amp;message, bool fatal) override</td></tr>
+<tr class="memitem:ae296d9f78a31916ca50674f5fb9579b5" id="r_ae296d9f78a31916ca50674f5fb9579b5"><td class="memItemLeft"><a id="ae296d9f78a31916ca50674f5fb9579b5" name="ae296d9f78a31916ca50674f5fb9579b5"></a>
+void&#160;</td><td class="memItemRight"><b>flush</b> () override</td></tr>
+<tr class="memdesc:ae296d9f78a31916ca50674f5fb9579b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes this sink's destination, if that means anything for it. No-op by default. <br /></td></tr>
+<tr class="memitem:abbffb026c32dc561cd1bd179986e9fe8" id="r_abbffb026c32dc561cd1bd179986e9fe8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abbffb026c32dc561cd1bd179986e9fe8">suite_aborted</a> () override</td></tr>
+<tr class="memitem:afd2a5e3f66da8ecadd40f3c8b9e5b782" id="r_afd2a5e3f66da8ecadd40f3c8b9e5b782"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afd2a5e3f66da8ecadd40f3c8b9e5b782">suite_finished</a> (unsigned long long fail_count, unsigned long long invalid_count) override</td></tr>
+<tr class="memitem:a348a2708a45e8b51340c39df6ec14efc" id="r_a348a2708a45e8b51340c39df6ec14efc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a348a2708a45e8b51340c39df6ec14efc">suite_metric</a> (<a class="el" href="group__tools-output.html#gaa00ed0d043ef3899719ef14750d8a7b5">outcome</a> kind, unsigned long long count, unsigned long long total) override</td></tr>
+<tr class="memitem:abe72692799b7674258c03002c5a36579" id="r_abe72692799b7674258c03002c5a36579"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abe72692799b7674258c03002c5a36579">test_finished</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>, bool passed, bool invalid) override</td></tr>
+<tr class="memitem:aae180344a2ee12d4a12e4f745dae2cc6" id="r_aae180344a2ee12d4a12e4f745dae2cc6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aae180344a2ee12d4a12e4f745dae2cc6">test_started</a> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;<a class="el" href="group__tools-types.html#ga4a803fd6715f8e58dd6ae617651bab88">name</a>) override</td></tr>
+<tr class="memitem:a5cb5722659d032485fe2d2d7042f6470" id="r_a5cb5722659d032485fe2d2d7042f6470"><td class="memItemLeft"><a id="a5cb5722659d032485fe2d2d7042f6470" name="a5cb5722659d032485fe2d2d7042f6470"></a>
 void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="structtts_1_1text.html">text</a> const &amp;t) override</td></tr>
-<tr class="memdesc:a5c262543e72018b6795d69fc939fb6cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes t to this sink's destination. <br /></td></tr>
+<tr class="memdesc:a5cb5722659d032485fe2d2d7042f6470"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes t to this sink's destination. <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a9124eaa6eed5ab0702d2a16e2ccacc66" name="a9124eaa6eed5ab0702d2a16e2ccacc66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9124eaa6eed5ab0702d2a16e2ccacc66">&#9670;&#160;</a></span>assertion_failed()</h2>
+<a id="a806ad2d30a231df71c134781b1eb6ab6" name="a806ad2d30a231df71c134781b1eb6ab6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806ad2d30a231df71c134781b1eb6ab6">&#9670;&#160;</a></span>assertion_failed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,7 +167,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::assertion_failed </td>
+          <td class="memname">void tts::colorized_sink::assertion_failed </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtts_1_1text.html">text</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>location</em></span>, </td>
         </tr>
@@ -205,18 +184,18 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
+<p>Called once per failing/fatal assertion, always and before the corresponding text (if any - it's suppressed under -q for a plain failure, though never for a fatal one). No-op by default. Not called for passing assertions - <a class="el" href="#abe72692799b7674258c03002c5a36579">test_finished()</a>'s <span class="tt">passed</span> already covers that case, and most consumers of this hook don't want one event per assertion. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a806ad2d30a231df71c134781b1eb6ab6">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03">tts::diagnostics_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66">tts::output_sink</a>.</p>
 
 </div>
 </div>
-<a id="a74ebf02b3020462a3916e8667db58a2a" name="a74ebf02b3020462a3916e8667db58a2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74ebf02b3020462a3916e8667db58a2a">&#9670;&#160;</a></span>suite_aborted()</h2>
+<a id="abbffb026c32dc561cd1bd179986e9fe8" name="abbffb026c32dc561cd1bd179986e9fe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbffb026c32dc561cd1bd179986e9fe8">&#9670;&#160;</a></span>suite_aborted()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -225,7 +204,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::suite_aborted </td>
+          <td class="memname">void tts::colorized_sink::suite_aborted </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -233,18 +212,18 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Called if the suite aborts early due to a <a class="el" href="group__test-basic.html#gacce7003b6dde780e39e20c3fecdc08bb" title="TTS_FATAL">TTS_FATAL</a> failure, before <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report()</a> (and thus <a class="el" href="structtts_1_1output__sink.html#afd5d4793ba03fda092974ee32ad41ed9">suite_finished()</a>) runs. No-op by default. </p>
+<p>Called if the suite aborts early due to a <a class="el" href="group__test-basic.html#gacce7003b6dde780e39e20c3fecdc08bb" title="TTS_FATAL">TTS_FATAL</a> failure, before <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report()</a> (and thus <a class="el" href="#afd2a5e3f66da8ecadd40f3c8b9e5b782">suite_finished()</a>) runs. No-op by default. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#abbffb026c32dc561cd1bd179986e9fe8">tts::colorized_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#a74ebf02b3020462a3916e8667db58a2a">tts::output_sink</a>.</p>
 
 </div>
 </div>
-<a id="afd5d4793ba03fda092974ee32ad41ed9" name="afd5d4793ba03fda092974ee32ad41ed9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd5d4793ba03fda092974ee32ad41ed9">&#9670;&#160;</a></span>suite_finished()</h2>
+<a id="afd2a5e3f66da8ecadd40f3c8b9e5b782" name="afd2a5e3f66da8ecadd40f3c8b9e5b782"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd2a5e3f66da8ecadd40f3c8b9e5b782">&#9670;&#160;</a></span>suite_finished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -253,7 +232,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::suite_finished </td>
+          <td class="memname">void tts::colorized_sink::suite_finished </td>
           <td>(</td>
           <td class="paramtype">unsigned long long</td>          <td class="paramname"><span class="paramname"><em>fail_count</em></span>, </td>
         </tr>
@@ -265,18 +244,18 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 <p>Called once the whole suite has finished running (from <a class="el" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25" title="Test reporting customization point.">tts::report()</a>), with its aggregate outcome, always - even under -q. No-op by default. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#afd2a5e3f66da8ecadd40f3c8b9e5b782">tts::colorized_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#afd5d4793ba03fda092974ee32ad41ed9">tts::output_sink</a>.</p>
 
 </div>
 </div>
-<a id="afc2c9f4966da5cb2a65b8c9bb8a3d9d2" name="afc2c9f4966da5cb2a65b8c9bb8a3d9d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">&#9670;&#160;</a></span>suite_metric()</h2>
+<a id="a348a2708a45e8b51340c39df6ec14efc" name="a348a2708a45e8b51340c39df6ec14efc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a348a2708a45e8b51340c39df6ec14efc">&#9670;&#160;</a></span>suite_metric()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -285,7 +264,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::suite_metric </td>
+          <td class="memname">void tts::colorized_sink::suite_metric </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__tools-output.html#gaa00ed0d043ef3899719ef14750d8a7b5">outcome</a></td>          <td class="paramname"><span class="paramname"><em>kind</em></span>, </td>
         </tr>
@@ -302,18 +281,18 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 <p>Called once per non-zero outcome category, right before its "N/M (P%) &lt;label&gt;" segment is printed as part of the <span class="tt">Results: ...</span> summary. No-op by default. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#a348a2708a45e8b51340c39df6ec14efc">tts::colorized_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">tts::output_sink</a>.</p>
 
 </div>
 </div>
-<a id="a97ce3b30dc52a9e424f2289c93b1359b" name="a97ce3b30dc52a9e424f2289c93b1359b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97ce3b30dc52a9e424f2289c93b1359b">&#9670;&#160;</a></span>test_finished()</h2>
+<a id="abe72692799b7674258c03002c5a36579" name="abe72692799b7674258c03002c5a36579"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe72692799b7674258c03002c5a36579">&#9670;&#160;</a></span>test_finished()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +301,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::test_finished </td>
+          <td class="memname">void tts::colorized_sink::test_finished </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtts_1_1text.html">text</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
@@ -339,18 +318,18 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 <p>Called once a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> has finished running, always and before its corresponding text (if any - suppressed under -q), with its outcome. No-op by default. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#abe72692799b7674258c03002c5a36579">tts::colorized_sink</a>, and <a class="el" href="structtts_1_1tap__sink.html#a0002a63d87841e4b712ad80a20a311ad">tts::tap_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#a97ce3b30dc52a9e424f2289c93b1359b">tts::output_sink</a>.</p>
 
 </div>
 </div>
-<a id="ac8d28651a9c70c0b30c46c9ffaf83bdc" name="ac8d28651a9c70c0b30c46c9ffaf83bdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8d28651a9c70c0b30c46c9ffaf83bdc">&#9670;&#160;</a></span>test_started()</h2>
+<a id="aae180344a2ee12d4a12e4f745dae2cc6" name="aae180344a2ee12d4a12e4f745dae2cc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae180344a2ee12d4a12e4f745dae2cc6">&#9670;&#160;</a></span>test_started()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,7 +338,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void tts::output_sink::test_started </td>
+          <td class="memname">void tts::colorized_sink::test_started </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structtts_1_1text.html">text</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
@@ -367,13 +346,13 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span><span class="mlabel inherited">inherited</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 <p>Called when a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> / <a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a> is about to run. No-op by default - opt-in for sinks that want structured per-test events instead of (or in addition to) parsing the formatted text stream. </p>
 
-<p>Reimplemented in <a class="el" href="structtts_1_1colorized__sink.html#aae180344a2ee12d4a12e4f745dae2cc6">tts::colorized_sink</a>.</p>
+<p>Reimplemented from <a class="el" href="structtts_1_1output__sink.html#ac8d28651a9c70c0b30c46c9ffaf83bdc">tts::output_sink</a>.</p>
 
 </div>
 </div>
@@ -384,7 +363,7 @@ void&#160;</td><td class="memItemRight"><b>write</b> (<a class="el" href="struct
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1gathering__sink.html">gathering_sink</a></li>
+    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1colorized__sink.html">colorized_sink</a></li>
   </ul>
 </div>
 </div> <!-- DOXYSTRAP RELATED -->

@@ -124,6 +124,7 @@ $(function(){initNavTree('group__tools-output.html','',''); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Output Utilities </div></div>
 </div><!--header-->
@@ -142,11 +143,44 @@ Classes</h2></td></tr>
 <tr class="memitem:tts_3A_3Astdout_5Fsink" id="r_tts_3A_3Astdout_5Fsink"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1stdout__sink.html">tts::stdout_sink</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default <a class="el" href="structtts_1_1output__sink.html" title="Customization point for where TTS output actually goes.">output_sink</a>, streaming every message straight to <span class="tt">stdout</span>.  <a href="structtts_1_1stdout__sink.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gaa00ed0d043ef3899719ef14750d8a7b5" id="r_gaa00ed0d043ef3899719ef14750d8a7b5"><td class="memItemLeft">enum class &#160;</td><td class="memItemRight"><a class="el" href="#gaa00ed0d043ef3899719ef14750d8a7b5">tts::outcome</a> </td></tr>
+<tr class="memdesc:gaa00ed0d043ef3899719ef14750d8a7b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The three ways a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> outcome is tallied in the <span class="tt">Results: ...</span> summary.  <a href="#gaa00ed0d043ef3899719ef14750d8a7b5">More...</a><br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:gab7cd9133e9d54bc84a3f33ca93f3ba45" id="r_gab7cd9133e9d54bc84a3f33ca93f3ba45"><td class="memItemLeft"><a class="el" href="classtts_1_1output__handler.html">output_handler</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#gab7cd9133e9d54bc84a3f33ca93f3ba45">tts::output</a> ()</td></tr>
 <tr class="memdesc:gab7cd9133e9d54bc84a3f33ca93f3ba45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the current TTS <a class="el" href="classtts_1_1output__handler.html" title="Centralizes all TTS runtime output and dispatches it to the current output_sink.">output_handler</a>.  <br /></td></tr>
 </table>
+<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
+<a id="gaa00ed0d043ef3899719ef14750d8a7b5" name="gaa00ed0d043ef3899719ef14750d8a7b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa00ed0d043ef3899719ef14750d8a7b5">&#9670;&#160;</a></span>outcome</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#gaa00ed0d043ef3899719ef14750d8a7b5">tts::outcome</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/tools/output.hpp&gt;</code></p>
+
+<p>The three ways a <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> outcome is tallied in the <span class="tt">Results: ...</span> summary. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtts_1_1output__sink.html#afc2c9f4966da5cb2a65b8c9bb8a3d9d2">output_sink::suite_metric</a> </dd></dl>
+
+</div>
+</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="gab7cd9133e9d54bc84a3f33ca93f3ba45" name="gab7cd9133e9d54bc84a3f33ca93f3ba45"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gab7cd9133e9d54bc84a3f33ca93f3ba45">&#9670;&#160;</a></span>output()</h2>

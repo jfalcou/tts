@@ -33,6 +33,128 @@
     <templarg>typename L2</templarg>
   </compound>
   <compound kind="struct">
+    <name>tts::colorized_sink</name>
+    <filename>structtts_1_1colorized__sink.html</filename>
+    <base>tts::output_sink</base>
+    <member kind="function">
+      <type>void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>a806ad2d30a231df71c134781b1eb6ab6</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>ae296d9f78a31916ca50674f5fb9579b5</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>abbffb026c32dc561cd1bd179986e9fe8</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>afd2a5e3f66da8ecadd40f3c8b9e5b782</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>a348a2708a45e8b51340c39df6ec14efc</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>abe72692799b7674258c03002c5a36579</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>aae180344a2ee12d4a12e4f745dae2cc6</anchor>
+      <arglist>(text const &amp;name) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1colorized__sink.html</anchorfile>
+      <anchor>a5cb5722659d032485fe2d2d7042f6470</anchor>
+      <arglist>(text const &amp;t) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tts::diagnostics_sink</name>
+    <filename>structtts_1_1diagnostics__sink.html</filename>
+    <base>tts::output_sink</base>
+    <member kind="function">
+      <type>void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1diagnostics__sink.html</anchorfile>
+      <anchor>a15356d5ab0183990f681e07ba15b5b03</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal) override</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1diagnostics__sink.html</anchorfile>
+      <anchor>a792e71f757af9d2e70be378b4097fd64</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a74ebf02b3020462a3916e8667db58a2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afd5d4793ba03fda092974ee32ad41ed9</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afc2c9f4966da5cb2a65b8c9bb8a3d9d2</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ac8d28651a9c70c0b30c46c9ffaf83bdc</anchor>
+      <arglist>(text const &amp;name)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1diagnostics__sink.html</anchorfile>
+      <anchor>a0463defe1e87083fbcad932cf3191cf3</anchor>
+      <arglist>(text const &amp;t) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tts::filter</name>
     <filename>structtts_1_1filter.html</filename>
     <templarg>template&lt; typename &gt; typename Pred</templarg>
@@ -83,6 +205,27 @@
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
       <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a74ebf02b3020462a3916e8667db58a2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afd5d4793ba03fda092974ee32ad41ed9</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afc2c9f4966da5cb2a65b8c9bb8a3d9d2</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -203,6 +346,27 @@
     </member>
     <member kind="function">
       <type>void</type>
+      <name>suite_aborted</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>aa8bf73dab2eea9cd03887f4ce155c359</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>suite_finished</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a53039ecc1bea7ac341ecd9fcfd2f01b5</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>suite_metric</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>a33cce4b5010e85d17c05abf8da7bd2f6</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
       <name>test_finished</name>
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
       <anchor>ac2c90555ce6036f12586dca2ac645177</anchor>
@@ -281,6 +445,27 @@
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
       <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a74ebf02b3020462a3916e8667db58a2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afd5d4793ba03fda092974ee32ad41ed9</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afc2c9f4966da5cb2a65b8c9bb8a3d9d2</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
@@ -368,6 +553,27 @@
     </member>
     <member kind="function" virtualness="virtual">
       <type>virtual void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a74ebf02b3020462a3916e8667db58a2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afd5d4793ba03fda092974ee32ad41ed9</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afc2c9f4966da5cb2a65b8c9bb8a3d9d2</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
       <name>test_finished</name>
       <anchorfile>structtts_1_1output__sink.html</anchorfile>
       <anchor>a97ce3b30dc52a9e424f2289c93b1359b</anchor>
@@ -386,6 +592,95 @@
       <anchorfile>structtts_1_1stdout__sink.html</anchorfile>
       <anchor>a632effef57bc8f6680ac7927525f7b31</anchor>
       <arglist>(text const &amp;t) override</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>tts::tap_sink</name>
+    <filename>structtts_1_1tap__sink.html</filename>
+    <base>tts::output_sink</base>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>assertion_failed</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a9124eaa6eed5ab0702d2a16e2ccacc66</anchor>
+      <arglist>(text const &amp;location, text const &amp;message, bool fatal)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>adf7651758a0da8c0e813b53dacec8356</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dump</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>ad5e25cdee27327fd819e76af711e31a6</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>dump</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>a84ca0493f51619330fc93bb995b8b4f5</anchor>
+      <arglist>(output_sink &amp;target)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>flush</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a81ed096099acf5015d76fb31eff4acff</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>text</type>
+      <name>render</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>a56cb72dd1c63ce2f714c612f34bd8b9a</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_aborted</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>a74ebf02b3020462a3916e8667db58a2a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_finished</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afd5d4793ba03fda092974ee32ad41ed9</anchor>
+      <arglist>(unsigned long long fail_count, unsigned long long invalid_count)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>suite_metric</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>afc2c9f4966da5cb2a65b8c9bb8a3d9d2</anchor>
+      <arglist>(outcome kind, unsigned long long count, unsigned long long total)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>test_finished</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>a0002a63d87841e4b712ad80a20a311ad</anchor>
+      <arglist>(text const &amp;name, bool passed, bool invalid) override</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual void</type>
+      <name>test_started</name>
+      <anchorfile>structtts_1_1output__sink.html</anchorfile>
+      <anchor>ac8d28651a9c70c0b30c46c9ffaf83bdc</anchor>
+      <arglist>(text const &amp;name)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>write</name>
+      <anchorfile>structtts_1_1tap__sink.html</anchorfile>
+      <anchor>aaf99a598457ca716548be7e144392ef4</anchor>
+      <arglist>(text const &amp;) override</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -775,6 +1070,16 @@
     <class kind="struct">tts::output_sink</class>
     <class kind="class">tts::scoped_sink</class>
     <class kind="struct">tts::stdout_sink</class>
+    <member kind="enumeration">
+      <type></type>
+      <name>tts::outcome</name>
+      <anchorfile>group__tools-output.html</anchorfile>
+      <anchor>gaa00ed0d043ef3899719ef14750d8a7b5</anchor>
+      <arglist></arglist>
+      <enumvalue file="group__tools-output.html" anchor="ggaa00ed0d043ef3899719ef14750d8a7b5a260ca9dd8a4577fc00b7bd5810298076">success</enumvalue>
+      <enumvalue file="group__tools-output.html" anchor="ggaa00ed0d043ef3899719ef14750d8a7b5a3ee28fe1a60c95b89d29317f122c7021">failure</enumvalue>
+      <enumvalue file="group__tools-output.html" anchor="ggaa00ed0d043ef3899719ef14750d8a7b5afedb2d84cafe20862cb4399751a8a7e3">invalid</enumvalue>
+    </member>
     <member kind="function">
       <type>output_handler &amp;</type>
       <name>tts::output</name>
@@ -1254,6 +1559,11 @@
     <docanchor file="setup.html" title="Standalone setup">setup-standalone</docanchor>
     <docanchor file="setup.html" title="CMake FetchContent">setup-fetchcontent</docanchor>
     <docanchor file="setup.html" title="Setup with CPM">setup-cpm</docanchor>
+  </compound>
+  <compound kind="page">
+    <name>output-sinks</name>
+    <title>Built-in Output Sinks</title>
+    <filename>output-sinks.html</filename>
   </compound>
   <compound kind="page">
     <name>tts101</name>

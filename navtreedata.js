@@ -30,6 +30,7 @@ var NAVTREE =
       [ "Setup", "setup.html", null ],
       [ "Getting Started", "tts101.html", null ],
       [ "Command Line Interface", "cli.html", null ],
+      [ "Built-in Output Sinks", "output-sinks.html", null ],
       [ "Customizing TTS", "usergroup1.html", [
         [ "General Behaviour", "customize.html", null ],
         [ "Generators", "group__tools-generators-custom.html", null ],
