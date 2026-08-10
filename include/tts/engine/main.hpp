@@ -252,9 +252,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       {
         if(!::tts::is_quiet())
         {
-          if(::tts::is_verbose())
-            ::tts::output().writeln("  [!!]: EMPTY TEST CASE (%.3fms)", duration_ms);
-          else ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
+          ::tts::text line = ::tts::is_verbose()
+                             ? ::tts::text {"  [!!]: EMPTY TEST CASE (%.3fms)", duration_ms}
+                             : ::tts::text {"  [!!]: EMPTY TEST CASE"};
+          ::tts::output().writeln(line);
         }
         ::tts::output().flush();
       }
@@ -262,9 +263,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       {
         if(!::tts::is_quiet())
         {
-          if(::tts::is_verbose())
-            ::tts::output().writeln("TEST: '%s' - [PASSED] (%.3fms)", t.name, duration_ms);
-          else ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
+          ::tts::text line = ::tts::is_verbose()
+                             ? ::tts::text {"TEST: '%s' - [PASSED] (%.3fms)", t.name, duration_ms}
+                             : ::tts::text {"TEST: '%s' - [PASSED]", t.name};
+          ::tts::output().writeln(line);
         }
         ::tts::output().flush();
       }

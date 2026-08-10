@@ -35,7 +35,8 @@ namespace tts::_
                                            static_cast<double>(freq.QuadPart));
 #else
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
+    clock_gettime(CLOCK_MONOTONIC,
+                  &ts); // NOSONAR - the whole point is avoiding <chrono>, see above
     return static_cast<unsigned long long>(ts.tv_sec) * 1'000'000'000ULL +
            static_cast<unsigned long long>(ts.tv_nsec);
 #endif
