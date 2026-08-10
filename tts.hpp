@@ -821,6 +821,141 @@ namespace tts
   };
 }
 TTS_DISABLE_WARNING_POP
+namespace tts::_
+{
+  inline ::tts::text xml_escape(::tts::text const& t)
+  {
+    ::tts::text out;
+    for(char c: t)
+    {
+      switch(c)
+      {
+      case '&': out += "&amp;"; break;
+      case '<': out += "&lt;"; break;
+      case '>': out += "&gt;"; break;
+      case '"': out += "&quot;"; break;
+      case '\'': out += "&apos;"; break;
+      default:
+        if(static_cast<unsigned char>(c) >= 0x20 || c == '\t' || c == '\n' || c == '\r')
+          out += ::tts::text {"%c", c};
+        break;
+      }
+    }
+    return out;
+  }
+}
+namespace tts
+{
+  struct junit_sink : output_sink
+  {
+    explicit junit_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const&) override
+    {
+    }
+    void assertion_failed(text const&           location,
+                          text const&           message,
+                          [[maybe_unused]] bool fatal) override
+    {
+      char const* loc = location.data();
+      std::size_t len = strlen(loc);
+      if(!current_failures_.is_empty()) current_failures_ += "&#10;";
+      current_failures_ +=
+      text {"%.*s: %s", static_cast<int>(len - 2), loc + 1, _::xml_escape(message).data()};
+      if(first_failure_.is_empty()) first_failure_ = _::xml_escape(message);
+    }
+    void test_finished(text const&        name,
+                       bool               passed,
+                       bool               invalid,
+                       unsigned long long duration_ns) override
+    {
+      if(invalid) ++invalid_count_;
+      else if(passed) ++passed_count_;
+      else ++failed_count_;
+      total_duration_ns_ += duration_ns;
+      auto escaped_name   = _::xml_escape(name);
+      auto seconds        = text {"%.6f", static_cast<double>(duration_ns) / 1'000'000'000.0};
+      if(invalid)
+      {
+        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"><skipped/></testcase>)"
+                       "\n",
+                       escaped_name.data(),
+                       escaped_name.data(),
+                       seconds.data()};
+      }
+      else if(!passed)
+      {
+        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"><failure )"
+                       R"(message="%s">%s</failure></testcase>)"
+                       "\n",
+                       escaped_name.data(),
+                       escaped_name.data(),
+                       seconds.data(),
+                       first_failure_.data(),
+                       current_failures_.data()};
+      }
+      else
+      {
+        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"/>)"
+                       "\n",
+                       escaped_name.data(),
+                       escaped_name.data(),
+                       seconds.data()};
+      }
+      current_failures_ = text {};
+      first_failure_    = text {};
+    }
+    text render() const
+    {
+      unsigned long long total   = passed_count_ + failed_count_ + invalid_count_;
+      double             seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
+      return text {"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                   R"(<testsuites><testsuite name="TTS" tests="%llu" failures="%llu" errors="0")"
+                   R"( skipped="%llu" time="%.6f">)"
+                   "\n%s  </testsuite></testsuites>\n",
+                   total,
+                   failed_count_,
+                   invalid_count_,
+                   seconds,
+                   body_.data()};
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_              = text {};
+      current_failures_  = text {};
+      first_failure_     = text {};
+      passed_count_      = 0;
+      failed_count_      = 0;
+      invalid_count_     = 0;
+      total_duration_ns_ = 0;
+    }
+    void finish() override
+    {
+      dump(*target_);
+    }
+  private:
+    output_sink*       target_;
+    text               body_;
+    text               current_failures_;
+    text               first_failure_;
+    unsigned long long passed_count_      = 0;
+    unsigned long long failed_count_      = 0;
+    unsigned long long invalid_count_     = 0;
+    unsigned long long total_duration_ns_ = 0;
+  };
+}
 namespace tts
 {
   struct tap_sink : output_sink
@@ -1910,7 +2045,11 @@ namespace tts::_
 #include <array>
 namespace tts::_
 {
-  inline constexpr std::array<char const*, 4> sink_names {"colored", "tap", "diagnostics", "json"};
+  inline constexpr std::array<char const*, 5> sink_names {"colored",
+                                                          "tap",
+                                                          "diagnostics",
+                                                          "json",
+                                                          "junit"};
   inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
   {
     ok = name.is_empty();
@@ -2372,11 +2511,13 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
   ::tts::tap_sink         tap_candidate {capture_target};
   ::tts::diagnostics_sink diagnostics_candidate {capture_target};
   ::tts::json_sink        json_candidate {capture_target};
+  ::tts::junit_sink       junit_candidate {capture_target};
   if(sink_name.is_empty() && capture_file) ::tts::output().sink(capture_sink);
   else if(sink_name == "colored") ::tts::output().sink(colorized_candidate);
   else if(sink_name == "tap") ::tts::output().sink(tap_candidate);
   else if(sink_name == "diagnostics") ::tts::output().sink(diagnostics_candidate);
   else if(sink_name == "json") ::tts::output().sink(json_candidate);
+  else if(sink_name == "junit") ::tts::output().sink(junit_candidate);
   auto        nb_tests   = shard.count(::tts::_::suite().size());
   std::size_t done_tests = 0;
   auto        seed       = ::tts::random_seed();
