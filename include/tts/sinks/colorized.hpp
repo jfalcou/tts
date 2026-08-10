@@ -40,10 +40,8 @@ namespace tts
     {
       char const* s = t.data();
 
-      // A logical line (e.g. the final "Results: ..." summary) can span several write() calls -
-      // "\n" only closes the CURRENT line's coloring (color_applied_), not active_color_ itself,
-      // so a single hook can color several consecutive lines (e.g. the separator right before
-      // Results:) the same way, until the next hook decides otherwise.
+      // "\n" ends the current line's color only, not active_color_, so a hook's color can span
+      // several write() calls until the next hook changes it.
       if(strcmp(s, "\n") == 0) // NOSONAR - avoids std::string
       {
         if(color_applied_) target_->write(text {"\033[0m"}); // NOSONAR - \o{} is C++23-only
@@ -60,9 +58,7 @@ namespace tts
 
       target_->write(t);
 
-      // suite_metric() colors only its own segment (one write() call), not everything after it
-      // like the other hooks - once that segment is written, fall back to whatever color (if
-      // any) was active before it, e.g. bold-neutral for the Results: line it's part of.
+      // suite_metric() colors only its own segment - fall back once it's written.
       if(revert_to_)
       {
         active_color_  = revert_to_;
@@ -71,9 +67,7 @@ namespace tts
       }
     }
 
-    // Each hook below decisively sets or clears active_color_, rather than only setting it - a
-    // hook whose corresponding text is suppressed by -q must not leave a stale color for some
-    // later, unrelated write() to inherit.
+    // Each hook below sets or clears active_color_ decisively, even under -q.
 
     void test_started([[maybe_unused]] text const& name) override
     {

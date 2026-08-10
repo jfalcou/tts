@@ -21,8 +21,7 @@ TTS_CASE("Failing case for sink tests")
 
 namespace
 {
-  // colorized_sink wraps a target sink and colors PASSED/FAILURE lines, including the
-  // multi-fragment "Results: ..." summary, without breaking any content through.
+  // colorized_sink colors pass/fail lines and the "Results: ..." summary, unchanged otherwise.
   bool check_colorized(int argc, char const** argv)
   {
     tts::gathering_sink target;
@@ -88,9 +87,7 @@ namespace
     return ok;
   }
 
-  // json_sink renders one "tests" entry per TTS_CASE plus a case-level "summary", built from the
-  // structured hooks - the counts must match what actually ran, not the suite's raw assertion
-  // totals.
+  // json_sink counts must match what ran, not the suite's raw assertion totals.
   bool check_json(int argc, char const** argv)
   {
     tts::json_sink json;
@@ -118,8 +115,7 @@ namespace
     return ok;
   }
 
-  // junit_sink renders one <testcase> per TTS_CASE inside a single <testsuite>, with a
-  // <failure> child gathering every failing assertion for a failed case.
+  // junit_sink groups every failing assertion of a failed case into one <failure> child.
   bool check_junit(int argc, char const** argv)
   {
     tts::junit_sink junit;

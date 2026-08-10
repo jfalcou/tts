@@ -15,8 +15,7 @@ TTS_DISABLE_WARNING_CRT_SECURE
 
 namespace tts::_
 {
-  // Escapes t for embedding in a JSON string literal - test names and failure messages are
-  // arbitrary user text, so this is the only thing standing between them and invalid JSON.
+  // Test names and failure messages are arbitrary user text - this is what keeps them valid JSON.
   inline ::tts::text json_escape(::tts::text const& t)
   {
     ::tts::text out;
@@ -84,8 +83,7 @@ namespace tts
 
     void assertion_failed(text const& location, text const& message, bool fatal) override
     {
-      // location is "[file:line]" (see tts::_::source_location) - strip the brackets, then split
-      // file from line so consumers get a real integer instead of a string to parse themselves.
+      // location is "[file:line]" - strip the brackets, split so line is a real integer.
       char const* loc      = location.data();
       std::size_t len      = strlen(loc); // NOSONAR - loc always comes from a well-formed tts::text
       auto        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};

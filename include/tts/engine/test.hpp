@@ -34,9 +34,7 @@ namespace tts::_
 {
   inline char const* current_test = "";
 
-  // Produced by TTS_XFAIL/TTS_MAYFAIL/TTS_XINVALID, consumed by capture/captures/test_generators's
-  // tagged constructor overload - carries the outcome tag through to test registration without
-  // changing what a case's ID argument itself looks like for the common, untagged case.
+  // Carries a TTS_XFAIL/TTS_MAYFAIL/TTS_XINVALID tag without changing TTS_CASE(ID)'s call shape.
   struct tagged_id
   {
     char const*             name;

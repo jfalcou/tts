@@ -17,9 +17,7 @@ namespace tts::_
     [[nodiscard]] static auto current(char const* file = __builtin_FILE(),
                                       int         line = __builtin_LINE()) noexcept
     {
-      // __builtin_FILE() uses whatever separator the compiler was invoked with - '/' almost
-      // everywhere, but '\' on Windows - so both need checking to reliably keep just the
-      // basename; picking only '/' left the full absolute path in place on MSVC/clang-cl.
+      // __builtin_FILE() uses '\' on Windows, '/' elsewhere - must check both.
       int  offset = 0;
       auto slash  = strrchr(file, '/');
       auto bslash = strrchr(file, '\\');

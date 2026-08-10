@@ -44,9 +44,7 @@ int main(int argc, char const** argv)
 
   bool ok = sink.aborted;
 
-  // A TTS_FATAL abort must make the implicit tts::report(0, 0) path (what TTS_MAIN calls
-  // automatically) reflect the failure - the aborted case's own bookkeeping never gets to run,
-  // so the driver's fatal_signal handler needs its own explicit accounting for this.
+  // A TTS_FATAL abort must still make tts::report(0, 0) reflect the failure.
   ok = ok && (::tts::report(0, 0) == 1);
 
   return ok ? 0 : 1;
