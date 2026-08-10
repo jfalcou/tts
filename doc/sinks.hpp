@@ -14,7 +14,7 @@
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
   needed.
 
-  All three draw from @ref tts::output_sink's structured hooks (`test_started()`,
+  All four draw from @ref tts::output_sink's structured hooks (`test_started()`,
   `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_metric()`,
   `suite_aborted()`) rather than by parsing the text `tts::stdout_sink` prints, so they stay
   correct regardless of `-v`/`-q`. None of them currently reflect @ref TTS_CASE_TPL's per-type
@@ -22,17 +22,17 @@
   hook.
 
   @note On a plain @ref TTS_MAIN binary (no custom driver), the `--sink=name` CLI flag installs
-  any of the three below without writing any C++ at all - `--sink=colored`, `--sink=tap`, or
-  `--sink=diagnostics`. It composes with `--capture=path`: `--sink=tap --capture=report.tap`
-  writes TAP-formatted output to the file instead of stdout. Like `--shard`, it's a no-op for
-  binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which already manages its own sink - see
-  @ref cli for the full flag reference.
+  any of the four below without writing any C++ at all - `--sink=colored`, `--sink=tap`,
+  `--sink=diagnostics`, or `--sink=json`. It composes with `--capture=path`:
+  `--sink=tap --capture=report.tap` writes TAP-formatted output to the file instead of stdout.
+  Like `--shard`, it's a no-op for binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which
+  already manages its own sink - see @ref cli for the full flag reference.
 
   # Simple Format Sinks
 
-  Each of these produces plain, line-oriented text - as opposed to a hypothetical structured-
-  format sink (JSON, JUnit XML, ...), which would need to assemble a single well-formed document
-  with its own schema instead of just lines of text.
+  Each of these produces plain, line-oriented text - as opposed to a structured-format sink like
+  @ref tts::json_sink below, which assembles a single well-formed document with its own schema
+  instead of just lines of text.
 
   ## %tts::colorized_sink
 
@@ -118,6 +118,46 @@
   @code{sh}
   expect.cpp:15: error: Expression: 1 == 2 evaluates to false.
     [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.
+  @endcode
+
+  # Structured Format Sinks
+
+  Unlike the simple sinks above, this one assembles its output into a single well-formed
+  document with its own schema instead of printing independent lines - so it only ever produces
+  output once the whole run has finished, via `dump()` or `finish()`, never incrementally.
+
+  ## %tts::json_sink
+
+  Accumulates one JSON object per @ref TTS_CASE (`name`, `status`, `duration_ns`, and any
+  failing/fatal assertions gathered while it ran) from `test_finished()` and
+  `assertion_failed()`, plus a `summary` counting passed/failed/invalid cases - counted
+  directly as cases finish, not from the suite's raw assertion totals, so the number of entries
+  in `tests` always matches `summary.total`. No JSON library involved: escaping is hand-rolled
+  in `tts::_::json_escape()`, in keeping with @ref compile-time.
+
+  @code{cpp}
+  tts::json_sink json;
+  tts::output().sink(json);
+
+  // ... run the test suite ...
+
+  json.dump(); // stream the JSON report to stdout
+  @endcode
+
+  Or, without a custom driver: `./my_test --sink=json`.
+
+  Given a suite with one passing and one failing case, `json.dump()` prints (reformatted here
+  for readability - the actual output is a single line):
+
+  @code{json}
+  {
+    "tests": [
+      {"name": "Check that expectation can be met", "status": "passed", "duration_ns": 996, "failures": []},
+      {"name": "Check that expectation fails", "status": "failed", "duration_ns": 8145,
+       "failures": [{"location": "expect.cpp:15", "message": "Expression: 1 == 2 evaluates to false.", "fatal": false}]}
+    ],
+    "summary": {"total": 2, "passed": 1, "failed": 1, "invalid": 0, "duration_ns": 9141}
+  }
   @endcode
 **/
 //==================================================================================================
