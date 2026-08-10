@@ -106,8 +106,8 @@ namespace tts
       else ++failed_count_;
       total_duration_ns_ += duration_ns;
 
-      text escaped_name   = _::xml_escape(name);
-      text seconds        = text {"%.6f", static_cast<double>(duration_ns) / 1'000'000'000.0};
+      auto escaped_name   = _::xml_escape(name);
+      auto seconds        = text {"%.6f", static_cast<double>(duration_ns) / 1'000'000'000.0};
 
       if(invalid)
       {
