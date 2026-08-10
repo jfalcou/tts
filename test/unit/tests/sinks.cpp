@@ -83,5 +83,32 @@ int main(int argc, char const** argv)
          (strstr(content, ": error: Expression: 1 == 2 evaluates to false.") != nullptr); // NOSONAR
   }
 
+  // json_sink renders one "tests" entry per TTS_CASE plus a case-level "summary", built from the
+  // structured hooks - the counts must match what actually ran, not the suite's raw assertion
+  // totals.
+  {
+    tts::json_sink json;
+    {
+      tts::scoped_sink scope(json);
+      sinks_test_main(argc, argv);
+    }
+
+    tts::gathering_sink target;
+    json.dump(target);
+    char const* content = target.content().data();
+
+    ok = ok && (strstr(content, "\"name\":\"Passing case for sink tests\"") != nullptr); // NOSONAR
+    ok = ok && (strstr(content, "\"status\":\"passed\"") != nullptr);                    // NOSONAR
+    ok = ok && (strstr(content, "\"name\":\"Failing case for sink tests\"") != nullptr); // NOSONAR
+    ok = ok && (strstr(content, "\"status\":\"failed\"") != nullptr);                    // NOSONAR
+    ok =
+    ok && (strstr(content, "\"location\":{\"file\":\"sinks.cpp\",\"line\":") != nullptr); // NOSONAR
+    ok =
+    ok && (strstr(content, "\"message\":\"Expression: 1 == 2 evaluates to false.\"") != // NOSONAR
+           nullptr);
+    char const* summary = R"("total":2,"passed":1,"failed":1,"invalid":0)";
+    ok                  = ok && (strstr(content, summary) != nullptr); // NOSONAR
+  }
+
   return ok ? 0 : 1;
 }

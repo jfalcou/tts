@@ -65,7 +65,7 @@
   `--allow-empty`   | Do not fail when the test suite registered zero test. `./my_test --allow-empty`
   `--capture=path`  | Capture this run's output and write it to `path` instead of stdout. `./my_test --capture=report.txt`
   `--shard=i/n`     | Only run the tests in shard `i` of `n` (`0 <= i < n`). `./my_test --shard=1/3`
-  `--sink=name`     | Format output as `name` (`colored`, `tap`, or `diagnostics`) - see @ref output-sinks. `./my_test --sink=tap`
+  `--sink=name`     | Format output as `name` (`colored`, `tap`, `diagnostics`, or `json`) - see @ref output-sinks. `./my_test --sink=tap`
 
   @note `--shard=i/n` partitions tests by registration index, round-robin (test at index `k`
   belongs to shard `k % n`), not by contiguous blocks - this keeps shards balanced even when

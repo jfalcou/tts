@@ -14,33 +14,56 @@
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
   needed.
 
-  All three draw from @ref tts::output_sink's structured hooks (`test_started()`,
+  All four draw from @ref tts::output_sink's structured hooks (`test_started()`,
   `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_metric()`,
   `suite_aborted()`) rather than by parsing the text `tts::stdout_sink` prints, so they stay
   correct regardless of `-v`/`-q`. None of them currently reflect @ref TTS_CASE_TPL's per-type
   breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN sub-scenarios, since those don't have their own
   hook.
 
+  Every "Example" below runs this same sample suite - one passing case, one invalid (empty)
+  case, and one failing case:
+
+  @code{cpp}
+  TTS_CASE("Check that expectation can be met")
+  {
+    TTS_EXPECT(1 == 1);
+  };
+
+  TTS_CASE("Check invalid detection")
+  {
+  };
+
+  TTS_CASE("Check that expectation fails")
+  {
+    TTS_EXPECT(1 == 2);
+  };
+  @endcode
+
   @note On a plain @ref TTS_MAIN binary (no custom driver), the `--sink=name` CLI flag installs
-  any of the three below without writing any C++ at all - `--sink=colored`, `--sink=tap`, or
-  `--sink=diagnostics`. It composes with `--capture=path`: `--sink=tap --capture=report.tap`
-  writes TAP-formatted output to the file instead of stdout. Like `--shard`, it's a no-op for
-  binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which already manages its own sink - see
-  @ref cli for the full flag reference.
+  any of the four below without writing any C++ at all - `--sink=colored`, `--sink=tap`,
+  `--sink=diagnostics`, or `--sink=json`. It composes with `--capture=path`:
+  `--sink=tap --capture=report.tap` writes TAP-formatted output to the file instead of stdout.
+  Like `--shard`, it's a no-op for binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which
+  already manages its own sink - see @ref cli for the full flag reference.
 
   # Simple Format Sinks
 
-  Each of these produces plain, line-oriented text - as opposed to a hypothetical structured-
-  format sink (JSON, JUnit XML, ...), which would need to assemble a single well-formed document
-  with its own schema instead of just lines of text.
+  Each of these produces plain, line-oriented text - as opposed to a structured-format sink like
+  @ref tts::json_sink below, which assembles a single well-formed document with its own schema
+  instead of just lines of text.
 
   ## %tts::colorized_sink
+
+  ### Effect
 
   Wraps a target sink (`tts::output_handler::default_sink()` by default), coloring pass/fail/
   invalid lines and the `Results: ...` summary with ANSI escapes - forwarding everything else
   unchanged. Opt-in: not every terminal or CI log renders ANSI escapes usefully, and on Windows
   it additionally depends on the host console having Virtual Terminal Processing enabled (most
   modern terminals already do).
+
+  ### Manual Usage
 
   @code{cpp}
   tts::colorized_sink colorized;
@@ -49,9 +72,13 @@
   // ... run the test suite ...
   @endcode
 
-  Or, without a custom driver: `./my_test --sink=colored`.
+  ### CLI Flag
 
-  A run with one passing, one invalid and one failing case then looks like this:
+  `./my_test --sink=colored`
+
+  ### Example
+
+  Running the sample suite above then looks like this:
 
   @htmlonly
   <pre style="background-color:var(--fragment-background);color:var(--fragment-foreground);
@@ -68,11 +95,15 @@
 
   ## %tts::tap_sink
 
+  ### Effect
+
   [TAP](https://testanything.org/) (Test Anything Protocol) is a simple, language-agnostic text
   format for reporting test results, understood by many CI dashboards and test harnesses.
   `tts::tap_sink` listens to `test_finished()` and accumulates one `ok N - name` /
   `not ok N - name` line per @ref TTS_CASE, then `dump()` streams them out preceded by a leading
   `1..N` plan line.
+
+  ### Manual Usage
 
   @code{cpp}
   tts::tap_sink tap;
@@ -83,26 +114,34 @@
   tap.dump(); // stream the TAP-formatted report to stdout
   @endcode
 
-  Or, without a custom driver: `./my_test --sink=tap` - `dump()` then happens automatically once
-  the run finishes.
+  ### CLI Flag
 
-  Given a suite with one passing and one failing case, `tap.dump()` prints:
+  `./my_test --sink=tap` - `dump()` then happens automatically once the run finishes.
+
+  ### Example
+
+  Running the sample suite above, `tap.dump()` prints - note that TAP has no third state, so
+  the invalid case comes out indistinguishable from a genuine failure:
 
   @code{sh}
-  1..2
+  1..3
   ok 1 - Check that expectation can be met
-  not ok 2 - Check that expectation fails
+  not ok 2 - Check invalid detection
+  not ok 3 - Check that expectation fails
   @endcode
 
   ## %tts::diagnostics_sink
+
+  ### Effect
 
   Wraps a target sink, forwarding every message unchanged, and additionally prints one
   `path:line: error: message` / `path:line: fatal error: message` line per failing/fatal
   assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VS Code's C/C++ extension
   provides `$gcc`, vim has quickfix, ...) can jump straight to it. `assertion_failed()` fires
-  before its corresponding
-  text, so the diagnostic line prints first; it still fires under `-q`, when that raw line is
-  itself suppressed.
+  before its corresponding text, so the diagnostic line prints first; it still fires under `-q`,
+  when that raw line is itself suppressed.
+
+  ### Manual Usage
 
   @code{cpp}
   tts::diagnostics_sink diagnostics;
@@ -111,13 +150,146 @@
   // ... run the test suite ...
   @endcode
 
-  Or, without a custom driver: `./my_test --sink=diagnostics`.
+  ### CLI Flag
 
-  A failing @ref TTS_CASE then prints the diagnostic line, immediately followed by its usual one:
+  `./my_test --sink=diagnostics`
+
+  ### Example
+
+  Running the sample suite above, the failing case prints the diagnostic line, immediately
+  followed by its usual one - the passing and invalid cases are unaffected, since neither
+  triggers `assertion_failed()`:
 
   @code{sh}
   expect.cpp:15: error: Expression: 1 == 2 evaluates to false.
     [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.
+  @endcode
+
+  # Structured Format Sinks
+
+  Unlike the simple sinks above, this one assembles its output into a single well-formed
+  document with its own schema instead of printing independent lines - so it only ever produces
+  output once the whole run has finished, via `dump()` or `finish()`, never incrementally.
+
+  ## %tts::json_sink
+
+  ### Effect
+
+  Accumulates one JSON object per @ref TTS_CASE from `test_finished()` and `assertion_failed()`,
+  plus a `summary` counting passed/failed/invalid cases - counted directly as cases finish, not
+  from the suite's raw assertion totals, so the number of entries in `tests` always matches
+  `summary.total`. No JSON library involved: escaping is hand-rolled in `tts::_::json_escape()`,
+  in keeping with @ref compile-time.
+
+  ### Schema
+
+  The document is a single object with two fields:
+
+  Field      | Type            | Description
+  ---------- | --------------- | -----------------------------------------------------------------
+  `tests`    | array of object | One entry per @ref TTS_CASE that finished running, in run order.
+  `summary`  | object          | Aggregate counts over every entry in `tests`.
+
+  Each entry in `tests`:
+
+  Field          | Type            | Description
+  -------------- | --------------- | -------------------------------------------------------------
+  `name`         | string          | The case's ID, exactly as given to @ref TTS_CASE.
+  `status`       | string          | One of `"passed"`, `"failed"`, `"invalid"` (registered no assertion at all).
+  `duration_ns`  | integer         | Wall-clock time the case took to run, in nanoseconds.
+  `failures`     | array of object | One entry per failing/fatal assertion. Empty unless `status` is `"failed"`.
+
+  Each entry in a `failures` array:
+
+  Field       | Type    | Description
+  ----------- | ------- | ------------------------------------------------------------------------
+  `location`  | object  | Where the assertion is, split into `file`/`line` (see below).
+  `message`   | string  | The assertion's failure message.
+  `fatal`     | boolean | `true` if this came from @ref TTS_FATAL (which then aborts the whole suite - see `summary` note below).
+
+  `location`:
+
+  Field   | Type    | Description
+  ------- | ------- | ----------------------------------------------------------------------------
+  `file`  | string  | Source file name, as reported in the human-readable output (basename only).
+  `line`  | integer | Line number within `file`.
+
+  `summary`:
+
+  Field          | Type    | Description
+  -------------- | ------- | -------------------------------------------------------------------
+  `total`        | integer | Number of entries in `tests` (`passed` + `failed` + `invalid`).
+  `passed`       | integer | Number of cases with `status: "passed"`.
+  `failed`       | integer | Number of cases with `status: "failed"`.
+  `invalid`      | integer | Number of cases with `status: "invalid"`.
+  `duration_ns`  | integer | Sum of every case's `duration_ns`.
+
+  @note A @ref TTS_FATAL assertion aborts the whole suite immediately - the case it happened in
+  never finishes running, so it never reaches `test_finished()` and does **not** appear in
+  `tests` at all, not even as a `"failed"` entry. `summary.total` then undercounts the suite's
+  actual registered case count. This mirrors how @ref tts::tap_sink and the plain text output
+  behave for the same reason: the driver loop's per-case bookkeeping only runs for a case that
+  returns normally.
+
+  ### Manual Usage
+
+  @code{cpp}
+  tts::json_sink json;
+  tts::output().sink(json);
+
+  // ... run the test suite ...
+
+  json.dump(); // stream the JSON report to stdout
+  @endcode
+
+  ### CLI Flag
+
+  `./my_test --sink=json`
+
+  ### Example
+
+  Running the sample suite above via `--sink=json` produces (pretty-printed here for
+  readability):
+
+  @code{json}
+  {
+    "tests": [
+      {
+        "name": "Check that expectation can be met",
+        "status": "passed",
+        "duration_ns": 917,
+        "failures": []
+      },
+      {
+        "name": "Check invalid detection",
+        "status": "invalid",
+        "duration_ns": 68,
+        "failures": []
+      },
+      {
+        "name": "Check that expectation fails",
+        "status": "failed",
+        "duration_ns": 11030,
+        "failures": [
+          {
+            "location": {
+              "file": "expect.cpp",
+              "line": 15
+            },
+            "message": "Expression: 1 == 2 evaluates to false.",
+            "fatal": false
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "total": 3,
+      "passed": 1,
+      "failed": 1,
+      "invalid": 1,
+      "duration_ns": 12015
+    }
+  }
   @endcode
 **/
 //==================================================================================================
