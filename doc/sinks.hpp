@@ -14,7 +14,7 @@
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
   needed.
 
-  All four draw from @ref tts::output_sink's structured hooks (`test_started()`,
+  All five draw from @ref tts::output_sink's structured hooks (`test_started()`,
   `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_metric()`,
   `suite_aborted()`) rather than by parsing the text `tts::stdout_sink` prints, so they stay
   correct regardless of `-v`/`-q`. None of them currently reflect @ref TTS_CASE_TPL's per-type
@@ -41,8 +41,8 @@
   @endcode
 
   @note On a plain @ref TTS_MAIN binary (no custom driver), the `--sink=name` CLI flag installs
-  any of the four below without writing any C++ at all - `--sink=colored`, `--sink=tap`,
-  `--sink=diagnostics`, or `--sink=json`. It composes with `--capture=path`:
+  any of the five below without writing any C++ at all - `--sink=colored`, `--sink=tap`,
+  `--sink=diagnostics`, `--sink=json`, or `--sink=junit`. It composes with `--capture=path`:
   `--sink=tap --capture=report.tap` writes TAP-formatted output to the file instead of stdout.
   Like `--shard`, it's a no-op for binaries using a @ref TTS_CUSTOM_DRIVER_FUNCTION, which
   already manages its own sink - see @ref cli for the full flag reference.
@@ -50,8 +50,8 @@
   # Simple Format Sinks
 
   Each of these produces plain, line-oriented text - as opposed to a structured-format sink like
-  @ref tts::json_sink below, which assembles a single well-formed document with its own schema
-  instead of just lines of text.
+  @ref tts::json_sink or @ref tts::junit_sink below, which each assemble a single well-formed
+  document with its own schema instead of just lines of text.
 
   ## %tts::colorized_sink
 
@@ -167,8 +167,8 @@
 
   # Structured Format Sinks
 
-  Unlike the simple sinks above, this one assembles its output into a single well-formed
-  document with its own schema instead of printing independent lines - so it only ever produces
+  Unlike the simple sinks above, each of these assembles its output into a single well-formed
+  document with its own schema instead of printing independent lines - so they only ever produce
   output once the whole run has finished, via `dump()` or `finish()`, never incrementally.
 
   ## %tts::json_sink
@@ -290,6 +290,90 @@
       "duration_ns": 12015
     }
   }
+  @endcode
+
+  ## %tts::junit_sink
+
+  ### Effect
+
+  Renders the run as JUnit XML, the de facto standard test-report format consumed by Jenkins,
+  GitLab CI, CircleCI, Azure DevOps, Bitbucket Pipelines and most CI dashboards - including
+  GitHub Actions itself via a separate report-parsing action (e.g. `dorny/test-reporter`,
+  `mikepenz/action-junit-report`), which is the standard way JUnit XML turns into inline PR
+  annotations. Every @ref TTS_CASE becomes one `<testcase>` inside a single `<testsuite>`,
+  counted from `test_finished()` directly rather than the suite's raw assertion totals, exactly
+  like @ref tts::json_sink.
+
+  ### Schema
+
+  `<testsuites>` wraps a single `<testsuite>`:
+
+  Attribute   | Description
+  ----------- | -------------------------------------------------------------------------------
+  `name`      | Fixed at `"TTS"` - TTS only ever reports one flat suite.
+  `tests`     | Total number of `<testcase>` entries (passed + failed + skipped).
+  `failures`  | Number of `<testcase>` entries with a `<failure>` child.
+  `errors`    | Always `0` - see the @ref TTS_FATAL note below.
+  `skipped`   | Number of `<testcase>` entries with a `<skipped/>` child (invalid cases).
+  `time`      | Sum of every case's elapsed time, in seconds.
+
+  Each `<testcase>`:
+
+  Attribute/child | Description
+  --------------- | ---------------------------------------------------------------------------
+  `name`          | The case's ID, exactly as given to @ref TTS_CASE.
+  `classname`     | Duplicates `name` - TTS has no class-like grouping to report instead.
+  `time`          | Elapsed time for this case, in seconds.
+  `<skipped/>`    | Present, empty, if the case registered no assertion at all.
+  `<failure>`     | Present if at least one assertion failed - `message` attribute is the first failure's message, text content is every failing assertion's `path:line: message`, one per line.
+
+  Neither `<skipped/>` nor `<failure>` is present for a passed case - just a self-closing
+  `<testcase .../>`.
+
+  @note Exactly like @ref tts::json_sink's `tests` array, a @ref TTS_FATAL assertion aborts the
+  whole suite before the case it happened in ever reaches `test_finished()`, so that case never
+  becomes a `<testcase>` at all - not even one with a `<failure>` or an `<error>` child. This is
+  also why `errors` is always `0`: TTS has no way to represent "aborted mid-case" as a
+  finished testcase, so there's nothing to ever count there.
+
+  ### Manual Usage
+
+  @code{cpp}
+  tts::junit_sink junit;
+  tts::output().sink(junit);
+
+  // ... run the test suite ...
+
+  junit.dump(); // stream the JUnit XML report to stdout
+  @endcode
+
+  ### CLI Flag
+
+  `./my_test --sink=junit`
+
+  ### Example
+
+  Running the sample suite above via `--sink=junit` produces (pretty-printed here for
+  readability):
+
+  @code{xml}
+  <?xml version="1.0" encoding="UTF-8"?>
+  <testsuites>
+    <testsuite name="TTS" tests="3" failures="1" errors="0" skipped="1" time="0.000012">
+      <testcase name="Check that expectation can be met"
+                classname="Check that expectation can be met" time="0.000001"/>
+      <testcase name="Check invalid detection" classname="Check invalid detection"
+                time="0.000000">
+        <skipped/>
+      </testcase>
+      <testcase name="Check that expectation fails" classname="Check that expectation fails"
+                time="0.000011">
+        <failure message="Expression: 1 == 2 evaluates to false.">
+          expect.cpp:15: Expression: 1 == 2 evaluates to false.
+        </failure>
+      </testcase>
+    </testsuite>
+  </testsuites>
   @endcode
 **/
 //==================================================================================================
