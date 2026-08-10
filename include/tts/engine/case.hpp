@@ -26,11 +26,17 @@ namespace tts::_
         : name(id)
     {
     }
+    capture(tagged_id id) // NOSONAR
+        : name(id.name)
+        , tag(id.tag)
+    {
+    }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name, body});
+      return test::acknowledge({name, body, /*types=*/ {}, tag});
     }
-    char const* name;
+    char const*             name;
+    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
   };
 
   // Global storage for current type used in a given test
@@ -60,6 +66,11 @@ namespace tts::_
         : name(id)
     {
     }
+    captures(tagged_id id) // NOSONAR
+        : name(id.name)
+        , tag(id.tag)
+    {
+    }
 
     auto operator+(auto body) const
     {
@@ -80,9 +91,11 @@ namespace tts::_
          // Clear the current type
          current_type = text {""};
        },
-       joined_type_names<Types...>()});
+       joined_type_names<Types...>(),
+       tag});
     }
-    char const* name;
+    char const*             name;
+    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
   };
 
   // Specialisation for types lists
@@ -102,10 +115,16 @@ namespace tts::_
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
   {
-    char const* name;
+    char const*             name;
+    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
 
     test_generators(char const* id) // NOSONAR
         : name(id)
+    {
+    }
+    test_generators(tagged_id id) // NOSONAR
+        : name(id.name)
+        , tag(id.tag)
     {
     }
 
@@ -129,7 +148,8 @@ namespace tts::_
                                   (process_type<Type>(body), ...);
                                   current_type = text {""};
                                 },
-                                joined_type_names<Type...>()});
+                                joined_type_names<Type...>(),
+                                tg.tag});
     }
   };
 }
@@ -232,6 +252,79 @@ namespace tts::_
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
   << [] /**/
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_XFAIL
+  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as expected to fail.
+
+  Wraps the case's ID instead of changing the enclosing macro's signature, so it composes with
+  @ref TTS_CASE, @ref TTS_CASE_TPL and @ref TTS_CASE_WITH unchanged: `TTS_CASE(TTS_XFAIL("..."))`.
+
+  The case is expected to produce at least one failing assertion. If it runs with no failures
+  instead, that mismatch is reported and fails the suite - matching the "X = expected" naming
+  convention already used by other test frameworks (pytest's `xfail`, DejaGnu, Perl's
+  `Test::More`), so it reads the same way to anyone coming from one of those.
+
+  An empty case (no assertion ran at all) does not satisfy `TTS_XFAIL` either - use
+  @ref TTS_XINVALID for that.
+
+  @param ID A literal string describing the scenario intents.
+
+  @see TTS_MAYFAIL
+  @see TTS_XINVALID
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_XFAIL(ID)
+#else
+#define TTS_XFAIL(ID) ::tts::expect_fail(ID)
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_MAYFAIL
+  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as allowed to fail.
+
+  Unlike @ref TTS_XFAIL, nothing specific is expected: the case may pass or fail, either is
+  accepted and neither is reported. Useful for flagging a work-in-progress or a known issue
+  that shouldn't block the suite without pretending to require a specific outcome.
+
+  An empty case is still reported, exactly as for an untagged @ref TTS_CASE - `TTS_MAYFAIL`
+  only relaxes the pass/fail expectation, not the "did anything actually run" one.
+
+  @param ID A literal string describing the scenario intents.
+
+  @see TTS_XFAIL
+  @see TTS_XINVALID
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_MAYFAIL(ID)
+#else
+#define TTS_MAYFAIL(ID) ::tts::may_fail(ID)
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_XINVALID
+  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as expected to be
+empty.
+
+  The case is expected to register no assertion at all. If it runs any assertion instead
+  (passing or failing), that mismatch is reported and fails the suite.
+
+  @param ID A literal string describing the scenario intents.
+
+  @see TTS_XFAIL
+  @see TTS_MAYFAIL
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_XINVALID(ID)
+#else
+#define TTS_XINVALID(ID) ::tts::expect_invalid(ID)
 #endif
 
 //======================================================================================================================

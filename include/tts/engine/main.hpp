@@ -242,13 +242,35 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       bool invalid                             = (test_count == ::tts::global_runtime.test_count);
       bool passed = !invalid && (failure_count == ::tts::global_runtime.failure_count);
 
+      // What actually happened (invalid/passed above) never changes based on the case's tag -
+      // only whether that actual result is what the case itself declared to expect does.
+      bool matches_expectation = false;
+      using enum ::tts::expected_outcome;
+      switch(t.tag)
+      {
+      case pass: matches_expectation = passed; break;
+      case xfail: matches_expectation = !invalid && !passed; break;
+      case may_fail: matches_expectation = !invalid; break;
+      case xinvalid: matches_expectation = invalid; break;
+      }
+
       if(invalid) ::tts::global_runtime.invalid();
+      if(!matches_expectation) ::tts::global_runtime.unexpected();
 
       ::tts::output().test_finished(::tts::text {t.name}, passed, invalid, duration_ns);
 
       ::tts::text duration_txt = ::tts::_::format_duration(static_cast<double>(duration_ns));
 
-      if(invalid)
+      if(t.tag != pass && !matches_expectation)
+      {
+        if(!::tts::is_quiet())
+          ::tts::output().writeln("TEST: '%s' - ** UNEXPECTED ** (tagged %s) (%s)",
+                                  t.name,
+                                  ::tts::_::tag_name(t.tag),
+                                  duration_txt.data());
+        ::tts::output().flush();
+      }
+      else if(invalid)
       {
         if(!::tts::is_quiet())
         {
