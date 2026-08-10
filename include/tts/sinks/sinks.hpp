@@ -10,6 +10,7 @@
 
 #include <tts/sinks/colorized.hpp>
 #include <tts/sinks/diagnostics.hpp>
+#include <tts/sinks/json.hpp>
 #include <tts/sinks/tap.hpp>
 
 //======================================================================================================================
