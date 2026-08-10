@@ -8,7 +8,7 @@
 
   # Overview
 
-  TTS has an extensible @ref tts::output_sink customization point (see @ref tools-config and the
+  TTS has an extensible @ref tts::output_sink customization point (see @ref tools-output and the
   `tts::gathering_sink` example) - everything a test suite prints goes through whichever sink is
   currently installed. Beyond writing your own, TTS ships a small set of ready-to-use sinks under
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
@@ -34,7 +34,13 @@
   `tts::tap_sink`            | Gathers the run, then renders it as TAP (Test Anything Protocol).
   `tts::diagnostics_sink`    | Adds compiler-style diagnostics for failure/fatal assertions.
 
-  # tts::colorized_sink
+  # Simple Format Sinks
+
+  Each of these produces plain, line-oriented text - as opposed to a hypothetical structured-
+  format sink (JSON, JUnit XML, ...), which would need to assemble a single well-formed document
+  with its own schema instead of just lines of text.
+
+  ## tts::colorized_sink
 
   Wraps a target sink (`tts::output_handler::default_sink()` by default), coloring pass/fail/
   invalid lines and the `Results: ...` summary with ANSI escapes - forwarding everything else
@@ -66,10 +72,13 @@
   Results: 3 tests <span class="ansi-green">- 1/3 (33.33%) success </span><span class="ansi-red">- 1/3 (33.33%) failure </span><span class="ansi-yellow">- 1/3 (33.33%) invalid </span></span></pre>
   @endhtmlonly
 
-  # tts::tap_sink
+  ## tts::tap_sink
 
-  Listens to `test_finished()` and accumulates one `ok N - name` / `not ok N - name` line per
-  @ref TTS_CASE, then `dump()` streams them out preceded by a leading `1..N` plan line.
+  [TAP](https://testanything.org/) (Test Anything Protocol) is a simple, language-agnostic text
+  format for reporting test results, understood by many CI dashboards and test harnesses.
+  `tts::tap_sink` listens to `test_finished()` and accumulates one `ok N - name` / `not ok N -
+  name` line per @ref TTS_CASE, then `dump()` streams them out preceded by a leading `1..N` plan
+  line.
 
   @code{cpp}
   tts::tap_sink tap;
@@ -91,7 +100,7 @@
   not ok 2 - Check that expectation fails
   @endcode
 
-  # tts::diagnostics_sink
+  ## tts::diagnostics_sink
 
   Wraps a target sink, forwarding every message unchanged, and additionally prints one
   `path:line: error: message` / `path:line: fatal error: message` line per failing/fatal
