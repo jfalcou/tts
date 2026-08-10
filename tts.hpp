@@ -410,6 +410,12 @@ namespace tts::_
 }
 namespace tts
 {
+  enum class outcome
+  {
+    success,
+    failure,
+    invalid
+  };
   struct output_sink
   {
     virtual void write(text const& t) = 0;
@@ -427,6 +433,18 @@ namespace tts
     virtual void test_finished([[maybe_unused]] text const& name,
                                [[maybe_unused]] bool        passed,
                                [[maybe_unused]] bool        invalid)
+    {
+    }
+    virtual void suite_finished([[maybe_unused]] unsigned long long fail_count,
+                                [[maybe_unused]] unsigned long long invalid_count)
+    {
+    }
+    virtual void suite_metric([[maybe_unused]] outcome            kind,
+                              [[maybe_unused]] unsigned long long count,
+                              [[maybe_unused]] unsigned long long total)
+    {
+    }
+    virtual void suite_aborted()
     {
     }
     virtual ~output_sink() = default;
@@ -516,6 +534,18 @@ namespace tts
     void test_finished(text const& name, bool passed, bool invalid)
     {
       sink_->test_finished(name, passed, invalid);
+    }
+    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count)
+    {
+      sink_->suite_finished(fail_count, invalid_count);
+    }
+    void suite_metric(outcome kind, unsigned long long count, unsigned long long total)
+    {
+      sink_->suite_metric(kind, count, total);
+    }
+    void suite_aborted()
+    {
+      sink_->suite_aborted();
     }
     void sink(output_sink& s)
     {
@@ -779,26 +809,36 @@ namespace tts::_
       auto  fail_txt = failure_count > 1 ? "s" : "";
       auto  inv_txt  = invalid_count > 1 ? "s" : "";
       auto& out      = ::tts::output();
+      out.suite_finished(failure_count, invalid_count);
       ::tts::_::separator();
       out.write("Results: %llu test%s ", test_count, test_txt);
       if(success_count != 0)
+      {
+        out.suite_metric(::tts::outcome::success, success_count, test_count);
         out.write("- %llu/%llu (%2.2f%%) success%s ",
                   success_count,
                   test_count,
                   100.f * static_cast<float>(success_count) / static_cast<float>(test_count),
                   pass_txt);
+      }
       if(failure_count != 0)
+      {
+        out.suite_metric(::tts::outcome::failure, failure_count, test_count);
         out.write("- %llu/%llu (%2.2f%%) failure%s ",
                   failure_count,
                   test_count,
                   100.f * static_cast<float>(failure_count) / static_cast<float>(test_count),
                   fail_txt);
+      }
       if(invalid_count != 0)
+      {
+        out.suite_metric(::tts::outcome::invalid, invalid_count, test_count);
         out.write("- %llu/%llu (%2.2f%%) invalid%s ",
                   invalid_count,
                   test_count,
                   100.f * static_cast<float>(invalid_count) / static_cast<float>(test_count),
                   inv_txt);
+      }
       out.writeln();
       if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
         return 1;
@@ -1766,17 +1806,17 @@ namespace tts::_
   void report_fail(char const* location, char const* message, ::tts::text const& type)
   {
     report_type_hint(type);
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
     if(!::tts::is_quiet())
     {
       ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
-    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
   }
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
     report_type_hint(type);
-    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
     ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
+    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
   struct shard_spec
   {
@@ -1880,9 +1920,10 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       done_tests++;
       bool invalid = (test_count == ::tts::global_runtime.test_count);
       bool passed  = !invalid && (failure_count == ::tts::global_runtime.failure_count);
+      if(invalid) ::tts::global_runtime.invalid();
+      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
       if(invalid)
       {
-        ::tts::global_runtime.invalid();
         if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
         ::tts::output().flush();
       }
@@ -1891,11 +1932,11 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
         if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
         ::tts::output().flush();
       }
-      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
     }
   }
   catch(::tts::_::fatal_signal&)
   {
+    ::tts::output().suite_aborted();
     if(!::tts::is_quiet())
       ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
                               static_cast<int>(nb_tests - done_tests - 1));
@@ -2387,6 +2428,150 @@ namespace tts::_
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
   << [] 
 #endif
+namespace tts
+{
+  struct colorized_sink : output_sink
+  {
+    explicit colorized_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const& t) override
+    {
+      char const* s = t.data();
+      if(strcmp(s, "\n") == 0)
+      {
+        if(color_applied_) target_->write(text {"\033[0m"});
+        color_applied_ = false;
+        target_->write(t);
+        return;
+      }
+      if(active_color_ && !color_applied_)
+      {
+        target_->write(text {active_color_});
+        color_applied_ = true;
+      }
+      target_->write(t);
+    }
+    void test_started([[maybe_unused]] text const& name) override
+    {
+      set_color(nullptr);
+    }
+    void assertion_failed([[maybe_unused]] text const& location,
+                          [[maybe_unused]] text const& message,
+                          [[maybe_unused]] bool        fatal) override
+    {
+      set_color("\033[31m");
+    }
+    void test_finished([[maybe_unused]] text const& name, bool passed, bool invalid) override
+    {
+      if(invalid) set_color("\033[33m");
+      else if(passed) set_color("\033[32m");
+      else set_color(nullptr);
+    }
+    void suite_finished([[maybe_unused]] unsigned long long fail_count,
+                        [[maybe_unused]] unsigned long long invalid_count) override
+    {
+      set_color("\033[1m");
+    }
+    void suite_metric(outcome                             kind,
+                      [[maybe_unused]] unsigned long long count,
+                      [[maybe_unused]] unsigned long long total) override
+    {
+      using enum outcome;
+      switch(kind)
+      {
+      case success: set_color("\033[1;32m"); break;
+      case failure: set_color("\033[1;31m"); break;
+      case invalid: set_color("\033[1;33m"); break;
+      }
+    }
+    void suite_aborted() override
+    {
+      set_color("\033[31m");
+    }
+    void flush() override
+    {
+      target_->flush();
+    }
+  private:
+    void set_color(char const* color)
+    {
+      active_color_  = color;
+      color_applied_ = false;
+    }
+    output_sink* target_;
+    char const*  active_color_  = nullptr;
+    bool         color_applied_ = false;
+  };
+}
+namespace tts
+{
+  struct diagnostics_sink : output_sink
+  {
+    explicit diagnostics_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const& t) override
+    {
+      target_->write(t);
+    }
+    void assertion_failed(text const& location, text const& message, bool fatal) override
+    {
+      char const* loc = location.data();
+      std::size_t len = strlen(loc);
+      target_->write(text {"%.*s: %s: %s\n",
+                           static_cast<int>(len - 2),
+                           loc + 1,
+                           fatal ? "fatal error" : "error",
+                           message.data()});
+    }
+    void flush() override
+    {
+      target_->flush();
+    }
+  private:
+    output_sink* target_;
+  };
+}
+namespace tts
+{
+  struct tap_sink : output_sink
+  {
+    void write(text const&) override
+    {
+    }
+    void test_finished(text const& name, bool passed, [[maybe_unused]] bool invalid) override
+    {
+      ++count_;
+      body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
+                      : text {"not ok %zu - %s\n", count_, name.data()};
+    }
+    text render() const
+    {
+      return text {"1..%zu\n", count_} + body_;
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_  = text {};
+      count_ = 0;
+    }
+  private:
+    text        body_;
+    std::size_t count_ = 0;
+  };
+}
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT(EXPR, ...)
 #else
