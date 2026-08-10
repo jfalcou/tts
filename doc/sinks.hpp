@@ -128,12 +128,54 @@
 
   ## %tts::json_sink
 
-  Accumulates one JSON object per @ref TTS_CASE (`name`, `status`, `duration_ns`, and any
-  failing/fatal assertions gathered while it ran) from `test_finished()` and
-  `assertion_failed()`, plus a `summary` counting passed/failed/invalid cases - counted
-  directly as cases finish, not from the suite's raw assertion totals, so the number of entries
-  in `tests` always matches `summary.total`. No JSON library involved: escaping is hand-rolled
-  in `tts::_::json_escape()`, in keeping with @ref compile-time.
+  Accumulates one JSON object per @ref TTS_CASE from `test_finished()` and `assertion_failed()`,
+  plus a `summary` counting passed/failed/invalid cases - counted directly as cases finish, not
+  from the suite's raw assertion totals, so the number of entries in `tests` always matches
+  `summary.total`. No JSON library involved: escaping is hand-rolled in `tts::_::json_escape()`,
+  in keeping with @ref compile-time.
+
+  ### Schema
+
+  The document is a single object with two fields:
+
+  Field      | Type            | Description
+  ---------- | --------------- | -----------------------------------------------------------------
+  `tests`    | array of object | One entry per @ref TTS_CASE that finished running, in run order.
+  `summary`  | object          | Aggregate counts over every entry in `tests`.
+
+  Each entry in `tests`:
+
+  Field          | Type            | Description
+  -------------- | --------------- | -------------------------------------------------------------
+  `name`         | string          | The case's ID, exactly as given to @ref TTS_CASE.
+  `status`       | string          | One of `"passed"`, `"failed"`, `"invalid"` (registered no assertion at all).
+  `duration_ns`  | integer         | Wall-clock time the case took to run, in nanoseconds.
+  `failures`     | array of object | One entry per failing/fatal assertion. Empty unless `status` is `"failed"`.
+
+  Each entry in a `failures` array:
+
+  Field       | Type    | Description
+  ----------- | ------- | ------------------------------------------------------------------------
+  `location`  | string  | `path:line` of the assertion, as reported in the human-readable output.
+  `message`   | string  | The assertion's failure message.
+  `fatal`     | boolean | `true` if this came from @ref TTS_FATAL (which then aborts the whole suite - see `summary` note below).
+
+  `summary`:
+
+  Field          | Type    | Description
+  -------------- | ------- | -------------------------------------------------------------------
+  `total`        | integer | Number of entries in `tests` (`passed` + `failed` + `invalid`).
+  `passed`       | integer | Number of cases with `status: "passed"`.
+  `failed`       | integer | Number of cases with `status: "failed"`.
+  `invalid`      | integer | Number of cases with `status: "invalid"`.
+  `duration_ns`  | integer | Sum of every case's `duration_ns`.
+
+  @note A @ref TTS_FATAL assertion aborts the whole suite immediately - the case it happened in
+  never finishes running, so it never reaches `test_finished()` and does **not** appear in
+  `tests` at all, not even as a `"failed"` entry. `summary.total` then undercounts the suite's
+  actual registered case count. This mirrors how @ref tts::tap_sink and the plain text output
+  behave for the same reason: the driver loop's per-case bookkeeping only runs for a case that
+  returns normally.
 
   @code{cpp}
   tts::json_sink json;
