@@ -1431,6 +1431,27 @@
     </member>
     <member kind="define">
       <type>#define</type>
+      <name>TTS_XFAIL</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>gad72988c12f401bb1eb13a4f6788f1d10</anchor>
+      <arglist>(ID)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_MAYFAIL</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga4b8a89f672881723dbe70f50e627ebf8</anchor>
+      <arglist>(ID)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_XINVALID</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>gaf1c68a2be4317b8c67da12e50e997406</anchor>
+      <arglist>(ID)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
       <name>TTS_WHEN</name>
       <anchorfile>group__test-scenario.html</anchorfile>
       <anchor>ga70b895c13fd5ab455fb7c46226fdc6b3</anchor>
