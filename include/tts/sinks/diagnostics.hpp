@@ -47,7 +47,7 @@ namespace tts
     {
       // location is already "[file:line]" (see tts::_::source_location) - strip the brackets.
       char const* loc = location.data();
-      std::size_t len = strlen(loc);
+      std::size_t len = strlen(loc); // NOSONAR - loc always comes from a well-formed tts::text
       target_->write(text {"%.*s: %s: %s\n",
                            static_cast<int>(len - 2),
                            loc + 1,

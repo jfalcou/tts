@@ -52,6 +52,11 @@ namespace
       "FINISHED name=%s passed=%d invalid=%d\n", name.data(), passed ? 1 : 0, invalid ? 1 : 0};
     }
 
+    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count) override
+    {
+      log += tts::text {"SUITE_FINISHED fails=%llu invalids=%llu\n", fail_count, invalid_count};
+    }
+
     tts::text log;
   };
 }
@@ -64,6 +69,7 @@ int main(int argc, char const** argv)
   {
     tts::scoped_sink scope(sink);
     structured_sink_main(argc, argv);
+    tts::report(1, 1); // triggers suite_finished() with this suite's actual fail/invalid counts
   }
 
   bool        ok  = true;
@@ -92,6 +98,8 @@ int main(int argc, char const** argv)
   ok &&
   (strstr(log, "FINISHED name=Invalid case for structured hooks passed=0 invalid=1\n") // NOSONAR
    != nullptr);
+
+  ok = ok && (strstr(log, "SUITE_FINISHED fails=1 invalids=1\n") != nullptr); // NOSONAR
 
   return ok ? 0 : 1;
 }

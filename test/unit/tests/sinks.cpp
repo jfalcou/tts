@@ -33,6 +33,7 @@ int main(int argc, char const** argv)
     {
       tts::scoped_sink scope(colorized);
       sinks_test_main(argc, argv);
+      tts::report(1, 0); // emits the "Results: ..." summary this block also checks below
     }
 
     char const* content = target.content().data();
@@ -41,6 +42,10 @@ int main(int argc, char const** argv)
     ok                  = ok && (strstr(content, "\033[0m") != nullptr);    // NOSONAR - reset
     ok = ok && (strstr(content, "Passing case for sink tests") != nullptr); // NOSONAR
     ok = ok && (strstr(content, "Failing case for sink tests") != nullptr); // NOSONAR
+
+    // The Results: summary itself (not just some earlier line) must be red, since this suite has
+    // a failure - it stays active color across the separator right above it too.
+    ok = ok && (strstr(content, "\033[31mResults:") != nullptr); // NOSONAR
   }
 
   // tap_sink renders "1..N" / "ok" / "not ok" lines from the structured test_finished() events.

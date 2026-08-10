@@ -96,21 +96,21 @@ namespace tts::_
   {
     report_type_hint(type);
 
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
+
     if(!::tts::is_quiet())
     {
       ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
-
-    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
   }
 
   void report_fatal(char const* location, char const* message, ::tts::text const& type)
   {
     report_type_hint(type);
 
-    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
-
     ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
+
+    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
   }
 
   // Splits the suite in `total` round-robin shards (test at registration index k belongs to
@@ -245,9 +245,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       bool invalid = (test_count == ::tts::global_runtime.test_count);
       bool passed  = !invalid && (failure_count == ::tts::global_runtime.failure_count);
 
+      if(invalid) ::tts::global_runtime.invalid();
+
+      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
+
       if(invalid)
       {
-        ::tts::global_runtime.invalid();
         if(!::tts::is_quiet()) ::tts::output().writeln("  [!!]: EMPTY TEST CASE");
         ::tts::output().flush();
       }
@@ -256,12 +259,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
         if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s' - [PASSED]", t.name);
         ::tts::output().flush();
       }
-
-      ::tts::output().test_finished(::tts::text {t.name}, passed, invalid);
     }
   }
   catch(::tts::_::fatal_signal&)
   {
+    ::tts::output().suite_aborted();
+
     if(!::tts::is_quiet())
       ::tts::output().writeln("@@ ABORTING DUE TO EARLY FAILURE @@ - %d Tests not run",
                               static_cast<int>(nb_tests - done_tests - 1));

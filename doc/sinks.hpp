@@ -14,13 +14,11 @@
   `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
   needed.
 
-  `tts::colorized_sink` works directly on the human-readable text `tts::stdout_sink` already
-  prints, recognizing TTS's own wording ("[PASSED]", "** FAILURE **", ...). `tts::tap_sink` and
-  `tts::diagnostics_sink` instead draw from @ref tts::output_sink's structured `test_finished()` /
-  `assertion_failed()` hooks, so they stay correct regardless of `-v`/`-q`. None of them currently
-  reflect @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN / @ref TTS_AND_THEN
-  sub-scenarios, since those don't have their own hook or a distinct line of their own to key off
-  of.
+  All three draw from @ref tts::output_sink's structured hooks (`test_started()`,
+  `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_aborted()`) rather than by
+  parsing the text `tts::stdout_sink` prints, so they stay correct regardless of `-v`/`-q`. None
+  of them currently reflect @ref TTS_CASE_TPL's per-type breakdown or @ref TTS_WHEN /
+  @ref TTS_AND_THEN sub-scenarios, since those don't have their own hook.
 
   Sink                       | Purpose
   -------------------------- | -----------------------------------------------------------------
@@ -30,12 +28,14 @@
 
   # tts::colorized_sink
 
-  Wraps a target sink (`tts::output_handler::default_sink()` by default) and colors messages that
-  look like a pass confirmation (green), a failure/fatal/abort (red), an invalid test (yellow), or
-  the final `Results: ...` summary (green if everything passed, red otherwise) - forwarding
-  everything else unchanged. Opt-in: not every terminal or CI log renders ANSI escapes usefully,
-  and on Windows it additionally depends on the host console having Virtual Terminal Processing
-  enabled (most modern terminals already do).
+  Wraps a target sink (`tts::output_handler::default_sink()` by default) and colors a pass
+  confirmation (green), a failure/fatal/abort (red), an invalid test (yellow), or the final
+  `Results: ...` summary and the separator line right above it (green if everything passed, red
+  otherwise) - forwarding everything else unchanged. A color stays active across consecutive
+  lines until the next hook changes it, which is why the separator picks up the same color as the
+  `Results: ...` line that follows it. Opt-in: not every terminal or CI log renders ANSI escapes
+  usefully, and on Windows it additionally depends on the host console having Virtual Terminal
+  Processing enabled (most modern terminals already do).
 
   @code{cpp}
   tts::colorized_sink colorized;
@@ -75,8 +75,8 @@
   Wraps a target sink, forwarding every message unchanged, and additionally prints one
   `file:line: error: message` / `file:line: fatal error: message` line per failing/fatal
   assertion, so editors/IDEs with a GCC/Clang-style problem matcher (VSCode's `$gcc`, vim's
-  quickfix, ...) can jump straight to it. Since it comes from the same structured hook
-  `tts::tap_sink` uses, it still fires under `-q`, when the raw failure line it complements is
+  quickfix, ...) can jump straight to it. `assertion_failed()` fires before its corresponding
+  text, so the diagnostic line prints first; it still fires under `-q`, when that raw line is
   itself suppressed.
 
   @code{cpp}
@@ -86,11 +86,11 @@
   // ... run the test suite ...
   @endcode
 
-  A failing @ref TTS_CASE then prints its usual line, immediately followed by the diagnostic one:
+  A failing @ref TTS_CASE then prints the diagnostic line, immediately followed by its usual one:
 
   @code{sh}
-    [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.
   expect.cpp:15: error: Expression: 1 == 2 evaluates to false.
+    [X] [expect.cpp:15] : ** FAILURE ** : Expression: 1 == 2 evaluates to false.
   @endcode
 
   @see tts::output_sink

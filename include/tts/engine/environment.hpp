@@ -50,6 +50,12 @@ namespace tts::_
 
       auto& out      = ::tts::output();
 
+      // Fires before separator() too, not just before "Results:" - colorized_sink keeps a color
+      // active across several consecutive lines until the next hook, so this also (deliberately)
+      // colors the separator, and overwrites any color a sink left dangling from the last test if
+      // that test's own closing line was suppressed by -q.
+      out.suite_finished(failure_count, invalid_count);
+
       ::tts::_::separator();
       out.write("Results: %llu test%s ", test_count, test_txt);
       if(success_count != 0)
