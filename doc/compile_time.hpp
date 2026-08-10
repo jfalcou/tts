@@ -32,17 +32,27 @@
   Header           | Added cost (g++) | Added cost (clang++) | Avoided via
   ---------------- | ----------------- | --------------------- | -----------------------------------
   `<chrono>`       | +460ms (~4x)      | +680ms (~6x)          | `tools/clock.hpp`'s `now_ns()`, built on `clock_gettime`/`QueryPerformanceCounter`
-  `<regex>`        | +270ms (~3x)      | +350ms (~3.5x)        | not needed anywhere in TTS
-  `<thread>`       | +200ms (~2.3x)    | +240ms (~2.8x)        | not needed anywhere in TTS
   `<memory>`       | +170ms (~2x)      | +210ms (~2.5x)        | `tools/file.hpp`'s `file_guard`, a hand-rolled move-only RAII wrapper instead of `std::unique_ptr`
   `<sstream>`      | +140ms            | +190ms                | `tools/text.hpp` builds strings via `malloc`/`snprintf`
   `<iostream>`     | +140ms            | +170ms                | output goes through `FILE*`/`fputs`, not `std::cout`
-  `<functional>`   | +100ms            | +100ms                | avoided unless genuinely needed
+  `<functional>`   | +100ms            | +100ms                | never - `tools/callable.hpp`'s type-erased `callable` is what every single `TTS_CASE` body is wrapped in, the hottest path in the whole library, so this one doesn't get a "genuinely needed" exception
   `<string>`       | +90ms             | +110ms                | @ref tts::text is TTS's own minimal string type
   `<unordered_map>`| +60ms             | +60ms                 | avoided unless genuinely needed
-  `<vector>`       | +50ms             | +60ms                 | avoided unless genuinely needed
+  `<vector>`       | +50ms             | +60ms                 | `tools/buffer.hpp`'s `tts::buffer`, a minimal `malloc`-based dynamic array
   `<map>`          | +50ms             | +50ms                 | avoided unless genuinely needed
   `<array>`        | ~0ms (noise)      | ~0ms (noise)          | fine to use - see below
+
+  @section compile-time-hypothetical What it costs if you ever need one anyway
+
+  TTS doesn't need the two headers below for anything today, so there's no "avoided via" to point
+  at - but if a future feature genuinely calls for one, here's what you'd be signing up for. Measure
+  again before merging: these numbers drift with compiler version, and being unused today doesn't
+  make them free tomorrow.
+
+  Header      | Added cost (g++) | Added cost (clang++)
+  ----------- | ----------------- | ---------------------
+  `<regex>`   | +270ms (~3x)      | +350ms (~3.5x)
+  `<thread>`  | +200ms (~2.3x)    | +240ms (~2.8x)
 
   @section compile-time-fine What's fine to use
 
