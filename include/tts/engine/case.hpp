@@ -274,6 +274,9 @@ namespace tts::_
 
   @see TTS_MAYFAIL
   @see TTS_XINVALID
+
+  @groupheader{Example}
+  @snippet doc/xfail.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -298,6 +301,9 @@ namespace tts::_
 
   @see TTS_XFAIL
   @see TTS_XINVALID
+
+  @groupheader{Example}
+  @snippet doc/mayfail.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -319,6 +325,9 @@ empty.
 
   @see TTS_XFAIL
   @see TTS_MAYFAIL
+
+  @groupheader{Example}
+  @snippet doc/xinvalid.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
