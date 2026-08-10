@@ -59,6 +59,16 @@ namespace tts
       }
 
       target_->write(t);
+
+      // suite_metric() colors only its own segment (one write() call), not everything after it
+      // like the other hooks - once that segment is written, fall back to whatever color (if
+      // any) was active before it, e.g. bold-neutral for the Results: line it's part of.
+      if(revert_to_)
+      {
+        active_color_  = revert_to_;
+        color_applied_ = false;
+        revert_to_     = nullptr;
+      }
     }
 
     // Each hook below decisively sets or clears active_color_, rather than only setting it - a
@@ -77,7 +87,10 @@ namespace tts
       set_color("\033[31m"); // red - NOSONAR, \o{} is C++23-only
     }
 
-    void test_finished([[maybe_unused]] text const& name, bool passed, bool invalid) override
+    void test_finished([[maybe_unused]] text const&        name,
+                       bool                                passed,
+                       bool                                invalid,
+                       [[maybe_unused]] unsigned long long duration_ns) override
     {
       if(invalid) set_color("\033[33m");     // yellow - NOSONAR, \o{} is C++23-only
       else if(passed) set_color("\033[32m"); // green - NOSONAR, \o{} is C++23-only
@@ -95,6 +108,7 @@ namespace tts
                       [[maybe_unused]] unsigned long long total) override
     {
       using enum outcome;
+      revert_to_ = active_color_; // fall back to this once the segment below is written
       switch(kind)
       {
       case success: set_color("\033[1;32m"); break; // bold green - NOSONAR
@@ -123,5 +137,6 @@ namespace tts
     output_sink* target_;
     char const*  active_color_  = nullptr;
     bool         color_applied_ = false;
+    char const*  revert_to_     = nullptr;
   };
 }

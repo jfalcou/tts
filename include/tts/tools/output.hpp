@@ -136,10 +136,11 @@ namespace tts
 
     /// Called once a @ref TTS_CASE / @ref TTS_CASE_TPL / @ref TTS_CASE_WITH has finished
     /// running, always and before its corresponding text (if any - suppressed under -q), with
-    /// its outcome. No-op by default.
-    virtual void test_finished([[maybe_unused]] text const& name,
-                               [[maybe_unused]] bool        passed,
-                               [[maybe_unused]] bool        invalid)
+    /// its outcome and how long it took to run, in nanoseconds. No-op by default.
+    virtual void test_finished([[maybe_unused]] text const&        name,
+                               [[maybe_unused]] bool               passed,
+                               [[maybe_unused]] bool               invalid,
+                               [[maybe_unused]] unsigned long long duration_ns)
     {
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
@@ -345,9 +346,9 @@ namespace tts
     }
 
     /// Notifies the current output_sink that a test has finished running.
-    void test_finished(text const& name, bool passed, bool invalid)
+    void test_finished(text const& name, bool passed, bool invalid, unsigned long long duration_ns)
     {
-      sink_->test_finished(name, passed, invalid);
+      sink_->test_finished(name, passed, invalid, duration_ns);
     }
 
     /// Notifies the current output_sink that the whole suite has finished running.

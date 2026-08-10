@@ -46,10 +46,19 @@ namespace
       (void)location;
     }
 
-    void test_finished(tts::text const& name, bool passed, bool invalid) override
+    void test_finished(tts::text const&   name,
+                       bool               passed,
+                       bool               invalid,
+                       unsigned long long duration_ns) override
     {
-      log += tts::text {
-      "FINISHED name=%s passed=%d invalid=%d\n", name.data(), passed ? 1 : 0, invalid ? 1 : 0};
+      // Sane upper bound (under 10s), not an exact value - actual timing is inherently
+      // machine-dependent and would make this test flaky.
+      bool sane  = duration_ns < 10'000'000'000ULL;
+      log       += tts::text {"FINISHED name=%s passed=%d invalid=%d duration_sane=%d\n",
+                        name.data(),
+                        passed ? 1 : 0,
+                        invalid ? 1 : 0,
+                        sane ? 1 : 0};
     }
 
     void suite_finished(unsigned long long fail_count, unsigned long long invalid_count) override
@@ -79,8 +88,9 @@ int main(int argc, char const** argv)
   ok && (strstr(log, "STARTED name=Passing case for structured hooks\n") != nullptr); // NOSONAR
   ok =
   ok &&
-  (strstr(log, "FINISHED name=Passing case for structured hooks passed=1 invalid=0\n") // NOSONAR
-   != nullptr);
+  (strstr(log, // NOSONAR
+          "FINISHED name=Passing case for structured hooks passed=1 invalid=0 duration_sane=1\n") !=
+   nullptr);
 
   ok =
   ok && (strstr(log, "STARTED name=Failing case for structured hooks\n") != nullptr); // NOSONAR
@@ -89,15 +99,17 @@ int main(int argc, char const** argv)
          != nullptr);
   ok =
   ok &&
-  (strstr(log, "FINISHED name=Failing case for structured hooks passed=0 invalid=0\n") // NOSONAR
-   != nullptr);
+  (strstr(log, // NOSONAR
+          "FINISHED name=Failing case for structured hooks passed=0 invalid=0 duration_sane=1\n") !=
+   nullptr);
 
   ok =
   ok && (strstr(log, "STARTED name=Invalid case for structured hooks\n") != nullptr); // NOSONAR
   ok =
   ok &&
-  (strstr(log, "FINISHED name=Invalid case for structured hooks passed=0 invalid=1\n") // NOSONAR
-   != nullptr);
+  (strstr(log, // NOSONAR
+          "FINISHED name=Invalid case for structured hooks passed=0 invalid=1 duration_sane=1\n") !=
+   nullptr);
 
   ok = ok && (strstr(log, "SUITE_FINISHED fails=1 invalids=1\n") != nullptr); // NOSONAR
 

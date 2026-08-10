@@ -88,6 +88,10 @@ namespace tts::_
 
       out.writeln();
 
+      double total_ms = static_cast<double>(total_duration_ns) / 1'000'000.0;
+      double avg_ms   = test_count ? total_ms / static_cast<double>(test_count) : 0.0;
+      out.writeln("Total Time: %.3f ms - %.3f ms/test", total_ms, avg_ms);
+
       // A shard landing on zero tests is an expected partition outcome, not a build/
       // registration bug, so --shard implicitly behaves like --allow-empty here.
       if(test_count == 0 && !::tts::arguments()("--allow-empty") && !::tts::arguments()("--shard"))
@@ -97,9 +101,13 @@ namespace tts::_
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
-    unsigned long long test_count = 0, success_count = 0, failure_count = 0, fatal_count = 0,
-                       invalid_count = 0;
-    bool fail_status                 = false;
+    unsigned long long test_count        = 0;
+    unsigned long long success_count     = 0;
+    unsigned long long failure_count     = 0;
+    unsigned long long fatal_count       = 0;
+    unsigned long long invalid_count     = 0;
+    unsigned long long total_duration_ns = 0;
+    bool               fail_status       = false;
   };
 }
 
