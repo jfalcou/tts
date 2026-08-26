@@ -29,8 +29,44 @@ jobs:
           cd build
           ninja tts-doxygen
 
+      ##################################################################################################
+      ## Coverage rides along with the documentation so both reach gh-pages in a single deployment,
+      ## which is what keeps one from wiping the other out.
+      ##################################################################################################
+      - name: Generate Coverage Report
+        run: |
+          cmake --preset gcc-coverage
+          cmake --build build/gcc-coverage --config Debug --target tts-coverage-report
+
+      - name: Assemble Coverage into the Site
+        run: |
+          cp -r build/gcc-coverage/coverage build/doc/coverage
+
+          python3 - build/gcc-coverage/coverage/summary.json build/doc/coverage/badge.json <<'EOF'
+          import json, sys
+
+          percent = json.load(open(sys.argv[1]))["line_percent"]
+
+          # Shields paints whatever colour it is handed, so the thresholds belong here.
+          for floor, colour in [(90, "brightgreen"), (75, "green"), (60, "yellow"), (40, "orange")]:
+            if percent >= floor:
+              break
+          else:
+            colour = "red"
+
+          json.dump( { "schemaVersion": 1
+                     , "label": "coverage"
+                     , "message": f"{percent:.1f}%"
+                     , "color": colour
+                     }
+                   , open(sys.argv[2], "w")
+                   )
+          EOF
+
+          cat build/doc/coverage/badge.json
+
       - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/doc
