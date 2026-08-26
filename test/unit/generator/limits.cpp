@@ -5,9 +5,6 @@
   SPDX-License-Identifier: BSL-1.0
 */
 //==================================================================================================
-
-//! [snippet]
-#define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
 
 // A user-defined type for which we will provide custom limits
@@ -59,4 +56,3 @@ TTS_CASE("Limit values for user-defined type")
   TTS_EQUAL(lim.one.i, 1);
   TTS_EQUAL(lim.one.f, 1.0f);
 };
-//! [snippet]
