@@ -62,6 +62,13 @@ jobs:
     uses: ./.github/workflows/sanitizers.yml
 
   ##################################################################################################
+  ## Coverage report - informational, runs alongside the gate without blocking the matrix
+  ##################################################################################################
+  coverage-report:
+    name: Coverage
+    uses: ./.github/workflows/coverage.yml
+
+  ##################################################################################################
   ## Unit Tests - the full compiler matrix, gated behind the fast checks above all passing
   ##################################################################################################
   linux-tests:
