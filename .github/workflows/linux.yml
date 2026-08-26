@@ -40,13 +40,7 @@ jobs:
           wrapper: ${{ matrix.compiler.wrapper }}
           setup-script: ${{ matrix.compiler.setup }}
 
-      - name: Run Unit Tests
-        uses: ./.github/actions/test
-        with:
-          config: ${{ matrix.options }}
-          preset: ${{ matrix.compiler.preset }}
-
-      - name: Run MemCheck
+      - name: Run Unit Tests and MemCheck
         uses: ./.github/actions/test
         with:
           config: ${{ matrix.options }}
