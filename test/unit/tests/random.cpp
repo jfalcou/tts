@@ -131,3 +131,18 @@ TTS_CASE_TPL("Check random_bits Uniformity [Mean & Variance]", tts::uint_types)
   double n = std::pow(2.0, static_cast<double>(8 * sizeof(T)));
   check_uniform_moments(results, 0.0, n - 1.0, 1.0, 5.0);
 };
+
+TTS_CASE_TPL("Check degenerate range for reals", float, double)
+<typename T>(tts::type<T>)
+{
+  TTS_EQUAL(tts::random_value(T(0), T(0)), T(0));
+  TTS_EQUAL(tts::random_value(T(-1.5), T(-1.5)), T(-1.5));
+  TTS_EQUAL(tts::random_value(T(42), T(42)), T(42));
+};
+
+TTS_CASE_TPL("Check degenerate range for integers", int, long, unsigned int)
+<typename T>(tts::type<T>)
+{
+  TTS_EQUAL(tts::random_value(T(0), T(0)), T(0));
+  TTS_EQUAL(tts::random_value(T(7), T(7)), T(7));
+};
