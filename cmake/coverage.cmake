@@ -28,6 +28,19 @@ function(TTS_SETUP_COVERAGE target)
     message(FATAL_ERROR "[${PROJECT_NAME}] - Coverage requires gcovr, install it with 'pip install gcovr'")
   endif()
 
+  # gcovr 8 sums a header's lines once per translation unit including it instead of taking their
+  # union, which on a header-only template library reports totals larger than the files themselves.
+  execute_process( COMMAND ${GCOVR_EXECUTABLE} --version
+                   OUTPUT_VARIABLE GCOVR_VERSION_OUTPUT
+                   OUTPUT_STRIP_TRAILING_WHITESPACE
+                 )
+
+  if(GCOVR_VERSION_OUTPUT MATCHES "gcovr ([0-9]+)" AND CMAKE_MATCH_1 GREATER_EQUAL 8)
+    message(WARNING
+            "[${PROJECT_NAME}] - gcovr ${CMAKE_MATCH_1}.x inflates per-file totals on templates, "
+            "its numbers will not match the CI's gcovr 7.x")
+  endif()
+
   # Clang writes notes GCC's gcov cannot read, llvm-cov's gcov mode is what reads them back - and
   # only the one matching the compiler, hence looking for the versioned name first as distributions
   # usually ship no unsuffixed llvm-cov at all.
