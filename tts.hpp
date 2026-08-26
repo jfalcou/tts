@@ -2362,6 +2362,7 @@ namespace tts
       constexpr T valmax    = std::numeric_limits<T>::max();
       constexpr T eps       = std::numeric_limits<T>::epsilon();
       constexpr T quiet_nan = std::numeric_limits<T>::quiet_NaN();
+      if(mini == maxi) return mini;
       if(mini == 0) mini = smvlp;
       if(maxi == 0) maxi = -smvlp;
       if(_::is_inf(mini) && mini < 0) mini = -valmax;
