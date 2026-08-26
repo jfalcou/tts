@@ -38,7 +38,11 @@ copa_make_single_unit ( INTERFACE     tts_test
 ##======================================================================================================================
 copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  unit.infrastructure.exe
-                        FILES         unit/basic/expect.cpp unit/basic/expect_not.cpp unit/basic/main.cpp
+                        FILES         unit/basic/main.cpp
+                                      unit/basic/exceptions.cpp
+                                      unit/basic/expect.cpp
+                                      unit/basic/expect_not.cpp
+                                      unit/basic/when.cpp
                         ROOT          ${root}
                         NAME          unit.basic.cpp
                       )
@@ -48,7 +52,9 @@ copa_make_single_unit ( INTERFACE     tts_test
                         FILES         unit/precision/main.cpp
                                       unit/precision/absolute.cpp
                                       unit/precision/ieee.cpp
+                                      unit/precision/range.cpp
                                       unit/precision/relative.cpp
+                                      unit/precision/sequence.cpp
                                       unit/precision/ulp.cpp
                         ROOT          ${root}
                         NAME          unit.precision.cpp
@@ -68,7 +74,20 @@ copa_make_single_unit ( INTERFACE     tts_test
                         NAME          unit.relation.cpp
                       )
 
-copa_glob_unit( QUIET PATTERN "unit/tests/*.cpp"
+copa_make_single_unit ( INTERFACE     tts_test
+                        DEPENDENCIES  unit.infrastructure.exe
+                        FILES         unit/generator/main.cpp
+                                      unit/generator/generator.cpp
+                                      unit/generator/limits.cpp
+                                      unit/generator/types.cpp
+                        ROOT          ${root}
+                        NAME          unit.generator.cpp
+                      )
+
+##======================================================================================================================
+## Test for TTS driver, options and sinks - one executable per file as each installs its own driver
+##======================================================================================================================
+copa_glob_unit( QUIET PATTERN "unit/driver/*.cpp"
                 RELATIVE ${root} INTERFACE tts_test DEPENDENCIES unit.infrastructure.exe
               )
 
