@@ -92,6 +92,9 @@ namespace tts
       constexpr T eps       = std::numeric_limits<T>::epsilon();
       constexpr T quiet_nan = std::numeric_limits<T>::quiet_NaN();
 
+      // Degenerate range: the only value in [mini,maxi] is mini itself
+      if(mini == maxi) return mini;
+
       // Sanitize 0
       if(mini == 0) mini = smvlp;
       if(maxi == 0) maxi = -smvlp;
