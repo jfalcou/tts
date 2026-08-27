@@ -13,7 +13,7 @@ jobs:
   documentation:
     permissions:
       contents: write
-    uses: jfalcou/copacabana/.github/workflows/documentation.yml@184770e42deec34dc0cc39158960bb3acbbbd06e # v1
+    uses: jfalcou/copacabana/.github/workflows/documentation.yml@17df3f26736d3a0ecc231a3b951f548dcbc09c45 # v2
     with:
       project: tts
       coverage: true
