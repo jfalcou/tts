@@ -12,7 +12,6 @@ endif()
 
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/coverage.cmake)
 
 ##======================================================================================================================
 option( TTS_BUILD_TEST          "Build tests for TTS"                                          ON  )
@@ -87,6 +86,6 @@ if(TTS_BUILD_TEST)
 
   # After the test targets exist, so the coverage targets can depend on them
   if(TTS_ENABLE_COVERAGE)
-    tts_setup_coverage(tts_test)
+    copa_setup_coverage(tts_test)
   endif()
 endif()
