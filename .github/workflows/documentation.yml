@@ -10,63 +10,10 @@ on:
       - main
 
 jobs:
-  generate-doc:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/jfalcou/compilers:v10
-    strategy:
-      fail-fast: false
-    steps:
-      - name: Fetch current branch
-        uses: actions/checkout@v6
-      - name: Prepare TTS for documentation
-        run: |
-          mkdir build && cd build
-          cmake .. -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=ON
-
-      - name: Generate Doxygen
-        run: |
-          cd build
-          ninja tts-doxygen
-
-      ##################################################################################################
-      ## Coverage rides along with the documentation so both reach gh-pages in a single deployment,
-      ## which is what keeps one from wiping the other out.
-      ##################################################################################################
-      - name: Generate Coverage Report
-        run: |
-          cmake --preset gcc-coverage
-          cmake --build build/gcc-coverage --config Debug --target tts-coverage-report
-
-      - name: Assemble Coverage into the Site
-        run: |
-          cp -r build/gcc-coverage/coverage build/doc/coverage
-
-          python3 - build/gcc-coverage/coverage/summary.json build/doc/coverage/badge.json <<'EOF'
-          import json, sys
-
-          percent = json.load(open(sys.argv[1]))["line_percent"]
-
-          # Shields paints whatever colour it is handed, so the thresholds belong here.
-          for floor, colour in [(90, "brightgreen"), (75, "green"), (60, "yellow"), (40, "orange")]:
-            if percent >= floor:
-              break
-          else:
-            colour = "red"
-
-          json.dump( { "schemaVersion": 1
-                     , "label": "coverage"
-                     , "message": f"{percent:.1f}%"
-                     , "color": colour
-                     }
-                   , open(sys.argv[2], "w")
-                   )
-          EOF
-
-          cat build/doc/coverage/badge.json
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/doc
+  documentation:
+    permissions:
+      contents: write
+    uses: jfalcou/copacabana/.github/workflows/documentation.yml@184770e42deec34dc0cc39158960bb3acbbbd06e # v1
+    with:
+      project: tts
+      coverage: true
