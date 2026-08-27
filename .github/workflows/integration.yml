@@ -14,62 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  install:
-    runs-on: [ubuntu-latest]
-    container:
-      image: ghcr.io/jfalcou/compilers:v10
-    strategy:
-      fail-fast: false
-
-    steps:
-      - name: Fetch current branch
-        uses: actions/checkout@v6
-      - name: Install TTS from checkout
-        run: |
-          mkdir build && cd build
-          cmake -G Ninja .. -DTTS_BUILD_TEST=OFF
-          ninja install
-      - name: Run Sample CMake
-        run: |
-          mkdir install && cd install
-          cmake ../test/integration/install-test -G Ninja
-          ninja && ctest --verbose
-
-  fetch-content:
-    env:
-      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-    runs-on: [ubuntu-latest]
-    container:
-      image: ghcr.io/jfalcou/compilers:v10
-    strategy:
-      fail-fast: false
-
-    steps:
-      - name: Fetch current branch
-        uses: actions/checkout@v6
-      - name: Run Sample CMake
-        run: |
-          git config --global --add safe.directory /__w/tts/tts
-          mkdir install && cd install
-          cmake ../test/integration/fetch-test -G Ninja -DGIT_BRANCH=${BRANCH_NAME} -DTTS_BUILD_TEST=OFF
-          ninja && ctest --verbose
-
-  cpm:
-    env:
-      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-    runs-on: [ubuntu-latest]
-    container:
-      image: ghcr.io/jfalcou/compilers:v10
-    strategy:
-      fail-fast: false
-
-    steps:
-      - name: Fetch current branch
-        uses: actions/checkout@v6
-      - name: Run Sample CMake
-        run: |
-          git config --global --add safe.directory /__w/tts/tts
-          mkdir install && cd install
-          cmake ../test/integration/cpm-test -G Ninja -DGIT_BRANCH=${BRANCH_NAME}
-          ninja && ctest --verbose
+  integration:
+    uses: jfalcou/copacabana/.github/workflows/integration.yml@184770e42deec34dc0cc39158960bb3acbbbd06e # v1
+    with:
+      project: tts
