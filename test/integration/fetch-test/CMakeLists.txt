@@ -18,6 +18,9 @@ FetchContent_Declare(tts
   GIT_TAG ${GIT_BRANCH}
 )
 
+## FetchContent has no per-package OPTIONS: what tts reads is pinned here.
+set(TTS_BUILD_TEST OFF CACHE BOOL "" FORCE)
+
 # make available
 FetchContent_MakeAvailable(tts)
 
