@@ -82,12 +82,13 @@ namespace tts::_
        [ body ]()
        {
          // We setup the current type name before each test so we know
-         (((current_type = as_text(typename_<Types>)),
-           (::tts::is_detailed()
-            ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
-            : 0),
-           body(type<Types>())),
-          ...);
+         (
+         ((current_type = as_text(typename_<Types>)),
+          (::tts::is_detailed()
+           ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
+           : 0),
+          body(type<Types>())),
+         ...);
          // Clear the current type
          current_type = text {""};
        },

@@ -82,7 +82,7 @@ namespace
     char const* content = target.content().data();
     bool        ok      = true;
     ok                  = ok && (strstr(content, "sinks.cpp:") != nullptr); // NOSONAR
-    ok                  = ok &&
+    ok = ok &&
          (strstr(content, ": error: Expression: 1 == 2 evaluates to false.") != nullptr); // NOSONAR
     return ok;
   }
@@ -132,7 +132,7 @@ namespace
                                R"( skipped="0")";
     bool        ok           = true;
     ok                       = ok && (strstr(content, suite_header) != nullptr); // NOSONAR
-    ok                       = ok &&
+    ok = ok &&
          (strstr(content, R"(<testcase name="Passing case for sink tests")") != nullptr); // NOSONAR
     ok = ok &&
          (strstr(content, R"(<testcase name="Failing case for sink tests")") != nullptr); // NOSONAR

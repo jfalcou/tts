@@ -55,10 +55,10 @@ namespace
       // machine-dependent and would make this test flaky.
       bool sane  = duration_ns < 10'000'000'000ULL;
       log       += tts::text {"FINISHED name=%s passed=%d invalid=%d duration_sane=%d\n",
-                        name.data(),
-                        passed ? 1 : 0,
-                        invalid ? 1 : 0,
-                        sane ? 1 : 0};
+                              name.data(),
+                              passed ? 1 : 0,
+                              invalid ? 1 : 0,
+                              sane ? 1 : 0};
     }
 
     void suite_finished(unsigned long long fail_count, unsigned long long invalid_count) override

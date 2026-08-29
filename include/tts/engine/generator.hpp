@@ -485,8 +485,8 @@ namespace tts
       auto w2 = convert_as(last_, type<D> {});
       D    step =
       (sz - 1)
-         ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
-         : convert_as(0, type<D> {});
+      ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
+      : convert_as(0, type<D> {});
       auto value =
       convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {});
 

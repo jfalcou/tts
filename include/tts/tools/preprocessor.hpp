@@ -71,27 +71,27 @@ namespace tts::_
 #define TTS_REGISTRATION TTS_UNIQUE(tts_registration)
 #endif
 
-#define TTS_UNIQUE3(ID, LINE)                           ID##LINE
-#define TTS_UNIQUE2(ID, LINE)                           TTS_UNIQUE3(ID, LINE)
-#define TTS_UNIQUE(ID)                                  TTS_UNIQUE2(ID, __COUNTER__)
+#define TTS_UNIQUE3(ID, LINE) ID##LINE
+#define TTS_UNIQUE2(ID, LINE) TTS_UNIQUE3(ID, LINE)
+#define TTS_UNIQUE(ID)        TTS_UNIQUE2(ID, __COUNTER__)
 
 //======================================================================================================================
 // Proper Macro concatenation of tokens
 //======================================================================================================================
-#define TTS_CAT(x, y)                                   TTS_CAT_I(x, y)
-#define TTS_CAT_I(x, y)                                 x##y
+#define TTS_CAT(x, y)         TTS_CAT_I(x, y)
+#define TTS_CAT_I(x, y)       x##y
 
 //======================================================================================================================
 // Proper Macro token -> string conversion
 //======================================================================================================================
-#define TTS_STRING(...)                                 TTS_STRING_((__VA_ARGS__))
-#define TTS_STRING__(...)                               #__VA_ARGS__
-#define TTS_STRING_(TXT)                                TTS_STRING__ TXT
+#define TTS_STRING(...)       TTS_STRING_((__VA_ARGS__))
+#define TTS_STRING__(...)     #__VA_ARGS__
+#define TTS_STRING_(TXT)      TTS_STRING__ TXT
 
 //======================================================================================================================
 // Count amount of variadic tokens
 //======================================================================================================================
-#define TTS_COUNT(...)                                  TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
+#define TTS_COUNT(...)        TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
 #define TTS_COUNT_(A0, A1, A2, A3, A4, A5, A6, A7, ...) A7
 
 //======================================================================================================================
