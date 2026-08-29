@@ -15,10 +15,10 @@ namespace n1
   struct my_real
   {
     float x;
-    operator float() const
-    {
-      return x;
-    }
+
+    // clang-format off
+    operator float() const { return x; }
+    // clang-format on
   };
 
   inline double ulp_distance(my_real const& a, my_real const& b)
