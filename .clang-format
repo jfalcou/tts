@@ -1,88 +1,35 @@
-##==================================================================================================
-##  TTS - Tiny Test System
-##  Copyright : TTS Contributors & Maintainers
-##  SPDX-License-Identifier: BSL-1.0
-##==================================================================================================
-AlignConsecutiveAssignments:
-  Enabled: true
-  AcrossEmptyLines: true
-  AcrossComments: false
-  AlignCompound: true
-  AlignFunctionPointers: false
-  PadOperators: true
-AlignConsecutiveDeclarations:
-  Enabled: true
-  AcrossEmptyLines: true
-  AcrossComments: false
-  AlignCompound: true
-  AlignFunctionPointers: false
-  PadOperators: true
-AlignEscapedNewlines: Right
-AlignTrailingComments: true
-AlignAfterOpenBracket: Align
-AllowShortBlocksOnASingleLine: Never
+BasedOnStyle: LLVM
+AlignArrayOfStructures: Right
+AlignConsecutiveAssignments: {Enabled: true, AcrossEmptyLines: true, AcrossComments: false, AlignCompound: true, AlignFunctionDeclarations: false, AlignFunctionPointers: false, PadOperators: true}
+AlignConsecutiveDeclarations: {Enabled: true, AcrossEmptyLines: true, AcrossComments: false, AlignCompound: true, AlignFunctionDeclarations: true, AlignFunctionPointers: false, PadOperators: true}
+AlignConsecutiveMacros: {Enabled: true, AcrossEmptyLines: true, AcrossComments: true, AlignCompound: true, AlignFunctionDeclarations: false, AlignFunctionPointers: false, PadOperators: true}
+AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: AllIfsAndElse
-AllowShortLambdasOnASingleLine: All
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakTemplateDeclarations: MultiLine
+BinPackArguments: false
+BinPackParameters: OnePerLine
+BraceWrapping: {AfterCaseLabel: true, AfterClass: true, AfterControlStatement: Always, AfterEnum: true, AfterExternBlock: true, AfterFunction: true, AfterNamespace: true, AfterObjCDeclaration: true, AfterStruct: true,
+  AfterUnion: true, BeforeCatch: true, BeforeElse: true, BeforeLambdaBody: true, BeforeWhile: false, IndentBraces: false, SplitEmptyFunction: true, SplitEmptyRecord: true, SplitEmptyNamespace: true}
 BreakBeforeBraces: Allman
-BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 ColumnLimit: 100
-Cpp11BracedListStyle: true
-CommentPragmas: '^ [^@]'
+CommentPragmas: ^ [^@]
 ContinuationIndentWidth: 0
 FixNamespaceComments: false
 IncludeBlocks: Regroup
-IndentCaseLabels: false
-IndentPPDirectives: None
-IndentWidth: 2
-KeepEmptyLinesAtTheStartOfBlocks: false
-MaxEmptyLinesToKeep: 1
+InsertNewlineAtEOF: true
+KeepEmptyLines: {AtEndOfFile: false, AtStartOfBlock: false, AtStartOfFile: true}
 NamespaceIndentation: All
 PointerAlignment: Left
-ReflowComments: true
-SortIncludes: Never
-SortUsingDeclarations: true
-SpaceAfterTemplateKeyword: false
-SpaceBeforeAssignmentOperators: true
-SpaceBeforeCpp11BracedList: true
-SpaceBeforeCtorInitializerColon: true
-SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: Never
-SpaceBeforeRangeBasedForLoopColon: false
-SpaceInEmptyParentheses: false
-SpacesInAngles: false
-SpacesInContainerLiterals: true
-SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false
-SpacesInSquareBrackets: true
-Standard: Cpp11
-UseTab: Never
-BinPackArguments: false
-BinPackParameters: false
-ExperimentalAutoDetectBinPacking: false
-AllowAllParametersOfDeclarationOnNextLine: false
 QualifierAlignment: Right
-ReferenceAlignment: Pointer
-AlignArrayOfStructures: Right
-AlignConsecutiveMacros:
-  Enabled: true
-  AcrossEmptyLines: true
-  AcrossComments: true
-  AlignCompound: true
-  PadOperators: true
-AllowShortCaseExpressionOnASingleLine: true
-AllowShortEnumsOnASingleLine: true
-BreakBeforeConceptDeclarations: Always
-InsertNewlineAtEOF: true
-Language: Cpp
-StatementMacros:
-  - TTS_CASE
-  - TTS_CASE_TPL
-  - TTS_CASE_WITH
-  - TTS_WHEN
-  - TTS_AND_THEN
+SortIncludes: {Enabled: false, IgnoreCase: false, IgnoreExtension: false}
+SpaceAfterTemplateKeyword: false
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeParens: Never
+SpaceBeforeParensOptions: {AfterControlStatements: false, AfterForeachMacros: false, AfterFunctionDefinitionName: false, AfterFunctionDeclarationName: false, AfterIfMacros: false, AfterNot: false, AfterOverloadedOperator: false,
+  AfterPlacementOperator: true, AfterRequiresInClause: false, AfterRequiresInExpression: false, BeforeNonEmptyParentheses: false}
+SpaceBeforeRangeBasedForLoopColon: false
+SpacesInSquareBrackets: true
+StatementMacros: [TTS_CASE, TTS_CASE_TPL, TTS_CASE_WITH, TTS_WHEN, TTS_AND_THEN]
