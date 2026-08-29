@@ -114,15 +114,15 @@ namespace tts::_
 #ifndef TTS_REGISTRATION
 #define TTS_REGISTRATION TTS_UNIQUE(tts_registration)
 #endif
-#define TTS_UNIQUE3(ID, LINE)                           ID##LINE
-#define TTS_UNIQUE2(ID, LINE)                           TTS_UNIQUE3(ID, LINE)
-#define TTS_UNIQUE(ID)                                  TTS_UNIQUE2(ID, __COUNTER__)
-#define TTS_CAT(x, y)                                   TTS_CAT_I(x, y)
-#define TTS_CAT_I(x, y)                                 x##y
-#define TTS_STRING(...)                                 TTS_STRING_((__VA_ARGS__))
-#define TTS_STRING__(...)                               #__VA_ARGS__
-#define TTS_STRING_(TXT)                                TTS_STRING__ TXT
-#define TTS_COUNT(...)                                  TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
+#define TTS_UNIQUE3(ID, LINE) ID##LINE
+#define TTS_UNIQUE2(ID, LINE) TTS_UNIQUE3(ID, LINE)
+#define TTS_UNIQUE(ID)        TTS_UNIQUE2(ID, __COUNTER__)
+#define TTS_CAT(x, y)         TTS_CAT_I(x, y)
+#define TTS_CAT_I(x, y)       x##y
+#define TTS_STRING(...)       TTS_STRING_((__VA_ARGS__))
+#define TTS_STRING__(...)     #__VA_ARGS__
+#define TTS_STRING_(TXT)      TTS_STRING__ TXT
+#define TTS_COUNT(...)        TTS_COUNT_(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
 #define TTS_COUNT_(A0, A1, A2, A3, A4, A5, A6, A7, ...) A7
 #define TTS_ARG0()
 #define TTS_ARG1(A0)                         auto&& A0
@@ -2919,8 +2919,8 @@ namespace tts
       auto w2 = convert_as(last_, type<D> {});
       D    step =
       (sz - 1)
-         ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
-         : convert_as(0, type<D> {});
+      ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
+      : convert_as(0, type<D> {});
       auto value =
       convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {});
       return (w1 <= w2) ? _::min(value, w2) : _::max(value, w2);
@@ -3041,12 +3041,13 @@ namespace tts::_
       {name,
        [ body ]()
        {
-         (((current_type = as_text(typename_<Types>)),
-           (::tts::is_detailed()
-            ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
-            : 0),
-           body(type<Types>())),
-          ...);
+         (
+         ((current_type = as_text(typename_<Types>)),
+          (::tts::is_detailed()
+           ? (::tts::output().writeln(">  With <T = %s>", current_type.data()), 0)
+           : 0),
+          body(type<Types>())),
+         ...);
          current_type = text {""};
        },
        joined_type_names<Types...>(),
