@@ -528,10 +528,15 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...)
     {
-      if constexpr(std::is_unsigned_v<D>)
+      // A bound is not always a number: it can be a per-type recipe evaluated by convert_as,
+      // which has no ordering against 0. Only check the ones that can actually be compared.
+      if constexpr(std::is_unsigned_v<D> && requires { mini >= 0; })
       {
         assert(mini >= 0 &&
                "Minimum value for unsigned type random generator must be non-negative");
+      }
+      if constexpr(std::is_unsigned_v<D> && requires { maxi >= 0; })
+      {
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
