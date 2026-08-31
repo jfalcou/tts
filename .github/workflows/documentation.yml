@@ -8,6 +8,10 @@ on:
   push:
     branches:
       - main
+  ## Builds nothing to deploy here: it reports what Doxygen said while generating the pages.
+  pull_request:
+    branches:
+      - main
 
 jobs:
   documentation:
