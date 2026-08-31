@@ -570,6 +570,24 @@ namespace tts
 
   //====================================================================================================================
   /**
+    @brief Produces valid shift amounts for the target type
+
+    Unlike @ref tts::random_bits, which draws a full-width bit pattern, this generator draws an
+  index into the bits of the target type - a value in `[0, 8*sizeof(T)[`. That is what a shift
+  operand has to be: shifting by the width of the type or more is undefined behaviour.
+  **/
+  //====================================================================================================================
+  struct random_shift
+  {
+    template<typename D> auto operator()(tts::type<D>, auto...) const
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return tts::random_value<i_t>(0, static_cast<i_t>(8 * sizeof(i_t) - 1));
+    }
+  };
+
+  //====================================================================================================================
+  /**
     @brief Converts a generator to produce integer values
 
     This generator adapter takes a generator `g` and produces integer values by generating values
