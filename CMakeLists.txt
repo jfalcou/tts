@@ -68,7 +68,14 @@ copa_setup_standalone ( QUIET
 ## Setup doxygen
 ##======================================================================================================================
 if(TTS_BUILD_DOCUMENTATION)
-  copa_setup_doxygen(${QUIET_OPTION} TARGET tts-doxygen DESTINATION "${PROJECT_BINARY_DIR}/doc")
+  copa_setup_doxygen(
+    ${QUIET_OPTION}
+    TARGET tts-doxygen
+    DESTINATION "${PROJECT_BINARY_DIR}/doc"
+    GODBOLT_LIBRARIES tts
+    COLOR_HUE 189
+    COLOR_SATURATION 48
+    COLOR_LIGHTNESS 48)
 endif()
 
 ##======================================================================================================================

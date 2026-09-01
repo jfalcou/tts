@@ -15,3 +15,4 @@ TTS_CASE_WITH("random bits generator example", tts::arithmetic_types, tts::rando
 {
   TTS_EXPECT(std::is_unsigned_v<T>);
 };
+//! [snippet]
