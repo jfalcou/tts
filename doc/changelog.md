@@ -1,6 +1,20 @@
 Change Log {#changelog}
 ==========
 
+# Version 3.1 - V.I. Warshawski
+
+## What's Changed
+
+### Breaking Changes
+  * `TTS_ABSOLUTE_EQUAL`, `TTS_RELATIVE_EQUAL` and `TTS_ULP_EQUAL` now require both operands to have
+    the same type. They used to compare them after promoting both to their common type, which
+    measured the distance in the unit of the promoted type rather than the one under test: comparing
+    a `float` against its own value as a `double` reported 9.84e+07 ULP instead of 0. A mismatch is
+    now a compile-time error naming both types; convert the expected value at the call site.
+  * Equality, ordering and bitwise checks are unchanged. `TTS_EQUAL` and its typed counterparts
+    forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
+    own.
+
 # Version 3.0 - Beatrice Adela Bradley
 
 ## What's Changed

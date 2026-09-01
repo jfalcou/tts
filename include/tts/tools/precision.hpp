@@ -67,8 +67,12 @@ namespace tts
     }
     else
     {
-      using common_t = std::common_type_t<T, U>;
-      return absolute_check(static_cast<common_t>(a), static_cast<common_t>(b));
+      static_assert(std::is_same_v<T, U>,
+                    "[TTS] TTS_ABSOLUTE_EQUAL needs both operands to have the same type. "
+                    "Comparing through their common type would express the distance in the unit "
+                    "of the promoted type, which is not the one being tested. Convert the "
+                    "expected value at the call site instead.");
+      return 0.;
     }
   }
 
@@ -121,8 +125,12 @@ namespace tts
     }
     else
     {
-      using common_t = std::common_type_t<T, U>;
-      return relative_check(static_cast<common_t>(a), static_cast<common_t>(b));
+      static_assert(std::is_same_v<T, U>,
+                    "[TTS] TTS_RELATIVE_EQUAL needs both operands to have the same type. "
+                    "Comparing through their common type would express the distance in the unit "
+                    "of the promoted type, which is not the one being tested. Convert the "
+                    "expected value at the call site instead.");
+      return 0.;
     }
   }
 
@@ -193,8 +201,12 @@ namespace tts
     }
     else
     {
-      using common_t = std::common_type_t<T, U>;
-      return ulp_check(static_cast<common_t>(a), static_cast<common_t>(b));
+      static_assert(std::is_same_v<T, U>,
+                    "[TTS] TTS_ULP_EQUAL needs both operands to have the same type. "
+                    "Comparing through their common type would express the distance in the unit "
+                    "of the promoted type, which is not the one being tested. Convert the "
+                    "expected value at the call site instead.");
+      return 0.;
     }
   }
 

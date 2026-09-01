@@ -12,7 +12,7 @@
 
 TTS_CASE("Absolute distance")
 {
-  TTS_ABSOLUTE_EQUAL(-2., 2.f, 4.);
-  TTS_ABSOLUTE_EQUAL('A', 80LL, 15, REQUIRED);
+  TTS_ABSOLUTE_EQUAL(-2., 2., 4.);
+  TTS_ABSOLUTE_EQUAL(static_cast<long long>('A'), 80LL, 15, REQUIRED);
 };
 //! [snippet]
