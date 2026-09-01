@@ -11,8 +11,8 @@
 TTS_CASE("Relative distance")
 {
   TTS_RELATIVE_EQUAL(42.f, 42.f, 0);
-  TTS_RELATIVE_EQUAL('A', 80LL, 18.75);
-  TTS_RELATIVE_EQUAL(1., 2.f, 100.);
+  TTS_RELATIVE_EQUAL(static_cast<long long>('A'), 80LL, 18.75);
+  TTS_RELATIVE_EQUAL(1., 2., 100.);
   TTS_RELATIVE_EQUAL(1, 10, 900.);
   TTS_RELATIVE_EQUAL(42.f, 42.f, 0, REQUIRED);
 };
@@ -93,5 +93,5 @@ TTS_CASE("relative_check treats exactly one NaN operand as infinitely far")
 TTS_CASE("Relative distance of type with custom reldist")
 {
   TTS_RELATIVE_EQUAL(n1::my_real {1.f}, n1::my_real {8.f}, 12.5);
-  TTS_RELATIVE_EQUAL(n1::my_real {8.f}, 1.f, 800.);
+  TTS_RELATIVE_EQUAL(n1::my_real {8.f}, n1::my_real {1.f}, 800.);
 };

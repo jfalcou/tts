@@ -67,6 +67,10 @@
 
   This comparison is performed by using the proper tts::absolute_distance overload.
 
+  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
+  be measured after promotion to the common type, hence in the unit of that type rather than
+  the one under test.
+
   @param L, R Expressions to compare.
   @param N    Maximum absolute distance accepted between `L` and `R`.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -89,6 +93,10 @@
 
   This comparison is performed by using the proper tts::relative_distance overload.
 
+  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
+  be measured after promotion to the common type, hence in the unit of that type rather than
+  the one under test.
+
   @param L, R Expressions to compare.
   @param N    Maximum relative percentage accepted between `L` and `R`.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -110,6 +118,10 @@
   @brief Checks if two values are within a given ULP distance
 
   This comparison is performed by using the proper tts::ulp_distance overload.
+
+  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
+  be measured after promotion to the common type, hence in the unit of that type rather than
+  the one under test.
 
   @param L, R Expressions to compare.
   @param N    Maximum ULPs accepted between `L` and `R`.
