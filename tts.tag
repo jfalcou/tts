@@ -523,13 +523,6 @@
     <name>tts::output_handler</name>
     <filename>classtts_1_1output__handler.html</filename>
     <member kind="function">
-      <type></type>
-      <name>output_handler</name>
-      <anchorfile>classtts_1_1output__handler.html</anchorfile>
-      <anchor>af9136631b1485d7dde14f729368f91ab</anchor>
-      <arglist>(output_sink &amp;s=default_sink())</arglist>
-    </member>
-    <member kind="function">
       <type>void</type>
       <name>assertion_failed</name>
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
@@ -549,6 +542,13 @@
       <anchorfile>classtts_1_1output__handler.html</anchorfile>
       <anchor>a76252835b1ef185ad29e4bcda75caab5</anchor>
       <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>output_handler</name>
+      <anchorfile>classtts_1_1output__handler.html</anchorfile>
+      <anchor>af9136631b1485d7dde14f729368f91ab</anchor>
+      <arglist>(output_sink &amp;s=default_sink())</arglist>
     </member>
     <member kind="function">
       <type>output_sink &amp;</type>
@@ -740,7 +740,7 @@
   <compound kind="struct">
     <name>tts::rebuild</name>
     <filename>structtts_1_1rebuild.html</filename>
-    <templarg>tts::_::sequence Seq</templarg>
+    <templarg>tts_implementation_defined Seq</templarg>
     <templarg>typename U</templarg>
   </compound>
   <compound kind="struct">
@@ -928,48 +928,6 @@
     <name>tts::text</name>
     <filename>structtts_1_1text.html</filename>
     <member kind="function">
-      <type></type>
-      <name>text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a9f145d97347d401600c729daa6db7016</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>afad159ee022f1f9eb56d64fe88a85210</anchor>
-      <arglist>(char const *format, Args... args)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>aae99c638e7a882ae6a57bc84a1229a5a</anchor>
-      <arglist>(char const *ptr)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a5b915ebebca894fba4802d64936b6d47</anchor>
-      <arglist>(text &amp;&amp;other) noexcept</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>ab95c0e58193d02e295ec8123775e6feb</anchor>
-      <arglist>(text const &amp;other)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>~text</name>
-      <anchorfile>structtts_1_1text.html</anchorfile>
-      <anchor>a3d2428a18170d89744f048ba757559e0</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
       <type>decltype(auto)</type>
       <name>begin</name>
       <anchorfile>structtts_1_1text.html</anchorfile>
@@ -1059,6 +1017,48 @@
       <anchorfile>structtts_1_1text.html</anchorfile>
       <anchor>ab5678b661ead194b1045172bee5e8b96</anchor>
       <arglist>(text &amp;o) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>text</name>
+      <anchorfile>structtts_1_1text.html</anchorfile>
+      <anchor>a9f145d97347d401600c729daa6db7016</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>text</name>
+      <anchorfile>structtts_1_1text.html</anchorfile>
+      <anchor>afad159ee022f1f9eb56d64fe88a85210</anchor>
+      <arglist>(char const *format, Args... args)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>text</name>
+      <anchorfile>structtts_1_1text.html</anchorfile>
+      <anchor>aae99c638e7a882ae6a57bc84a1229a5a</anchor>
+      <arglist>(char const *ptr)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>text</name>
+      <anchorfile>structtts_1_1text.html</anchorfile>
+      <anchor>a5b915ebebca894fba4802d64936b6d47</anchor>
+      <arglist>(text &amp;&amp;other) noexcept</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>text</name>
+      <anchorfile>structtts_1_1text.html</anchorfile>
+      <anchor>ab95c0e58193d02e295ec8123775e6feb</anchor>
+      <arglist>(text const &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>~text</name>
+      <anchorfile>structtts_1_1text.html</anchorfile>
+      <anchor>a3d2428a18170d89744f048ba757559e0</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="friend">
       <type>friend OS &amp;</type>
