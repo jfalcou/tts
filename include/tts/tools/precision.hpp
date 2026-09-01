@@ -98,7 +98,7 @@ namespace tts
     {
       if constexpr(std::is_same_v<T, bool>) // Boolean case
       {
-        return a == b ? 0. : 100.;
+        return a == b ? 0. : 1.;
       }
       else if constexpr(std::is_floating_point_v<T>) // IEEE cases
       {
@@ -107,7 +107,7 @@ namespace tts
         if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
           return std::numeric_limits<double>::infinity();
 
-        return 100. * (_::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b))));
+        return _::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b)));
       }
       else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
       {

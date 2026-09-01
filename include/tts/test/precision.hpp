@@ -89,7 +89,7 @@
 //======================================================================================================================
 /**
   @def TTS_RELATIVE_EQUAL
-  @brief Checks if values are within a given relative distance expressed as a percentage.
+  @brief Checks if values are within a given relative distance.
 
   This comparison is performed by using the proper tts::relative_distance overload.
 
@@ -98,7 +98,8 @@
   the one under test.
 
   @param L, R Expressions to compare.
-  @param N    Maximum relative percentage accepted between `L` and `R`.
+  @param N    Maximum relative distance accepted between `L` and `R`, as a ratio: `0.005` is
+              half a percent. `abs(L-R) / max(abs(L), abs(R), 1)` is what gets compared to it.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
@@ -109,7 +110,7 @@
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)                                                           \
-  TTS_PRECISION(L, R, N, "%", ::tts::relative_check, 8, __VA_ARGS__)
+  TTS_PRECISION(L, R, N, "rel", ::tts::relative_check, 8, __VA_ARGS__)
 #endif
 
 //======================================================================================================================

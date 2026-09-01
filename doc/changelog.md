@@ -11,6 +11,12 @@ Change Log {#changelog}
     measured the distance in the unit of the promoted type rather than the one under test: comparing
     a `float` against its own value as a `double` reported 9.84e+07 ULP instead of 0. A mismatch is
     now a compile-time error naming both types; convert the expected value at the call site.
+  * `TTS_RELATIVE_EQUAL` and `TTS_ALL_RELATIVE_EQUAL` report a ratio where they used to report a
+    percentage, and the unit they print is `rel` rather than `%`. `abs(L-R) / max(abs(L), abs(R), 1)`
+    is compared to the tolerance directly, so every existing tolerance has to be divided by a
+    hundred. The factor was the odd one out: `ulp` and `absolute` already reported the quantity
+    itself, and a consumer overloading the hook naturally returns the quotient — one that did was
+    testing a hundred times looser than its tolerances read.
   * Equality, ordering and bitwise checks are unchanged. `TTS_EQUAL` and its typed counterparts
     forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
     own.
