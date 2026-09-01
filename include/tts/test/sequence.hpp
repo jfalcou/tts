@@ -147,13 +147,14 @@ their sizes are equal.
 //======================================================================================================================
 /**
   @def TTS_ALL_RELATIVE_EQUAL
-  @brief Checks if all elements of two sequences are within a given relative percentage and that
+  @brief Checks if all elements of two sequences are within a given relative distance and that
 their sizes are equal.
 
   This comparison is performed by using the proper tts::relative_check overload.
 
   @param L, R Sequences to compare.
-  @param N    Maximum relative percentage accepted between `L` and `R`.
+  @param N    Maximum relative distance accepted between `L` and `R`, as a ratio: `0.005` is
+              half a percent. `abs(L-R) / max(abs(L), abs(R), 1)` is what gets compared to it.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
@@ -164,7 +165,7 @@ their sizes are equal.
 #define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)                                                       \
-  TTS_ALL(L, R, ::tts::relative_check, N, "%", __VA_ARGS__)
+  TTS_ALL(L, R, ::tts::relative_check, N, "rel", __VA_ARGS__)
 #endif
 
 //======================================================================================================================

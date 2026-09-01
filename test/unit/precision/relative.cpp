@@ -11,18 +11,18 @@
 TTS_CASE("Relative distance")
 {
   TTS_RELATIVE_EQUAL(42.f, 42.f, 0);
-  TTS_RELATIVE_EQUAL(static_cast<long long>('A'), 80LL, 18.75);
-  TTS_RELATIVE_EQUAL(1., 2., 100.);
-  TTS_RELATIVE_EQUAL(1, 10, 900.);
+  TTS_RELATIVE_EQUAL(static_cast<long long>('A'), 80LL, 0.1875);
+  TTS_RELATIVE_EQUAL(1., 2., 1.);
+  TTS_RELATIVE_EQUAL(1, 10, 9.);
   TTS_RELATIVE_EQUAL(42.f, 42.f, 0, REQUIRED);
 };
 
 TTS_CASE("Relative distance between boolean")
 {
   TTS_RELATIVE_EQUAL(true, true, 0.);
-  TTS_RELATIVE_EQUAL(true, false, 100.);
+  TTS_RELATIVE_EQUAL(true, false, 1.);
   TTS_RELATIVE_EQUAL(false, false, 0.);
-  TTS_RELATIVE_EQUAL(false, true, 100.);
+  TTS_RELATIVE_EQUAL(false, true, 1.);
 };
 
 TTS_CASE_TPL("Relative distance between integers",
@@ -39,8 +39,8 @@ TTS_CASE_TPL("Relative distance between integers",
   T a = 65, b = static_cast<T>(a + 5);
 
   TTS_RELATIVE_EQUAL(a, a, 0.);
-  TTS_RELATIVE_EQUAL(a, b, 7.15);
-  TTS_RELATIVE_EQUAL(b, a, 7.15);
+  TTS_RELATIVE_EQUAL(a, b, 0.0715);
+  TTS_RELATIVE_EQUAL(b, a, 0.0715);
 };
 
 TTS_CASE_TPL("Relative distance between floating point", float, double)
@@ -49,14 +49,14 @@ TTS_CASE_TPL("Relative distance between floating point", float, double)
   T a {1};
 
   TTS_RELATIVE_EQUAL(a, a, 0.);
-  TTS_RELATIVE_EQUAL(a, a + 0.049f, 5);
-  TTS_RELATIVE_EQUAL(a, a - 0.049f, 5);
-  TTS_RELATIVE_EQUAL(a + 0.049f, a, 5);
-  TTS_RELATIVE_EQUAL(a - 0.049f, a, 5);
-  TTS_RELATIVE_EQUAL(a, a + 0.499f, 50);
-  TTS_RELATIVE_EQUAL(a, a - 0.499f, 50);
-  TTS_RELATIVE_EQUAL(a + 0.499f, a, 50);
-  TTS_RELATIVE_EQUAL(a - 0.499f, a, 50);
+  TTS_RELATIVE_EQUAL(a, a + 0.049f, 0.05);
+  TTS_RELATIVE_EQUAL(a, a - 0.049f, 0.05);
+  TTS_RELATIVE_EQUAL(a + 0.049f, a, 0.05);
+  TTS_RELATIVE_EQUAL(a - 0.049f, a, 0.05);
+  TTS_RELATIVE_EQUAL(a, a + 0.499f, 0.5);
+  TTS_RELATIVE_EQUAL(a, a - 0.499f, 0.5);
+  TTS_RELATIVE_EQUAL(a + 0.499f, a, 0.5);
+  TTS_RELATIVE_EQUAL(a - 0.499f, a, 0.5);
 
 #if !defined(__FAST_MATH__)
   T qnan = std::numeric_limits<T>::quiet_NaN();
