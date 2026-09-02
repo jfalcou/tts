@@ -24,7 +24,7 @@ option( TTS_ENABLE_COVERAGE     "Build tests with code coverage instrumentation"
 ##======================================================================================================================
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake ${COPACABANA_SOURCE_DIR}/copacabana/cmake)
 include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
-copa_project_version(MAJOR 3 MINOR 0 PATCH 0)
+copa_project_version(MAJOR 3 MINOR 0 PATCH 0 REPOSITORY https://github.com/jfalcou/tts)
 
 ##======================================================================================================================
 ## Summary Display
