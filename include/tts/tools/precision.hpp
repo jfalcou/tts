@@ -9,6 +9,110 @@
 #include <tts/tools/bitcast.hpp>
 #include <tts/engine/math.hpp>
 
+namespace tts::_
+{
+  //====================================================================================================================
+  // How TTS measures a distance when nothing more specific is known. Pulled into a base so that a
+  // specialization of tts::precision only has to redefine what it actually changes.
+  //====================================================================================================================
+  template<typename T> struct builtin_precision
+  {
+    static double absolute(T const& a, T const& b)
+    {
+      // A consumer still overloading the free function keeps working through this path. Specializing
+      // tts::precision replaces this base outright, so a specialization always wins over it.
+      if constexpr(requires { absolute_distance(a, b); }) return absolute_distance(a, b);
+      else if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
+      else if constexpr(std::is_floating_point_v<T>)
+      {
+        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+        if(is_inf(a) || is_inf(b) || is_nan(a) || is_nan(b))
+          return std::numeric_limits<double>::infinity();
+        return abs(a - b);
+      }
+      else if constexpr(std::is_integral_v<T>)
+        return builtin_precision<double>::absolute(static_cast<double>(a), static_cast<double>(b));
+      else
+      {
+        static_assert(
+        std::is_floating_point_v<T> || std::is_integral_v<T>,
+        "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare. "
+        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to specialize "
+        "tts::precision<T>::absolute ?");
+        return 0.;
+      }
+    }
+
+    static double relative(T const& a, T const& b)
+    {
+      if constexpr(requires { relative_distance(a, b); }) return relative_distance(a, b);
+      else if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
+      else if constexpr(std::is_floating_point_v<T>)
+      {
+        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+        if(is_inf(a) || is_inf(b) || is_nan(a) || is_nan(b))
+          return std::numeric_limits<double>::infinity();
+        return abs(a - b) / max(T(1), max(abs(a), abs(b)));
+      }
+      else if constexpr(std::is_integral_v<T>)
+        return builtin_precision<double>::relative(static_cast<double>(a), static_cast<double>(b));
+      else
+      {
+        static_assert(
+        std::is_floating_point_v<T> || std::is_integral_v<T>,
+        "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare. "
+        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to specialize "
+        "tts::precision<T>::relative ?");
+        return 0.;
+      }
+    }
+
+    static double ulp(T const& a, T const& b)
+    {
+      if constexpr(requires { ulp_distance(a, b); }) return ulp_distance(a, b);
+      else if constexpr(std::is_same_v<T, bool>)
+        return a == b ? 0. : std::numeric_limits<double>::infinity();
+      else if constexpr(std::is_floating_point_v<T>)
+      {
+        using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
+        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+        else if(is_unordered(a, b)) return std::numeric_limits<double>::infinity();
+        else
+        {
+          auto aa = bitinteger(a);
+          auto bb = bitinteger(b);
+          if(aa > bb) std::swap(aa, bb);
+          auto z = static_cast<ui_t>(bb - aa);
+          if(signbit(a) != signbit(b)) ++z;
+          return static_cast<double>(z) / 2.;
+        }
+      }
+      else if constexpr(std::is_integral_v<T>)
+      {
+        using u_t = typename std::make_unsigned<T>::type;
+        auto ua   = static_cast<u_t>(a);
+        auto ub   = static_cast<u_t>(b);
+        return static_cast<double>((a < b) ? (ub - ua) : (ua - ub)) / 2.;
+      }
+      else
+      {
+        static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>,
+                      "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare. "
+                      "Did you mean to use TTS_ALL_ULP_EQUAL or to specialize "
+                      "tts::precision<T>::ulp ?");
+        return 0.;
+      }
+    }
+
+    static bool ieee(T const& a, T const& b)
+    {
+      if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
+      else if constexpr(std::is_floating_point_v<T>) return (a == b) || (is_nan(a) && is_nan(b));
+      else return eq(a, b);
+    }
+  };
+}
+
 namespace tts
 {
   //====================================================================================================================
@@ -17,6 +121,23 @@ namespace tts
     @{
   **/
   //====================================================================================================================
+
+  //====================================================================================================================
+  /*!
+    @ingroup tools-precision
+    @brief How far apart two values of type T are, and when they count as IEEE-equal
+
+    Specialize this for your own types rather than overloading the free functions: a specialization
+    that does not match is a compilation error, where a misnamed overload used to be ignored in
+    silence. Inherit from tts::_::builtin_precision<T> to keep the members you do not redefine.
+
+    The free functions are still honoured by the primary, so existing overloads keep working, but
+    they are deprecated and will be dropped in a later version.
+  **/
+  //====================================================================================================================
+  template<typename T> struct precision : _::builtin_precision<T>
+  {
+  };
 
   //====================================================================================================================
   /*!
@@ -35,45 +156,13 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U> inline double absolute_check(T const& a, U const& b)
   {
-    if constexpr(requires { absolute_distance(a, b); }) return absolute_distance(a, b);
-    else if constexpr(std::is_same_v<T, U>)
-    {
-      if constexpr(std::is_same_v<T, bool>) // Boolean case
-      {
-        return a == b ? 0. : 1.;
-      }
-      else if constexpr(std::is_floating_point_v<T>) // IEEE cases
-      {
-        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
-
-        if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
-          return std::numeric_limits<double>::infinity();
-
-        return _::abs(a - b);
-      }
-      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
-      {
-        auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
-        return absolute_check(d0, d1);
-      }
-      else
-      {
-        static_assert(
-        std::is_floating_point_v<T> || std::is_integral_v<T>,
-        "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
-        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?");
-        return 0.;
-      }
-    }
-    else
-    {
-      static_assert(std::is_same_v<T, U>,
-                    "[TTS] TTS_ABSOLUTE_EQUAL needs both operands to have the same type. "
-                    "Comparing through their common type would express the distance in the unit "
-                    "of the promoted type, which is not the one being tested. Convert the "
-                    "expected value at the call site instead.");
-      return 0.;
-    }
+    static_assert(std::is_same_v<T, U>,
+                  "[TTS] TTS_ABSOLUTE_EQUAL needs both operands to have the same type. "
+                  "Comparing through their common type would express the distance in the unit "
+                  "of the promoted type, which is not the one being tested. Convert the "
+                  "expected value at the call site instead.");
+    if constexpr(std::is_same_v<T, U>) return precision<T>::absolute(a, b);
+    else return 0.;
   }
 
   //====================================================================================================================
@@ -93,45 +182,13 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U> inline double relative_check(T const& a, U const& b)
   {
-    if constexpr(requires { relative_distance(a, b); }) return relative_distance(a, b);
-    else if constexpr(std::is_same_v<T, U>)
-    {
-      if constexpr(std::is_same_v<T, bool>) // Boolean case
-      {
-        return a == b ? 0. : 1.;
-      }
-      else if constexpr(std::is_floating_point_v<T>) // IEEE cases
-      {
-        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
-
-        if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
-          return std::numeric_limits<double>::infinity();
-
-        return _::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b)));
-      }
-      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
-      {
-        auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
-        return relative_check(d0, d1);
-      }
-      else
-      {
-        static_assert(
-        std::is_floating_point_v<T> || std::is_integral_v<T>,
-        "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
-        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?");
-        return 0.;
-      }
-    }
-    else
-    {
-      static_assert(std::is_same_v<T, U>,
-                    "[TTS] TTS_RELATIVE_EQUAL needs both operands to have the same type. "
-                    "Comparing through their common type would express the distance in the unit "
-                    "of the promoted type, which is not the one being tested. Convert the "
-                    "expected value at the call site instead.");
-      return 0.;
-    }
+    static_assert(std::is_same_v<T, U>,
+                  "[TTS] TTS_RELATIVE_EQUAL needs both operands to have the same type. "
+                  "Comparing through their common type would express the distance in the unit "
+                  "of the promoted type, which is not the one being tested. Convert the "
+                  "expected value at the call site instead.");
+    if constexpr(std::is_same_v<T, U>) return precision<T>::relative(a, b);
+    else return 0.;
   }
 
   //====================================================================================================================
@@ -151,63 +208,13 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U> inline double ulp_check(T const& a, U const& b)
   {
-    if constexpr(requires { ulp_distance(a, b); }) return ulp_distance(a, b);
-    else if constexpr(std::is_same_v<T, U>)
-    {
-      if constexpr(std::is_same_v<T, bool>) // Boolean case
-      {
-        return a == b ? 0. : std::numeric_limits<double>::infinity();
-      }
-      else if constexpr(std::is_floating_point_v<T>) // IEEE cases
-      {
-        using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
-
-        if((a == b) || (_::is_nan(a) && _::is_nan(b)))
-        {
-          return 0.;
-        }
-        else if(_::is_unordered(a, b))
-        {
-          return std::numeric_limits<double>::infinity();
-        }
-        else
-        {
-          auto aa = _::bitinteger(a);
-          auto bb = _::bitinteger(b);
-
-          if(aa > bb) std::swap(aa, bb);
-
-          auto z = static_cast<ui_t>(bb - aa);
-
-          if(_::signbit(a) != _::signbit(b)) ++z;
-          return static_cast<double>(z) / 2.;
-        }
-      }
-      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>) // Natural case
-      {
-        using u_t = typename std::make_unsigned<T>::type;
-
-        auto ua   = static_cast<u_t>(a);
-        auto ub   = static_cast<u_t>(b);
-        return static_cast<double>((a < b) ? (ub - ua) : (ua - ub)) / 2.;
-      }
-      else
-      {
-        static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>,
-                      "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
-                      "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_check ?");
-        return 0.;
-      }
-    }
-    else
-    {
-      static_assert(std::is_same_v<T, U>,
-                    "[TTS] TTS_ULP_EQUAL needs both operands to have the same type. "
-                    "Comparing through their common type would express the distance in the unit "
-                    "of the promoted type, which is not the one being tested. Convert the "
-                    "expected value at the call site instead.");
-      return 0.;
-    }
+    static_assert(std::is_same_v<T, U>,
+                  "[TTS] TTS_ULP_EQUAL needs both operands to have the same type. "
+                  "Comparing through their common type would express the distance in the unit "
+                  "of the promoted type, which is not the one being tested. Convert the "
+                  "expected value at the call site instead.");
+    if constexpr(std::is_same_v<T, U>) return precision<T>::ulp(a, b);
+    else return 0.;
   }
 
   //====================================================================================================================
@@ -227,15 +234,13 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U> inline bool ieee_check(T const& a, U const& b)
   {
-    if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
-    else if constexpr(std::is_floating_point_v<T>) // IEEE cases
-    {
+    // Left permissive, unlike the three distances: this one manufactures no conversion, it ends on
+    // eq(a, b). Two different types here are the TTS_EQUAL case, not the precision one.
+    if constexpr(std::is_same_v<T, U>) return precision<T>::ieee(a, b);
+    else if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
+    else if constexpr(std::is_floating_point_v<T>)
       return (a == b) || (_::is_nan(a) && _::is_nan(b));
-    }
-    else
-    {
-      return _::eq(a, b);
-    }
+    else return _::eq(a, b);
   }
   //====================================================================================================================
   //! @}
