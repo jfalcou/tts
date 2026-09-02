@@ -2356,11 +2356,19 @@ namespace tts
     {
       return _::roll(mini, maxi);
     }
+    template<std::floating_point T> T rolling_floor(T mini, T maxi)
+    {
+      constexpr T smvlp = std::numeric_limits<T>::min();
+      constexpr T eps   = std::numeric_limits<T>::epsilon();
+      if(mini != smvlp) return mini;
+      if(maxi == 1) return eps;
+      if(maxi > 1) return max(T(1) / _::sqrt(maxi), mini);
+      return mini;
+    }
     template<std::floating_point T> T roll_random(T mini, T maxi)
     {
       constexpr T smvlp     = std::numeric_limits<T>::min();
       constexpr T valmax    = std::numeric_limits<T>::max();
-      constexpr T eps       = std::numeric_limits<T>::epsilon();
       constexpr T quiet_nan = std::numeric_limits<T>::quiet_NaN();
       if(mini == maxi) return mini;
       if(mini == 0) mini = smvlp;
@@ -2379,8 +2387,7 @@ namespace tts
       T value = {};
       if(mini > 0)
       {
-        if(mini < 1 && maxi > 1) mini = max(T(1) / _::sqrt(maxi), mini);
-        mini      = (maxi == 1) ? eps : mini;
+        mini      = rolling_floor(mini, maxi);
         T log_min = _::log10(mini);
         T log_max = _::log10(maxi);
         T log_val = _::roll(log_min, log_max);
@@ -2388,8 +2395,7 @@ namespace tts
       }
       else if(maxi < 0)
       {
-        if(mini < -1 && maxi > -1) maxi = min(T(1) / _::sqrt(-mini), maxi);
-        maxi      = (mini == -1) ? -eps : maxi;
+        maxi      = -rolling_floor(-maxi, -mini);
         T log_min = _::log10(-maxi);
         T log_max = _::log10(-mini);
         T log_val = _::roll(log_min, log_max);
