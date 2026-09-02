@@ -46,80 +46,114 @@ namespace tts
     @see tts::text
   **/
   //====================================================================================================================
+  // Declared before the base because the base recurses through it: the elements of a sequence
+  // are rendered by as_text, and for a scalar element ADL alone would find nothing.
+  template<typename T> text as_text(T const& e);
+
+  namespace _
+  {
+    //==================================================================================================================
+    // How TTS renders a value when nothing more specific is known. Pulled into a base so that a
+    // specialization of tts::display only has to say what it changes.
+    //==================================================================================================================
+    template<typename T> struct builtin_display
+    {
+      static text render(T const& e)
+      {
+        if constexpr(requires { to_text(e); })
+        {
+          return to_text(e);
+        }
+        else if constexpr(std::floating_point<T>)
+        {
+          auto precision = ::tts::arguments().value(16, "--precision");
+          bool hexmode   = ::tts::arguments()("-x", "--hex");
+          bool scimode   = ::tts::arguments()("-s", "--scientific");
+
+          if(scimode) return text("%.*E", precision, e);
+          else if(hexmode) return text("%#.*A", precision, e);
+          else return text("%.*g", precision, e);
+        }
+        else if constexpr(std::integral<T>)
+        {
+          if constexpr(sizeof(T) > 4)
+          {
+            auto fmt = ::tts::arguments()("-x", "--hex") ? "%lX" : "%ld";
+            return text(fmt, e);
+          }
+          else
+          {
+            auto fmt = ::tts::arguments()("-x", "--hex") ? "%X" : "%d";
+            return text(fmt, e);
+          }
+        }
+        else if constexpr(_::string<T>)
+        {
+          return text("'%.*s'", static_cast<int>(e.size()), e.data() ? e.data() : "");
+        }
+        else if constexpr(_::optional<T>)
+        {
+          // Safe access to type name
+          auto type_desc = as_text(typename_<typename T::value_type>);
+          text base {"optional<%s>", type_desc.data() ? type_desc.data() : "unknown"};
+
+          if(e.has_value())
+          {
+            auto val_desc = as_text(e.value());
+            return base + text("{%s}", val_desc.data() ? val_desc.data() : "?");
+          }
+          else return base + "{}";
+        }
+        else if constexpr(std::is_pointer_v<T>)
+        {
+          auto type_desc = as_text(typename_<T>);
+          return text("%p (%s)", (void*)(e), type_desc.data() ? type_desc.data() : "unknown");
+        }
+        else if constexpr(_::sequence<T>)
+        {
+          text that("{ ");
+          for(auto const& v: e)
+            that += as_text(v) + " ";
+          that += "}";
+          return that;
+        }
+        else
+        {
+          // Display accessible bytes
+          unsigned char bytes[ sizeof(e) ];
+          std::memcpy(bytes, &e, sizeof(e));
+          text txt_bytes("[ ");
+          for(auto const& b: bytes)
+            txt_bytes += text("%2.2X", b) + " ";
+          txt_bytes      += "]";
+
+          auto type_desc  = as_text(typename_<T>);
+          return text("%s: %s",
+                      type_desc.data() ? type_desc.data() : "unknown",
+                      txt_bytes.data() ? txt_bytes.data() : "[]");
+        }
+      }
+    };
+  }
+
+  //====================================================================================================================
+  /*!
+    @ingroup tools-text
+    @brief How a value of type T is rendered in a report
+
+    Specialize this rather than overloading to_text: a specialization that does not match is a
+    compilation error, where a misnamed overload fell back on the byte dump in silence. The
+    to_text overloads are still honoured by the primary, so existing ones keep working, but they
+    are deprecated and will be dropped in a later version.
+  **/
+  //====================================================================================================================
+  template<typename T> struct display : _::builtin_display<T>
+  {
+  };
+
   template<typename T> text as_text(T const& e)
   {
-    if constexpr(requires { to_text(e); })
-    {
-      return to_text(e);
-    }
-    else if constexpr(std::floating_point<T>)
-    {
-      auto precision = ::tts::arguments().value(16, "--precision");
-      bool hexmode   = ::tts::arguments()("-x", "--hex");
-      bool scimode   = ::tts::arguments()("-s", "--scientific");
-
-      if(scimode) return text("%.*E", precision, e);
-      else if(hexmode) return text("%#.*A", precision, e);
-      else return text("%.*g", precision, e);
-    }
-    else if constexpr(std::integral<T>)
-    {
-      if constexpr(sizeof(T) > 4)
-      {
-        auto fmt = ::tts::arguments()("-x", "--hex") ? "%lX" : "%ld";
-        return text(fmt, e);
-      }
-      else
-      {
-        auto fmt = ::tts::arguments()("-x", "--hex") ? "%X" : "%d";
-        return text(fmt, e);
-      }
-    }
-    else if constexpr(_::string<T>)
-    {
-      return text("'%.*s'", static_cast<int>(e.size()), e.data() ? e.data() : "");
-    }
-    else if constexpr(_::optional<T>)
-    {
-      // Safe access to type name
-      auto type_desc = as_text(typename_<typename T::value_type>);
-      text base {"optional<%s>", type_desc.data() ? type_desc.data() : "unknown"};
-
-      if(e.has_value())
-      {
-        auto val_desc = as_text(e.value());
-        return base + text("{%s}", val_desc.data() ? val_desc.data() : "?");
-      }
-      else return base + "{}";
-    }
-    else if constexpr(std::is_pointer_v<T>)
-    {
-      auto type_desc = as_text(typename_<T>);
-      return text("%p (%s)", (void*)(e), type_desc.data() ? type_desc.data() : "unknown");
-    }
-    else if constexpr(_::sequence<T>)
-    {
-      text that("{ ");
-      for(auto const& v: e)
-        that += as_text(v) + " ";
-      that += "}";
-      return that;
-    }
-    else
-    {
-      // Display accessible bytes
-      unsigned char bytes[ sizeof(e) ];
-      std::memcpy(bytes, &e, sizeof(e));
-      text txt_bytes("[ ");
-      for(auto const& b: bytes)
-        txt_bytes += text("%2.2X", b) + " ";
-      txt_bytes      += "]";
-
-      auto type_desc  = as_text(typename_<T>);
-      return text("%s: %s",
-                  type_desc.data() ? type_desc.data() : "unknown",
-                  txt_bytes.data() ? txt_bytes.data() : "[]");
-    }
+    return display<T>::render(e);
   }
 
   //====================================================================================================================
