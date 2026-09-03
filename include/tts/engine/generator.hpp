@@ -59,6 +59,14 @@ namespace tts
 
     template<typename T, bool Signed = false>
     using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
+
+    template<typename T, typename V> struct builtin_conversion
+    {
+      static auto from(V const& v)
+      {
+        return static_cast<T>(v);
+      }
+    };
   }
 
   //====================================================================================================================
@@ -79,12 +87,31 @@ namespace tts
 
   //====================================================================================================================
   /**
+    @brief How a value is read as another type
+
+    Generators funnel their bounds through this, so a bound written once has to answer for every
+  type the case is run on. Specialize it for your own types rather than overloading convert_as.
+
+    Unlike tts::precision and tts::comparison, a stale convert_as overload cannot be reported: the
+  name carries a generic default, so asking whether one exists always answers yes and finds this
+  very dispatcher. An overload still wins over the trait by being the better match, silently.
+
+    @tparam T Target data type
+    @tparam V Type of the value being read
+  **/
+  //====================================================================================================================
+  template<typename T, typename V> struct conversion : _::builtin_conversion<T, V>
+  {
+  };
+
+  //====================================================================================================================
+  /**
     @brief Single value evaluation customization point
   **/
   //====================================================================================================================
   template<typename T, typename V> auto convert_as(V const& v, type<T> const&)
   {
-    return static_cast<T>(v);
+    return conversion<T, V>::from(v);
   }
 
   //====================================================================================================================
@@ -131,26 +158,65 @@ namespace tts
     @return A value of type `T` produced by the generator `g`.
   **/
   //====================================================================================================================
-  template<typename T> auto produce(type<T> const& t, auto g, auto... others)
+  template<typename T> auto produce(type<T> const& t, auto g, auto... others);
+}
+
+namespace tts::_
+{
+  template<typename T> struct builtin_generation
   {
-    return g(t, others...);
-  }
-
-  template<tts::_::sequence T> auto produce(type<T> const&, auto g, auto... args)
-  {
-    using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
-    using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
-
-    typename rebuild<T, value_type>::type that;
-    auto                                  b  = begin(that);
-    auto                                  e  = end(that);
-    std::ptrdiff_t                        sz = e - b;
-
-    for(std::ptrdiff_t i = 0; i < sz; ++i)
+    static auto make(auto g, auto... others)
     {
-      *b++ = produce(tts::type<value_type> {}, g, i, sz, args...);
+      return g(tts::type<T> {}, others...);
     }
-    return that;
+  };
+
+  template<sequence T> struct builtin_generation<T>
+  {
+    static auto make(auto g, auto... args)
+    {
+      using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
+      using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
+
+      typename rebuild<T, value_type>::type that;
+      auto                                  b  = begin(that);
+      auto                                  e  = end(that);
+      std::ptrdiff_t                        sz = e - b;
+
+      for(std::ptrdiff_t i = 0; i < sz; ++i)
+      {
+        *b++ = produce(tts::type<value_type> {}, g, i, sz, args...);
+      }
+      return that;
+    }
+  };
+}
+
+namespace tts
+{
+  //====================================================================================================================
+  /*!
+    @ingroup tools-generators-custom
+    @brief How a value of a given type is built from a generator
+
+    Specialize this for your own types rather than overloading produce. Inherit from
+  tts::_::builtin_generation<T> to keep the default way of building, which hands a scalar straight
+  to the generator and fills a sequence element by element.
+
+    Unlike tts::precision and tts::comparison, a stale produce overload cannot be reported: the name
+  carries a generic default, so asking whether one exists always answers yes and finds the
+  dispatcher itself. An overload still wins over the trait by being the better match, silently.
+
+    @tparam T Target data type
+  **/
+  //====================================================================================================================
+  template<typename T> struct generation : _::builtin_generation<T>
+  {
+  };
+
+  template<typename T> auto produce(type<T> const&, auto g, auto... others)
+  {
+    return generation<T>::make(g, others...);
   }
 
   //====================================================================================================================
@@ -546,6 +612,30 @@ namespace tts
     Mn mini;
     Mx maxi;
   };
+
+  //====================================================================================================================
+  /*!
+    @ingroup tools-generators-custom
+    @brief Whether a generator is a tts::randoms, by its type
+
+    tts::generation keys on the type being built, so a specialization that has to treat a range
+  apart cannot see it in the overload set the way a produce overload could. Recognizing the
+  generator is left here rather than at the point of use, where it would come down to guessing from
+  the members a generator happens to carry.
+
+    @tparam G Generator type being examined
+  **/
+  //====================================================================================================================
+  template<typename G> struct is_randoms : std::false_type
+  {
+  };
+  template<typename Mx, typename Mn> struct is_randoms<randoms<Mx, Mn>> : std::true_type
+  {
+  };
+
+  //! @brief Value alias for tts::is_randoms, indifferent to references and cv-qualifiers
+  template<typename G>
+  inline constexpr bool is_randoms_v = is_randoms<std::remove_cvref_t<G>>::value;
 
   //====================================================================================================================
   /**
