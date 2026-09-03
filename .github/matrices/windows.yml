@@ -1,0 +1,10 @@
+##======================================================================================================================
+##  TTS - Tiny Test System
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
+##======================================================================================================================
+## Read by copacabana's matrix.yml: the rows below are the windows jobs, one per row and configuration.
+runs-on: windows-2022
+rows:
+  - { name: "MSVC"    , preset: "msvc"    }
+  - { name: "Clang-CL", preset: "clangcl" }

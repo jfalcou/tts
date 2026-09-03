@@ -1,0 +1,13 @@
+##======================================================================================================================
+##  TTS - Tiny Test System
+##  Copyright : TTS Contributors & Maintainers
+##  SPDX-License-Identifier: BSL-1.0
+##======================================================================================================================
+## Read by copacabana's matrix.yml: the rows below are the nvidia jobs, one per row and configuration.
+runs-on: self-hosted
+rows:
+  - { preset: "clang-cuda"                                }
+  - { preset: "nvcc"                                      }
+  - { preset: "nvc++", setup: "./.github/scripts/cuda.sh" }
+  - { preset: "nvcc-g++"                                  }
+  - { preset: "nvcc-clang++"                              }
