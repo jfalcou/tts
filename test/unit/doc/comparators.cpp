@@ -18,10 +18,17 @@ namespace sample
     T value;
   };
 
-  template<typename T> bool compare_equal(box<T> const& l, box<T> const& r)
+}
+
+namespace tts
+{
+  template<typename T> struct comparison<sample::box<T>, sample::box<T>>
   {
-    return l.value == r.value;
-  }
+    static bool equal(sample::box<T> const& l, sample::box<T> const& r)
+    {
+      return l.value == r.value;
+    }
+  };
 }
 
 TTS_CASE("Compare values with custom equality")
@@ -48,15 +55,22 @@ namespace sample
     T value;
   };
 
-  template<typename T> bool compare_equal(absolute<T> const& l, absolute<T> const& r)
-  {
-    return std::abs(l.value) == std::abs(r.value);
-  }
+}
 
-  template<typename T> bool compare_less(absolute<T> const& l, absolute<T> const& r)
+namespace tts
+{
+  template<typename T> struct comparison<sample::absolute<T>, sample::absolute<T>>
   {
-    return std::abs(l.value) < std::abs(r.value);
-  }
+    static bool equal(sample::absolute<T> const& l, sample::absolute<T> const& r)
+    {
+      return std::abs(l.value) == std::abs(r.value);
+    }
+
+    static bool less(sample::absolute<T> const& l, sample::absolute<T> const& r)
+    {
+      return std::abs(l.value) < std::abs(r.value);
+    }
+  };
 }
 
 TTS_CASE("Compare values with custom comparisons")
