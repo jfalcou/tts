@@ -23,6 +23,6 @@ jobs:
     permissions:
       actions: read
       contents: read
-    uses: jfalcou/copacabana/.github/workflows/compile-cost.yml@47bf63947ce5d46e3e4a1845dab6b10f403464d5 # feat/hosted-matrix
+    uses: jfalcou/copacabana/.github/workflows/compile-cost.yml@05d0796125e284daa16d9a4f6424c58f98a2bb5a # v7
     with:
       project: tts

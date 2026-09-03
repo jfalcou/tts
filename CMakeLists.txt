@@ -14,31 +14,26 @@ include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/compiler.cmake)
 
 ##======================================================================================================================
-option( TTS_BUILD_TEST          "Build tests for TTS"                                          ON  )
-option( TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS"                                        OFF )
-option( TTS_ENABLE_SANITIZERS   "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF )
-option( TTS_ENABLE_COVERAGE     "Build tests with code coverage instrumentation"               OFF )
-option( TTS_COMPILE_COST        "Measure what every test unit costs to compile"                OFF )
 
 ##======================================================================================================================
 ## Project setup via copacabana
 ##======================================================================================================================
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake ${COPACABANA_SOURCE_DIR}/copacabana/cmake)
 include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
+
+copa_add_option(TTS_BUILD_TEST "Build tests for TTS" ON LABEL "Unit tests")
+copa_add_option(TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF LABEL "Doxygen")
+copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF LABEL "Sanitizers")
+copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
+copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
 copa_project_version(MAJOR 3 MINOR 0 PATCH 0 REPOSITORY https://github.com/jfalcou/tts)
 
 ##======================================================================================================================
 ## Summary Display
 ##======================================================================================================================
+copa_show_options()
+
 if(NOT TTS_QUIET)
-  if(CMAKE_BUILD_TYPE)
-    message(STATUS "[${PROJECT_NAME}] - Building in ${CMAKE_BUILD_TYPE} mode")
-  endif()
-  message(STATUS "[${PROJECT_NAME}] - Unit tests   : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
-  message(STATUS "[${PROJECT_NAME}] - Doxygen      : ${TTS_BUILD_DOCUMENTATION} (via TTS_BUILD_DOCUMENTATION)")
-  message(STATUS "[${PROJECT_NAME}] - Sanitizers   : ${TTS_ENABLE_SANITIZERS} (via TTS_ENABLE_SANITIZERS)")
-  message(STATUS "[${PROJECT_NAME}] - Coverage     : ${TTS_ENABLE_COVERAGE} (via TTS_ENABLE_COVERAGE)")
-  message(STATUS "[${PROJECT_NAME}] - Compile cost : ${TTS_COMPILE_COST} (via TTS_COMPILE_COST)")
   set(QUIET_OPTION "")
 else()
   set(QUIET_OPTION "QUIET")
