@@ -25,6 +25,7 @@
         <tab type="user" url="@ref test-types"      title="Type Tests"/>
       </tab>
       <tab type="usergroup" visible="yes" title="Tools and Helpers" intro="">
+        <tab type="user" url="@ref tools-comparison"        title="Comparison Utilities"/>
         <tab type="user" url="@ref tools-config"            title="Configuration"/>
         <tab type="user" url="@ref tools-generators-class"  title="Data Generators"/>
         <tab type="user" url="@ref tools-output"            title="Output Utilities"/>

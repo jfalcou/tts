@@ -15,11 +15,27 @@ Change Log {#changelog}
     percentage, and the unit they print is `rel` rather than `%`. `abs(L-R) / max(abs(L), abs(R), 1)`
     is compared to the tolerance directly, so every existing tolerance has to be divided by a
     hundred. The factor was the odd one out: `ulp` and `absolute` already reported the quantity
-    itself, and a consumer overloading the hook naturally returns the quotient — one that did was
+    itself, and a consumer overloading the hook naturally returns the quotient; one that did was
     testing a hundred times looser than its tolerances read.
   * Equality, ordering and bitwise checks are unchanged. `TTS_EQUAL` and its typed counterparts
     forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
     own.
+
+### New Features
+  * Every customization point is now reachable as a trait. `tts::precision<T>`, `tts::display<T>`,
+    `tts::comparison<L, R>`, `tts::generation<T>` and `tts::conversion<T, V>` stand where the free
+    functions `ulp_distance`, `relative_distance`, `absolute_distance`, `ieee_equal`, `to_text`,
+    `compare_equal`, `compare_less`, `produce` and `convert_as` used to be reached by name. A
+    specialization that does not match is a compilation error, where a misnamed overload was
+    ignored in silence. Each trait inherits its defaults from a `tts::_::builtin_*` base, so a
+    specialization keeps the members it leaves alone by inheriting from that base.
+  * Every free function above is still honoured by its trait's primary, so existing overloads keep
+    working. They are deprecated and will be dropped in a later version. `tts::generation` and
+    `tts::conversion` are the two that cannot report a stale overload: their names carry a generic
+    default, so asking whether one exists always answers yes and finds the dispatcher itself.
+  * `tts::is_randoms` and its `tts::is_randoms_v` alias name the range generator by its type. A
+    `tts::generation` specialization keys on the type being built and cannot see the generator in
+    an overload set, so a range that has to be drawn apart is recognized this way.
 
 # Version 3.0 - Beatrice Adela Bradley
 
