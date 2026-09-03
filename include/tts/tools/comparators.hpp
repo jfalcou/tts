@@ -16,16 +16,22 @@ namespace tts::_
   {
     static constexpr bool equal(L const& l, R const& r)
     {
-      // A consumer still overloading the free function keeps working through this path. Specializing
-      // tts::comparison replaces this base outright, so a specialization always wins over it.
-      if constexpr(requires { compare_equal(l, r); }) return compare_equal(l, r);
-      else return l == r;
+      static_assert(
+      !requires { compare_equal(l, r); },
+      "[TTS] tts::compare_equal is no longer a customization point. "
+      "Specialize tts::comparison<L, R>::equal instead.");
+
+      return l == r;
     }
 
     static constexpr bool less(L const& l, R const& r)
     {
-      if constexpr(requires { compare_less(l, r); }) return compare_less(l, r);
-      else return l < r;
+      static_assert(
+      !requires { compare_less(l, r); },
+      "[TTS] tts::compare_less is no longer a customization point. "
+      "Specialize tts::comparison<L, R>::less instead.");
+
+      return l < r;
     }
   };
 }
@@ -51,8 +57,8 @@ namespace tts
     Both operand types are parameters, in the order they are written, so a comparison between two
     different types is specialized on the pair rather than on either side of it.
 
-    The free functions are still honoured by the primary, so existing overloads keep working, but
-    they are deprecated and will be dropped in a later version.
+    The `compare_equal` and `compare_less` free functions this replaces are gone. An overload left
+    behind is reported where it would have been used, rather than ignored in silence.
 
     @tparam L Type of the left-hand operand
     @tparam R Type of the right-hand operand, the same as L unless stated otherwise

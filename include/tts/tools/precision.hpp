@@ -19,10 +19,12 @@ namespace tts::_
   {
     static double absolute(T const& a, T const& b)
     {
-      // A consumer still overloading the free function keeps working through this path. Specializing
-      // tts::precision replaces this base outright, so a specialization always wins over it.
-      if constexpr(requires { absolute_distance(a, b); }) return absolute_distance(a, b);
-      else if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
+      static_assert(
+      !requires { absolute_distance(a, b); },
+      "[TTS] tts::absolute_distance is no longer a customization point. "
+      "Specialize tts::precision<T>::absolute instead.");
+
+      if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
       else if constexpr(std::is_floating_point_v<T>)
       {
         if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
@@ -45,8 +47,12 @@ namespace tts::_
 
     static double relative(T const& a, T const& b)
     {
-      if constexpr(requires { relative_distance(a, b); }) return relative_distance(a, b);
-      else if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
+      static_assert(
+      !requires { relative_distance(a, b); },
+      "[TTS] tts::relative_distance is no longer a customization point. "
+      "Specialize tts::precision<T>::relative instead.");
+
+      if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
       else if constexpr(std::is_floating_point_v<T>)
       {
         if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
@@ -69,8 +75,12 @@ namespace tts::_
 
     static double ulp(T const& a, T const& b)
     {
-      if constexpr(requires { ulp_distance(a, b); }) return ulp_distance(a, b);
-      else if constexpr(std::is_same_v<T, bool>)
+      static_assert(
+      !requires { ulp_distance(a, b); },
+      "[TTS] tts::ulp_distance is no longer a customization point. "
+      "Specialize tts::precision<T>::ulp instead.");
+
+      if constexpr(std::is_same_v<T, bool>)
         return a == b ? 0. : std::numeric_limits<double>::infinity();
       else if constexpr(std::is_floating_point_v<T>)
       {
@@ -106,8 +116,12 @@ namespace tts::_
 
     static bool ieee(T const& a, T const& b)
     {
-      if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
-      else if constexpr(std::is_floating_point_v<T>) return (a == b) || (is_nan(a) && is_nan(b));
+      static_assert(
+      !requires { ieee_equal(a, b); },
+      "[TTS] tts::ieee_equal is no longer a customization point. "
+      "Specialize tts::precision<T>::ieee instead.");
+
+      if constexpr(std::is_floating_point_v<T>) return (a == b) || (is_nan(a) && is_nan(b));
       else return eq(a, b);
     }
   };
@@ -131,8 +145,9 @@ namespace tts
     that does not match is a compilation error, where a misnamed overload used to be ignored in
     silence. Inherit from tts::_::builtin_precision<T> to keep the members you do not redefine.
 
-    The free functions are still honoured by the primary, so existing overloads keep working, but
-    they are deprecated and will be dropped in a later version.
+    The `ulp_distance`, `relative_distance`, `absolute_distance` and `ieee_equal` free functions
+    this replaces are gone. An overload left behind is reported where it would have been used,
+    rather than ignored in silence.
   **/
   //====================================================================================================================
   template<typename T> struct precision : _::builtin_precision<T>
@@ -234,10 +249,10 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename U> inline bool ieee_check(T const& a, U const& b)
   {
-    // Left permissive, unlike the three distances: this one manufactures no conversion, it ends on
-    // eq(a, b). Two different types here are the TTS_EQUAL case, not the precision one.
+    // Left permissive on the pair of types, unlike the three distances: this one manufactures no
+    // conversion, it ends on eq(a, b). Two different types here are the TTS_EQUAL case, not the
+    // precision one, and neither of them can name a single tts::precision to answer.
     if constexpr(std::is_same_v<T, U>) return precision<T>::ieee(a, b);
-    else if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
     else if constexpr(std::is_floating_point_v<T>)
       return (a == b) || (_::is_nan(a) && _::is_nan(b));
     else return _::eq(a, b);
