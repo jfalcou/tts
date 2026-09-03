@@ -17,23 +17,32 @@ namespace space
     int i;
   };
 
-  tts::text to_text(some_type const& s)
-  {
-    return "some_type[" + tts::as_text(s.i) + "]";
-  }
-
   struct some_other_type
   {
-    int              j;
+    int j;
+  };
+}
 
-    friend tts::text to_text(some_other_type const& s)
+namespace tts
+{
+  template<> struct display<space::some_type>
+  {
+    static text render(space::some_type const& s)
     {
-      return "[[" + tts::as_text(s.j) + "]]";
+      return "some_type[" + as_text(s.i) + "]";
+    }
+  };
+
+  template<> struct display<space::some_other_type>
+  {
+    static text render(space::some_other_type const& s)
+    {
+      return "[[" + as_text(s.j) + "]]";
     }
   };
 }
 
-TTS_CASE("Check display of type with specific to_text")
+TTS_CASE("Check display of type with a tts::display specialization")
 {
   TTS_EQUAL(tts::as_text(space::some_type {42}), "some_type[42]");
   TTS_EQUAL(tts::as_text(space::some_other_type {63}), "[[63]]");
