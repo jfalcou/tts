@@ -92,9 +92,10 @@ namespace tts
     Generators funnel their bounds through this, so a bound written once has to answer for every
   type the case is run on. Specialize it for your own types rather than overloading convert_as.
 
-    Unlike tts::precision and tts::comparison, a stale convert_as overload cannot be reported: the
-  name carries a generic default, so asking whether one exists always answers yes and finds this
-  very dispatcher. An overload still wins over the trait by being the better match, silently.
+    The `convert_as` free function is the dispatcher rather than a customization point, and the
+  call sites reach it qualified, so an overload of that name in another namespace is never found.
+  It carries a generic default, which is why a leftover cannot be reported the way tts::precision
+  and tts::comparison report theirs.
 
     @tparam T Target data type
     @tparam V Type of the value being read
@@ -203,9 +204,10 @@ namespace tts
   tts::_::builtin_generation<T> to keep the default way of building, which hands a scalar straight
   to the generator and fills a sequence element by element.
 
-    Unlike tts::precision and tts::comparison, a stale produce overload cannot be reported: the name
-  carries a generic default, so asking whether one exists always answers yes and finds the
-  dispatcher itself. An overload still wins over the trait by being the better match, silently.
+    The `produce` free function is the dispatcher rather than a customization point, and the call
+  sites reach it qualified, so an overload of that name in another namespace is never found. It
+  carries a generic default, which is why a leftover cannot be reported the way tts::precision and
+  tts::comparison report theirs.
 
     @tparam T Target data type
   **/
@@ -393,7 +395,7 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...) const
     {
-      return convert_as(seed, type<D> {});
+      return ::tts::convert_as(seed, type<D> {});
     }
 
     T seed;
@@ -424,12 +426,12 @@ namespace tts
 
     template<typename D> auto operator()(tts::type<D>) const
     {
-      return convert_as(false, type<tts::boolean_type_t<D>> {});
+      return ::tts::convert_as(false, type<tts::boolean_type_t<D>> {});
     }
 
     template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
+      return ::tts::convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
     }
 
     T start;
@@ -466,12 +468,12 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(start + idx * step, type<D> {});
+      return ::tts::convert_as(start + idx * step, type<D> {});
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(start, type<D> {});
+      return ::tts::convert_as(start, type<D> {});
     }
 
     T start;
@@ -508,12 +510,12 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(start - idx * step, type<D> {});
+      return ::tts::convert_as(start - idx * step, type<D> {});
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(start, type<D> {});
+      return ::tts::convert_as(start, type<D> {});
     }
 
     T start;
@@ -547,14 +549,13 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      auto w1 = convert_as(first_, type<D> {});
-      auto w2 = convert_as(last_, type<D> {});
-      D    step =
-      (sz - 1)
-      ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
-      : convert_as(0, type<D> {});
-      auto value =
-      convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {});
+      auto w1    = ::tts::convert_as(first_, type<D> {});
+      auto w2    = ::tts::convert_as(last_, type<D> {});
+      D    step  = (sz - 1) ? static_cast<D>(::tts::convert_as(last_ - first_, type<D> {}) /
+                                             ::tts::convert_as(sz - 1, type<D> {}))
+                            : ::tts::convert_as(0, type<D> {});
+      auto value = ::tts::convert_as(
+      w1 + ::tts::convert_as(idx, type<D> {}) * ::tts::convert_as(step, type<D> {}), type<D> {});
 
       // Clamp rounding overshoot back to the last bound, whichever direction the range runs in.
       return (w1 <= w2) ? _::min(value, w2) : _::max(value, w2);
@@ -562,7 +563,7 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(first_, type<D> {});
+      return ::tts::convert_as(first_, type<D> {});
     }
 
     T first_;
@@ -606,7 +607,7 @@ namespace tts
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(convert_as(mini, type<D> {}), convert_as(maxi, type<D> {}));
+      return random_value(::tts::convert_as(mini, type<D> {}), ::tts::convert_as(maxi, type<D> {}));
     }
 
     Mn mini;

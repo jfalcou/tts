@@ -9,6 +9,7 @@
 
 #include <tts/tools/text.hpp>
 #include <tts/tools/options.hpp>
+#include <tts/tools/source_location.hpp>
 #include <tts/tools/types.hpp>
 
 namespace tts
@@ -60,11 +61,12 @@ namespace tts
     {
       static text render(T const& e)
       {
-        if constexpr(requires { to_text(e); })
-        {
-          return to_text(e);
-        }
-        else if constexpr(std::floating_point<T>)
+        static_assert(
+        !requires { to_text(e); },
+        "[TTS] tts::to_text is no longer a customization point. "
+        "Specialize tts::display<T>::render instead.");
+
+        if constexpr(std::floating_point<T>)
         {
           auto precision = ::tts::arguments().value(16, "--precision");
           bool hexmode   = ::tts::arguments()("-x", "--hex");
@@ -142,14 +144,66 @@ namespace tts
     @brief How a value of type T is rendered in a report
 
     Specialize this rather than overloading to_text: a specialization that does not match is a
-    compilation error, where a misnamed overload fell back on the byte dump in silence. The
-    to_text overloads are still honoured by the primary, so existing ones keep working, but they
-    are deprecated and will be dropped in a later version.
+    compilation error, where a misnamed overload fell back on the byte dump in silence. Inherit
+    from tts::_::builtin_display<T> to keep the rendering for anything left alone.
+
+    The `to_text` free function this replaces is gone. An overload left behind is reported where it
+    would have been used, rather than ignored in silence.
   **/
   //====================================================================================================================
   template<typename T> struct display : _::builtin_display<T>
   {
   };
+
+  //====================================================================================================================
+  // TTS renders its own types through its own trait. They used to carry a hidden friend to_text,
+  // which was the customization point being removed, so they answer here like anyone else would.
+  //====================================================================================================================
+  template<> struct display<text>
+  {
+    static text render(text const& t)
+    {
+      return t;
+    }
+  };
+
+  template<typename T> struct display<type<T>>
+  {
+    static text render(type<T> const&)
+    {
+      return as_text(typename_<T>);
+    }
+  };
+
+  template<typename T> struct display<_::typename_impl<T>>
+  {
+    static text render(_::typename_impl<T> const& t)
+    {
+      return text("%.*s", t.size(), t.data());
+    }
+  };
+
+  template<> struct display<_::source_location>
+  {
+    static text render(_::source_location const& s)
+    {
+      return text(s.data());
+    }
+  };
+}
+
+namespace tts::_
+{
+  //====================================================================================================================
+  // Whether a type says how it is rendered. The primary of tts::display inherits the built-in
+  // rendering, so a specialization that answers for a type is exactly one that does not.
+  //====================================================================================================================
+  template<typename T>
+  concept described = !std::is_base_of_v<builtin_display<T>, display<T>>;
+}
+
+namespace tts
+{
 
   template<typename T> text as_text(T const& e)
   {

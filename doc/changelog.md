@@ -1,7 +1,7 @@
 Change Log {#changelog}
 ==========
 
-# Version 3.1 - V.I. Warshawski
+# Version 4.0 - V.I. Warshawski
 
 ## What's Changed
 
@@ -21,18 +21,18 @@ Change Log {#changelog}
     forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
     own.
 
-### New Features
-  * Every customization point is now reachable as a trait. `tts::precision<T>`, `tts::display<T>`,
-    `tts::comparison<L, R>`, `tts::generation<T>` and `tts::conversion<T, V>` stand where the free
-    functions `ulp_distance`, `relative_distance`, `absolute_distance`, `ieee_equal`, `to_text`,
-    `compare_equal`, `compare_less`, `produce` and `convert_as` used to be reached by name. A
-    specialization that does not match is a compilation error, where a misnamed overload was
-    ignored in silence. Each trait inherits its defaults from a `tts::_::builtin_*` base, so a
+  * Every customization point is a trait, and the free functions they replace are gone.
+    `tts::precision<T>`, `tts::display<T>`, `tts::comparison<L, R>`, `tts::generation<T>` and
+    `tts::conversion<T, V>` stand where `ulp_distance`, `relative_distance`, `absolute_distance`,
+    `ieee_equal`, `to_text`, `compare_equal`, `compare_less`, `produce` and `convert_as` used to be
+    reached by name. Each trait inherits its defaults from a `tts::_::builtin_*` base, so a
     specialization keeps the members it leaves alone by inheriting from that base.
-  * Every free function above is still honoured by its trait's primary, so existing overloads keep
-    working. They are deprecated and will be dropped in a later version. `tts::generation` and
-    `tts::conversion` are the two that cannot report a stale overload: their names carry a generic
-    default, so asking whether one exists always answers yes and finds the dispatcher itself.
+  * An overload of one of the seven customization names left behind is reported where it would have
+    been used, rather than ignored in silence. `produce` and `convert_as` are the exception: they
+    are the dispatchers rather than customization points, and **TTS** reaches them qualified, so an
+    overload of either name in another namespace is never found.
+
+### New Features
   * `tts::is_randoms` and its `tts::is_randoms_v` alias name the range generator by its type. A
     `tts::generation` specialization keys on the type being built and cannot see the generator in
     an overload set, so a range that has to be drawn apart is recognized this way.
