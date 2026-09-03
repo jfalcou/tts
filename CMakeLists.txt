@@ -18,6 +18,7 @@ option( TTS_BUILD_TEST          "Build tests for TTS"                           
 option( TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS"                                        OFF )
 option( TTS_ENABLE_SANITIZERS   "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF )
 option( TTS_ENABLE_COVERAGE     "Build tests with code coverage instrumentation"               OFF )
+option( TTS_COMPILE_COST        "Measure what every test unit costs to compile"                OFF )
 
 ##======================================================================================================================
 ## Project setup via copacabana
@@ -33,10 +34,11 @@ if(NOT TTS_QUIET)
   if(CMAKE_BUILD_TYPE)
     message(STATUS "[${PROJECT_NAME}] - Building in ${CMAKE_BUILD_TYPE} mode")
   endif()
-  message(STATUS "[${PROJECT_NAME}] - Unit tests : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
-  message(STATUS "[${PROJECT_NAME}] - Doxygen    : ${TTS_BUILD_DOCUMENTATION} (via TTS_BUILD_DOCUMENTATION)")
-  message(STATUS "[${PROJECT_NAME}] - Sanitizers : ${TTS_ENABLE_SANITIZERS} (via TTS_ENABLE_SANITIZERS)")
-  message(STATUS "[${PROJECT_NAME}] - Coverage   : ${TTS_ENABLE_COVERAGE} (via TTS_ENABLE_COVERAGE)")
+  message(STATUS "[${PROJECT_NAME}] - Unit tests   : ${TTS_BUILD_TEST} (via TTS_BUILD_TEST)")
+  message(STATUS "[${PROJECT_NAME}] - Doxygen      : ${TTS_BUILD_DOCUMENTATION} (via TTS_BUILD_DOCUMENTATION)")
+  message(STATUS "[${PROJECT_NAME}] - Sanitizers   : ${TTS_ENABLE_SANITIZERS} (via TTS_ENABLE_SANITIZERS)")
+  message(STATUS "[${PROJECT_NAME}] - Coverage     : ${TTS_ENABLE_COVERAGE} (via TTS_ENABLE_COVERAGE)")
+  message(STATUS "[${PROJECT_NAME}] - Compile cost : ${TTS_COMPILE_COST} (via TTS_COMPILE_COST)")
   set(QUIET_OPTION "")
 else()
   set(QUIET_OPTION "QUIET")
@@ -94,5 +96,10 @@ if(TTS_BUILD_TEST)
   # After the test targets exist, so the coverage targets can depend on them
   if(TTS_ENABLE_COVERAGE)
     copa_setup_coverage(tts_test)
+  endif()
+
+  # clang only: -fproc-stat-report is its flag. After the test targets, as the measurement rebuilds them.
+  if(TTS_COMPILE_COST)
+    copa_setup_compile_cost(tts_test)
   endif()
 endif()
