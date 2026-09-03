@@ -138,7 +138,7 @@ namespace tts::_
     {
       current_type = as_text(typename_<T>);
       if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
-      process_call(body, produce(type<T> {}, Generators)...);
+      process_call(body, ::tts::produce(type<T> {}, Generators)...);
     }
 
     friend auto operator<<(test_generators tg, auto body)

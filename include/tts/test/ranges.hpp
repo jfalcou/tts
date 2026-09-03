@@ -88,8 +88,7 @@ namespace tts
     template<typename P> void print_producer(P const& prod, auto alt)
     {
       if(::tts::is_quiet()) return;
-      if constexpr(requires(P const& p) { to_text(p); })
-        ::tts::output().writeln(::tts::as_text(prod));
+      if constexpr(::tts::_::described<P>) ::tts::output().writeln(::tts::as_text(prod));
       else ::tts::output().writeln(alt);
     }
   }
@@ -108,7 +107,7 @@ namespace tts
     buffer<RefType>  inputs(count);
 
     for(std::size_t i = 0; i < inputs.size(); ++i)
-      inputs[ i ] = produce(type<RefType> {}, g, i, count);
+      inputs[ i ] = ::tts::produce(type<RefType> {}, g, i, count);
 
     std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
 
@@ -273,15 +272,22 @@ namespace tts
       return ::tts::random_value(mini, maxi);
     }
 
-    friend tts::text to_text(realistic_generator const& s)
-    {
-      return tts::text {"realistic_generator<%s>(%s,%s)",
-                        tts::as_text(typename_<T>).data(),
-                        tts::as_text(s.mini).data(),
-                        tts::as_text(s.maxi).data()};
-    }
-
   private:
+    // The rendering used to be a hidden friend reading these directly. It is a tts::display
+    // specialization now, and needs the same access.
+    template<typename> friend struct display;
+
     T mini, maxi;
+  };
+
+  template<typename T> struct display<realistic_generator<T>>
+  {
+    static text render(realistic_generator<T> const& s)
+    {
+      return text {"realistic_generator<%s>(%s,%s)",
+                   as_text(typename_<T>).data(),
+                   as_text(s.mini).data(),
+                   as_text(s.maxi).data()};
+    }
   };
 }

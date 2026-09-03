@@ -30,11 +30,6 @@ namespace tts::_
       return that;
     }
 
-    friend text to_text(source_location const& s)
-    {
-      return s.desc_;
-    }
-
     decltype(auto) data() const
     {
       return desc_.data();

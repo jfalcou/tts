@@ -30,9 +30,8 @@
   @snippet doc/display-unknown.cpp snippet
 
   In the case a given type needs to be displayed in a specific manner, specialize
-  @ref tts::display for it and **TTS** will use it when necessary. A `to_text` overload in the
-  type's namespace or as a friend function is still honoured, but that route is deprecated and
-  will be dropped in a later version.
+  @ref tts::display for it and **TTS** will use it when necessary. The `to_text` overload this
+  replaces is gone: one left behind is reported where it would have been used.
 
   @snippet doc/custom-display.cpp snippet1
 
@@ -56,8 +55,8 @@
 
   Similarly, **TTS** uses `operator<` to build all its ordering-based checks. The `less` member of
   the same trait covers those. Inherit from `tts::_::builtin_comparison` to keep the member left
-  alone. A `compare_equal` or `compare_less` overload is still honoured, but that route is
-  deprecated and will be dropped in a later version.
+  alone. The `compare_equal` and `compare_less` overloads these replace are gone: one left behind
+  is reported where it would have been used.
 
   @snippet doc/comparators.cpp snippet2
 
@@ -91,8 +90,8 @@
   own.
 
   The four free functions `ulp_distance`, `ieee_equal`, `relative_distance` and `absolute_distance`
-  are still honoured by the trait, so existing overloads keep working, but that route is deprecated
-  and will be dropped in a later version.
+  are gone. One left behind is reported where it would have been used, rather than ignored in
+  silence, so a suite carrying them says so at the first check that needs it.
 
   @snippet doc/precision_absolute.cpp snippet
 
@@ -128,9 +127,10 @@
   test. Specialize it when a bound is a recipe rather than a value, so that a bound written once in
   a case answers for each type the case runs on.
 
-  Both keep honouring a `produce` or `convert_as` overload, which wins over the trait by being the
-  better match. Neither can report a stale one: their names carry a generic default, so asking
-  whether an overload exists always answers yes and finds the dispatcher itself.
+  `produce` and `convert_as` are the dispatchers rather than customization points, and **TTS**
+  reaches them qualified, so an overload of either name in another namespace is never found. They
+  carry a generic default, which is why a leftover cannot be reported the way the other traits
+  report theirs.
 
   A specialization of @ref tts::generation keys on the type being built and cannot see the generator
   in an overload set. When one has to be treated apart, @ref tts::is_randoms names the range

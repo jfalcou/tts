@@ -51,7 +51,6 @@ copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  unit.infrastructure.exe
                         FILES         unit/precision/main.cpp
                                       unit/precision/absolute.cpp
-                                      unit/precision/deprecated_hooks.cpp
                                       unit/precision/ieee.cpp
                                       unit/precision/range.cpp
                                       unit/precision/relative.cpp
