@@ -66,19 +66,27 @@ jobs:
   linux-tests:
     name: Linux
     needs: [precommit, standalone-generation, sanitizer-tests]
-    uses: ./.github/workflows/linux.yml
+    uses: jfalcou/copacabana/.github/workflows/matrix.yml@47bf63947ce5d46e3e4a1845dab6b10f403464d5 # feat/hosted-matrix
+    with:
+      file: .github/matrices/linux.yml
 
   macos-tests:
     name: MacOS
     needs: [precommit, standalone-generation, sanitizer-tests]
-    uses: ./.github/workflows/macos.yml
+    uses: jfalcou/copacabana/.github/workflows/matrix.yml@47bf63947ce5d46e3e4a1845dab6b10f403464d5 # feat/hosted-matrix
+    with:
+      file: .github/matrices/macos.yml
 
   windows-tests:
     name: Windows
     needs: [precommit, standalone-generation, sanitizer-tests]
-    uses: ./.github/workflows/windows.yml
+    uses: jfalcou/copacabana/.github/workflows/matrix.yml@47bf63947ce5d46e3e4a1845dab6b10f403464d5 # feat/hosted-matrix
+    with:
+      file: .github/matrices/windows.yml
 
   nvidia-tests:
     name: Nvidia
     needs: [precommit, standalone-generation, sanitizer-tests]
-    uses: ./.github/workflows/nvidia.yml
+    uses: jfalcou/copacabana/.github/workflows/matrix.yml@47bf63947ce5d46e3e4a1845dab6b10f403464d5 # feat/hosted-matrix
+    with:
+      file: .github/matrices/nvidia.yml
