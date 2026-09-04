@@ -110,7 +110,22 @@
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)                                                           \
-  TTS_PRECISION(L, R, N, "rel", ::tts::relative_check, 8, __VA_ARGS__)
+  (                                                                                                \
+  ::tts::_::reads_as_percent<decltype(L)>(N)                                                       \
+  ? TTS_PERCENT_TOLERANCE_##__VA_ARGS__(N)                                                         \
+  : TTS_PRECISION(L, R, N, "rel", ::tts::relative_check, 8, __VA_ARGS__))
+
+#define TTS_PERCENT_TOLERANCE_(N)         TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FAIL)
+#define TTS_PERCENT_TOLERANCE_REQUIRED(N) TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FATAL)
+#define TTS_PERCENT_TOLERANCE_IMPL(N, FAILURE)                                                     \
+  [ & ]()                                                                                          \
+  {                                                                                                \
+    FAILURE("Tolerance %.*g reads as a percentage: TTS 4 compares a ratio, divide it by a "        \
+            "hundred.",                                                                            \
+            8,                                                                                     \
+            static_cast<double>(N));                                                               \
+    return ::tts::_::logger {};                                                                    \
+  }()
 #endif
 
 //======================================================================================================================

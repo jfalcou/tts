@@ -165,7 +165,10 @@ their sizes are equal.
 #define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)                                                       \
-  TTS_ALL(L, R, ::tts::relative_check, N, "rel", __VA_ARGS__)
+  (                                                                                                \
+  ::tts::_::reads_as_percent<decltype(*::tts::_::begin(L))>(N)                                     \
+  ? TTS_PERCENT_TOLERANCE_##__VA_ARGS__(N)                                                         \
+  : TTS_ALL(L, R, ::tts::relative_check, N, "rel", __VA_ARGS__))
 #endif
 
 //======================================================================================================================
