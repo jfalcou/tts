@@ -75,48 +75,6 @@ namespace tts::_
 #endif
 
 #if defined(TTS_MAIN)
-//======================================================================================================================
-// Outlined reporting functions implementations
-//======================================================================================================================
-namespace tts::_
-{
-  // Shared by report_fail/report_fatal - the only place the failing type shows up outside verbose.
-  void report_type_hint(::tts::text const& type)
-  {
-    if(!::tts::is_verbose() && !type.is_empty())
-      ::tts::output().writeln(">  With <T = %s>", type.data());
-  }
-
-  void report_pass(char const* location, char const* message)
-  {
-    if(::tts::is_detailed())
-    {
-      ::tts::output().writeln("  [+] %s : %s", location, message);
-    }
-  }
-
-  void report_fail(char const* location, char const* message, ::tts::text const& type)
-  {
-    report_type_hint(type);
-
-    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
-
-    if(!::tts::is_quiet())
-    {
-      ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
-    }
-  }
-
-  void report_fatal(char const* location, char const* message, ::tts::text const& type)
-  {
-    report_type_hint(type);
-
-    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
-
-    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
-  }
-}
-
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
