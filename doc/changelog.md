@@ -17,6 +17,10 @@ Change Log {#changelog}
     hundred. The factor was the odd one out: `ulp` and `absolute` already reported the quantity
     itself, and a consumer overloading the hook naturally returns the quotient; one that did was
     testing a hundred times looser than its tolerances read.
+  * A relative tolerance of one or more is reported as a failure rather than compared: it accepts
+    any error up to the value itself, and is a percentage left over from the previous unit. The
+    message says to divide it by a hundred. This applies to the native floating point path only; a
+    `tts::precision` specialisation keeps whatever unit it returns.
   * Equality, ordering and bitwise checks are unchanged. `TTS_EQUAL` and its typed counterparts
     forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
     own.
