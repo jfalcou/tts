@@ -47,7 +47,9 @@ namespace tts
 
 TTS_CASE("Check that tts::comparison drives the relation macros")
 {
-  app::tagged const a {1, 0.0}, b {1, 99.5}, c {2, 0.0};
+  app::tagged const a {1, 0.0};
+  app::tagged const b {1, 99.5};
+  app::tagged const c {2, 0.0};
 
   TTS_EQUAL(a, b);
   TTS_NOT_EQUAL(a, c);
@@ -60,7 +62,8 @@ TTS_CASE("Check that tts::comparison drives the relation macros")
 
 TTS_CASE("Check that tts::comparison is reachable on its own")
 {
-  app::tagged const a {1, 0.0}, c {2, 0.0};
+  app::tagged const a {1, 0.0};
+  app::tagged const c {2, 0.0};
 
   TTS_EXPECT(tts::comparison<app::tagged>::equal(a, a));
   TTS_EXPECT_NOT(tts::comparison<app::tagged>::equal(a, c));
