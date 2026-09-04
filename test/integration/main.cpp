@@ -41,7 +41,7 @@ TTS_CASE("Check precision tests")
   double x = 1.;
 
   TTS_ABSOLUTE_EQUAL(x, 1.001, 1e-3);
-  TTS_RELATIVE_EQUAL(1, 1.1, 10);
+  TTS_RELATIVE_EQUAL(1., 1.1, 0.1);
   TTS_ULP_EQUAL(1. + 1e-16, x, 0.5);
   TTS_IEEE_EQUAL(1., x);
 };

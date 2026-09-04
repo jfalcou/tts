@@ -38,6 +38,6 @@ TTS_CASE("Compare values with custom relative distance computation")
   sample::ratio a {1, 77};
   sample::ratio b {3, 85};
 
-  TTS_RELATIVE_EQUAL(a, b, 2.25);
+  TTS_RELATIVE_EQUAL(a, b, 0.0225);
 };
 //! [snippet]
