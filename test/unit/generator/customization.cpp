@@ -7,6 +7,8 @@
 //==================================================================================================
 #include <tts/tts.hpp>
 
+#include <algorithm>
+
 //==================================================================================================
 // tts::generation and tts::conversion are the two customization points a generator goes through:
 // one builds the value, the other reads the bounds the case wrote once for every type it runs on.
@@ -47,7 +49,7 @@ namespace tts
     static app::percent make(auto g, auto... args)
     {
       auto raw = produce(tts::type<int> {}, g, args...);
-      return {raw < 0 ? 0 : (raw > 100 ? 100 : raw)};
+      return {std::clamp(raw, 0, 100)};
     }
   };
 }
