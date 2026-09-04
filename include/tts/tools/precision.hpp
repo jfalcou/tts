@@ -7,6 +7,7 @@
 //======================================================================================================================
 #pragma once
 #include <tts/tools/bitcast.hpp>
+#include <limits>
 #include <tts/engine/math.hpp>
 
 namespace tts::_
@@ -153,6 +154,26 @@ namespace tts
   template<typename T> struct precision : _::builtin_precision<T>
   {
   };
+
+  namespace _
+  {
+    // A finite relative tolerance of one or more accepts any error up to the value itself, which
+    // is never what a test means: it is a percentage left over from TTS 3, where the distance was
+    // reported as one. An infinite tolerance is deliberate, it accepts the nan and infinity
+    // cases. Only the native floating point path can say so; a precision specialisation of its
+    // own has its own unit.
+    template<typename T>
+    concept native_precision = std::is_base_of_v<builtin_precision<T>, precision<T>>;
+
+    template<typename T, typename N> constexpr bool reads_as_percent(N const& n)
+    {
+      using type = std::remove_cvref_t<T>;
+      if constexpr(native_precision<type> && std::is_arithmetic_v<type> &&
+                   !std::is_same_v<type, bool>)
+        return n >= 1 && n != std::numeric_limits<N>::infinity();
+      else return false;
+    }
+  }
 
   //====================================================================================================================
   /*!

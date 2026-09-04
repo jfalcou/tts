@@ -77,6 +77,7 @@ TTS_CASE("Check that forced broken precision tests fails")
   double x = 1. + 1e-15;
 
   TTS_RELATIVE_EQUAL(1, 2, 0);
+  TTS_RELATIVE_EQUAL(1., 1.1, 10);
   TTS_ULP_EQUAL(1., x, 0.5);
   TTS_IEEE_EQUAL(1., x);
   TTS_ABSOLUTE_EQUAL(x, 1., 1e-16);
@@ -89,6 +90,8 @@ TTS_CASE("Check broken sequence comparisons")
 
   TTS_ALL_ABSOLUTE_EQUAL(v, w, 0);
   TTS_ALL_RELATIVE_EQUAL(v, w, 0.1);
+  // A tolerance of one or more is a percentage left over from TTS 3, reported as such
+  TTS_ALL_RELATIVE_EQUAL(v, w, 10);
   TTS_ALL_ULP_EQUAL(v, w, 0.5);
   TTS_ALL_IEEE_EQUAL(v, w);
 };
@@ -97,5 +100,5 @@ int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);
-  return ::tts::report(29, 2);
+  return ::tts::report(31, 2);
 }
