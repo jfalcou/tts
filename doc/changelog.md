@@ -31,6 +31,14 @@ Change Log {#changelog}
     `ieee_equal`, `to_text`, `compare_equal`, `compare_less`, `produce` and `convert_as` used to be
     reached by name. Each trait inherits its defaults from a `tts::_::builtin_*` base, so a
     specialization keeps the members it leaves alone by inheriting from that base.
+  * `operator<<` is not consulted when a value is rendered, and has not been since 3.0, which
+    dropped that path along with `<sstream>` without saying so. Up to 2.2, `as_text` tried an
+    ostream insertion before falling back on the element dump for a range and on the byte dump for
+    anything else. A type that used to print through its own `operator<<` now prints as a byte
+    dump, and one that also exposes `begin` and `end` prints element by element, which fails to
+    compile when its iterator is a proxy. Specialise `tts::display<T>` for such a type. Bringing
+    the path back costs 13% of median compile memory across the suite, measured, which is what 3.0
+    bought by removing it.
   * An overload of one of the seven customization names left behind is reported where it would have
     been used, rather than ignored in silence. `produce` and `convert_as` are the exception: they
     are the dispatchers rather than customization points, and **TTS** reaches them qualified, so an
