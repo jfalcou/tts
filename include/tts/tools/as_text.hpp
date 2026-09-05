@@ -134,10 +134,10 @@ namespace tts
       static text bytes(T const& e)
       {
         // Display accessible bytes
-        auto const* raw = reinterpret_cast<unsigned char const*>(&e);
+        auto const* raw = reinterpret_cast<std::byte const*>(&e);
         text        txt_bytes("[ ");
         for(std::size_t i = 0; i < sizeof(e); ++i)
-          txt_bytes += text("%2.2X", raw[ i ]) + " ";
+          txt_bytes += text("%2.2X", std::to_integer<unsigned>(raw[ i ])) + " ";
         txt_bytes      += "]";
 
         auto type_desc  = as_text(typename_<T>);
