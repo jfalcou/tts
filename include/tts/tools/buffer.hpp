@@ -13,6 +13,23 @@ namespace tts
 {
   template<typename T> class buffer
   {
+    // eve::wide and friends are over-aligned; malloc only promises alignof(std::max_align_t)
+    static constexpr bool over_aligned = alignof(T) > alignof(std::max_align_t);
+
+    static T*             allocate(std::size_t n) noexcept
+    {
+      if constexpr(over_aligned)
+        return static_cast<T*>(
+        ::operator new(sizeof(T) * n, std::align_val_t {alignof(T)}, std::nothrow));
+      else return static_cast<T*>(::operator new(sizeof(T) * n, std::nothrow));
+    }
+
+    static void deallocate(T* p) noexcept
+    {
+      if constexpr(over_aligned) ::operator delete(p, std::align_val_t {alignof(T)});
+      else ::operator delete(p);
+    }
+
   public:
     buffer()
         : size_(0)
@@ -26,7 +43,7 @@ namespace tts
     {
       if(n > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR
+        data_ = allocate(n);
         assert(data_ && "tts::buffer out of memory");
 
         size_     = n;
@@ -41,7 +58,7 @@ namespace tts
     {
       if(n > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR
+        data_ = allocate(n);
         assert(data_ && "tts::buffer out of memory");
 
         size_     = n;
@@ -57,7 +74,7 @@ namespace tts
       std::size_t n = init.size();
       if(n > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR
+        data_ = allocate(n);
         assert(data_ && "tts::buffer out of memory");
 
         size_         = n;
@@ -77,7 +94,7 @@ namespace tts
           for(std::size_t i = 0; i < size_; ++i)
             (data_ + i)->~T(); // NOSONAR - T may be non-trivial
         }
-        free(data_); // NOSONAR
+        deallocate(data_);
       }
     }
 
@@ -86,7 +103,7 @@ namespace tts
     {
       if(other.size_ > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * other.size_)); // NOSONAR
+        data_ = allocate(other.size_);
         assert(data_ && "tts::buffer out of memory");
 
         size_     = other.size_;
@@ -208,7 +225,7 @@ namespace tts
           new_cap *= 2;
         }
 
-        auto new_data = static_cast<T*>(malloc(sizeof(T) * new_cap)); // NOSONAR
+        auto new_data = allocate(new_cap);
         assert(new_data && "tts::buffer out of memory");
 
         for(std::size_t i = 0; i < size_; ++i)
@@ -218,7 +235,7 @@ namespace tts
             (data_ + i)->~T(); // NOSONAR - T may be non-trivial
         }
 
-        free(data_); // NOSONAR
+        deallocate(data_);
         data_     = new_data;
         capacity_ = new_cap;
       }
