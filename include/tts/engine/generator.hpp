@@ -59,6 +59,14 @@ namespace tts
 
     template<typename T, bool Signed = false>
     using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
+
+    template<typename T, typename V> struct builtin_conversion
+    {
+      static auto from(V const& v)
+      {
+        return static_cast<T>(v);
+      }
+    };
   }
 
   //====================================================================================================================
@@ -79,12 +87,32 @@ namespace tts
 
   //====================================================================================================================
   /**
+    @brief How a value is read as another type
+
+    Generators funnel their bounds through this, so a bound written once has to answer for every
+  type the case is run on. Specialize it for your own types rather than overloading convert_as.
+
+    The `convert_as` free function is the dispatcher rather than a customization point, and the
+  call sites reach it qualified, so an overload of that name in another namespace is never found.
+  It carries a generic default, which is why a leftover cannot be reported the way tts::precision
+  and tts::comparison report theirs.
+
+    @tparam T Target data type
+    @tparam V Type of the value being read
+  **/
+  //====================================================================================================================
+  template<typename T, typename V> struct conversion : _::builtin_conversion<T, V>
+  {
+  };
+
+  //====================================================================================================================
+  /**
     @brief Single value evaluation customization point
   **/
   //====================================================================================================================
   template<typename T, typename V> auto convert_as(V const& v, type<T> const&)
   {
-    return static_cast<T>(v);
+    return conversion<T, V>::from(v);
   }
 
   //====================================================================================================================
@@ -131,26 +159,66 @@ namespace tts
     @return A value of type `T` produced by the generator `g`.
   **/
   //====================================================================================================================
-  template<typename T> auto produce(type<T> const& t, auto g, auto... others)
+  template<typename T> auto produce(type<T> const& t, auto g, auto... others);
+}
+
+namespace tts::_
+{
+  template<typename T> struct builtin_generation
   {
-    return g(t, others...);
-  }
-
-  template<tts::_::sequence T> auto produce(type<T> const&, auto g, auto... args)
-  {
-    using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
-    using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
-
-    typename rebuild<T, value_type>::type that;
-    auto                                  b  = begin(that);
-    auto                                  e  = end(that);
-    std::ptrdiff_t                        sz = e - b;
-
-    for(std::ptrdiff_t i = 0; i < sz; ++i)
+    static auto make(auto g, auto... others)
     {
-      *b++ = produce(tts::type<value_type> {}, g, i, sz, args...);
+      return g(tts::type<T> {}, others...);
     }
-    return that;
+  };
+
+  template<sequence T> struct builtin_generation<T>
+  {
+    static auto make(auto g, auto... args)
+    {
+      using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
+      using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
+
+      typename rebuild<T, value_type>::type that;
+      auto                                  b  = begin(that);
+      auto                                  e  = end(that);
+      std::ptrdiff_t                        sz = e - b;
+
+      for(std::ptrdiff_t i = 0; i < sz; ++i)
+      {
+        *b++ = produce(tts::type<value_type> {}, g, i, sz, args...);
+      }
+      return that;
+    }
+  };
+}
+
+namespace tts
+{
+  //====================================================================================================================
+  /*!
+    @ingroup tools-generators-custom
+    @brief How a value of a given type is built from a generator
+
+    Specialize this for your own types rather than overloading produce. Inherit from
+  tts::_::builtin_generation<T> to keep the default way of building, which hands a scalar straight
+  to the generator and fills a sequence element by element.
+
+    The `produce` free function is the dispatcher rather than a customization point, and the call
+  sites reach it qualified, so an overload of that name in another namespace is never found. It
+  carries a generic default, which is why a leftover cannot be reported the way tts::precision and
+  tts::comparison report theirs.
+
+    @tparam T Target data type
+  **/
+  //====================================================================================================================
+  template<typename T> struct generation : _::builtin_generation<T>
+  {
+  };
+
+  template<typename T> auto produce(type<T> const&, auto g, auto... others)
+  {
+    return generation<T>::make(g, others...);
   }
 
   //====================================================================================================================
@@ -327,7 +395,7 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...) const
     {
-      return convert_as(seed, type<D> {});
+      return ::tts::convert_as(seed, type<D> {});
     }
 
     T seed;
@@ -358,12 +426,12 @@ namespace tts
 
     template<typename D> auto operator()(tts::type<D>) const
     {
-      return convert_as(false, type<tts::boolean_type_t<D>> {});
+      return ::tts::convert_as(false, type<tts::boolean_type_t<D>> {});
     }
 
     template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
+      return ::tts::convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
     }
 
     T start;
@@ -400,12 +468,12 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(start + idx * step, type<D> {});
+      return ::tts::convert_as(start + idx * step, type<D> {});
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(start, type<D> {});
+      return ::tts::convert_as(start, type<D> {});
     }
 
     T start;
@@ -442,12 +510,12 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(start - idx * step, type<D> {});
+      return ::tts::convert_as(start - idx * step, type<D> {});
     }
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(start, type<D> {});
+      return ::tts::convert_as(start, type<D> {});
     }
 
     T start;
@@ -481,14 +549,13 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      auto w1 = convert_as(first_, type<D> {});
-      auto w2 = convert_as(last_, type<D> {});
-      D    step =
-      (sz - 1)
-      ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
-      : convert_as(0, type<D> {});
-      auto value =
-      convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {});
+      auto w1    = ::tts::convert_as(first_, type<D> {});
+      auto w2    = ::tts::convert_as(last_, type<D> {});
+      D    step  = (sz - 1) ? static_cast<D>(::tts::convert_as(last_ - first_, type<D> {}) /
+                                             ::tts::convert_as(sz - 1, type<D> {}))
+                            : ::tts::convert_as(0, type<D> {});
+      auto value = ::tts::convert_as(
+      w1 + ::tts::convert_as(idx, type<D> {}) * ::tts::convert_as(step, type<D> {}), type<D> {});
 
       // Clamp rounding overshoot back to the last bound, whichever direction the range runs in.
       return (w1 <= w2) ? _::min(value, w2) : _::max(value, w2);
@@ -496,7 +563,7 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(first_, type<D> {});
+      return ::tts::convert_as(first_, type<D> {});
     }
 
     T first_;
@@ -528,19 +595,48 @@ namespace tts
 
     template<typename D> D operator()(tts::type<D>, auto...)
     {
-      if constexpr(std::is_unsigned_v<D>)
+      // A bound is not always a number: it can be a per-type recipe evaluated by convert_as,
+      // which has no ordering against 0. Only check the ones that can actually be compared.
+      if constexpr(std::is_unsigned_v<D> && requires { mini >= 0; })
       {
         assert(mini >= 0 &&
                "Minimum value for unsigned type random generator must be non-negative");
+      }
+      if constexpr(std::is_unsigned_v<D> && requires { maxi >= 0; })
+      {
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(convert_as(mini, type<D> {}), convert_as(maxi, type<D> {}));
+      return random_value(::tts::convert_as(mini, type<D> {}), ::tts::convert_as(maxi, type<D> {}));
     }
 
     Mn mini;
     Mx maxi;
   };
+
+  //====================================================================================================================
+  /*!
+    @ingroup tools-generators-custom
+    @brief Whether a generator is a tts::randoms, by its type
+
+    tts::generation keys on the type being built, so a specialization that has to treat a range
+  apart cannot see it in the overload set the way a produce overload could. Recognizing the
+  generator is left here rather than at the point of use, where it would come down to guessing from
+  the members a generator happens to carry.
+
+    @tparam G Generator type being examined
+  **/
+  //====================================================================================================================
+  template<typename G> struct is_randoms : std::false_type
+  {
+  };
+  template<typename Mx, typename Mn> struct is_randoms<randoms<Mx, Mn>> : std::true_type
+  {
+  };
+
+  //! @brief Value alias for tts::is_randoms, indifferent to references and cv-qualifiers
+  template<typename G>
+  inline constexpr bool is_randoms_v = is_randoms<std::remove_cvref_t<G>>::value;
 
   //====================================================================================================================
   /**
@@ -560,6 +656,24 @@ namespace tts
     {
       using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
       return tts::random_value<i_t>(0, std::numeric_limits<i_t>::max());
+    }
+  };
+
+  //====================================================================================================================
+  /**
+    @brief Produces valid shift amounts for the target type
+
+    Unlike @ref tts::random_bits, which draws a full-width bit pattern, this generator draws an
+  index into the bits of the target type - a value in `[0, 8*sizeof(T)[`. That is what a shift
+  operand has to be: shifting by the width of the type or more is undefined behaviour.
+  **/
+  //====================================================================================================================
+  struct random_shift
+  {
+    template<typename D> auto operator()(tts::type<D>, auto...) const
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return tts::random_value<i_t>(0, static_cast<i_t>(8 * sizeof(i_t) - 1));
     }
   };
 

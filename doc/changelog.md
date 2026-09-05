@@ -1,6 +1,46 @@
 Change Log {#changelog}
 ==========
 
+# Version 4.0 - V.I. Warshawski
+
+## What's Changed
+
+### Breaking Changes
+  * `TTS_ABSOLUTE_EQUAL`, `TTS_RELATIVE_EQUAL` and `TTS_ULP_EQUAL` now require both operands to have
+    the same type. They used to compare them after promoting both to their common type, which
+    measured the distance in the unit of the promoted type rather than the one under test: comparing
+    a `float` against its own value as a `double` reported 9.84e+07 ULP instead of 0. A mismatch is
+    now a compile-time error naming both types; convert the expected value at the call site.
+  * `TTS_RELATIVE_EQUAL` and `TTS_ALL_RELATIVE_EQUAL` report a ratio where they used to report a
+    percentage, and the unit they print is `rel` rather than `%`. `abs(L-R) / max(abs(L), abs(R), 1)`
+    is compared to the tolerance directly, so every existing tolerance has to be divided by a
+    hundred. The factor was the odd one out: `ulp` and `absolute` already reported the quantity
+    itself, and a consumer overloading the hook naturally returns the quotient; one that did was
+    testing a hundred times looser than its tolerances read.
+  * A relative tolerance of one or more is reported as a failure rather than compared: it accepts
+    any error up to the value itself, and is a percentage left over from the previous unit. The
+    message says to divide it by a hundred. This applies to the native floating point path only; a
+    `tts::precision` specialisation keeps whatever unit it returns.
+  * Equality, ordering and bitwise checks are unchanged. `TTS_EQUAL` and its typed counterparts
+    forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
+    own.
+
+  * Every customization point is a trait, and the free functions they replace are gone.
+    `tts::precision<T>`, `tts::display<T>`, `tts::comparison<L, R>`, `tts::generation<T>` and
+    `tts::conversion<T, V>` stand where `ulp_distance`, `relative_distance`, `absolute_distance`,
+    `ieee_equal`, `to_text`, `compare_equal`, `compare_less`, `produce` and `convert_as` used to be
+    reached by name. Each trait inherits its defaults from a `tts::_::builtin_*` base, so a
+    specialization keeps the members it leaves alone by inheriting from that base.
+  * An overload of one of the seven customization names left behind is reported where it would have
+    been used, rather than ignored in silence. `produce` and `convert_as` are the exception: they
+    are the dispatchers rather than customization points, and **TTS** reaches them qualified, so an
+    overload of either name in another namespace is never found.
+
+### New Features
+  * `tts::is_randoms` and its `tts::is_randoms_v` alias name the range generator by its type. A
+    `tts::generation` specialization keys on the type being built and cannot see the generator in
+    an overload set, so a range that has to be drawn apart is recognized this way.
+
 # Version 3.0 - Beatrice Adela Bradley
 
 ## What's Changed

@@ -215,11 +215,6 @@ namespace tts
       return data_ + size_;
     }
 
-    friend auto const& to_text(text const& t)
-    {
-      return t;
-    }
-
     /// Equality comparison operator
     friend bool operator==(text const& a, text const& b) noexcept
     {

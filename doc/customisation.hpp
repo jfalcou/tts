@@ -29,9 +29,9 @@
 
   @snippet doc/display-unknown.cpp snippet
 
-  In the case a given type needs to be displayed in a specific manner, **TTS** allows to
-  overload `to_text` in the type's namespace or as a friend function and will use it when
-  necessary.
+  In the case a given type needs to be displayed in a specific manner, specialize
+  @ref tts::display for it and **TTS** will use it when necessary. The `to_text` overload this
+  replaces is gone: one left behind is reported where it would have been used.
 
   @snippet doc/custom-display.cpp snippet1
 
@@ -46,50 +46,52 @@
   or `-s` will not be applied to the formatted string.
 
   @section  customize-comparison Equality and Ordering
-  All equality-based checks in **TTS** use the compared value `operator==`. If needed, one can
-  specialize the `compare_equal` function in the type's namespace or as a friend function to
-  let **TTS** use a special comparison scheme.
+  All equality-based checks in **TTS** use the compared value `operator==`. If needed, specialize
+  @ref tts::comparison to let **TTS** use a special comparison scheme. The trait takes both operand
+  types, in the order they are written, and the second one defaults to the first, so a homogeneous
+  comparison names a single type.
 
   @snippet doc/comparators.cpp snippet1
 
-  Similarly, **TTS** uses `operator<` to build all its ordering-based checks. If needed, one
-  can specialize the `compare_less` function in the type's namespace or as a friend function
-  to let **TTS** use a special ordering scheme.
+  Similarly, **TTS** uses `operator<` to build all its ordering-based checks. The `less` member of
+  the same trait covers those. Inherit from `tts::_::builtin_comparison` to keep the member left
+  alone. The `compare_equal` and `compare_less` overloads these replace are gone: one left behind
+  is reported where it would have been used.
 
   @snippet doc/comparators.cpp snippet2
 
   @section customize-precision Precision Measurement
 
   ## ULP Distance
-  When dealing with floating point values, **TTS** uses its `ulp_distance` function to perform
-  all [ULP checks](rationale.html#ulp). If needed, one can specialize this function in the
-  type's namespace or as a friend function to let **TTS** use a special ULP comparison
-  scheme. One can also reuse the pre-existing `tts::ulp_check` to implement their
-  own.
+  When dealing with floating point values, **TTS** measures all [ULP checks](rationale.html#ulp)
+  through the `ulp` member of @ref tts::precision. Specialize the trait to let **TTS** use a special
+  ULP comparison scheme, inheriting from `tts::_::builtin_precision` to keep the three members left
+  alone. One can also reuse the pre-existing `tts::ulp_check` to implement their own.
 
   @snippet doc/precision_ulp.cpp snippet
 
   ## IEEE Comparison
-  IEEE comparison consists in checking for exact equality while considering all NaN/Invalid values of
-  floating point values. One can specialize the `ieee_equal` function in the type's namespace or as a friend function
-  to let **TTS** use a special IEEE comparison scheme. One can also reuse the pre-existing `tts::ieee_check` to
-  implement their own.
+  IEEE comparison consists in checking for exact equality while considering all NaN/Invalid values
+  of floating point values. It is the `ieee` member of @ref tts::precision. One can also reuse the
+  pre-existing `tts::ieee_check` to implement their own.
 
   @snippet doc/precision_ieee.cpp snippet
 
   ## Relative Comparison
-  Relative precision checks within **TTS** are done through the `relative_distance` function.
-  If needed, one can specialize this function in the type's namespace or as a friend function
-  to let **TTS** use a special relative precision scheme. One can also reuse the
+  Relative precision checks within **TTS** are done through the `relative` member of
+  @ref tts::precision, which reports a ratio rather than a percentage. One can also reuse the
   pre-existing `tts::relative_check` to implement their own.
 
   @snippet doc/precision_relative.cpp snippet
 
   ## Absolute Comparison
-  **TTS** uses its `absolute_distance` function to perform all absolute precision checks. If
-  needed, one can specialize this function in the type's namespace or as a friend function to
-  let **TTS** use a special absolute precision scheme. One can also reuse the
-  pre-existing `tts::absolute_check` to implement their own.
+  **TTS** performs all absolute precision checks through the `absolute` member of
+  @ref tts::precision. One can also reuse the pre-existing `tts::absolute_check` to implement their
+  own.
+
+  The four free functions `ulp_distance`, `ieee_equal`, `relative_distance` and `absolute_distance`
+  are gone. One left behind is reported where it would have been used, rather than ignored in
+  silence, so a suite carrying them says so at the first check that needs it.
 
   @snippet doc/precision_absolute.cpp snippet
 
@@ -113,6 +115,26 @@
   every `n` iterations.
 
   @snippet doc/generator.cpp snippet
+
+  ## Producing values of a user-defined type
+
+  A generator answers for the type it is handed, so a type **TTS** knows nothing about needs to say
+  how it is built. Specialize @ref tts::generation for it, inheriting from
+  `tts::_::builtin_generation` to keep the default way of building, which hands a scalar straight to
+  the generator and fills a sequence element by element.
+
+  Generator bounds go through @ref tts::conversion, which casts a plain value to the type under
+  test. Specialize it when a bound is a recipe rather than a value, so that a bound written once in
+  a case answers for each type the case runs on.
+
+  `produce` and `convert_as` are the dispatchers rather than customization points, and **TTS**
+  reaches them qualified, so an overload of either name in another namespace is never found. They
+  carry a generic default, which is why a leftover cannot be reported the way the other traits
+  report theirs.
+
+  A specialization of @ref tts::generation keys on the type being built and cannot see the generator
+  in an overload set. When one has to be treated apart, @ref tts::is_randoms names the range
+  generator by its type.
 
 **/
 //==================================================================================================

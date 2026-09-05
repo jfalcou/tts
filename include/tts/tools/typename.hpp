@@ -37,11 +37,6 @@ namespace tts::_
       return data_.size;
     }
 
-    friend text to_text(typename_impl const& t)
-    {
-      return text("%.*s", t.size(), t.data());
-    }
-
     template<_::stream OS> friend OS& operator<<(OS& os, typename_impl t)
     {
       for(int i = 0; i < t.size(); ++i)
