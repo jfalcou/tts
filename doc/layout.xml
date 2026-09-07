@@ -3,19 +3,19 @@
   <!-- Navigation index tabs for HTML output -->
   <navindex>
     <tab type="mainpage" visible="yes" title=""/>
-    <tab type="usergroup" visible="yes" title="How-Tos">
+    <tab type="usergroup" visible="yes" title="How-Tos" url="@ref setup">
       <tab type="user" url="@ref setup"   title="Setup"/>
       <tab type="user" url="@ref tts101"  title="Getting Started"/>
       <tab type="user" url="@ref cli"     title="Command Line Interface"/>
       <tab type="user" url="@ref output-sinks" title="Built-in Output Sinks"/>
-      <tab type="usergroup" visible="yes" title="Customizing TTS">
+      <tab type="usergroup" visible="yes" title="Customizing TTS" url="@ref customize">
         <tab type="user" url="@ref customize"               title="General Behaviour"/>
         <tab type="user" url="@ref tools-generators-custom" title="Generators"/>
         <tab type="user" url="@ref customization-points"    title="Other Customizations"/>
       </tab>
     </tab>
-    <tab type="usergroup" visible="yes"     title="Reference Documentation">
-      <tab type="usergroup" visible="yes"   title="Testing Macros">
+    <tab type="usergroup" visible="yes"     title="Reference Documentation" url="@ref tts_reference">
+      <tab type="usergroup" visible="yes"   title="Testing Macros" url="@ref test-scenario">
         <tab type="user" url="@ref test-scenario"   title="Scenario Definition"/>
         <tab type="user" url="@ref test-basic"      title="Basic Tests"/>
         <tab type="user" url="@ref test-relation"   title="Relation Tests"/>
@@ -24,7 +24,7 @@
         <tab type="user" url="@ref test-exceptions" title="Exceptions Tests"/>
         <tab type="user" url="@ref test-types"      title="Type Tests"/>
       </tab>
-      <tab type="usergroup" visible="yes" title="Tools and Helpers" intro="">
+      <tab type="usergroup" visible="yes" title="Tools and Helpers" intro="" url="@ref tools-config">
         <tab type="user" url="@ref tools-config"            title="Configuration"/>
         <tab type="user" url="@ref tools-generators-class"  title="Data Generators"/>
         <tab type="user" url="@ref tools-output"            title="Output Utilities"/>
@@ -34,7 +34,7 @@
         <tab type="user" url="@ref tools-types"             title="Type Utilities"/>
       </tab>
     </tab>
-    <tab type="usergroup" visible="yes" title="Informations">
+    <tab type="usergroup" visible="yes" title="Informations" url="@ref rationale">
        <tab type="user" url="@ref rationale" title="Rationale"/>
        <tab type="user" url="@ref compile-time" title="Compile-Time Discipline"/>
        <tab type="user" url="@ref changelog" title="Changelog"/>
