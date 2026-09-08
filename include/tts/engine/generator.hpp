@@ -484,9 +484,9 @@ namespace tts
   /**
     @brief Defines a data generator that produce a reverse ramp of data.
 
-    This generator produces a ramp starting from a final value and decreasing by a fixed step at
-    each call. I.e., for a size `N`, the produced values are: `start, start-step, start-2*step, ...,
-    start-(N-1)*step`.
+    This generator produces a ramp read backward: the last value is `start` and every earlier one
+    stands one step above it. I.e., for a size `N`, the produced values are:
+    `start+(N-1)*step, ..., start+2*step, start+step, start`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -508,9 +508,9 @@ namespace tts
     {
     }
 
-    template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
+    template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      return ::tts::convert_as(start - idx * step, type<D> {});
+      return ::tts::convert_as(start + (sz - 1 - idx) * step, type<D> {});
     }
 
     template<typename D> D operator()(tts::type<D>) const
