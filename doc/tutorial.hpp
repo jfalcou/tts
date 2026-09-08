@@ -65,6 +65,6 @@
   @endcode
 
   One may notice that no other information is displayed. This is the default behaviour.
-  You can now use [the various **TTS** testing macros](usergroup2.html) to design your own unit tests.
+  You can now use [the various **TTS** testing macros](@ref tts_reference) to design your own unit tests.
 **/
 //==================================================================================================
