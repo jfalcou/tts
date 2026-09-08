@@ -24,17 +24,17 @@
 */
 var menudata={children:[
 {text:"Main Page",url:"index.html"},
-{text:"How-Tos",url:"usergroup0.html",children:[
+{text:"How-Tos",url:"setup.html",children:[
 {text:"Setup",url:"setup.html"},
 {text:"Getting Started",url:"tts101.html"},
 {text:"Command Line Interface",url:"cli.html"},
 {text:"Built-in Output Sinks",url:"output-sinks.html"},
-{text:"Customizing TTS",url:"usergroup1.html",children:[
+{text:"Customizing TTS",url:"customize.html",children:[
 {text:"General Behaviour",url:"customize.html"},
 {text:"Generators",url:"group__tools-generators-custom.html"},
 {text:"Other Customizations",url:"group__customization-points.html"}]}]},
-{text:"Reference Documentation",url:"usergroup2.html",children:[
-{text:"Testing Macros",url:"usergroup3.html",children:[
+{text:"Reference Documentation",url:"tts_reference.html",children:[
+{text:"Testing Macros",url:"group__test-scenario.html",children:[
 {text:"Scenario Definition",url:"group__test-scenario.html"},
 {text:"Basic Tests",url:"group__test-basic.html"},
 {text:"Relation Tests",url:"group__test-relation.html"},
@@ -42,7 +42,7 @@ var menudata={children:[
 {text:"Sequence Tests",url:"group__test-sequence.html"},
 {text:"Exceptions Tests",url:"group__test-exceptions.html"},
 {text:"Type Tests",url:"group__test-types.html"}]},
-{text:"Tools and Helpers",url:"usergroup4.html",children:[
+{text:"Tools and Helpers",url:"group__tools-config.html",children:[
 {text:"Configuration",url:"group__tools-config.html"},
 {text:"Data Generators",url:"group__tools-generators-class.html"},
 {text:"Output Utilities",url:"group__tools-output.html"},
@@ -50,7 +50,7 @@ var menudata={children:[
 {text:"PRNG Utilities",url:"group__tools-random.html"},
 {text:"Text Utilities",url:"group__tools-text.html"},
 {text:"Type Utilities",url:"group__tools-types.html"}]}]},
-{text:"Informations",url:"usergroup5.html",children:[
+{text:"Informations",url:"rationale.html",children:[
 {text:"Rationale",url:"rationale.html"},
 {text:"Compile-Time Discipline",url:"compile-time.html"},
 {text:"Changelog",url:"changelog.html"},

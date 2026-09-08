@@ -3,7 +3,7 @@ var searchData=
   ['test_20case_0',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
   ['test_20system_1',['The Tiny Test System',['../index.html',1,'']]],
   ['testing_2',['Precision testing',['../rationale.html#ulp',1,'']]],
-  ['testing_20macros_3',['Testing Macros',['../tts101.html#tuto-macro',1,'']]],
+  ['testing_20macros_3',['Testing Macros',['../tts_reference.html#autotoc_md37',1,'Testing Macros'],['../tts101.html#tuto-macro',1,'Testing Macros']]],
   ['testing_20ulps_4',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
   ['tests_20driver_5',['Tests Driver',['../customize.html#customize-driver',1,'']]],
   ['tests_20parameters_6',['Tests Parameters',['../cli.html#autotoc_md28',1,'']]],
@@ -15,10 +15,11 @@ var searchData=
   ['time_20discipline_12',['Compile-Time Discipline',['../compile-time.html',1,'']]],
   ['tiny_20test_20system_13',['The Tiny Test System',['../index.html',1,'']]],
   ['to_20use_14',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
-  ['tts_20behaviour_15',['Customizing TTS Behaviour',['../customize.html',1,'']]],
-  ['tts_3a_3acolorized_5fsink_16',['tts::colorized_sink',['../output-sinks.html#autotoc_md39',1,'']]],
-  ['tts_3a_3adiagnostics_5fsink_17',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md49',1,'']]],
-  ['tts_3a_3ajson_5fsink_18',['tts::json_sink',['../output-sinks.html#autotoc_md55',1,'']]],
-  ['tts_3a_3ajunit_5fsink_19',['tts::junit_sink',['../output-sinks.html#autotoc_md61',1,'']]],
-  ['tts_3a_3atap_5fsink_20',['tts::tap_sink',['../output-sinks.html#autotoc_md44',1,'']]]
+  ['tools_20and_20helpers_15',['Tools and Helpers',['../tts_reference.html#autotoc_md38',1,'']]],
+  ['tts_20behaviour_16',['Customizing TTS Behaviour',['../customize.html',1,'']]],
+  ['tts_3a_3acolorized_5fsink_17',['tts::colorized_sink',['../output-sinks.html#autotoc_md41',1,'']]],
+  ['tts_3a_3adiagnostics_5fsink_18',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md51',1,'']]],
+  ['tts_3a_3ajson_5fsink_19',['tts::json_sink',['../output-sinks.html#autotoc_md57',1,'']]],
+  ['tts_3a_3ajunit_5fsink_20',['tts::junit_sink',['../output-sinks.html#autotoc_md63',1,'']]],
+  ['tts_3a_3atap_5fsink_21',['tts::tap_sink',['../output-sinks.html#autotoc_md46',1,'']]]
 ];

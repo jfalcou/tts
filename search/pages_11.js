@@ -4,5 +4,5 @@ var searchData=
   ['options_1',['Display Options',['../cli.html#autotoc_md26',1,'']]],
   ['ordering_2',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['output_20sinks_3',['Built-in Output Sinks',['../output-sinks.html',1,'']]],
-  ['overview_4',['Overview',['../output-sinks.html#autotoc_md37',1,'']]]
+  ['overview_4',['Overview',['../output-sinks.html#autotoc_md39',1,'']]]
 ];

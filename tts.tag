@@ -1836,6 +1836,11 @@
     <docanchor file="rationale.html" title="Testing ULPs">ulp-testing</docanchor>
   </compound>
   <compound kind="page">
+    <name>tts_reference</name>
+    <title>Reference Documentation</title>
+    <filename>tts_reference.html</filename>
+  </compound>
+  <compound kind="page">
     <name>setup</name>
     <title>Setup</title>
     <filename>setup.html</filename>

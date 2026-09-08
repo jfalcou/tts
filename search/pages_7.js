@@ -8,5 +8,6 @@ var searchData=
   ['display_5',['Data display',['../customize.html#customize-display',1,'']]],
   ['display_20options_6',['Display Options',['../cli.html#autotoc_md26',1,'']]],
   ['distance_7',['ULP Distance',['../customize.html#autotoc_md30',1,'']]],
-  ['driver_8',['Tests Driver',['../customize.html#customize-driver',1,'']]]
+  ['documentation_8',['Reference Documentation',['../tts_reference.html',1,'']]],
+  ['driver_9',['Tests Driver',['../customize.html#customize-driver',1,'']]]
 ];

@@ -26,19 +26,19 @@ var NAVTREE =
 [
   [ "TTS", "index.html", [
     [ "The Tiny Test System", "index.html", "index" ],
-    [ "How-Tos", "usergroup0.html", [
+    [ "How-Tos", "setup.html", [
       [ "Setup", "setup.html", null ],
       [ "Getting Started", "tts101.html", null ],
       [ "Command Line Interface", "cli.html", null ],
       [ "Built-in Output Sinks", "output-sinks.html", null ],
-      [ "Customizing TTS", "usergroup1.html", [
+      [ "Customizing TTS", "customize.html", [
         [ "General Behaviour", "customize.html", null ],
         [ "Generators", "group__tools-generators-custom.html", null ],
         [ "Other Customizations", "group__customization-points.html", null ]
       ] ]
     ] ],
-    [ "Reference Documentation", "usergroup2.html", [
-      [ "Testing Macros", "usergroup3.html", [
+    [ "Reference Documentation", "tts_reference.html", [
+      [ "Testing Macros", "group__test-scenario.html", [
         [ "Scenario Definition", "group__test-scenario.html", null ],
         [ "Basic Tests", "group__test-basic.html", null ],
         [ "Relation Tests", "group__test-relation.html", null ],
@@ -47,7 +47,7 @@ var NAVTREE =
         [ "Exceptions Tests", "group__test-exceptions.html", null ],
         [ "Type Tests", "group__test-types.html", null ]
       ] ],
-      [ "Tools and Helpers", "usergroup4.html", [
+      [ "Tools and Helpers", "group__tools-config.html", [
         [ "Configuration", "group__tools-config.html", null ],
         [ "Data Generators", "group__tools-generators-class.html", null ],
         [ "Output Utilities", "group__tools-output.html", null ],
@@ -57,7 +57,7 @@ var NAVTREE =
         [ "Type Utilities", "group__tools-types.html", null ]
       ] ]
     ] ],
-    [ "Informations", "usergroup5.html", [
+    [ "Informations", "rationale.html", [
       [ "Rationale", "rationale.html", null ],
       [ "Compile-Time Discipline", "compile-time.html", null ],
       [ "Changelog", "changelog.html", null ],
