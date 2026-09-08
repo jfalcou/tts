@@ -6,6 +6,10 @@ Change Log {#changelog}
 ## What's Changed
 
 ### Breaking Changes
+  * `tts::reverse_ramp` is a ramp read backward: for a size `N`, its values are
+    `start+(N-1)*step` down to `start`, so the last one is `start` and none of them falls below it.
+    It used to count down from `start`, which put `reverse_ramp{0}` entirely on negative values and
+    made it unusable for anything indexed from zero.
   * `TTS_ABSOLUTE_EQUAL`, `TTS_RELATIVE_EQUAL` and `TTS_ULP_EQUAL` now require both operands to have
     the same type. They used to compare them after promoting both to their common type, which
     measured the distance in the unit of the promoted type rather than the one under test: comparing
