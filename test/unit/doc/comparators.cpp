@@ -86,6 +86,44 @@ TTS_CASE("Compare values with custom comparisons")
 };
 //! [snippet2]
 
+#undef TTS_MAIN
+
+//! [snippet3]
+#define TTS_MAIN // No need for main()
+#include <tts/tts.hpp>
+
+namespace sample
+{
+  // Only the tag carries a value; the rest of the storage is never written.
+  struct tagged_word
+  {
+    std::uint8_t  tag;
+    std::uint64_t storage;
+  };
+}
+
+namespace tts
+{
+  template<> struct comparison<sample::tagged_word, sample::tagged_word>
+  {
+    static bool bit_equal(sample::tagged_word const& l, sample::tagged_word const& r)
+    {
+      return l.tag == r.tag;
+    }
+  };
+}
+
+TTS_CASE("Compare values by the bits that carry them")
+{
+  sample::tagged_word const a {7, 0};
+  sample::tagged_word const b {7, 0xDEADBEEF};
+  sample::tagged_word const c {9, 0};
+
+  TTS_BIT_EQUAL(a, b);
+  TTS_BIT_NOT_EQUAL(a, c);
+};
+//! [snippet3]
+
 int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);

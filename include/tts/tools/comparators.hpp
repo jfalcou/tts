@@ -59,11 +59,12 @@ namespace tts
 
     Specialize this for your own types rather than overloading the free functions: a specialization
     that does not match is a compilation error, where a misnamed overload used to be ignored in
-    silence. Inherit from tts::_::builtin_comparison<L, R> to keep the member you leave alone.
+    silence.
 
-    The three members are `equal`, `less` and `bit_equal`. The last one backs TTS_BIT_EQUAL and
-    TTS_BIT_NOT_EQUAL, and defaults to a `memcmp` over the whole object: a type whose storage holds
-    padding, such as a SIMD register wider than the lanes it carries, has to specialize it.
+    The three members are `equal`, `less` and `bit_equal`. Write the ones the type needs and leave
+    the rest out: their defaults are `operator==`, `operator<` and a `memcmp` over the whole
+    object. That last one reads padding, so a type whose storage is wider than the value it
+    carries, such as a SIMD register wider than the lanes it holds, has to write `bit_equal`.
 
     Both operand types are parameters, in the order they are written, so a comparison between two
     different types is specialized on the pair rather than on either side of it.
@@ -73,9 +74,20 @@ namespace tts
 
     @tparam L Type of the left-hand operand
     @tparam R Type of the right-hand operand, the same as L unless stated otherwise
+
+    @groupheader{Example}
+    @snippet doc/comparators.cpp snippet1
+
+    A specialization that answers for `less` as well covers the ordering macros.
+
+    @snippet doc/comparators.cpp snippet2
+
+    A type whose storage is wider than the value it carries answers for `bit_equal`.
+
+    @snippet doc/comparators.cpp snippet3
   **/
   //====================================================================================================================
-  template<typename L, typename R = L> struct comparison : _::builtin_comparison<L, R>
+  template<typename L, typename R = L> struct comparison
   {
   };
 
@@ -84,19 +96,42 @@ namespace tts
 
 namespace tts::_
 {
+  // The fallback refuses a member that is there but does not take the operands.
   template<typename L, typename R> inline constexpr bool bit_eq(L const& l, R const& r)
   {
-    return comparison<L, R>::bit_equal(l, r);
+    if constexpr(requires { comparison<L, R>::bit_equal(l, r); })
+    {
+      return comparison<L, R>::bit_equal(l, r);
+    }
+    else
+    {
+      static_assert(
+      !requires { comparison<L, R>::bit_equal; },
+      "[TTS] tts::comparison<L, R>::bit_equal does not accept the two operands.");
+
+      return builtin_comparison<L, R>::bit_equal(l, r);
+    }
   }
 
   template<typename L, typename R> inline constexpr bool bit_neq(L const& l, R const& r)
   {
-    return !comparison<L, R>::bit_equal(l, r);
+    return !bit_eq(l, r);
   }
 
   template<typename L, typename R> inline constexpr bool eq(L const& l, R const& r)
   {
-    return comparison<L, R>::equal(l, r);
+    if constexpr(requires { comparison<L, R>::equal(l, r); })
+    {
+      return comparison<L, R>::equal(l, r);
+    }
+    else
+    {
+      static_assert(
+      !requires { comparison<L, R>::equal; },
+      "[TTS] tts::comparison<L, R>::equal does not accept the two operands.");
+
+      return builtin_comparison<L, R>::equal(l, r);
+    }
   }
 
   template<typename L, typename R> inline constexpr bool neq(L const& l, R const& r)
@@ -106,7 +141,18 @@ namespace tts::_
 
   template<typename L, typename R> inline constexpr bool lt(L const& l, R const& r)
   {
-    return comparison<L, R>::less(l, r);
+    if constexpr(requires { comparison<L, R>::less(l, r); })
+    {
+      return comparison<L, R>::less(l, r);
+    }
+    else
+    {
+      static_assert(
+      !requires { comparison<L, R>::less; },
+      "[TTS] tts::comparison<L, R>::less does not accept the two operands.");
+
+      return builtin_comparison<L, R>::less(l, r);
+    }
   }
 
   template<typename L, typename R> inline constexpr bool le(L const& l, R const& r)

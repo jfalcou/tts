@@ -119,9 +119,37 @@ TTS_CASE("Check that tts::comparison keys on the ordered pair of operands")
 };
 
 //==================================================================================================
-// Anything without a specialization keeps the built-in comparison, which is what leaves the trait
-// an addition rather than a detour every type has to pay for.
+// The primary carries no member, so whatever a type leaves out keeps the built-in comparison.
 //==================================================================================================
+namespace app
+{
+  struct half
+  {
+    int v;
+  };
+
+  inline tts::text as_text(half const& h)
+  {
+    return tts::as_text(h.v) + "/2";
+  }
+
+  inline bool operator==(half const& l, half const& r)
+  {
+    return l.v == r.v;
+  }
+}
+
+namespace tts
+{
+  template<> struct comparison<app::half, app::half>
+  {
+    static bool less(app::half const& l, app::half const& r)
+    {
+      return l.v / 2 < r.v / 2;
+    }
+  };
+}
+
 TTS_CASE("Check that the built-in comparison is left in place")
 {
   TTS_EQUAL(45, 45);
@@ -129,6 +157,12 @@ TTS_CASE("Check that the built-in comparison is left in place")
   TTS_NOT_EQUAL(45, 46);
   TTS_LESS(45, 46);
 
-  TTS_EXPECT((tts::comparison<int, double>::equal(45, 45.0)));
-  TTS_EXPECT((tts::comparison<int>::less(45, 46)));
+  app::half const a {4};
+  app::half const b {5};
+  app::half const c {6};
+
+  TTS_LESS(a, c);
+  TTS_GREATER_EQUAL(a, b);
+  TTS_EQUAL(a, a);
+  TTS_NOT_EQUAL(a, b);
 };
