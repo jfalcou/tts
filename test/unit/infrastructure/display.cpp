@@ -91,7 +91,7 @@ struct temperature
 
 struct reading_log
 {
-  double        samples[ 3 ];
+  double        samples[ 3 ]; // NOSONAR - a raw array is the shape under test here
 
   double const* begin() const
   {
