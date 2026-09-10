@@ -125,17 +125,14 @@ namespace app
 {
   struct half
   {
-    int v;
+    int         v;
+
+    friend bool operator==(half const&, half const&) = default;
   };
 
   inline tts::text as_text(half const& h)
   {
     return tts::as_text(h.v) + "/2";
-  }
-
-  inline bool operator==(half const& l, half const& r)
-  {
-    return l.v == r.v;
   }
 }
 
