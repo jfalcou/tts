@@ -36,8 +36,9 @@ Change Log {#changelog}
     `tts::precision<T>`, `tts::display<T>`, `tts::comparison<L, R>`, `tts::generation<T>` and
     `tts::conversion<T, V>` stand where `ulp_distance`, `relative_distance`, `absolute_distance`,
     `ieee_equal`, `to_text`, `compare_equal`, `compare_less`, `produce` and `convert_as` used to be
-    reached by name. Each trait inherits its defaults from a `tts::_::builtin_*` base, so a
-    specialization keeps the members it leaves alone by inheriting from that base.
+    reached by name. A specialization writes the members it changes and leaves the rest out: every
+    member has a default, and a member the specialization does not carry keeps it. A member that is
+    there but does not accept the operands is reported rather than ignored.
   * `operator<<` is not consulted when a value is rendered, and has not been since 3.0, which
     dropped that path along with `<sstream>` without saying so. Up to 2.2, `as_text` tried an
     ostream insertion before falling back on the element dump for a range and on the byte dump for

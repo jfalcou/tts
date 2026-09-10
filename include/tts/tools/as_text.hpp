@@ -154,14 +154,14 @@ namespace tts
     @brief How a value of type T is rendered in a report
 
     Specialize this rather than overloading to_text: a specialization that does not match is a
-    compilation error, where a misnamed overload fell back on the byte dump in silence. Inherit
-    from tts::_::builtin_display<T> to keep the rendering for anything left alone.
+    compilation error, where a misnamed overload fell back on the byte dump in silence. A type
+    without a specialization keeps the built-in rendering.
 
     The `to_text` free function this replaces is gone. An overload left behind is reported where it
     would have been used, rather than ignored in silence.
   **/
   //====================================================================================================================
-  template<typename T> struct display : _::builtin_display<T>
+  template<typename T> struct display
   {
   };
 
@@ -204,12 +204,8 @@ namespace tts
 
 namespace tts::_
 {
-  //====================================================================================================================
-  // Whether a type says how it is rendered. The primary of tts::display inherits the built-in
-  // rendering, so a specialization that answers for a type is exactly one that does not.
-  //====================================================================================================================
   template<typename T>
-  concept described = !std::is_base_of_v<builtin_display<T>, display<T>>;
+  concept described = requires(T const& e) { display<T>::render(e); };
 }
 
 namespace tts
@@ -217,7 +213,15 @@ namespace tts
 
   template<typename T> text as_text(T const& e)
   {
-    return display<T>::render(e);
+    if constexpr(_::described<T>) return display<T>::render(e);
+    else
+    {
+      static_assert(
+      !requires { display<T>::render; },
+      "[TTS] tts::display<T>::render does not accept a value of type T.");
+
+      return _::builtin_display<T>::render(e);
+    }
   }
 
   //====================================================================================================================

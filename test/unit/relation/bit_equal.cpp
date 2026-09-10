@@ -48,9 +48,7 @@ TTS_CASE("test bit_equal for structures")
 };
 
 //==================================================================================================
-// A type whose storage is wider than the value it carries, as a SIMD register holding fewer lanes
-// than it has bytes, compares bytes that no operation writes. The bit_equal member of
-// tts::comparison is what such a type overrides.
+// A type whose storage is wider than the value it carries writes only bit_equal.
 //==================================================================================================
 namespace app
 {
@@ -63,8 +61,7 @@ namespace app
 
 namespace tts
 {
-  template<>
-  struct comparison<app::padded, app::padded> : _::builtin_comparison<app::padded, app::padded>
+  template<> struct comparison<app::padded, app::padded>
   {
     static bool bit_equal(app::padded const& l, app::padded const& r)
     {

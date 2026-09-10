@@ -144,26 +144,79 @@ namespace tts
 
     Specialize this for your own types rather than overloading the free functions: a specialization
     that does not match is a compilation error, where a misnamed overload used to be ignored in
-    silence. Inherit from tts::_::builtin_precision<T> to keep the members you do not redefine.
+    silence. Write the members the type needs and leave the rest out: a member the specialization
+    does not carry keeps its default.
+
+    A specialization that measures a compound type element by element calls tts::ulp_check,
+    tts::relative_check, tts::absolute_check and tts::ieee_check on the elements. Those carry the
+    dispatch; the trait itself answers only for a type that specializes it.
 
     The `ulp_distance`, `relative_distance`, `absolute_distance` and `ieee_equal` free functions
     this replaces are gone. An overload left behind is reported where it would have been used,
     rather than ignored in silence.
   **/
   //====================================================================================================================
-  template<typename T> struct precision : _::builtin_precision<T>
+  template<typename T> struct precision
   {
   };
 
   namespace _
   {
+    template<typename T> inline double dispatch_absolute(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::absolute(a, b); }) return precision<T>::absolute(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::absolute; },
+        "[TTS] tts::precision<T>::absolute does not accept the two operands.");
+        return builtin_precision<T>::absolute(a, b);
+      }
+    }
+
+    template<typename T> inline double dispatch_relative(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::relative(a, b); }) return precision<T>::relative(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::relative; },
+        "[TTS] tts::precision<T>::relative does not accept the two operands.");
+        return builtin_precision<T>::relative(a, b);
+      }
+    }
+
+    template<typename T> inline double dispatch_ulp(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::ulp(a, b); }) return precision<T>::ulp(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::ulp; },
+        "[TTS] tts::precision<T>::ulp does not accept the two operands.");
+        return builtin_precision<T>::ulp(a, b);
+      }
+    }
+
+    template<typename T> inline bool dispatch_ieee(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::ieee(a, b); }) return precision<T>::ieee(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::ieee; },
+        "[TTS] tts::precision<T>::ieee does not accept the two operands.");
+        return builtin_precision<T>::ieee(a, b);
+      }
+    }
+
     // A finite relative tolerance of one or more accepts any error up to the value itself, which
     // is never what a test means: it is a percentage left over from TTS 3, where the distance was
     // reported as one. An infinite tolerance is deliberate, it accepts the nan and infinity
     // cases. Only the native floating point path can say so; a precision specialisation of its
     // own has its own unit.
     template<typename T>
-    concept native_precision = std::is_base_of_v<builtin_precision<T>, precision<T>>;
+    concept native_precision = !requires { precision<T>::relative; };
 
     template<typename T, typename N> constexpr bool reads_as_percent(N const& n)
     {
@@ -197,7 +250,7 @@ namespace tts
                   "Comparing through their common type would express the distance in the unit "
                   "of the promoted type, which is not the one being tested. Convert the "
                   "expected value at the call site instead.");
-    if constexpr(std::is_same_v<T, U>) return precision<T>::absolute(a, b);
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_absolute(a, b);
     else return 0.;
   }
 
@@ -223,7 +276,7 @@ namespace tts
                   "Comparing through their common type would express the distance in the unit "
                   "of the promoted type, which is not the one being tested. Convert the "
                   "expected value at the call site instead.");
-    if constexpr(std::is_same_v<T, U>) return precision<T>::relative(a, b);
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_relative(a, b);
     else return 0.;
   }
 
@@ -249,7 +302,7 @@ namespace tts
                   "Comparing through their common type would express the distance in the unit "
                   "of the promoted type, which is not the one being tested. Convert the "
                   "expected value at the call site instead.");
-    if constexpr(std::is_same_v<T, U>) return precision<T>::ulp(a, b);
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_ulp(a, b);
     else return 0.;
   }
 
@@ -265,7 +318,7 @@ namespace tts
 
     @param  a Value to compare
     @param  b Value to compare
-    @return Is `a == b` or `_::is_nan(a) && _::is_nan(b)`
+    @return Whether `a == b`, or both are NaN
   **/
   //====================================================================================================================
   template<typename T, typename U> inline bool ieee_check(T const& a, U const& b)
@@ -273,7 +326,7 @@ namespace tts
     // Left permissive on the pair of types, unlike the three distances: this one manufactures no
     // conversion, it ends on eq(a, b). Two different types here are the TTS_EQUAL case, not the
     // precision one, and neither of them can name a single tts::precision to answer.
-    if constexpr(std::is_same_v<T, U>) return precision<T>::ieee(a, b);
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_ieee(a, b);
     else if constexpr(std::is_floating_point_v<T>)
       return (a == b) || (_::is_nan(a) && _::is_nan(b));
     else return _::eq(a, b);

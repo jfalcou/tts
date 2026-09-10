@@ -90,7 +90,8 @@ namespace tts
     @brief How a value is read as another type
 
     Generators funnel their bounds through this, so a bound written once has to answer for every
-  type the case is run on. Specialize it for your own types rather than overloading convert_as.
+  type the case is run on. Specialize it for your own types rather than overloading convert_as. A
+  type without a specialization keeps the built-in cast.
 
     The `convert_as` free function is the dispatcher rather than a customization point, and the
   call sites reach it qualified, so an overload of that name in another namespace is never found.
@@ -101,7 +102,7 @@ namespace tts
     @tparam V Type of the value being read
   **/
   //====================================================================================================================
-  template<typename T, typename V> struct conversion : _::builtin_conversion<T, V>
+  template<typename T, typename V> struct conversion
   {
   };
 
@@ -112,7 +113,15 @@ namespace tts
   //====================================================================================================================
   template<typename T, typename V> auto convert_as(V const& v, type<T> const&)
   {
-    return conversion<T, V>::from(v);
+    if constexpr(requires { conversion<T, V>::from(v); }) return conversion<T, V>::from(v);
+    else
+    {
+      static_assert(
+      !requires { conversion<T, V>::from; },
+      "[TTS] tts::conversion<T, V>::from does not accept a value of type V.");
+
+      return _::builtin_conversion<T, V>::from(v);
+    }
   }
 
   //====================================================================================================================
@@ -200,9 +209,9 @@ namespace tts
     @ingroup tools-generators-custom
     @brief How a value of a given type is built from a generator
 
-    Specialize this for your own types rather than overloading produce. Inherit from
-  tts::_::builtin_generation<T> to keep the default way of building, which hands a scalar straight
-  to the generator and fills a sequence element by element.
+    Specialize this for your own types rather than overloading produce. A type without a
+  specialization keeps the default way of building, which hands a scalar straight to the generator
+  and fills a sequence element by element.
 
     The `produce` free function is the dispatcher rather than a customization point, and the call
   sites reach it qualified, so an overload of that name in another namespace is never found. It
@@ -212,13 +221,24 @@ namespace tts
     @tparam T Target data type
   **/
   //====================================================================================================================
-  template<typename T> struct generation : _::builtin_generation<T>
+  template<typename T> struct generation
   {
   };
 
   template<typename T> auto produce(type<T> const&, auto g, auto... others)
   {
-    return generation<T>::make(g, others...);
+    if constexpr(requires { generation<T>::make(g, others...); })
+    {
+      return generation<T>::make(g, others...);
+    }
+    else
+    {
+      static_assert(
+      !requires { generation<T>::make; },
+      "[TTS] tts::generation<T>::make does not accept the generator.");
+
+      return _::builtin_generation<T>::make(g, others...);
+    }
   }
 
   //====================================================================================================================

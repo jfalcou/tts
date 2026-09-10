@@ -82,9 +82,9 @@
   @snippet doc/comparators.cpp snippet1
 
   Similarly, **TTS** uses `operator<` to build all its ordering-based checks. The `less` member of
-  the same trait covers those. Inherit from `tts::_::builtin_comparison` to keep the member left
-  alone. The `compare_equal` and `compare_less` overloads these replace are gone: one left behind
-  is reported where it would have been used.
+  the same trait covers those, and a member the specialization leaves out keeps its default. The
+  `compare_equal` and `compare_less` overloads these replace are gone: one left behind is reported
+  where it would have been used.
 
   @snippet doc/comparators.cpp snippet2
 
@@ -98,8 +98,8 @@
   ## ULP Distance
   When dealing with floating point values, **TTS** measures all [ULP checks](rationale.html#ulp)
   through the `ulp` member of @ref tts::precision. Specialize the trait to let **TTS** use a special
-  ULP comparison scheme, inheriting from `tts::_::builtin_precision` to keep the three members left
-  alone. One can also reuse the pre-existing `tts::ulp_check` to implement their own.
+  ULP comparison scheme; the three members left out keep their defaults. One can also reuse the
+  pre-existing `tts::ulp_check` to implement their own.
 
   @snippet doc/precision_ulp.cpp snippet
 
@@ -152,9 +152,9 @@
   ## Producing values of a user-defined type
 
   A generator answers for the type it is handed, so a type **TTS** knows nothing about needs to say
-  how it is built. Specialize @ref tts::generation for it, inheriting from
-  `tts::_::builtin_generation` to keep the default way of building, which hands a scalar straight to
-  the generator and fills a sequence element by element.
+  how it is built. Specialize @ref tts::generation for it. A type without a specialization keeps the
+  default way of building, which hands a scalar straight to the generator and fills a sequence
+  element by element.
 
   Generator bounds go through @ref tts::conversion, which casts a plain value to the type under
   test. Specialize it when a bound is a recipe rather than a value, so that a bound written once in
