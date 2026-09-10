@@ -33,6 +33,13 @@ namespace tts::_
 
       return l < r;
     }
+
+    static bool bit_equal(L const& l, R const& r)
+    {
+      static_assert(sizeof(L) == sizeof(R), "Types must have the same size for bitwise comparison");
+
+      return std::memcmp(&l, &r, sizeof(L)) == 0;
+    }
   };
 }
 
@@ -48,11 +55,15 @@ namespace tts
   //====================================================================================================================
   /*!
     @ingroup tools-comparison
-    @brief When two values count as equal, and when one comes before the other
+    @brief When two values are equal, when one comes before the other, and when their bits agree
 
     Specialize this for your own types rather than overloading the free functions: a specialization
     that does not match is a compilation error, where a misnamed overload used to be ignored in
     silence. Inherit from tts::_::builtin_comparison<L, R> to keep the member you leave alone.
+
+    The three members are `equal`, `less` and `bit_equal`. The last one backs TTS_BIT_EQUAL and
+    TTS_BIT_NOT_EQUAL, and defaults to a `memcmp` over the whole object: a type whose storage holds
+    padding, such as a SIMD register wider than the lanes it carries, has to specialize it.
 
     Both operand types are parameters, in the order they are written, so a comparison between two
     different types is specialized on the pair rather than on either side of it.
@@ -75,16 +86,12 @@ namespace tts::_
 {
   template<typename L, typename R> inline constexpr bool bit_eq(L const& l, R const& r)
   {
-    static_assert(sizeof(L) == sizeof(R), "Types must have the same size for bitwise comparison");
-
-    return std::memcmp(&l, &r, sizeof(L)) == 0;
+    return comparison<L, R>::bit_equal(l, r);
   }
 
   template<typename L, typename R> inline constexpr bool bit_neq(L const& l, R const& r)
   {
-    static_assert(sizeof(L) == sizeof(R), "Types must have the same size for bitwise comparison");
-
-    return std::memcmp(&l, &r, sizeof(L)) != 0;
+    return !comparison<L, R>::bit_equal(l, r);
   }
 
   template<typename L, typename R> inline constexpr bool eq(L const& l, R const& r)

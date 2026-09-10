@@ -88,6 +88,11 @@
 
   @snippet doc/comparators.cpp snippet2
 
+  `TTS_BIT_EQUAL` and `TTS_BIT_NOT_EQUAL` use the `bit_equal` member of the same trait. It defaults
+  to a `memcmp` over the whole object, so a type whose storage holds padding, such as a SIMD
+  register wider than the lanes it carries, compares bytes that no operation ever writes and has to
+  specialize it.
+
   @section customize-precision Precision Measurement
 
   ## ULP Distance

@@ -25,9 +25,12 @@ Change Log {#changelog}
     any error up to the value itself, and is a percentage left over from the previous unit. The
     message says to divide it by a hundred. This applies to the native floating point path only; a
     `tts::precision` specialisation keeps whatever unit it returns.
-  * Equality, ordering and bitwise checks are unchanged. `TTS_EQUAL` and its typed counterparts
-    forward to `operator==` or to a `compare_equal` overload, and introduce no conversion of their
-    own.
+  * Equality and ordering checks are unchanged. `TTS_EQUAL` and its typed counterparts forward to
+    `operator==` or to a `compare_equal` overload, and introduce no conversion of their own.
+  * `TTS_BIT_EQUAL` and `TTS_BIT_NOT_EQUAL` go through the `bit_equal` member of
+    `tts::comparison<L, R>` rather than calling `memcmp` themselves. The default is that same
+    `memcmp`, so an unspecialized type behaves as before; a type whose storage holds padding can now
+    say which bits carry a value.
 
   * Every customization point is a trait, and the free functions they replace are gone.
     `tts::precision<T>`, `tts::display<T>`, `tts::comparison<L, R>`, `tts::generation<T>` and
