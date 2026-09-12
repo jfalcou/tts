@@ -110,11 +110,6 @@ namespace tts
   //====================================================================================================================
   template<typename T> struct type
   {
-    friend text to_text(type)
-    {
-      return as_text(typename_<T>);
-    }
-
     template<_::stream OS> friend OS& operator<<(OS& os, type const&)
     {
       return os << typename_<T>;

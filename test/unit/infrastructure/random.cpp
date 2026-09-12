@@ -131,7 +131,8 @@ TTS_CASE_TPL("Check Integer Uniformity [Mean & Variance]", int, long, unsigned i
     TTS_EXPECT(val <= max_v);
   }
 
-  check_uniform_moments(results, static_cast<double>(min_v), static_cast<double>(max_v), 1.0, 5.0);
+  check_uniform_moments(
+  results, static_cast<double>(min_v), static_cast<double>(max_v), 0.01, 0.05);
 };
 
 TTS_CASE_TPL("Check Float Log-Uniformity", float, double)
@@ -155,7 +156,7 @@ TTS_CASE_TPL("Check Float Log-Uniformity", float, double)
 
   double expected_log_mean = (std::log10(min_v) + std::log10(max_v)) / 2.0;
   double actual_log_mean   = compute_mean(log_results);
-  TTS_RELATIVE_EQUAL(actual_log_mean, expected_log_mean, 1.0);
+  TTS_RELATIVE_EQUAL(actual_log_mean, expected_log_mean, 0.01);
 };
 
 TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)
@@ -174,7 +175,7 @@ TTS_CASE_TPL("Check Zero Crossing Probabilities", float, double)
 
   double positive_ratio = static_cast<double>(positive_count) / static_cast<double>(samples);
 
-  TTS_RELATIVE_EQUAL(positive_ratio, 0.8, 1.0);
+  TTS_RELATIVE_EQUAL(positive_ratio, 0.8, 0.01);
 };
 
 TTS_CASE_TPL("Check random_bits Uniformity [Mean & Variance]", tts::uint_types)
@@ -190,7 +191,7 @@ TTS_CASE_TPL("Check random_bits Uniformity [Mean & Variance]", tts::uint_types)
     results.push_back(static_cast<double>(gen(tts::type<T> {})));
 
   double n = std::pow(2.0, static_cast<double>(8 * sizeof(T)));
-  check_uniform_moments(results, 0.0, n - 1.0, 1.0, 5.0);
+  check_uniform_moments(results, 0.0, n - 1.0, 0.01, 0.05);
 };
 
 TTS_CASE_TPL("Check degenerate range for reals", float, double)

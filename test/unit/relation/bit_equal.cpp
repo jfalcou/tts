@@ -46,3 +46,36 @@ TTS_CASE("test bit_equal for structures")
                 (std::pair<int, float> {0x3F800000, 1.f}));
   TTS_BIT_EQUAL((std::pair<int, float> {0x3F800000, 1.f}), (ab {0x3F800000, 1.f}));
 };
+
+//==================================================================================================
+// A type whose storage is wider than the value it carries writes only bit_equal.
+//==================================================================================================
+namespace app
+{
+  struct padded
+  {
+    std::uint8_t  used;
+    std::uint64_t slack;
+  };
+}
+
+namespace tts
+{
+  template<> struct comparison<app::padded, app::padded>
+  {
+    static bool bit_equal(app::padded const& l, app::padded const& r)
+    {
+      return l.used == r.used;
+    }
+  };
+}
+
+TTS_CASE("test that tts::comparison drives the bitwise macros")
+{
+  app::padded const a {42, 0};
+  app::padded const b {42, 0xDEADBEEF};
+  app::padded const c {43, 0};
+
+  TTS_BIT_EQUAL(a, b);
+  TTS_BIT_NOT_EQUAL(a, c);
+};

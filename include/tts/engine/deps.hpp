@@ -11,6 +11,7 @@
 #include <cassert>
 #include <concepts>
 #include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <new>

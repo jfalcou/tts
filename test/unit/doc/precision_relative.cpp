@@ -17,13 +17,20 @@ namespace sample
     int n, d;
   };
 
-  double relative_distance(ratio a, ratio b)
-  {
-    auto ra = static_cast<float>(a.n) / static_cast<float>(a.d);
-    auto rb = static_cast<float>(b.n) / static_cast<float>(b.d);
+}
 
-    return tts::relative_check(ra, rb);
-  }
+namespace tts
+{
+  template<> struct precision<sample::ratio> : _::builtin_precision<sample::ratio>
+  {
+    static double relative(sample::ratio const& a, sample::ratio const& b)
+    {
+      auto ra = static_cast<float>(a.n) / static_cast<float>(a.d);
+      auto rb = static_cast<float>(b.n) / static_cast<float>(b.d);
+
+      return tts::relative_check(ra, rb);
+    }
+  };
 }
 
 TTS_CASE("Compare values with custom relative distance computation")
@@ -31,6 +38,6 @@ TTS_CASE("Compare values with custom relative distance computation")
   sample::ratio a {1, 77};
   sample::ratio b {3, 85};
 
-  TTS_RELATIVE_EQUAL(a, b, 2.25);
+  TTS_RELATIVE_EQUAL(a, b, 0.0225);
 };
 //! [snippet]

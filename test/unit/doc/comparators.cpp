@@ -18,10 +18,17 @@ namespace sample
     T value;
   };
 
-  template<typename T> bool compare_equal(box<T> const& l, box<T> const& r)
+}
+
+namespace tts
+{
+  template<typename T> struct comparison<sample::box<T>, sample::box<T>>
   {
-    return l.value == r.value;
-  }
+    static bool equal(sample::box<T> const& l, sample::box<T> const& r)
+    {
+      return l.value == r.value;
+    }
+  };
 }
 
 TTS_CASE("Compare values with custom equality")
@@ -48,15 +55,22 @@ namespace sample
     T value;
   };
 
-  template<typename T> bool compare_equal(absolute<T> const& l, absolute<T> const& r)
-  {
-    return std::abs(l.value) == std::abs(r.value);
-  }
+}
 
-  template<typename T> bool compare_less(absolute<T> const& l, absolute<T> const& r)
+namespace tts
+{
+  template<typename T> struct comparison<sample::absolute<T>, sample::absolute<T>>
   {
-    return std::abs(l.value) < std::abs(r.value);
-  }
+    static bool equal(sample::absolute<T> const& l, sample::absolute<T> const& r)
+    {
+      return std::abs(l.value) == std::abs(r.value);
+    }
+
+    static bool less(sample::absolute<T> const& l, sample::absolute<T> const& r)
+    {
+      return std::abs(l.value) < std::abs(r.value);
+    }
+  };
 }
 
 TTS_CASE("Compare values with custom comparisons")
@@ -71,6 +85,44 @@ TTS_CASE("Compare values with custom comparisons")
   TTS_GREATER_EQUAL(b, a);
 };
 //! [snippet2]
+
+#undef TTS_MAIN
+
+//! [snippet3]
+#define TTS_MAIN // No need for main()
+#include <tts/tts.hpp>
+
+namespace sample
+{
+  // Only the tag carries a value; the rest of the storage is never written.
+  struct tagged_word
+  {
+    std::uint8_t  tag;
+    std::uint64_t storage;
+  };
+}
+
+namespace tts
+{
+  template<> struct comparison<sample::tagged_word, sample::tagged_word>
+  {
+    static bool bit_equal(sample::tagged_word const& l, sample::tagged_word const& r)
+    {
+      return l.tag == r.tag;
+    }
+  };
+}
+
+TTS_CASE("Compare values by the bits that carry them")
+{
+  sample::tagged_word const a {7, 0};
+  sample::tagged_word const b {7, 0xDEADBEEF};
+  sample::tagged_word const c {9, 0};
+
+  TTS_BIT_EQUAL(a, b);
+  TTS_BIT_NOT_EQUAL(a, c);
+};
+//! [snippet3]
 
 int main(int argc, char const** argv)
 {
