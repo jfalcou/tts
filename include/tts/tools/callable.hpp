@@ -12,7 +12,7 @@
 
 namespace tts::_
 {
-  struct callable : erased_storage
+  struct callable : erased_storage // NOSONAR - erased_storage owns the payload and destroys it
   {
     using signature_t = void (*)(void*);
 
@@ -46,8 +46,6 @@ namespace tts::_
       invoker = other.invoker;
       return *this;
     }
-
-    ~callable() = default;
 
     void operator()() const
     {

@@ -14,7 +14,7 @@
 
 namespace tts::_
 {
-  struct abort_handler : erased_storage
+  struct abort_handler : erased_storage // NOSONAR - erased_storage owns the payload and destroys it
   {
     using signature_t = void (*)(void*, int);
 
@@ -45,8 +45,6 @@ namespace tts::_
       invoker = other.invoker;
       return *this;
     }
-
-    ~abort_handler() = default;
 
     void operator()(int reason) const
     {
