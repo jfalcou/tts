@@ -47,6 +47,8 @@ namespace tts::_
       return *this;
     }
 
+    ~callable() = default;
+
     void operator()() const
     {
       assert(payload);

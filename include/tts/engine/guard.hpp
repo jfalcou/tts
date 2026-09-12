@@ -11,6 +11,7 @@
 #include <tts/engine/abort.hpp>
 #include <tts/engine/environment.hpp>
 #include <tts/engine/test.hpp>
+#include <array>
 
 #if defined(__EMSCRIPTEN__)
 #elif defined(_WIN32)
@@ -24,7 +25,7 @@
 
 namespace tts::_
 {
-  inline std::size_t remaining_tests = 0;
+  inline std::size_t remaining_tests = 0; // NOSONAR - the loop updates it before each case
 
   // Read once: a debugger or a sanitizer wants the signal for itself.
   inline bool crash_guard_enabled()
@@ -34,7 +35,7 @@ namespace tts::_
   }
 
   // Not async-signal-safe: each handler guards its own re-entry before calling this.
-  inline void report_crash(char const* cause, void const* address)
+  inline void report_crash(char const* cause, void const* address) // NOSONAR - an address is void*
   {
     // Without this the Results: line reads 100% success on a run that died.
     ::tts::global_runtime.fatal();
@@ -86,16 +87,23 @@ namespace tts::_
     perform_abort(static_cast<int>(code));
   }
 
-  extern "C" inline void crash_on_abort_signal(int)
+}
+
+extern "C"
+{
+  [[noreturn]] inline void tts_crash_on_abort_signal(int)
   {
     static bool reporting = false;
-    if(reporting) exit_now();
+    if(reporting) ::tts::_::exit_now();
     reporting = true;
 
-    report_crash("SIGABRT", nullptr);
-    perform_abort(SIGABRT);
+    ::tts::_::report_crash("SIGABRT", nullptr);
+    ::tts::_::perform_abort(SIGABRT);
   }
+}
 
+namespace tts::_
+{
   struct crash_guard
   {
     crash_guard()
@@ -107,7 +115,7 @@ namespace tts::_
       SetThreadStackGuarantee(&guarantee);
 
       handle_   = AddVectoredExceptionHandler(1, &crash_filter);
-      previous_ = signal(SIGABRT, &crash_on_abort_signal);
+      previous_ = signal(SIGABRT, &tts_crash_on_abort_signal);
     }
 
     ~crash_guard()
@@ -129,9 +137,9 @@ namespace tts::_
 #else
 namespace tts::_
 {
-  inline constexpr int crash_signals[] = {SIGSEGV, SIGBUS, SIGFPE, SIGILL, SIGABRT};
+  inline constexpr std::array<int, 5> crash_signals {SIGSEGV, SIGBUS, SIGFPE, SIGILL, SIGABRT};
 
-  inline char const*   signal_name(int sig)
+  inline char const*                  signal_name(int sig)
   {
     switch(sig)
     {
@@ -144,21 +152,30 @@ namespace tts::_
     }
   }
 
-  extern "C" inline void crash_handler(int sig, siginfo_t* info, void*)
+}
+
+extern "C"
+{
+  // sigaction hands a mutable siginfo_t, so this parameter cannot take a const.
+  [[noreturn]] inline void
+  tts_crash_handler(int sig, siginfo_t* info, void*) // NOSONAR - the kernel picks this signature
   {
     static sig_atomic_t volatile reporting = 0;
     if(reporting)
     {
       signal(sig, SIG_DFL);
       raise(sig);
-      exit_now();
+      ::tts::_::exit_now();
     }
     reporting = 1;
 
-    report_crash(signal_name(sig), sig == SIGABRT ? nullptr : info->si_addr);
-    perform_abort(sig);
+    ::tts::_::report_crash(::tts::_::signal_name(sig), sig == SIGABRT ? nullptr : info->si_addr);
+    ::tts::_::perform_abort(sig);
   }
+}
 
+namespace tts::_
+{
   struct crash_guard
   {
     crash_guard()
@@ -167,17 +184,17 @@ namespace tts::_
 
       // A stack overflow leaves no stack for the handler to run on, hence the alternate one.
       stack_t alt  = {};
-      alt.ss_sp    = stack_;
-      alt.ss_size  = sizeof(stack_);
+      alt.ss_sp    = stack_.data();
+      alt.ss_size  = stack_.size();
       alt.ss_flags = 0;
       sigaltstack(&alt, nullptr);
 
       struct sigaction action = {};
-      action.sa_sigaction     = &crash_handler;
+      action.sa_sigaction     = &tts_crash_handler;
       action.sa_flags         = SA_SIGINFO | SA_ONSTACK;
       sigemptyset(&action.sa_mask);
 
-      for(std::size_t i = 0; i < sizeof(crash_signals) / sizeof(int); ++i)
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
         sigaction(crash_signals[ i ], &action, &previous_[ i ]);
     }
 
@@ -185,7 +202,7 @@ namespace tts::_
     {
       if(!armed_) return;
 
-      for(std::size_t i = 0; i < sizeof(crash_signals) / sizeof(int); ++i)
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
         sigaction(crash_signals[ i ], &previous_[ i ], nullptr);
     }
 
@@ -194,11 +211,11 @@ namespace tts::_
 
   private:
     // SIGSTKSZ stopped being a constant in glibc 2.34, so the alternate stack has a fixed size.
-    static constexpr std::size_t alt_stack_size                                   = 64u * 1024u;
+    static constexpr std::size_t                       alt_stack_size = 64u * 1024u;
 
-    static inline char           stack_[ alt_stack_size ]                         = {};
-    struct sigaction             previous_[ sizeof(crash_signals) / sizeof(int) ] = {};
-    bool                         armed_ = crash_guard_enabled();
+    static inline std::array<char, alt_stack_size>     stack_ {};
+    std::array<struct sigaction, crash_signals.size()> previous_ {};
+    bool                                               armed_ = crash_guard_enabled();
   };
 }
 #endif

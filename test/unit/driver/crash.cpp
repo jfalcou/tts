@@ -36,7 +36,7 @@ namespace
 
     bool says(char const* what) const
     {
-      return std::strstr(seen.data(), what) != nullptr;
+      return std::strstr(seen.data(), what) != nullptr; // NOSONAR - contains() is C++23
     }
 
     tts::text seen    = {};

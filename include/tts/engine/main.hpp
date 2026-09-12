@@ -76,7 +76,7 @@ namespace tts::_
 #endif
 
 #if defined(TTS_MAIN)
-#include <tts/engine/guard.hpp>
+#include <tts/engine/guard.hpp> // NOSONAR - the driver is the only unit that needs the signals
 
 //======================================================================================================================
 // Outlined reporting functions implementations

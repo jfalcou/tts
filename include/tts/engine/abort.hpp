@@ -46,6 +46,8 @@ namespace tts::_
       return *this;
     }
 
+    ~abort_handler() = default;
+
     void operator()(int reason) const
     {
       assert(payload);
@@ -66,8 +68,8 @@ namespace tts::_
     }
   };
 
-  inline callable          abort_epilogue = {};
-  inline abort_handler     abort_action   = {};
+  inline callable          abort_epilogue = {}; // NOSONAR - the driver sets it once it is ready
+  inline abort_handler     abort_action   = {}; // NOSONAR - set_abort_handler replaces it
 
   [[noreturn]] inline void exit_now()
   {

@@ -11,7 +11,7 @@ namespace tts::_
 {
   struct erased_storage
   {
-    using cleanup_t  = void (*)(void*);
+    using cleanup_t  = void (*)(void*); // NOSONAR - erasing the type is what the void* is for
 
     erased_storage() = default;
 

@@ -19,7 +19,7 @@ void       outside_function()
   outside_data = 99;
 }
 
-inline int outside_reason = 0;
+inline int outside_reason = 0; // NOSONAR - the handler under test writes it
 void       outside_reporter(int reason)
 {
   outside_reason = reason;
