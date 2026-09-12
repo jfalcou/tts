@@ -347,6 +347,11 @@ namespace tts
   }
 }
 TTS_DISABLE_WARNING_POP
+namespace tts
+{
+  using nanoseconds = unsigned long long;
+  using counter = unsigned long long;
+}
 namespace tts::_
 {
   struct verbosity
@@ -399,19 +404,19 @@ namespace tts
                                   [[maybe_unused]] bool        fatal)
     {
     }
-    virtual void test_finished([[maybe_unused]] text const&        name,
-                               [[maybe_unused]] bool               passed,
-                               [[maybe_unused]] bool               invalid,
-                               [[maybe_unused]] unsigned long long duration_ns)
+    virtual void test_finished([[maybe_unused]] text const& name,
+                               [[maybe_unused]] bool        passed,
+                               [[maybe_unused]] bool        invalid,
+                               [[maybe_unused]] nanoseconds duration_ns)
     {
     }
-    virtual void suite_finished([[maybe_unused]] unsigned long long fail_count,
-                                [[maybe_unused]] unsigned long long invalid_count)
+    virtual void suite_finished([[maybe_unused]] counter fail_count,
+                                [[maybe_unused]] counter invalid_count)
     {
     }
-    virtual void suite_metric([[maybe_unused]] outcome            kind,
-                              [[maybe_unused]] unsigned long long count,
-                              [[maybe_unused]] unsigned long long total)
+    virtual void suite_metric([[maybe_unused]] outcome kind,
+                              [[maybe_unused]] counter count,
+                              [[maybe_unused]] counter total)
     {
     }
     virtual void suite_aborted()
@@ -504,15 +509,15 @@ namespace tts
     {
       sink_->assertion_failed(location, message, fatal);
     }
-    void test_finished(text const& name, bool passed, bool invalid, unsigned long long duration_ns)
+    void test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns)
     {
       sink_->test_finished(name, passed, invalid, duration_ns);
     }
-    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count)
+    void suite_finished(counter fail_count, counter invalid_count)
     {
       sink_->suite_finished(fail_count, invalid_count);
     }
-    void suite_metric(outcome kind, unsigned long long count, unsigned long long total)
+    void suite_metric(outcome kind, counter count, counter total)
     {
       sink_->suite_metric(kind, count, total);
     }
@@ -617,23 +622,23 @@ namespace tts
     {
       set_color("\033[31m");
     }
-    void test_finished([[maybe_unused]] text const&        name,
-                       bool                                passed,
-                       bool                                invalid,
-                       [[maybe_unused]] unsigned long long duration_ns) override
+    void test_finished([[maybe_unused]] text const& name,
+                       bool                         passed,
+                       bool                         invalid,
+                       [[maybe_unused]] nanoseconds duration_ns) override
     {
       if(invalid) set_color("\033[33m");
       else if(passed) set_color("\033[32m");
       else set_color(nullptr);
     }
-    void suite_finished([[maybe_unused]] unsigned long long fail_count,
-                        [[maybe_unused]] unsigned long long invalid_count) override
+    void suite_finished([[maybe_unused]] counter fail_count,
+                        [[maybe_unused]] counter invalid_count) override
     {
       set_color("\033[1m");
     }
-    void suite_metric(outcome                             kind,
-                      [[maybe_unused]] unsigned long long count,
-                      [[maybe_unused]] unsigned long long total) override
+    void suite_metric(outcome                  kind,
+                      [[maybe_unused]] counter count,
+                      [[maybe_unused]] counter total) override
     {
       using enum outcome;
       revert_to_ = active_color_;
@@ -749,10 +754,8 @@ namespace tts
                                  _::json_escape(message).data(),
                                  fatal ? "true" : "false"};
     }
-    void test_finished(text const&        name,
-                       bool               passed,
-                       bool               invalid,
-                       unsigned long long duration_ns) override
+    void
+    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
     {
       char const* status = "failed";
       if(invalid)
@@ -777,7 +780,7 @@ namespace tts
     }
     text render() const
     {
-      unsigned long long total = passed_count_ + failed_count_ + invalid_count_;
+      counter total = passed_count_ + failed_count_ + invalid_count_;
       return text {R"({"tests":[%s],"summary":{"total":%llu,"passed":%llu,"failed":%llu,)"
                    R"("invalid":%llu,"duration_ns":%llu}})",
                    body_.data(),
@@ -811,13 +814,13 @@ namespace tts
       dump(*target_);
     }
   private:
-    output_sink*       target_;
-    text               body_;
-    text               current_failures_;
-    unsigned long long passed_count_      = 0;
-    unsigned long long failed_count_      = 0;
-    unsigned long long invalid_count_     = 0;
-    unsigned long long total_duration_ns_ = 0;
+    output_sink* target_;
+    text         body_;
+    text         current_failures_;
+    counter      passed_count_      = 0;
+    counter      failed_count_      = 0;
+    counter      invalid_count_     = 0;
+    nanoseconds  total_duration_ns_ = 0;
   };
 }
 TTS_DISABLE_WARNING_POP
@@ -866,10 +869,8 @@ namespace tts
       text {"%.*s: %s", static_cast<int>(len - 2), loc + 1, _::xml_escape(message).data()};
       if(first_failure_.is_empty()) first_failure_ = _::xml_escape(message);
     }
-    void test_finished(text const&        name,
-                       bool               passed,
-                       bool               invalid,
-                       unsigned long long duration_ns) override
+    void
+    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
     {
       if(invalid) ++invalid_count_;
       else if(passed) ++passed_count_;
@@ -909,8 +910,8 @@ namespace tts
     }
     text render() const
     {
-      unsigned long long total   = passed_count_ + failed_count_ + invalid_count_;
-      double             seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
+      counter total   = passed_count_ + failed_count_ + invalid_count_;
+      double  seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
       return text {"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                    R"(<testsuites><testsuite name="TTS" tests="%llu" failures="%llu" errors="0")"
                    R"( skipped="%llu" time="%.6f">)"
@@ -946,14 +947,14 @@ namespace tts
       dump(*target_);
     }
   private:
-    output_sink*       target_;
-    text               body_;
-    text               current_failures_;
-    text               first_failure_;
-    unsigned long long passed_count_      = 0;
-    unsigned long long failed_count_      = 0;
-    unsigned long long invalid_count_     = 0;
-    unsigned long long total_duration_ns_ = 0;
+    output_sink* target_;
+    text         body_;
+    text         current_failures_;
+    text         first_failure_;
+    counter      passed_count_      = 0;
+    counter      failed_count_      = 0;
+    counter      invalid_count_     = 0;
+    nanoseconds  total_duration_ns_ = 0;
   };
 }
 namespace tts
@@ -967,10 +968,10 @@ namespace tts
     void write(text const&) override
     {
     }
-    void test_finished(text const&                         name,
-                       bool                                passed,
-                       [[maybe_unused]] bool               invalid,
-                       [[maybe_unused]] unsigned long long duration_ns) override
+    void test_finished(text const&                  name,
+                       bool                         passed,
+                       [[maybe_unused]] bool        invalid,
+                       [[maybe_unused]] nanoseconds duration_ns) override
     {
       ++count_;
       body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
@@ -1149,20 +1150,20 @@ Range specifics Parameters:
 #endif
 namespace tts::_
 {
-  inline unsigned long long now_ns()
+  inline nanoseconds now_ns()
   {
 #if defined(_WIN32)
     LARGE_INTEGER freq;
     LARGE_INTEGER count;
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&count);
-    return static_cast<unsigned long long>(static_cast<double>(count.QuadPart) * 1e9 /
-                                           static_cast<double>(freq.QuadPart));
+    return static_cast<nanoseconds>(static_cast<double>(count.QuadPart) * 1e9 /
+                                    static_cast<double>(freq.QuadPart));
 #else
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return static_cast<unsigned long long>(ts.tv_sec) * 1'000'000'000ULL +
-           static_cast<unsigned long long>(ts.tv_nsec);
+    return static_cast<nanoseconds>(ts.tv_sec) * 1'000'000'000ULL +
+           static_cast<nanoseconds>(ts.tv_nsec);
 #endif
   }
   inline ::tts::text format_duration(double duration_ns)
@@ -1380,7 +1381,7 @@ namespace tts::_
     {
       unexpected_count++;
     }
-    int report(unsigned long long fails, unsigned long long invalids) const
+    int report(counter fails, counter invalids) const
     {
       auto  test_txt = test_count > 1 ? "s" : "";
       auto  pass_txt = success_count > 1 ? "es" : "";
@@ -1428,14 +1429,14 @@ namespace tts::_
       if(!fails && !invalids) return unexpected_count == 0 ? 0 : 1;
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
-    unsigned long long test_count        = 0;
-    unsigned long long success_count     = 0;
-    unsigned long long failure_count     = 0;
-    unsigned long long fatal_count       = 0;
-    unsigned long long invalid_count     = 0;
-    unsigned long long unexpected_count  = 0;
-    unsigned long long total_duration_ns = 0;
-    bool               fail_status       = false;
+    counter     test_count        = 0;
+    counter     success_count     = 0;
+    counter     failure_count     = 0;
+    counter     fatal_count       = 0;
+    counter     invalid_count     = 0;
+    counter     unexpected_count  = 0;
+    nanoseconds total_duration_ns = 0;
+    bool        fail_status       = false;
   };
 }
 namespace tts
@@ -1443,7 +1444,7 @@ namespace tts
   inline _::env global_runtime       = {};
   inline bool   fatal_error_status   = false;
   inline bool   global_logger_status = false;
-  inline int report(unsigned long long fails, unsigned long long invalids)
+  inline int report(counter fails, counter invalids)
   {
     return global_runtime.report(fails, invalids);
   }
@@ -1969,13 +1970,12 @@ namespace tts
 }
 namespace tts::_
 {
-  using milliseconds              = unsigned long long;
   inline char const* current_test = "";
   struct tagged_id
   {
     char const*             name;
     ::tts::expected_outcome tag;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
   inline char const* tag_name(::tts::expected_outcome tag)
@@ -2002,7 +2002,7 @@ namespace tts::_
     tts::_::callable        behaviour;
     tts::text               types       = {};
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
   inline buffer<test>& suite()
@@ -2024,7 +2024,7 @@ namespace tts
   }
   inline _::tagged_id expect_fail(_::tagged_id const& id)
   {
-    return {id.name, expected_outcome::xfail, id.timeout_ms, id.timeout_set};
+    return {id.name, expected_outcome::xfail, id.timeout_ns, id.timeout_set};
   }
   inline _::tagged_id may_fail(char const* id)
   {
@@ -2032,7 +2032,7 @@ namespace tts
   }
   inline _::tagged_id may_fail(_::tagged_id const& id)
   {
-    return {id.name, expected_outcome::may_fail, id.timeout_ms, id.timeout_set};
+    return {id.name, expected_outcome::may_fail, id.timeout_ns, id.timeout_set};
   }
   inline _::tagged_id expect_invalid(char const* id)
   {
@@ -2040,15 +2040,15 @@ namespace tts
   }
   inline _::tagged_id expect_invalid(_::tagged_id const& id)
   {
-    return {id.name, expected_outcome::xinvalid, id.timeout_ms, id.timeout_set};
+    return {id.name, expected_outcome::xinvalid, id.timeout_ns, id.timeout_set};
   }
-  inline _::tagged_id with_timeout(_::milliseconds ms, char const* id)
+  inline _::tagged_id with_timeout(unsigned long long ms, char const* id)
   {
-    return {id, expected_outcome::pass, ms, true};
+    return {id, expected_outcome::pass, ms * 1'000'000, true};
   }
-  inline _::tagged_id with_timeout(_::milliseconds ms, _::tagged_id const& id)
+  inline _::tagged_id with_timeout(unsigned long long ms, _::tagged_id const& id)
   {
-    return {id.name, id.tag, ms, true};
+    return {id.name, id.tag, ms * 1'000'000, true};
   }
 }
 namespace tts::_
@@ -2678,16 +2678,17 @@ namespace tts::_
 #endif
 namespace tts::_
 {
-  inline milliseconds watchdog_ms = 0;
-  inline milliseconds default_timeout_ms()
+  inline nanoseconds watchdog_ns = 0;
+  inline nanoseconds default_timeout_ns()
   {
-    static milliseconds that = ::tts::arguments().value<milliseconds>("--timeout");
+    static nanoseconds that = ::tts::arguments().value<unsigned long long>("--timeout") * 1'000'000;
     return that;
   }
   inline void report_timeout()
   {
-    ::tts::text line {
-    "TEST: '%s' - @@ TIMEOUT @@ still running after %llu ms", current_test, watchdog_ms};
+    ::tts::text line {"TEST: '%s' - @@ TIMEOUT @@ still running after %s",
+                      current_test,
+                      format_duration(static_cast<double>(watchdog_ns)).data()};
     report_abort(line.data(), "TIMEOUT");
   }
 }
@@ -2696,7 +2697,7 @@ namespace tts::_
 {
   struct watchdog
   {
-    explicit watchdog(milliseconds)
+    explicit watchdog(nanoseconds)
     {
     }
   };
@@ -2714,15 +2715,15 @@ namespace tts::_
   }
   struct watchdog
   {
-    explicit watchdog(milliseconds ms)
+    explicit watchdog(nanoseconds ns)
     {
-      if(!ms) return;
-      watchdog_ms = ms;
+      if(!ns) return;
+      watchdog_ns = ns;
       CreateTimerQueueTimer(&timer_,
                             nullptr,
                             &watchdog_expired,
                             nullptr,
-                            static_cast<DWORD>(ms),
+                            static_cast<DWORD>(ns / 1'000'000u),
                             0,
                             WT_EXECUTEINTIMERTHREAD);
     }
@@ -2751,18 +2752,18 @@ namespace tts::_
 {
   struct watchdog
   {
-    explicit watchdog(milliseconds ms)
+    explicit watchdog(nanoseconds ns)
     {
-      if(!ms) return;
-      watchdog_ms             = ms;
+      if(!ns) return;
+      watchdog_ns             = ns;
       struct sigaction action = {};
       action.sa_handler       = &tts_watchdog_expired;
       action.sa_flags         = 0;
       sigemptyset(&action.sa_mask);
       sigaction(SIGALRM, &action, &previous_);
       itimerval deadline {};
-      deadline.it_value.tv_sec  = static_cast<time_t>(ms / 1000u);
-      deadline.it_value.tv_usec = static_cast<suseconds_t>((ms % 1000u) * 1000u);
+      deadline.it_value.tv_sec  = static_cast<time_t>(ns / 1'000'000'000u);
+      deadline.it_value.tv_usec = static_cast<suseconds_t>((ns % 1'000'000'000u) / 1000u);
       setitimer(ITIMER_REAL, &deadline, nullptr);
       armed_ = true;
     }
@@ -2911,7 +2912,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       {
         [[maybe_unused]] ::tts::_::crash_guard guard {};
         [[maybe_unused]] ::tts::_::watchdog    deadline {
-        t.timeout_set ? t.timeout_ms : ::tts::_::default_timeout_ms()};
+        t.timeout_set ? t.timeout_ns : ::tts::_::default_timeout_ns()};
         t();
       }
       auto duration_ns = ::tts::_::now_ns() - start_ns;
@@ -3369,17 +3370,17 @@ namespace tts::_
     capture(tagged_id id)
         : name(id.name)
         , tag(id.tag)
-        , timeout_ms(id.timeout_ms)
+        , timeout_ns(id.timeout_ns)
         , timeout_set(id.timeout_set)
     {
     }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name, body,  {}, tag, timeout_ms, timeout_set});
+      return test::acknowledge({name, body,  {}, tag, timeout_ns, timeout_set});
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
   inline text current_type = {};
@@ -3406,7 +3407,7 @@ namespace tts::_
     captures(tagged_id id)
         : name(id.name)
         , tag(id.tag)
-        , timeout_ms(id.timeout_ms)
+        , timeout_ns(id.timeout_ns)
         , timeout_set(id.timeout_set)
     {
     }
@@ -3427,12 +3428,12 @@ namespace tts::_
        },
        joined_type_names<Types...>(),
        tag,
-       timeout_ms,
+       timeout_ns,
        timeout_set});
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
   template<typename... Types> struct captures<types<Types...>> : captures<Types...>
@@ -3449,7 +3450,7 @@ namespace tts::_
   {
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
     test_generators(char const* id)
         : name(id)
@@ -3458,7 +3459,7 @@ namespace tts::_
     test_generators(tagged_id id)
         : name(id.name)
         , tag(id.tag)
-        , timeout_ms(id.timeout_ms)
+        , timeout_ns(id.timeout_ns)
         , timeout_set(id.timeout_set)
     {
     }
@@ -3482,7 +3483,7 @@ namespace tts::_
                                 },
                                 joined_type_names<Type...>(),
                                 tg.tag,
-                                tg.timeout_ms,
+                                tg.timeout_ns,
                                 tg.timeout_set});
     }
   };
