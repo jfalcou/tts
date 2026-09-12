@@ -19,6 +19,7 @@ Flags:
   -q, --quiet       Display only test failures percentage.
   --allow-empty     Do not fail when the test suite registered zero test.
   --dry             Print registered test names without running them.
+  --no-crash-guard  Leave a crash to the system instead of naming the case that caused it.
 
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values

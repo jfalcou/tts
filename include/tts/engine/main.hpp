@@ -8,6 +8,7 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/engine/abort.hpp>
 #include <tts/engine/usage.hpp>
 #include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
@@ -75,6 +76,8 @@ namespace tts::_
 #endif
 
 #if defined(TTS_MAIN)
+#include <tts/engine/guard.hpp> // NOSONAR - the driver is the only unit that needs the signals
+
 //======================================================================================================================
 // Outlined reporting functions implementations
 //======================================================================================================================
@@ -208,6 +211,18 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
                             nb_tests,
                             nb_tests > 1 ? "s" : "");
 
+  // perform_abort() never returns here, so the capture file is flushed from there.
+  ::tts::_::abort_epilogue =
+  ::tts::_::callable {[ &capture_file, &capture_sink ]()
+                      {
+                        if(capture_file)
+                        {
+                          ::tts::output().sink(::tts::output_handler::default_sink());
+                          fputs(capture_sink.content().data(),
+                                capture_file.get()); // NOSONAR
+                        }
+                      }};
+
   try
   {
     std::size_t position = 0;
@@ -224,9 +239,14 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       ::tts::output().flush();
 
+      ::tts::_::remaining_tests = nb_tests - done_tests - 1;
+
       // Always measured regardless of --verbose - sinks and the Total Time: line need it either way.
       auto start_ns = ::tts::_::now_ns();
-      t();
+      {
+        [[maybe_unused]] ::tts::_::crash_guard guard {};
+        t();
+      }
       auto duration_ns = ::tts::_::now_ns() - start_ns;
       done_tests++;
 

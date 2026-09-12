@@ -21,6 +21,22 @@
 
   @snippet doc/entry_point.cpp snippet
 
+  @section customize-abort Crashed and Stuck Runs
+  A crashed test case cannot resume, so **TTS** names it, reports it through the sinks and exits
+  with 1. @ref tts::set_abort_handler runs just before that exit, with the signal that brought the
+  run down or `0` when nothing did.
+
+  A test binary that has to handle an abrupt stop in its own way installs one.
+
+  @snippet doc/abort_handler.cpp snippet
+
+  The guard covers `SIGSEGV`, `SIGBUS`, `SIGFPE`, `SIGILL` and `SIGABRT`, that last one catching an
+  `assert` in the code under test; under Windows, access violations, stack overflows, integer
+  divisions by zero and illegal instructions. Under emscripten it is compiled out.
+
+  `--no-crash-guard`, or `TTS_NO_CRASH_GUARD` in the environment, leaves those signals to the
+  system: that is what a debugger, or a sanitizer stack trace, needs.
+
   @section  customize-display Data display
   By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string`
   or, in the case of sequence-like types, a sequence of calls to `std::to_string`. In case no
