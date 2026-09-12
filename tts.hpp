@@ -1007,6 +1007,166 @@ namespace tts
 }
 namespace tts::_
 {
+  struct erased_storage
+  {
+    using cleanup_t  = void (*)(void*);
+    erased_storage() = default;
+    erased_storage(void* data, cleanup_t how)
+        : payload {data}
+        , cleanup {how}
+    {
+    }
+    erased_storage(erased_storage&& other) noexcept
+        : payload {other.payload}
+        , cleanup {other.cleanup}
+    {
+      other.payload = nullptr;
+    }
+    erased_storage& operator=(erased_storage&& other) noexcept
+    {
+      if(payload) cleanup(payload);
+      payload       = other.payload;
+      cleanup       = other.cleanup;
+      other.payload = nullptr;
+      return *this;
+    }
+    erased_storage(erased_storage const&)            = delete;
+    erased_storage& operator=(erased_storage const&) = delete;
+    ~erased_storage()
+    {
+      if(payload) cleanup(payload);
+    }
+    explicit operator bool() const
+    {
+      return payload != nullptr;
+    }
+    template<typename T> static void destroy(void* data)
+    {
+      delete static_cast<T*>(data);
+    }
+    static void destroy_nothing(void*)
+    {
+    }
+    void*     payload = nullptr;
+    cleanup_t cleanup = nullptr;
+  };
+}
+namespace tts::_
+{
+  struct callable : erased_storage
+  {
+    using signature_t = void (*)(void*);
+    callable()        = default;
+    callable(void (*f)())
+        : erased_storage {reinterpret_cast<void*>(f), &destroy_nothing}
+        , invoker {invoke_ptr}
+    {
+    }
+    template<typename Function>
+    callable(Function f)
+        : erased_storage {new Function {TTS_MOVE(f)}, &destroy<Function>}
+        , invoker {invoke<Function>}
+    {
+    }
+    callable(callable&& other) noexcept
+        : erased_storage {TTS_MOVE(other)}
+        , invoker {other.invoker}
+    {
+    }
+    callable& operator=(callable&& other) noexcept
+    {
+      erased_storage::operator=(TTS_MOVE(other));
+      invoker = other.invoker;
+      return *this;
+    }
+    void operator()() const
+    {
+      assert(payload);
+      invoker(payload);
+    }
+    signature_t invoker = nullptr;
+  private:
+    template<typename T>
+    static void invoke(void* data)
+    {
+      (*static_cast<T*>(data))();
+    }
+    static void invoke_ptr(void* data)
+    {
+      reinterpret_cast<void (*)()>(data)();
+    }
+  };
+}
+namespace tts::_
+{
+  struct abort_handler : erased_storage
+  {
+    using signature_t = void (*)(void*, int);
+    abort_handler()   = default;
+    abort_handler(void (*f)(int))
+        : erased_storage {reinterpret_cast<void*>(f), &destroy_nothing}
+        , invoker {invoke_ptr}
+    {
+    }
+    template<typename Function>
+    abort_handler(Function f)
+        : erased_storage {new Function {TTS_MOVE(f)}, &destroy<Function>}
+        , invoker {invoke<Function>}
+    {
+    }
+    abort_handler(abort_handler&& other) noexcept
+        : erased_storage {TTS_MOVE(other)}
+        , invoker {other.invoker}
+    {
+    }
+    abort_handler& operator=(abort_handler&& other) noexcept
+    {
+      erased_storage::operator=(TTS_MOVE(other));
+      invoker = other.invoker;
+      return *this;
+    }
+    void operator()(int reason) const
+    {
+      assert(payload);
+      invoker(payload, reason);
+    }
+    signature_t invoker = nullptr;
+  private:
+    template<typename T> static void invoke(void* data, int reason)
+    {
+      (*static_cast<T*>(data))(reason);
+    }
+    static void invoke_ptr(void* data, int reason)
+    {
+      reinterpret_cast<void (*)(int)>(data)(reason);
+    }
+  };
+  inline callable          abort_epilogue = {};
+  inline abort_handler     abort_action   = {};
+  [[noreturn]] inline void exit_now()
+  {
+    fflush(stdout);
+    fflush(stderr);
+    std::_Exit(1);
+  }
+  [[noreturn]] inline void perform_abort(int reason)
+  {
+    if(abort_epilogue) abort_epilogue();
+    if(abort_action) abort_action(reason);
+    exit_now();
+  }
+}
+namespace tts
+{
+  template<typename Handler> inline _::abort_handler set_abort_handler(Handler h)
+  {
+    _::abort_handler previous = TTS_MOVE(_::abort_action);
+    _::abort_action           = _::abort_handler {TTS_MOVE(h)};
+    return previous;
+  }
+}
+namespace tts::_
+{
   inline constexpr auto usage_text =
   R"(
 Flags:
@@ -1017,6 +1177,7 @@ Flags:
   -q, --quiet       Display only test failures percentage.
   --allow-empty     Do not fail when the test suite registered zero test.
   --dry             Print registered test names without running them.
+  --no-crash-guard  Leave a crash to the system instead of naming the case that caused it.
 Parameters:
   --precision=arg   Set the precision for displaying floating pint values
   --seed=arg        Set the PRNG seeds (default is time-based)
@@ -1854,89 +2015,6 @@ namespace tts
     }
   };
 }
-namespace tts::_
-{
-  struct callable
-  {
-  public:
-    using signature_t   = void (*)(void*);
-    signature_t invoker = {};
-    signature_t cleanup = {};
-    void*       payload = {};
-    callable()
-        : invoker {nullptr}
-        , cleanup {nullptr}
-        , payload {nullptr}
-    {
-    }
-    callable(void (*f)())
-        : invoker {invoke_ptr}
-        , cleanup {cleanup_ptr}
-        , payload {reinterpret_cast<void*>(f)}
-    {
-    }
-    template<typename Function>
-    callable(Function f)
-        : invoker {invoke<Function>}
-        , cleanup {destroy<Function>}
-        , payload {new Function {TTS_MOVE(f)}}
-    {
-    }
-    constexpr callable(callable&& other) noexcept
-        : invoker {TTS_MOVE(other.invoker)}
-        , cleanup {TTS_MOVE(other.cleanup)}
-        , payload {TTS_MOVE(other.payload)}
-    {
-      other.payload = {};
-    }
-    ~callable()
-    {
-      if(payload) cleanup(payload);
-    }
-    callable(callable const&)            = delete;
-    callable& operator=(callable const&) = delete;
-    callable& operator=(callable&& other) noexcept
-    {
-      payload       = TTS_MOVE(other.payload);
-      other.payload = {};
-      invoker       = TTS_MOVE(other.invoker);
-      cleanup       = TTS_MOVE(other.cleanup);
-      return *this;
-    }
-    void operator()()
-    {
-      assert(payload);
-      invoker(payload);
-    }
-    void operator()() const
-    {
-      assert(payload);
-      invoker(payload);
-    }
-    explicit operator bool() const
-    {
-      return payload != nullptr;
-    }
-  private:
-    template<typename T>
-    static void invoke(void* data)
-    {
-      (*static_cast<T*>(data))();
-    }
-    template<typename T>
-    static void destroy(void* data)
-    {
-      delete static_cast<T*>(data);
-    }
-    static void invoke_ptr(void* data)
-    {
-      reinterpret_cast<void (*)()>(data)();
-    }
-    static void cleanup_ptr(void*)
-    {
-    }
-  };
-}
 namespace tts
 {
   enum class expected_outcome
@@ -2434,6 +2512,186 @@ namespace tts::_
 }
 #endif
 #if defined(TTS_MAIN)
+#include <array>
+#if defined(__EMSCRIPTEN__)
+#elif defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#include <csignal>
+#else
+#include <csignal>
+#endif
+namespace tts::_
+{
+  inline std::size_t remaining_tests = 0;
+  inline bool crash_guard_enabled()
+  {
+    static bool that = !::tts::arguments()("--no-crash-guard");
+    return that;
+  }
+  inline void report_crash(char const* cause, void const* address)
+  {
+    ::tts::global_runtime.fatal();
+    ::tts::global_runtime.unexpected();
+    if(address)
+      ::tts::output().writeln("TEST: '%s' - @@ CRASHED @@ %s at %p", current_test, cause, address);
+    else ::tts::output().writeln("TEST: '%s' - @@ CRASHED @@ %s", current_test, cause);
+    ::tts::output().suite_aborted();
+    ::tts::output().writeln("@@ ABORTING DUE TO CRASH @@ - %d Tests not run",
+                            static_cast<int>(remaining_tests));
+    ::tts::report(0, 0);
+    ::tts::output().finish();
+  }
+}
+#if defined(__EMSCRIPTEN__)
+namespace tts::_
+{
+  struct crash_guard
+  {
+  };
+}
+#elif defined(_WIN32)
+namespace tts::_
+{
+  inline LONG WINAPI crash_filter(PEXCEPTION_POINTERS info)
+  {
+    auto        code  = info->ExceptionRecord->ExceptionCode;
+    char const* cause = nullptr;
+    switch(code)
+    {
+    case EXCEPTION_ACCESS_VIOLATION: cause = "access violation"; break;
+    case EXCEPTION_STACK_OVERFLOW: cause = "stack overflow"; break;
+    case EXCEPTION_INT_DIVIDE_BY_ZERO: cause = "integer divide by zero"; break;
+    case EXCEPTION_ILLEGAL_INSTRUCTION: cause = "illegal instruction"; break;
+    default: return EXCEPTION_CONTINUE_SEARCH;
+    }
+    static bool reporting = false;
+    if(reporting) exit_now();
+    reporting = true;
+    report_crash(cause, info->ExceptionRecord->ExceptionAddress);
+    perform_abort(static_cast<int>(code));
+  }
+  inline constexpr std::array<int, 4> crash_signals {SIGSEGV, SIGFPE, SIGILL, SIGABRT};
+  inline char const*                  signal_name(int sig)
+  {
+    switch(sig)
+    {
+    case SIGSEGV: return "SIGSEGV";
+    case SIGFPE: return "SIGFPE";
+    case SIGILL: return "SIGILL";
+    case SIGABRT: return "SIGABRT";
+    default: return "signal";
+    }
+  }
+}
+extern "C"
+{
+  [[noreturn]] inline void tts_crash_on_signal(int sig)
+  {
+    static bool reporting = false;
+    if(reporting) ::tts::_::exit_now();
+    reporting = true;
+    ::tts::_::report_crash(::tts::_::signal_name(sig), nullptr);
+    ::tts::_::perform_abort(sig);
+  }
+}
+namespace tts::_
+{
+  struct crash_guard
+  {
+    crash_guard()
+    {
+      if(!armed_) return;
+      ULONG guarantee = 64u * 1024u;
+      SetThreadStackGuarantee(&guarantee);
+      handle_ = AddVectoredExceptionHandler(1, &crash_filter);
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+        previous_[ i ] = signal(crash_signals[ i ], &tts_crash_on_signal);
+    }
+    ~crash_guard()
+    {
+      if(!armed_) return;
+      if(handle_) RemoveVectoredExceptionHandler(handle_);
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+        if(previous_[ i ] && previous_[ i ] != SIG_ERR) signal(crash_signals[ i ], previous_[ i ]);
+    }
+    crash_guard(crash_guard const&)                                               = delete;
+    crash_guard&                                    operator=(crash_guard const&) = delete;
+    PVOID                                           handle_                       = nullptr;
+    std::array<void (*)(int), crash_signals.size()> previous_                     = {};
+    bool                                            armed_ = crash_guard_enabled();
+  };
+}
+#else
+namespace tts::_
+{
+  inline constexpr std::array<int, 5> crash_signals {SIGSEGV, SIGBUS, SIGFPE, SIGILL, SIGABRT};
+  inline char const*                  signal_name(int sig)
+  {
+    switch(sig)
+    {
+    case SIGSEGV: return "SIGSEGV";
+    case SIGBUS: return "SIGBUS";
+    case SIGFPE: return "SIGFPE";
+    case SIGILL: return "SIGILL";
+    case SIGABRT: return "SIGABRT";
+    default: return "signal";
+    }
+  }
+}
+extern "C"
+{
+  [[noreturn]] inline void
+  tts_crash_handler(int sig, siginfo_t* info, void*)
+  {
+    static sig_atomic_t volatile reporting = 0;
+    if(reporting)
+    {
+      signal(sig, SIG_DFL);
+      raise(sig);
+      ::tts::_::exit_now();
+    }
+    reporting = 1;
+    ::tts::_::report_crash(::tts::_::signal_name(sig), sig == SIGABRT ? nullptr : info->si_addr);
+    ::tts::_::perform_abort(sig);
+  }
+}
+namespace tts::_
+{
+  struct crash_guard
+  {
+    crash_guard()
+    {
+      if(!armed_) return;
+      stack_t alt  = {};
+      alt.ss_sp    = stack_.data();
+      alt.ss_size  = stack_.size();
+      alt.ss_flags = 0;
+      sigaltstack(&alt, nullptr);
+      struct sigaction action = {};
+      action.sa_sigaction     = &tts_crash_handler;
+      action.sa_flags         = SA_SIGINFO | SA_ONSTACK;
+      sigemptyset(&action.sa_mask);
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+        sigaction(crash_signals[ i ], &action, &previous_[ i ]);
+    }
+    ~crash_guard()
+    {
+      if(!armed_) return;
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+        sigaction(crash_signals[ i ], &previous_[ i ], nullptr);
+    }
+    crash_guard(crash_guard const&)            = delete;
+    crash_guard& operator=(crash_guard const&) = delete;
+  private:
+    static constexpr std::size_t                       alt_stack_size = 64u * 1024u;
+    static inline std::array<char, alt_stack_size>     stack_ {};
+    std::array<struct sigaction, crash_signals.size()> previous_ {};
+    bool                                               armed_ = crash_guard_enabled();
+  };
+}
+#endif
 namespace tts::_
 {
   void report_type_hint(::tts::text const& type)
@@ -2537,6 +2795,16 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
                             shard.total,
                             nb_tests,
                             nb_tests > 1 ? "s" : "");
+  ::tts::_::abort_epilogue =
+  ::tts::_::callable {[ &capture_file, &capture_sink ]()
+                      {
+                        if(capture_file)
+                        {
+                          ::tts::output().sink(::tts::output_handler::default_sink());
+                          fputs(capture_sink.content().data(),
+                                capture_file.get());
+                        }
+                      }};
   try
   {
     std::size_t position = 0;
@@ -2549,8 +2817,12 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       ::tts::output().test_started(::tts::text {t.name});
       if(!::tts::is_quiet()) ::tts::output().writeln("TEST: '%s'", t.name);
       ::tts::output().flush();
+      ::tts::_::remaining_tests = nb_tests - done_tests - 1;
       auto start_ns = ::tts::_::now_ns();
-      t();
+      {
+        [[maybe_unused]] ::tts::_::crash_guard guard {};
+        t();
+      }
       auto duration_ns = ::tts::_::now_ns() - start_ns;
       done_tests++;
       ::tts::global_runtime.total_duration_ns += duration_ns;
