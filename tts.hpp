@@ -1007,38 +1007,67 @@ namespace tts
 }
 namespace tts::_
 {
-  struct erased_storage
+  template<typename Signature> struct erased;
+  template<typename R, typename... Args> struct erased<R(Args...)>
   {
-    using cleanup_t  = void (*)(void*);
-    erased_storage() = default;
-    erased_storage(void* data, cleanup_t how)
-        : payload {data}
-        , cleanup {how}
+    using signature_t = R (*)(void*, Args...);
+    using cleanup_t   = void (*)(void*);
+    erased()          = default;
+    erased(R (*f)(Args...))
+        : payload {reinterpret_cast<void*>(f)}
+        , cleanup {destroy_nothing}
+        , invoker {invoke_ptr}
     {
     }
-    erased_storage(erased_storage&& other) noexcept
+    template<typename Function>
+    erased(Function f)
+        : payload {new Function {TTS_MOVE(f)}}
+        , cleanup {destroy<Function>}
+        , invoker {invoke<Function>}
+    {
+    }
+    erased(erased&& other) noexcept
         : payload {other.payload}
         , cleanup {other.cleanup}
+        , invoker {other.invoker}
     {
       other.payload = nullptr;
     }
-    erased_storage& operator=(erased_storage&& other) noexcept
+    erased& operator=(erased&& other) noexcept
     {
       if(payload) cleanup(payload);
       payload       = other.payload;
       cleanup       = other.cleanup;
+      invoker       = other.invoker;
       other.payload = nullptr;
       return *this;
     }
-    erased_storage(erased_storage const&)            = delete;
-    erased_storage& operator=(erased_storage const&) = delete;
-    ~erased_storage()
+    erased(erased const&)            = delete;
+    erased& operator=(erased const&) = delete;
+    ~erased()
     {
       if(payload) cleanup(payload);
+    }
+    R operator()(Args... args) const
+    {
+      assert(payload);
+      return invoker(payload, args...);
     }
     explicit operator bool() const
     {
       return payload != nullptr;
+    }
+    void*       payload = nullptr;
+    cleanup_t   cleanup = nullptr;
+    signature_t invoker = nullptr;
+  private:
+    template<typename T> static R invoke(void* data, Args... args)
+    {
+      return (*static_cast<T*>(data))(args...);
+    }
+    static R invoke_ptr(void* data, Args... args)
+    {
+      return reinterpret_cast<R (*)(Args...)>(data)(args...);
     }
     template<typename T> static void destroy(void* data)
     {
@@ -1047,100 +1076,12 @@ namespace tts::_
     static void destroy_nothing(void*)
     {
     }
-    void*     payload = nullptr;
-    cleanup_t cleanup = nullptr;
   };
+  using callable = erased<void()>;
 }
 namespace tts::_
 {
-  struct callable : erased_storage
-  {
-    using signature_t = void (*)(void*);
-    callable()        = default;
-    callable(void (*f)())
-        : erased_storage {reinterpret_cast<void*>(f), &destroy_nothing}
-        , invoker {invoke_ptr}
-    {
-    }
-    template<typename Function>
-    callable(Function f)
-        : erased_storage {new Function {TTS_MOVE(f)}, &destroy<Function>}
-        , invoker {invoke<Function>}
-    {
-    }
-    callable(callable&& other) noexcept
-        : erased_storage {TTS_MOVE(other)}
-        , invoker {other.invoker}
-    {
-    }
-    callable& operator=(callable&& other) noexcept
-    {
-      erased_storage::operator=(TTS_MOVE(other));
-      invoker = other.invoker;
-      return *this;
-    }
-    void operator()() const
-    {
-      assert(payload);
-      invoker(payload);
-    }
-    signature_t invoker = nullptr;
-  private:
-    template<typename T>
-    static void invoke(void* data)
-    {
-      (*static_cast<T*>(data))();
-    }
-    static void invoke_ptr(void* data)
-    {
-      reinterpret_cast<void (*)()>(data)();
-    }
-  };
-}
-namespace tts::_
-{
-  struct abort_handler : erased_storage
-  {
-    using signature_t = void (*)(void*, int);
-    abort_handler()   = default;
-    abort_handler(void (*f)(int))
-        : erased_storage {reinterpret_cast<void*>(f), &destroy_nothing}
-        , invoker {invoke_ptr}
-    {
-    }
-    template<typename Function>
-    abort_handler(Function f)
-        : erased_storage {new Function {TTS_MOVE(f)}, &destroy<Function>}
-        , invoker {invoke<Function>}
-    {
-    }
-    abort_handler(abort_handler&& other) noexcept
-        : erased_storage {TTS_MOVE(other)}
-        , invoker {other.invoker}
-    {
-    }
-    abort_handler& operator=(abort_handler&& other) noexcept
-    {
-      erased_storage::operator=(TTS_MOVE(other));
-      invoker = other.invoker;
-      return *this;
-    }
-    void operator()(int reason) const
-    {
-      assert(payload);
-      invoker(payload, reason);
-    }
-    signature_t invoker = nullptr;
-  private:
-    template<typename T> static void invoke(void* data, int reason)
-    {
-      (*static_cast<T*>(data))(reason);
-    }
-    static void invoke_ptr(void* data, int reason)
-    {
-      reinterpret_cast<void (*)(int)>(data)(reason);
-    }
-  };
+  using abort_handler                     = erased<void(int)>;
   inline callable          abort_epilogue = {};
   inline abort_handler     abort_action   = {};
   [[noreturn]] inline void exit_now()
@@ -1183,6 +1124,7 @@ Parameters:
   --seed=arg        Set the PRNG seeds (default is time-based)
   --capture=path    Capture this run's output and write it to path instead of stdout
   --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
+  --timeout=arg     Kill the run when a case is still going after arg milliseconds
 Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)
   --loop=arg        Repeat each range checks arg times
@@ -2027,11 +1969,14 @@ namespace tts
 }
 namespace tts::_
 {
+  using milliseconds              = unsigned long long;
   inline char const* current_test = "";
   struct tagged_id
   {
     char const*             name;
     ::tts::expected_outcome tag;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
   inline char const* tag_name(::tts::expected_outcome tag)
   {
@@ -2055,8 +2000,10 @@ namespace tts::_
     static inline bool      acknowledge(test&& f);
     char const*             name;
     tts::_::callable        behaviour;
-    tts::text               types = {};
-    ::tts::expected_outcome tag   = ::tts::expected_outcome::pass;
+    tts::text               types       = {};
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
   inline buffer<test>& suite()
   {
@@ -2075,13 +2022,33 @@ namespace tts
   {
     return {id, expected_outcome::xfail};
   }
+  inline _::tagged_id expect_fail(_::tagged_id const& id)
+  {
+    return {id.name, expected_outcome::xfail, id.timeout_ms, id.timeout_set};
+  }
   inline _::tagged_id may_fail(char const* id)
   {
     return {id, expected_outcome::may_fail};
   }
+  inline _::tagged_id may_fail(_::tagged_id const& id)
+  {
+    return {id.name, expected_outcome::may_fail, id.timeout_ms, id.timeout_set};
+  }
   inline _::tagged_id expect_invalid(char const* id)
   {
     return {id, expected_outcome::xinvalid};
+  }
+  inline _::tagged_id expect_invalid(_::tagged_id const& id)
+  {
+    return {id.name, expected_outcome::xinvalid, id.timeout_ms, id.timeout_set};
+  }
+  inline _::tagged_id with_timeout(_::milliseconds ms, char const* id)
+  {
+    return {id, expected_outcome::pass, ms, true};
+  }
+  inline _::tagged_id with_timeout(_::milliseconds ms, _::tagged_id const& id)
+  {
+    return {id.name, id.tag, ms, true};
   }
 }
 namespace tts::_
@@ -2512,6 +2479,21 @@ namespace tts::_
 }
 #endif
 #if defined(TTS_MAIN)
+namespace tts::_
+{
+  inline std::size_t remaining_tests = 0;
+  inline void        report_abort(char const* headline, char const* reason)
+  {
+    ::tts::global_runtime.fatal();
+    ::tts::global_runtime.unexpected();
+    ::tts::output().writeln(headline);
+    ::tts::output().suite_aborted();
+    ::tts::output().writeln(
+    "@@ ABORTING DUE TO %s @@ - %d Tests not run", reason, static_cast<int>(remaining_tests));
+    ::tts::report(0, 0);
+    ::tts::output().finish();
+  }
+}
 #include <array>
 #if defined(__EMSCRIPTEN__)
 #elif defined(_WIN32)
@@ -2524,7 +2506,6 @@ namespace tts::_
 #endif
 namespace tts::_
 {
-  inline std::size_t remaining_tests = 0;
   inline bool crash_guard_enabled()
   {
     static bool that = !::tts::arguments()("--no-crash-guard");
@@ -2532,16 +2513,10 @@ namespace tts::_
   }
   inline void report_crash(char const* cause, void const* address)
   {
-    ::tts::global_runtime.fatal();
-    ::tts::global_runtime.unexpected();
-    if(address)
-      ::tts::output().writeln("TEST: '%s' - @@ CRASHED @@ %s at %p", current_test, cause, address);
-    else ::tts::output().writeln("TEST: '%s' - @@ CRASHED @@ %s", current_test, cause);
-    ::tts::output().suite_aborted();
-    ::tts::output().writeln("@@ ABORTING DUE TO CRASH @@ - %d Tests not run",
-                            static_cast<int>(remaining_tests));
-    ::tts::report(0, 0);
-    ::tts::output().finish();
+    ::tts::text line =
+    address ? ::tts::text {"TEST: '%s' - @@ CRASHED @@ %s at %p", current_test, cause, address}
+            : ::tts::text {"TEST: '%s' - @@ CRASHED @@ %s", current_test, cause};
+    report_abort(line.data(), "CRASH");
   }
 }
 #if defined(__EMSCRIPTEN__)
@@ -2692,6 +2667,120 @@ namespace tts::_
   };
 }
 #endif
+#if defined(__EMSCRIPTEN__)
+#elif defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#else
+#include <csignal>
+#include <sys/time.h>
+#endif
+namespace tts::_
+{
+  inline milliseconds watchdog_ms = 0;
+  inline milliseconds default_timeout_ms()
+  {
+    static milliseconds that = ::tts::arguments().value<milliseconds>("--timeout");
+    return that;
+  }
+  inline void report_timeout()
+  {
+    ::tts::text line {
+    "TEST: '%s' - @@ TIMEOUT @@ still running after %llu ms", current_test, watchdog_ms};
+    report_abort(line.data(), "TIMEOUT");
+  }
+}
+#if defined(__EMSCRIPTEN__)
+namespace tts::_
+{
+  struct watchdog
+  {
+    explicit watchdog(milliseconds)
+    {
+    }
+  };
+}
+#elif defined(_WIN32)
+namespace tts::_
+{
+  inline VOID CALLBACK watchdog_expired(PVOID, BOOLEAN)
+  {
+    static bool reporting = false;
+    if(reporting) exit_now();
+    reporting = true;
+    report_timeout();
+    perform_abort(0);
+  }
+  struct watchdog
+  {
+    explicit watchdog(milliseconds ms)
+    {
+      if(!ms) return;
+      watchdog_ms = ms;
+      CreateTimerQueueTimer(&timer_,
+                            nullptr,
+                            &watchdog_expired,
+                            nullptr,
+                            static_cast<DWORD>(ms),
+                            0,
+                            WT_EXECUTEINTIMERTHREAD);
+    }
+    ~watchdog()
+    {
+      if(timer_) DeleteTimerQueueTimer(nullptr, timer_, INVALID_HANDLE_VALUE);
+    }
+    watchdog(watchdog const&)            = delete;
+    watchdog& operator=(watchdog const&) = delete;
+    HANDLE    timer_                     = nullptr;
+  };
+}
+#else
+extern "C"
+{
+  [[noreturn]] inline void tts_watchdog_expired(int)
+  {
+    static bool reporting = false;
+    if(reporting) ::tts::_::exit_now();
+    reporting = true;
+    ::tts::_::report_timeout();
+    ::tts::_::perform_abort(0);
+  }
+}
+namespace tts::_
+{
+  struct watchdog
+  {
+    explicit watchdog(milliseconds ms)
+    {
+      if(!ms) return;
+      watchdog_ms             = ms;
+      struct sigaction action = {};
+      action.sa_handler       = &tts_watchdog_expired;
+      action.sa_flags         = 0;
+      sigemptyset(&action.sa_mask);
+      sigaction(SIGALRM, &action, &previous_);
+      itimerval deadline {};
+      deadline.it_value.tv_sec  = static_cast<time_t>(ms / 1000u);
+      deadline.it_value.tv_usec = static_cast<suseconds_t>((ms % 1000u) * 1000u);
+      setitimer(ITIMER_REAL, &deadline, nullptr);
+      armed_ = true;
+    }
+    ~watchdog()
+    {
+      if(!armed_) return;
+      itimerval off {};
+      setitimer(ITIMER_REAL, &off, nullptr);
+      sigaction(SIGALRM, &previous_, nullptr);
+    }
+    watchdog(watchdog const&)            = delete;
+    watchdog& operator=(watchdog const&) = delete;
+  private:
+    struct sigaction previous_ = {};
+    bool             armed_    = false;
+  };
+}
+#endif
 namespace tts::_
 {
   void report_type_hint(::tts::text const& type)
@@ -2821,6 +2910,8 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto start_ns = ::tts::_::now_ns();
       {
         [[maybe_unused]] ::tts::_::crash_guard guard {};
+        [[maybe_unused]] ::tts::_::watchdog    deadline {
+        t.timeout_set ? t.timeout_ms : ::tts::_::default_timeout_ms()};
         t();
       }
       auto duration_ns = ::tts::_::now_ns() - start_ns;
@@ -3278,14 +3369,18 @@ namespace tts::_
     capture(tagged_id id)
         : name(id.name)
         , tag(id.tag)
+        , timeout_ms(id.timeout_ms)
+        , timeout_set(id.timeout_set)
     {
     }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name, body,  {}, tag});
+      return test::acknowledge({name, body,  {}, tag, timeout_ms, timeout_set});
     }
     char const*             name;
-    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
   inline text current_type = {};
   inline text joined_type_names()
@@ -3311,6 +3406,8 @@ namespace tts::_
     captures(tagged_id id)
         : name(id.name)
         , tag(id.tag)
+        , timeout_ms(id.timeout_ms)
+        , timeout_set(id.timeout_set)
     {
     }
     auto operator+(auto body) const
@@ -3329,10 +3426,14 @@ namespace tts::_
          current_type = text {""};
        },
        joined_type_names<Types...>(),
-       tag});
+       tag,
+       timeout_ms,
+       timeout_set});
     }
     char const*             name;
-    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
   template<typename... Types> struct captures<types<Types...>> : captures<Types...>
   {
@@ -3347,7 +3448,9 @@ namespace tts::_
   struct test_generators<types<Type...>, Generators...>
   {
     char const*             name;
-    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
     test_generators(char const* id)
         : name(id)
     {
@@ -3355,6 +3458,8 @@ namespace tts::_
     test_generators(tagged_id id)
         : name(id.name)
         , tag(id.tag)
+        , timeout_ms(id.timeout_ms)
+        , timeout_set(id.timeout_set)
     {
     }
     template<typename... Args> static void process_call(auto body, Args&&... args)
@@ -3376,7 +3481,9 @@ namespace tts::_
                                   current_type = text {""};
                                 },
                                 joined_type_names<Type...>(),
-                                tg.tag});
+                                tg.tag,
+                                tg.timeout_ms,
+                                tg.timeout_set});
     }
   };
 }
@@ -3416,6 +3523,11 @@ namespace tts::_
 #define TTS_XINVALID(ID)
 #else
 #define TTS_XINVALID(ID) ::tts::expect_invalid(ID)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TIMEOUT(MS, ID)
+#else
+#define TTS_TIMEOUT(MS, ID) ::tts::with_timeout(MS, ID)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT(EXPR, ...)
