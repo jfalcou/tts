@@ -15,9 +15,10 @@ TTS_CASE(TTS_TIMEOUT(150, "Case that never returns"))
 {
   TTS_EXPECT(true);
 
-  bool volatile never = false;
+  bool volatile never = false; // NOSONAR - no thread here, this only keeps the loop from folding
   while(!never)
   {
+    // Spinning until the deadline kills us is the whole point of this case.
   }
 };
 
@@ -59,8 +60,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
   tts::set_abort_handler(
   [ &sink ](int reason)
   {
-    // One composed line, so the name and the deadline must appear together: TTS prints the case
-    // name on its own when the case starts, and that must not be enough.
     tts::text attribution {
     "'%s' - @@ TIMEOUT @@ still running after %llu ms", "Case that never returns", 150ULL};
 

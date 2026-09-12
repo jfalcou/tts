@@ -96,7 +96,7 @@ namespace tts
   }
 
   /// Same, on an ID another wrapper already tagged, so the wrappers nest.
-  inline _::tagged_id expect_fail(_::tagged_id id)
+  inline _::tagged_id expect_fail(_::tagged_id const& id)
   {
     return {id.name, expected_outcome::xfail, id.timeout_ms, id.timeout_set};
   }
@@ -108,7 +108,7 @@ namespace tts
   }
 
   /// Same, on an ID another wrapper already tagged, so the wrappers nest.
-  inline _::tagged_id may_fail(_::tagged_id id)
+  inline _::tagged_id may_fail(_::tagged_id const& id)
   {
     return {id.name, expected_outcome::may_fail, id.timeout_ms, id.timeout_set};
   }
@@ -120,7 +120,7 @@ namespace tts
   }
 
   /// Same, on an ID another wrapper already tagged, so the wrappers nest.
-  inline _::tagged_id expect_invalid(_::tagged_id id)
+  inline _::tagged_id expect_invalid(_::tagged_id const& id)
   {
     return {id.name, expected_outcome::xinvalid, id.timeout_ms, id.timeout_set};
   }
@@ -132,7 +132,7 @@ namespace tts
   }
 
   /// Same, on an ID another wrapper already tagged, so the wrappers nest.
-  inline _::tagged_id with_timeout(unsigned long long ms, _::tagged_id id)
+  inline _::tagged_id with_timeout(unsigned long long ms, _::tagged_id const& id)
   {
     return {id.name, id.tag, ms, true};
   }
