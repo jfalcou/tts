@@ -1,7 +1,7 @@
 {
-    "branch_covered": 774,
+    "branch_covered": 778,
     "branch_percent": 72.8,
-    "branch_total": 1063,
+    "branch_total": 1069,
     "files": [
         {
             "branch_covered": 1,
@@ -64,16 +64,16 @@
             "line_total": 47
         },
         {
-            "branch_covered": 9,
-            "branch_percent": 36.0,
-            "branch_total": 25,
+            "branch_covered": 13,
+            "branch_percent": 41.9,
+            "branch_total": 31,
             "filename": "include/tts/engine/guard.hpp",
-            "function_covered": 3,
-            "function_percent": 50.0,
-            "function_total": 6,
-            "line_covered": 23,
-            "line_percent": 52.3,
-            "line_total": 44
+            "function_covered": 5,
+            "function_percent": 62.5,
+            "function_total": 8,
+            "line_covered": 27,
+            "line_percent": 56.2,
+            "line_total": 48
         },
         {
             "branch_covered": 6,
@@ -436,12 +436,12 @@
             "line_total": 9
         }
     ],
-    "function_covered": 1613,
+    "function_covered": 1615,
     "function_percent": 90.2,
-    "function_total": 1788,
+    "function_total": 1790,
     "gcovr/summary_format_version": "0.6",
-    "line_covered": 1413,
+    "line_covered": 1417,
     "line_percent": 91.3,
-    "line_total": 1548,
+    "line_total": 1552,
     "root": "../../.."
 }
