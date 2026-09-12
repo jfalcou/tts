@@ -9,6 +9,7 @@
 #pragma once
 
 #include <tts/engine/abort.hpp>
+#include <tts/engine/abort_report.hpp>
 #include <tts/engine/environment.hpp>
 #include <tts/engine/test.hpp>
 
