@@ -33,7 +33,6 @@ namespace tts
 
 namespace tts::_
 {
-  // A case deadline, in milliseconds.
 
   inline char const* current_test = "";
 
@@ -42,7 +41,7 @@ namespace tts::_
   {
     char const*             name;
     ::tts::expected_outcome tag;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
 
@@ -72,7 +71,7 @@ namespace tts::_
     tts::_::callable        behaviour;
     tts::text               types       = {};
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
 
@@ -101,7 +100,7 @@ namespace tts
   /// Tags an already tagged ID as expected to fail, keeping whatever deadline it carries.
   inline _::tagged_id expect_fail(_::tagged_id const& id)
   {
-    return {id.name, expected_outcome::xfail, id.timeout_ms, id.timeout_set};
+    return {id.name, expected_outcome::xfail, id.timeout_ns, id.timeout_set};
   }
 
   /// Tags a @ref TTS_CASE's ID as allowed to pass or fail - see @ref TTS_MAYFAIL.
@@ -113,7 +112,7 @@ namespace tts
   /// Tags an already tagged ID as allowed to fail, keeping whatever deadline it carries.
   inline _::tagged_id may_fail(_::tagged_id const& id)
   {
-    return {id.name, expected_outcome::may_fail, id.timeout_ms, id.timeout_set};
+    return {id.name, expected_outcome::may_fail, id.timeout_ns, id.timeout_set};
   }
 
   /// Tags a @ref TTS_CASE's ID as expected to be empty - see @ref TTS_XINVALID.
@@ -125,18 +124,18 @@ namespace tts
   /// Tags an already tagged ID as expected to be empty, keeping whatever deadline it carries.
   inline _::tagged_id expect_invalid(_::tagged_id const& id)
   {
-    return {id.name, expected_outcome::xinvalid, id.timeout_ms, id.timeout_set};
+    return {id.name, expected_outcome::xinvalid, id.timeout_ns, id.timeout_set};
   }
 
   /// Gives a @ref TTS_CASE's ID a deadline in milliseconds - see @ref TTS_TIMEOUT.
-  inline _::tagged_id with_timeout(milliseconds ms, char const* id)
+  inline _::tagged_id with_timeout(unsigned long long ms, char const* id)
   {
-    return {id, expected_outcome::pass, ms, true};
+    return {id, expected_outcome::pass, ms * 1'000'000, true};
   }
 
   /// Gives an already tagged ID a deadline, keeping its tag - see @ref TTS_TIMEOUT.
-  inline _::tagged_id with_timeout(milliseconds ms, _::tagged_id const& id)
+  inline _::tagged_id with_timeout(unsigned long long ms, _::tagged_id const& id)
   {
-    return {id.name, id.tag, ms, true};
+    return {id.name, id.tag, ms * 1'000'000, true};
   }
 }

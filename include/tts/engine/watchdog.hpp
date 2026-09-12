@@ -25,18 +25,19 @@
 
 namespace tts::_
 {
-  inline milliseconds watchdog_ms = 0; // NOSONAR - the loop sets it before each case
+  inline nanoseconds watchdog_ns = 0; // NOSONAR - the loop sets it before each case
 
-  inline milliseconds default_timeout_ms()
+  inline nanoseconds default_timeout_ns()
   {
-    static milliseconds that = ::tts::arguments().value<milliseconds>("--timeout");
+    static nanoseconds that = ::tts::arguments().value<unsigned long long>("--timeout") * 1'000'000;
     return that;
   }
 
   inline void report_timeout()
   {
-    ::tts::text line {
-    "TEST: '%s' - @@ TIMEOUT @@ still running after %llu ms", current_test, watchdog_ms};
+    ::tts::text line {"TEST: '%s' - @@ TIMEOUT @@ still running after %s",
+                      current_test,
+                      format_duration(static_cast<double>(watchdog_ns)).data()};
 
     report_abort(line.data(), "TIMEOUT");
   }
@@ -48,7 +49,7 @@ namespace tts::_
   // No process-wide timer here: nothing to arm.
   struct watchdog
   {
-    explicit watchdog(milliseconds)
+    explicit watchdog(nanoseconds)
     {
     }
   };
@@ -68,16 +69,16 @@ namespace tts::_
 
   struct watchdog
   {
-    explicit watchdog(milliseconds ms)
+    explicit watchdog(nanoseconds ns)
     {
-      if(!ms) return;
+      if(!ns) return;
 
-      watchdog_ms = ms;
+      watchdog_ns = ns;
       CreateTimerQueueTimer(&timer_,
                             nullptr,
                             &watchdog_expired,
                             nullptr,
-                            static_cast<DWORD>(ms),
+                            static_cast<DWORD>(ns / 1'000'000u),
                             0,
                             WT_EXECUTEINTIMERTHREAD);
     }
@@ -113,11 +114,11 @@ namespace tts::_
 {
   struct watchdog
   {
-    explicit watchdog(milliseconds ms)
+    explicit watchdog(nanoseconds ns)
     {
-      if(!ms) return;
+      if(!ns) return;
 
-      watchdog_ms             = ms;
+      watchdog_ns             = ns;
 
       struct sigaction action = {};
       action.sa_handler       = &tts_watchdog_expired;
@@ -127,8 +128,8 @@ namespace tts::_
 
       // A thread blocked in a syscall still takes the signal, which a polling thread would not.
       itimerval deadline {};
-      deadline.it_value.tv_sec  = static_cast<time_t>(ms / 1000u);
-      deadline.it_value.tv_usec = static_cast<suseconds_t>((ms % 1000u) * 1000u);
+      deadline.it_value.tv_sec  = static_cast<time_t>(ns / 1'000'000'000u);
+      deadline.it_value.tv_usec = static_cast<suseconds_t>((ns % 1'000'000'000u) / 1000u);
       setitimer(ITIMER_REAL, &deadline, nullptr);
 
       armed_ = true;

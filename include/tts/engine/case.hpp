@@ -29,17 +29,17 @@ namespace tts::_
     capture(tagged_id id) // NOSONAR
         : name(id.name)
         , tag(id.tag)
-        , timeout_ms(id.timeout_ms)
+        , timeout_ns(id.timeout_ns)
         , timeout_set(id.timeout_set)
     {
     }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name, body, /*types=*/ {}, tag, timeout_ms, timeout_set});
+      return test::acknowledge({name, body, /*types=*/ {}, tag, timeout_ns, timeout_set});
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
 
@@ -73,7 +73,7 @@ namespace tts::_
     captures(tagged_id id) // NOSONAR
         : name(id.name)
         , tag(id.tag)
-        , timeout_ms(id.timeout_ms)
+        , timeout_ns(id.timeout_ns)
         , timeout_set(id.timeout_set)
     {
     }
@@ -100,12 +100,12 @@ namespace tts::_
        },
        joined_type_names<Types...>(),
        tag,
-       timeout_ms,
+       timeout_ns,
        timeout_set});
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
 
@@ -128,7 +128,7 @@ namespace tts::_
   {
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    milliseconds            timeout_ms  = 0;
+    nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
 
     test_generators(char const* id) // NOSONAR
@@ -138,7 +138,7 @@ namespace tts::_
     test_generators(tagged_id id) // NOSONAR
         : name(id.name)
         , tag(id.tag)
-        , timeout_ms(id.timeout_ms)
+        , timeout_ns(id.timeout_ns)
         , timeout_set(id.timeout_set)
     {
     }
@@ -165,7 +165,7 @@ namespace tts::_
                                 },
                                 joined_type_names<Type...>(),
                                 tg.tag,
-                                tg.timeout_ms,
+                                tg.timeout_ns,
                                 tg.timeout_set});
     }
   };
