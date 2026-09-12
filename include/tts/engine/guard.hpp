@@ -199,9 +199,10 @@ namespace tts::_
   inline bool alternate_stack_ready()
   {
     // SIGSTKSZ stopped being a constant in glibc 2.34, so the alternate stack has a fixed size.
-    static std::array<char, 64u * 1024u> buffer {};
+    // A stack the machine can run on starts on a 16 byte boundary, which a char array never grants.
+    alignas(16) static std::array<char, 64u * 1024u> buffer {};
 
-    static bool const                    that = []
+    static bool const                                that = []
     {
       stack_t alt  = {};
       alt.ss_sp    = buffer.data();
