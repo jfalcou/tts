@@ -87,18 +87,32 @@ namespace tts::_
     perform_abort(static_cast<int>(code));
   }
 
+  // The vectored handler never sees a raised signal, so the CRT dispositions cover them too.
+  inline constexpr std::array<int, 4> crash_signals {SIGSEGV, SIGFPE, SIGILL, SIGABRT};
+
+  inline char const*                  signal_name(int sig)
+  {
+    switch(sig)
+    {
+    case SIGSEGV: return "SIGSEGV";
+    case SIGFPE: return "SIGFPE";
+    case SIGILL: return "SIGILL";
+    case SIGABRT: return "SIGABRT";
+    default: return "signal";
+    }
+  }
 }
 
 extern "C"
 {
-  [[noreturn]] inline void tts_crash_on_abort_signal(int)
+  [[noreturn]] inline void tts_crash_on_signal(int sig)
   {
     static bool reporting = false;
     if(reporting) ::tts::_::exit_now();
     reporting = true;
 
-    ::tts::_::report_crash("SIGABRT", nullptr);
-    ::tts::_::perform_abort(SIGABRT);
+    ::tts::_::report_crash(::tts::_::signal_name(sig), nullptr);
+    ::tts::_::perform_abort(sig);
   }
 }
 
@@ -114,8 +128,10 @@ namespace tts::_
       ULONG guarantee = 64u * 1024u;
       SetThreadStackGuarantee(&guarantee);
 
-      handle_   = AddVectoredExceptionHandler(1, &crash_filter);
-      previous_ = signal(SIGABRT, &tts_crash_on_abort_signal);
+      handle_ = AddVectoredExceptionHandler(1, &crash_filter);
+
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+        previous_[ i ] = signal(crash_signals[ i ], &tts_crash_on_signal);
     }
 
     ~crash_guard()
@@ -123,15 +139,17 @@ namespace tts::_
       if(!armed_) return;
 
       if(handle_) RemoveVectoredExceptionHandler(handle_);
-      if(previous_ != SIG_ERR) signal(SIGABRT, previous_);
+
+      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+        if(previous_[ i ] && previous_[ i ] != SIG_ERR) signal(crash_signals[ i ], previous_[ i ]);
     }
 
-    crash_guard(crash_guard const&)            = delete;
-    crash_guard& operator=(crash_guard const&) = delete;
+    crash_guard(crash_guard const&)                                               = delete;
+    crash_guard&                                    operator=(crash_guard const&) = delete;
 
-    PVOID        handle_                       = nullptr;
-    void (*previous_)(int)                     = SIG_ERR;
-    bool armed_                                = crash_guard_enabled();
+    PVOID                                           handle_                       = nullptr;
+    std::array<void (*)(int), crash_signals.size()> previous_                     = {};
+    bool                                            armed_ = crash_guard_enabled();
   };
 }
 #else
