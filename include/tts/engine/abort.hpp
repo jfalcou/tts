@@ -9,7 +9,7 @@
 #pragma once
 
 #include <tts/engine/deps.hpp>
-#include <tts/tools/callable.hpp>
+#include <tts/tools/erased.hpp>
 
 namespace tts::_
 {

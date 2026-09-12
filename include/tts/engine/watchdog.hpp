@@ -25,11 +25,11 @@
 
 namespace tts::_
 {
-  inline unsigned long long watchdog_ms = 0; // NOSONAR - the loop sets it before each case
+  inline milliseconds watchdog_ms = 0; // NOSONAR - the loop sets it before each case
 
-  inline unsigned long long default_timeout_ms()
+  inline milliseconds default_timeout_ms()
   {
-    static unsigned long long that = ::tts::arguments().value<unsigned long long>("--timeout");
+    static milliseconds that = ::tts::arguments().value<milliseconds>("--timeout");
     return that;
   }
 
@@ -48,7 +48,7 @@ namespace tts::_
   // No process-wide timer here: nothing to arm.
   struct watchdog
   {
-    explicit watchdog(unsigned long long)
+    explicit watchdog(milliseconds)
     {
     }
   };
@@ -68,7 +68,7 @@ namespace tts::_
 
   struct watchdog
   {
-    explicit watchdog(unsigned long long ms)
+    explicit watchdog(milliseconds ms)
     {
       if(!ms) return;
 
@@ -113,7 +113,7 @@ namespace tts::_
 {
   struct watchdog
   {
-    explicit watchdog(unsigned long long ms)
+    explicit watchdog(milliseconds ms)
     {
       if(!ms) return;
 

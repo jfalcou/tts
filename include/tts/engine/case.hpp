@@ -39,7 +39,7 @@ namespace tts::_
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    unsigned long long      timeout_ms  = 0;
+    milliseconds            timeout_ms  = 0;
     bool                    timeout_set = false;
   };
 
@@ -105,7 +105,7 @@ namespace tts::_
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    unsigned long long      timeout_ms  = 0;
+    milliseconds            timeout_ms  = 0;
     bool                    timeout_set = false;
   };
 
@@ -128,7 +128,7 @@ namespace tts::_
   {
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    unsigned long long      timeout_ms  = 0;
+    milliseconds            timeout_ms  = 0;
     bool                    timeout_set = false;
 
     test_generators(char const* id) // NOSONAR
@@ -358,9 +358,9 @@ empty.
   @def TTS_TIMEOUT
   @brief Gives a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) a deadline of its own.
 
-  Wraps the case's ID like @ref TTS_XFAIL does, and nests with it in either order. The case is
-  killed once it has been running for MS milliseconds, and the run ends there. `0` removes the
-  deadline `--timeout` set for that one case.
+  The case is killed once it has been running for MS milliseconds, and the run ends there. `0`
+  removes the deadline `--timeout` set for that one case. Wrapping the ID is how the tag travels,
+  so it nests with @ref TTS_XFAIL in either order.
 
   @param MS Deadline in milliseconds.
   @param ID A literal string describing the scenario intents.

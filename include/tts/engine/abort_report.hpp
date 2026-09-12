@@ -15,8 +15,7 @@ namespace tts::_
 {
   inline std::size_t remaining_tests = 0; // NOSONAR - the loop updates it before each case
 
-  // What a dying run tells the sinks. The crash guard and the watchdog differ by two words.
-  inline void report_abort(char const* headline, char const* reason)
+  inline void        report_abort(char const* headline, char const* reason)
   {
     // Without fatal() the Results: line reads 100% success on a run that died.
     ::tts::global_runtime.fatal();

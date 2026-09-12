@@ -106,4 +106,6 @@ namespace tts::_
       // Nothing to free.
     }
   };
+
+  using callable = erased<void()>;
 }

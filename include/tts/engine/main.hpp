@@ -77,7 +77,7 @@ namespace tts::_
 
 #if defined(TTS_MAIN)
 #include <tts/engine/guard.hpp>    // NOSONAR - the driver is the only unit that needs the signals
-#include <tts/engine/watchdog.hpp> // NOSONAR - same reason
+#include <tts/engine/watchdog.hpp> // NOSONAR - it needs the timers, and only the driver does
 
 //======================================================================================================================
 // Outlined reporting functions implementations
