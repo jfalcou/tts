@@ -18,5 +18,6 @@ var searchData=
   ['cost_15',['Headers we avoid, and what they cost',['../compile-time.html#compile-time-cost',1,'']]],
   ['costs_20if_20you_20ever_20need_20one_20anyway_16',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]],
   ['cpm_17',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['customizing_20tts_20behaviour_18',['Customizing TTS Behaviour',['../customize.html',1,'']]]
+  ['crashed_20and_20stuck_20runs_18',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
+  ['customizing_20tts_20behaviour_19',['Customizing TTS Behaviour',['../customize.html',1,'']]]
 ];

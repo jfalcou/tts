@@ -15,6 +15,7 @@ var searchData=
   ['standalone_20setup_12',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
   ['started_13',['Getting Started',['../tts101.html',1,'']]],
   ['structured_20format_20sinks_14',['Structured Format Sinks',['../output-sinks.html#autotoc_md56',1,'']]],
-  ['supported_20compilers_15',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
-  ['system_16',['The Tiny Test System',['../index.html',1,'']]]
+  ['stuck_20runs_15',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
+  ['supported_20compilers_16',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
+  ['system_17',['The Tiny Test System',['../index.html',1,'']]]
 ];

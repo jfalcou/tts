@@ -1231,6 +1231,13 @@
       <anchor>gaab7070a86258a19d84e431fe122c2e25</anchor>
       <arglist>(unsigned long long fails, unsigned long long invalids)</arglist>
     </member>
+    <member kind="function">
+      <type>tts_implementation_defined</type>
+      <name>tts::set_abort_handler</name>
+      <anchorfile>group__customization-points.html</anchorfile>
+      <anchor>ga111b130256e38312cb4705dccee9d4d8</anchor>
+      <arglist>(Handler h)</arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>tools-generators-class</name>
@@ -1816,6 +1823,7 @@
     <title>Customizing TTS Behaviour</title>
     <filename>customize.html</filename>
     <docanchor file="customize.html" title="Tests Driver">customize-driver</docanchor>
+    <docanchor file="customize.html" title="Crashed and Stuck Runs">customize-abort</docanchor>
     <docanchor file="customize.html" title="Data display">customize-display</docanchor>
     <docanchor file="customize.html" title="Equality and Ordering">customize-comparison</docanchor>
     <docanchor file="customize.html" title="Precision Measurement">customize-precision</docanchor>

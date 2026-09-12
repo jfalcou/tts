@@ -152,6 +152,9 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga8b25d232b7bc19668349b1defdc1e7f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a TTS test suite.  <br /></td></tr>
 <tr class="memitem:gaab7070a86258a19d84e431fe122c2e25" id="r_gaab7070a86258a19d84e431fe122c2e25"><td class="memItemLeft">int&#160;</td><td class="memItemRight"><a class="el" href="#gaab7070a86258a19d84e431fe122c2e25">tts::report</a> (unsigned long long fails, unsigned long long invalids)</td></tr>
 <tr class="memdesc:gaab7070a86258a19d84e431fe122c2e25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test reporting customization point.  <br /></td></tr>
+<tr class="memitem:ga111b130256e38312cb4705dccee9d4d8" id="r_ga111b130256e38312cb4705dccee9d4d8"><td class="memTemplParams" colspan="2">template&lt;typename Handler&gt; </td></tr>
+<tr class="memitem:ga111b130256e38312cb4705dccee9d4d8 template"><td class="memItemLeft">tts_implementation_defined&#160;</td><td class="memItemRight"><a class="el" href="#ga111b130256e38312cb4705dccee9d4d8">tts::set_abort_handler</a> (Handler h)</td></tr>
+<tr class="memdesc:ga111b130256e38312cb4705dccee9d4d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run termination customization point.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="gac451ae42ba6d30988c42480129c8bb59" name="gac451ae42ba6d30988c42480129c8bb59"></a>
@@ -302,6 +305,55 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 if all tests passed and 1 otherwise. </dd></dl>
 
+</div>
+</div>
+<a id="ga111b130256e38312cb4705dccee9d4d8" name="ga111b130256e38312cb4705dccee9d4d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga111b130256e38312cb4705dccee9d4d8">&#9670;&#160;</a></span>set_abort_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Handler&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tts_implementation_defined tts::set_abort_handler </td>
+          <td>(</td>
+          <td class="paramtype">Handler</td>          <td class="paramname"><span class="paramname"><em>h</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/abort.hpp&gt;</code></p>
+
+<p>Run termination customization point. </p>
+<p>Runs just before <b>TTS</b> exits a crashed or timed out run, with the signal that brought it down or <span class="tt">0</span> when nothing did. <b>TTS</b> exits with 1 once it returns.</p>
+<p>Useful when a test binary has to handle an abrupt stop in its own way.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">h</td><td>Any callable taking an <span class="tt">int</span>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The handler installed before this call, empty if there was none.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="Test application entry-point customization.">TTS_CUSTOM_DRIVER_FUNCTION</a></dd></dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Choosing what a crashed or stuck run does before exiting&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">auto</span> previous = <a class="code hl_function" href="#ga111b130256e38312cb4705dccee9d4d8">tts::set_abort_handler</a>(</div>
+<div class="line">  [](<span class="keywordtype">int</span> reason) { std::cout &lt;&lt; <span class="stringliteral">&quot;tearing down after signal &quot;</span> &lt;&lt; reason &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>; });</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567">TTS_EXPECT_NOT</a>(previous);</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->

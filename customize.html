@@ -141,6 +141,9 @@ $(function(){initNavTree('customize.html','',''); });
     <a href="#customize-driver">Tests Driver </a>
   </li>
   <li class="level1">
+    <a href="#customize-abort">Crashed and Stuck Runs </a>
+  </li>
+  <li class="level1">
     <a href="#customize-display">Data display </a>
   </li>
   <li class="level1">
@@ -188,7 +191,20 @@ Tests Driver</h1>
 <div class="line">  custom_entry_point(argc, argv);</div>
 <div class="line">  <span class="keywordflow">return</span> <a class="code hl_function" href="group__customization-points.html#gaab7070a86258a19d84e431fe122c2e25">tts::report</a>(0, 0);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="customize-display"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="customize-abort"></a>
+Crashed and Stuck Runs</h1>
+<p>A crashed test case cannot resume, so <b>TTS</b> names it, reports it through the sinks and exits with 1. <a class="el" href="group__customization-points.html#ga111b130256e38312cb4705dccee9d4d8" title="tts::set_abort_handler">tts::set_abort_handler</a> runs just before that exit, with the signal that brought the run down or <span class="tt">0</span> when nothing did.</p>
+<p>A test binary that has to handle an abrupt stop in its own way installs one.</p>
+<div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Choosing what a crashed or stuck run does before exiting&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">auto</span> previous = <a class="code hl_function" href="group__customization-points.html#ga111b130256e38312cb4705dccee9d4d8">tts::set_abort_handler</a>(</div>
+<div class="line">  [](<span class="keywordtype">int</span> reason) { std::cout &lt;&lt; <span class="stringliteral">&quot;tearing down after signal &quot;</span> &lt;&lt; reason &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>; });</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567">TTS_EXPECT_NOT</a>(previous);</div>
+<div class="line">};</div>
+</div><!-- fragment --><p>The guard covers <span class="tt">SIGSEGV</span>, <span class="tt">SIGBUS</span>, <span class="tt">SIGFPE</span>, <span class="tt">SIGILL</span> and <span class="tt">SIGABRT</span>, that last one catching an <span class="tt">assert</span> in the code under test; under Windows, access violations, stack overflows, integer divisions by zero and illegal instructions. Under emscripten it is compiled out.</p>
+<p><span class="tt">--no-crash-guard</span>, or <span class="tt">TTS_NO_CRASH_GUARD</span> in the environment, leaves those signals to the system: that is what a debugger, or a sanitizer stack trace, needs.</p>
+<h1 class="doxsection"><a class="anchor" id="customize-display"></a>
 Data display</h1>
 <p>By default, whenever <b>TTS</b> needs to display a value in a report, it uses <span class="tt">std::to_string</span> or, in the case of sequence-like types, a sequence of calls to <span class="tt">std::to_string</span>. In case no overload for <span class="tt">std::to_string</span> exists for a given type, a string will be built from the type name and its byte sequence.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>

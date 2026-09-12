@@ -26,6 +26,7 @@ var searchData=
   ['cost_23',['Headers we avoid, and what they cost',['../compile-time.html#compile-time-cost',1,'']]],
   ['costs_20if_20you_20ever_20need_20one_20anyway_24',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]],
   ['cpm_25',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['customization_20points_26',['Customization Points',['../group__customization-points.html',1,'Customization Points'],['../group__tools-generators-custom.html',1,'Data Generators Customization Points']]],
-  ['customizing_20tts_20behaviour_27',['Customizing TTS Behaviour',['../customize.html',1,'']]]
+  ['crashed_20and_20stuck_20runs_26',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
+  ['customization_20points_27',['Customization Points',['../group__customization-points.html',1,'Customization Points'],['../group__tools-generators-custom.html',1,'Data Generators Customization Points']]],
+  ['customizing_20tts_20behaviour_28',['Customizing TTS Behaviour',['../customize.html',1,'']]]
 ];
