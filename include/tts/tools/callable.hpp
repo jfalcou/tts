@@ -7,86 +7,53 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/tools/erased_storage.hpp>
 #include <tts/tools/preprocessor.hpp>
 
 namespace tts::_
 {
-  struct callable
+  struct callable : erased_storage
   {
-  public:
-    using signature_t   = void (*)(void*);
+    using signature_t = void (*)(void*);
 
-    signature_t invoker = {}; // Type erased invoke call functions
-    signature_t cleanup = {}; // Type erased cleanup of payload
-    void*       payload = {}; // Function + function state
-
-    callable()
-        : invoker {nullptr}
-        , cleanup {nullptr}
-        , payload {nullptr}
-    {
-    }
+    callable()        = default;
 
     // Optimized path for simple function pointers (used by TTS_CASE)
     // Avoids template instantiation and heap allocation for stateless tests
-    callable(void (*f)()) // NOSONAR
-        : invoker {invoke_ptr}
-        , cleanup {cleanup_ptr}
-        , payload {reinterpret_cast<void*>(f)}
+    callable(void (*f)())                                               // NOSONAR
+        : erased_storage {reinterpret_cast<void*>(f), &destroy_nothing} // NOSONAR Type erasure
+        , invoker {invoke_ptr}
     {
     }
 
     // Copy/transfer the function as the unknown payload holding states
-    // We could have have used std::any but you know, compile-time
     template<typename Function>
-    callable(Function f) // NOSONAR
-        : invoker {invoke<Function>}
-        , cleanup {destroy<Function>}
-        , payload {new Function {TTS_MOVE(f)}} // NOSONAR Type erasure
+    callable(Function f)                                                  // NOSONAR
+        : erased_storage {new Function {TTS_MOVE(f)}, &destroy<Function>} // NOSONAR Type erasure
+        , invoker {invoke<Function>}
     {
     }
 
-    constexpr callable(callable&& other) noexcept
-        : invoker {TTS_MOVE(other.invoker)}
-        , cleanup {TTS_MOVE(other.cleanup)}
-        , payload {TTS_MOVE(other.payload)}
+    callable(callable&& other) noexcept
+        : erased_storage {TTS_MOVE(other)}
+        , invoker {other.invoker}
     {
-      other.payload = {};
     }
-
-    ~callable()
-    {
-      if(payload) cleanup(payload);
-    }
-
-    callable(callable const&)            = delete;
-    callable& operator=(callable const&) = delete;
 
     callable& operator=(callable&& other) noexcept
     {
-      payload       = TTS_MOVE(other.payload);
-      other.payload = {};
-      invoker       = TTS_MOVE(other.invoker);
-      cleanup       = TTS_MOVE(other.cleanup);
-
+      erased_storage::operator=(TTS_MOVE(other));
+      invoker = other.invoker;
       return *this;
     }
 
-    void operator()()
-    {
-      assert(payload);
-      invoker(payload);
-    }
     void operator()() const
     {
       assert(payload);
       invoker(payload);
     }
 
-    explicit operator bool() const
-    {
-      return payload != nullptr;
-    }
+    signature_t invoker = nullptr;
 
   private:
     template<typename T>
@@ -94,20 +61,10 @@ namespace tts::_
     {
       (*static_cast<T*>(data))();
     }
-    template<typename T>
-    static void destroy(void* data) // NOSONAR Type erasure: no need for a more complex solution
-    {
-      delete static_cast<T*>(data); // NOSONAR Type erasure: delete is safe
-    }
 
-    // Static helpers for the function pointer path
-    static void invoke_ptr(void* data) // NOSONAR Type erasure: no need for a more complex solution
+    static void invoke_ptr(void* data) // NOSONAR Type erasure
     {
       reinterpret_cast<void (*)()>(data)(); // NOSONAR Type erasure
-    }
-    static void cleanup_ptr(void*) // NOSONAR Type erasure: no need for a more complex solution
-    {
-      // NOSONAR No cleanup needed for function pointers
     }
   };
 }

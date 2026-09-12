@@ -91,6 +91,13 @@ copa_glob_unit( QUIET PATTERN "unit/driver/*.cpp"
                 RELATIVE ${root} INTERFACE tts_test DEPENDENCIES unit.infrastructure.exe
               )
 
+## crash.cpp brings its own process down on purpose and always exits 1, so its verdict is the line
+## its handler prints. Under emscripten the guard is compiled out and 77 marks the test skipped.
+set_tests_properties( unit.driver.crash.exe
+                      PROPERTIES  SKIP_RETURN_CODE 77
+                                  PASS_REGULAR_EXPRESSION "CRASH ATTRIBUTION OK"
+                    )
+
 
 ##======================================================================================================================
 ## Test for TTS Documentation
