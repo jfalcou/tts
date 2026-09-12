@@ -1,7 +1,7 @@
 {
     "branch_covered": 774,
-    "branch_percent": 72.9,
-    "branch_total": 1062,
+    "branch_percent": 72.8,
+    "branch_total": 1063,
     "files": [
         {
             "branch_covered": 1,
@@ -161,8 +161,8 @@
         },
         {
             "branch_covered": 8,
-            "branch_percent": 57.1,
-            "branch_total": 14,
+            "branch_percent": 53.3,
+            "branch_total": 15,
             "filename": "include/tts/engine/watchdog.hpp",
             "function_covered": 3,
             "function_percent": 60.0,
@@ -417,8 +417,8 @@
             "branch_total": 31,
             "filename": "include/tts/tools/text.hpp",
             "function_covered": 83,
-            "function_percent": 94.3,
-            "function_total": 88,
+            "function_percent": 95.4,
+            "function_total": 87,
             "line_covered": 94,
             "line_percent": 100.0,
             "line_total": 94
@@ -438,7 +438,7 @@
     ],
     "function_covered": 1613,
     "function_percent": 90.2,
-    "function_total": 1789,
+    "function_total": 1788,
     "gcovr/summary_format_version": "0.6",
     "line_covered": 1413,
     "line_percent": 91.3,
