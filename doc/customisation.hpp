@@ -37,6 +37,18 @@
   `--no-crash-guard`, or `TTS_NO_CRASH_GUARD` in the environment, leaves those signals to the
   system: that is what a debugger, or a sanitizer stack trace, needs.
 
+  A case that hangs cannot resume either, and nothing outside the process can name it.
+  `--timeout=<ms>`, or `TTS_TIMEOUT` in the environment, gives every case a deadline; past it the
+  case is named the same way a crash is, and the run ends with 1. @ref TTS_TIMEOUT sets one case's
+  deadline, and `0` exempts that case from the global one. The handler receives `0` rather than a
+  signal number, nothing having been raised.
+
+  @snippet doc/timeout.cpp snippet
+
+  Under POSIX the deadline is an interval timer, so a case blocked in a system call is still
+  interrupted; code under test that uses `SIGALRM` itself conflicts with it. Under Windows it is a
+  timer queue. Under emscripten it is compiled out.
+
   @section  customize-display Data display
   By default, whenever **TTS** needs to display a value in a report, it uses `std::to_string`
   or, in the case of sequence-like types, a sequence of calls to `std::to_string`. In case no

@@ -26,6 +26,7 @@ Parameters:
   --seed=arg        Set the PRNG seeds (default is time-based)
   --capture=path    Capture this run's output and write it to path instead of stdout
   --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
+  --timeout=arg     Kill the run when a case is still going after arg milliseconds
 
 Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)

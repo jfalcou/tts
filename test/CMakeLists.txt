@@ -98,6 +98,14 @@ set_tests_properties( unit.driver.crash.exe
                                   PASS_REGULAR_EXPRESSION "CRASH ATTRIBUTION OK"
                     )
 
+## timeout.cpp hangs on purpose until its own deadline kills it, and always exits 1, so its verdict
+## is the line its handler prints. Under emscripten there is no process timer and 77 marks it skipped.
+set_tests_properties( unit.driver.timeout.exe
+                      PROPERTIES  SKIP_RETURN_CODE 77
+                                  PASS_REGULAR_EXPRESSION "TIMEOUT ATTRIBUTION OK"
+                                  TIMEOUT 30
+                    )
+
 
 ##======================================================================================================================
 ## Test for TTS Documentation

@@ -25,8 +25,6 @@
 
 namespace tts::_
 {
-  inline std::size_t remaining_tests = 0; // NOSONAR - the loop updates it before each case
-
   // Read once: a debugger or a sanitizer wants the signal for itself.
   inline bool crash_guard_enabled()
   {
@@ -37,20 +35,11 @@ namespace tts::_
   // Not async-signal-safe: each handler guards its own re-entry before calling this.
   inline void report_crash(char const* cause, void const* address) // NOSONAR - an address is void*
   {
-    // Without this the Results: line reads 100% success on a run that died.
-    ::tts::global_runtime.fatal();
-    ::tts::global_runtime.unexpected();
+    ::tts::text line =
+    address ? ::tts::text {"TEST: '%s' - @@ CRASHED @@ %s at %p", current_test, cause, address}
+            : ::tts::text {"TEST: '%s' - @@ CRASHED @@ %s", current_test, cause};
 
-    if(address)
-      ::tts::output().writeln("TEST: '%s' - @@ CRASHED @@ %s at %p", current_test, cause, address);
-    else ::tts::output().writeln("TEST: '%s' - @@ CRASHED @@ %s", current_test, cause);
-
-    ::tts::output().suite_aborted();
-    ::tts::output().writeln("@@ ABORTING DUE TO CRASH @@ - %d Tests not run",
-                            static_cast<int>(remaining_tests));
-
-    ::tts::report(0, 0);
-    ::tts::output().finish();
+    report_abort(line.data(), "CRASH");
   }
 }
 

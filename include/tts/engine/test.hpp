@@ -39,6 +39,8 @@ namespace tts::_
   {
     char const*             name;
     ::tts::expected_outcome tag;
+    unsigned long long      timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
 
   inline char const* tag_name(::tts::expected_outcome tag)
@@ -65,8 +67,10 @@ namespace tts::_
 
     char const*             name;
     tts::_::callable        behaviour;
-    tts::text               types = {};
-    ::tts::expected_outcome tag   = ::tts::expected_outcome::pass;
+    tts::text               types       = {};
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    unsigned long long      timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
 
   // Global tests suite
@@ -91,15 +95,45 @@ namespace tts
     return {id, expected_outcome::xfail};
   }
 
+  /// Same, on an ID another wrapper already tagged, so the wrappers nest.
+  inline _::tagged_id expect_fail(_::tagged_id id)
+  {
+    return {id.name, expected_outcome::xfail, id.timeout_ms, id.timeout_set};
+  }
+
   /// Tags a @ref TTS_CASE's ID as allowed to pass or fail - see @ref TTS_MAYFAIL.
   inline _::tagged_id may_fail(char const* id)
   {
     return {id, expected_outcome::may_fail};
   }
 
+  /// Same, on an ID another wrapper already tagged, so the wrappers nest.
+  inline _::tagged_id may_fail(_::tagged_id id)
+  {
+    return {id.name, expected_outcome::may_fail, id.timeout_ms, id.timeout_set};
+  }
+
   /// Tags a @ref TTS_CASE's ID as expected to be empty - see @ref TTS_XINVALID.
   inline _::tagged_id expect_invalid(char const* id)
   {
     return {id, expected_outcome::xinvalid};
+  }
+
+  /// Same, on an ID another wrapper already tagged, so the wrappers nest.
+  inline _::tagged_id expect_invalid(_::tagged_id id)
+  {
+    return {id.name, expected_outcome::xinvalid, id.timeout_ms, id.timeout_set};
+  }
+
+  /// Gives a @ref TTS_CASE's ID a deadline in milliseconds - see @ref TTS_TIMEOUT.
+  inline _::tagged_id with_timeout(unsigned long long ms, char const* id)
+  {
+    return {id, expected_outcome::pass, ms, true};
+  }
+
+  /// Same, on an ID another wrapper already tagged, so the wrappers nest.
+  inline _::tagged_id with_timeout(unsigned long long ms, _::tagged_id id)
+  {
+    return {id.name, id.tag, ms, true};
   }
 }

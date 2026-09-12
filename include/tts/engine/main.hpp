@@ -76,7 +76,8 @@ namespace tts::_
 #endif
 
 #if defined(TTS_MAIN)
-#include <tts/engine/guard.hpp> // NOSONAR - the driver is the only unit that needs the signals
+#include <tts/engine/guard.hpp>    // NOSONAR - the driver is the only unit that needs the signals
+#include <tts/engine/watchdog.hpp> // NOSONAR - same reason
 
 //======================================================================================================================
 // Outlined reporting functions implementations
@@ -245,6 +246,8 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       auto start_ns = ::tts::_::now_ns();
       {
         [[maybe_unused]] ::tts::_::crash_guard guard {};
+        [[maybe_unused]] ::tts::_::watchdog    deadline {
+        t.timeout_set ? t.timeout_ms : ::tts::_::default_timeout_ms()};
         t();
       }
       auto duration_ns = ::tts::_::now_ns() - start_ns;
