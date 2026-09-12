@@ -58,9 +58,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
   tts::set_abort_handler(
   [ &sink ](int reason)
   {
-    bool ok = reason == SIGSEGV && sink.aborted && sink.says("@@ CRASHED @@") &&
-              sink.says("SIGSEGV") && sink.says("Case crashing halfway through") &&
-              sink.says("Results:");
+    // One composed line, so the name, the marker and the cause must appear together: TTS prints
+    // the case name on its own when the case starts, and that must not be enough.
+    tts::text attribution {"'%s' - @@ CRASHED @@ %s", "Case crashing halfway through", "SIGSEGV"};
+
+    bool      ok =
+    reason == SIGSEGV && sink.aborted && sink.says(attribution.data()) && sink.says("Results:");
 
     // The run exits 1 whatever happens, so ctest reads this line instead of the code.
     if(ok) std::puts("CRASH ATTRIBUTION OK");
