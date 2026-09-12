@@ -1653,6 +1653,13 @@
     </member>
     <member kind="define">
       <type>#define</type>
+      <name>TTS_TIMEOUT</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga761dc95ad62ab8e7781f003c60888386</anchor>
+      <arglist>(MS, ID)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
       <name>TTS_WHEN</name>
       <anchorfile>group__test-scenario.html</anchorfile>
       <anchor>ga70b895c13fd5ab455fb7c46226fdc6b3</anchor>

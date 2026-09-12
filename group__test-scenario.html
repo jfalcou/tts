@@ -153,6 +153,8 @@ Scenarios Definitions</h2></td></tr>
 <tr class="memdesc:ga4b8a89f672881723dbe70f50e627ebf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tags a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> (or <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a>) ID as allowed to fail.  <br /></td></tr>
 <tr class="memitem:gaf1c68a2be4317b8c67da12e50e997406" id="r_gaf1c68a2be4317b8c67da12e50e997406"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaf1c68a2be4317b8c67da12e50e997406">TTS_XINVALID</a>(ID)</td></tr>
 <tr class="memdesc:gaf1c68a2be4317b8c67da12e50e997406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tags a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> (or <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a>) ID as expected to be empty.  <br /></td></tr>
+<tr class="memitem:ga761dc95ad62ab8e7781f003c60888386" id="r_ga761dc95ad62ab8e7781f003c60888386"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga761dc95ad62ab8e7781f003c60888386">TTS_TIMEOUT</a>(MS,  ID)</td></tr>
+<tr class="memdesc:ga761dc95ad62ab8e7781f003c60888386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> (or <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a>) a deadline of its own.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
 Scoped scenarios</h2></td></tr>
@@ -422,6 +424,50 @@ Scoped scenarios</h2></td></tr>
 <div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="#ga4b8a89f672881723dbe70f50e627ebf8">TTS_MAYFAIL</a>(<span class="stringliteral">&quot;Flaky under load on some CI runners&quot;</span>))</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(<span class="keyword">true</span>); <span class="comment">// may occasionally fail elsewhere - either outcome is accepted here</span></div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga761dc95ad62ab8e7781f003c60888386" name="ga761dc95ad62ab8e7781f003c60888386"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga761dc95ad62ab8e7781f003c60888386">&#9670;&#160;</a></span>TTS_TIMEOUT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_TIMEOUT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>MS</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ID</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/case.hpp&gt;</code></p>
+
+<p>Gives a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> (or <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> / <a class="el" href="#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a>) a deadline of its own. </p>
+<p>The case is killed once it has been running for MS milliseconds, and the run ends there. <span class="tt">0</span> removes the deadline <span class="tt">--timeout</span> set for that one case. Wrapping the ID is how the tag travels, so it nests with <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a> in either order.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">MS</td><td>Deadline in milliseconds. </td></tr>
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="Tags a TTS_CASE (or TTS_CASE_TPL / TTS_CASE_WITH) ID as expected to fail.">TTS_XFAIL</a></dd></dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="#ga761dc95ad62ab8e7781f003c60888386">TTS_TIMEOUT</a>(5000, <span class="stringliteral">&quot;a collective that answers in time&quot;</span>))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(<span class="keyword">true</span>);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="#gad72988c12f401bb1eb13a4f6788f1d10">TTS_XFAIL</a>(<a class="code hl_define" href="#ga761dc95ad62ab8e7781f003c60888386">TTS_TIMEOUT</a>(0, <span class="stringliteral">&quot;known to sit there, and exempt from --timeout&quot;</span>)))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(1 == 2);</div>
 <div class="line">};</div>
 </div><!-- fragment --> 
 </div>
