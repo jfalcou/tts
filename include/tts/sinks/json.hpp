@@ -103,10 +103,8 @@ namespace tts
                                  fatal ? "true" : "false"};
     }
 
-    void test_finished(text const&        name,
-                       bool               passed,
-                       bool               invalid,
-                       unsigned long long duration_ns) override
+    void
+    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
     {
       char const* status = "failed";
       if(invalid)
@@ -135,7 +133,7 @@ namespace tts
     /// Renders everything gathered so far as a single JSON document.
     text render() const
     {
-      unsigned long long total = passed_count_ + failed_count_ + invalid_count_;
+      counter total = passed_count_ + failed_count_ + invalid_count_;
       return text {R"({"tests":[%s],"summary":{"total":%llu,"passed":%llu,"failed":%llu,)"
                    R"("invalid":%llu,"duration_ns":%llu}})",
                    body_.data(),
@@ -178,13 +176,13 @@ namespace tts
     }
 
   private:
-    output_sink*       target_;
-    text               body_;
-    text               current_failures_;
-    unsigned long long passed_count_      = 0;
-    unsigned long long failed_count_      = 0;
-    unsigned long long invalid_count_     = 0;
-    unsigned long long total_duration_ns_ = 0;
+    output_sink* target_;
+    text         body_;
+    text         current_failures_;
+    counter      passed_count_      = 0;
+    counter      failed_count_      = 0;
+    counter      invalid_count_     = 0;
+    nanoseconds  total_duration_ns_ = 0;
   };
 }
 

@@ -36,8 +36,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
   [](int c, char const** v) { timeout_main(c, v); },
   [](tts::test::recording_sink const& sink, int reason)
   {
-    tts::text attribution {
-    "'%s' - @@ TIMEOUT @@ still running after %llu ms", "Case that never returns", 150ULL};
+    tts::text attribution {"'%s' - @@ TIMEOUT @@ still running after 150.000 ms",
+                           "Case that never returns"};
 
     return reason == 0 && sink.aborted && sink.says(attribution.data()) &&
            sink.says("ABORTING DUE TO TIMEOUT") && sink.says("Results:");

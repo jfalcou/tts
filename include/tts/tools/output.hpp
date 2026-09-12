@@ -9,6 +9,7 @@
 #pragma once
 
 #include <tts/tools/text.hpp>
+#include <tts/tools/units.hpp>
 
 namespace tts::_
 {
@@ -137,27 +138,27 @@ namespace tts
     /// Called once a @ref TTS_CASE / @ref TTS_CASE_TPL / @ref TTS_CASE_WITH has finished
     /// running, always and before its corresponding text (if any - suppressed under -q), with
     /// its outcome and how long it took to run, in nanoseconds. No-op by default.
-    virtual void test_finished([[maybe_unused]] text const&        name,
-                               [[maybe_unused]] bool               passed,
-                               [[maybe_unused]] bool               invalid,
-                               [[maybe_unused]] unsigned long long duration_ns)
+    virtual void test_finished([[maybe_unused]] text const& name,
+                               [[maybe_unused]] bool        passed,
+                               [[maybe_unused]] bool        invalid,
+                               [[maybe_unused]] nanoseconds duration_ns)
     {
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
 
     /// Called once the whole suite has finished running (from tts::report()), with its aggregate
     /// outcome, always - even under -q. No-op by default.
-    virtual void suite_finished([[maybe_unused]] unsigned long long fail_count,
-                                [[maybe_unused]] unsigned long long invalid_count)
+    virtual void suite_finished([[maybe_unused]] counter fail_count,
+                                [[maybe_unused]] counter invalid_count)
     {
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
 
     /// Called once per non-zero outcome category, right before its "N/M (P%) <label>" segment is
     /// printed as part of the `Results: ...` summary. No-op by default.
-    virtual void suite_metric([[maybe_unused]] outcome            kind,
-                              [[maybe_unused]] unsigned long long count,
-                              [[maybe_unused]] unsigned long long total)
+    virtual void suite_metric([[maybe_unused]] outcome kind,
+                              [[maybe_unused]] counter count,
+                              [[maybe_unused]] counter total)
     {
       // Intentionally empty: most sinks only care about the formatted text stream.
     }
@@ -346,19 +347,19 @@ namespace tts
     }
 
     /// Notifies the current output_sink that a test has finished running.
-    void test_finished(text const& name, bool passed, bool invalid, unsigned long long duration_ns)
+    void test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns)
     {
       sink_->test_finished(name, passed, invalid, duration_ns);
     }
 
     /// Notifies the current output_sink that the whole suite has finished running.
-    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count)
+    void suite_finished(counter fail_count, counter invalid_count)
     {
       sink_->suite_finished(fail_count, invalid_count);
     }
 
     /// Notifies the current output_sink that a Results: outcome category is about to print.
-    void suite_metric(outcome kind, unsigned long long count, unsigned long long total)
+    void suite_metric(outcome kind, counter count, counter total)
     {
       sink_->suite_metric(kind, count, total);
     }

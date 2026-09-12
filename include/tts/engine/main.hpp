@@ -247,7 +247,7 @@ int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char 
       {
         [[maybe_unused]] ::tts::_::crash_guard guard {};
         [[maybe_unused]] ::tts::_::watchdog    deadline {
-        t.timeout_set ? t.timeout_ms : ::tts::_::default_timeout_ms()};
+        t.timeout_set ? t.timeout_ns : ::tts::_::default_timeout_ns()};
         t();
       }
       auto duration_ns = ::tts::_::now_ns() - start_ns;

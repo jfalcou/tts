@@ -93,10 +93,8 @@ namespace tts
       if(first_failure_.is_empty()) first_failure_ = _::xml_escape(message);
     }
 
-    void test_finished(text const&        name,
-                       bool               passed,
-                       bool               invalid,
-                       unsigned long long duration_ns) override
+    void
+    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
     {
       if(invalid) ++invalid_count_;
       else if(passed) ++passed_count_;
@@ -141,8 +139,8 @@ namespace tts
     /// Renders everything gathered so far as a single JUnit XML document.
     text render() const
     {
-      unsigned long long total   = passed_count_ + failed_count_ + invalid_count_;
-      double             seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
+      counter total   = passed_count_ + failed_count_ + invalid_count_;
+      double  seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
 
       return text {"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                    R"(<testsuites><testsuite name="TTS" tests="%llu" failures="%llu" errors="0")"
@@ -188,13 +186,13 @@ namespace tts
     }
 
   private:
-    output_sink*       target_;
-    text               body_;
-    text               current_failures_;
-    text               first_failure_;
-    unsigned long long passed_count_      = 0;
-    unsigned long long failed_count_      = 0;
-    unsigned long long invalid_count_     = 0;
-    unsigned long long total_duration_ns_ = 0;
+    output_sink* target_;
+    text         body_;
+    text         current_failures_;
+    text         first_failure_;
+    counter      passed_count_      = 0;
+    counter      failed_count_      = 0;
+    counter      invalid_count_     = 0;
+    nanoseconds  total_duration_ns_ = 0;
   };
 }

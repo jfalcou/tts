@@ -18,24 +18,25 @@
 #endif
 
 #include <tts/tools/text.hpp>
+#include <tts/tools/units.hpp>
 
 namespace tts::_
 {
   // Monotonic elapsed-time only, not std::chrono - see doc/compile_time.hpp.
-  inline unsigned long long now_ns()
+  inline nanoseconds now_ns()
   {
 #if defined(_WIN32)
     LARGE_INTEGER freq;
     LARGE_INTEGER count;
     QueryPerformanceFrequency(&freq);
     QueryPerformanceCounter(&count);
-    return static_cast<unsigned long long>(static_cast<double>(count.QuadPart) * 1e9 /
-                                           static_cast<double>(freq.QuadPart));
+    return static_cast<nanoseconds>(static_cast<double>(count.QuadPart) * 1e9 /
+                                    static_cast<double>(freq.QuadPart));
 #else
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts); // NOSONAR - avoiding <chrono>, see comment above
-    return static_cast<unsigned long long>(ts.tv_sec) * 1'000'000'000ULL +
-           static_cast<unsigned long long>(ts.tv_nsec);
+    return static_cast<nanoseconds>(ts.tv_sec) * 1'000'000'000ULL +
+           static_cast<nanoseconds>(ts.tv_nsec);
 #endif
   }
 
