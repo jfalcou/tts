@@ -35,7 +35,7 @@
   `<memory>`       | +170ms (~2x)      | +210ms (~2.5x)        | `tools/file.hpp`'s `file_guard`, a hand-rolled move-only RAII wrapper instead of `std::unique_ptr`
   `<sstream>`      | +140ms            | +190ms                | `tools/text.hpp` builds strings via `malloc`/`snprintf`
   `<iostream>`     | +140ms            | +170ms                | output goes through `FILE*`/`fputs`, not `std::cout`
-  `<functional>`   | +100ms            | +100ms                | never - `tools/callable.hpp`'s type-erased `callable` is what every single `TTS_CASE` body is wrapped in, the hottest path in the whole library, so this one doesn't get a "genuinely needed" exception
+  `<functional>`   | +100ms            | +100ms                | never - `tools/erased.hpp`'s type-erased `callable` is what every single `TTS_CASE` body is wrapped in, the hottest path in the whole library, so this one doesn't get a "genuinely needed" exception
   `<string>`       | +90ms             | +110ms                | @ref tts::text is TTS's own minimal string type
   `<unordered_map>`| +60ms             | +60ms                 | avoided unless genuinely needed
   `<vector>`       | +50ms             | +60ms                 | `tools/buffer.hpp`'s `tts::buffer`, a minimal `malloc`-based dynamic array

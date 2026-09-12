@@ -9,62 +9,11 @@
 #pragma once
 
 #include <tts/engine/deps.hpp>
-#include <tts/tools/callable.hpp>
-#include <tts/tools/erased_storage.hpp>
+#include <tts/tools/erased.hpp>
 
 namespace tts::_
 {
-  struct abort_handler : erased_storage // NOSONAR - erased_storage owns the payload and destroys it
-  {
-    using signature_t = void (*)(void*, int);
-
-    abort_handler()   = default;
-
-    abort_handler(void (*f)(int))                                       // NOSONAR
-        : erased_storage {reinterpret_cast<void*>(f), &destroy_nothing} // NOSONAR Type erasure
-        , invoker {invoke_ptr}
-    {
-    }
-
-    template<typename Function>
-    abort_handler(Function f)                                             // NOSONAR
-        : erased_storage {new Function {TTS_MOVE(f)}, &destroy<Function>} // NOSONAR Type erasure
-        , invoker {invoke<Function>}
-    {
-    }
-
-    abort_handler(abort_handler&& other) noexcept
-        : erased_storage {TTS_MOVE(other)}
-        , invoker {other.invoker}
-    {
-    }
-
-    abort_handler& operator=(abort_handler&& other) noexcept
-    {
-      erased_storage::operator=(TTS_MOVE(other));
-      invoker = other.invoker;
-      return *this;
-    }
-
-    void operator()(int reason) const
-    {
-      assert(payload);
-      invoker(payload, reason);
-    }
-
-    signature_t invoker = nullptr;
-
-  private:
-    template<typename T> static void invoke(void* data, int reason) // NOSONAR Type erasure
-    {
-      (*static_cast<T*>(data))(reason);
-    }
-
-    static void invoke_ptr(void* data, int reason) // NOSONAR Type erasure
-    {
-      reinterpret_cast<void (*)(int)>(data)(reason); // NOSONAR Type erasure
-    }
-  };
+  using abort_handler                     = erased<void(int)>;
 
   inline callable          abort_epilogue = {}; // NOSONAR - the driver sets it once it is ready
   inline abort_handler     abort_action   = {}; // NOSONAR - set_abort_handler replaces it

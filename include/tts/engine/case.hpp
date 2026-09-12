@@ -29,14 +29,18 @@ namespace tts::_
     capture(tagged_id id) // NOSONAR
         : name(id.name)
         , tag(id.tag)
+        , timeout_ms(id.timeout_ms)
+        , timeout_set(id.timeout_set)
     {
     }
     auto operator+(auto body) const
     {
-      return test::acknowledge({name, body, /*types=*/ {}, tag});
+      return test::acknowledge({name, body, /*types=*/ {}, tag, timeout_ms, timeout_set});
     }
     char const*             name;
-    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
 
   // Global storage for current type used in a given test
@@ -69,6 +73,8 @@ namespace tts::_
     captures(tagged_id id) // NOSONAR
         : name(id.name)
         , tag(id.tag)
+        , timeout_ms(id.timeout_ms)
+        , timeout_set(id.timeout_set)
     {
     }
 
@@ -93,10 +99,14 @@ namespace tts::_
          current_type = text {""};
        },
        joined_type_names<Types...>(),
-       tag});
+       tag,
+       timeout_ms,
+       timeout_set});
     }
     char const*             name;
-    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
   };
 
   // Specialisation for types lists
@@ -117,7 +127,9 @@ namespace tts::_
   struct test_generators<types<Type...>, Generators...>
   {
     char const*             name;
-    ::tts::expected_outcome tag = ::tts::expected_outcome::pass;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    milliseconds            timeout_ms  = 0;
+    bool                    timeout_set = false;
 
     test_generators(char const* id) // NOSONAR
         : name(id)
@@ -126,6 +138,8 @@ namespace tts::_
     test_generators(tagged_id id) // NOSONAR
         : name(id.name)
         , tag(id.tag)
+        , timeout_ms(id.timeout_ms)
+        , timeout_set(id.timeout_set)
     {
     }
 
@@ -150,7 +164,9 @@ namespace tts::_
                                   current_type = text {""};
                                 },
                                 joined_type_names<Type...>(),
-                                tg.tag});
+                                tg.tag,
+                                tg.timeout_ms,
+                                tg.timeout_set});
     }
   };
 }
@@ -335,6 +351,30 @@ empty.
 #define TTS_XINVALID(ID)
 #else
 #define TTS_XINVALID(ID) ::tts::expect_invalid(ID)
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_TIMEOUT
+  @brief Gives a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) a deadline of its own.
+
+  The case is killed once it has been running for MS milliseconds, and the run ends there. `0`
+  removes the deadline `--timeout` set for that one case. Wrapping the ID is how the tag travels,
+  so it nests with @ref TTS_XFAIL in either order.
+
+  @param MS Deadline in milliseconds.
+  @param ID A literal string describing the scenario intents.
+
+  @see TTS_XFAIL
+
+  @groupheader{Example}
+  @snippet doc/timeout.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_TIMEOUT(MS, ID)
+#else
+#define TTS_TIMEOUT(MS, ID) ::tts::with_timeout(MS, ID)
 #endif
 
 //======================================================================================================================
