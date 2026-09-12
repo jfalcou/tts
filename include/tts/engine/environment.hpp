@@ -46,7 +46,7 @@ namespace tts::_
       unexpected_count++;
     }
 
-    int report(unsigned long long fails, unsigned long long invalids) const
+    int report(counter fails, counter invalids) const
     {
       auto  test_txt = test_count > 1 ? "s" : "";
       auto  pass_txt = success_count > 1 ? "es" : "";
@@ -105,14 +105,14 @@ namespace tts::_
       else return (failure_count == fails && invalid_count == invalids) ? 0 : 1;
     }
 
-    unsigned long long test_count        = 0;
-    unsigned long long success_count     = 0;
-    unsigned long long failure_count     = 0;
-    unsigned long long fatal_count       = 0;
-    unsigned long long invalid_count     = 0;
-    unsigned long long unexpected_count  = 0;
-    unsigned long long total_duration_ns = 0;
-    bool               fail_status       = false;
+    counter     test_count        = 0;
+    counter     success_count     = 0;
+    counter     failure_count     = 0;
+    counter     fatal_count       = 0;
+    counter     invalid_count     = 0;
+    counter     unexpected_count  = 0;
+    nanoseconds total_duration_ns = 0;
+    bool        fail_status       = false;
   };
 }
 
@@ -136,7 +136,7 @@ namespace tts
     @return 0 if all tests passed and 1 otherwise.
   **/
   //====================================================================================================================
-  inline int report(unsigned long long fails, unsigned long long invalids)
+  inline int report(counter fails, counter invalids)
   {
     return global_runtime.report(fails, invalids);
   }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <tts/tools/buffer.hpp>
+#include <tts/tools/clock.hpp>
 #include <tts/tools/erased.hpp>
 #include <tts/tools/text.hpp>
 
@@ -33,7 +34,6 @@ namespace tts
 namespace tts::_
 {
   // A case deadline, in milliseconds.
-  using milliseconds              = unsigned long long;
 
   inline char const* current_test = "";
 
@@ -129,13 +129,13 @@ namespace tts
   }
 
   /// Gives a @ref TTS_CASE's ID a deadline in milliseconds - see @ref TTS_TIMEOUT.
-  inline _::tagged_id with_timeout(_::milliseconds ms, char const* id)
+  inline _::tagged_id with_timeout(milliseconds ms, char const* id)
   {
     return {id, expected_outcome::pass, ms, true};
   }
 
   /// Gives an already tagged ID a deadline, keeping its tag - see @ref TTS_TIMEOUT.
-  inline _::tagged_id with_timeout(_::milliseconds ms, _::tagged_id const& id)
+  inline _::tagged_id with_timeout(milliseconds ms, _::tagged_id const& id)
   {
     return {id.name, id.tag, ms, true};
   }

@@ -81,25 +81,25 @@ namespace tts
       set_color("\033[31m"); // red - NOSONAR, \o{} is C++23-only
     }
 
-    void test_finished([[maybe_unused]] text const&        name,
-                       bool                                passed,
-                       bool                                invalid,
-                       [[maybe_unused]] unsigned long long duration_ns) override
+    void test_finished([[maybe_unused]] text const& name,
+                       bool                         passed,
+                       bool                         invalid,
+                       [[maybe_unused]] nanoseconds duration_ns) override
     {
       if(invalid) set_color("\033[33m");     // yellow - NOSONAR, \o{} is C++23-only
       else if(passed) set_color("\033[32m"); // green - NOSONAR, \o{} is C++23-only
       else set_color(nullptr); // plain failure - assertion_failed() already colored its line
     }
 
-    void suite_finished([[maybe_unused]] unsigned long long fail_count,
-                        [[maybe_unused]] unsigned long long invalid_count) override
+    void suite_finished([[maybe_unused]] counter fail_count,
+                        [[maybe_unused]] counter invalid_count) override
     {
       set_color("\033[1m"); // bold, neutral - NOSONAR, \o{} is C++23-only
     }
 
-    void suite_metric(outcome                             kind,
-                      [[maybe_unused]] unsigned long long count,
-                      [[maybe_unused]] unsigned long long total) override
+    void suite_metric(outcome                  kind,
+                      [[maybe_unused]] counter count,
+                      [[maybe_unused]] counter total) override
     {
       using enum outcome;
       revert_to_ = active_color_; // fall back to this once the segment below is written

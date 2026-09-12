@@ -46,10 +46,10 @@ namespace
       (void)location;
     }
 
-    void test_finished(tts::text const&   name,
-                       bool               passed,
-                       bool               invalid,
-                       unsigned long long duration_ns) override
+    void test_finished(tts::text const& name,
+                       bool             passed,
+                       bool             invalid,
+                       tts::nanoseconds duration_ns) override
     {
       // Sane upper bound (under 10s), not an exact value - actual timing is inherently
       // machine-dependent and would make this test flaky.
@@ -61,7 +61,7 @@ namespace
                               sane ? 1 : 0};
     }
 
-    void suite_finished(unsigned long long fail_count, unsigned long long invalid_count) override
+    void suite_finished(tts::counter fail_count, tts::counter invalid_count) override
     {
       log += tts::text {"SUITE_FINISHED fails=%llu invalids=%llu\n", fail_count, invalid_count};
     }
