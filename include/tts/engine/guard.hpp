@@ -108,16 +108,26 @@ extern "C"
 
 namespace tts::_
 {
+  // The stack overflow exception needs this reserve to be delivered at all. It belongs to the
+  // thread, not to a case, and Windows keeps it until the thread ends.
+  inline bool stack_reserve_ready()
+  {
+    static bool const that = []
+    {
+      ULONG guarantee = 64u * 1024u;
+      return SetThreadStackGuarantee(&guarantee) != 0;
+    }();
+
+    return that;
+  }
+
   struct crash_guard
   {
     crash_guard()
     {
       if(!armed_) return;
 
-      // The stack overflow exception needs this reserve to be delivered at all.
-      ULONG guarantee = 64u * 1024u;
-      SetThreadStackGuarantee(&guarantee);
-
+      stack_reserve_ready();
       handle_ = AddVectoredExceptionHandler(1, &crash_filter);
 
       for(std::size_t i = 0; i < crash_signals.size(); ++i)
@@ -184,22 +194,34 @@ extern "C"
 
 namespace tts::_
 {
+  // A stack overflow leaves no stack for the handler to run on, hence the alternate one. It belongs
+  // to the process, not to a case, and the kernel keeps it until someone hands it another.
+  inline bool alternate_stack_ready()
+  {
+    // SIGSTKSZ stopped being a constant in glibc 2.34, so the alternate stack has a fixed size.
+    static std::array<char, 64u * 1024u> buffer {};
+
+    static bool const                    that = []
+    {
+      stack_t alt  = {};
+      alt.ss_sp    = buffer.data();
+      alt.ss_size  = buffer.size();
+      alt.ss_flags = 0;
+      return sigaltstack(&alt, nullptr) == 0;
+    }();
+
+    return that;
+  }
+
   struct crash_guard
   {
     crash_guard()
     {
       if(!armed_) return;
 
-      // A stack overflow leaves no stack for the handler to run on, hence the alternate one.
-      stack_t alt  = {};
-      alt.ss_sp    = stack_.data();
-      alt.ss_size  = stack_.size();
-      alt.ss_flags = 0;
-      sigaltstack(&alt, nullptr);
-
       struct sigaction action = {};
       action.sa_sigaction     = &tts_crash_handler;
-      action.sa_flags         = SA_SIGINFO | SA_ONSTACK;
+      action.sa_flags         = SA_SIGINFO | (alternate_stack_ready() ? SA_ONSTACK : 0);
       sigemptyset(&action.sa_mask);
 
       for(std::size_t i = 0; i < crash_signals.size(); ++i)
@@ -218,10 +240,6 @@ namespace tts::_
     crash_guard& operator=(crash_guard const&) = delete;
 
   private:
-    // SIGSTKSZ stopped being a constant in glibc 2.34, so the alternate stack has a fixed size.
-    static constexpr std::size_t                       alt_stack_size = 64u * 1024u;
-
-    static inline std::array<char, alt_stack_size>     stack_ {};
     std::array<struct sigaction, crash_signals.size()> previous_ {};
     bool                                               armed_ = crash_guard_enabled();
   };
