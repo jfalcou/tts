@@ -8,6 +8,7 @@
 #define TTS_MAIN
 #define TTS_CUSTOM_DRIVER_FUNCTION crash_main
 #include <tts/tts.hpp>
+#include "unit/driver/recording_sink.hpp"
 
 #if !defined(__EMSCRIPTEN__)
 #include <csignal>
@@ -19,30 +20,6 @@ TTS_CASE("Case crashing halfway through")
   // A raised signal keeps memcheck and the sanitizers silent: no invalid access happens.
   std::raise(SIGSEGV);
 };
-
-namespace
-{
-  struct recording_sink : tts::output_sink
-  {
-    void write(tts::text const& t) override
-    {
-      seen += t;
-    }
-
-    void suite_aborted() override
-    {
-      aborted = true;
-    }
-
-    bool says(char const* what) const
-    {
-      return std::strstr(seen.data(), what) != nullptr; // NOSONAR - contains() is C++23
-    }
-
-    tts::text seen    = {};
-    bool      aborted = false;
-  };
-}
 #endif
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
@@ -50,28 +27,17 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
 #if defined(__EMSCRIPTEN__)
   return 77; // no crash guard here, so nothing to check
 #else
-  ::tts::initialize(argc, argv);
-
-  // main is still on the stack when the handler runs, so the capture stays valid.
-  recording_sink sink;
-
-  tts::set_abort_handler(
-  [ &sink ](int reason)
+  return tts::test::run_and_report(
+  argc,
+  argv,
+  "CRASH ATTRIBUTION OK",
+  [](int c, char const** v) { crash_main(c, v); },
+  [](tts::test::recording_sink const& sink, int reason)
   {
-    // One composed line, so the name, the marker and the cause must appear together: TTS prints
-    // the case name on its own when the case starts, and that must not be enough.
     tts::text attribution {"'%s' - @@ CRASHED @@ %s", "Case crashing halfway through", "SIGSEGV"};
 
-    bool      ok =
-    reason == SIGSEGV && sink.aborted && sink.says(attribution.data()) && sink.says("Results:");
-
-    // The run exits 1 whatever happens, so ctest reads this line instead of the code.
-    if(ok) std::puts("CRASH ATTRIBUTION OK");
+    return reason == SIGSEGV && sink.aborted && sink.says(attribution.data()) &&
+           sink.says("Results:");
   });
-
-  tts::scoped_sink scope(sink);
-  crash_main(argc, argv);
-
-  return 1; // the case above must not let us reach this
 #endif
 }

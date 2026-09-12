@@ -8,6 +8,7 @@
 #define TTS_MAIN
 #define TTS_CUSTOM_DRIVER_FUNCTION timeout_main
 #include <tts/tts.hpp>
+#include "unit/driver/recording_sink.hpp"
 
 #if !defined(__EMSCRIPTEN__)
 
@@ -21,30 +22,6 @@ TTS_CASE(TTS_TIMEOUT(150, "Case that never returns"))
     // Spinning until the deadline kills us is the whole point of this case.
   }
 };
-
-namespace
-{
-  struct recording_sink : tts::output_sink
-  {
-    void write(tts::text const& t) override
-    {
-      seen += t;
-    }
-
-    void suite_aborted() override
-    {
-      aborted = true;
-    }
-
-    bool says(char const* what) const
-    {
-      return std::strstr(seen.data(), what) != nullptr; // NOSONAR - contains() is C++23
-    }
-
-    tts::text seen    = {};
-    bool      aborted = false;
-  };
-}
 #endif
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
@@ -52,27 +29,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
 #if defined(__EMSCRIPTEN__)
   return 77; // no process timer here, so nothing to check
 #else
-  ::tts::initialize(argc, argv);
-
-  // main is still on the stack when the handler runs, so the capture stays valid.
-  recording_sink sink;
-
-  tts::set_abort_handler(
-  [ &sink ](int reason)
+  return tts::test::run_and_report(
+  argc,
+  argv,
+  "TIMEOUT ATTRIBUTION OK",
+  [](int c, char const** v) { timeout_main(c, v); },
+  [](tts::test::recording_sink const& sink, int reason)
   {
     tts::text attribution {
     "'%s' - @@ TIMEOUT @@ still running after %llu ms", "Case that never returns", 150ULL};
 
-    bool ok = reason == 0 && sink.aborted && sink.says(attribution.data()) &&
-              sink.says("ABORTING DUE TO TIMEOUT") && sink.says("Results:");
-
-    // The run exits 1 whatever happens, so ctest reads this line instead of the code.
-    if(ok) std::puts("TIMEOUT ATTRIBUTION OK");
+    return reason == 0 && sink.aborted && sink.says(attribution.data()) &&
+           sink.says("ABORTING DUE TO TIMEOUT") && sink.says("Results:");
   });
-
-  tts::scoped_sink scope(sink);
-  timeout_main(argc, argv);
-
-  return 1; // the case above must not let us reach this
 #endif
 }
