@@ -37,7 +37,7 @@ namespace tts::_
   inline char const* current_test = "";
 
   // The abort path reads it to tell a crash nobody wanted from one a case was tagged for.
-  inline ::tts::expected_outcome current_tag = ::tts::expected_outcome::pass;
+  inline ::tts::expected_outcome current_tag = expected_outcome::pass; // NOSONAR - set per case
 
   // Carries a TTS_XFAIL/TTS_MAYFAIL/TTS_XINVALID tag without changing TTS_CASE(ID)'s call shape.
   struct tagged_id
