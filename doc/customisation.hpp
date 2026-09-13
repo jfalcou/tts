@@ -23,10 +23,15 @@
 
   @section customize-abort Crashed and Stuck Runs
   A crashed test case cannot resume, so **TTS** names it, reports it through the sinks and exits
-  with 1. @ref tts::set_abort_handler runs just before that exit, with the signal that brought the
-  run down or `0` when nothing did.
+  with 1. What the run already printed stays, the cases left are counted as not run, and the
+  summary is written. A case tagged @ref TTS_XFAIL or @ref TTS_MAYFAIL turns that end into the
+  expected one, and the run exits 0.
 
-  A test binary that has to handle an abrupt stop in its own way installs one.
+  @snippet doc/crash.cpp snippet
+
+  @ref tts::set_abort_handler runs just before the exit, with the signal that brought the run down
+  or `0` when nothing did. A test binary that has to handle an abrupt stop in its own way installs
+  one.
 
   @snippet doc/abort_handler.cpp snippet
 
@@ -39,9 +44,9 @@
 
   A case that hangs cannot resume either, and nothing outside the process can name it.
   `--timeout=<ms>`, or `TTS_TIMEOUT` in the environment, gives every case a deadline; past it the
-  case is named the same way a crash is, and the run ends with 1. @ref TTS_TIMEOUT sets one case's
-  deadline, and `0` exempts that case from the global one. The handler receives `0` rather than a
-  signal number, nothing having been raised.
+  case is named the same way a crash is, and the run ends the same way. @ref TTS_TIMEOUT sets one
+  case's deadline, and `0` exempts that case from the global one. The handler receives `0` rather
+  than a signal number, nothing having been raised.
 
   @snippet doc/timeout.cpp snippet
 

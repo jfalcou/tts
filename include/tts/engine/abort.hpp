@@ -13,10 +13,12 @@
 
 namespace tts::_
 {
-  using abort_handler                     = erased<void(int)>;
+  using abort_handler                  = erased<void(int)>;
 
-  inline callable          abort_epilogue = {}; // NOSONAR - the driver sets it once it is ready
-  inline abort_handler     abort_action   = {}; // NOSONAR - set_abort_handler replaces it
+  inline callable      abort_epilogue  = {}; // NOSONAR - the driver sets it once it is ready
+  inline abort_handler abort_action    = {}; // NOSONAR - set_abort_handler replaces it
+
+  inline int           abort_exit_code = 1; // NOSONAR - report_abort sets it once it has summed up
 
   [[noreturn]] inline void exit_now()
   {
@@ -24,7 +26,7 @@ namespace tts::_
     // flushes nothing.
     fflush(stdout);
     fflush(stderr);
-    std::_Exit(1);
+    std::_Exit(abort_exit_code);
   }
 
   [[noreturn]] inline void perform_abort(int reason)
@@ -43,7 +45,8 @@ namespace tts
     @ingroup customization-points
 
     Runs just before **TTS** exits a crashed or timed out run, with the signal that brought it down
-    or `0` when nothing did. **TTS** exits with 1 once it returns.
+    or `0` when nothing did. **TTS** exits once it returns, with 1, or with 0 when the case that
+    brought the run down was tagged @ref TTS_XFAIL or @ref TTS_MAYFAIL.
 
     Useful when a test binary has to handle an abrupt stop in its own way.
 
