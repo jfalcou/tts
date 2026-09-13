@@ -67,6 +67,10 @@
 
   This comparison is performed by using the proper tts::absolute_distance overload.
 
+  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
+  be measured after promotion to the common type, hence in the unit of that type rather than
+  the one under test.
+
   @param L, R Expressions to compare.
   @param N    Maximum absolute distance accepted between `L` and `R`.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -85,12 +89,17 @@
 //======================================================================================================================
 /**
   @def TTS_RELATIVE_EQUAL
-  @brief Checks if values are within a given relative distance expressed as a percentage.
+  @brief Checks if values are within a given relative distance.
 
   This comparison is performed by using the proper tts::relative_distance overload.
 
+  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
+  be measured after promotion to the common type, hence in the unit of that type rather than
+  the one under test.
+
   @param L, R Expressions to compare.
-  @param N    Maximum relative percentage accepted between `L` and `R`.
+  @param N    Maximum relative distance accepted between `L` and `R`, as a ratio: `0.005` is
+              half a percent. `abs(L-R) / max(abs(L), abs(R), 1)` is what gets compared to it.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
 
   @groupheader{Example}
@@ -101,7 +110,22 @@
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)                                                           \
-  TTS_PRECISION(L, R, N, "%", ::tts::relative_check, 8, __VA_ARGS__)
+  (                                                                                                \
+  ::tts::_::reads_as_percent<decltype(L)>(N)                                                       \
+  ? TTS_PERCENT_TOLERANCE_##__VA_ARGS__(N)                                                         \
+  : TTS_PRECISION(L, R, N, "rel", ::tts::relative_check, 8, __VA_ARGS__))
+
+#define TTS_PERCENT_TOLERANCE_(N)         TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FAIL)
+#define TTS_PERCENT_TOLERANCE_REQUIRED(N) TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FATAL)
+#define TTS_PERCENT_TOLERANCE_IMPL(N, FAILURE)                                                     \
+  [ & ]()                                                                                          \
+  {                                                                                                \
+    FAILURE("Tolerance %.*g reads as a percentage: TTS 4 compares a ratio, divide it by a "        \
+            "hundred.",                                                                            \
+            8,                                                                                     \
+            static_cast<double>(N));                                                               \
+    return ::tts::_::logger {};                                                                    \
+  }()
 #endif
 
 //======================================================================================================================
@@ -110,6 +134,10 @@
   @brief Checks if two values are within a given ULP distance
 
   This comparison is performed by using the proper tts::ulp_distance overload.
+
+  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
+  be measured after promotion to the common type, hence in the unit of that type rather than
+  the one under test.
 
   @param L, R Expressions to compare.
   @param N    Maximum ULPs accepted between `L` and `R`.

@@ -13,18 +13,24 @@
 
 struct payload
 {
-  double           d;
-  unsigned int     i, j;
-  constexpr bool   operator==(payload const&) const = default;
-
-  friend tts::text to_text(payload const& p)
-  {
-    return "payload(" + tts::as_text(p.d) + ")[" + tts::as_text(p.i) + "][" + tts::as_text(p.j) +
-           "]";
-  }
+  double         d;
+  unsigned int   i, j;
+  constexpr bool operator==(payload const&) const = default;
 };
 
-TTS_CASE("Display a type with custom to_text")
+namespace tts
+{
+  template<> struct display<payload>
+  {
+    static text render(payload const& p)
+    {
+      return "payload(" + tts::as_text(p.d) + ")[" + tts::as_text(p.i) + "][" + tts::as_text(p.j) +
+             "]";
+    }
+  };
+}
+
+TTS_CASE("Display a type with a tts::display specialization")
 {
   payload p {1.5, 0xAABBCCDD, 0x11223344};
   payload q {1.5, 0xFFEEDDCC, 0x99887766};
@@ -48,13 +54,20 @@ namespace sample
     constexpr bool operator==(payload const&) const = default;
   };
 
-  tts::text to_text(payload const& p)
-  {
-    return tts::text("payload(%f)[%d][%d]", p.d, p.i, p.j);
-  }
 }
 
-TTS_CASE("Display another type with custom to_text")
+namespace tts
+{
+  template<> struct display<sample::payload>
+  {
+    static text render(sample::payload const& p)
+    {
+      return text("payload(%f)[%d][%d]", p.d, p.i, p.j);
+    }
+  };
+}
+
+TTS_CASE("Display another type with a tts::display specialization")
 {
   sample::payload p {1.5, 0xAABBCCDD, 0x11223344};
   sample::payload q {1.5, 0xFFEEDDCC, 0x99887766};

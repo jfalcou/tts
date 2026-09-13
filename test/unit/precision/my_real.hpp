@@ -21,25 +21,31 @@ namespace n1
     // clang-format on
   };
 
-  inline double ulp_distance(my_real const& a, my_real const& b)
-  {
-    return a.x / b.x;
-  }
+}
 
-  inline bool ieee_equal(my_real const& a, my_real const& b)
+namespace tts
+{
+  template<> struct precision<n1::my_real>
   {
-    return a.x == b.x || (a.x >= 0.f && b.x >= 0.f);
-  }
+    static double ulp(n1::my_real const& a, n1::my_real const& b)
+    {
+      return a.x / b.x;
+    }
+    static double relative(n1::my_real const& a, n1::my_real const& b)
+    {
+      return a.x / b.x;
+    }
 
-  inline double relative_distance(my_real const& a, my_real const& b)
-  {
-    return a.x / b.x;
-  }
+    static double absolute(n1::my_real const& a, n1::my_real const& b)
+    {
+      return std::abs(a.x - b.x);
+    }
 
-  inline double absolute_distance(my_real const& a, my_real const& b)
-  {
-    return std::abs(a.x - b.x);
-  }
+    static bool ieee(n1::my_real const& a, n1::my_real const& b)
+    {
+      return a.x == b.x || (a.x >= 0.f && b.x >= 0.f);
+    }
+  };
 }
 
 #endif

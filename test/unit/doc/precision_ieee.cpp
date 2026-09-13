@@ -17,13 +17,20 @@ namespace sample
     int n, d;
   };
 
-  bool ieee_equal(ratio a, ratio b)
+}
+
+namespace tts
+{
+  template<> struct precision<sample::ratio> : _::builtin_precision<sample::ratio>
   {
-    auto ra = static_cast<float>(a.n) / static_cast<float>(a.d);
-    auto rb = static_cast<float>(b.n) / static_cast<float>(b.d);
-    printf("%f vs %f\n", ra, rb);
-    return tts::ieee_check(ra, rb);
-  }
+    static bool ieee(sample::ratio const& a, sample::ratio const& b)
+    {
+      auto ra = static_cast<float>(a.n) / static_cast<float>(a.d);
+      auto rb = static_cast<float>(b.n) / static_cast<float>(b.d);
+
+      return tts::ieee_check(ra, rb);
+    }
+  };
 }
 
 TTS_CASE("Compare values with custom IEEE distance computation")
