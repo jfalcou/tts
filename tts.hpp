@@ -1082,14 +1082,15 @@ namespace tts::_
 }
 namespace tts::_
 {
-  using abort_handler                     = erased<void(int)>;
-  inline callable          abort_epilogue = {};
-  inline abort_handler     abort_action   = {};
+  using abort_handler                  = erased<void(int)>;
+  inline callable      abort_epilogue  = {};
+  inline abort_handler abort_action    = {};
+  inline int           abort_exit_code = 1;
   [[noreturn]] inline void exit_now()
   {
     fflush(stdout);
     fflush(stderr);
-    std::_Exit(1);
+    std::_Exit(abort_exit_code);
   }
   [[noreturn]] inline void perform_abort(int reason)
   {
@@ -1971,6 +1972,7 @@ namespace tts
 namespace tts::_
 {
   inline char const* current_test = "";
+  inline ::tts::expected_outcome current_tag = expected_outcome::pass;
   struct tagged_id
   {
     char const*             name;
@@ -1995,6 +1997,7 @@ namespace tts::_
     void operator()()
     {
       current_test = name;
+      current_tag  = tag;
       behaviour();
     }
     static inline bool      acknowledge(test&& f);
@@ -2484,13 +2487,14 @@ namespace tts::_
   inline std::size_t remaining_tests = 0;
   inline void        report_abort(char const* headline, char const* reason)
   {
+    using enum ::tts::expected_outcome;
     ::tts::global_runtime.fatal();
-    ::tts::global_runtime.unexpected();
+    if(current_tag != xfail && current_tag != may_fail) ::tts::global_runtime.unexpected();
     ::tts::output().writeln(headline);
     ::tts::output().suite_aborted();
     ::tts::output().writeln(
     "@@ ABORTING DUE TO %s @@ - %d Tests not run", reason, static_cast<int>(remaining_tests));
-    ::tts::report(0, 0);
+    abort_exit_code = ::tts::report(0, 0);
     ::tts::output().finish();
   }
 }
