@@ -193,8 +193,26 @@ Tests Driver</h1>
 <div class="line">}</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="customize-abort"></a>
 Crashed and Stuck Runs</h1>
-<p>A crashed test case cannot resume, so <b>TTS</b> names it, reports it through the sinks and exits with 1. <a class="el" href="group__customization-points.html#ga111b130256e38312cb4705dccee9d4d8" title="tts::set_abort_handler">tts::set_abort_handler</a> runs just before that exit, with the signal that brought the run down or <span class="tt">0</span> when nothing did.</p>
-<p>A test binary that has to handle an abrupt stop in its own way installs one.</p>
+<p>A crashed test case cannot resume, so <b>TTS</b> names it, reports it through the sinks and exits with 1. What the run already printed stays, the cases left are counted as not run, and the summary is written. A case tagged <a class="el" href="group__test-scenario.html#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a> or <a class="el" href="group__test-scenario.html#ga4b8a89f672881723dbe70f50e627ebf8" title="TTS_MAYFAIL">TTS_MAYFAIL</a> turns that end into the expected one, and the run exits 0.</p>
+<div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;a case that runs to the end&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(1 + 1, 2);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#if !defined(__EMSCRIPTEN__) </span><span class="comment">// no signal delivery there, so nothing would name the case below</span></div>
+<div class="line"><span class="comment">// A crash ends the run, so the tag turns that end into the expected one and the exit code into 0.</span></div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="group__test-scenario.html#gad72988c12f401bb1eb13a4f6788f1d10">TTS_XFAIL</a>(<span class="stringliteral">&quot;a case that brings the run down&quot;</span>))</div>
+<div class="line">{</div>
+<div class="line">  <span class="comment">// A raised signal keeps memcheck and the sanitizers silent: no invalid access happens.</span></div>
+<div class="line">  std::raise(SIGSEGV);</div>
+<div class="line">};</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;a case the run never reaches&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(<span class="keyword">true</span>);</div>
+<div class="line">};</div>
+</div><!-- fragment --><p><a class="el" href="group__customization-points.html#ga111b130256e38312cb4705dccee9d4d8" title="tts::set_abort_handler">tts::set_abort_handler</a> runs just before the exit, with the signal that brought the run down or <span class="tt">0</span> when nothing did. A test binary that has to handle an abrupt stop in its own way installs one.</p>
 <div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Choosing what a crashed or stuck run does before exiting&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">auto</span> previous = <a class="code hl_function" href="group__customization-points.html#ga111b130256e38312cb4705dccee9d4d8">tts::set_abort_handler</a>(</div>
@@ -204,7 +222,7 @@ Crashed and Stuck Runs</h1>
 <div class="line">};</div>
 </div><!-- fragment --><p>The guard covers <span class="tt">SIGSEGV</span>, <span class="tt">SIGBUS</span>, <span class="tt">SIGFPE</span>, <span class="tt">SIGILL</span> and <span class="tt">SIGABRT</span>, that last one catching an <span class="tt">assert</span> in the code under test; under Windows, access violations, stack overflows, integer divisions by zero and illegal instructions. Under emscripten it is compiled out.</p>
 <p><span class="tt">--no-crash-guard</span>, or <span class="tt">TTS_NO_CRASH_GUARD</span> in the environment, leaves those signals to the system: that is what a debugger, or a sanitizer stack trace, needs.</p>
-<p>A case that hangs cannot resume either, and nothing outside the process can name it. <span class="tt">--timeout=&lt;ms&gt;</span>, or <span class="tt"><a class="el" href="group__test-scenario.html#ga761dc95ad62ab8e7781f003c60888386" title="Gives a TTS_CASE (or TTS_CASE_TPL / TTS_CASE_WITH) a deadline of its own.">TTS_TIMEOUT</a></span> in the environment, gives every case a deadline; past it the case is named the same way a crash is, and the run ends with 1. <a class="el" href="group__test-scenario.html#ga761dc95ad62ab8e7781f003c60888386" title="TTS_TIMEOUT">TTS_TIMEOUT</a> sets one case's deadline, and <span class="tt">0</span> exempts that case from the global one. The handler receives <span class="tt">0</span> rather than a signal number, nothing having been raised.</p>
+<p>A case that hangs cannot resume either, and nothing outside the process can name it. <span class="tt">--timeout=&lt;ms&gt;</span>, or <span class="tt"><a class="el" href="group__test-scenario.html#ga761dc95ad62ab8e7781f003c60888386" title="Gives a TTS_CASE (or TTS_CASE_TPL / TTS_CASE_WITH) a deadline of its own.">TTS_TIMEOUT</a></span> in the environment, gives every case a deadline; past it the case is named the same way a crash is, and the run ends the same way. <a class="el" href="group__test-scenario.html#ga761dc95ad62ab8e7781f003c60888386" title="TTS_TIMEOUT">TTS_TIMEOUT</a> sets one case's deadline, and <span class="tt">0</span> exempts that case from the global one. The handler receives <span class="tt">0</span> rather than a signal number, nothing having been raised.</p>
 <div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="group__test-scenario.html#ga761dc95ad62ab8e7781f003c60888386">TTS_TIMEOUT</a>(5000, <span class="stringliteral">&quot;a collective that answers in time&quot;</span>))</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(<span class="keyword">true</span>);</div>
@@ -214,6 +232,15 @@ Crashed and Stuck Runs</h1>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(1 == 2);</div>
 <div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#if !defined(__EMSCRIPTEN__) </span><span class="comment">// no process timer there, so nothing would end the case below</span></div>
+<div class="line"><span class="comment">// The deadline ends the run, so the tag turns that end into the expected one and the exit code</span></div>
+<div class="line"><span class="comment">// into 0.</span></div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="group__test-scenario.html#gad72988c12f401bb1eb13a4f6788f1d10">TTS_XFAIL</a>(<a class="code hl_define" href="group__test-scenario.html#ga761dc95ad62ab8e7781f003c60888386">TTS_TIMEOUT</a>(250, <span class="stringliteral">&quot;a case that outlives its own deadline&quot;</span>)))</div>
+<div class="line">{</div>
+<div class="line">  std::this_thread::sleep_for(std::chrono::milliseconds(500));</div>
+<div class="line">};</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --><p>Under POSIX the deadline is an interval timer, so a case blocked in a system call is still interrupted; code under test that uses <span class="tt">SIGALRM</span> itself conflicts with it. Under Windows it is a timer queue. Under emscripten it is compiled out.</p>
 <h1 class="doxsection"><a class="anchor" id="customize-display"></a>
 Data display</h1>

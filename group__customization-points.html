@@ -335,7 +335,7 @@ template&lt;typename Handler&gt; </div>
 <p><code>#include &lt;tts/engine/abort.hpp&gt;</code></p>
 
 <p>Run termination customization point. </p>
-<p>Runs just before <b>TTS</b> exits a crashed or timed out run, with the signal that brought it down or <span class="tt">0</span> when nothing did. <b>TTS</b> exits with 1 once it returns.</p>
+<p>Runs just before <b>TTS</b> exits a crashed or timed out run, with the signal that brought it down or <span class="tt">0</span> when nothing did. <b>TTS</b> exits once it returns, with 1, or with 0 when the case that brought the run down was tagged <a class="el" href="group__test-scenario.html#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a> or <a class="el" href="group__test-scenario.html#ga4b8a89f672881723dbe70f50e627ebf8" title="TTS_MAYFAIL">TTS_MAYFAIL</a>.</p>
 <p>Useful when a test binary has to handle an abrupt stop in its own way.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">

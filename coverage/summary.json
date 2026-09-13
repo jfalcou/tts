@@ -1,7 +1,7 @@
 {
-    "branch_covered": 778,
-    "branch_percent": 72.8,
-    "branch_total": 1069,
+    "branch_covered": 775,
+    "branch_percent": 72.2,
+    "branch_total": 1073,
     "files": [
         {
             "branch_covered": 1,
@@ -18,7 +18,7 @@
         {
             "branch_covered": 0,
             "branch_percent": 0.0,
-            "branch_total": 1,
+            "branch_total": 5,
             "filename": "include/tts/engine/abort_report.hpp",
             "function_covered": 0,
             "function_percent": 0.0,
@@ -88,8 +88,8 @@
             "line_total": 15
         },
         {
-            "branch_covered": 111,
-            "branch_percent": 73.0,
+            "branch_covered": 110,
+            "branch_percent": 72.4,
             "branch_total": 152,
             "filename": "include/tts/engine/main.hpp",
             "function_covered": 19,
@@ -140,12 +140,12 @@
             "branch_percent": 33.3,
             "branch_total": 9,
             "filename": "include/tts/engine/test.hpp",
-            "function_covered": 8,
-            "function_percent": 88.9,
+            "function_covered": 6,
+            "function_percent": 66.7,
             "function_total": 9,
-            "line_covered": 20,
-            "line_percent": 74.1,
-            "line_total": 27
+            "line_covered": 17,
+            "line_percent": 60.7,
+            "line_total": 28
         },
         {
             "branch_covered": 0,
@@ -160,15 +160,15 @@
             "line_total": 4
         },
         {
-            "branch_covered": 8,
-            "branch_percent": 53.3,
+            "branch_covered": 6,
+            "branch_percent": 40.0,
             "branch_total": 15,
             "filename": "include/tts/engine/watchdog.hpp",
             "function_covered": 3,
             "function_percent": 60.0,
             "function_total": 5,
-            "line_covered": 24,
-            "line_percent": 72.7,
+            "line_covered": 9,
+            "line_percent": 27.3,
             "line_total": 33
         },
         {
@@ -436,12 +436,12 @@
             "line_total": 9
         }
     ],
-    "function_covered": 1615,
-    "function_percent": 90.2,
+    "function_covered": 1613,
+    "function_percent": 90.1,
     "function_total": 1790,
     "gcovr/summary_format_version": "0.6",
-    "line_covered": 1417,
-    "line_percent": 91.3,
-    "line_total": 1552,
+    "line_covered": 1399,
+    "line_percent": 90.1,
+    "line_total": 1553,
     "root": "../../.."
 }

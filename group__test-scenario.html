@@ -469,6 +469,15 @@ Scoped scenarios</h2></td></tr>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>(1 == 2);</div>
 <div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#if !defined(__EMSCRIPTEN__) </span><span class="comment">// no process timer there, so nothing would end the case below</span></div>
+<div class="line"><span class="comment">// The deadline ends the run, so the tag turns that end into the expected one and the exit code</span></div>
+<div class="line"><span class="comment">// into 0.</span></div>
+<div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="#gad72988c12f401bb1eb13a4f6788f1d10">TTS_XFAIL</a>(<a class="code hl_define" href="#ga761dc95ad62ab8e7781f003c60888386">TTS_TIMEOUT</a>(250, <span class="stringliteral">&quot;a case that outlives its own deadline&quot;</span>)))</div>
+<div class="line">{</div>
+<div class="line">  std::this_thread::sleep_for(std::chrono::milliseconds(500));</div>
+<div class="line">};</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --> 
 </div>
 </div>
