@@ -69,7 +69,7 @@ MathJax.Hub.Config({
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
   <td id="projectalign">
-   <div id="projectname">TTS<span id="projectnumber">&#160;v3.0.0</span>
+   <div id="projectname">TTS<span id="projectnumber">&#160;v4.0.0</span>
    </div>
    <div id="projectbrief">The Tiny Test System</div>
   </td>
@@ -186,7 +186,7 @@ Headers we avoid, and what they cost</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">&lt;map&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">avoided unless genuinely needed  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">~0ms (noise)  </td><td class="markdownTableBodyNone">~0ms (noise)  </td><td class="markdownTableBodyNone">fine to use - see below  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">C arrays, sized by a constant  </td></tr>
 </table>
 <h1 class="doxsection"><a class="anchor" id="compile-time-hypothetical"></a>
 What it costs if you ever need one anyway</h1>
@@ -201,9 +201,8 @@ What it costs if you ever need one anyway</h1>
 </table>
 <h1 class="doxsection"><a class="anchor" id="compile-time-fine"></a>
 What's fine to use</h1>
-<p>Being on this page isn't a blanket ban on the standard library - it's a reminder to check before assuming. Two examples that already got measured and cleared:</p>
+<p>Being on this page isn't a blanket ban on the standard library - it's a reminder to check before assuming. One example that already got measured and cleared:</p>
 <ul>
-<li><span class="tt">&lt;array&gt;</span> measures as free (no cost above run-to-run noise) with both compilers above, and is used where a bounded, compile-time-sized container earns its keep.</li>
 <li><span class="tt">&lt;windows.h&gt;</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span> and included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, was measured on real <span class="tt">cl.exe</span> and found free relative to an empty translation unit - lighter, in fact, than the fragile forward-declare-the-three-functions-we-need workaround that seemed safer on paper. Platform-gated code still gets measured on that platform, not assumed safe or assumed expensive.</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="compile-time-checklist"></a>

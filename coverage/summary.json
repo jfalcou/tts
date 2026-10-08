@@ -428,12 +428,12 @@
             "branch_percent": 71.0,
             "branch_total": 31,
             "filename": "include/tts/tools/text.hpp",
-            "function_covered": 83,
-            "function_percent": 95.4,
-            "function_total": 87,
-            "line_covered": 92,
+            "function_covered": 84,
+            "function_percent": 95.5,
+            "function_total": 88,
+            "line_covered": 99,
             "line_percent": 100.0,
-            "line_total": 92
+            "line_total": 99
         },
         {
             "branch_covered": 0,
@@ -448,12 +448,12 @@
             "line_total": 7
         }
     ],
-    "function_covered": 2086,
+    "function_covered": 2087,
     "function_percent": 88.8,
-    "function_total": 2349,
+    "function_total": 2350,
     "gcovr/summary_format_version": "0.6",
-    "line_covered": 1452,
-    "line_percent": 90.4,
-    "line_total": 1606,
+    "line_covered": 1459,
+    "line_percent": 90.5,
+    "line_total": 1613,
     "root": "../../.."
 }
