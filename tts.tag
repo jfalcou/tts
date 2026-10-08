@@ -1874,12 +1874,17 @@
     <name>compile-time</name>
     <title>Compile-Time Discipline</title>
     <filename>compile-time.html</filename>
-    <docanchor file="compile-time.html" title="Why this matters">compile-time-why</docanchor>
-    <docanchor file="compile-time.html" title="Headers we avoid, and what they cost">compile-time-cost</docanchor>
-    <docanchor file="compile-time.html" title="What it costs if you ever need one anyway">compile-time-hypothetical</docanchor>
-    <docanchor file="compile-time.html" title="What&apos;s fine to use">compile-time-fine</docanchor>
-    <docanchor file="compile-time.html" title="Before you add a header">compile-time-checklist</docanchor>
-    <docanchor file="compile-time.html" title="Precedent in this codebase">compile-time-precedent</docanchor>
+    <docanchor file="compile-time.html" title="Headers of TTS">compile-time-headers</docanchor>
+    <docanchor file="compile-time.html" title="Include cost of a test suite">compile-time-why</docanchor>
+    <docanchor file="compile-time.html" title="Avoided headers and their cost">compile-time-cost</docanchor>
+    <docanchor file="compile-time.html" title="Measured and cleared headers">compile-time-fine</docanchor>
+    <docanchor file="compile-time.html" title="Checklist for a new header">compile-time-checklist</docanchor>
+    <docanchor file="compile-time.html" title="Replacements written in TTS">compile-time-precedent</docanchor>
+    <docanchor file="compile-time.html" title="Other test libraries">compile-time-comparison</docanchor>
+    <docanchor file="compile-time.html" title="Minimal include cost">compile-time-comparison-include</docanchor>
+    <docanchor file="compile-time.html" title="Cost of test cases">compile-time-comparison-cases</docanchor>
+    <docanchor file="compile-time.html" title="Template machinery">compile-time-comparison-types</docanchor>
+    <docanchor file="compile-time.html" title="Fixed cost and crossings">compile-time-comparison-fits</docanchor>
   </compound>
   <compound kind="page">
     <name>customize</name>

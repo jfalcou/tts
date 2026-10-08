@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 368" font-family="sans-serif" font-size="12">
+<text x="96" y="22" fill="#808080" font-size="14">g++ 15.2.0 -O0, 100 cases on 100 types, or one template case</text>
+<line x1="96.0" x2="96.0" y1="40" y2="304" stroke="#808080" stroke-opacity="0.3"/>
+<text x="96.0" y="320" fill="#808080" text-anchor="middle">0 s</text>
+<line x1="214.5" x2="214.5" y1="40" y2="304" stroke="#808080" stroke-opacity="0.3"/>
+<text x="214.5" y="320" fill="#808080" text-anchor="middle">2 s</text>
+<line x1="333.0" x2="333.0" y1="40" y2="304" stroke="#808080" stroke-opacity="0.3"/>
+<text x="333.0" y="320" fill="#808080" text-anchor="middle">4 s</text>
+<line x1="451.5" x2="451.5" y1="40" y2="304" stroke="#808080" stroke-opacity="0.3"/>
+<text x="451.5" y="320" fill="#808080" text-anchor="middle">6 s</text>
+<line x1="570.0" x2="570.0" y1="40" y2="304" stroke="#808080" stroke-opacity="0.3"/>
+<text x="570.0" y="320" fill="#808080" text-anchor="middle">8 s</text>
+<text x="88" y="64" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
+<rect x="96" y="44" width="85.4" height="14" fill="#e09f3e"/>
+<rect x="96" y="61" width="131.0" height="14" fill="#e09f3e" fill-opacity="0.45"/>
+<text x="187.4" y="55" fill="#808080">1.44 s</text>
+<text x="233.0" y="72" fill="#808080">2.21 s, +53 %</text>
+<text x="88" y="108" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
+<rect x="96" y="88" width="95.2" height="14" fill="#d1495b"/>
+<rect x="96" y="105" width="97.0" height="14" fill="#d1495b" fill-opacity="0.45"/>
+<text x="197.2" y="99" fill="#808080">1.61 s</text>
+<text x="199.0" y="116" fill="#808080">1.64 s, +2 %</text>
+<text x="88" y="152" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
+<rect x="96" y="132" width="106.6" height="14" fill="#5c8a8a"/>
+<rect x="96" y="149" width="214.4" height="14" fill="#5c8a8a" fill-opacity="0.45"/>
+<text x="208.6" y="143" fill="#808080">1.80 s</text>
+<text x="316.4" y="160" fill="#808080">3.62 s, +101 %</text>
+<text x="88" y="196" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
+<rect x="96" y="176" width="114.2" height="14" fill="#2e86ab"/>
+<rect x="96" y="193" width="129.7" height="14" fill="#2e86ab" fill-opacity="0.45"/>
+<text x="216.2" y="187" fill="#808080">1.93 s</text>
+<text x="231.7" y="204" fill="#808080">2.19 s, +14 %</text>
+<text x="88" y="240" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
+<rect x="96" y="220" width="169.9" height="14" fill="#3fa34d"/>
+<rect x="96" y="237" width="181.0" height="14" fill="#3fa34d" fill-opacity="0.45"/>
+<text x="271.9" y="231" fill="#808080">2.87 s</text>
+<text x="283.0" y="248" fill="#808080">3.05 s, +7 %</text>
+<text x="88" y="284" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
+<rect x="96" y="264" width="345.6" height="14" fill="#8e6bbf"/>
+<rect x="96" y="281" width="431.1" height="14" fill="#8e6bbf" fill-opacity="0.45"/>
+<text x="447.6" y="275" fill="#808080">5.83 s</text>
+<text x="533.1" y="292" fill="#808080">7.28 s, +25 %</text>
+<text x="96" y="358" fill="#808080">solid: 100 separate cases, light: one template case</text>
+</svg>

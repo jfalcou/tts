@@ -138,35 +138,56 @@ $(function(){initNavTree('compile-time.html','',''); });
 <div class="toc"><h3>Table of Contents</h3>
 <ul>
   <li class="level1">
-    <a href="#compile-time-why">Why this matters </a>
+    <a href="#compile-time-headers">Headers of TTS </a>
+    <ul>
+      <li class="level2">
+        <a href="#compile-time-why">Include cost of a test suite </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-cost">Avoided headers and their cost </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-fine">Measured and cleared headers </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-checklist">Checklist for a new header </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-precedent">Replacements written in TTS </a>
+      </li>
+    </ul>
   </li>
   <li class="level1">
-    <a href="#compile-time-cost">Headers we avoid, and what they cost </a>
-  </li>
-  <li class="level1">
-    <a href="#compile-time-hypothetical">What it costs if you ever need one anyway </a>
-  </li>
-  <li class="level1">
-    <a href="#compile-time-fine">What's fine to use </a>
-  </li>
-  <li class="level1">
-    <a href="#compile-time-checklist">Before you add a header </a>
-  </li>
-  <li class="level1">
-    <a href="#compile-time-precedent">Precedent in this codebase </a>
+    <a href="#compile-time-comparison">Other test libraries </a>
+    <ul>
+      <li class="level2">
+        <a href="#compile-time-comparison-include">Minimal include cost </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-comparison-cases">Cost of test cases </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-comparison-types">Template machinery </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-comparison-fits">Fixed cost and crossings </a>
+      </li>
+    </ul>
   </li>
 </ul>
 </div>
-<div class="textblock"><h1 class="doxsection"><a class="anchor" id="compile-time-why"></a>
-Why this matters</h1>
-<p>TTS is header-only, and it targets test suites - which typically means dozens or hundreds of small translation units, each <span class="tt">#include &lt;tts/tts.hpp&gt;</span>-ing the whole library on its own. There is no separately-compiled <span class="tt">.o</span> to amortize a header's parsing cost over: every header TTS pulls in is paid, in full, by every test file, in every project that uses it, on every build. This project's own CI matrix alone rebuilds the test suite across more than a dozen compiler/OS/standard-library combinations per pull request - a single heavy header added to a commonly-included file is not a one-time cost, it is a cost multiplied by every one of those builds, forever.</p>
-<p>This is why TTS reimplements small, purpose-built pieces of what it needs (a minimal string type, a monotonic clock, a move-only file wrapper, ...) instead of reaching for the equivalent standard library facility: the value proposition of a <em>tiny</em> test system depends on it staying cheap to include.</p>
-<h1 class="doxsection"><a class="anchor" id="compile-time-cost"></a>
-Headers we avoid, and what they cost</h1>
-<p>Intuition about which headers are "heavy" is unreliable - some innocuous-looking ones aren't free, and some that look expensive on paper measure as free in practice. Only measuring settles it. The numbers below come from timing a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit with and without each header added, <span class="tt">g++ 13</span> and <span class="tt">clang++ 18</span>, <span class="tt">-std=c++20</span>, best-of-8 runs (see <a class="el" href="#compile-time-checklist" title="Before you add a header">Before you add a header</a> for the exact method):</p>
+<div class="textblock"><h1 class="doxsection"><a class="anchor" id="compile-time-headers"></a>
+Headers of TTS</h1>
+<h2 class="doxsection"><a class="anchor" id="compile-time-why"></a>
+Include cost of a test suite</h2>
+<p>The library is header-only, and a test suite holds dozens or hundreds of small translation units, each including <span class="tt">&lt;tts/tts.hpp&gt;</span> on its own. No separately compiled object amortizes the parsing: every header <b>TTS</b> pulls in is parsed again by every test file, in every project using it, at every build. The CI matrix of this project alone rebuilds the suite on more than a dozen combinations of compiler, system and standard library per pull request, so a heavy header added to a widely included file multiplies its cost by every one of those builds.</p>
+<p>The library therefore writes small replacements for what it needs, such as a minimal string type, a monotonic clock or a move-only file wrapper, rather than include the standard facility.</p>
+<h2 class="doxsection"><a class="anchor" id="compile-time-cost"></a>
+Avoided headers and their cost</h2>
+<p>The cost of a header is measured, never assumed: some light-looking headers cost a lot, and some heavy-looking ones cost nothing. The table gives the time a header adds to a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit, with <span class="tt">g++ 13</span> and <span class="tt">clang++ 18</span>, <span class="tt">-std=c++20</span>, best of 8 runs, measured as <a class="el" href="#compile-time-checklist" title="Checklist for a new header">Checklist for a new header</a> describes.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">Added cost (g++)  </th><th class="markdownTableHeadNone">Added cost (clang++)  </th><th class="markdownTableHeadNone">Avoided via  </th></tr>
+<th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">g++  </th><th class="markdownTableHeadNone">clang++  </th><th class="markdownTableHeadNone">Avoided via  </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">&lt;chrono&gt;</span>  </td><td class="markdownTableBodyNone">+460ms (~4x)  </td><td class="markdownTableBodyNone">+680ms (~6x)  </td><td class="markdownTableBodyNone"><span class="tt">tools/clock.hpp</span>'s <span class="tt">now_ns()</span>, built on <span class="tt">clock_gettime</span>/<span class="tt">QueryPerformanceCounter</span>  </td></tr>
 <tr class="markdownTableRowEven">
@@ -176,7 +197,7 @@ Headers we avoid, and what they cost</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">&lt;iostream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+170ms  </td><td class="markdownTableBodyNone">output goes through <span class="tt">FILE*</span>/<span class="tt">fputs</span>, not <span class="tt">std::cout</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;functional&gt;</span>  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">never - <span class="tt">tools/erased.hpp</span>'s type-erased <span class="tt">callable</span> is what every single <span class="tt"><a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="Introduces a new test scenario and registers it into the current test driver.">TTS_CASE</a></span> body is wrapped in, the hottest path in the whole library, so this one doesn't get a "genuinely needed" exception  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;functional&gt;</span>  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">never: <span class="tt">tools/erased.hpp</span>'s type-erased <span class="tt">callable</span> wraps every <span class="tt"><a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="Introduces a new test scenario and registers it into the current test driver.">TTS_CASE</a></span> body, the hottest path of the library  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">&lt;string&gt;</span>  </td><td class="markdownTableBodyNone">+90ms  </td><td class="markdownTableBodyNone">+110ms  </td><td class="markdownTableBodyNone"><a class="el" href="structtts_1_1text.html" title="tts::text">tts::text</a> is TTS's own minimal string type  </td></tr>
 <tr class="markdownTableRowOdd">
@@ -186,43 +207,108 @@ Headers we avoid, and what they cost</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">&lt;map&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">avoided unless genuinely needed  </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">&lt;regex&gt;</span>  </td><td class="markdownTableBodyNone">+270ms (~3x)  </td><td class="markdownTableBodyNone">+350ms (~3.5x)  </td><td class="markdownTableBodyNone">not needed so far  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">&lt;thread&gt;</span>  </td><td class="markdownTableBodyNone">+200ms (~2.3x)  </td><td class="markdownTableBodyNone">+240ms (~2.8x)  </td><td class="markdownTableBodyNone">not needed so far  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">C arrays, sized by a constant  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="compile-time-hypothetical"></a>
-What it costs if you ever need one anyway</h1>
-<p>TTS doesn't need the two headers below for anything today, so there's no "avoided via" to point at - but if a future feature genuinely calls for one, here's what you'd be signing up for. Measure again before merging: these numbers drift with compiler version, and being unused today doesn't make them free tomorrow.</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">Added cost (g++)  </th><th class="markdownTableHeadNone">Added cost (clang++)  </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;regex&gt;</span>  </td><td class="markdownTableBodyNone">+270ms (~3x)  </td><td class="markdownTableBodyNone">+350ms (~3.5x)  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;thread&gt;</span>  </td><td class="markdownTableBodyNone">+200ms (~2.3x)  </td><td class="markdownTableBodyNone">+240ms (~2.8x)  </td></tr>
-</table>
-<h1 class="doxsection"><a class="anchor" id="compile-time-fine"></a>
-What's fine to use</h1>
-<p>Being on this page isn't a blanket ban on the standard library - it's a reminder to check before assuming. One example that already got measured and cleared:</p>
-<ul>
-<li><span class="tt">&lt;windows.h&gt;</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span> and included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, was measured on real <span class="tt">cl.exe</span> and found free relative to an empty translation unit - lighter, in fact, than the fragile forward-declare-the-three-functions-we-need workaround that seemed safer on paper. Platform-gated code still gets measured on that platform, not assumed safe or assumed expensive.</li>
-</ul>
-<h1 class="doxsection"><a class="anchor" id="compile-time-checklist"></a>
-Before you add a header</h1>
+<h2 class="doxsection"><a class="anchor" id="compile-time-fine"></a>
+Measured and cleared headers</h2>
+<p>A standard header stays allowed once measured as free. <span class="tt">&lt;windows.h&gt;</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span> and included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, measured on <span class="tt">cl.exe</span> as free relative to an empty translation unit, and lighter than declaring the three functions it provides by hand. Code reserved to a platform is measured on that platform.</p>
+<h2 class="doxsection"><a class="anchor" id="compile-time-checklist"></a>
+Checklist for a new header</h2>
 <ol type="1">
-<li>Check whether what you need is already available. <span class="tt">engine/deps.hpp</span> is included by essentially every TTS header and already pulls in <span class="tt">&lt;cstdio&gt;</span>, <span class="tt">&lt;cstdlib&gt;</span>, <span class="tt">&lt;cstring&gt;</span>, <span class="tt">&lt;type_traits&gt;</span>, <span class="tt">&lt;utility&gt;</span>, <span class="tt">&lt;initializer_list&gt;</span>, <span class="tt">&lt;cassert&gt;</span>, <span class="tt">&lt;bit&gt;</span>, <span class="tt">&lt;compare&gt;</span>, <span class="tt">&lt;concepts&gt;</span>, <span class="tt">&lt;cstdint&gt;</span>, <span class="tt">&lt;limits&gt;</span> and <span class="tt">&lt;new&gt;</span> - reusing one of those costs nothing further.</li>
-<li>If a new header genuinely seems necessary, measure it, don't guess. Write two near-identical translation units, one with the header and one without, and time both: <div class="fragment"><div class="line">time g++ -std=c++20 -I include -c file.cpp -o /dev/null</div>
-</div><!-- fragment --> Repeat several times (5-8 runs is usually enough to see past scheduler noise) and compare the best or average time against the baseline. Do this on more than one compiler if you can - the table above shows the same header can cost meaningfully different amounts on <span class="tt">g++</span> versus <span class="tt">clang++</span>.</li>
-<li>For a change spread across several files, <span class="tt">git worktree add ../tts-baseline main</span> gives you an untouched copy of <span class="tt">main</span> to diff against without disturbing your own working tree - build and time the same representative translation unit from both trees.</li>
-<li>Report the actual numbers in the pull request. "I checked and it's fine" asks a reviewer to either trust that blindly or redo the measurement themselves; the before/after numbers let them just read the answer.</li>
+<li><span class="tt">engine/deps.hpp</span>, which nearly every <b>TTS</b> header includes, already brings <span class="tt">&lt;cstdio&gt;</span>, <span class="tt">&lt;cstdlib&gt;</span>, <span class="tt">&lt;cstring&gt;</span>, <span class="tt">&lt;type_traits&gt;</span>, <span class="tt">&lt;utility&gt;</span>, <span class="tt">&lt;initializer_list&gt;</span>, <span class="tt">&lt;cassert&gt;</span>, <span class="tt">&lt;bit&gt;</span>, <span class="tt">&lt;compare&gt;</span>, <span class="tt">&lt;concepts&gt;</span>, <span class="tt">&lt;cstdint&gt;</span>, <span class="tt">&lt;limits&gt;</span> and <span class="tt">&lt;new&gt;</span>. Using one of them costs nothing more.</li>
+<li>A new header is measured on two near-identical translation units, one with the header and one without: <div class="fragment"><div class="line">time g++ -std=c++20 -I include -c file.cpp -o /dev/null</div>
+</div><!-- fragment --> Five to eight runs see past the scheduler noise; the best or the average time is compared with the baseline. The same header costs different amounts with <span class="tt">g++</span> and <span class="tt">clang++</span>, as the table shows, so both are measured.</li>
+<li>A change spread across several files is measured against an untouched copy of <span class="tt">main</span>, such as <span class="tt">git worktree add ../tts-baseline main</span>, by building the same representative translation unit in both trees.</li>
+<li>The pull request gives the numbers before and after the change.</li>
 </ol>
-<h1 class="doxsection"><a class="anchor" id="compile-time-precedent"></a>
-Precedent in this codebase</h1>
-<p>A few places in TTS exist specifically because of a header that didn't clear this bar - useful reading before writing a new one from scratch:</p>
+<h2 class="doxsection"><a class="anchor" id="compile-time-precedent"></a>
+Replacements written in TTS</h2>
+<p>These files exist because a standard header did not clear the bar, and serve as models for a new replacement:</p>
 <ul>
-<li><span class="tt">tools/clock.hpp</span> - a portable monotonic-nanosecond timer, not <span class="tt">std::chrono</span>.</li>
-<li><span class="tt">tools/file.hpp</span> - <span class="tt">file_guard</span>, a move-only RAII <span class="tt">FILE*</span> wrapper, not <span class="tt">std::unique_ptr</span>.</li>
-<li><span class="tt">tools/text.hpp</span> - <span class="tt"><a class="el" href="structtts_1_1text.html" title="Lightweight string-like object.">tts::text</a></span>, a minimal <span class="tt">malloc</span>/<span class="tt">snprintf</span>-based string type, not <span class="tt">std::string</span>. </li>
+<li><span class="tt">tools/clock.hpp</span>: a portable monotonic timer in nanoseconds, in place of <span class="tt">std::chrono</span>.</li>
+<li><span class="tt">tools/file.hpp</span>: <span class="tt">file_guard</span>, a move-only RAII <span class="tt">FILE*</span> wrapper, in place of <span class="tt">std::unique_ptr</span>.</li>
+<li><span class="tt">tools/text.hpp</span>: <span class="tt"><a class="el" href="structtts_1_1text.html" title="Lightweight string-like object.">tts::text</a></span>, a minimal string type built on <span class="tt">malloc</span> and <span class="tt">snprintf</span>, in place of <span class="tt">std::string</span>.</li>
 </ul>
-</div></div><!-- contents -->
+<h1 class="doxsection"><a class="anchor" id="compile-time-comparison"></a>
+Other test libraries</h1>
+<p>The charts give the CPU time of compiling one test unit with <span class="tt">-std=c++20 -c</span>, with <b>TTS</b> and with doctest, Catch2, GoogleTest, Boost.Test and ut, measured again at each build of this documentation. Every point is the median of several compilations.</p>
+<p>Measured on 2026-10-08 with clang++ 19.1.7 and g++ 15.2.0 and <code>-O0</code>, the median of 3 compilations per point, 2 at a time.</p>
+<p>Catch2 and GoogleTest compile their runner in a library of their own, which the charts do not count. doctest, Boost.Test, ut and <b>TTS</b> compile it in the unit that defines it.</p>
+<h2 class="doxsection"><a class="anchor" id="compile-time-comparison-include"></a>
+Minimal include cost</h2>
+<p>The unit holds the test runner and no test case.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-include.svg" alt="Minimal include cost with gcc"/>
+</li>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-include.svg" alt="Minimal include cost with clang"/>
+</li>
+</ul>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-cases"></a>
+Cost of test cases</h2>
+<p>The unit holds a growing number of test cases. A simple case runs three checks on two integers, and a template case runs the same three checks over <span class="tt">short</span>, <span class="tt">int</span>, <span class="tt">float</span> and <span class="tt">double</span>.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-simple.svg" alt="Compile time of simple test cases with gcc"/>
+<img src="bench/gcc-template.svg" alt="Compile time of template test cases with gcc"/>
+</li>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-simple.svg" alt="Compile time of simple test cases with clang"/>
+<img src="bench/clang-template.svg" alt="Compile time of template test cases with clang"/>
+</li>
+</ul>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-types"></a>
+Template machinery</h2>
+<p>The unit holds N test cases, each on a type of its own, then a single template test case over the same N types, with the largest N measured. The gap between the two bars is the cost of the template machinery of each library alone.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-types.svg" alt="Cases on distinct types against one template case, with gcc"/>
+</li>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-types.svg" alt="Cases on distinct types against one template case, with clang"/>
+</li>
+</ul>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-fits"></a>
+Fixed cost and crossings</h2>
+<p>Each curve is fitted by least squares as a fixed cost and a cost per test case. Where another library costs less per case than <b>TTS</b>, its line crosses the one of <b>TTS</b> at the number of cases the second table gives; <span class="tt">always</span> means it never does. Against Catch2 and GoogleTest, the crossing is a lower bound, their runner being left out.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
+<tr><td>TTS</td><td>\(0.21\,\mathrm{s} + 7.5\,\mathrm{ms} \cdot n\)</td><td>\(0.22\,\mathrm{s} + 32.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(4.96\,\mathrm{s} + 9.5\,\mathrm{ms} \cdot n\)</td><td>\(4.86\,\mathrm{s} + 89.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(0.58\,\mathrm{s} + 3.6\,\mathrm{ms} \cdot n\)</td><td>\(0.62\,\mathrm{s} + 20.6\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(0.60\,\mathrm{s} + 6.5\,\mathrm{ms} \cdot n\)</td><td>\(0.63\,\mathrm{s} + 53.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(1.35\,\mathrm{s} + 4.1\,\mathrm{ms} \cdot n\)</td><td>\(1.37\,\mathrm{s} + 21.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(1.26\,\mathrm{s} + 16.5\,\mathrm{ms} \cdot n\)</td><td>\(1.30\,\mathrm{s} + 64.5\,\mathrm{ms} \cdot n\)</td></tr>
+</table>
+<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
+<tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
+<tr><td>Catch2</td><td>95</td><td>33</td></tr>
+<tr><td>GoogleTest</td><td>411</td><td>always</td></tr>
+<tr><td>doctest</td><td>339</td><td>99</td></tr>
+<tr><td>ut</td><td>always</td><td>always</td></tr>
+</table>
+</li>
+<li><b class="tab-title">clang++</b> <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
+<tr><td>TTS</td><td>\(0.17\,\mathrm{s} + 3.9\,\mathrm{ms} \cdot n\)</td><td>\(0.18\,\mathrm{s} + 16.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(3.38\,\mathrm{s} + 6.7\,\mathrm{ms} \cdot n\)</td><td>\(3.33\,\mathrm{s} + 49.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(1.01\,\mathrm{s} + 3.0\,\mathrm{ms} \cdot n\)</td><td>\(1.03\,\mathrm{s} + 15.6\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(0.97\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td><td>\(0.99\,\mathrm{s} + 24.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(1.28\,\mathrm{s} + 3.2\,\mathrm{ms} \cdot n\)</td><td>\(1.28\,\mathrm{s} + 13.7\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(1.60\,\mathrm{s} + 10.5\,\mathrm{ms} \cdot n\)</td><td>\(1.59\,\mathrm{s} + 34.2\,\mathrm{ms} \cdot n\)</td></tr>
+</table>
+<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
+<tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
+<tr><td>Catch2</td><td>987</td><td>2082</td></tr>
+<tr><td>GoogleTest</td><td>2350</td><td>always</td></tr>
+<tr><td>doctest</td><td>1667</td><td>468</td></tr>
+<tr><td>ut</td><td>always</td><td>always</td></tr>
+</table>
+</li>
+</ul>
+</div><div class="tabbed"></div> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 </div><!-- container -->

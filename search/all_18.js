@@ -6,7 +6,6 @@ var searchData=
   ['ulp_5fcheck_3',['ulp_check',['../group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf',1,'tts']]],
   ['ulps_4',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
   ['usage_5',['Usage',['../output-sinks.html#autotoc_md48',1,'Manual Usage'],['../output-sinks.html#autotoc_md53',1,'Manual Usage'],['../output-sinks.html#autotoc_md58',1,'Manual Usage'],['../output-sinks.html#autotoc_md65',1,'Manual Usage'],['../output-sinks.html#autotoc_md71',1,'Manual Usage']]],
-  ['use_6',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
-  ['user_20defined_20type_7',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]],
-  ['utilities_8',['Utilities',['../group__tools-comparison.html',1,'Comparison Utilities'],['../group__tools-config.html',1,'Configuration Utilities'],['../group__tools-output.html',1,'Output Utilities'],['../group__tools-precision.html',1,'Precision Utilities'],['../group__tools-text.html',1,'Text Utilities'],['../group__tools-types.html',1,'Type Utilities'],['../group__tools-random.html',1,'Utilities']]]
+  ['user_20defined_20type_6',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]],
+  ['utilities_7',['Utilities',['../group__tools-comparison.html',1,'Comparison Utilities'],['../group__tools-config.html',1,'Configuration Utilities'],['../group__tools-output.html',1,'Output Utilities'],['../group__tools-precision.html',1,'Precision Utilities'],['../group__tools-text.html',1,'Text Utilities'],['../group__tools-types.html',1,'Type Utilities'],['../group__tools-random.html',1,'Utilities']]]
 ];

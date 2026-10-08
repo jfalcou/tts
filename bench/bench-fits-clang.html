@@ -1,0 +1,17 @@
+<p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
+<tr><td>TTS</td><td>\(0.17\,\mathrm{s} + 3.9\,\mathrm{ms} \cdot n\)</td><td>\(0.18\,\mathrm{s} + 16.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(3.38\,\mathrm{s} + 6.7\,\mathrm{ms} \cdot n\)</td><td>\(3.33\,\mathrm{s} + 49.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(1.01\,\mathrm{s} + 3.0\,\mathrm{ms} \cdot n\)</td><td>\(1.03\,\mathrm{s} + 15.6\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(0.97\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td><td>\(0.99\,\mathrm{s} + 24.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(1.28\,\mathrm{s} + 3.2\,\mathrm{ms} \cdot n\)</td><td>\(1.28\,\mathrm{s} + 13.7\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(1.60\,\mathrm{s} + 10.5\,\mathrm{ms} \cdot n\)</td><td>\(1.59\,\mathrm{s} + 34.2\,\mathrm{ms} \cdot n\)</td></tr>
+</table>
+<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
+<tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
+<tr><td>Catch2</td><td>987</td><td>2082</td></tr>
+<tr><td>GoogleTest</td><td>2350</td><td>always</td></tr>
+<tr><td>doctest</td><td>1667</td><td>468</td></tr>
+<tr><td>ut</td><td>always</td><td>always</td></tr>
+</table>
