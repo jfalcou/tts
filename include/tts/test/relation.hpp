@@ -79,7 +79,8 @@
   @def TTS_BIT_EQUAL
   @brief Performs equality comparison between the bits of two expressions
 
-  This comparison is performed by using memcmp on the underlying representation of both expressions.
+  This comparison goes through the `bit_equal` member of tts::comparison, a `memcmp` over the whole
+  object unless the type specializes it.
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
@@ -99,7 +100,8 @@
   @def TTS_BIT_NOT_EQUAL
   @brief Performs inequality comparison between the bits of two expressions
 
-  This comparison is performed by using memcmp on the underlying representation of both expressions.
+  This comparison goes through the `bit_equal` member of tts::comparison, a `memcmp` over the whole
+  object unless the type specializes it.
 
   @param LHS, RHS  Expressions to compare.
   @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.

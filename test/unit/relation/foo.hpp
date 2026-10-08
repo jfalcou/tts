@@ -22,16 +22,21 @@ namespace foo
   {
     return "foo::bar{" + tts::as_text(b.v) + "}";
   }
+}
 
-  inline bool compare_equal(foo::bar const& l, foo::bar const& r)
+namespace tts
+{
+  template<> struct comparison<foo::bar, foo::bar>
   {
-    return l.v == r.v;
-  }
-
-  inline bool compare_less(foo::bar const& l, foo::bar const& r)
-  {
-    return l.v < r.v;
-  }
+    static bool equal(foo::bar const& l, foo::bar const& r)
+    {
+      return l.v == r.v;
+    }
+    static bool less(foo::bar const& l, foo::bar const& r)
+    {
+      return l.v < r.v;
+    }
+  };
 }
 
 #endif

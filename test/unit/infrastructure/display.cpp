@@ -75,6 +75,60 @@ TTS_CASE("Check display of std::optional")
   TTS_EQUAL(tts::as_text(std::optional<int> {}), "optional<int>{}");
 };
 
+//==================================================================================================
+// operator<< is not a rendering hook. Up to 2.2 it was tried before the dumps; since 3.0 a type
+// renders through tts::display<T> or not at all, and these two pin that down.
+//==================================================================================================
+struct temperature
+{
+  double               celsius;
+
+  friend std::ostream& operator<<(std::ostream& os, temperature t)
+  {
+    return os << t.celsius << "C";
+  }
+};
+
+struct reading_log
+{
+  double        samples[ 3 ]; // NOSONAR - a raw array is the shape under test here
+
+  double const* begin() const
+  {
+    return samples;
+  }
+  double const* end() const
+  {
+    return samples + 3;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, reading_log const& l)
+  {
+    os << "log[";
+    for(auto v: l)
+      os << ' ' << v;
+    return os << " ]";
+  }
+};
+
+TTS_CASE("Check a streamable type still falls on the byte dump")
+{
+  temperature const t {21.5};
+#if defined(_MSC_VER) && !defined(__clang__)
+  TTS_EQUAL(tts::as_text(t), "struct temperature: [ 00 00 00 00 00 80 35 40 ]");
+#else
+  TTS_EQUAL(tts::as_text(t), "temperature: [ 00 00 00 00 00 80 35 40 ]");
+#endif
+};
+
+TTS_CASE("Check a streamable sequence still falls on the element dump")
+{
+  reading_log const log {
+  {1., 2., 3.}
+  };
+  TTS_EQUAL(tts::as_text(log), "{ 1 2 3 }");
+};
+
 struct payload
 {
   double       d;

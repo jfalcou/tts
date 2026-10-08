@@ -64,6 +64,7 @@ copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  unit.infrastructure.exe
                         FILES         unit/relation/main.cpp
                                       unit/relation/bit_equal.cpp
+                                      unit/relation/comparison.cpp
                                       unit/relation/equal.cpp
                                       unit/relation/greater.cpp
                                       unit/relation/greater_equal.cpp
@@ -77,6 +78,7 @@ copa_make_single_unit ( INTERFACE     tts_test
 copa_make_single_unit ( INTERFACE     tts_test
                         DEPENDENCIES  unit.infrastructure.exe
                         FILES         unit/generator/main.cpp
+                                      unit/generator/customization.cpp
                                       unit/generator/generator.cpp
                                       unit/generator/limits.cpp
                                       unit/generator/types.cpp

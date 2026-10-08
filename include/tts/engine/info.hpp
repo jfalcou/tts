@@ -14,11 +14,44 @@
 namespace tts::_
 {
   //====================================================================================================================
-  // Reporting functions declarations (Implemented in main.hpp via TTS_MAIN)
+  // Reporting functions. Inline rather than outlined under TTS_MAIN: a translation unit that writes
+  // its own main and uses the checks has to link without the driver.
   //====================================================================================================================
-  void report_pass(char const* location, char const* message);
-  void report_fail(char const* location, char const* message, ::tts::text const& type);
-  void report_fatal(char const* location, char const* message, ::tts::text const& type);
+  // Shared by report_fail/report_fatal - the only place the failing type shows up outside verbose.
+  inline void report_type_hint(::tts::text const& type)
+  {
+    if(!::tts::is_verbose() && !type.is_empty())
+      ::tts::output().writeln(">  With <T = %s>", type.data());
+  }
+
+  inline void report_pass(char const* location, char const* message)
+  {
+    if(::tts::is_detailed())
+    {
+      ::tts::output().writeln("  [+] %s : %s", location, message);
+    }
+  }
+
+  inline void report_fail(char const* location, char const* message, ::tts::text const& type)
+  {
+    report_type_hint(type);
+
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
+
+    if(!::tts::is_quiet())
+    {
+      ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
+    }
+  }
+
+  inline void report_fatal(char const* location, char const* message, ::tts::text const& type)
+  {
+    report_type_hint(type);
+
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
+
+    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
+  }
 }
 
 //======================================================================================================================

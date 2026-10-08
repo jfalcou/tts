@@ -40,7 +40,7 @@ TTS_CASE("Relative equality over sequence")
 
   TTS_ALL_RELATIVE_EQUAL(v, v, 0);
   TTS_ALL_RELATIVE_EQUAL(v, w, 0);
-  TTS_ALL_RELATIVE_EQUAL(v, z, 3.33);
+  TTS_ALL_RELATIVE_EQUAL(v, z, 0.0333);
   TTS_ALL_RELATIVE_EQUAL(v, w, 0, REQUIRED);
 };
 
