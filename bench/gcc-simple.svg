@@ -2,48 +2,44 @@
 <text x="56" y="22" fill="#808080" font-size="14">g++ 15.2.0 -O0, three checks per case</text>
 <line x1="56" x2="550" y1="356.0" y2="356.0" stroke="#808080" stroke-opacity="0.3"/>
 <text x="50" y="360.0" fill="#808080" text-anchor="end">0 s</text>
-<line x1="56" x2="550" y1="292.8" y2="292.8" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50" y="296.8" fill="#808080" text-anchor="end">2 s</text>
-<line x1="56" x2="550" y1="229.6" y2="229.6" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50" y="233.6" fill="#808080" text-anchor="end">4 s</text>
-<line x1="56" x2="550" y1="166.4" y2="166.4" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50" y="170.4" fill="#808080" text-anchor="end">6 s</text>
-<line x1="56" x2="550" y1="103.2" y2="103.2" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50" y="107.2" fill="#808080" text-anchor="end">8 s</text>
+<line x1="56" x2="550" y1="250.7" y2="250.7" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="254.7" fill="#808080" text-anchor="end">2 s</text>
+<line x1="56" x2="550" y1="145.3" y2="145.3" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="149.3" fill="#808080" text-anchor="end">4 s</text>
 <line x1="56" x2="550" y1="40.0" y2="40.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50" y="44.0" fill="#808080" text-anchor="end">10 s</text>
+<text x="50" y="44.0" fill="#808080" text-anchor="end">6 s</text>
 <text x="58.5" y="372" fill="#808080" text-anchor="middle">1</text>
 <text x="179.5" y="372" fill="#808080" text-anchor="middle">50</text>
 <text x="550.0" y="372" fill="#808080" text-anchor="middle">200</text>
 <text x="303.0" y="392" fill="#808080" text-anchor="middle">test cases in the unit</text>
-<text x="558" y="304.4" fill="#2e86ab" font-weight="bold">Catch2 +4.9 ms</text>
-<text x="558" y="290.0" fill="#d1495b" font-weight="bold">TTS +9.7 ms</text>
-<text x="558" y="276.0" fill="#e09f3e" font-weight="bold">GoogleTest +8.3 ms</text>
-<text x="558" y="262.0" fill="#3fa34d" font-weight="bold">doctest +5.4 ms</text>
-<text x="558" y="176.4" fill="#5c8a8a" font-weight="bold">ut +20.8 ms</text>
-<text x="558" y="97.8" fill="#8e6bbf" font-weight="bold">Boost.Test +11.1 ms</text>
-<polyline points="58.5,164.5 179.5,144.9 550.0,93.8" fill="none" stroke="#8e6bbf" stroke-width="2.5"/>
-<circle cx="58.5" cy="164.5" r="3" fill="#8e6bbf"/>
-<circle cx="179.5" cy="144.9" r="3" fill="#8e6bbf"/>
-<circle cx="550.0" cy="93.8" r="3" fill="#8e6bbf"/>
-<polyline points="58.5,331.5 179.5,323.2 550.0,300.4" fill="none" stroke="#2e86ab" stroke-width="2.5"/>
-<circle cx="58.5" cy="331.5" r="3" fill="#2e86ab"/>
-<circle cx="179.5" cy="323.2" r="3" fill="#2e86ab"/>
-<circle cx="550.0" cy="300.4" r="3" fill="#2e86ab"/>
-<polyline points="58.5,300.6 179.5,292.5 550.0,266.6" fill="none" stroke="#3fa34d" stroke-width="2.5"/>
-<circle cx="58.5" cy="300.6" r="3" fill="#3fa34d"/>
-<circle cx="179.5" cy="292.5" r="3" fill="#3fa34d"/>
-<circle cx="550.0" cy="266.6" r="3" fill="#3fa34d"/>
-<polyline points="58.5,329.4 179.5,317.7 550.0,277.4" fill="none" stroke="#e09f3e" stroke-width="2.5"/>
-<circle cx="58.5" cy="329.4" r="3" fill="#e09f3e"/>
-<circle cx="179.5" cy="317.7" r="3" fill="#e09f3e"/>
-<circle cx="550.0" cy="277.4" r="3" fill="#e09f3e"/>
-<polyline points="58.5,346.9 179.5,331.9 550.0,286.0" fill="none" stroke="#d1495b" stroke-width="2.5"/>
-<circle cx="58.5" cy="346.9" r="3" fill="#d1495b"/>
-<circle cx="179.5" cy="331.9" r="3" fill="#d1495b"/>
-<circle cx="550.0" cy="286.0" r="3" fill="#d1495b"/>
-<polyline points="58.5,302.6 179.5,271.4 550.0,172.4" fill="none" stroke="#5c8a8a" stroke-width="2.5"/>
-<circle cx="58.5" cy="302.6" r="3" fill="#5c8a8a"/>
-<circle cx="179.5" cy="271.4" r="3" fill="#5c8a8a"/>
-<circle cx="550.0" cy="172.4" r="3" fill="#5c8a8a"/>
+<text x="558" y="310.3" fill="#2e86ab" font-weight="bold">Catch2 +2.5 ms</text>
+<text x="558" y="292.1" fill="#d1495b" font-weight="bold">TTS +5.6 ms</text>
+<text x="558" y="278.1" fill="#e09f3e" font-weight="bold">GoogleTest +5.0 ms</text>
+<text x="558" y="264.1" fill="#3fa34d" font-weight="bold">doctest +3.3 ms</text>
+<text x="558" y="172.2" fill="#5c8a8a" font-weight="bold">ut +13.1 ms</text>
+<text x="558" y="90.6" fill="#8e6bbf" font-weight="bold">Boost.Test +6.5 ms</text>
+<polyline points="58.5,154.9 179.5,136.0 550.0,86.6" fill="none" stroke="#8e6bbf" stroke-width="2.5"/>
+<circle cx="58.5" cy="154.9" r="3" fill="#8e6bbf"/>
+<circle cx="179.5" cy="136.0" r="3" fill="#8e6bbf"/>
+<circle cx="550.0" cy="86.6" r="3" fill="#8e6bbf"/>
+<polyline points="58.5,333.0 179.5,326.2 550.0,306.3" fill="none" stroke="#2e86ab" stroke-width="2.5"/>
+<circle cx="58.5" cy="333.0" r="3" fill="#2e86ab"/>
+<circle cx="179.5" cy="326.2" r="3" fill="#2e86ab"/>
+<circle cx="550.0" cy="306.3" r="3" fill="#2e86ab"/>
+<polyline points="58.5,299.4 179.5,292.7 550.0,265.0" fill="none" stroke="#3fa34d" stroke-width="2.5"/>
+<circle cx="58.5" cy="299.4" r="3" fill="#3fa34d"/>
+<circle cx="179.5" cy="292.7" r="3" fill="#3fa34d"/>
+<circle cx="550.0" cy="265.0" r="3" fill="#3fa34d"/>
+<polyline points="58.5,330.8 179.5,319.7 550.0,278.7" fill="none" stroke="#e09f3e" stroke-width="2.5"/>
+<circle cx="58.5" cy="330.8" r="3" fill="#e09f3e"/>
+<circle cx="179.5" cy="319.7" r="3" fill="#e09f3e"/>
+<circle cx="550.0" cy="278.7" r="3" fill="#e09f3e"/>
+<polyline points="58.5,347.0 179.5,332.7 550.0,288.1" fill="none" stroke="#d1495b" stroke-width="2.5"/>
+<circle cx="58.5" cy="347.0" r="3" fill="#d1495b"/>
+<circle cx="179.5" cy="332.7" r="3" fill="#d1495b"/>
+<circle cx="550.0" cy="288.1" r="3" fill="#d1495b"/>
+<polyline points="58.5,303.9 179.5,275.3 550.0,168.2" fill="none" stroke="#5c8a8a" stroke-width="2.5"/>
+<circle cx="58.5" cy="303.9" r="3" fill="#5c8a8a"/>
+<circle cx="179.5" cy="275.3" r="3" fill="#5c8a8a"/>
+<circle cx="550.0" cy="168.2" r="3" fill="#5c8a8a"/>
 </svg>
