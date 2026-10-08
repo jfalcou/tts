@@ -25,6 +25,7 @@ TITLES = {"simple": "three checks per case", "template": "three checks per case,
 WIDTH, HEIGHT = 720, 400
 LEFT, RIGHT, TOP, BOTTOM = 56, 170, 40, 44
 INK = "#808080"
+SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" font-family="sans-serif" font-size="12">'
 
 
 def step_for(top):
@@ -46,7 +47,7 @@ def linear_fit(line):
     return my - slope * mx, slope
 
 
-def chart(points, compiler, form, version):
+def chart(points, form, version):
     xmax = max(c for c, _ in (p for line in points.values() for p in line))
     step = step_for(max(t for line in points.values() for _, t in line))
     ymax = step * math.ceil(max(t for line in points.values() for _, t in line) / step)
@@ -57,8 +58,7 @@ def chart(points, compiler, form, version):
     def y(t):
         return HEIGHT - BOTTOM - (HEIGHT - TOP - BOTTOM) * t / ymax
 
-    out = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" font-family="sans-serif" font-size="12">'
-           % (WIDTH, HEIGHT)]
+    out = [SVG % (WIDTH, HEIGHT)]
     out.append('<text x="%d" y="22" fill="%s" font-size="14">%s, %s</text>' % (LEFT, INK, version, TITLES[form]))
     tick = 0.0
     while tick <= ymax + 1e-9:
@@ -103,9 +103,8 @@ def include_chart(rows, version):
     def x(t):
         return left + (WIDTH - left - right) * t / xmax
 
-    out = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" font-family="sans-serif" font-size="12">'
-           % (WIDTH, height)]
-    out.append('<text x="%d" y="22" fill="%s" font-size="14">%s, minimal include cost</text>' % (left, INK, version))
+    out = [SVG % (WIDTH, height),
+           '<text x="%d" y="22" fill="%s" font-size="14">%s, minimal include cost</text>' % (left, INK, version)]
     tick = 0.0
     while tick <= xmax + 1e-9:
         out.append('<line x1="%.1f" x2="%.1f" y1="%d" y2="%d" stroke="%s" stroke-opacity="0.3"/>'
@@ -115,11 +114,11 @@ def include_chart(rows, version):
         tick += step
     for row, (lib, cpu, peak) in enumerate(rows):
         y = TOP + 28 * row + 6
-        out.append('<text x="%d" y="%d" fill="%s" font-weight="bold" text-anchor="end">%s</text>'
-                   % (left - 8, y + 12, COLORS[lib], NAMES[lib]))
-        out.append('<rect x="%d" y="%d" width="%.1f" height="16" fill="%s"/>' % (left, y, x(cpu) - left, COLORS[lib]))
-        out.append('<text x="%.1f" y="%d" fill="%s">%.2f s, %d MiB</text>'
-                   % (x(cpu) + 6, y + 12, INK, cpu, peak // 1024))
+        out.extend(['<text x="%d" y="%d" fill="%s" font-weight="bold" text-anchor="end">%s</text>'
+                    % (left - 8, y + 12, COLORS[lib], NAMES[lib]),
+                    '<rect x="%d" y="%d" width="%.1f" height="16" fill="%s"/>' % (left, y, x(cpu) - left, COLORS[lib]),
+                    '<text x="%.1f" y="%d" fill="%s">%.2f s, %d MiB</text>'
+                    % (x(cpu) + 6, y + 12, INK, cpu, peak // 1024)])
     out.append("</svg>")
     return "\n".join(out)
 
@@ -136,10 +135,9 @@ def types_chart(pairs, version, n):
     def x(t):
         return left + (WIDTH - left - right) * t / xmax
 
-    out = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" font-family="sans-serif" font-size="12">'
-           % (WIDTH, height)]
-    out.append('<text x="%d" y="22" fill="%s" font-size="14">%s, %d cases on %d types, or one template case</text>'
-               % (left, INK, version, n, n))
+    out = [SVG % (WIDTH, height),
+           '<text x="%d" y="22" fill="%s" font-size="14">%s, %d cases on %d types, or one template case</text>'
+           % (left, INK, version, n, n)]
     tick = 0.0
     while tick <= xmax + 1e-9:
         out.append('<line x1="%.1f" x2="%.1f" y1="%d" y2="%d" stroke="%s" stroke-opacity="0.3"/>'
@@ -149,15 +147,15 @@ def types_chart(pairs, version, n):
         tick += step
     for row, (lib, (separate, together)) in enumerate(rows):
         y = TOP + 44 * row + 4
-        out.append('<text x="%d" y="%d" fill="%s" font-weight="bold" text-anchor="end">%s</text>'
-                   % (left - 8, y + 20, COLORS[lib], NAMES[lib]))
-        out.append('<rect x="%d" y="%d" width="%.1f" height="14" fill="%s"/>'
-                   % (left, y, x(separate) - left, COLORS[lib]))
-        out.append('<rect x="%d" y="%d" width="%.1f" height="14" fill="%s" fill-opacity="0.45"/>'
-                   % (left, y + 17, x(together) - left, COLORS[lib]))
-        out.append('<text x="%.1f" y="%d" fill="%s">%.2f s</text>' % (x(separate) + 6, y + 11, INK, separate))
-        out.append('<text x="%.1f" y="%d" fill="%s">%.2f s, %+.0f %%</text>'
-                   % (x(together) + 6, y + 28, INK, together, 100 * (together - separate) / separate))
+        out.extend(['<text x="%d" y="%d" fill="%s" font-weight="bold" text-anchor="end">%s</text>'
+                    % (left - 8, y + 20, COLORS[lib], NAMES[lib]),
+                    '<rect x="%d" y="%d" width="%.1f" height="14" fill="%s"/>'
+                    % (left, y, x(separate) - left, COLORS[lib]),
+                    '<rect x="%d" y="%d" width="%.1f" height="14" fill="%s" fill-opacity="0.45"/>'
+                    % (left, y + 17, x(together) - left, COLORS[lib]),
+                    '<text x="%.1f" y="%d" fill="%s">%.2f s</text>' % (x(separate) + 6, y + 11, INK, separate),
+                    '<text x="%.1f" y="%d" fill="%s">%.2f s, %+.0f %%</text>'
+                    % (x(together) + 6, y + 28, INK, together, 100 * (together - separate) / separate)])
     out.append('<text x="%d" y="%d" fill="%s">solid: %d separate cases, light: one template case</text>'
                % (left, height - 10, INK, n))
     out.append("</svg>")
@@ -191,85 +189,92 @@ def summary(data, fits, types=None):
     return {name: text + "\n" for name, text in blocks.items()}
 
 
+def crossing(tts, other):
+    """Cases up to which TTS compiles faster: a library cheaper per case crosses it at (a' - a) / (b - b')."""
+    (a, b), (fixed, per_case) = tts, other
+    if b <= per_case:
+        return "always" if a <= fixed else "never"
+    cases = (fixed - a) / (b - per_case)
+    return "%.0f" % cases if cases > 0 else "never"
+
+
 def fit_tables(forms, fits, libraries):
     """Fitted costs, then crossing points with TTS."""
     head = "".join("<th>%s cases</th>" % f for _, f in forms)
-    out = ['<p>Cost of a unit holding \\(n\\) test cases, fitted as a fixed part and a part per case:</p>']
-    out.append('<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th>%s</tr>' % head)
+    out = ['<p>Cost of a unit holding \\(n\\) test cases, fitted as a fixed part and a part per case:</p>',
+           '<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th>%s</tr>' % head]
     for lib in libraries:
         # MathJax 2 renders \( \) in raw HTML; $ is not one of its delimiters by default.
         cells = "".join("<td>\\(%.2f\\,\\mathrm{s} + %.1f\\,\\mathrm{ms} \\cdot n\\)</td>"
                         % (fits[cf][lib][0], 1000 * fits[cf][lib][1]) if lib in fits[cf]
                         else "<td></td>" for cf in forms)
         out.append("<tr><td>%s</td>%s</tr>" % (NAMES[lib], cells))
-    out.append("</table>")
-    out.append('<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>')
-    out.append('<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th>%s</tr>' % head)
-    for lib in libraries:
-        if lib == "tts":
-            continue
-        cells = []
-        for cf in forms:
-            if lib not in fits[cf] or "tts" not in fits[cf]:
-                cells.append("<td></td>")
-                continue
-            (a, b), (fixed, per_case) = fits[cf]["tts"], fits[cf][lib]
-            if b <= per_case:
-                cells.append("<td>%s</td>" % ("always" if a <= fixed else "never"))
-            else:
-                crossing = (fixed - a) / (b - per_case)
-                cells.append("<td>%s</td>" % ("%.0f" % crossing if crossing > 0 else "never"))
-        out.append("<tr><td>%s</td>%s</tr>" % (NAMES[lib], "".join(cells)))
+    out.extend(["</table>",
+                '<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>',
+                '<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th>%s</tr>' % head])
+    for lib in (lib for lib in libraries if lib != "tts"):
+        cells = "".join("<td>%s</td>" % (crossing(fits[cf]["tts"], fits[cf][lib])
+                                          if lib in fits[cf] and "tts" in fits[cf] else "") for cf in forms)
+        out.append("<tr><td>%s</td>%s</tr>" % (NAMES[lib], cells))
     out.append("</table>")
     return "\n".join(out)
+
+
+def save(destination, name, text):
+    destination.mkdir(parents=True, exist_ok=True)  # NOSONAR - a path the build gives
+    (destination / name).write_text(text)  # NOSONAR - a path the build gives
+
+
+def case_charts(data, compiler, version, destination):
+    """The line charts of one compiler, and its fitted costs by form."""
+    fits_by_form = {}
+    for form in TITLES:
+        points = {}
+        for r in data["results"]:
+            if r["compiler"] == compiler and r["form"] == form:
+                points.setdefault(r["library"], []).append((r["cases"], r["cpu"]))
+        if not points:
+            continue
+        points = {lib: sorted(line) for lib, line in sorted(points.items())}
+        fits = {lib: linear_fit(line) for lib, line in points.items()}
+        fits_by_form[(compiler, form)] = fits
+        for lib, (fixed, per_case) in fits.items():
+            print("%-6s %-9s %-11s %7.3f s + %6.2f ms per case" % (compiler, form, NAMES[lib], fixed, 1000 * per_case))
+            if lib != "tts" and "tts" in fits:
+                print("%-6s %-9s TTS ahead of %s: %s" % (compiler, form, NAMES[lib], crossing(fits["tts"], fits[lib])))
+        save(destination, "%s-%s.svg" % (compiler, form), chart(points, form, version))
+    return fits_by_form
+
+
+def types_pairs(data, compiler):
+    """At the largest N, the time of N separate cases and of one template case, per library."""
+    rows = [r for r in data["results"] if r["compiler"] == compiler and r["form"] in ("distinct", "onetemplate")]
+    if not rows:
+        return 0, {}
+    n = max(r["cases"] for r in rows)
+    pairs = {}
+    for r in (r for r in rows if r["cases"] == n):
+        pairs.setdefault(r["library"], [0.0, 0.0])[r["form"] == "onetemplate"] = r["cpu"]
+    return n, pairs
 
 
 def main(results, destination):
     data = json.loads(pathlib.Path(results).read_text())
     destination = pathlib.Path(destination)
-    destination.mkdir(parents=True, exist_ok=True)
-    all_fits = {}
+    all_fits, types = {}, {}
     for compiler, version in data["compilers"].items():
         version = "%s %s" % (version, data.get("options", ""))
         rows = [(r["library"], r["cpu"], r["peak_kib"]) for r in data["results"]
                 if r["compiler"] == compiler and r["form"] == "include"]
         if rows:
-            (destination / ("%s-include.svg" % compiler)).write_text(include_chart(rows, version))
-        for form in TITLES:
-            points = {}
-            for r in data["results"]:
-                if r["compiler"] == compiler and r["form"] == form:
-                    points.setdefault(r["library"], []).append((r["cases"], r["cpu"]))
-            points = {lib: sorted(line) for lib, line in sorted(points.items())}
-            fits = {lib: linear_fit(line) for lib, line in points.items()}
-            if fits:
-                all_fits[(compiler, form)] = fits
-            for lib, (fixed, per_case) in fits.items():
-                print("%-6s %-9s %-11s %7.3f s + %6.2f ms per case"
-                      % (compiler, form, NAMES[lib], fixed, 1000 * per_case))
-            # A library cheaper per case than TTS crosses it at (a' - a) / (b - b').
-            if "tts" in fits:
-                a, b = fits["tts"]
-                for lib, (fixed, per_case) in fits.items():
-                    if lib != "tts" and b > per_case:
-                        print("%-6s %-9s TTS stays ahead of %s up to %.0f cases"
-                              % (compiler, form, NAMES[lib], (fixed - a) / (b - per_case)))
-            if points:
-                (destination / ("%s-%s.svg" % (compiler, form))).write_text(chart(points, compiler, form, version))
-    types = {}
-    for compiler, version in data["compilers"].items():
-        version = "%s %s" % (version, data.get("options", ""))
-        rows = [r for r in data["results"] if r["compiler"] == compiler and r["form"] in ("distinct", "onetemplate")]
-        if rows:
-            n = max(r["cases"] for r in rows)
-            pairs = {}
-            for r in rows:
-                if r["cases"] == n:
-                    pairs.setdefault(r["library"], [0.0, 0.0])[r["form"] == "onetemplate"] = r["cpu"]
+            save(destination, "%s-include.svg" % compiler, include_chart(rows, version))
+        all_fits.update(case_charts(data, compiler, version, destination))
+        n, pairs = types_pairs(data, compiler)
+        if pairs:
             types[compiler] = n
-            (destination / ("%s-types.svg" % compiler)).write_text(types_chart(pairs, version, n))
+            save(destination, "%s-types.svg" % compiler, types_chart(pairs, version, n))
     for name, text in summary(data, all_fits, types).items():
-        (destination / name).write_text(text)
+        save(destination, name, text)
 
 
 if __name__ == "__main__":

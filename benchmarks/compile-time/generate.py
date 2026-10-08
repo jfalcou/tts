@@ -15,46 +15,46 @@ TYPES = "short, int, float, double"
 SETUP = "  T a = T({i}), b = T({i} + 1);\n"
 
 LIBRARIES = {
-  "tts": dict(
-    head="#define TTS_MAIN\n#include <tts/tts.hpp>\n",
-    simple='TTS_CASE("case {i}")\n{{\n  int a = {i}, b = {i} + 1;\n  TTS_EQUAL(a, {i});\n  TTS_NOT_EQUAL(a, b);\n'
+  "tts": {
+    "head": "#define TTS_MAIN\n#include <tts/tts.hpp>\n",
+    "simple": 'TTS_CASE("case {i}")\n{{\n  int a = {i}, b = {i} + 1;\n  TTS_EQUAL(a, {i});\n  TTS_NOT_EQUAL(a, b);\n'
            '  TTS_EXPECT(a < b);\n}};\n',
-    template='TTS_CASE_TPL("case {i}", ' + TYPES + ')\n<typename T>(tts::type<T>)\n{{\n' + SETUP +
-             '  TTS_EQUAL(a, T({i}));\n  TTS_NOT_EQUAL(a, b);\n  TTS_EXPECT(a < b);\n}};\n'),
-  "catch2": dict(
-    head="#include <catch2/catch_template_test_macros.hpp>\n#include <catch2/catch_test_macros.hpp>\n",
-    simple='TEST_CASE("case {i}")\n{{\n  int a = {i}, b = {i} + 1;\n  CHECK(a == {i});\n  CHECK(a != b);\n'
+    "template": 'TTS_CASE_TPL("case {i}", ' + TYPES + ')\n<typename T>(tts::type<T>)\n{{\n' + SETUP +
+             '  TTS_EQUAL(a, T({i}));\n  TTS_NOT_EQUAL(a, b);\n  TTS_EXPECT(a < b);\n}};\n'},
+  "catch2": {
+    "head": "#include <catch2/catch_template_test_macros.hpp>\n#include <catch2/catch_test_macros.hpp>\n",
+    "simple": 'TEST_CASE("case {i}")\n{{\n  int a = {i}, b = {i} + 1;\n  CHECK(a == {i});\n  CHECK(a != b);\n'
            '  CHECK(a < b);\n}}\n',
-    template='TEMPLATE_TEST_CASE("case {i}", "", ' + TYPES + ')\n{{\n  using T = TestType;\n' + SETUP +
-             '  CHECK(a == T({i}));\n  CHECK(a != b);\n  CHECK(a < b);\n}}\n'),
-  "doctest": dict(
-    head="#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n#include <doctest/doctest.h>\n",
-    simple='TEST_CASE("case {i}")\n{{\n  int a = {i}, b = {i} + 1;\n  CHECK(a == {i});\n  CHECK(a != b);\n'
+    "template": 'TEMPLATE_TEST_CASE("case {i}", "", ' + TYPES + ')\n{{\n  using T = TestType;\n' + SETUP +
+             '  CHECK(a == T({i}));\n  CHECK(a != b);\n  CHECK(a < b);\n}}\n'},
+  "doctest": {
+    "head": "#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n#include <doctest/doctest.h>\n",
+    "simple": 'TEST_CASE("case {i}")\n{{\n  int a = {i}, b = {i} + 1;\n  CHECK(a == {i});\n  CHECK(a != b);\n'
            '  CHECK(a < b);\n}}\n',
-    template='TEST_CASE_TEMPLATE("case {i}", T, ' + TYPES + ')\n{{\n' + SETUP +
-             '  CHECK(a == T({i}));\n  CHECK(a != b);\n  CHECK(a < b);\n}}\n'),
-  "gtest": dict(
-    head="#include <gtest/gtest.h>\nusing Types = ::testing::Types<" + TYPES + ">;\n",
-    simple='TEST(Suite, Case{i})\n{{\n  int a = {i}, b = {i} + 1;\n  EXPECT_EQ(a, {i});\n  EXPECT_NE(a, b);\n'
+    "template": 'TEST_CASE_TEMPLATE("case {i}", T, ' + TYPES + ')\n{{\n' + SETUP +
+             '  CHECK(a == T({i}));\n  CHECK(a != b);\n  CHECK(a < b);\n}}\n'},
+  "gtest": {
+    "head": "#include <gtest/gtest.h>\nusing Types = ::testing::Types<" + TYPES + ">;\n",
+    "simple": 'TEST(Suite, Case{i})\n{{\n  int a = {i}, b = {i} + 1;\n  EXPECT_EQ(a, {i});\n  EXPECT_NE(a, b);\n'
            '  EXPECT_LT(a, b);\n}}\n',
-    template='template<typename T> struct S{i} : ::testing::Test {{}};\nTYPED_TEST_SUITE(S{i}, Types);\n'
+    "template": 'template<typename T> struct S{i} : ::testing::Test {{}};\nTYPED_TEST_SUITE(S{i}, Types);\n'
              'TYPED_TEST(S{i}, Case)\n{{\n  using T = TypeParam;\n' + SETUP +
-             '  EXPECT_EQ(a, T({i}));\n  EXPECT_NE(a, b);\n  EXPECT_LT(a, b);\n}}\n'),
-  "boost": dict(
-    head="#define BOOST_TEST_MODULE bench\n#include <boost/test/included/unit_test.hpp>\n#include <tuple>\n"
+             '  EXPECT_EQ(a, T({i}));\n  EXPECT_NE(a, b);\n  EXPECT_LT(a, b);\n}}\n'},
+  "boost": {
+    "head": "#define BOOST_TEST_MODULE bench\n#include <boost/test/included/unit_test.hpp>\n#include <tuple>\n"
          "using Types = std::tuple<" + TYPES + ">;\n",
-    simple='BOOST_AUTO_TEST_CASE(case_{i})\n{{\n  int a = {i}, b = {i} + 1;\n  BOOST_CHECK_EQUAL(a, {i});\n'
+    "simple": 'BOOST_AUTO_TEST_CASE(case_{i})\n{{\n  int a = {i}, b = {i} + 1;\n  BOOST_CHECK_EQUAL(a, {i});\n'
            '  BOOST_CHECK_NE(a, b);\n  BOOST_CHECK_LT(a, b);\n}}\n',
-    template='BOOST_AUTO_TEST_CASE_TEMPLATE(case_{i}, T, Types)\n{{\n' + SETUP +
-             '  BOOST_CHECK(a == T({i}));\n  BOOST_CHECK(a != b);\n  BOOST_CHECK(a < b);\n}}\n'),
-  "ut": dict(
-    head="#include <boost/ut.hpp>\n#include <tuple>\nusing namespace boost::ut;\n",
-    simple='static suite<"s{i}"> s{i} = [] {{\n  "case {i}"_test = [] {{\n    int a = {i}, b = {i} + 1;\n'
+    "template": 'BOOST_AUTO_TEST_CASE_TEMPLATE(case_{i}, T, Types)\n{{\n' + SETUP +
+             '  BOOST_CHECK(a == T({i}));\n  BOOST_CHECK(a != b);\n  BOOST_CHECK(a < b);\n}}\n'},
+  "ut": {
+    "head": "#include <boost/ut.hpp>\n#include <tuple>\nusing namespace boost::ut;\n",
+    "simple": 'static suite<"s{i}"> s{i} = [] {{\n  "case {i}"_test = [] {{\n    int a = {i}, b = {i} + 1;\n'
            '    expect(a == {i}_i);\n    expect(a != b);\n    expect(a < b);\n  }};\n}};\n',
-    template='static suite<"s{i}"> s{i} = [] {{\n  "case {i}"_test = []<class T>(T) {{\n  ' + SETUP +
+    "template": 'static suite<"s{i}"> s{i} = [] {{\n  "case {i}"_test = []<class T>(T) {{\n  ' + SETUP +
              '    expect(a == T({i}));\n    expect(a != b);\n    expect(a < b);\n  }} | std::tuple<' + TYPES +
              '>{{}};\n}};\n',
-    tail="int main() {}\n"),
+    "tail": "int main() {}\n"},
 }
 
 ## distinct and onetemplate check the same types, so their gap is the template machinery alone.
@@ -108,6 +108,10 @@ def one_template(name, n):
             % (body, types, values))
 
 
+def write(path, text):
+    path.write_text(text)  # NOSONAR - a path the build gives
+
+
 def counts(text):
     return [int(n) for n in text.replace(";", ",").split(",") if n]
 
@@ -121,19 +125,19 @@ def main():
     args = ap.parse_args()
 
     out = pathlib.Path(args.output)
-    out.mkdir(parents=True, exist_ok=True)
+    out.mkdir(parents=True, exist_ok=True)  # NOSONAR - a path the build gives
     for stale in out.glob("*.cpp"):
-        stale.unlink()
+        stale.unlink()  # NOSONAR - a path the build gives
     for name, lib in LIBRARIES.items():
-        (out / ("%s-include-0.cpp" % name)).write_text(lib["head"] + lib.get("tail", ""))
+        write(out / ("%s-include-0.cpp" % name), lib["head"] + lib.get("tail", ""))
         for form, sizes in (("simple", args.simple), ("template", args.template)):
             for n in sizes:
                 body = "".join(lib[form].format(i=i) for i in range(n))
-                (out / ("%s-%s-%d.cpp" % (name, form, n))).write_text(lib["head"] + body + lib.get("tail", ""))
+                write(out / ("%s-%s-%d.cpp" % (name, form, n)), lib["head"] + body + lib.get("tail", ""))
         for n in args.types:
             for form, body in (("distinct", distinct(name, n)), ("onetemplate", one_template(name, n))):
-                (out / ("%s-%s-%d.cpp" % (name, form, n))).write_text(lib["head"] + DISTINCT_TYPE + body +
-                                                                       lib.get("tail", ""))
+                write(out / ("%s-%s-%d.cpp" % (name, form, n)),
+                      lib["head"] + DISTINCT_TYPE + body + lib.get("tail", ""))
 
 
 if __name__ == "__main__":
