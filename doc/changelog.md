@@ -51,6 +51,10 @@ Change Log {#changelog}
     been used, rather than ignored in silence. `produce` and `convert_as` are the exception: they
     are the dispatchers rather than customization points, and **TTS** reaches them qualified, so an
     overload of either name in another namespace is never found.
+  * The built-in sinks come with `#include <tts/tts.hpp>` only in the translation unit that defines
+    `TTS_MAIN`. Any other translation unit that builds one includes `<tts/sinks/sinks.hpp>`, and no
+    longer parses the driver it does not run.
+  * `<tts/tts.hpp>` no longer brings `<array>` along. A test that uses `std::array` includes it.
 
 ### New Features
   * `tts::is_randoms` and its `tts::is_randoms_v` alias name the range generator by its type. A

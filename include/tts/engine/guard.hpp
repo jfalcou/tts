@@ -12,7 +12,6 @@
 #include <tts/engine/abort_report.hpp>
 #include <tts/engine/environment.hpp>
 #include <tts/engine/test.hpp>
-#include <array>
 
 #if defined(__EMSCRIPTEN__)
 #elif defined(_WIN32)
@@ -78,9 +77,15 @@ namespace tts::_
   }
 
   // The vectored handler never sees a raised signal, so the CRT dispositions cover them too.
-  inline constexpr std::array<int, 4> crash_signals {SIGSEGV, SIGFPE, SIGILL, SIGABRT};
+  inline constexpr int         crash_signals[] = {// NOSONAR - <array> costs compile time
+                                                  SIGSEGV,
+                                                  SIGFPE,
+                                                  SIGILL,
+                                                  SIGABRT};
+  inline constexpr std::size_t crash_signal_count =
+  sizeof(crash_signals) / sizeof(crash_signals[ 0 ]);
 
-  inline char const*                  signal_name(int sig)
+  inline char const* signal_name(int sig)
   {
     switch(sig)
     {
@@ -130,7 +135,7 @@ namespace tts::_
       stack_reserve_ready();
       handle_ = AddVectoredExceptionHandler(1, &crash_filter);
 
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         previous_[ i ] = signal(crash_signals[ i ], &tts_crash_on_signal);
     }
 
@@ -140,24 +145,32 @@ namespace tts::_
 
       if(handle_) RemoveVectoredExceptionHandler(handle_);
 
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         if(previous_[ i ] && previous_[ i ] != SIG_ERR) signal(crash_signals[ i ], previous_[ i ]);
     }
 
-    crash_guard(crash_guard const&)                                               = delete;
-    crash_guard&                                    operator=(crash_guard const&) = delete;
+    crash_guard(crash_guard const&)            = delete;
+    crash_guard& operator=(crash_guard const&) = delete;
 
-    PVOID                                           handle_                       = nullptr;
-    std::array<void (*)(int), crash_signals.size()> previous_                     = {};
-    bool                                            armed_ = crash_guard_enabled();
+    PVOID        handle_                       = nullptr;
+    using handler_t                            = void (*)(int);
+    handler_t previous_[ crash_signal_count ]  = {}; // NOSONAR - <array> costs compile time
+    bool      armed_                           = crash_guard_enabled();
   };
 }
 #else
 namespace tts::_
 {
-  inline constexpr std::array<int, 5> crash_signals {SIGSEGV, SIGBUS, SIGFPE, SIGILL, SIGABRT};
+  inline constexpr int         crash_signals[] = {// NOSONAR - <array> costs compile time
+                                                  SIGSEGV,
+                                                  SIGBUS,
+                                                  SIGFPE,
+                                                  SIGILL,
+                                                  SIGABRT};
+  inline constexpr std::size_t crash_signal_count =
+  sizeof(crash_signals) / sizeof(crash_signals[ 0 ]);
 
-  inline char const*                  signal_name(int sig)
+  inline char const* signal_name(int sig)
   {
     switch(sig)
     {
@@ -200,13 +213,13 @@ namespace tts::_
   {
     // SIGSTKSZ stopped being a constant in glibc 2.34, so the alternate stack has a fixed size.
     // A stack the machine can run on starts on a 16 byte boundary, which a char array never grants.
-    alignas(16) static std::array<char, 64u * 1024u> buffer {};
+    alignas(16) static char buffer[ 64u * 1024u ] = {}; // NOSONAR - <array> costs compile time
 
-    static bool const                                that = []
+    static bool const       that                  = []
     {
       stack_t alt  = {};
-      alt.ss_sp    = buffer.data();
-      alt.ss_size  = buffer.size();
+      alt.ss_sp    = buffer;
+      alt.ss_size  = sizeof(buffer);
       alt.ss_flags = 0;
       return sigaltstack(&alt, nullptr) == 0;
     }();
@@ -225,7 +238,7 @@ namespace tts::_
       action.sa_flags         = SA_SIGINFO | (alternate_stack_ready() ? SA_ONSTACK : 0);
       sigemptyset(&action.sa_mask);
 
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         sigaction(crash_signals[ i ], &action, &previous_[ i ]);
     }
 
@@ -233,7 +246,7 @@ namespace tts::_
     {
       if(!armed_) return;
 
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         sigaction(crash_signals[ i ], &previous_[ i ], nullptr);
     }
 
@@ -241,8 +254,8 @@ namespace tts::_
     crash_guard& operator=(crash_guard const&) = delete;
 
   private:
-    std::array<struct sigaction, crash_signals.size()> previous_ {};
-    bool                                               armed_ = crash_guard_enabled();
+    struct sigaction previous_[ crash_signal_count ] = {}; // NOSONAR - <array> costs compile time
+    bool             armed_                          = crash_guard_enabled();
   };
 }
 #endif
