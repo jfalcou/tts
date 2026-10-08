@@ -40,7 +40,7 @@
   `<unordered_map>`| +60ms             | +60ms                 | avoided unless genuinely needed
   `<vector>`       | +50ms             | +60ms                 | `tools/buffer.hpp`'s `tts::buffer`, a minimal `malloc`-based dynamic array
   `<map>`          | +50ms             | +50ms                 | avoided unless genuinely needed
-  `<array>`        | ~0ms (noise)      | ~0ms (noise)          | fine to use - see below
+  `<array>`        | +20ms             | +20ms                 | C arrays, sized by a constant
 
   @section compile-time-hypothetical What it costs if you ever need one anyway
 
@@ -57,10 +57,8 @@
   @section compile-time-fine What's fine to use
 
   Being on this page isn't a blanket ban on the standard library - it's a reminder to check before
-  assuming. Two examples that already got measured and cleared:
+  assuming. One example that already got measured and cleared:
 
-  + `<array>` measures as free (no cost above run-to-run noise) with both compilers above, and is
-  used where a bounded, compile-time-sized container earns its keep.
   + `<windows.h>`, guarded by `WIN32_LEAN_AND_MEAN` and `NOMINMAX` and included only on the Windows
   branch of `tools/clock.hpp`, was measured on real `cl.exe` and found free relative to an empty
   translation unit - lighter, in fact, than the fragile forward-declare-the-three-functions-we-need

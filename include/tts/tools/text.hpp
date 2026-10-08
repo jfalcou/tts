@@ -10,6 +10,7 @@
 
 #include <tts/tools/concepts.hpp>
 #include <tts/tools/preprocessor.hpp>
+#include <cstdarg>
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
@@ -68,18 +69,7 @@ namespace tts
     explicit text(char const* format, Args... args)
         : text()
     {
-      // Store result in local int to check for errors/negatives
-      int len = snprintf(nullptr, 0, format, args...);
-      if(len > 0)
-      {
-        auto sz = static_cast<std::size_t>(len);
-        data_   = reinterpret_cast<char*>(malloc(sz + 1)); // NOSONAR
-        if(data_)
-        {
-          size_ = sz; // Only assign size if alloc succeeds
-          snprintf(data_, size_ + 1, format, args...);
-        }
-      }
+      assign(format, args...);
     }
 
     /// Copy constructor
@@ -251,6 +241,29 @@ namespace tts
     }
 
   private:
+    void assign(char const* format, ...) // NOSONAR - one body for every argument list
+    {
+      va_list args;
+      va_list probe;
+      va_start(args, format);
+      va_copy(probe, args);
+
+      // Store result in local int to check for errors/negatives
+      int len = vsnprintf(nullptr, 0, format, probe);
+      va_end(probe);
+      if(len > 0)
+      {
+        auto sz = static_cast<std::size_t>(len);
+        data_   = reinterpret_cast<char*>(malloc(sz + 1)); // NOSONAR
+        if(data_)
+        {
+          size_ = sz; // Only assign size if alloc succeeds
+          vsnprintf(data_, size_ + 1, format, args);
+        }
+      }
+      va_end(args);
+    }
+
     char*  data_ = nullptr;
     size_t size_ = 0;
   };

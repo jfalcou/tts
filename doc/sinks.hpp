@@ -11,8 +11,9 @@
   TTS has an extensible @ref tts::output_sink customization point (see @ref tools-output and the
   `tts::gathering_sink` example) - everything a test suite prints goes through whichever sink is
   currently installed. Beyond writing your own, TTS ships a small set of ready-to-use sinks under
-  `include/tts/sinks/`, already available through `#include <tts/tts.hpp>` with no extra include
-  needed.
+  `include/tts/sinks/`, available through `#include <tts/tts.hpp>` in the translation unit that
+  defines @ref TTS_MAIN. Any other translation unit that builds one includes
+  `<tts/sinks/sinks.hpp>`.
 
   All five draw from @ref tts::output_sink's structured hooks (`test_started()`,
   `assertion_failed()`, `test_finished()`, `suite_finished()`, `suite_metric()`,

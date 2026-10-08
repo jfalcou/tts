@@ -9,14 +9,10 @@
 #pragma once
 
 #include <tts/engine/abort.hpp>
-#include <tts/engine/usage.hpp>
 #include <tts/engine/logger.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/environment.hpp>
-#include <tts/engine/shard.hpp>
-#include <tts/engine/sink_selection.hpp>
 #include <tts/tools/clock.hpp>
-#include <tts/tools/file.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/random.hpp>
 
@@ -78,6 +74,11 @@ namespace tts::_
 #if defined(TTS_MAIN)
 #include <tts/engine/guard.hpp>    // NOSONAR - the driver is the only unit that needs the signals
 #include <tts/engine/watchdog.hpp> // NOSONAR - it needs the timers, and only the driver does
+#include <tts/engine/shard.hpp>    // NOSONAR - only the driver reads it, so only its unit parses it
+#include <tts/engine/sink_selection.hpp> // NOSONAR - only the driver reads it, so only its unit parses it
+#include <tts/engine/usage.hpp> // NOSONAR - only the driver reads it, so only its unit parses it
+#include <tts/sinks/sinks.hpp>  // NOSONAR - only the driver reads it, so only its unit parses it
+#include <tts/tools/file.hpp>   // NOSONAR - only the driver reads it, so only its unit parses it
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE

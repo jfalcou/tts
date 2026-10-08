@@ -8,6 +8,7 @@
 #include <tts/tts.hpp>
 
 #include <algorithm>
+#include <array>
 
 //==================================================================================================
 // tts::generation and tts::conversion are the two customization points a generator goes through:
