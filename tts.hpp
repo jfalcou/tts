@@ -24,6 +24,7 @@ namespace tts
 #include <cassert>
 #include <concepts>
 #include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <new>
@@ -294,10 +295,6 @@ namespace tts
     decltype(auto) end()
     {
       return data_ + size_;
-    }
-    friend auto const& to_text(text const& t)
-    {
-      return t;
     }
     friend bool operator==(text const& a, text const& b) noexcept
     {
@@ -1452,6 +1449,35 @@ namespace tts
 }
 namespace tts::_
 {
+  class source_location
+  {
+  public:
+    [[nodiscard]] static auto current(char const* file = __builtin_FILE(),
+                                      int         line = __builtin_LINE()) noexcept
+    {
+      int  offset = 0;
+      auto slash  = strrchr(file, '/');
+      auto bslash = strrchr(file, '\\');
+      auto end    = (bslash && (!slash || bslash > slash)) ? bslash : slash;
+      if(end) offset = static_cast<int>(end - file + 1);
+      source_location that {};
+      that.desc_ = text {"[%s:%d]", file + offset, line};
+      return that;
+    }
+    decltype(auto) data() const
+    {
+      return desc_.data();
+    }
+    template<_::stream OS> friend OS& operator<<(OS& os, source_location const& s)
+    {
+      return os << s.desc_;
+    }
+  private:
+    text desc_ {"[unknown:?]"};
+  };
+}
+namespace tts::_
+{
   template<typename T> struct typename_impl
   {
   private:
@@ -1473,10 +1499,6 @@ namespace tts::_
     constexpr auto size() const
     {
       return data_.size;
-    }
-    friend text to_text(typename_impl const& t)
-    {
-      return text("%.*s", t.size(), t.data());
     }
     template<_::stream OS> friend OS& operator<<(OS& os, typename_impl t)
     {
@@ -1618,10 +1640,6 @@ namespace tts
   };
   template<typename T> struct type
   {
-    friend text to_text(type)
-    {
-      return as_text(typename_<T>);
-    }
     template<_::stream OS> friend OS& operator<<(OS& os, type const&)
     {
       return os << typename_<T>;
@@ -1652,74 +1670,135 @@ namespace tts
 }
 namespace tts
 {
+  template<typename T> text as_text(T const& e);
+  namespace _
+  {
+    template<typename T> struct builtin_display
+    {
+      static text render(T const& e)
+      {
+        static_assert(
+        !requires { to_text(e); },
+        "[TTS] tts::to_text is no longer a customization point. "
+        "Specialize tts::display<T>::render instead.");
+        if constexpr(std::floating_point<T>) return floating(e);
+        else if constexpr(std::integral<T>) return integral(e);
+        else if constexpr(_::string<T>)
+          return text("'%.*s'", static_cast<int>(e.size()), e.data() ? e.data() : "");
+        else if constexpr(_::optional<T>) return optional(e);
+        else if constexpr(std::is_pointer_v<T>) return pointer(e);
+        else if constexpr(_::sequence<T>) return sequence(e);
+        else return bytes(e);
+      }
+    private:
+      static text floating(T const& e)
+      {
+        auto precision = ::tts::arguments().value(16, "--precision");
+        bool hexmode   = ::tts::arguments()("-x", "--hex");
+        bool scimode   = ::tts::arguments()("-s", "--scientific");
+        if(scimode) return text("%.*E", precision, e);
+        else if(hexmode) return text("%#.*A", precision, e);
+        else return text("%.*g", precision, e);
+      }
+      static text integral(T const& e)
+      {
+        if constexpr(sizeof(T) > 4)
+        {
+          auto fmt = ::tts::arguments()("-x", "--hex") ? "%lX" : "%ld";
+          return text(fmt, e);
+        }
+        else
+        {
+          auto fmt = ::tts::arguments()("-x", "--hex") ? "%X" : "%d";
+          return text(fmt, e);
+        }
+      }
+      static text optional(T const& e)
+      {
+        auto type_desc = as_text(typename_<typename T::value_type>);
+        text base {"optional<%s>", type_desc.data() ? type_desc.data() : "unknown"};
+        if(e.has_value())
+        {
+          auto val_desc = as_text(e.value());
+          return base + text("{%s}", val_desc.data() ? val_desc.data() : "?");
+        }
+        else return base + "{}";
+      }
+      static text pointer(T const& e)
+      {
+        auto type_desc = as_text(typename_<T>);
+        return text("%p (%s)", (void*)(e), type_desc.data() ? type_desc.data() : "unknown");
+      }
+      static text sequence(T const& e)
+      {
+        text that("{ ");
+        for(auto const& v: e)
+          that += as_text(v) + " ";
+        that += "}";
+        return that;
+      }
+      static text bytes(T const& e)
+      {
+        auto const* raw = reinterpret_cast<std::byte const*>(&e);
+        text        txt_bytes("[ ");
+        for(std::size_t i = 0; i < sizeof(e); ++i)
+          txt_bytes += text("%2.2X", std::to_integer<unsigned>(raw[ i ])) + " ";
+        txt_bytes      += "]";
+        auto type_desc  = as_text(typename_<T>);
+        return text("%s: %s",
+                    type_desc.data() ? type_desc.data() : "unknown",
+                    txt_bytes.data() ? txt_bytes.data() : "[]");
+      }
+    };
+  }
+  template<typename T> struct display
+  {
+  };
+  template<> struct display<text>
+  {
+    static text render(text const& t)
+    {
+      return t;
+    }
+  };
+  template<typename T> struct display<type<T>>
+  {
+    static text render(type<T> const&)
+    {
+      return as_text(typename_<T>);
+    }
+  };
+  template<typename T> struct display<_::typename_impl<T>>
+  {
+    static text render(_::typename_impl<T> const& t)
+    {
+      return text("%.*s", t.size(), t.data());
+    }
+  };
+  template<> struct display<_::source_location>
+  {
+    static text render(_::source_location const& s)
+    {
+      return text(s.data());
+    }
+  };
+}
+namespace tts::_
+{
+  template<typename T>
+  concept described = requires(T const& e) { display<T>::render(e); };
+}
+namespace tts
+{
   template<typename T> text as_text(T const& e)
   {
-    if constexpr(requires { to_text(e); })
-    {
-      return to_text(e);
-    }
-    else if constexpr(std::floating_point<T>)
-    {
-      auto precision = ::tts::arguments().value(16, "--precision");
-      bool hexmode   = ::tts::arguments()("-x", "--hex");
-      bool scimode   = ::tts::arguments()("-s", "--scientific");
-      if(scimode) return text("%.*E", precision, e);
-      else if(hexmode) return text("%#.*A", precision, e);
-      else return text("%.*g", precision, e);
-    }
-    else if constexpr(std::integral<T>)
-    {
-      if constexpr(sizeof(T) > 4)
-      {
-        auto fmt = ::tts::arguments()("-x", "--hex") ? "%lX" : "%ld";
-        return text(fmt, e);
-      }
-      else
-      {
-        auto fmt = ::tts::arguments()("-x", "--hex") ? "%X" : "%d";
-        return text(fmt, e);
-      }
-    }
-    else if constexpr(_::string<T>)
-    {
-      return text("'%.*s'", static_cast<int>(e.size()), e.data() ? e.data() : "");
-    }
-    else if constexpr(_::optional<T>)
-    {
-      auto type_desc = as_text(typename_<typename T::value_type>);
-      text base {"optional<%s>", type_desc.data() ? type_desc.data() : "unknown"};
-      if(e.has_value())
-      {
-        auto val_desc = as_text(e.value());
-        return base + text("{%s}", val_desc.data() ? val_desc.data() : "?");
-      }
-      else return base + "{}";
-    }
-    else if constexpr(std::is_pointer_v<T>)
-    {
-      auto type_desc = as_text(typename_<T>);
-      return text("%p (%s)", (void*)(e), type_desc.data() ? type_desc.data() : "unknown");
-    }
-    else if constexpr(_::sequence<T>)
-    {
-      text that("{ ");
-      for(auto const& v: e)
-        that += as_text(v) + " ";
-      that += "}";
-      return that;
-    }
+    if constexpr(_::described<T>) return display<T>::render(e);
     else
     {
-      unsigned char bytes[ sizeof(e) ];
-      std::memcpy(bytes, &e, sizeof(e));
-      text txt_bytes("[ ");
-      for(auto const& b: bytes)
-        txt_bytes += text("%2.2X", b) + " ";
-      txt_bytes      += "]";
-      auto type_desc  = as_text(typename_<T>);
-      return text("%s: %s",
-                  type_desc.data() ? type_desc.data() : "unknown",
-                  txt_bytes.data() ? txt_bytes.data() : "[]");
+      static_assert(
+      !requires { display<T>::render; },
+      "[TTS] tts::display<T>::render does not accept a value of type T.");
+      return _::builtin_display<T>::render(e);
     }
   }
   template<std::size_t N> auto as_text(char const (&t)[ N ])
@@ -1772,6 +1851,19 @@ namespace tts
 {
   template<typename T> class buffer
   {
+    static constexpr bool over_aligned = alignof(T) > alignof(std::max_align_t);
+    static T*             allocate(std::size_t n) noexcept
+    {
+      if constexpr(over_aligned)
+        return static_cast<T*>(
+        ::operator new(sizeof(T) * n, std::align_val_t {alignof(T)}, std::nothrow));
+      else return static_cast<T*>(::operator new(sizeof(T) * n, std::nothrow));
+    }
+    static void deallocate(T* p) noexcept
+    {
+      if constexpr(over_aligned) ::operator delete(p, std::align_val_t {alignof(T)});
+      else ::operator delete(p);
+    }
   public:
     buffer()
         : size_(0)
@@ -1784,7 +1876,7 @@ namespace tts
     {
       if(n > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * n));
+        data_ = allocate(n);
         assert(data_ && "tts::buffer out of memory");
         size_     = n;
         capacity_ = n;
@@ -1797,7 +1889,7 @@ namespace tts
     {
       if(n > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * n));
+        data_ = allocate(n);
         assert(data_ && "tts::buffer out of memory");
         size_     = n;
         capacity_ = n;
@@ -1811,7 +1903,7 @@ namespace tts
       std::size_t n = init.size();
       if(n > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * n));
+        data_ = allocate(n);
         assert(data_ && "tts::buffer out of memory");
         size_         = n;
         capacity_     = n;
@@ -1829,7 +1921,7 @@ namespace tts
           for(std::size_t i = 0; i < size_; ++i)
             (data_ + i)->~T();
         }
-        free(data_);
+        deallocate(data_);
       }
     }
     buffer(buffer const& other)
@@ -1837,7 +1929,7 @@ namespace tts
     {
       if(other.size_ > 0)
       {
-        data_ = static_cast<T*>(malloc(sizeof(T) * other.size_));
+        data_ = allocate(other.size_);
         assert(data_ && "tts::buffer out of memory");
         size_     = other.size_;
         capacity_ = other.size_;
@@ -1944,7 +2036,7 @@ namespace tts
                  "tts::buffer requested capacity overflows size_t");
           new_cap *= 2;
         }
-        auto new_data = static_cast<T*>(malloc(sizeof(T) * new_cap));
+        auto new_data = allocate(new_cap);
         assert(new_data && "tts::buffer out of memory");
         for(std::size_t i = 0; i < size_; ++i)
         {
@@ -1952,7 +2044,7 @@ namespace tts
           if constexpr(!std::is_trivially_destructible_v<T>)
             (data_ + i)->~T();
         }
-        free(data_);
+        deallocate(data_);
         data_     = new_data;
         capacity_ = new_cap;
       }
@@ -2800,36 +2892,6 @@ namespace tts::_
   };
 }
 #endif
-namespace tts::_
-{
-  void report_type_hint(::tts::text const& type)
-  {
-    if(!::tts::is_verbose() && !type.is_empty())
-      ::tts::output().writeln(">  With <T = %s>", type.data());
-  }
-  void report_pass(char const* location, char const* message)
-  {
-    if(::tts::is_detailed())
-    {
-      ::tts::output().writeln("  [+] %s : %s", location, message);
-    }
-  }
-  void report_fail(char const* location, char const* message, ::tts::text const& type)
-  {
-    report_type_hint(type);
-    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
-    if(!::tts::is_quiet())
-    {
-      ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
-    }
-  }
-  void report_fatal(char const* location, char const* message, ::tts::text const& type)
-  {
-    report_type_hint(type);
-    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
-    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
-  }
-}
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
@@ -3015,42 +3077,33 @@ TTS_DISABLE_WARNING_POP
 #endif
 namespace tts::_
 {
-  class source_location
+  inline void report_type_hint(::tts::text const& type)
   {
-  public:
-    [[nodiscard]] static auto current(char const* file = __builtin_FILE(),
-                                      int         line = __builtin_LINE()) noexcept
+    if(!::tts::is_verbose() && !type.is_empty())
+      ::tts::output().writeln(">  With <T = %s>", type.data());
+  }
+  inline void report_pass(char const* location, char const* message)
+  {
+    if(::tts::is_detailed())
     {
-      int  offset = 0;
-      auto slash  = strrchr(file, '/');
-      auto bslash = strrchr(file, '\\');
-      auto end    = (bslash && (!slash || bslash > slash)) ? bslash : slash;
-      if(end) offset = static_cast<int>(end - file + 1);
-      source_location that {};
-      that.desc_ = text {"[%s:%d]", file + offset, line};
-      return that;
+      ::tts::output().writeln("  [+] %s : %s", location, message);
     }
-    friend text to_text(source_location const& s)
+  }
+  inline void report_fail(char const* location, char const* message, ::tts::text const& type)
+  {
+    report_type_hint(type);
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, false);
+    if(!::tts::is_quiet())
     {
-      return s.desc_;
+      ::tts::output().writeln("  [X] %s : ** FAILURE ** : %s", location, message);
     }
-    decltype(auto) data() const
-    {
-      return desc_.data();
-    }
-    template<_::stream OS> friend OS& operator<<(OS& os, source_location const& s)
-    {
-      return os << s.desc_;
-    }
-  private:
-    text desc_ {"[unknown:?]"};
-  };
-}
-namespace tts::_
-{
-  void report_pass(char const* location, char const* message);
-  void report_fail(char const* location, char const* message, ::tts::text const& type);
-  void report_fatal(char const* location, char const* message, ::tts::text const& type);
+  }
+  inline void report_fatal(char const* location, char const* message, ::tts::text const& type)
+  {
+    report_type_hint(type);
+    ::tts::output().assertion_failed(::tts::text {location}, ::tts::text {message}, true);
+    ::tts::output().writeln("  [@] %s : @@ FATAL @@ : %s", location, message);
+  }
 }
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_PASS(...)
@@ -3130,10 +3183,27 @@ namespace tts
     };
     template<typename T, bool Signed = false>
     using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
+    template<typename T, typename V> struct builtin_conversion
+    {
+      static auto from(V const& v)
+      {
+        return static_cast<T>(v);
+      }
+    };
   }
+  template<typename T, typename V> struct conversion
+  {
+  };
   template<typename T, typename V> auto convert_as(V const& v, type<T> const&)
   {
-    return static_cast<T>(v);
+    if constexpr(requires { conversion<T, V>::from(v); }) return conversion<T, V>::from(v);
+    else
+    {
+      static_assert(
+      !requires { conversion<T, V>::from; },
+      "[TTS] tts::conversion<T, V>::from does not accept a value of type V.");
+      return _::builtin_conversion<T, V>::from(v);
+    }
   }
   template<tts::_::sequence Seq, typename U> struct rebuild;
   template<template<typename, typename...> typename Seq, typename T, typename... S, typename U>
@@ -3146,23 +3216,53 @@ namespace tts
   {
     using type = Seq<U, N>;
   };
-  template<typename T> auto produce(type<T> const& t, auto g, auto... others)
+  template<typename T> auto produce(type<T> const& t, auto g, auto... others);
+}
+namespace tts::_
+{
+  template<typename T> struct builtin_generation
   {
-    return g(t, others...);
-  }
-  template<tts::_::sequence T> auto produce(type<T> const&, auto g, auto... args)
-  {
-    using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
-    using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
-    typename rebuild<T, value_type>::type that;
-    auto                                  b  = begin(that);
-    auto                                  e  = end(that);
-    std::ptrdiff_t                        sz = e - b;
-    for(std::ptrdiff_t i = 0; i < sz; ++i)
+    static auto make(auto g, auto... others)
     {
-      *b++ = produce(tts::type<value_type> {}, g, i, sz, args...);
+      return g(tts::type<T> {}, others...);
     }
-    return that;
+  };
+  template<sequence T> struct builtin_generation<T>
+  {
+    static auto make(auto g, auto... args)
+    {
+      using elmt_type  = std::remove_cvref_t<decltype(*begin(tts::_::declval<T>()))>;
+      using value_type = decltype(produce(tts::type<elmt_type> {}, g, 0, 0ULL, args...));
+      typename rebuild<T, value_type>::type that;
+      auto                                  b  = begin(that);
+      auto                                  e  = end(that);
+      std::ptrdiff_t                        sz = e - b;
+      for(std::ptrdiff_t i = 0; i < sz; ++i)
+      {
+        *b++ = produce(tts::type<value_type> {}, g, i, sz, args...);
+      }
+      return that;
+    }
+  };
+}
+namespace tts
+{
+  template<typename T> struct generation
+  {
+  };
+  template<typename T> auto produce(type<T> const&, auto g, auto... others)
+  {
+    if constexpr(requires { generation<T>::make(g, others...); })
+    {
+      return generation<T>::make(g, others...);
+    }
+    else
+    {
+      static_assert(
+      !requires { generation<T>::make; },
+      "[TTS] tts::generation<T>::make does not accept the generator.");
+      return _::builtin_generation<T>::make(g, others...);
+    }
   }
   template<typename T> struct base_type
   {
@@ -3226,7 +3326,7 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto...) const
     {
-      return convert_as(seed, type<D> {});
+      return ::tts::convert_as(seed, type<D> {});
     }
     T seed;
   };
@@ -3239,11 +3339,11 @@ namespace tts
     }
     template<typename D> auto operator()(tts::type<D>) const
     {
-      return convert_as(false, type<tts::boolean_type_t<D>> {});
+      return ::tts::convert_as(false, type<tts::boolean_type_t<D>> {});
     }
     template<typename D> auto operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
+      return ::tts::convert_as(((start + idx) % range) == 0, type<tts::boolean_type_t<D>> {});
     }
     T start;
     U range;
@@ -3262,11 +3362,11 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
     {
-      return convert_as(start + idx * step, type<D> {});
+      return ::tts::convert_as(start + idx * step, type<D> {});
     }
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(start, type<D> {});
+      return ::tts::convert_as(start, type<D> {});
     }
     T start;
     U step;
@@ -3283,13 +3383,14 @@ namespace tts
         , step(st)
     {
     }
-    template<typename D> D operator()(tts::type<D>, auto idx, auto...) const
+    template<typename D, typename I> D operator()(tts::type<D>, I idx, auto sz, auto...) const
     {
-      return convert_as(start - idx * step, type<D> {});
+      auto const rev = static_cast<I>(sz) - 1 - idx;
+      return ::tts::convert_as(start + rev * step, type<D> {});
     }
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(start, type<D> {});
+      return ::tts::convert_as(start, type<D> {});
     }
     T start;
     U step;
@@ -3303,19 +3404,18 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
     {
-      auto w1 = convert_as(first_, type<D> {});
-      auto w2 = convert_as(last_, type<D> {});
-      D    step =
-      (sz - 1)
-      ? static_cast<D>(convert_as(last_ - first_, type<D> {}) / convert_as(sz - 1, type<D> {}))
-      : convert_as(0, type<D> {});
-      auto value =
-      convert_as(w1 + convert_as(idx, type<D> {}) * convert_as(step, type<D> {}), type<D> {});
+      auto w1    = ::tts::convert_as(first_, type<D> {});
+      auto w2    = ::tts::convert_as(last_, type<D> {});
+      D    step  = (sz - 1) ? static_cast<D>(::tts::convert_as(last_ - first_, type<D> {}) /
+                                             ::tts::convert_as(sz - 1, type<D> {}))
+                            : ::tts::convert_as(0, type<D> {});
+      auto value = ::tts::convert_as(
+      w1 + ::tts::convert_as(idx, type<D> {}) * ::tts::convert_as(step, type<D> {}), type<D> {});
       return (w1 <= w2) ? _::min(value, w2) : _::max(value, w2);
     }
     template<typename D> D operator()(tts::type<D>) const
     {
-      return convert_as(first_, type<D> {});
+      return ::tts::convert_as(first_, type<D> {});
     }
     T first_;
     U last_;
@@ -3329,24 +3429,43 @@ namespace tts
     }
     template<typename D> D operator()(tts::type<D>, auto...)
     {
-      if constexpr(std::is_unsigned_v<D>)
+      if constexpr(std::is_unsigned_v<D> && requires { mini >= 0; })
       {
         assert(mini >= 0 &&
                "Minimum value for unsigned type random generator must be non-negative");
+      }
+      if constexpr(std::is_unsigned_v<D> && requires { maxi >= 0; })
+      {
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(convert_as(mini, type<D> {}), convert_as(maxi, type<D> {}));
+      return random_value(::tts::convert_as(mini, type<D> {}), ::tts::convert_as(maxi, type<D> {}));
     }
     Mn mini;
     Mx maxi;
   };
+  template<typename G> struct is_randoms : std::false_type
+  {
+  };
+  template<typename Mx, typename Mn> struct is_randoms<randoms<Mx, Mn>> : std::true_type
+  {
+  };
+  template<typename G>
+  inline constexpr bool is_randoms_v = is_randoms<std::remove_cvref_t<G>>::value;
   struct random_bits
   {
     template<typename D> auto operator()(tts::type<D>, auto...)
     {
       using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
       return tts::random_value<i_t>(0, std::numeric_limits<i_t>::max());
+    }
+  };
+  struct random_shift
+  {
+    template<typename D> auto operator()(tts::type<D>, auto...) const
+    {
+      using i_t = tts::_::sized_integer_t<tts::base_type_t<D>>;
+      return tts::random_value<i_t>(0, static_cast<i_t>(8 * sizeof(i_t) - 1));
     }
   };
   template<typename G> struct as_integer
@@ -3489,7 +3608,7 @@ namespace tts::_
     {
       current_type = as_text(typename_<T>);
       if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
-      process_call(body, produce(type<T> {}, Generators)...);
+      process_call(body, ::tts::produce(type<T> {}, Generators)...);
     }
     friend auto operator<<(test_generators tg, auto body)
     {
@@ -3721,24 +3840,70 @@ namespace tts::_
 #define TTS_NO_THROW_REQUIRED(EXPR) TTS_NO_THROW_IMPL(EXPR, TTS_FATAL)
 namespace tts::_
 {
-  template<typename L, typename R>
-  concept comparable_equal = requires(L l, R r) { compare_equal(l, r); };
-  template<typename L, typename R>
-  concept comparable_less = requires(L l, R r) { compare_less(l, r); };
+  template<typename L, typename R> struct builtin_comparison
+  {
+    static constexpr bool equal(L const& l, R const& r)
+    {
+      static_assert(
+      !requires { compare_equal(l, r); },
+      "[TTS] tts::compare_equal is no longer a customization point. "
+      "Specialize tts::comparison<L, R>::equal instead.");
+      return l == r;
+    }
+    static constexpr bool less(L const& l, R const& r)
+    {
+      static_assert(
+      !requires { compare_less(l, r); },
+      "[TTS] tts::compare_less is no longer a customization point. "
+      "Specialize tts::comparison<L, R>::less instead.");
+      return l < r;
+    }
+    static bool bit_equal(L const& l, R const& r)
+    {
+      static_assert(sizeof(L) == sizeof(R), "Types must have the same size for bitwise comparison");
+      return std::memcmp(&l, &r, sizeof(L)) == 0;
+    }
+  };
+}
+namespace tts
+{
+  template<typename L, typename R = L> struct comparison
+  {
+  };
+}
+namespace tts::_
+{
   template<typename L, typename R> inline constexpr bool bit_eq(L const& l, R const& r)
   {
-    static_assert(sizeof(L) == sizeof(R), "Types must have the same size for bitwise comparison");
-    return std::memcmp(&l, &r, sizeof(L)) == 0;
+    if constexpr(requires { comparison<L, R>::bit_equal(l, r); })
+    {
+      return comparison<L, R>::bit_equal(l, r);
+    }
+    else
+    {
+      static_assert(
+      !requires { comparison<L, R>::bit_equal; },
+      "[TTS] tts::comparison<L, R>::bit_equal does not accept the two operands.");
+      return builtin_comparison<L, R>::bit_equal(l, r);
+    }
   }
   template<typename L, typename R> inline constexpr bool bit_neq(L const& l, R const& r)
   {
-    static_assert(sizeof(L) == sizeof(R), "Types must have the same size for bitwise comparison");
-    return std::memcmp(&l, &r, sizeof(L)) != 0;
+    return !bit_eq(l, r);
   }
   template<typename L, typename R> inline constexpr bool eq(L const& l, R const& r)
   {
-    if constexpr(comparable_equal<L, R>) return compare_equal(l, r);
-    else return l == r;
+    if constexpr(requires { comparison<L, R>::equal(l, r); })
+    {
+      return comparison<L, R>::equal(l, r);
+    }
+    else
+    {
+      static_assert(
+      !requires { comparison<L, R>::equal; },
+      "[TTS] tts::comparison<L, R>::equal does not accept the two operands.");
+      return builtin_comparison<L, R>::equal(l, r);
+    }
   }
   template<typename L, typename R> inline constexpr bool neq(L const& l, R const& r)
   {
@@ -3746,8 +3911,17 @@ namespace tts::_
   }
   template<typename L, typename R> inline constexpr bool lt(L const& l, R const& r)
   {
-    if constexpr(comparable_less<L, R>) return compare_less(l, r);
-    else return l < r;
+    if constexpr(requires { comparison<L, R>::less(l, r); })
+    {
+      return comparison<L, R>::less(l, r);
+    }
+    else
+    {
+      static_assert(
+      !requires { comparison<L, R>::less; },
+      "[TTS] tts::comparison<L, R>::less does not accept the two operands.");
+      return builtin_comparison<L, R>::less(l, r);
+    }
   }
   template<typename L, typename R> inline constexpr bool le(L const& l, R const& r)
   {
@@ -4105,111 +4279,87 @@ namespace tts::_
 #else
 #define TTS_EXPECT_NOT_COMPILES(...) TTS_VAL(TTS_EXPECT_NOT_COMPILES_IMPL TTS_REVERSE(__VA_ARGS__))
 #endif
-namespace tts
+#include <limits>
+namespace tts::_
 {
-  template<typename T, typename U> inline double absolute_check(T const& a, U const& b)
+  template<typename T> struct builtin_precision
   {
-    if constexpr(requires { absolute_distance(a, b); }) return absolute_distance(a, b);
-    else if constexpr(std::is_same_v<T, U>)
+    static double absolute(T const& a, T const& b)
     {
-      if constexpr(std::is_same_v<T, bool>)
-      {
-        return a == b ? 0. : 1.;
-      }
+      static_assert(
+      !requires { absolute_distance(a, b); },
+      "[TTS] tts::absolute_distance is no longer a customization point. "
+      "Specialize tts::precision<T>::absolute instead.");
+      if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
       else if constexpr(std::is_floating_point_v<T>)
       {
-        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
-        if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
+        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+        if(is_inf(a) || is_inf(b) || is_nan(a) || is_nan(b))
           return std::numeric_limits<double>::infinity();
-        return _::abs(a - b);
+        return abs(a - b);
       }
-      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
-      {
-        auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
-        return absolute_check(d0, d1);
-      }
+      else if constexpr(std::is_integral_v<T>)
+        return builtin_precision<double>::absolute(static_cast<double>(a), static_cast<double>(b));
       else
       {
         static_assert(
         std::is_floating_point_v<T> || std::is_integral_v<T>,
-        "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare."
-        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to overload tts::absolute_check ?");
+        "[TTS] TTS_ABSOLUTE_EQUAL requires integral or floating points data to compare. "
+        "Did you mean to use TTS_ALL_ABSOLUTE_EQUAL or to specialize "
+        "tts::precision<T>::absolute ?");
         return 0.;
       }
     }
-    else
+    static double relative(T const& a, T const& b)
     {
-      using common_t = std::common_type_t<T, U>;
-      return absolute_check(static_cast<common_t>(a), static_cast<common_t>(b));
-    }
-  }
-  template<typename T, typename U> inline double relative_check(T const& a, U const& b)
-  {
-    if constexpr(requires { relative_distance(a, b); }) return relative_distance(a, b);
-    else if constexpr(std::is_same_v<T, U>)
-    {
-      if constexpr(std::is_same_v<T, bool>)
-      {
-        return a == b ? 0. : 100.;
-      }
+      static_assert(
+      !requires { relative_distance(a, b); },
+      "[TTS] tts::relative_distance is no longer a customization point. "
+      "Specialize tts::precision<T>::relative instead.");
+      if constexpr(std::is_same_v<T, bool>) return a == b ? 0. : 1.;
       else if constexpr(std::is_floating_point_v<T>)
       {
-        if((a == b) || (_::is_nan(a) && _::is_nan(b))) return 0.;
-        if(_::is_inf(a) || _::is_inf(b) || _::is_nan(a) || _::is_nan(b))
+        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+        if(is_inf(a) || is_inf(b) || is_nan(a) || is_nan(b))
           return std::numeric_limits<double>::infinity();
-        return 100. * (_::abs(a - b) / _::max(T(1), _::max(_::abs(a), _::abs(b))));
+        return abs(a - b) / max(T(1), max(abs(a), abs(b)));
       }
-      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
-      {
-        auto d0 = static_cast<double>(a), d1 = static_cast<double>(b);
-        return relative_check(d0, d1);
-      }
+      else if constexpr(std::is_integral_v<T>)
+        return builtin_precision<double>::relative(static_cast<double>(a), static_cast<double>(b));
       else
       {
         static_assert(
         std::is_floating_point_v<T> || std::is_integral_v<T>,
-        "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare."
-        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to overload tts::relative_check ?");
+        "[TTS] TTS_RELATIVE_EQUAL requires integral or floating points data to compare. "
+        "Did you mean to use TTS_ALL_RELATIVE_EQUAL or to specialize "
+        "tts::precision<T>::relative ?");
         return 0.;
       }
     }
-    else
+    static double ulp(T const& a, T const& b)
     {
-      using common_t = std::common_type_t<T, U>;
-      return relative_check(static_cast<common_t>(a), static_cast<common_t>(b));
-    }
-  }
-  template<typename T, typename U> inline double ulp_check(T const& a, U const& b)
-  {
-    if constexpr(requires { ulp_distance(a, b); }) return ulp_distance(a, b);
-    else if constexpr(std::is_same_v<T, U>)
-    {
+      static_assert(
+      !requires { ulp_distance(a, b); },
+      "[TTS] tts::ulp_distance is no longer a customization point. "
+      "Specialize tts::precision<T>::ulp instead.");
       if constexpr(std::is_same_v<T, bool>)
-      {
         return a == b ? 0. : std::numeric_limits<double>::infinity();
-      }
       else if constexpr(std::is_floating_point_v<T>)
       {
         using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
-        if((a == b) || (_::is_nan(a) && _::is_nan(b)))
-        {
-          return 0.;
-        }
-        else if(_::is_unordered(a, b))
-        {
-          return std::numeric_limits<double>::infinity();
-        }
+        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+        else if(is_unordered(a, b)) return std::numeric_limits<double>::infinity();
         else
         {
-          auto aa = _::bitinteger(a);
-          auto bb = _::bitinteger(b);
+          auto aa = bitinteger(a);
+          auto bb = bitinteger(b);
           if(aa > bb) std::swap(aa, bb);
           auto z = static_cast<ui_t>(bb - aa);
-          if(_::signbit(a) != _::signbit(b)) ++z;
+          if(signbit(a) != signbit(b)) ++z;
           return static_cast<double>(z) / 2.;
         }
       }
-      else if constexpr(std::is_integral_v<T> && !std::is_same_v<T, bool>)
+      else if constexpr(std::is_integral_v<T>)
       {
         using u_t = typename std::make_unsigned<T>::type;
         auto ua   = static_cast<u_t>(a);
@@ -4219,28 +4369,121 @@ namespace tts
       else
       {
         static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>,
-                      "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare."
-                      "Did you mean to use TTS_ALL_ULP_EQUAL or to overload tts::ulp_check ?");
+                      "[TTS] TTS_ULP_EQUAL requires integral or floating points data to compare. "
+                      "Did you mean to use TTS_ALL_ULP_EQUAL or to specialize "
+                      "tts::precision<T>::ulp ?");
         return 0.;
       }
     }
-    else
+    static bool ieee(T const& a, T const& b)
     {
-      using common_t = std::common_type_t<T, U>;
-      return ulp_check(static_cast<common_t>(a), static_cast<common_t>(b));
+      static_assert(
+      !requires { ieee_equal(a, b); },
+      "[TTS] tts::ieee_equal is no longer a customization point. "
+      "Specialize tts::precision<T>::ieee instead.");
+      if constexpr(std::is_floating_point_v<T>) return (a == b) || (is_nan(a) && is_nan(b));
+      else return eq(a, b);
     }
+  };
+}
+namespace tts
+{
+  template<typename T> struct precision
+  {
+  };
+  namespace _
+  {
+    template<typename T> inline double dispatch_absolute(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::absolute(a, b); }) return precision<T>::absolute(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::absolute; },
+        "[TTS] tts::precision<T>::absolute does not accept the two operands.");
+        return builtin_precision<T>::absolute(a, b);
+      }
+    }
+    template<typename T> inline double dispatch_relative(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::relative(a, b); }) return precision<T>::relative(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::relative; },
+        "[TTS] tts::precision<T>::relative does not accept the two operands.");
+        return builtin_precision<T>::relative(a, b);
+      }
+    }
+    template<typename T> inline double dispatch_ulp(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::ulp(a, b); }) return precision<T>::ulp(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::ulp; },
+        "[TTS] tts::precision<T>::ulp does not accept the two operands.");
+        return builtin_precision<T>::ulp(a, b);
+      }
+    }
+    template<typename T> inline bool dispatch_ieee(T const& a, T const& b)
+    {
+      if constexpr(requires { precision<T>::ieee(a, b); }) return precision<T>::ieee(a, b);
+      else
+      {
+        static_assert(
+        !requires { precision<T>::ieee; },
+        "[TTS] tts::precision<T>::ieee does not accept the two operands.");
+        return builtin_precision<T>::ieee(a, b);
+      }
+    }
+    template<typename T>
+    concept native_precision = !requires { precision<T>::relative; };
+    template<typename T, typename N> constexpr bool reads_as_percent(N const& n)
+    {
+      using type = std::remove_cvref_t<T>;
+      if constexpr(native_precision<type> && std::is_arithmetic_v<type> &&
+                   !std::is_same_v<type, bool>)
+        return n >= 1 && n != std::numeric_limits<N>::infinity();
+      else return false;
+    }
+  }
+  template<typename T, typename U> inline double absolute_check(T const& a, U const& b)
+  {
+    static_assert(std::is_same_v<T, U>,
+                  "[TTS] TTS_ABSOLUTE_EQUAL needs both operands to have the same type. "
+                  "Comparing through their common type would express the distance in the unit "
+                  "of the promoted type, which is not the one being tested. Convert the "
+                  "expected value at the call site instead.");
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_absolute(a, b);
+    else return 0.;
+  }
+  template<typename T, typename U> inline double relative_check(T const& a, U const& b)
+  {
+    static_assert(std::is_same_v<T, U>,
+                  "[TTS] TTS_RELATIVE_EQUAL needs both operands to have the same type. "
+                  "Comparing through their common type would express the distance in the unit "
+                  "of the promoted type, which is not the one being tested. Convert the "
+                  "expected value at the call site instead.");
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_relative(a, b);
+    else return 0.;
+  }
+  template<typename T, typename U> inline double ulp_check(T const& a, U const& b)
+  {
+    static_assert(std::is_same_v<T, U>,
+                  "[TTS] TTS_ULP_EQUAL needs both operands to have the same type. "
+                  "Comparing through their common type would express the distance in the unit "
+                  "of the promoted type, which is not the one being tested. Convert the "
+                  "expected value at the call site instead.");
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_ulp(a, b);
+    else return 0.;
   }
   template<typename T, typename U> inline bool ieee_check(T const& a, U const& b)
   {
-    if constexpr(requires { ieee_equal(a, b); }) return ieee_equal(a, b);
+    if constexpr(std::is_same_v<T, U>) return _::dispatch_ieee(a, b);
     else if constexpr(std::is_floating_point_v<T>)
-    {
       return (a == b) || (_::is_nan(a) && _::is_nan(b));
-    }
-    else
-    {
-      return _::eq(a, b);
-    }
+    else return _::eq(a, b);
   }
 }
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)                                 \
@@ -4290,7 +4533,21 @@ namespace tts
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)                                                           \
-  TTS_PRECISION(L, R, N, "%", ::tts::relative_check, 8, __VA_ARGS__)
+  (                                                                                                \
+  ::tts::_::reads_as_percent<decltype(L)>(N)                                                       \
+  ? TTS_PERCENT_TOLERANCE_##__VA_ARGS__(N)                                                         \
+  : TTS_PRECISION(L, R, N, "rel", ::tts::relative_check, 8, __VA_ARGS__))
+#define TTS_PERCENT_TOLERANCE_(N)         TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FAIL)
+#define TTS_PERCENT_TOLERANCE_REQUIRED(N) TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FATAL)
+#define TTS_PERCENT_TOLERANCE_IMPL(N, FAILURE)                                                     \
+  [ & ]()                                                                                          \
+  {                                                                                                \
+    FAILURE("Tolerance %.*g reads as a percentage: TTS 4 compares a ratio, divide it by a "        \
+            "hundred.",                                                                            \
+            8,                                                                                     \
+            static_cast<double>(N));                                                               \
+    return ::tts::_::logger {};                                                                    \
+  }()
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_ULP_EQUAL(L, R, N, ...)
@@ -4426,7 +4683,10 @@ namespace tts::_
 #define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)
 #else
 #define TTS_ALL_RELATIVE_EQUAL(L, R, N, ...)                                                       \
-  TTS_ALL(L, R, ::tts::relative_check, N, "%", __VA_ARGS__)
+  (                                                                                                \
+  ::tts::_::reads_as_percent<decltype(*::tts::_::begin(L))>(N)                                     \
+  ? TTS_PERCENT_TOLERANCE_##__VA_ARGS__(N)                                                         \
+  : TTS_ALL(L, R, ::tts::relative_check, N, "rel", __VA_ARGS__))
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_ALL_ULP_EQUAL(L, R, N, ...)
@@ -4575,8 +4835,7 @@ namespace tts
     template<typename P> void print_producer(P const& prod, auto alt)
     {
       if(::tts::is_quiet()) return;
-      if constexpr(requires(P const& p) { to_text(p); })
-        ::tts::output().writeln(::tts::as_text(prod));
+      if constexpr(::tts::_::described<P>) ::tts::output().writeln(::tts::as_text(prod));
       else ::tts::output().writeln(alt);
     }
   }
@@ -4589,7 +4848,7 @@ namespace tts
     buffer<out_type> ref_out(count), new_out(count);
     buffer<RefType>  inputs(count);
     for(std::size_t i = 0; i < inputs.size(); ++i)
-      inputs[ i ] = produce(type<RefType> {}, g, i, count);
+      inputs[ i ] = ::tts::produce(type<RefType> {}, g, i, count);
     std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
     double               max_ulp    = 0.;
     std::size_t          nb_buckets = 2 + 1 + 16;
@@ -4688,14 +4947,18 @@ namespace tts
     {
       return ::tts::random_value(mini, maxi);
     }
-    friend tts::text to_text(realistic_generator const& s)
-    {
-      return tts::text {"realistic_generator<%s>(%s,%s)",
-                        tts::as_text(typename_<T>).data(),
-                        tts::as_text(s.mini).data(),
-                        tts::as_text(s.maxi).data()};
-    }
   private:
+    template<typename> friend struct display;
     T mini, maxi;
+  };
+  template<typename T> struct display<realistic_generator<T>>
+  {
+    static text render(realistic_generator<T> const& s)
+    {
+      return text {"realistic_generator<%s>(%s,%s)",
+                   as_text(typename_<T>).data(),
+                   as_text(s.mini).data(),
+                   as_text(s.maxi).data()};
+    }
   };
 }
