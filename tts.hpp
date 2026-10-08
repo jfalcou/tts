@@ -41,35 +41,6 @@ namespace tts
 #endif
 namespace tts::_
 {
-  template<typename T>
-  concept stream = requires(T& os) {
-    { os.copyfmt(os) };
-    { os.fill(0) };
-  };
-  template<typename T>
-  concept string = requires(T const& s) {
-    typename T::size_type;
-    typename T::value_type;
-    { s[ 0 ] } -> std::convertible_to<typename T::value_type>;
-    { s.data() } -> std::convertible_to<typename T::value_type const*>;
-    { s.size() } -> std::same_as<typename T::size_type>;
-    { s.find_first_of(typename T::value_type {}) } -> std::same_as<typename T::size_type>;
-  };
-  template<typename T>
-  concept optional = requires(T const& o) {
-    typename T::value_type;
-    { o.has_value() } -> std::convertible_to<bool>;
-    { o.value() } -> std::convertible_to<typename T::value_type>;
-    { o.value_or(0) };
-  };
-  template<typename T>
-  concept sequence = requires(T const& s) {
-    { s.begin() };
-    { s.end() };
-  };
-}
-namespace tts::_
-{
   template<typename T> using identity_t = T;
   template<typename, typename = void> extern identity_t<void (*)() noexcept> declval;
   template<typename T> extern identity_t<T && (*)() noexcept> declval<T, std::void_t<T&&>>;
@@ -158,6 +129,146 @@ namespace tts::_
 #define TTS_MAYBE_STRIP_PARENS_1(x)          x
 #define TTS_MAYBE_STRIP_PARENS_2(x)          TTS_APPLY(TTS_MAYBE_STRIP_PARENS_2_I, x)
 #define TTS_MAYBE_STRIP_PARENS_2_I(...)      __VA_ARGS__
+namespace tts::_
+{
+  template<typename Signature> struct erased;
+  template<typename R, typename... Args> struct erased<R(Args...)>
+  {
+    using signature_t = R (*)(void*, Args...);
+    using cleanup_t   = void (*)(void*);
+    erased()          = default;
+    erased(R (*f)(Args...))
+        : payload {reinterpret_cast<void*>(f)}
+        , cleanup {destroy_nothing}
+        , invoker {invoke_ptr}
+    {
+    }
+    template<typename Function>
+    erased(Function f)
+        : payload {new Function {TTS_MOVE(f)}}
+        , cleanup {destroy<Function>}
+        , invoker {invoke<Function>}
+    {
+    }
+    erased(erased&& other) noexcept
+        : payload {other.payload}
+        , cleanup {other.cleanup}
+        , invoker {other.invoker}
+    {
+      other.payload = nullptr;
+    }
+    erased& operator=(erased&& other) noexcept
+    {
+      if(payload) cleanup(payload);
+      payload       = other.payload;
+      cleanup       = other.cleanup;
+      invoker       = other.invoker;
+      other.payload = nullptr;
+      return *this;
+    }
+    erased(erased const&)            = delete;
+    erased& operator=(erased const&) = delete;
+    ~erased()
+    {
+      if(payload) cleanup(payload);
+    }
+    R operator()(Args... args) const
+    {
+      assert(payload);
+      return invoker(payload, args...);
+    }
+    explicit operator bool() const
+    {
+      return payload != nullptr;
+    }
+    void*       payload = nullptr;
+    cleanup_t   cleanup = nullptr;
+    signature_t invoker = nullptr;
+  private:
+    template<typename T> static R invoke(void* data, Args... args)
+    {
+      return (*static_cast<T*>(data))(args...);
+    }
+    static R invoke_ptr(void* data, Args... args)
+    {
+      return reinterpret_cast<R (*)(Args...)>(data)(args...);
+    }
+    template<typename T> static void destroy(void* data)
+    {
+      delete static_cast<T*>(data);
+    }
+    static void destroy_nothing(void*)
+    {
+    }
+  };
+  using callable = erased<void()>;
+}
+namespace tts::_
+{
+  using abort_handler                  = erased<void(int)>;
+  inline callable      abort_epilogue  = {};
+  inline abort_handler abort_action    = {};
+  inline int           abort_exit_code = 1;
+  [[noreturn]] inline void exit_now()
+  {
+    fflush(stdout);
+    fflush(stderr);
+    std::_Exit(abort_exit_code);
+  }
+  [[noreturn]] inline void perform_abort(int reason)
+  {
+    if(abort_epilogue) abort_epilogue();
+    if(abort_action) abort_action(reason);
+    exit_now();
+  }
+}
+namespace tts
+{
+  template<typename Handler> inline _::abort_handler set_abort_handler(Handler h)
+  {
+    _::abort_handler previous = TTS_MOVE(_::abort_action);
+    _::abort_action           = _::abort_handler {TTS_MOVE(h)};
+    return previous;
+  }
+}
+#if defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <windows.h>
+#include <profileapi.h>
+#else
+#include <time.h>
+#endif
+namespace tts::_
+{
+  template<typename T>
+  concept stream = requires(T& os) {
+    { os.copyfmt(os) };
+    { os.fill(0) };
+  };
+  template<typename T>
+  concept string = requires(T const& s) {
+    typename T::size_type;
+    typename T::value_type;
+    { s[ 0 ] } -> std::convertible_to<typename T::value_type>;
+    { s.data() } -> std::convertible_to<typename T::value_type const*>;
+    { s.size() } -> std::same_as<typename T::size_type>;
+    { s.find_first_of(typename T::value_type {}) } -> std::same_as<typename T::size_type>;
+  };
+  template<typename T>
+  concept optional = requires(T const& o) {
+    typename T::value_type;
+    { o.has_value() } -> std::convertible_to<bool>;
+    { o.value() } -> std::convertible_to<typename T::value_type>;
+    { o.value_or(0) };
+  };
+  template<typename T>
+  concept sequence = requires(T const& s) {
+    { s.begin() };
+    { s.end() };
+  };
+}
+#include <cstdarg>
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 namespace tts
@@ -187,17 +298,7 @@ namespace tts
     explicit text(char const* format, Args... args)
         : text()
     {
-      int len = snprintf(nullptr, 0, format, args...);
-      if(len > 0)
-      {
-        auto sz = static_cast<std::size_t>(len);
-        data_   = reinterpret_cast<char*>(malloc(sz + 1));
-        if(data_)
-        {
-          size_ = sz;
-          snprintf(data_, size_ + 1, format, args...);
-        }
-      }
+      assign(format, args...);
     }
     text(text const& other)
         : text()
@@ -322,6 +423,26 @@ namespace tts
       return a <=> text {b};
     }
   private:
+    void assign(char const* format, ...)
+    {
+      va_list args;
+      va_list probe;
+      va_start(args, format);
+      va_copy(probe, args);
+      int len = vsnprintf(nullptr, 0, format, probe);
+      va_end(probe);
+      if(len > 0)
+      {
+        auto sz = static_cast<std::size_t>(len);
+        data_   = reinterpret_cast<char*>(malloc(sz + 1));
+        if(data_)
+        {
+          size_ = sz;
+          vsnprintf(data_, size_ + 1, format, args);
+        }
+      }
+      va_end(args);
+    }
     char*  data_ = nullptr;
     size_t size_ = 0;
   };
@@ -348,6 +469,32 @@ namespace tts
 {
   using nanoseconds = unsigned long long;
   using counter = unsigned long long;
+}
+namespace tts::_
+{
+  inline nanoseconds now_ns()
+  {
+#if defined(_WIN32)
+    LARGE_INTEGER freq;
+    LARGE_INTEGER count;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&count);
+    return static_cast<nanoseconds>(static_cast<double>(count.QuadPart) * 1e9 /
+                                    static_cast<double>(freq.QuadPart));
+#else
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return static_cast<nanoseconds>(ts.tv_sec) * 1'000'000'000ULL +
+           static_cast<nanoseconds>(ts.tv_nsec);
+#endif
+  }
+  inline ::tts::text format_duration(double duration_ns)
+  {
+    if(duration_ns < 999.5) return ::tts::text {"%.0f ns", duration_ns};
+    if(duration_ns < 999'999.5) return ::tts::text {"%.3f us", duration_ns / 1'000.0};
+    if(duration_ns < 999'999'500.0) return ::tts::text {"%.3f ms", duration_ns / 1'000'000.0};
+    return ::tts::text {"%.3f s", duration_ns / 1'000'000'000.0};
+  }
 }
 namespace tts::_
 {
@@ -576,600 +723,6 @@ namespace tts::_
     if(printable)
       ::tts::output().writeln(
       "--------------------------------------------------------------------------------");
-  }
-}
-namespace tts
-{
-  struct colorized_sink : output_sink
-  {
-    explicit colorized_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const& t) override
-    {
-      char const* s = t.data();
-      if(strcmp(s, "\n") == 0)
-      {
-        if(color_applied_) target_->write(text {"\033[0m"});
-        color_applied_ = false;
-        target_->write(t);
-        return;
-      }
-      if(active_color_ && !color_applied_)
-      {
-        target_->write(text {active_color_});
-        color_applied_ = true;
-      }
-      target_->write(t);
-      if(revert_to_)
-      {
-        active_color_  = revert_to_;
-        color_applied_ = false;
-        revert_to_     = nullptr;
-      }
-    }
-    void test_started([[maybe_unused]] text const& name) override
-    {
-      set_color(nullptr);
-    }
-    void assertion_failed([[maybe_unused]] text const& location,
-                          [[maybe_unused]] text const& message,
-                          [[maybe_unused]] bool        fatal) override
-    {
-      set_color("\033[31m");
-    }
-    void test_finished([[maybe_unused]] text const& name,
-                       bool                         passed,
-                       bool                         invalid,
-                       [[maybe_unused]] nanoseconds duration_ns) override
-    {
-      if(invalid) set_color("\033[33m");
-      else if(passed) set_color("\033[32m");
-      else set_color(nullptr);
-    }
-    void suite_finished([[maybe_unused]] counter fail_count,
-                        [[maybe_unused]] counter invalid_count) override
-    {
-      set_color("\033[1m");
-    }
-    void suite_metric(outcome                  kind,
-                      [[maybe_unused]] counter count,
-                      [[maybe_unused]] counter total) override
-    {
-      using enum outcome;
-      revert_to_ = active_color_;
-      switch(kind)
-      {
-      case success: set_color("\033[1;32m"); break;
-      case failure: set_color("\033[1;31m"); break;
-      case invalid: set_color("\033[1;33m"); break;
-      }
-    }
-    void suite_aborted() override
-    {
-      set_color("\033[31m");
-    }
-    void flush() override
-    {
-      target_->flush();
-    }
-  private:
-    void set_color(char const* color)
-    {
-      active_color_  = color;
-      color_applied_ = false;
-    }
-    output_sink* target_;
-    char const*  active_color_  = nullptr;
-    bool         color_applied_ = false;
-    char const*  revert_to_     = nullptr;
-  };
-}
-namespace tts
-{
-  struct diagnostics_sink : output_sink
-  {
-    explicit diagnostics_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const& t) override
-    {
-      target_->write(t);
-    }
-    void assertion_failed(text const& location, text const& message, bool fatal) override
-    {
-      char const* loc = location.data();
-      std::size_t len = strlen(loc);
-      target_->write(text {"%.*s: %s: %s\n",
-                           static_cast<int>(len - 2),
-                           loc + 1,
-                           fatal ? "fatal error" : "error",
-                           message.data()});
-    }
-    void flush() override
-    {
-      target_->flush();
-    }
-  private:
-    output_sink* target_;
-  };
-}
-TTS_DISABLE_WARNING_PUSH
-TTS_DISABLE_WARNING_CRT_SECURE
-namespace tts::_
-{
-  inline ::tts::text json_escape(::tts::text const& t)
-  {
-    ::tts::text out;
-    for(char c: t)
-    {
-      switch(c)
-      {
-      case '"': out += R"(\")"; break;
-      case '\\': out += R"(\\)"; break;
-      case '\n': out += "\\n"; break;
-      case '\r': out += "\\r"; break;
-      case '\t': out += "\\t"; break;
-      default:
-        if(static_cast<unsigned char>(c) < 0x20)
-          out += ::tts::text {"\\u%04x", static_cast<unsigned>(static_cast<unsigned char>(c))};
-        else out += ::tts::text {"%c", c};
-        break;
-      }
-    }
-    return out;
-  }
-}
-namespace tts
-{
-  struct json_sink : output_sink
-  {
-    explicit json_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const&) override
-    {
-    }
-    void assertion_failed(text const& location, text const& message, bool fatal) override
-    {
-      char const* loc      = location.data();
-      std::size_t len      = strlen(loc);
-      auto        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};
-      char const* colon    = strrchr(stripped.data(), ':');
-      text        file =
-      colon ? text {"%.*s", static_cast<int>(colon - stripped.data()), stripped.data()} : stripped;
-      int line = 0;
-      if(colon) sscanf(colon + 1, "%d", &line);
-      if(!current_failures_.is_empty()) current_failures_ += ",";
-      current_failures_ += text {R"({"location":{"file":"%s","line":%d},"message":"%s",)"
-                                 R"("fatal":%s})",
-                                 _::json_escape(file).data(),
-                                 line,
-                                 _::json_escape(message).data(),
-                                 fatal ? "true" : "false"};
-    }
-    void
-    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
-    {
-      char const* status = "failed";
-      if(invalid)
-      {
-        status = "invalid";
-        ++invalid_count_;
-      }
-      else if(passed)
-      {
-        status = "passed";
-        ++passed_count_;
-      }
-      else ++failed_count_;
-      total_duration_ns_ += duration_ns;
-      if(!body_.is_empty()) body_ += ",";
-      body_ += text {R"({"name":"%s","status":"%s","duration_ns":%llu,"failures":[%s]})",
-                     _::json_escape(name).data(),
-                     status,
-                     duration_ns,
-                     current_failures_.data()};
-      current_failures_ = text {};
-    }
-    text render() const
-    {
-      counter total = passed_count_ + failed_count_ + invalid_count_;
-      return text {R"({"tests":[%s],"summary":{"total":%llu,"passed":%llu,"failed":%llu,)"
-                   R"("invalid":%llu,"duration_ns":%llu}})",
-                   body_.data(),
-                   total,
-                   passed_count_,
-                   failed_count_,
-                   invalid_count_,
-                   total_duration_ns_};
-    }
-    void dump(output_sink& target)
-    {
-      target.write(render());
-      clear();
-    }
-    void dump()
-    {
-      stdout_sink target;
-      dump(target);
-    }
-    void clear()
-    {
-      body_              = text {};
-      current_failures_  = text {};
-      passed_count_      = 0;
-      failed_count_      = 0;
-      invalid_count_     = 0;
-      total_duration_ns_ = 0;
-    }
-    void finish() override
-    {
-      dump(*target_);
-    }
-  private:
-    output_sink* target_;
-    text         body_;
-    text         current_failures_;
-    counter      passed_count_      = 0;
-    counter      failed_count_      = 0;
-    counter      invalid_count_     = 0;
-    nanoseconds  total_duration_ns_ = 0;
-  };
-}
-TTS_DISABLE_WARNING_POP
-namespace tts::_
-{
-  inline ::tts::text xml_escape(::tts::text const& t)
-  {
-    ::tts::text out;
-    for(char c: t)
-    {
-      switch(c)
-      {
-      case '&': out += "&amp;"; break;
-      case '<': out += "&lt;"; break;
-      case '>': out += "&gt;"; break;
-      case '"': out += "&quot;"; break;
-      case '\'': out += "&apos;"; break;
-      default:
-        if(static_cast<unsigned char>(c) >= 0x20 || c == '\t' || c == '\n' || c == '\r')
-          out += ::tts::text {"%c", c};
-        break;
-      }
-    }
-    return out;
-  }
-}
-namespace tts
-{
-  struct junit_sink : output_sink
-  {
-    explicit junit_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const&) override
-    {
-    }
-    void assertion_failed(text const&           location,
-                          text const&           message,
-                          [[maybe_unused]] bool fatal) override
-    {
-      char const* loc = location.data();
-      std::size_t len = strlen(loc);
-      if(!current_failures_.is_empty()) current_failures_ += "&#10;";
-      current_failures_ +=
-      text {"%.*s: %s", static_cast<int>(len - 2), loc + 1, _::xml_escape(message).data()};
-      if(first_failure_.is_empty()) first_failure_ = _::xml_escape(message);
-    }
-    void
-    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
-    {
-      if(invalid) ++invalid_count_;
-      else if(passed) ++passed_count_;
-      else ++failed_count_;
-      total_duration_ns_ += duration_ns;
-      auto escaped_name   = _::xml_escape(name);
-      auto seconds        = text {"%.6f", static_cast<double>(duration_ns) / 1'000'000'000.0};
-      if(invalid)
-      {
-        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"><skipped/></testcase>)"
-                       "\n",
-                       escaped_name.data(),
-                       escaped_name.data(),
-                       seconds.data()};
-      }
-      else if(!passed)
-      {
-        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"><failure )"
-                       R"(message="%s">%s</failure></testcase>)"
-                       "\n",
-                       escaped_name.data(),
-                       escaped_name.data(),
-                       seconds.data(),
-                       first_failure_.data(),
-                       current_failures_.data()};
-      }
-      else
-      {
-        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"/>)"
-                       "\n",
-                       escaped_name.data(),
-                       escaped_name.data(),
-                       seconds.data()};
-      }
-      current_failures_ = text {};
-      first_failure_    = text {};
-    }
-    text render() const
-    {
-      counter total   = passed_count_ + failed_count_ + invalid_count_;
-      double  seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
-      return text {"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                   R"(<testsuites><testsuite name="TTS" tests="%llu" failures="%llu" errors="0")"
-                   R"( skipped="%llu" time="%.6f">)"
-                   "\n%s  </testsuite></testsuites>\n",
-                   total,
-                   failed_count_,
-                   invalid_count_,
-                   seconds,
-                   body_.data()};
-    }
-    void dump(output_sink& target)
-    {
-      target.write(render());
-      clear();
-    }
-    void dump()
-    {
-      stdout_sink target;
-      dump(target);
-    }
-    void clear()
-    {
-      body_              = text {};
-      current_failures_  = text {};
-      first_failure_     = text {};
-      passed_count_      = 0;
-      failed_count_      = 0;
-      invalid_count_     = 0;
-      total_duration_ns_ = 0;
-    }
-    void finish() override
-    {
-      dump(*target_);
-    }
-  private:
-    output_sink* target_;
-    text         body_;
-    text         current_failures_;
-    text         first_failure_;
-    counter      passed_count_      = 0;
-    counter      failed_count_      = 0;
-    counter      invalid_count_     = 0;
-    nanoseconds  total_duration_ns_ = 0;
-  };
-}
-namespace tts
-{
-  struct tap_sink : output_sink
-  {
-    explicit tap_sink(output_sink& target = output_handler::default_sink())
-        : target_(&target)
-    {
-    }
-    void write(text const&) override
-    {
-    }
-    void test_finished(text const&                  name,
-                       bool                         passed,
-                       [[maybe_unused]] bool        invalid,
-                       [[maybe_unused]] nanoseconds duration_ns) override
-    {
-      ++count_;
-      body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
-                      : text {"not ok %zu - %s\n", count_, name.data()};
-    }
-    text render() const
-    {
-      return text {"1..%zu\n", count_} + body_;
-    }
-    void dump(output_sink& target)
-    {
-      target.write(render());
-      clear();
-    }
-    void dump()
-    {
-      stdout_sink target;
-      dump(target);
-    }
-    void clear()
-    {
-      body_  = text {};
-      count_ = 0;
-    }
-    void finish() override
-    {
-      dump(*target_);
-    }
-  private:
-    output_sink* target_;
-    text         body_;
-    std::size_t  count_ = 0;
-  };
-}
-namespace tts::_
-{
-  template<typename Signature> struct erased;
-  template<typename R, typename... Args> struct erased<R(Args...)>
-  {
-    using signature_t = R (*)(void*, Args...);
-    using cleanup_t   = void (*)(void*);
-    erased()          = default;
-    erased(R (*f)(Args...))
-        : payload {reinterpret_cast<void*>(f)}
-        , cleanup {destroy_nothing}
-        , invoker {invoke_ptr}
-    {
-    }
-    template<typename Function>
-    erased(Function f)
-        : payload {new Function {TTS_MOVE(f)}}
-        , cleanup {destroy<Function>}
-        , invoker {invoke<Function>}
-    {
-    }
-    erased(erased&& other) noexcept
-        : payload {other.payload}
-        , cleanup {other.cleanup}
-        , invoker {other.invoker}
-    {
-      other.payload = nullptr;
-    }
-    erased& operator=(erased&& other) noexcept
-    {
-      if(payload) cleanup(payload);
-      payload       = other.payload;
-      cleanup       = other.cleanup;
-      invoker       = other.invoker;
-      other.payload = nullptr;
-      return *this;
-    }
-    erased(erased const&)            = delete;
-    erased& operator=(erased const&) = delete;
-    ~erased()
-    {
-      if(payload) cleanup(payload);
-    }
-    R operator()(Args... args) const
-    {
-      assert(payload);
-      return invoker(payload, args...);
-    }
-    explicit operator bool() const
-    {
-      return payload != nullptr;
-    }
-    void*       payload = nullptr;
-    cleanup_t   cleanup = nullptr;
-    signature_t invoker = nullptr;
-  private:
-    template<typename T> static R invoke(void* data, Args... args)
-    {
-      return (*static_cast<T*>(data))(args...);
-    }
-    static R invoke_ptr(void* data, Args... args)
-    {
-      return reinterpret_cast<R (*)(Args...)>(data)(args...);
-    }
-    template<typename T> static void destroy(void* data)
-    {
-      delete static_cast<T*>(data);
-    }
-    static void destroy_nothing(void*)
-    {
-    }
-  };
-  using callable = erased<void()>;
-}
-namespace tts::_
-{
-  using abort_handler                  = erased<void(int)>;
-  inline callable      abort_epilogue  = {};
-  inline abort_handler abort_action    = {};
-  inline int           abort_exit_code = 1;
-  [[noreturn]] inline void exit_now()
-  {
-    fflush(stdout);
-    fflush(stderr);
-    std::_Exit(abort_exit_code);
-  }
-  [[noreturn]] inline void perform_abort(int reason)
-  {
-    if(abort_epilogue) abort_epilogue();
-    if(abort_action) abort_action(reason);
-    exit_now();
-  }
-}
-namespace tts
-{
-  template<typename Handler> inline _::abort_handler set_abort_handler(Handler h)
-  {
-    _::abort_handler previous = TTS_MOVE(_::abort_action);
-    _::abort_action           = _::abort_handler {TTS_MOVE(h)};
-    return previous;
-  }
-}
-namespace tts::_
-{
-  inline constexpr auto usage_text =
-  R"(
-Flags:
-  -h, --help        Display this help message
-  -x, --hex         Print the floating results in hexfloat mode
-  -s, --scientific  Print the floating results in scientific mode
-  -v, --verbose     Display tests results regardless of their status.
-  -q, --quiet       Display only test failures percentage.
-  --allow-empty     Do not fail when the test suite registered zero test.
-  --dry             Print registered test names without running them.
-  --no-crash-guard  Leave a crash to the system instead of naming the case that caused it.
-Parameters:
-  --precision=arg   Set the precision for displaying floating pint values
-  --seed=arg        Set the PRNG seeds (default is time-based)
-  --capture=path    Capture this run's output and write it to path instead of stdout
-  --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
-  --timeout=arg     Kill the run when a case is still going after arg milliseconds
-Range specifics Parameters:
-  --block=arg       Set size of range checks samples (min. 32)
-  --loop=arg        Repeat each range checks arg times
-  --ulpmax=arg      Set global failure ulp threshold for range tests (default is 2.0)
-  --valmax=arg      Set maximal value for range tests (default is code)
-  --valmin=arg      Set minimal value for range tests (default is code)
-)";
-  inline int usage(char const* name)
-  {
-    printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
-    puts(usage_text);
-    return 0;
-  }
-}
-#if defined(_WIN32)
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <profileapi.h>
-#else
-#include <time.h>
-#endif
-namespace tts::_
-{
-  inline nanoseconds now_ns()
-  {
-#if defined(_WIN32)
-    LARGE_INTEGER freq;
-    LARGE_INTEGER count;
-    QueryPerformanceFrequency(&freq);
-    QueryPerformanceCounter(&count);
-    return static_cast<nanoseconds>(static_cast<double>(count.QuadPart) * 1e9 /
-                                    static_cast<double>(freq.QuadPart));
-#else
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return static_cast<nanoseconds>(ts.tv_sec) * 1'000'000'000ULL +
-           static_cast<nanoseconds>(ts.tv_nsec);
-#endif
-  }
-  inline ::tts::text format_duration(double duration_ns)
-  {
-    if(duration_ns < 999.5) return ::tts::text {"%.0f ns", duration_ns};
-    if(duration_ns < 999'999.5) return ::tts::text {"%.3f us", duration_ns / 1'000.0};
-    if(duration_ns < 999'999'500.0) return ::tts::text {"%.3f ms", duration_ns / 1'000'000.0};
-    return ::tts::text {"%.3f s", duration_ns / 1'000'000'000.0};
   }
 }
 TTS_DISABLE_WARNING_PUSH
@@ -2148,116 +1701,6 @@ namespace tts
 }
 namespace tts::_
 {
-  struct shard_spec
-  {
-    bool         active = false;
-    unsigned int index  = 0;
-    unsigned int total  = 1;
-    bool         selects(std::size_t position) const
-    {
-      return !active || (position % total == index);
-    }
-    std::size_t count(std::size_t suite_size) const
-    {
-      if(!active) return suite_size;
-      if(suite_size <= index) return 0;
-      return (suite_size - index - 1) / total + 1;
-    }
-  };
-  TTS_DISABLE_WARNING_PUSH
-  TTS_DISABLE_WARNING_CRT_SECURE
-  inline shard_spec parse_shard(bool& ok)
-  {
-    ok              = true;
-    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
-    if(raw.is_empty()) return {};
-    unsigned int i = 0;
-    unsigned int n = 0;
-    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
-    {
-      ok = false;
-      return {};
-    }
-    return {true, i, n};
-  }
-  TTS_DISABLE_WARNING_POP
-}
-#include <array>
-namespace tts::_
-{
-  inline constexpr std::array<char const*, 5> sink_names {"colored",
-                                                          "tap",
-                                                          "diagnostics",
-                                                          "json",
-                                                          "junit"};
-  inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
-  {
-    ok = name.is_empty();
-    for(auto candidate: sink_names)
-      ok = ok || (name == ::tts::text {candidate});
-    if(ok) return {};
-    ::tts::text expected;
-    for(std::size_t i = 0; i < sink_names.size(); ++i)
-      expected += ::tts::text {i ? ", %s" : "%s", sink_names[ i ]};
-    return ::tts::text {
-    "Unknown --sink value '%s', expected one of: %s", name.data(), expected.data()};
-  }
-}
-#include <cstdio>
-namespace tts::_
-{
-  TTS_DISABLE_WARNING_PUSH
-  TTS_DISABLE_WARNING_CRT_SECURE
-  class file_guard
-  {
-  public:
-    file_guard() = default;
-    explicit file_guard(FILE* f)
-        : file_(f)
-    {
-    }
-    file_guard(file_guard const&)            = delete;
-    file_guard& operator=(file_guard const&) = delete;
-    file_guard(file_guard&& other) noexcept
-        : file_guard()
-    {
-      swap(other);
-    }
-    file_guard& operator=(file_guard&& other) noexcept
-    {
-      file_guard {TTS_MOVE(other)}.swap(*this);
-      return *this;
-    }
-    ~file_guard()
-    {
-      close();
-    }
-    void swap(file_guard& other) noexcept
-    {
-      FILE* tmp   = file_;
-      file_       = other.file_;
-      other.file_ = tmp;
-    }
-    FILE* get() const
-    {
-      return file_;
-    }
-    explicit operator bool() const
-    {
-      return file_ != nullptr;
-    }
-  private:
-    void close()
-    {
-      if(file_) fclose(file_);
-      file_ = nullptr;
-    }
-    FILE* file_ = nullptr;
-  };
-  TTS_DISABLE_WARNING_POP
-}
-namespace tts::_
-{
   inline auto as_int(float a)
   {
     return std::bit_cast<std::uint32_t>(a);
@@ -2590,7 +2033,6 @@ namespace tts::_
     ::tts::output().finish();
   }
 }
-#include <array>
 #if defined(__EMSCRIPTEN__)
 #elif defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -2643,8 +2085,14 @@ namespace tts::_
     report_crash(cause, info->ExceptionRecord->ExceptionAddress);
     perform_abort(static_cast<int>(code));
   }
-  inline constexpr std::array<int, 4> crash_signals {SIGSEGV, SIGFPE, SIGILL, SIGABRT};
-  inline char const*                  signal_name(int sig)
+  inline constexpr int         crash_signals[] = {
+                                                  SIGSEGV,
+                                                  SIGFPE,
+                                                  SIGILL,
+                                                  SIGABRT};
+  inline constexpr std::size_t crash_signal_count =
+  sizeof(crash_signals) / sizeof(crash_signals[ 0 ]);
+  inline char const* signal_name(int sig)
   {
     switch(sig)
     {
@@ -2685,28 +2133,36 @@ namespace tts::_
       if(!armed_) return;
       stack_reserve_ready();
       handle_ = AddVectoredExceptionHandler(1, &crash_filter);
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         previous_[ i ] = signal(crash_signals[ i ], &tts_crash_on_signal);
     }
     ~crash_guard()
     {
       if(!armed_) return;
       if(handle_) RemoveVectoredExceptionHandler(handle_);
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         if(previous_[ i ] && previous_[ i ] != SIG_ERR) signal(crash_signals[ i ], previous_[ i ]);
     }
-    crash_guard(crash_guard const&)                                               = delete;
-    crash_guard&                                    operator=(crash_guard const&) = delete;
-    PVOID                                           handle_                       = nullptr;
-    std::array<void (*)(int), crash_signals.size()> previous_                     = {};
-    bool                                            armed_ = crash_guard_enabled();
+    crash_guard(crash_guard const&)            = delete;
+    crash_guard& operator=(crash_guard const&) = delete;
+    PVOID        handle_                       = nullptr;
+    using handler_t                            = void (*)(int);
+    handler_t previous_[ crash_signal_count ]  = {};
+    bool      armed_                           = crash_guard_enabled();
   };
 }
 #else
 namespace tts::_
 {
-  inline constexpr std::array<int, 5> crash_signals {SIGSEGV, SIGBUS, SIGFPE, SIGILL, SIGABRT};
-  inline char const*                  signal_name(int sig)
+  inline constexpr int         crash_signals[] = {
+                                                  SIGSEGV,
+                                                  SIGBUS,
+                                                  SIGFPE,
+                                                  SIGILL,
+                                                  SIGABRT};
+  inline constexpr std::size_t crash_signal_count =
+  sizeof(crash_signals) / sizeof(crash_signals[ 0 ]);
+  inline char const* signal_name(int sig)
   {
     switch(sig)
     {
@@ -2740,12 +2196,12 @@ namespace tts::_
 {
   inline bool alternate_stack_ready()
   {
-    alignas(16) static std::array<char, 64u * 1024u> buffer {};
-    static bool const                                that = []
+    alignas(16) static char buffer[ 64u * 1024u ] = {};
+    static bool const       that                  = []
     {
       stack_t alt  = {};
-      alt.ss_sp    = buffer.data();
-      alt.ss_size  = buffer.size();
+      alt.ss_sp    = buffer;
+      alt.ss_size  = sizeof(buffer);
       alt.ss_flags = 0;
       return sigaltstack(&alt, nullptr) == 0;
     }();
@@ -2760,20 +2216,20 @@ namespace tts::_
       action.sa_sigaction     = &tts_crash_handler;
       action.sa_flags         = SA_SIGINFO | (alternate_stack_ready() ? SA_ONSTACK : 0);
       sigemptyset(&action.sa_mask);
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         sigaction(crash_signals[ i ], &action, &previous_[ i ]);
     }
     ~crash_guard()
     {
       if(!armed_) return;
-      for(std::size_t i = 0; i < crash_signals.size(); ++i)
+      for(std::size_t i = 0; i < crash_signal_count; ++i)
         sigaction(crash_signals[ i ], &previous_[ i ], nullptr);
     }
     crash_guard(crash_guard const&)            = delete;
     crash_guard& operator=(crash_guard const&) = delete;
   private:
-    std::array<struct sigaction, crash_signals.size()> previous_ {};
-    bool                                               armed_ = crash_guard_enabled();
+    struct sigaction previous_[ crash_signal_count ] = {};
+    bool             armed_                          = crash_guard_enabled();
   };
 }
 #endif
@@ -2892,6 +2348,575 @@ namespace tts::_
   };
 }
 #endif
+namespace tts::_
+{
+  struct shard_spec
+  {
+    bool         active = false;
+    unsigned int index  = 0;
+    unsigned int total  = 1;
+    bool         selects(std::size_t position) const
+    {
+      return !active || (position % total == index);
+    }
+    std::size_t count(std::size_t suite_size) const
+    {
+      if(!active) return suite_size;
+      if(suite_size <= index) return 0;
+      return (suite_size - index - 1) / total + 1;
+    }
+  };
+  TTS_DISABLE_WARNING_PUSH
+  TTS_DISABLE_WARNING_CRT_SECURE
+  inline shard_spec parse_shard(bool& ok)
+  {
+    ok              = true;
+    ::tts::text raw = ::tts::arguments().value<::tts::text>("--shard");
+    if(raw.is_empty()) return {};
+    unsigned int i = 0;
+    unsigned int n = 0;
+    if(sscanf(raw.data(), "%u/%u", &i, &n) != 2 || n == 0 || i >= n)
+    {
+      ok = false;
+      return {};
+    }
+    return {true, i, n};
+  }
+  TTS_DISABLE_WARNING_POP
+}
+namespace tts::_
+{
+  inline constexpr char const* sink_names[] = {
+                                               "colored",
+                                               "tap",
+                                               "diagnostics",
+                                               "json",
+                                               "junit"};
+  inline constexpr std::size_t sink_count   = sizeof(sink_names) / sizeof(sink_names[ 0 ]);
+  inline ::tts::text validate_sink_name(::tts::text const& name, bool& ok)
+  {
+    ok = name.is_empty();
+    for(auto candidate: sink_names)
+      ok = ok || (name == ::tts::text {candidate});
+    if(ok) return {};
+    ::tts::text expected;
+    for(std::size_t i = 0; i < sink_count; ++i)
+      expected += ::tts::text {i ? ", %s" : "%s", sink_names[ i ]};
+    return ::tts::text {
+    "Unknown --sink value '%s', expected one of: %s", name.data(), expected.data()};
+  }
+}
+namespace tts::_
+{
+  inline constexpr auto usage_text =
+  R"(
+Flags:
+  -h, --help        Display this help message
+  -x, --hex         Print the floating results in hexfloat mode
+  -s, --scientific  Print the floating results in scientific mode
+  -v, --verbose     Display tests results regardless of their status.
+  -q, --quiet       Display only test failures percentage.
+  --allow-empty     Do not fail when the test suite registered zero test.
+  --dry             Print registered test names without running them.
+  --no-crash-guard  Leave a crash to the system instead of naming the case that caused it.
+Parameters:
+  --precision=arg   Set the precision for displaying floating pint values
+  --seed=arg        Set the PRNG seeds (default is time-based)
+  --capture=path    Capture this run's output and write it to path instead of stdout
+  --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
+  --timeout=arg     Kill the run when a case is still going after arg milliseconds
+Range specifics Parameters:
+  --block=arg       Set size of range checks samples (min. 32)
+  --loop=arg        Repeat each range checks arg times
+  --ulpmax=arg      Set global failure ulp threshold for range tests (default is 2.0)
+  --valmax=arg      Set maximal value for range tests (default is code)
+  --valmin=arg      Set minimal value for range tests (default is code)
+)";
+  inline int usage(char const* name)
+  {
+    printf("TTS Unit Tests Driver\nUsage: %s [OPTION...]", name);
+    puts(usage_text);
+    return 0;
+  }
+}
+namespace tts
+{
+  struct colorized_sink : output_sink
+  {
+    explicit colorized_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const& t) override
+    {
+      char const* s = t.data();
+      if(strcmp(s, "\n") == 0)
+      {
+        if(color_applied_) target_->write(text {"\033[0m"});
+        color_applied_ = false;
+        target_->write(t);
+        return;
+      }
+      if(active_color_ && !color_applied_)
+      {
+        target_->write(text {active_color_});
+        color_applied_ = true;
+      }
+      target_->write(t);
+      if(revert_to_)
+      {
+        active_color_  = revert_to_;
+        color_applied_ = false;
+        revert_to_     = nullptr;
+      }
+    }
+    void test_started([[maybe_unused]] text const& name) override
+    {
+      set_color(nullptr);
+    }
+    void assertion_failed([[maybe_unused]] text const& location,
+                          [[maybe_unused]] text const& message,
+                          [[maybe_unused]] bool        fatal) override
+    {
+      set_color("\033[31m");
+    }
+    void test_finished([[maybe_unused]] text const& name,
+                       bool                         passed,
+                       bool                         invalid,
+                       [[maybe_unused]] nanoseconds duration_ns) override
+    {
+      if(invalid) set_color("\033[33m");
+      else if(passed) set_color("\033[32m");
+      else set_color(nullptr);
+    }
+    void suite_finished([[maybe_unused]] counter fail_count,
+                        [[maybe_unused]] counter invalid_count) override
+    {
+      set_color("\033[1m");
+    }
+    void suite_metric(outcome                  kind,
+                      [[maybe_unused]] counter count,
+                      [[maybe_unused]] counter total) override
+    {
+      using enum outcome;
+      revert_to_ = active_color_;
+      switch(kind)
+      {
+      case success: set_color("\033[1;32m"); break;
+      case failure: set_color("\033[1;31m"); break;
+      case invalid: set_color("\033[1;33m"); break;
+      }
+    }
+    void suite_aborted() override
+    {
+      set_color("\033[31m");
+    }
+    void flush() override
+    {
+      target_->flush();
+    }
+  private:
+    void set_color(char const* color)
+    {
+      active_color_  = color;
+      color_applied_ = false;
+    }
+    output_sink* target_;
+    char const*  active_color_  = nullptr;
+    bool         color_applied_ = false;
+    char const*  revert_to_     = nullptr;
+  };
+}
+namespace tts
+{
+  struct diagnostics_sink : output_sink
+  {
+    explicit diagnostics_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const& t) override
+    {
+      target_->write(t);
+    }
+    void assertion_failed(text const& location, text const& message, bool fatal) override
+    {
+      char const* loc = location.data();
+      std::size_t len = strlen(loc);
+      target_->write(text {"%.*s: %s: %s\n",
+                           static_cast<int>(len - 2),
+                           loc + 1,
+                           fatal ? "fatal error" : "error",
+                           message.data()});
+    }
+    void flush() override
+    {
+      target_->flush();
+    }
+  private:
+    output_sink* target_;
+  };
+}
+TTS_DISABLE_WARNING_PUSH
+TTS_DISABLE_WARNING_CRT_SECURE
+namespace tts::_
+{
+  inline ::tts::text json_escape(::tts::text const& t)
+  {
+    ::tts::text out;
+    for(char c: t)
+    {
+      switch(c)
+      {
+      case '"': out += R"(\")"; break;
+      case '\\': out += R"(\\)"; break;
+      case '\n': out += "\\n"; break;
+      case '\r': out += "\\r"; break;
+      case '\t': out += "\\t"; break;
+      default:
+        if(static_cast<unsigned char>(c) < 0x20)
+          out += ::tts::text {"\\u%04x", static_cast<unsigned>(static_cast<unsigned char>(c))};
+        else out += ::tts::text {"%c", c};
+        break;
+      }
+    }
+    return out;
+  }
+}
+namespace tts
+{
+  struct json_sink : output_sink
+  {
+    explicit json_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const&) override
+    {
+    }
+    void assertion_failed(text const& location, text const& message, bool fatal) override
+    {
+      char const* loc      = location.data();
+      std::size_t len      = strlen(loc);
+      auto        stripped = text {"%.*s", static_cast<int>(len - 2), loc + 1};
+      char const* colon    = strrchr(stripped.data(), ':');
+      text        file =
+      colon ? text {"%.*s", static_cast<int>(colon - stripped.data()), stripped.data()} : stripped;
+      int line = 0;
+      if(colon) sscanf(colon + 1, "%d", &line);
+      if(!current_failures_.is_empty()) current_failures_ += ",";
+      current_failures_ += text {R"({"location":{"file":"%s","line":%d},"message":"%s",)"
+                                 R"("fatal":%s})",
+                                 _::json_escape(file).data(),
+                                 line,
+                                 _::json_escape(message).data(),
+                                 fatal ? "true" : "false"};
+    }
+    void
+    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
+    {
+      char const* status = "failed";
+      if(invalid)
+      {
+        status = "invalid";
+        ++invalid_count_;
+      }
+      else if(passed)
+      {
+        status = "passed";
+        ++passed_count_;
+      }
+      else ++failed_count_;
+      total_duration_ns_ += duration_ns;
+      if(!body_.is_empty()) body_ += ",";
+      body_ += text {R"({"name":"%s","status":"%s","duration_ns":%llu,"failures":[%s]})",
+                     _::json_escape(name).data(),
+                     status,
+                     duration_ns,
+                     current_failures_.data()};
+      current_failures_ = text {};
+    }
+    text render() const
+    {
+      counter total = passed_count_ + failed_count_ + invalid_count_;
+      return text {R"({"tests":[%s],"summary":{"total":%llu,"passed":%llu,"failed":%llu,)"
+                   R"("invalid":%llu,"duration_ns":%llu}})",
+                   body_.data(),
+                   total,
+                   passed_count_,
+                   failed_count_,
+                   invalid_count_,
+                   total_duration_ns_};
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_              = text {};
+      current_failures_  = text {};
+      passed_count_      = 0;
+      failed_count_      = 0;
+      invalid_count_     = 0;
+      total_duration_ns_ = 0;
+    }
+    void finish() override
+    {
+      dump(*target_);
+    }
+  private:
+    output_sink* target_;
+    text         body_;
+    text         current_failures_;
+    counter      passed_count_      = 0;
+    counter      failed_count_      = 0;
+    counter      invalid_count_     = 0;
+    nanoseconds  total_duration_ns_ = 0;
+  };
+}
+TTS_DISABLE_WARNING_POP
+namespace tts::_
+{
+  inline ::tts::text xml_escape(::tts::text const& t)
+  {
+    ::tts::text out;
+    for(char c: t)
+    {
+      switch(c)
+      {
+      case '&': out += "&amp;"; break;
+      case '<': out += "&lt;"; break;
+      case '>': out += "&gt;"; break;
+      case '"': out += "&quot;"; break;
+      case '\'': out += "&apos;"; break;
+      default:
+        if(static_cast<unsigned char>(c) >= 0x20 || c == '\t' || c == '\n' || c == '\r')
+          out += ::tts::text {"%c", c};
+        break;
+      }
+    }
+    return out;
+  }
+}
+namespace tts
+{
+  struct junit_sink : output_sink
+  {
+    explicit junit_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const&) override
+    {
+    }
+    void assertion_failed(text const&           location,
+                          text const&           message,
+                          [[maybe_unused]] bool fatal) override
+    {
+      char const* loc = location.data();
+      std::size_t len = strlen(loc);
+      if(!current_failures_.is_empty()) current_failures_ += "&#10;";
+      current_failures_ +=
+      text {"%.*s: %s", static_cast<int>(len - 2), loc + 1, _::xml_escape(message).data()};
+      if(first_failure_.is_empty()) first_failure_ = _::xml_escape(message);
+    }
+    void
+    test_finished(text const& name, bool passed, bool invalid, nanoseconds duration_ns) override
+    {
+      if(invalid) ++invalid_count_;
+      else if(passed) ++passed_count_;
+      else ++failed_count_;
+      total_duration_ns_ += duration_ns;
+      auto escaped_name   = _::xml_escape(name);
+      auto seconds        = text {"%.6f", static_cast<double>(duration_ns) / 1'000'000'000.0};
+      if(invalid)
+      {
+        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"><skipped/></testcase>)"
+                       "\n",
+                       escaped_name.data(),
+                       escaped_name.data(),
+                       seconds.data()};
+      }
+      else if(!passed)
+      {
+        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"><failure )"
+                       R"(message="%s">%s</failure></testcase>)"
+                       "\n",
+                       escaped_name.data(),
+                       escaped_name.data(),
+                       seconds.data(),
+                       first_failure_.data(),
+                       current_failures_.data()};
+      }
+      else
+      {
+        body_ += text {R"(    <testcase name="%s" classname="%s" time="%s"/>)"
+                       "\n",
+                       escaped_name.data(),
+                       escaped_name.data(),
+                       seconds.data()};
+      }
+      current_failures_ = text {};
+      first_failure_    = text {};
+    }
+    text render() const
+    {
+      counter total   = passed_count_ + failed_count_ + invalid_count_;
+      double  seconds = static_cast<double>(total_duration_ns_) / 1'000'000'000.0;
+      return text {"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                   R"(<testsuites><testsuite name="TTS" tests="%llu" failures="%llu" errors="0")"
+                   R"( skipped="%llu" time="%.6f">)"
+                   "\n%s  </testsuite></testsuites>\n",
+                   total,
+                   failed_count_,
+                   invalid_count_,
+                   seconds,
+                   body_.data()};
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_              = text {};
+      current_failures_  = text {};
+      first_failure_     = text {};
+      passed_count_      = 0;
+      failed_count_      = 0;
+      invalid_count_     = 0;
+      total_duration_ns_ = 0;
+    }
+    void finish() override
+    {
+      dump(*target_);
+    }
+  private:
+    output_sink* target_;
+    text         body_;
+    text         current_failures_;
+    text         first_failure_;
+    counter      passed_count_      = 0;
+    counter      failed_count_      = 0;
+    counter      invalid_count_     = 0;
+    nanoseconds  total_duration_ns_ = 0;
+  };
+}
+namespace tts
+{
+  struct tap_sink : output_sink
+  {
+    explicit tap_sink(output_sink& target = output_handler::default_sink())
+        : target_(&target)
+    {
+    }
+    void write(text const&) override
+    {
+    }
+    void test_finished(text const&                  name,
+                       bool                         passed,
+                       [[maybe_unused]] bool        invalid,
+                       [[maybe_unused]] nanoseconds duration_ns) override
+    {
+      ++count_;
+      body_ += passed ? text {"ok %zu - %s\n", count_, name.data()}
+                      : text {"not ok %zu - %s\n", count_, name.data()};
+    }
+    text render() const
+    {
+      return text {"1..%zu\n", count_} + body_;
+    }
+    void dump(output_sink& target)
+    {
+      target.write(render());
+      clear();
+    }
+    void dump()
+    {
+      stdout_sink target;
+      dump(target);
+    }
+    void clear()
+    {
+      body_  = text {};
+      count_ = 0;
+    }
+    void finish() override
+    {
+      dump(*target_);
+    }
+  private:
+    output_sink* target_;
+    text         body_;
+    std::size_t  count_ = 0;
+  };
+}
+#include <cstdio>
+namespace tts::_
+{
+  TTS_DISABLE_WARNING_PUSH
+  TTS_DISABLE_WARNING_CRT_SECURE
+  class file_guard
+  {
+  public:
+    file_guard() = default;
+    explicit file_guard(FILE* f)
+        : file_(f)
+    {
+    }
+    file_guard(file_guard const&)            = delete;
+    file_guard& operator=(file_guard const&) = delete;
+    file_guard(file_guard&& other) noexcept
+        : file_guard()
+    {
+      swap(other);
+    }
+    file_guard& operator=(file_guard&& other) noexcept
+    {
+      file_guard {TTS_MOVE(other)}.swap(*this);
+      return *this;
+    }
+    ~file_guard()
+    {
+      close();
+    }
+    void swap(file_guard& other) noexcept
+    {
+      FILE* tmp   = file_;
+      file_       = other.file_;
+      other.file_ = tmp;
+    }
+    FILE* get() const
+    {
+      return file_;
+    }
+    explicit operator bool() const
+    {
+      return file_ != nullptr;
+    }
+  private:
+    void close()
+    {
+      if(file_) fclose(file_);
+      file_ = nullptr;
+    }
+    FILE* file_ = nullptr;
+  };
+  TTS_DISABLE_WARNING_POP
+}
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE
 int TTS_CUSTOM_DRIVER_FUNCTION([[maybe_unused]] int argc, [[maybe_unused]] char const** argv)
