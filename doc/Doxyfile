@@ -16,6 +16,7 @@ LAYOUT_FILE            = layout.xml
 INPUT                  = ../include .
 INCLUDE_PATH           = ../include
 EXAMPLE_PATH           = ../test/unit/doc ../test/integration .
+EXAMPLE_PATH          += $(DOXYGEN_OUPUT)/bench
 FILE_PATTERNS          = *.hpp *.md
 
 ## How much of a page to unfold

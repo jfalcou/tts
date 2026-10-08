@@ -23,6 +23,7 @@ include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
 
 copa_add_option(TTS_BUILD_TEST "Build tests for TTS" ON LABEL "Unit tests")
 copa_add_option(TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF LABEL "Doxygen")
+copa_add_option(TTS_BENCHMARK_DOCUMENTATION "Compare TTS with other test libraries in the documentation" ON)
 copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF LABEL "Sanitizers")
 copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
 copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
@@ -73,6 +74,17 @@ if(TTS_BUILD_DOCUMENTATION)
     COLOR_HUE 189
     COLOR_SATURATION 48
     COLOR_LIGHTNESS 48)
+
+  if(TTS_BENCHMARK_DOCUMENTATION)
+    add_subdirectory(benchmarks/compile-time)
+    add_dependencies(tts-doxygen tts-compile-bench)
+  else()
+    # The page includes this block whether or not the comparison runs.
+    foreach(block meta include-gcc include-clang cases-gcc cases-clang types-gcc types-clang fits-gcc fits-clang)
+      file(WRITE "${PROJECT_BINARY_DIR}/doc/bench/bench-${block}.html"
+           "<p>This build of the documentation did not run the comparison.</p>\n")
+    endforeach()
+  endif()
 endif()
 
 ##======================================================================================================================
