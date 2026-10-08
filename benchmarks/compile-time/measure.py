@@ -58,7 +58,7 @@ def main():
     ap.add_argument("--jobs", type=int, default=2)
     args = ap.parse_args()
 
-    compilers = {name: path for name, path in (c.split("=", 1) for c in args.compiler)}
+    compilers = {name: path for name, _, path in (c.partition("=") for c in args.compiler)}
     options = shlex.split(args.options)
     libraries = {k: options + shlex.split(v) for k, v in (lib.split("=", 1) for lib in args.library)}
 

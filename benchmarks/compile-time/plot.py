@@ -47,6 +47,10 @@ def linear_fit(line):
     return my - slope * mx, slope
 
 
+def close(out):
+    return "\n".join([*out, "</svg>"])
+
+
 def chart(points, form, version):
     xmax = max(c for c, _ in (p for line in points.values() for p in line))
     step = step_for(max(t for line in points.values() for _, t in line))
@@ -66,9 +70,8 @@ def chart(points, form, version):
                    % (LEFT, WIDTH - RIGHT, y(tick), y(tick), INK))
         out.append('<text x="%d" y="%.1f" fill="%s" text-anchor="end">%g s</text>' % (LEFT - 6, y(tick) + 4, INK, tick))
         tick += step
-    for c in sorted({c for line in points.values() for c, _ in line}):
-        out.append('<text x="%.1f" y="%d" fill="%s" text-anchor="middle">%d</text>'
-                   % (x(c), HEIGHT - BOTTOM + 16, INK, c))
+    out.extend('<text x="%.1f" y="%d" fill="%s" text-anchor="middle">%d</text>' % (x(c), HEIGHT - BOTTOM + 16, INK, c)
+               for c in sorted({c for line in points.values() for c, _ in line}))
     out.append('<text x="%.1f" y="%d" fill="%s" text-anchor="middle">test cases in the unit</text>'
                % ((LEFT + WIDTH - RIGHT) / 2, HEIGHT - 8, INK))
 
@@ -87,8 +90,7 @@ def chart(points, form, version):
         out.append('<polyline points="%s" fill="none" stroke="%s" stroke-width="2.5"/>' % (path, COLORS[lib]))
         for c, t in line:
             out.append('<circle cx="%.1f" cy="%.1f" r="3" fill="%s"/>' % (x(c), y(t), COLORS[lib]))
-    out.append("</svg>")
-    return "\n".join(out)
+    return close(out)
 
 
 def include_chart(rows, version):
@@ -119,8 +121,7 @@ def include_chart(rows, version):
                     '<rect x="%d" y="%d" width="%.1f" height="16" fill="%s"/>' % (left, y, x(cpu) - left, COLORS[lib]),
                     '<text x="%.1f" y="%d" fill="%s">%.2f s, %d MiB</text>'
                     % (x(cpu) + 6, y + 12, INK, cpu, peak // 1024)])
-    out.append("</svg>")
-    return "\n".join(out)
+    return close(out)
 
 
 def types_chart(pairs, version, n):
@@ -158,8 +159,7 @@ def types_chart(pairs, version, n):
                     % (x(together) + 6, y + 28, INK, together, 100 * (together - separate) / separate)])
     out.append('<text x="%d" y="%d" fill="%s">solid: %d separate cases, light: one template case</text>'
                % (left, height - 10, INK, n))
-    out.append("</svg>")
-    return "\n".join(out)
+    return close(out)
 
 
 def summary(data, fits, types=None):
@@ -259,7 +259,7 @@ def types_pairs(data, compiler):
 
 
 def main(results, destination):
-    data = json.loads(pathlib.Path(results).read_text())
+    data = json.loads(pathlib.Path(results).read_text())  # NOSONAR - a path the build gives
     destination = pathlib.Path(destination)
     all_fits, types = {}, {}
     for compiler, version in data["compilers"].items():
