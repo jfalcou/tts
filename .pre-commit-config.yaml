@@ -12,3 +12,10 @@ repos:
   hooks:
   - id: clang-format
     types_or: [c++]
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.16.6
+  hooks:
+  - id: ruff-check
+    # C416 asks for dict(pairs) where SonarCloud S7500 asks for the comprehension it would replace.
+    args: ["--select=E,F,W,I,C4,C90,PERF,SIM", "--ignore=C416", "--line-length=120",
+           "--config=lint.mccabe.max-complexity=15"]
