@@ -141,6 +141,8 @@ $(function(){initNavTree('group__tools-text.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:tts_3A_3Adisplay_3C_20T_20_3E" id="r_tts_3A_3Adisplay_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1display.html">tts::display&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">How a value of type T is rendered in a report.  <a href="structtts_1_1display.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Atext" id="r_tts_3A_3Atext"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1text.html">tts::text</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lightweight string-like object.  <a href="structtts_1_1text.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
@@ -189,23 +191,32 @@ template&lt;typename T&gt; </div>
 <div class="line">    <span class="keywordtype">int</span> i;</div>
 <div class="line">  };</div>
 <div class="line"> </div>
-<div class="line">  tts::text to_text(some_type <span class="keyword">const</span>&amp; s)</div>
-<div class="line">  {</div>
-<div class="line">    <span class="keywordflow">return</span> <span class="stringliteral">&quot;some_type[&quot;</span> + <a class="code hl_function" href="#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(s.i) + <span class="stringliteral">&quot;]&quot;</span>;</div>
-<div class="line">  }</div>
-<div class="line"> </div>
 <div class="line">  <span class="keyword">struct </span>some_other_type</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keywordtype">int</span>              j;</div>
+<div class="line">    <span class="keywordtype">int</span> j;</div>
+<div class="line">  };</div>
+<div class="line">}</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">friend</span> tts::text to_text(some_other_type <span class="keyword">const</span>&amp; s)</div>
+<div class="line"><span class="keyword">namespace </span>tts</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1display.html">display</a>&lt;space::some_type&gt;</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">static</span> text render(space::some_type <span class="keyword">const</span>&amp; s)</div>
 <div class="line">    {</div>
-<div class="line">      <span class="keywordflow">return</span> <span class="stringliteral">&quot;[[&quot;</span> + <a class="code hl_function" href="#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(s.j) + <span class="stringliteral">&quot;]]&quot;</span>;</div>
+<div class="line">      <span class="keywordflow">return</span> <span class="stringliteral">&quot;some_type[&quot;</span> + <a class="code hl_function" href="#ga044124276e1b1e518a746121e16b0fad">as_text</a>(s.i) + <span class="stringliteral">&quot;]&quot;</span>;</div>
+<div class="line">    }</div>
+<div class="line">  };</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1display.html">display</a>&lt;space::some_other_type&gt;</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">static</span> text render(space::some_other_type <span class="keyword">const</span>&amp; s)</div>
+<div class="line">    {</div>
+<div class="line">      <span class="keywordflow">return</span> <span class="stringliteral">&quot;[[&quot;</span> + <a class="code hl_function" href="#ga044124276e1b1e518a746121e16b0fad">as_text</a>(s.j) + <span class="stringliteral">&quot;]]&quot;</span>;</div>
 <div class="line">    }</div>
 <div class="line">  };</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check display of type with specific to_text&quot;</span>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check display of type with a tts::display specialization&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_function" href="#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(space::some_type {42}), <span class="stringliteral">&quot;some_type[42]&quot;</span>);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(<a class="code hl_function" href="#ga044124276e1b1e518a746121e16b0fad">tts::as_text</a>(space::some_other_type {63}), <span class="stringliteral">&quot;[[63]]&quot;</span>);</div>

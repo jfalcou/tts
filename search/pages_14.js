@@ -1,21 +1,9 @@
 var searchData=
 [
-  ['s_20changed_0',['s Changed',['../changelog.html#autotoc_md1',1,'What&apos;s Changed'],['../changelog.html#autotoc_md8',1,'What&apos;s Changed'],['../changelog.html#autotoc_md14',1,'What&apos;s Changed']]],
-  ['s_20fine_20to_20use_1',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
-  ['scarpetta_2',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]],
-  ['schema_3',['Schema',['../output-sinks.html#autotoc_md59',1,'Schema'],['../output-sinks.html#autotoc_md65',1,'Schema']]],
-  ['setup_4',['Setup',['../setup.html',1,'']]],
-  ['setup_5',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
-  ['setup_20with_20cpm_6',['Setup with CPM',['../setup.html#setup-cpm',1,'']]],
-  ['short_20example_7',['A Short Example',['../index.html#autotoc_md36',1,'']]],
-  ['simple_20format_20sinks_8',['Simple Format Sinks',['../output-sinks.html#autotoc_md40',1,'']]],
-  ['sinks_9',['Sinks',['../output-sinks.html',1,'Built-in Output Sinks'],['../output-sinks.html#autotoc_md40',1,'Simple Format Sinks'],['../output-sinks.html#autotoc_md56',1,'Structured Format Sinks']]],
-  ['source_10',['Install from the source',['../setup.html#setup-source',1,'']]],
-  ['specify_20a_20test_20case_11',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
-  ['standalone_20setup_12',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
-  ['started_13',['Getting Started',['../tts101.html',1,'']]],
-  ['structured_20format_20sinks_14',['Structured Format Sinks',['../output-sinks.html#autotoc_md56',1,'']]],
-  ['stuck_20runs_15',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
-  ['supported_20compilers_16',['Supported Compilers',['../index.html#autotoc_md35',1,'']]],
-  ['system_17',['The Tiny Test System',['../index.html',1,'']]]
+  ['range_20parameters_0',['Range Parameters',['../cli.html#autotoc_md33',1,'']]],
+  ['rationale_1',['Rationale',['../rationale.html',1,'']]],
+  ['reference_20documentation_2',['Reference Documentation',['../tts_reference.html',1,'']]],
+  ['relative_20comparison_3',['Relative Comparison',['../customize.html#autotoc_md36',1,'']]],
+  ['release_4',['First public release.',['../changelog.html#autotoc_md27',1,'']]],
+  ['runs_5',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]]
 ];

@@ -44,6 +44,7 @@ var menudata={children:[
 {text:"Type Tests",url:"group__test-types.html"}]},
 {text:"Tools and Helpers",url:"group__tools-config.html",children:[
 {text:"Configuration",url:"group__tools-config.html"},
+{text:"Comparison Utilities",url:"group__tools-comparison.html"},
 {text:"Data Generators",url:"group__tools-generators-class.html"},
 {text:"Output Utilities",url:"group__tools-output.html"},
 {text:"Precision Utilities",url:"group__tools-precision.html"},

@@ -216,7 +216,7 @@ Constexpr Relation Checks</h2></td></tr>
 <p><code>#include &lt;tts/test/relation.hpp&gt;</code></p>
 
 <p>Performs equality comparison between the bits of two expressions. </p>
-<p>This comparison is performed by using memcmp on the underlying representation of both expressions.</p>
+<p>This comparison goes through the <span class="tt">bit_equal</span> member of <a class="el" href="structtts_1_1comparison.html" title="When two values are equal, when one comes before the other, and when their bits agree.">tts::comparison</a>, a <span class="tt">memcmp</span> over the whole object unless the type specializes it.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">LHS,RHS</td><td>Expressions to compare. </td></tr>
@@ -265,7 +265,7 @@ Constexpr Relation Checks</h2></td></tr>
 <p><code>#include &lt;tts/test/relation.hpp&gt;</code></p>
 
 <p>Performs inequality comparison between the bits of two expressions. </p>
-<p>This comparison is performed by using memcmp on the underlying representation of both expressions.</p>
+<p>This comparison goes through the <span class="tt">bit_equal</span> member of <a class="el" href="structtts_1_1comparison.html" title="When two values are equal, when one comes before the other, and when their bits agree.">tts::comparison</a>, a <span class="tt">memcmp</span> over the whole object unless the type specializes it.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">LHS,RHS</td><td>Expressions to compare. </td></tr>

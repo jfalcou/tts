@@ -49,6 +49,7 @@ var NAVTREE =
       ] ],
       [ "Tools and Helpers", "group__tools-config.html", [
         [ "Configuration", "group__tools-config.html", null ],
+        [ "Comparison Utilities", "group__tools-comparison.html", null ],
         [ "Data Generators", "group__tools-generators-class.html", null ],
         [ "Output Utilities", "group__tools-output.html", null ],
         [ "Precision Utilities", "group__tools-precision.html", null ],

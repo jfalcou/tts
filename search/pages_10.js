@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['need_20one_20anyway_0',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]],
-  ['new_20contributors_1',['New Contributors',['../changelog.html#autotoc_md5',1,'']]],
-  ['new_20features_2',['New Features',['../changelog.html#autotoc_md4',1,'New Features'],['../changelog.html#autotoc_md10',1,'New Features']]]
+  ['macros_0',['Macros',['../tts_reference.html#autotoc_md42',1,'Testing Macros'],['../tts101.html#tuto-macro',1,'Testing Macros']]],
+  ['manual_20usage_1',['Manual Usage',['../output-sinks.html#autotoc_md48',1,'Manual Usage'],['../output-sinks.html#autotoc_md53',1,'Manual Usage'],['../output-sinks.html#autotoc_md58',1,'Manual Usage'],['../output-sinks.html#autotoc_md65',1,'Manual Usage'],['../output-sinks.html#autotoc_md71',1,'Manual Usage']]],
+  ['matters_2',['Why this matters',['../compile-time.html#compile-time-why',1,'']]],
+  ['measurement_3',['Precision Measurement',['../customize.html#customize-precision',1,'']]],
+  ['metric_4',['Precision metric',['../rationale.html#ulp-metric',1,'']]]
 ];

@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['effect_0',['Effect',['../output-sinks.html#autotoc_md42',1,'Effect'],['../output-sinks.html#autotoc_md47',1,'Effect'],['../output-sinks.html#autotoc_md52',1,'Effect'],['../output-sinks.html#autotoc_md58',1,'Effect'],['../output-sinks.html#autotoc_md64',1,'Effect']]],
-  ['environment_20variable_20fallback_1',['Environment Variable Fallback',['../cli.html#autotoc_md25',1,'']]],
-  ['equality_20and_20ordering_2',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
-  ['ever_20need_20one_20anyway_3',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]],
-  ['example_4',['Example',['../index.html#autotoc_md36',1,'A Short Example'],['../output-sinks.html#autotoc_md45',1,'Example'],['../output-sinks.html#autotoc_md50',1,'Example'],['../output-sinks.html#autotoc_md55',1,'Example'],['../output-sinks.html#autotoc_md62',1,'Example'],['../output-sinks.html#autotoc_md68',1,'Example']]],
-  ['execution_20control_5',['Execution Control',['../cli.html#autotoc_md27',1,'']]]
+  ['daring_0',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md22',1,'']]],
+  ['data_20display_1',['Data display',['../customize.html#customize-display',1,'']]],
+  ['data_20generator_2',['Data Generator',['../customize.html#autotoc_md38',1,'']]],
+  ['defined_20type_3',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]],
+  ['detective_20who_4',['Detective who',['../changelog.html#autotoc_md10',1,'Detective who?'],['../changelog.html#autotoc_md16',1,'Detective who?'],['../changelog.html#autotoc_md19',1,'Detective who?'],['../changelog.html#autotoc_md21',1,'Detective who?'],['../changelog.html#autotoc_md23',1,'Detective who?'],['../changelog.html#autotoc_md25',1,'Detective who?'],['../changelog.html#autotoc_md28',1,'Detective who?']]],
+  ['discipline_5',['Compile-Time Discipline',['../compile-time.html',1,'']]],
+  ['display_6',['Data display',['../customize.html#customize-display',1,'']]],
+  ['display_20options_7',['Display Options',['../cli.html#autotoc_md30',1,'']]],
+  ['distance_8',['ULP Distance',['../customize.html#autotoc_md34',1,'']]],
+  ['documentation_9',['Reference Documentation',['../tts_reference.html',1,'']]],
+  ['driver_10',['Tests Driver',['../customize.html#customize-driver',1,'']]]
 ];

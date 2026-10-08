@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['header_0',['Before you add a header',['../compile-time.html#compile-time-checklist',1,'']]],
-  ['headers_20we_20avoid_20and_20what_20they_20cost_1',['Headers we avoid, and what they cost',['../compile-time.html#compile-time-cost',1,'']]],
-  ['helpers_2',['Tools and Helpers',['../tts_reference.html#autotoc_md38',1,'']]]
+  ['generator_0',['Data Generator',['../customize.html#autotoc_md38',1,'']]],
+  ['getting_20started_1',['Getting Started',['../tts101.html',1,'']]],
+  ['gray_2',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md17',1,'']]]
 ];

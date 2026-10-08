@@ -143,8 +143,7 @@ $(function(){initNavTree('structtts_1_1reverse__ramp.html','','structtts_1_1reve
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, typename U = T&gt;<br />
 struct tts::reverse_ramp&lt; T, U &gt;</div><p>Defines a data generator that produce a reverse ramp of data. </p>
-<p>This generator produces a ramp starting from a final value and decreasing by a fixed step at each call. I.e., for a size <span class="tt">N</span>, the produced values are: <span class="tt">start, start-step, start-2*step, ...,
-start-(N-1)*step</span>.</p>
+<p>This generator produces a ramp read backward: the last value is <span class="tt">start</span> and every earlier one stands one step above it. I.e., for a size <span class="tt">N</span>, the produced values are: <span class="tt">start+(N-1)*step, ..., start+2*step, start+step, start</span>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Type of the initial value </td></tr>
@@ -171,13 +170,14 @@ start-(N-1)*step</span>.</p>
 <div class="line">  <span class="keywordflow">else</span></div>
 <div class="line">  {</div>
 <div class="line">    <span class="keyword">using </span>value_type = <span class="keyword">typename</span> T::value_type;</div>
+<div class="line">    <span class="keyword">auto</span> <span class="keyword">const</span> last  = ramp1.size() - 1;</div>
 <div class="line">    <span class="keywordflow">for</span>(std::size_t i = 0; i &lt; ramp1.size(); ++i)</div>
 <div class="line">    {</div>
-<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ramp1[ i ], <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(65) - <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(i));</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ramp1[ i ], <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(65) + <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(last - i));</div>
 <div class="line">    }</div>
 <div class="line">    <span class="keywordflow">for</span>(std::size_t i = 0; i &lt; ramp2.size(); ++i)</div>
 <div class="line">    {</div>
-<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ramp2[ i ], <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(10) - <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(i * 2));</div>
+<div class="line">      <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ramp2[ i ], <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>(10) + <span class="keyword">static_cast&lt;</span>value_type<span class="keyword">&gt;</span>((last - i) * 2));</div>
 <div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line">};</div>

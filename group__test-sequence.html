@@ -150,7 +150,7 @@ Macros</h2></td></tr>
 <tr class="memitem:gaa8195215a7938bde4219b81dbc772a92" id="r_gaa8195215a7938bde4219b81dbc772a92"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa8195215a7938bde4219b81dbc772a92">TTS_ALL_IEEE_EQUAL</a>(L,  R, ...)</td></tr>
 <tr class="memdesc:gaa8195215a7938bde4219b81dbc772a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within 0 ULP and that their sizes are equal.  <br /></td></tr>
 <tr class="memitem:gaac398cee8b7655a7e49ed6047d7c233b" id="r_gaac398cee8b7655a7e49ed6047d7c233b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaac398cee8b7655a7e49ed6047d7c233b">TTS_ALL_RELATIVE_EQUAL</a>(L,  R,  N, ...)</td></tr>
-<tr class="memdesc:gaac398cee8b7655a7e49ed6047d7c233b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within a given relative percentage and that their sizes are equal.  <br /></td></tr>
+<tr class="memdesc:gaac398cee8b7655a7e49ed6047d7c233b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within a given relative distance and that their sizes are equal.  <br /></td></tr>
 <tr class="memitem:gab7e461674c9066bbd4c333e50595ab09" id="r_gab7e461674c9066bbd4c333e50595ab09"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gab7e461674c9066bbd4c333e50595ab09">TTS_ALL_ULP_EQUAL</a>(L,  R,  N, ...)</td></tr>
 <tr class="memdesc:gab7e461674c9066bbd4c333e50595ab09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within a given ULP distance and that their sizes are equal.  <br /></td></tr>
 </table>
@@ -346,12 +346,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/sequence.hpp&gt;</code></p>
 
-<p>Checks if all elements of two sequences are within a given relative percentage and that their sizes are equal. </p>
+<p>Checks if all elements of two sequences are within a given relative distance and that their sizes are equal. </p>
 <p>This comparison is performed by using the proper <a class="el" href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1" title="Compute the relative distance between two values.">tts::relative_check</a> overload.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">L,R</td><td>Sequences to compare. </td></tr>
-    <tr><td class="paramname">N</td><td>Maximum relative percentage accepted between <span class="tt">L</span> and <span class="tt">R</span>. </td></tr>
+    <tr><td class="paramname">N</td><td>Maximum relative distance accepted between <span class="tt">L</span> and <span class="tt">R</span>, as a ratio: <span class="tt">0.005</span> is half a percent. <span class="tt">abs(L-R) / max(abs(L), abs(R), 1)</span> is what gets compared to it. </td></tr>
     <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
   </table>
   </dd>
@@ -367,7 +367,7 @@ Macros</h2></td></tr>
 <div class="line">  std::vector v {1.f, 2.f, 3.f, -5.f};</div>
 <div class="line">  std::list   w {1.f, 2.f, 3.1f, -5.f};</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_define" href="#gaac398cee8b7655a7e49ed6047d7c233b">TTS_ALL_RELATIVE_EQUAL</a>(v, w, 3.33);</div>
+<div class="line">  <a class="code hl_define" href="#gaac398cee8b7655a7e49ed6047d7c233b">TTS_ALL_RELATIVE_EQUAL</a>(v, w, 0.0333);</div>
 <div class="line">};</div>
 </div><!-- fragment --> 
 </div>

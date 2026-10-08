@@ -1,8 +1,26 @@
 var searchData=
 [
-  ['ulp_0',['Computing ULP',['../rationale.html#ulp-computing',1,'']]],
-  ['ulp_20distance_1',['ULP Distance',['../customize.html#autotoc_md30',1,'']]],
-  ['ulps_2',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
-  ['usage_3',['Usage',['../output-sinks.html#autotoc_md43',1,'Manual Usage'],['../output-sinks.html#autotoc_md48',1,'Manual Usage'],['../output-sinks.html#autotoc_md53',1,'Manual Usage'],['../output-sinks.html#autotoc_md60',1,'Manual Usage'],['../output-sinks.html#autotoc_md66',1,'Manual Usage']]],
-  ['use_4',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]]
+  ['test_20case_0',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
+  ['test_20system_1',['The Tiny Test System',['../index.html',1,'']]],
+  ['testing_2',['Precision testing',['../rationale.html#ulp',1,'']]],
+  ['testing_20macros_3',['Testing Macros',['../tts_reference.html#autotoc_md42',1,'Testing Macros'],['../tts101.html#tuto-macro',1,'Testing Macros']]],
+  ['testing_20ulps_4',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
+  ['tests_20driver_5',['Tests Driver',['../customize.html#customize-driver',1,'']]],
+  ['tests_20parameters_6',['Tests Parameters',['../cli.html#autotoc_md32',1,'']]],
+  ['the_20source_7',['Install from the source',['../setup.html#setup-source',1,'']]],
+  ['the_20tiny_20test_20system_8',['The Tiny Test System',['../index.html',1,'']]],
+  ['they_20cost_9',['Headers we avoid, and what they cost',['../compile-time.html#compile-time-cost',1,'']]],
+  ['this_20codebase_10',['Precedent in this codebase',['../compile-time.html#compile-time-precedent',1,'']]],
+  ['this_20matters_11',['Why this matters',['../compile-time.html#compile-time-why',1,'']]],
+  ['time_20discipline_12',['Compile-Time Discipline',['../compile-time.html',1,'']]],
+  ['tiny_20test_20system_13',['The Tiny Test System',['../index.html',1,'']]],
+  ['to_20use_14',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
+  ['tools_20and_20helpers_15',['Tools and Helpers',['../tts_reference.html#autotoc_md43',1,'']]],
+  ['tts_20behaviour_16',['Customizing TTS Behaviour',['../customize.html',1,'']]],
+  ['tts_3a_3acolorized_5fsink_17',['tts::colorized_sink',['../output-sinks.html#autotoc_md46',1,'']]],
+  ['tts_3a_3adiagnostics_5fsink_18',['tts::diagnostics_sink',['../output-sinks.html#autotoc_md56',1,'']]],
+  ['tts_3a_3ajson_5fsink_19',['tts::json_sink',['../output-sinks.html#autotoc_md62',1,'']]],
+  ['tts_3a_3ajunit_5fsink_20',['tts::junit_sink',['../output-sinks.html#autotoc_md68',1,'']]],
+  ['tts_3a_3atap_5fsink_21',['tts::tap_sink',['../output-sinks.html#autotoc_md51',1,'']]],
+  ['type_22',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]]
 ];

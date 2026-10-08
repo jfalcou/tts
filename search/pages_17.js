@@ -1,11 +1,9 @@
 var searchData=
 [
-  ['variable_20fallback_0',['Environment Variable Fallback',['../cli.html#autotoc_md25',1,'']]],
-  ['version_200_201_20cadfael_1',['Version 0.1 - Cadfael',['../changelog.html#autotoc_md22',1,'']]],
-  ['version_200_202_20kate_20fansler_2',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md20',1,'']]],
-  ['version_201_200_20phoebe_20daring_3',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md18',1,'']]],
-  ['version_202_200_20kay_20scarpetta_4',['Version 2.0 - Kay Scarpetta',['../changelog.html#autotoc_md16',1,'']]],
-  ['version_202_201_20cordelia_20gray_5',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md13',1,'']]],
-  ['version_202_202_20aubrey_20bradimore_6',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md7',1,'']]],
-  ['version_203_200_20beatrice_20adela_20bradley_7',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md0',1,'']]]
+  ['ulp_0',['Computing ULP',['../rationale.html#ulp-computing',1,'']]],
+  ['ulp_20distance_1',['ULP Distance',['../customize.html#autotoc_md34',1,'']]],
+  ['ulps_2',['Testing ULPs',['../rationale.html#ulp-testing',1,'']]],
+  ['usage_3',['Usage',['../output-sinks.html#autotoc_md48',1,'Manual Usage'],['../output-sinks.html#autotoc_md53',1,'Manual Usage'],['../output-sinks.html#autotoc_md58',1,'Manual Usage'],['../output-sinks.html#autotoc_md65',1,'Manual Usage'],['../output-sinks.html#autotoc_md71',1,'Manual Usage']]],
+  ['use_4',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
+  ['user_20defined_20type_5',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]]
 ];

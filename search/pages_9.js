@@ -1,13 +1,9 @@
 var searchData=
 [
-  ['fallback_0',['Environment Variable Fallback',['../cli.html#autotoc_md25',1,'']]],
-  ['fansler_1',['Version 0.2 - Kate Fansler',['../changelog.html#autotoc_md20',1,'']]],
-  ['features_2',['Features',['../changelog.html#autotoc_md4',1,'New Features'],['../changelog.html#autotoc_md10',1,'New Features']]],
-  ['fetchcontent_3',['CMake FetchContent',['../setup.html#setup-fetchcontent',1,'']]],
-  ['fine_20to_20use_4',['What&apos;s fine to use',['../compile-time.html#compile-time-fine',1,'']]],
-  ['first_20public_20release_5',['First public release.',['../changelog.html#autotoc_md23',1,'']]],
-  ['fixes_6',['Fixes',['../changelog.html#autotoc_md3',1,'Bug Fixes'],['../changelog.html#autotoc_md11',1,'Bug Fixes']]],
-  ['flag_7',['Flag',['../output-sinks.html#autotoc_md44',1,'CLI Flag'],['../output-sinks.html#autotoc_md49',1,'CLI Flag'],['../output-sinks.html#autotoc_md54',1,'CLI Flag'],['../output-sinks.html#autotoc_md61',1,'CLI Flag'],['../output-sinks.html#autotoc_md67',1,'CLI Flag']]],
-  ['format_20sinks_8',['Format Sinks',['../output-sinks.html#autotoc_md40',1,'Simple Format Sinks'],['../output-sinks.html#autotoc_md56',1,'Structured Format Sinks']]],
-  ['from_20the_20source_9',['Install from the source',['../setup.html#setup-source',1,'']]]
+  ['effect_0',['Effect',['../output-sinks.html#autotoc_md47',1,'Effect'],['../output-sinks.html#autotoc_md52',1,'Effect'],['../output-sinks.html#autotoc_md57',1,'Effect'],['../output-sinks.html#autotoc_md63',1,'Effect'],['../output-sinks.html#autotoc_md69',1,'Effect']]],
+  ['environment_20variable_20fallback_1',['Environment Variable Fallback',['../cli.html#autotoc_md29',1,'']]],
+  ['equality_20and_20ordering_2',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
+  ['ever_20need_20one_20anyway_3',['What it costs if you ever need one anyway',['../compile-time.html#compile-time-hypothetical',1,'']]],
+  ['example_4',['Example',['../index.html#autotoc_md41',1,'A Short Example'],['../output-sinks.html#autotoc_md50',1,'Example'],['../output-sinks.html#autotoc_md55',1,'Example'],['../output-sinks.html#autotoc_md60',1,'Example'],['../output-sinks.html#autotoc_md67',1,'Example'],['../output-sinks.html#autotoc_md73',1,'Example']]],
+  ['execution_20control_5',['Execution Control',['../cli.html#autotoc_md31',1,'']]]
 ];

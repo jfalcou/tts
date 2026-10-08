@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['options_0',['options',['../structtts_1_1options.html',1,'tts']]],
-  ['output_5fhandler_1',['output_handler',['../classtts_1_1output__handler.html',1,'tts']]],
-  ['output_5fsink_2',['output_sink',['../structtts_1_1output__sink.html',1,'tts']]]
+  ['limits_5fset_0',['limits_set',['../structtts_1_1limits__set.html',1,'tts']]],
+  ['logicals_1',['logicals',['../structtts_1_1logicals.html',1,'tts']]]
 ];

@@ -134,7 +134,8 @@ $(function(){initNavTree('group__tools-generators-class.html','',''); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Data Generators <div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -150,6 +151,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a generator to produce integer values.  <a href="structtts_1_1as__signed__integer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Abetween_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Abetween_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1between.html">tts::between&lt; T, U &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce values between two bounds.  <a href="structtts_1_1between.html#details">More...</a><br /></td></tr>
+<tr class="memitem:tts_3A_3Ais_5Frandoms_3C_20G_20_3E" id="r_tts_3A_3Ais_5Frandoms_3C_20G_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1is__randoms.html">tts::is_randoms&lt; G &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether a generator is a <a class="el" href="structtts_1_1randoms.html" title="Random generator between two bounds using realistic_distribution.">tts::randoms</a>, by its type.  <a href="structtts_1_1is__randoms.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Alimits_5Fset_3C_20T_20_3E" id="r_tts_3A_3Alimits_5Fset_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1limits__set.html">tts::limits_set&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a set of limits for a type <span class="tt">T</span>.  <a href="structtts_1_1limits__set.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Alogicals_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Alogicals_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1logicals.html">tts::logicals&lt; T, U &gt;</a></td></tr>
@@ -158,6 +161,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce a ramp of data.  <a href="structtts_1_1ramp.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Arandom_5Fbits" id="r_tts_3A_3Arandom_5Fbits"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1random__bits.html">tts::random_bits</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Produces random bits patterns.  <a href="structtts_1_1random__bits.html#details">More...</a><br /></td></tr>
+<tr class="memitem:tts_3A_3Arandom_5Fshift" id="r_tts_3A_3Arandom_5Fshift"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1random__shift.html">tts::random_shift</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Produces valid shift amounts for the target type.  <a href="structtts_1_1random__shift.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Arandoms_3C_20Mx_2C_20Mn_20_3E" id="r_tts_3A_3Arandoms_3C_20Mx_2C_20Mn_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1randoms.html">tts::randoms&lt; Mx, Mn &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Random generator between two bounds using realistic_distribution.  <a href="structtts_1_1randoms.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Areverse_5Framp_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Areverse_5Framp_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1reverse__ramp.html">tts::reverse_ramp&lt; T, U &gt;</a></td></tr>
@@ -170,6 +175,13 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727" id="r_ga5bdd075a33a6dcabef5e5d7e33299727"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga5bdd075a33a6dcabef5e5d7e33299727">limits</a> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; T &gt;)</td></tr>
 <tr class="memdesc:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a set of limits for the type <span class="tt">T</span>.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga2043fb2d208c08ab1c7ff87b895f4abf" id="r_ga2043fb2d208c08ab1c7ff87b895f4abf"><td class="memTemplParams" colspan="2"><a id="ga2043fb2d208c08ab1c7ff87b895f4abf" name="ga2043fb2d208c08ab1c7ff87b895f4abf"></a>
+template&lt;typename G&gt; </td></tr>
+<tr class="memitem:ga2043fb2d208c08ab1c7ff87b895f4abf template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>tts::is_randoms_v</b> = <a class="el" href="structtts_1_1is__randoms.html">is_randoms</a>&lt;std::remove_cvref_t&lt;G&gt;&gt;<a class="el" href="structtts_1_1value.html">::value</a></td></tr>
+<tr class="memdesc:ga2043fb2d208c08ab1c7ff87b895f4abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value alias for <a class="el" href="structtts_1_1is__randoms.html" title="Whether a generator is a tts::randoms, by its type.">tts::is_randoms</a>, indifferent to references and cv-qualifiers. <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ga5bdd075a33a6dcabef5e5d7e33299727" name="ga5bdd075a33a6dcabef5e5d7e33299727"></a>

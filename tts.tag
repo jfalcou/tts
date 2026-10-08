@@ -101,6 +101,18 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tts::comparison</name>
+    <filename>structtts_1_1comparison.html</filename>
+    <templarg>typename L</templarg>
+    <templarg>typename R</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tts::conversion</name>
+    <filename>structtts_1_1conversion.html</filename>
+    <templarg>typename T</templarg>
+    <templarg>typename V</templarg>
+  </compound>
+  <compound kind="struct">
     <name>tts::diagnostics_sink</name>
     <filename>structtts_1_1diagnostics__sink.html</filename>
     <base>tts::output_sink</base>
@@ -167,6 +179,11 @@
       <anchor>a0463defe1e87083fbcad932cf3191cf3</anchor>
       <arglist>(text const &amp;t) override</arglist>
     </member>
+  </compound>
+  <compound kind="struct">
+    <name>tts::display</name>
+    <filename>structtts_1_1display.html</filename>
+    <templarg>typename T</templarg>
   </compound>
   <compound kind="struct">
     <name>tts::filter</name>
@@ -269,6 +286,16 @@
       <anchor>a5c262543e72018b6795d69fc939fb6cc</anchor>
       <arglist>(text const &amp;t) override</arglist>
     </member>
+  </compound>
+  <compound kind="struct">
+    <name>tts::generation</name>
+    <filename>structtts_1_1generation.html</filename>
+    <templarg>typename T</templarg>
+  </compound>
+  <compound kind="struct">
+    <name>tts::is_randoms</name>
+    <filename>structtts_1_1is__randoms.html</filename>
+    <templarg>typename G</templarg>
   </compound>
   <compound kind="struct">
     <name>tts::json_sink</name>
@@ -717,6 +744,11 @@
     </member>
   </compound>
   <compound kind="struct">
+    <name>tts::precision</name>
+    <filename>structtts_1_1precision.html</filename>
+    <templarg>typename T</templarg>
+  </compound>
+  <compound kind="struct">
     <name>tts::ramp</name>
     <filename>structtts_1_1ramp.html</filename>
     <templarg>typename T</templarg>
@@ -725,6 +757,10 @@
   <compound kind="struct">
     <name>tts::random_bits</name>
     <filename>structtts_1_1random__bits.html</filename>
+  </compound>
+  <compound kind="struct">
+    <name>tts::random_shift</name>
+    <filename>structtts_1_1random__shift.html</filename>
   </compound>
   <compound kind="struct">
     <name>tts::randoms</name>
@@ -1166,6 +1202,12 @@
     </member>
   </compound>
   <compound kind="group">
+    <name>tools-comparison</name>
+    <title>Comparison Utilities</title>
+    <filename>group__tools-comparison.html</filename>
+    <class kind="struct">tts::comparison</class>
+  </compound>
+  <compound kind="group">
     <name>tools-config</name>
     <title>Configuration Utilities</title>
     <filename>group__tools-config.html</filename>
@@ -1246,10 +1288,12 @@
     <class kind="struct">tts::as_integer</class>
     <class kind="struct">tts::as_signed_integer</class>
     <class kind="struct">tts::between</class>
+    <class kind="struct">tts::is_randoms</class>
     <class kind="struct">tts::limits_set</class>
     <class kind="struct">tts::logicals</class>
     <class kind="struct">tts::ramp</class>
     <class kind="struct">tts::random_bits</class>
+    <class kind="struct">tts::random_shift</class>
     <class kind="struct">tts::randoms</class>
     <class kind="struct">tts::reverse_ramp</class>
     <class kind="struct">tts::value</class>
@@ -1260,11 +1304,21 @@
       <anchor>ga5bdd075a33a6dcabef5e5d7e33299727</anchor>
       <arglist>(tts::type&lt; T &gt;)</arglist>
     </member>
+    <member kind="variable">
+      <type>constexpr bool</type>
+      <name>tts::is_randoms_v</name>
+      <anchorfile>group__tools-generators-class.html</anchorfile>
+      <anchor>ga2043fb2d208c08ab1c7ff87b895f4abf</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>tools-generators-custom</name>
     <title>Data Generators Customization Points</title>
     <filename>group__tools-generators-custom.html</filename>
+    <class kind="struct">tts::conversion</class>
+    <class kind="struct">tts::generation</class>
+    <class kind="struct">tts::is_randoms</class>
     <class kind="struct">tts::rebuild</class>
     <member kind="function">
       <type>auto</type>
@@ -1391,6 +1445,7 @@
     <name>tools-precision</name>
     <title>Precision Utilities</title>
     <filename>group__tools-precision.html</filename>
+    <class kind="struct">tts::precision</class>
     <member kind="function">
       <type>double</type>
       <name>tts::absolute_check</name>
@@ -1677,6 +1732,7 @@
     <name>tools-text</name>
     <title>Text Utilities</title>
     <filename>group__tools-text.html</filename>
+    <class kind="struct">tts::display</class>
     <class kind="struct">tts::text</class>
     <member kind="function">
       <type>text</type>
