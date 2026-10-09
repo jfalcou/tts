@@ -1405,17 +1405,17 @@ namespace tts
   template<typename T> class buffer
   {
     static constexpr bool over_aligned = alignof(T) > alignof(std::max_align_t);
-    static T*             allocate(std::size_t n) noexcept
+    static T* allocate(std::size_t n) noexcept
     {
       if constexpr(over_aligned)
         return static_cast<T*>(
         ::operator new(sizeof(T) * n, std::align_val_t {alignof(T)}, std::nothrow));
-      else return static_cast<T*>(::operator new(sizeof(T) * n, std::nothrow));
+      else return static_cast<T*>(malloc(sizeof(T) * n));
     }
     static void deallocate(T* p) noexcept
     {
       if constexpr(over_aligned) ::operator delete(p, std::align_val_t {alignof(T)});
-      else ::operator delete(p);
+      else free(p);
     }
   public:
     buffer()
