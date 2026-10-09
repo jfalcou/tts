@@ -236,7 +236,7 @@ Replacements written in TTS</h2>
 <h1 class="doxsection"><a class="anchor" id="compile-time-comparison"></a>
 Other test libraries</h1>
 <p>The charts give the CPU time of compiling one test unit with <span class="tt">-std=c++20 -c</span>, with <b>TTS</b> and with doctest, Catch2, GoogleTest, Boost.Test and ut, measured again at each build of this documentation. Every point is the median of several compilations.</p>
-<p>Measured on 2026-10-08 with clang++ 19.1.7 and g++ 15.2.0 and <code>-O0</code>, the median of 3 compilations per point, 2 at a time.</p>
+<p>Measured on 2026-10-09 with clang++ 19.1.7 and g++ 15.2.0 and <code>-O0</code>, the median of 3 compilations per point, 2 at a time.</p>
 <p>Catch2 and GoogleTest compile their runner in a library of their own, which the charts do not count. doctest, Boost.Test, ut and <b>TTS</b> compile it in the unit that defines it.</p>
 <h2 class="doxsection"><a class="anchor" id="compile-time-comparison-include"></a>
 Minimal include cost</h2>
@@ -273,37 +273,37 @@ Fixed cost and crossings</h2>
 <div class="tabbed"></div><div class="tabbed"><ul>
 <li><b class="tab-title">g++</b> <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.16\,\mathrm{s} + 5.6\,\mathrm{ms} \cdot n\)</td><td>\(0.17\,\mathrm{s} + 25.9\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(3.83\,\mathrm{s} + 6.5\,\mathrm{ms} \cdot n\)</td><td>\(3.77\,\mathrm{s} + 72.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(0.44\,\mathrm{s} + 2.5\,\mathrm{ms} \cdot n\)</td><td>\(0.47\,\mathrm{s} + 15.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(0.46\,\mathrm{s} + 5.0\,\mathrm{ms} \cdot n\)</td><td>\(0.48\,\mathrm{s} + 42.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(1.06\,\mathrm{s} + 3.3\,\mathrm{ms} \cdot n\)</td><td>\(1.05\,\mathrm{s} + 16.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(0.93\,\mathrm{s} + 13.1\,\mathrm{ms} \cdot n\)</td><td>\(0.96\,\mathrm{s} + 51.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>TTS</td><td>\(0.20\,\mathrm{s} + 7.3\,\mathrm{ms} \cdot n\)</td><td>\(0.19\,\mathrm{s} + 32.6\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(4.48\,\mathrm{s} + 7.6\,\mathrm{ms} \cdot n\)</td><td>\(4.42\,\mathrm{s} + 83.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(0.51\,\mathrm{s} + 3.2\,\mathrm{ms} \cdot n\)</td><td>\(0.56\,\mathrm{s} + 18.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(0.56\,\mathrm{s} + 5.9\,\mathrm{ms} \cdot n\)</td><td>\(0.62\,\mathrm{s} + 49.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(1.27\,\mathrm{s} + 3.8\,\mathrm{ms} \cdot n\)</td><td>\(1.25\,\mathrm{s} + 20.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(1.26\,\mathrm{s} + 15.1\,\mathrm{ms} \cdot n\)</td><td>\(1.18\,\mathrm{s} + 60.7\,\mathrm{ms} \cdot n\)</td></tr>
 </table>
 <p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
 <tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>88</td><td>28</td></tr>
-<tr><td>GoogleTest</td><td>492</td><td>always</td></tr>
-<tr><td>doctest</td><td>389</td><td>90</td></tr>
+<tr><td>Catch2</td><td>77</td><td>27</td></tr>
+<tr><td>GoogleTest</td><td>262</td><td>always</td></tr>
+<tr><td>doctest</td><td>307</td><td>88</td></tr>
 <tr><td>ut</td><td>always</td><td>always</td></tr>
 </table>
 </li>
 <li><b class="tab-title">clang++</b> <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.12\,\mathrm{s} + 2.4\,\mathrm{ms} \cdot n\)</td><td>\(0.12\,\mathrm{s} + 10.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(2.26\,\mathrm{s} + 4.6\,\mathrm{ms} \cdot n\)</td><td>\(2.28\,\mathrm{s} + 35.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(0.68\,\mathrm{s} + 2.0\,\mathrm{ms} \cdot n\)</td><td>\(0.71\,\mathrm{s} + 9.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(0.69\,\mathrm{s} + 2.4\,\mathrm{ms} \cdot n\)</td><td>\(0.71\,\mathrm{s} + 16.3\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(0.88\,\mathrm{s} + 2.2\,\mathrm{ms} \cdot n\)</td><td>\(0.89\,\mathrm{s} + 8.6\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(1.11\,\mathrm{s} + 7.2\,\mathrm{ms} \cdot n\)</td><td>\(1.08\,\mathrm{s} + 24.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>TTS</td><td>\(0.15\,\mathrm{s} + 3.2\,\mathrm{ms} \cdot n\)</td><td>\(0.14\,\mathrm{s} + 13.3\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(2.71\,\mathrm{s} + 5.6\,\mathrm{ms} \cdot n\)</td><td>\(2.75\,\mathrm{s} + 41.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(0.79\,\mathrm{s} + 2.5\,\mathrm{ms} \cdot n\)</td><td>\(0.80\,\mathrm{s} + 13.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(0.79\,\mathrm{s} + 3.1\,\mathrm{ms} \cdot n\)</td><td>\(0.82\,\mathrm{s} + 21.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(1.04\,\mathrm{s} + 2.8\,\mathrm{ms} \cdot n\)</td><td>\(1.03\,\mathrm{s} + 11.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(1.41\,\mathrm{s} + 8.3\,\mathrm{ms} \cdot n\)</td><td>\(1.31\,\mathrm{s} + 29.2\,\mathrm{ms} \cdot n\)</td></tr>
 </table>
 <p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
 <tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>1160</td><td>915</td></tr>
-<tr><td>GoogleTest</td><td>17498</td><td>always</td></tr>
-<tr><td>doctest</td><td>2855</td><td>418</td></tr>
+<tr><td>Catch2</td><td>906</td><td>1764</td></tr>
+<tr><td>GoogleTest</td><td>8599</td><td>always</td></tr>
+<tr><td>doctest</td><td>2120</td><td>630</td></tr>
 <tr><td>ut</td><td>always</td><td>always</td></tr>
 </table>
 </li>
