@@ -4514,15 +4514,15 @@ namespace tts
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)                                 \
   [ & ](auto local_tts_a, auto local_tts_b)                                                        \
   {                                                                                                \
-    auto r = FUNC(local_tts_a, local_tts_b);                                                       \
+    auto local_tts_r = FUNC(local_tts_a, local_tts_b);                                             \
                                                                                                    \
-    if(r <= N)                                                                                     \
+    if(local_tts_r <= N)                                                                           \
     {                                                                                              \
       TTS_PASS("Expression: %s == %s within %.*g %s (over %.*g %s).",                              \
                TTS_STRING(LHS),                                                                    \
                TTS_STRING(RHS),                                                                    \
                PREC,                                                                               \
-               r,                                                                                  \
+               local_tts_r,                                                                        \
                UNIT,                                                                               \
                PREC,                                                                               \
                static_cast<double>(N),                                                             \
@@ -4537,7 +4537,7 @@ namespace tts
               ::tts::as_text(local_tts_a).data(),                                                  \
               ::tts::as_text(local_tts_b).data(),                                                  \
               PREC,                                                                                \
-              r,                                                                                   \
+              local_tts_r,                                                                         \
               UNIT,                                                                                \
               PREC,                                                                                \
               static_cast<double>(N),                                                              \
@@ -4660,35 +4660,35 @@ namespace tts::_
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
                                                                                                    \
-    auto        ba = tts::_::begin(local_tts_a);                                                   \
-    auto        bb = tts::_::begin(local_tts_b);                                                   \
-    auto        ea = tts::_::end(local_tts_a);                                                     \
+    auto        local_tts_ba = tts::_::begin(local_tts_a);                                         \
+    auto        local_tts_bb = tts::_::begin(local_tts_b);                                         \
+    auto        local_tts_ea = tts::_::end(local_tts_a);                                           \
                                                                                                    \
-    std::size_t i  = 0;                                                                            \
-    ::tts::text failures("");                                                                      \
+    std::size_t local_tts_i  = 0;                                                                  \
+    ::tts::text local_tts_failures("");                                                            \
                                                                                                    \
-    while(ba != ea)                                                                                \
+    while(local_tts_ba != local_tts_ea)                                                            \
     {                                                                                              \
-      auto local_tts_err = OP(*ba, *bb);                                                           \
+      auto local_tts_err = OP(*local_tts_ba, *local_tts_bb);                                       \
       if(local_tts_err > N)                                                                        \
       {                                                                                            \
-        failures += ::tts::text("      @[%ld] : %s and %s differs by %s %s.\n",                    \
-                                i++,                                                               \
-                                ::tts::as_text(*ba).data(),                                        \
-                                ::tts::as_text(*bb).data(),                                        \
-                                ::tts::as_text(local_tts_err).data(),                              \
-                                UNIT);                                                             \
+        local_tts_failures += ::tts::text("      @[%ld] : %s and %s differs by %s %s.\n",          \
+                                          local_tts_i++,                                           \
+                                          ::tts::as_text(*local_tts_ba).data(),                    \
+                                          ::tts::as_text(*local_tts_bb).data(),                    \
+                                          ::tts::as_text(local_tts_err).data(),                    \
+                                          UNIT);                                                   \
       }                                                                                            \
-      ba++;                                                                                        \
-      bb++;                                                                                        \
+      local_tts_ba++;                                                                              \
+      local_tts_bb++;                                                                              \
     }                                                                                              \
                                                                                                    \
-    if(!failures.is_empty())                                                                       \
+    if(!local_tts_failures.is_empty())                                                             \
     {                                                                                              \
       FAILURE("Expected: %s == %s but found the following errors:\n%s",                            \
               TTS_STRING(SEQ1),                                                                    \
               TTS_STRING(SEQ2),                                                                    \
-              failures.data());                                                                    \
+              local_tts_failures.data());                                                          \
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
                                                                                                    \
@@ -4936,14 +4936,14 @@ namespace tts
                             TTS_STRING(NewFunc),                                                   \
                             TTS_STRING(TTS_REMOVE_PARENS(NewType)));                               \
                                                                                                    \
-    auto generator = TTS_REMOVE_PARENS(Producer);                                                  \
-    ::tts::_::print_producer(generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));                  \
+    auto local_tts_generator = TTS_REMOVE_PARENS(Producer);                                        \
+    ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));        \
                                                                                                    \
     double tts_ulp_max         = Ulpmax;                                                           \
     double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
     double local_tts_max_ulp =                                                                     \
     ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(                  \
-    generator, RefFunc, NewFunc);                                                                  \
+    local_tts_generator, RefFunc, NewFunc);                                                        \
                                                                                                    \
     if(local_tts_max_ulp <= local_tts_threshold)                                                   \
     {                                                                                              \
