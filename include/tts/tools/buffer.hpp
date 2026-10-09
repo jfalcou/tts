@@ -16,18 +16,19 @@ namespace tts
     // eve::wide and friends are over-aligned; malloc only promises alignof(std::max_align_t)
     static constexpr bool over_aligned = alignof(T) > alignof(std::max_align_t);
 
-    static T*             allocate(std::size_t n) noexcept
+    // malloc keeps the test registry out of the operator new and delete a test may replace
+    static T* allocate(std::size_t n) noexcept
     {
       if constexpr(over_aligned)
         return static_cast<T*>(
         ::operator new(sizeof(T) * n, std::align_val_t {alignof(T)}, std::nothrow));
-      else return static_cast<T*>(::operator new(sizeof(T) * n, std::nothrow));
+      else return static_cast<T*>(malloc(sizeof(T) * n)); // NOSONAR - test may replace new
     }
 
     static void deallocate(T* p) noexcept
     {
       if constexpr(over_aligned) ::operator delete(p, std::align_val_t {alignof(T)});
-      else ::operator delete(p);
+      else free(p); // NOSONAR - test may replace delete
     }
 
   public:

@@ -33,6 +33,18 @@ copa_make_single_unit ( INTERFACE     tts_test
                         NAME          unit.infrastructure.failure.cpp
                       )
 
+## Replaces the global operator new and delete, so it cannot share an executable with other units
+copa_make_single_unit ( INTERFACE     tts_test
+                        FILES         unit/infrastructure/replaced_new.cpp
+                        ROOT          ${root}
+                        NAME          unit.infrastructure.replaced_new.cpp
+                      )
+
+## valgrind serves operator new itself unless told to leave the one an executable defines
+set_property( TEST unit.infrastructure.replaced_new.exe APPEND
+              PROPERTY ENVIRONMENT "VALGRIND_OPTS=--soname-synonyms=somalloc=nouserintercepts"
+            )
+
 ##======================================================================================================================
 ## Test for TTS tests
 ##======================================================================================================================
