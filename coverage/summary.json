@@ -1,7 +1,7 @@
 {
-    "branch_covered": 776,
-    "branch_percent": 72.5,
-    "branch_total": 1071,
+    "branch_covered": 778,
+    "branch_percent": 72.4,
+    "branch_total": 1074,
     "files": [
         {
             "branch_covered": 1,
@@ -304,16 +304,16 @@
             "line_total": 8
         },
         {
-            "branch_covered": 36,
+            "branch_covered": 38,
             "branch_percent": 65.5,
-            "branch_total": 55,
+            "branch_total": 58,
             "filename": "include/tts/tools/buffer.hpp",
-            "function_covered": 78,
+            "function_covered": 80,
             "function_percent": 100.0,
-            "function_total": 78,
-            "line_covered": 111,
-            "line_percent": 98.2,
-            "line_total": 113
+            "function_total": 80,
+            "line_covered": 115,
+            "line_percent": 98.3,
+            "line_total": 117
         },
         {
             "branch_covered": 5,
@@ -448,12 +448,12 @@
             "line_total": 7
         }
     ],
-    "function_covered": 2087,
+    "function_covered": 2089,
     "function_percent": 88.8,
-    "function_total": 2350,
+    "function_total": 2352,
     "gcovr/summary_format_version": "0.6",
-    "line_covered": 1459,
+    "line_covered": 1463,
     "line_percent": 90.5,
-    "line_total": 1613,
+    "line_total": 1617,
     "root": "../../.."
 }
