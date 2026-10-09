@@ -208,14 +208,14 @@ namespace tts
                             TTS_STRING(NewFunc),                                                   \
                             TTS_STRING(TTS_REMOVE_PARENS(NewType)));                               \
                                                                                                    \
-    auto generator = TTS_REMOVE_PARENS(Producer);                                                  \
-    ::tts::_::print_producer(generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));                  \
+    auto local_tts_generator = TTS_REMOVE_PARENS(Producer);                                        \
+    ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));        \
                                                                                                    \
     double tts_ulp_max         = Ulpmax;                                                           \
     double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
     double local_tts_max_ulp =                                                                     \
     ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(                  \
-    generator, RefFunc, NewFunc);                                                                  \
+    local_tts_generator, RefFunc, NewFunc);                                                        \
                                                                                                    \
     if(local_tts_max_ulp <= local_tts_threshold)                                                   \
     {                                                                                              \

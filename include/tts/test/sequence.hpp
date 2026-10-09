@@ -73,35 +73,35 @@ namespace tts::_
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
                                                                                                    \
-    auto        ba = tts::_::begin(local_tts_a);                                                   \
-    auto        bb = tts::_::begin(local_tts_b);                                                   \
-    auto        ea = tts::_::end(local_tts_a);                                                     \
+    auto        local_tts_ba = tts::_::begin(local_tts_a);                                         \
+    auto        local_tts_bb = tts::_::begin(local_tts_b);                                         \
+    auto        local_tts_ea = tts::_::end(local_tts_a);                                           \
                                                                                                    \
-    std::size_t i  = 0;                                                                            \
-    ::tts::text failures("");                                                                      \
+    std::size_t local_tts_i  = 0;                                                                  \
+    ::tts::text local_tts_failures("");                                                            \
                                                                                                    \
-    while(ba != ea)                                                                                \
+    while(local_tts_ba != local_tts_ea)                                                            \
     {                                                                                              \
-      auto local_tts_err = OP(*ba, *bb);                                                           \
+      auto local_tts_err = OP(*local_tts_ba, *local_tts_bb);                                       \
       if(local_tts_err > N)                                                                        \
       {                                                                                            \
-        failures += ::tts::text("      @[%ld] : %s and %s differs by %s %s.\n",                    \
-                                i++,                                                               \
-                                ::tts::as_text(*ba).data(),                                        \
-                                ::tts::as_text(*bb).data(),                                        \
-                                ::tts::as_text(local_tts_err).data(),                              \
-                                UNIT);                                                             \
+        local_tts_failures += ::tts::text("      @[%ld] : %s and %s differs by %s %s.\n",          \
+                                          local_tts_i++,                                           \
+                                          ::tts::as_text(*local_tts_ba).data(),                    \
+                                          ::tts::as_text(*local_tts_bb).data(),                    \
+                                          ::tts::as_text(local_tts_err).data(),                    \
+                                          UNIT);                                                   \
       }                                                                                            \
-      ba++;                                                                                        \
-      bb++;                                                                                        \
+      local_tts_ba++;                                                                              \
+      local_tts_bb++;                                                                              \
     }                                                                                              \
                                                                                                    \
-    if(!failures.is_empty())                                                                       \
+    if(!local_tts_failures.is_empty())                                                             \
     {                                                                                              \
       FAILURE("Expected: %s == %s but found the following errors:\n%s",                            \
               TTS_STRING(SEQ1),                                                                    \
               TTS_STRING(SEQ2),                                                                    \
-              failures.data());                                                                    \
+              local_tts_failures.data());                                                          \
       return ::tts::_::logger {};                                                                  \
     }                                                                                              \
                                                                                                    \
