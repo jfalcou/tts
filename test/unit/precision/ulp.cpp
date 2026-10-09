@@ -16,6 +16,12 @@ TTS_CASE("ULP distance")
   TTS_ULP_EQUAL(static_cast<long long>('A'), 80LL, 15., REQUIRED);
 };
 
+TTS_CASE("ULP distance next to a local named like a macro local")
+{
+  float r = 1.f;
+  TTS_ULP_EQUAL(r, 1.f, 0.);
+};
+
 TTS_CASE("ULP distance between boolean")
 {
   TTS_ULP_EQUAL(true, true, 0.);

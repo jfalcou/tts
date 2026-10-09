@@ -65,3 +65,17 @@ TTS_CASE("Strict IEEE equality over sequence")
   TTS_ALL_IEEE_EQUAL(v, w);
   TTS_ALL_IEEE_EQUAL(v, w, REQUIRED);
 };
+
+TTS_CASE("Equality over sequence next to locals named like macro locals")
+{
+  std::vector ba {1.f, 2.f};
+  std::vector bb {1.f, 2.f};
+  std::vector ea {1.f, 2.f};
+  std::size_t i        = 0;
+  float       failures = 0.f;
+
+  TTS_ALL_ULP_EQUAL(ba, bb, 0.5);
+  TTS_ALL_EQUAL(ea, bb);
+  TTS_EQUAL(i, std::size_t {0});
+  TTS_EQUAL(failures, 0.f);
+};

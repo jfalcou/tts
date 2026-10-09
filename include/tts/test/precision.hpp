@@ -16,15 +16,15 @@
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)                                 \
   [ & ](auto local_tts_a, auto local_tts_b)                                                        \
   {                                                                                                \
-    auto r = FUNC(local_tts_a, local_tts_b);                                                       \
+    auto local_tts_r = FUNC(local_tts_a, local_tts_b);                                             \
                                                                                                    \
-    if(r <= N)                                                                                     \
+    if(local_tts_r <= N)                                                                           \
     {                                                                                              \
       TTS_PASS("Expression: %s == %s within %.*g %s (over %.*g %s).",                              \
                TTS_STRING(LHS),                                                                    \
                TTS_STRING(RHS),                                                                    \
                PREC,                                                                               \
-               r,                                                                                  \
+               local_tts_r,                                                                        \
                UNIT,                                                                               \
                PREC,                                                                               \
                static_cast<double>(N),                                                             \
@@ -39,7 +39,7 @@
               ::tts::as_text(local_tts_a).data(),                                                  \
               ::tts::as_text(local_tts_b).data(),                                                  \
               PREC,                                                                                \
-              r,                                                                                   \
+              local_tts_r,                                                                         \
               UNIT,                                                                                \
               PREC,                                                                                \
               static_cast<double>(N),                                                              \
