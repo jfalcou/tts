@@ -1,17 +1,17 @@
 <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.26\,\mathrm{s} + 5.9\,\mathrm{ms} \cdot n\)</td><td>\(0.27\,\mathrm{s} + 25.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(4.97\,\mathrm{s} + 9.4\,\mathrm{ms} \cdot n\)</td><td>\(4.89\,\mathrm{s} + 76.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(1.51\,\mathrm{s} + 4.7\,\mathrm{ms} \cdot n\)</td><td>\(1.55\,\mathrm{s} + 24.7\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(1.50\,\mathrm{s} + 5.2\,\mathrm{ms} \cdot n\)</td><td>\(1.53\,\mathrm{s} + 36.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(1.97\,\mathrm{s} + 4.8\,\mathrm{ms} \cdot n\)</td><td>\(1.95\,\mathrm{s} + 21.6\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(2.47\,\mathrm{s} + 15.5\,\mathrm{ms} \cdot n\)</td><td>\(2.44\,\mathrm{s} + 49.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>TTS</td><td>\(0.27\,\mathrm{s} + 6.0\,\mathrm{ms} \cdot n\)</td><td>\(0.28\,\mathrm{s} + 25.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(4.90\,\mathrm{s} + 9.7\,\mathrm{ms} \cdot n\)</td><td>\(4.99\,\mathrm{s} + 75.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(1.56\,\mathrm{s} + 4.8\,\mathrm{ms} \cdot n\)</td><td>\(1.61\,\mathrm{s} + 24.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(1.54\,\mathrm{s} + 5.4\,\mathrm{ms} \cdot n\)</td><td>\(1.56\,\mathrm{s} + 38.1\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(2.00\,\mathrm{s} + 5.1\,\mathrm{ms} \cdot n\)</td><td>\(2.02\,\mathrm{s} + 21.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(2.49\,\mathrm{s} + 16.9\,\mathrm{ms} \cdot n\)</td><td>\(2.57\,\mathrm{s} + 50.1\,\mathrm{ms} \cdot n\)</td></tr>
 </table>
 <p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
 <tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>1025</td><td>3965</td></tr>
-<tr><td>GoogleTest</td><td>1774</td><td>always</td></tr>
-<tr><td>doctest</td><td>1526</td><td>481</td></tr>
+<tr><td>Catch2</td><td>1082</td><td>1295</td></tr>
+<tr><td>GoogleTest</td><td>2144</td><td>always</td></tr>
+<tr><td>doctest</td><td>1776</td><td>396</td></tr>
 <tr><td>ut</td><td>always</td><td>always</td></tr>
 </table>
