@@ -1,17 +1,17 @@
 <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.21\,\mathrm{s} + 7.6\,\mathrm{ms} \cdot n\)</td><td>\(0.22\,\mathrm{s} + 33.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(4.81\,\mathrm{s} + 8.6\,\mathrm{ms} \cdot n\)</td><td>\(4.78\,\mathrm{s} + 88.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(0.59\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td><td>\(0.62\,\mathrm{s} + 20.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(0.61\,\mathrm{s} + 6.6\,\mathrm{ms} \cdot n\)</td><td>\(0.65\,\mathrm{s} + 53.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(1.34\,\mathrm{s} + 4.1\,\mathrm{ms} \cdot n\)</td><td>\(1.35\,\mathrm{s} + 21.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(1.24\,\mathrm{s} + 16.4\,\mathrm{ms} \cdot n\)</td><td>\(1.29\,\mathrm{s} + 64.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>TTS</td><td>\(0.24\,\mathrm{s} + 8.9\,\mathrm{ms} \cdot n\)</td><td>\(0.25\,\mathrm{s} + 38.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Boost.Test</td><td>\(5.37\,\mathrm{s} + 9.9\,\mathrm{ms} \cdot n\)</td><td>\(5.31\,\mathrm{s} + 100.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>Catch2</td><td>\(0.66\,\mathrm{s} + 4.1\,\mathrm{ms} \cdot n\)</td><td>\(0.71\,\mathrm{s} + 23.6\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>GoogleTest</td><td>\(0.69\,\mathrm{s} + 7.2\,\mathrm{ms} \cdot n\)</td><td>\(0.73\,\mathrm{s} + 60.1\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>doctest</td><td>\(1.52\,\mathrm{s} + 5.0\,\mathrm{ms} \cdot n\)</td><td>\(1.53\,\mathrm{s} + 24.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>ut</td><td>\(1.35\,\mathrm{s} + 17.6\,\mathrm{ms} \cdot n\)</td><td>\(1.42\,\mathrm{s} + 71.3\,\mathrm{ms} \cdot n\)</td></tr>
 </table>
-<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>
+<p>Number of test cases in a unit where <b>TTS</b> compiles faster:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
 <tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>93</td><td>32</td></tr>
-<tr><td>GoogleTest</td><td>389</td><td>always</td></tr>
-<tr><td>doctest</td><td>328</td><td>98</td></tr>
+<tr><td>Catch2</td><td>up to 88</td><td>up to 30</td></tr>
+<tr><td>GoogleTest</td><td>up to 263</td><td>always</td></tr>
+<tr><td>doctest</td><td>up to 327</td><td>up to 86</td></tr>
 <tr><td>ut</td><td>always</td><td>always</td></tr>
 </table>

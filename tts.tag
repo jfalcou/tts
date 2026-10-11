@@ -1872,12 +1872,12 @@
   </compound>
   <compound kind="page">
     <name>compile-time</name>
-    <title>Compile-Time Discipline</title>
+    <title>Compile-Time Cost</title>
     <filename>compile-time.html</filename>
-    <docanchor file="compile-time.html" title="Headers of TTS">compile-time-headers</docanchor>
+    <docanchor file="compile-time.html" title="Standard headers in TTS">compile-time-headers</docanchor>
     <docanchor file="compile-time.html" title="Include cost of a test suite">compile-time-why</docanchor>
     <docanchor file="compile-time.html" title="Avoided headers and their cost">compile-time-cost</docanchor>
-    <docanchor file="compile-time.html" title="Measured and cleared headers">compile-time-fine</docanchor>
+    <docanchor file="compile-time.html" title="Headers measured as free">compile-time-fine</docanchor>
     <docanchor file="compile-time.html" title="Checklist for a new header">compile-time-checklist</docanchor>
     <docanchor file="compile-time.html" title="Replacements written in TTS">compile-time-precedent</docanchor>
     <docanchor file="compile-time.html" title="Other test libraries">compile-time-comparison</docanchor>

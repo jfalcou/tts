@@ -10,5 +10,6 @@ var searchData=
   ['flag_7',['Flag',['../output-sinks.html#autotoc_md49',1,'CLI Flag'],['../output-sinks.html#autotoc_md54',1,'CLI Flag'],['../output-sinks.html#autotoc_md59',1,'CLI Flag'],['../output-sinks.html#autotoc_md66',1,'CLI Flag'],['../output-sinks.html#autotoc_md72',1,'CLI Flag']]],
   ['for_20a_20new_20header_8',['Checklist for a new header',['../compile-time.html#compile-time-checklist',1,'']]],
   ['format_20sinks_9',['Format Sinks',['../output-sinks.html#autotoc_md45',1,'Simple Format Sinks'],['../output-sinks.html#autotoc_md61',1,'Structured Format Sinks']]],
-  ['from_20the_20source_10',['Install from the source',['../setup.html#setup-source',1,'']]]
+  ['free_10',['Headers measured as free',['../compile-time.html#compile-time-fine',1,'']]],
+  ['from_20the_20source_11',['Install from the source',['../setup.html#setup-source',1,'']]]
 ];

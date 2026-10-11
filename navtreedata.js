@@ -60,7 +60,7 @@ var NAVTREE =
     ] ],
     [ "Informations", "rationale.html", [
       [ "Rationale", "rationale.html", null ],
-      [ "Compile-Time Discipline", "compile-time.html", null ],
+      [ "Compile-Time Cost", "compile-time.html", null ],
       [ "Changelog", "changelog.html", null ],
       [ "Licence", "licence.html", null ]
     ] ]

@@ -53,6 +53,6 @@ var menudata={children:[
 {text:"Type Utilities",url:"group__tools-types.html"}]}]},
 {text:"Informations",url:"rationale.html",children:[
 {text:"Rationale",url:"rationale.html"},
-{text:"Compile-Time Discipline",url:"compile-time.html"},
+{text:"Compile-Time Cost",url:"compile-time.html"},
 {text:"Changelog",url:"changelog.html"},
 {text:"Licence",url:"licence.html"}]}]}

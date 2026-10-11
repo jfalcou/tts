@@ -12,10 +12,11 @@ var searchData=
   ['source_9',['Install from the source',['../setup.html#setup-source',1,'']]],
   ['specify_20a_20test_20case_10',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
   ['standalone_20setup_11',['Standalone setup',['../setup.html#setup-standalone',1,'']]],
-  ['started_12',['Getting Started',['../tts101.html',1,'']]],
-  ['structured_20format_20sinks_13',['Structured Format Sinks',['../output-sinks.html#autotoc_md61',1,'']]],
-  ['stuck_20runs_14',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
-  ['suite_15',['Include cost of a test suite',['../compile-time.html#compile-time-why',1,'']]],
-  ['supported_20compilers_16',['Supported Compilers',['../index.html#autotoc_md40',1,'']]],
-  ['system_17',['The Tiny Test System',['../index.html',1,'']]]
+  ['standard_20headers_20in_20tts_12',['Standard headers in TTS',['../compile-time.html#compile-time-headers',1,'']]],
+  ['started_13',['Getting Started',['../tts101.html',1,'']]],
+  ['structured_20format_20sinks_14',['Structured Format Sinks',['../output-sinks.html#autotoc_md61',1,'']]],
+  ['stuck_20runs_15',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
+  ['suite_16',['Include cost of a test suite',['../compile-time.html#compile-time-why',1,'']]],
+  ['supported_20compilers_17',['Supported Compilers',['../index.html#autotoc_md40',1,'']]],
+  ['system_18',['The Tiny Test System',['../index.html',1,'']]]
 ];

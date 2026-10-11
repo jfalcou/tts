@@ -11,34 +11,34 @@
 <line x1="570.0" x2="570.0" y1="40" y2="304" stroke="#808080" stroke-opacity="0.3"/>
 <text x="570.0" y="320" fill="#808080" text-anchor="middle">8 s</text>
 <text x="88" y="64" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
-<rect x="96" y="44" width="83.5" height="14" fill="#e09f3e"/>
-<rect x="96" y="61" width="130.2" height="14" fill="#e09f3e" fill-opacity="0.45"/>
-<text x="185.5" y="55" fill="#808080">1.41 s</text>
-<text x="232.2" y="72" fill="#808080">2.20 s, +56 %</text>
+<rect x="96" y="44" width="95.9" height="14" fill="#e09f3e"/>
+<rect x="96" y="61" width="149.7" height="14" fill="#e09f3e" fill-opacity="0.45"/>
+<text x="197.9" y="55" fill="#808080">1.62 s</text>
+<text x="251.7" y="72" fill="#808080">2.53 s, +56 %</text>
 <text x="88" y="108" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
-<rect x="96" y="88" width="95.5" height="14" fill="#d1495b"/>
-<rect x="96" y="105" width="96.5" height="14" fill="#d1495b" fill-opacity="0.45"/>
-<text x="197.5" y="99" fill="#808080">1.61 s</text>
-<text x="198.5" y="116" fill="#808080">1.63 s, +1 %</text>
+<rect x="96" y="88" width="109.5" height="14" fill="#d1495b"/>
+<rect x="96" y="105" width="113.7" height="14" fill="#d1495b" fill-opacity="0.45"/>
+<text x="211.5" y="99" fill="#808080">1.85 s</text>
+<text x="215.7" y="116" fill="#808080">1.92 s, +4 %</text>
 <text x="88" y="152" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
-<rect x="96" y="132" width="107.2" height="14" fill="#5c8a8a"/>
-<rect x="96" y="149" width="215.4" height="14" fill="#5c8a8a" fill-opacity="0.45"/>
-<text x="209.2" y="143" fill="#808080">1.81 s</text>
-<text x="317.4" y="160" fill="#808080">3.63 s, +101 %</text>
+<rect x="96" y="132" width="119.5" height="14" fill="#5c8a8a"/>
+<rect x="96" y="149" width="237.0" height="14" fill="#5c8a8a" fill-opacity="0.45"/>
+<text x="221.5" y="143" fill="#808080">2.02 s</text>
+<text x="339.0" y="160" fill="#808080">4.00 s, +98 %</text>
 <text x="88" y="196" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
-<rect x="96" y="176" width="113.8" height="14" fill="#2e86ab"/>
-<rect x="96" y="193" width="130.2" height="14" fill="#2e86ab" fill-opacity="0.45"/>
-<text x="215.8" y="187" fill="#808080">1.92 s</text>
-<text x="232.2" y="204" fill="#808080">2.20 s, +14 %</text>
+<rect x="96" y="176" width="130.3" height="14" fill="#2e86ab"/>
+<rect x="96" y="193" width="147.6" height="14" fill="#2e86ab" fill-opacity="0.45"/>
+<text x="232.3" y="187" fill="#808080">2.20 s</text>
+<text x="249.6" y="204" fill="#808080">2.49 s, +13 %</text>
 <text x="88" y="240" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
-<rect x="96" y="220" width="165.5" height="14" fill="#3fa34d"/>
-<rect x="96" y="237" width="174.6" height="14" fill="#3fa34d" fill-opacity="0.45"/>
-<text x="267.5" y="231" fill="#808080">2.79 s</text>
-<text x="276.6" y="248" fill="#808080">2.95 s, +5 %</text>
+<rect x="96" y="220" width="189.5" height="14" fill="#3fa34d"/>
+<rect x="96" y="237" width="201.1" height="14" fill="#3fa34d" fill-opacity="0.45"/>
+<text x="291.5" y="231" fill="#808080">3.20 s</text>
+<text x="303.1" y="248" fill="#808080">3.39 s, +6 %</text>
 <text x="88" y="284" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
-<rect x="96" y="264" width="345.9" height="14" fill="#8e6bbf"/>
-<rect x="96" y="281" width="424.4" height="14" fill="#8e6bbf" fill-opacity="0.45"/>
-<text x="447.9" y="275" fill="#808080">5.84 s</text>
-<text x="526.4" y="292" fill="#808080">7.16 s, +23 %</text>
+<rect x="96" y="264" width="377.2" height="14" fill="#8e6bbf"/>
+<rect x="96" y="281" width="472.3" height="14" fill="#8e6bbf" fill-opacity="0.45"/>
+<text x="479.2" y="275" fill="#808080">6.37 s</text>
+<text x="574.3" y="292" fill="#808080">7.97 s, +25 %</text>
 <text x="96" y="358" fill="#808080">solid: 100 separate cases, light: one template case</text>
 </svg>

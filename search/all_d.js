@@ -4,7 +4,7 @@ var searchData=
   ['ieee_20comparison_1',['IEEE Comparison',['../customize.html#autotoc_md35',1,'']]],
   ['ieee_5fcheck_2',['ieee_check',['../group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3',1,'tts']]],
   ['in_20output_20sinks_3',['Built-in Output Sinks',['../output-sinks.html',1,'']]],
-  ['in_20tts_4',['Replacements written in TTS',['../compile-time.html#compile-time-precedent',1,'']]],
+  ['in_20tts_4',['in TTS',['../compile-time.html#compile-time-precedent',1,'Replacements written in TTS'],['../compile-time.html#compile-time-headers',1,'Standard headers in TTS']]],
   ['include_20cost_5',['Minimal include cost',['../compile-time.html#compile-time-comparison-include',1,'']]],
   ['include_20cost_20of_20a_20test_20suite_6',['Include cost of a test suite',['../compile-time.html#compile-time-why',1,'']]],
   ['infrastructure_7',['Infrastructure',['../changelog.html#autotoc_md6',1,'Infrastructure'],['../changelog.html#autotoc_md13',1,'Infrastructure']]],

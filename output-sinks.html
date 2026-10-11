@@ -351,7 +351,7 @@ Structured Format Sinks</h1>
 tts::json_sink</h2>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
 Effect</h3>
-<p>Accumulates one JSON object per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> from <span class="tt">test_finished()</span> and <span class="tt">assertion_failed()</span>, plus a <span class="tt">summary</span> counting passed/failed/invalid cases - counted directly as cases finish, not from the suite's raw assertion totals, so the number of entries in <span class="tt">tests</span> always matches <span class="tt">summary.total</span>. No JSON library involved: escaping is hand-rolled in <span class="tt">tts_implementation_defined()</span>, in keeping with <a class="el" href="compile-time.html" title="Compile-Time Discipline">Compile-Time Discipline</a>.</p>
+<p>Accumulates one JSON object per <a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> from <span class="tt">test_finished()</span> and <span class="tt">assertion_failed()</span>, plus a <span class="tt">summary</span> counting passed/failed/invalid cases - counted directly as cases finish, not from the suite's raw assertion totals, so the number of entries in <span class="tt">tests</span> always matches <span class="tt">summary.total</span>. No JSON library involved: escaping is hand-rolled in <span class="tt">tts_implementation_defined()</span>, in keeping with <a class="el" href="compile-time.html" title="Compile-Time Cost">Compile-Time Cost</a>.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 Schema</h3>
 <p>The document is a single object with two fields:</p>
