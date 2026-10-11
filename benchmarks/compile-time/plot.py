@@ -190,12 +190,14 @@ def summary(data, fits, types=None):
 
 
 def crossing(tts, other):
-    """Cases up to which TTS compiles faster: a library cheaper per case crosses it at (a' - a) / (b - b')."""
+    """Range of cases where TTS compiles faster; the two lines cross at (a' - a) / (b - b')."""
     (a, b), (fixed, per_case) = tts, other
-    if b <= per_case:
+    if b == per_case:
         return "always" if a <= fixed else "never"
     cases = (fixed - a) / (b - per_case)
-    return "%.0f" % cases if cases > 0 else "never"
+    if b > per_case:
+        return "up to %.0f" % cases if cases > 0 else "never"
+    return "from %.0f" % cases if cases > 0 else "always"
 
 
 def fit_tables(forms, fits, libraries):
@@ -210,7 +212,7 @@ def fit_tables(forms, fits, libraries):
                         else "<td></td>" for cf in forms)
         out.append("<tr><td>%s</td>%s</tr>" % (NAMES[lib], cells))
     out.extend(["</table>",
-                '<p>Number of test cases in a unit up to which <b>TTS</b> compiles faster:</p>',
+                '<p>Number of test cases in a unit where <b>TTS</b> compiles faster:</p>',
                 '<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th>%s</tr>' % head])
     for lib in (lib for lib in libraries if lib != "tts"):
         cells = "".join("<td>%s</td>" % (crossing(fits[cf]["tts"], fits[cf][lib])
