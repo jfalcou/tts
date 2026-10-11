@@ -23,7 +23,7 @@ include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
 
 copa_add_option(TTS_BUILD_TEST "Build tests for TTS" ON LABEL "Unit tests")
 copa_add_option(TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF LABEL "Doxygen")
-copa_add_option(TTS_BENCHMARK_DOCUMENTATION "Compare TTS with other test libraries in the documentation" ON)
+copa_add_option(TTS_BENCHMARK_DOCUMENTATION "Compare TTS with other test libraries in the documentation" OFF)
 copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF LABEL "Sanitizers")
 copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
 copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
