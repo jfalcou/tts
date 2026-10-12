@@ -11,53 +11,98 @@
 #include <tts/tools/comparators.hpp>
 #include <tts/tools/as_text.hpp>
 #include <tts/engine/info.hpp>
+#include <tts/engine/check.hpp>
+#include <tts/tools/typename.hpp>
 
-#define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                 \
-  if(::tts::_::OP(local_tts_a, local_tts_b))                                                       \
-  {                                                                                                \
-    TTS_PASS("Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));                    \
-    return ::tts::_::logger {false};                                                               \
-  }                                                                                                \
-  else                                                                                             \
-  {                                                                                                \
-    FAILURE("Expression: %s %s %s is false because %s %s %s.",                                     \
-            TTS_STRING(A),                                                                         \
-            T,                                                                                     \
-            TTS_STRING(B),                                                                         \
-            ::tts::as_text(local_tts_a).data(),                                                    \
-            F,                                                                                     \
-            ::tts::as_text(local_tts_b).data());                                                   \
-    return ::tts::_::logger {};                                                                    \
-  }                                                                                                \
-  /**/
+namespace tts::_
+{
+  template<typename A, typename B>
+  logger relation_failed(A const& a, B const& b, check_site const& site, char const* kind)
+  {
+    return check_failed(site,
+                        ::tts::text {"%s: %s %s %s is false because %s %s %s.",
+                                     kind,
+                                     site.lhs,
+                                     site.op,
+                                     site.rhs,
+                                     ::tts::as_text(a).data(),
+                                     site.negated,
+                                     ::tts::as_text(b).data()});
+  }
 
-#define TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                           \
-  constexpr auto local_tts_expr = ::tts::_::OP(A, B);                                              \
-  if constexpr(local_tts_expr)                                                                     \
-  {                                                                                                \
-    TTS_PASS("Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));           \
-    ::tts::global_logger_status = false;                                                           \
-  }                                                                                                \
-  else                                                                                             \
-  {                                                                                                \
-    FAILURE("Constant expression: %s %s %s is false because %s %s %s.",                            \
-            TTS_STRING(A),                                                                         \
-            T,                                                                                     \
-            TTS_STRING(B),                                                                         \
-            ::tts::as_text(A).data(),                                                              \
-            F,                                                                                     \
-            ::tts::as_text(B).data());                                                             \
-    ::tts::global_logger_status = true;                                                            \
-  }                                                                                                \
-  /**/
+  template<typename Relation, typename A, typename B>
+  logger check_relation(Relation relation, A const& a, B const& b, check_site const& site)
+  {
+    if(relation(a, b))
+    {
+      if(check_passed())
+        check_report(site,
+                     ::tts::text {"Expression: %s %s %s is true.", site.lhs, site.op, site.rhs});
+      return logger {false};
+    }
+
+    return relation_failed(a, b, site, "Expression");
+  }
+
+  template<typename A, typename B> logger types_differ(check_site const& site)
+  {
+    return check_failed(site,
+                        ::tts::text {"'%s %s %s' is false because '%.*s' is not '%.*s'.",
+                                     site.lhs,
+                                     site.op,
+                                     site.rhs,
+                                     ::tts::typename_<A>.size(),
+                                     ::tts::typename_<A>.data(),
+                                     ::tts::typename_<B>.size(),
+                                     ::tts::typename_<B>.data()});
+  }
+
+  template<typename Relation, typename A, typename B>
+  logger check_typed_relation(Relation relation, A const& a, B const& b, check_site const& site)
+  {
+    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(site);
+    else return check_relation(relation, a, b, site);
+  }
+
+  template<bool Holds, typename A, typename B>
+  logger check_constant_relation(A const& a, B const& b, check_site const& site)
+  {
+    if constexpr(Holds)
+    {
+      if(check_passed())
+        check_report(
+        site, ::tts::text {"Constant expression: %s %s %s is true.", site.lhs, site.op, site.rhs});
+      return logger {false};
+    }
+    else
+    {
+      return relation_failed(a, b, site, "Constant expression");
+    }
+  }
+
+  template<bool Holds, typename A, typename B>
+  logger check_typed_constant_relation(A const& a, B const& b, check_site const& site)
+  {
+    if constexpr(!std::same_as<A, B>)
+    {
+      // No additional information on differing types, as in the published output.
+      types_differ<A, B>(site);
+      return logger {false};
+    }
+    else
+    {
+      return check_constant_relation<Holds>(a, b, site);
+    }
+  }
+}
 
 #define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_##__VA_ARGS__(A, B, OP, T, F)
 #define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                 \
-  [ & ](auto const& local_tts_a, auto const& local_tts_b)                                          \
-  { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }(A, B) /**/
+  ::tts::_::check_relation(                                                                        \
+  ::tts::_::OP, A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) /**/
 
 //======================================================================================================================
 /**
@@ -260,28 +305,8 @@
   TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
-  [ & ](auto&& local_tts_a, auto&& local_tts_b)                                                    \
-  {                                                                                                \
-    using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                     \
-    using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                     \
-                                                                                                   \
-    if constexpr(!std::same_as<type_a, type_b>)                                                    \
-    {                                                                                              \
-      FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
-              TTS_STRING(A),                                                                       \
-              T,                                                                                   \
-              TTS_STRING(B),                                                                       \
-              ::tts::typename_<type_a>.size(),                                                     \
-              ::tts::typename_<type_a>.data(),                                                     \
-              ::tts::typename_<type_b>.size(),                                                     \
-              ::tts::typename_<type_b>.data());                                                    \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                   \
-    }                                                                                              \
-  }(A, B) /**/
+  ::tts::_::check_typed_relation(                                                                  \
+  ::tts::_::OP, A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) /**/
 
 //======================================================================================================================
 /**
@@ -423,16 +448,8 @@ same.
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
-  ::tts::global_logger_status = false;                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                               \
-  } while(0);                                                                                      \
-  ::tts::_::logger                                                                                 \
-  {                                                                                                \
-    ::tts::global_logger_status                                                                    \
-  }                                                                                                \
-/**/
+  ::tts::_::check_constant_relation<(::tts::_::OP(A, B))>(                                         \
+  A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) /**/
 
 //======================================================================================================================
 /**
@@ -576,34 +593,8 @@ same.
   TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
-  ::tts::global_logger_status = false;                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    using type_a = std::remove_cvref_t<decltype(A)>;                                               \
-    using type_b = std::remove_cvref_t<decltype(B)>;                                               \
-                                                                                                   \
-    if(!std::same_as<type_a, type_b>)                                                              \
-    {                                                                                              \
-      FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
-              TTS_STRING(A),                                                                       \
-              T,                                                                                   \
-              TTS_STRING(B),                                                                       \
-              ::tts::typename_<type_a>.size(),                                                     \
-              ::tts::typename_<type_a>.data(),                                                     \
-              ::tts::typename_<type_b>.size(),                                                     \
-              ::tts::typename_<type_b>.data());                                                    \
-      ::tts::global_logger_status = false;                                                         \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                             \
-    }                                                                                              \
-  } while(0);                                                                                      \
-  ::tts::_::logger                                                                                 \
-  {                                                                                                \
-    ::tts::global_logger_status                                                                    \
-  }                                                                                                \
-  /**/
+  ::tts::_::check_typed_constant_relation<(::tts::_::OP(A, B))>(                                   \
+  A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) /**/
 
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
