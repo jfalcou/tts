@@ -8,7 +8,7 @@
 
   @section compile-time-headers Standard headers in TTS
 
-  @subsection compile-time-why Include cost of a test suite
+  @subsection compile-time-why Objectives
 
   The library is header-only, and a test suite holds dozens or hundreds of small translation units,
   each including `<tts/tts.hpp>` on its own. No separately compiled object amortizes the parsing, so
@@ -20,12 +20,11 @@
   The library therefore holds small replacements for the facilities it needs, listed in
   @ref compile-time-precedent, rather than including the standard headers.
 
-  @subsection compile-time-cost Avoided headers and their cost
+  @subsection compile-time-cost Costly headers
 
   The cost of a header is measured before the header is included, since the name of a header does
   not predict its cost. The times below are what a header adds to a minimal `TTS_MAIN` translation
-  unit, with `g++ 13` and `clang++ 18`, `-std=c++20`, best of eight runs, measured as
-  @ref compile-time-checklist describes.
+  unit, with `g++ 13` and `clang++ 18`, `-std=c++20`, best of eight runs.
 
   Header            | g++    | clang++ | Replacement
   ----------------- | ------ | ------- | ----------------------------------------------
@@ -42,33 +41,24 @@
   `<map>`           | +50ms  | +50ms   | none, not used
   `<array>`         | +20ms  | +20ms   | a C array sized by a constant
 
-  @subsection compile-time-fine Headers measured as free
+  @subsection compile-time-fine Acceptable headers
 
-  A standard header is allowed once measured as free. `<windows.h>` is included only on the Windows
-  branch of `tools/clock.hpp`, guarded by `WIN32_LEAN_AND_MEAN` and `NOMINMAX`. Measured on
-  `cl.exe`, it costs nothing relative to an empty translation unit, and less than declaring by hand
-  the three functions it provides. Platform-specific code is measured on that platform.
+  A standard header is allowed once measured as free:
 
-  @subsection compile-time-checklist Checklist for a new header
+  - two translation units, identical but for the header, are compiled with `-std=c++20 -c` five to
+    eight times each, and their best times are compared;
+  - `g++` and `clang++` are both measured, since the same header costs them differently;
+  - the pull request that adds the header gives both times.
 
-  1. `engine/deps.hpp`, included by nearly every **TTS** header, already includes `<cstdio>`,
-  `<cstdlib>`, `<cstring>`, `<type_traits>`, `<utility>`, `<initializer_list>`, `<cassert>`,
-  `<bit>`, `<cstddef>`, `<compare>`, `<concepts>`, `<cstdint>`, `<limits>`, and `<new>`. Using one
-  of them costs nothing more.
-  2. A new header is measured on two near-identical translation units, one with the header and one
-  without:
-  @code{sh}
-  time g++ -std=c++20 -I include -c file.cpp -o /dev/null
-  @endcode
-  Five to eight runs are taken to amortize scheduling effects; the best time is compared with the
-  baseline. The same header costs different amounts with `g++` and `clang++` (`<chrono>` adds 460 ms
-  with the first and 680 ms with the second), so both are measured.
-  3. A change spread across several files is measured against an untouched copy of `main`, created
-  with `git worktree add ../tts-baseline main`, by building the same representative translation
-  unit in both trees.
-  4. The pull request gives the numbers before and after the change.
+  `<windows.h>` is included only on the Windows branch of `tools/clock.hpp`, guarded by
+  `WIN32_LEAN_AND_MEAN` and `NOMINMAX`. Measured on `cl.exe`, it costs nothing relative to an empty
+  translation unit, and less than declaring by hand the three functions it provides.
+  Platform-specific code is measured on that platform.
 
-  @subsection compile-time-precedent Replacements written in TTS
+  `engine/deps.hpp`, included by nearly every **TTS** header, already includes the acceptable
+  headers, so using one of them costs nothing more.
+
+  @subsection compile-time-precedent TTS replacements
 
   Each file below replaces a standard header listed in the table above, and is a model for a new
   replacement:
@@ -85,19 +75,37 @@
 
   @section compile-time-comparison Other test libraries
 
-  The CPU time of compiling one test unit with `-std=c++20 -c` is measured at each publication of
-  this documentation, for **TTS**, doctest, Catch2, GoogleTest, Boost.Test, and ut. Each point is
-  the median of several compilations.
+  Each publication of this documentation builds test executables with **TTS**,
+  [doctest](https://github.com/doctest/doctest),
+  [Catch2](https://github.com/catchorg/Catch2),
+  [GoogleTest](https://github.com/google/googletest),
+  [Boost.Test](https://github.com/boostorg/test), and
+  [ut](https://github.com/boost-ext/ut), and measures the CPU time of their compilation and link
+  with `-std=c++20`. Each executable runs and passes before its time is kept, and each point is the
+  median of several builds.
 
   @htmlinclude bench-meta.html
 
-  Catch2 and GoogleTest compile their runner in a separate library, whose compilation time is not
-  measured. The runner of doctest, Boost.Test, ut, and **TTS** is compiled in the unit that defines
-  it.
+  Every test is the same trivial case, three checks on two integers. Each library is set up as its
+  documentation sets it up:
 
-  @subsection compile-time-comparison-include Minimal include cost
+  - **TTS**, [doctest](https://github.com/doctest/doctest), and
+    [Boost.Test](https://github.com/boostorg/test) compile their runner in the unit that defines
+    `TTS_MAIN`, defines `DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN`, or includes
+    `boost/test/included/unit_test.hpp`: the test file of a one-file executable, and a `main.cpp` of
+    its own otherwise.
+  - [ut](https://github.com/boost-ext/ut) runs its tests from its header, so every test file holds its
+    runner.
+  - [Catch2](https://github.com/catchorg/Catch2) and
+    [GoogleTest](https://github.com/google/googletest) link `Catch2WithMain` and `gtest_main`, built
+    once per build tree and left out of the executables.
+  - [doctest](https://github.com/doctest/doctest) checks with its decomposing `CHECK(a == b)`; its
+    binary `CHECK_EQ(a, b)` costs less per test.
 
-  The unit holds the test runner and no test case.
+  @subsection compile-time-comparison-include Include cost
+
+  A test file holding neither runner nor test, compiled with `-c`. The unit of
+  [ut](https://github.com/boost-ext/ut) holds its runner.
 
   @tab_begin
 
@@ -109,56 +117,67 @@
 
   @tab_end
 
-  @subsection compile-time-comparison-cases Cost of test cases
+  @subsection compile-time-comparison-one One test
 
-  The unit holds a growing number of test cases. A simple case runs three checks on two integers,
-  and a template case runs the same three checks over `short`, `int`, `float`, and `double`.
+  An executable built from one file holding the runner and one test.
+
+  @tab_begin
+
+  @tab{g++}
+  @htmlinclude bench-one-gcc.html
+
+  @tab{clang++}
+  @htmlinclude bench-one-clang.html
+
+  @tab_end
+
+  @subsection compile-time-comparison-cases Tests in one file
+
+  An executable built from one file holding the runner and a growing number of tests. Each curve is
+  fitted by least squares to a fixed cost plus a cost per test.
 
   @tab_begin
 
   @tab{g++}
   @htmlinclude bench-cases-gcc.html
-
-  @tab{clang++}
-  @htmlinclude bench-cases-clang.html
-
-  @tab_end
-
-  @subsection compile-time-comparison-types Template machinery
-
-  Two units are compared at the largest N measured. The first holds N test cases, each on a type
-  of its own, and the second a single template test case over the same N types. The difference
-  between the two bars is the cost of the template machinery alone, for each library.
-
-  @tab_begin
-
-  @tab{g++}
-  @htmlinclude bench-types-gcc.html
-
-  @tab{clang++}
-  @htmlinclude bench-types-clang.html
-
-  @tab_end
-
-  @subsection compile-time-comparison-fits Fixed cost and crossings
-
-  Each curve is fitted by least squares to a fixed cost plus a cost per test case. The second table
-  gives the number of test cases in a unit where **TTS** compiles faster:
-
-  - `up to N`: the other library costs less per case, and its line crosses that of **TTS** at N;
-  - `from N`: the other library costs more per case, and its line crosses that of **TTS** at N;
-  - `always` or `never`: the two lines do not cross at a positive number of cases.
-
-  Catch2 and GoogleTest are measured without their runner, so **TTS** compiles faster over at least
-  the range given against them.
-
-  @tab_begin
-
-  @tab{g++}
   @htmlinclude bench-fits-gcc.html
 
   @tab{clang++}
+  @htmlinclude bench-cases-clang.html
   @htmlinclude bench-fits-clang.html
+
+  @tab_end
+
+  @subsection compile-time-comparison-tests Cost of one test
+
+  A test file without runner holding 200 tests, compiled with `-c`. The cost of one test is its time
+  minus that of the test file with no test, divided by the number of tests. The runner stays out:
+  for some libraries, it varies more between two builds than 50 tests add to the curve above.
+
+  @tab_begin
+
+  @tab{g++}
+  @htmlinclude bench-tests-gcc.html
+
+  @tab{clang++}
+  @htmlinclude bench-tests-clang.html
+
+  @tab_end
+
+  @subsection compile-time-comparison-files Tests in many files
+
+  An executable built from a runner and a growing number of files of one test each, linked together.
+  **TTS**, [doctest](https://github.com/doctest/doctest), and
+  [Boost.Test](https://github.com/boostorg/test) compile their runner once, in its own file;
+  [ut](https://github.com/boost-ext/ut) compiles it in each file.
+
+  @tab_begin
+
+  @tab{g++}
+  @htmlinclude bench-files-gcc.html
+
+  @tab{clang++}
+  @htmlinclude bench-files-clang.html
 
   @tab_end
 **/
