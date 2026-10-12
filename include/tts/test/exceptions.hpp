@@ -21,7 +21,6 @@ namespace tts::_
     {
       if(check_passed())
         check_report(site, ::tts::text {"Expected: %s throws %s.", site.lhs, site.rhs});
-      ::tts::global_runtime.pass(); // counted twice, as in the published totals
       return logger {false};
     }
 
@@ -33,7 +32,6 @@ namespace tts::_
     if(!caught)
     {
       if(check_passed()) check_report(site, ::tts::text {"Expected: %s does not throw.", site.lhs});
-      ::tts::global_runtime.pass(); // counted twice, as in the published totals
       return logger {false};
     }
 
