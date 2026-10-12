@@ -82,7 +82,8 @@
   [Boost.Test](https://github.com/boostorg/test), and
   [ut](https://github.com/boost-ext/ut), and measures the CPU time of their compilation and link
   with `-std=c++20`. Each executable runs and passes before its time is kept, and each point is the
-  median of several builds.
+  median of several builds. Each publication runs on a new CI machine, named below, and its times
+  compare only with one another.
 
   @htmlinclude bench-meta.html
 

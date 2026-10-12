@@ -216,9 +216,11 @@ def per_compiler(data, compiler, version, destination):
 def main(results, destination):
     data = json.loads(pathlib.Path(results).read_text())  # NOSONAR - a path the build gives
     destination = pathlib.Path(destination)
-    blocks = {"meta": '<p>Measured on %s with %s and <code>%s</code>, the median of %d builds per point, %d at a time.'
-                      '</p>' % (data.get("date", "an unknown date"), " and ".join(data["compilers"].values()),
-                                data.get("options", "-O0"), data["runs"], data.get("jobs", 1))}
+    blocks = {"meta": '<p>Measured on %s on %s, %s cores, with %s and <code>%s</code>: the median of %d builds '
+                      'per point, made in rounds that alternate the libraries, %d at a time.</p>'
+                      % (data.get("date", "an unknown date"), data.get("cpu", "an unknown CPU"), data.get("cores", "?"),
+                         ", ".join(data["compilers"].values()), data.get("options", "-O0"), data["runs"],
+                         data.get("jobs", 1))}
     # The page includes every block, so an unmeasured compiler still gets its own.
     for compiler in COMPILERS:
         here = {}
