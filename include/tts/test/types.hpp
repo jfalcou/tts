@@ -10,6 +10,9 @@
 
 #include <tts/engine/info.hpp>
 #include <tts/engine/check.hpp>
+#include <tts/tools/preprocessor.hpp>
+#include <tts/tools/typename.hpp>
+#include <tts/tools/types.hpp>
 
 namespace tts::_
 {
@@ -58,9 +61,6 @@ namespace tts::_
                                      site.lhs});
   }
 }
-#include <tts/tools/preprocessor.hpp>
-#include <tts/tools/typename.hpp>
-#include <tts/tools/types.hpp>
 
 //======================================================================================================================
 /**
