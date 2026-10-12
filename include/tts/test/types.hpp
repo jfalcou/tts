@@ -9,6 +9,55 @@
 #pragma once
 
 #include <tts/engine/info.hpp>
+#include <tts/engine/check.hpp>
+
+namespace tts::_
+{
+  template<typename T, typename R> logger check_type(check_site const& site, bool expression)
+  {
+    if constexpr(std::is_same_v<T, R>)
+    {
+      if(check_passed())
+        check_report(site,
+                     expression
+                     ? ::tts::text {"Expression: '%s' is of type '%s'.", site.lhs, site.rhs}
+                     : ::tts::text {"Type: '%s' is '%s'.", site.lhs, site.rhs});
+      return logger {false};
+    }
+    else
+    {
+      char const* format = expression
+                           ? "Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'."
+                           : "Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'.";
+      return check_failed(site,
+                          ::tts::text {format,
+                                       site.lhs,
+                                       site.rhs,
+                                       ::tts::typename_<T>.size(),
+                                       ::tts::typename_<T>.data(),
+                                       ::tts::typename_<R>.size(),
+                                       ::tts::typename_<R>.data()});
+    }
+  }
+
+  inline logger check_compiles(bool compiles, bool expected, check_site const& site)
+  {
+    if(compiles == expected)
+    {
+      if(check_passed())
+        check_report(site,
+                     ::tts::text {compiles ? "Expression: '%s' compiles as expected."
+                                           : "Expression: '%s' does not compile as expected.",
+                                  site.lhs});
+      return logger {false};
+    }
+
+    return check_failed(site,
+                        ::tts::text {compiles ? "Expression: '%s' compiles unexpectedly."
+                                              : "Expression: '%s' does not compile as expected.",
+                                     site.lhs});
+  }
+}
 #include <tts/tools/preprocessor.hpp>
 #include <tts/tools/typename.hpp>
 #include <tts/tools/types.hpp>
@@ -45,27 +94,10 @@
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FATAL)
 
 #define TTS_TYPE_IS_IMPL(TYPE, REF, FAILURE)                                                       \
-  [ & ]<typename TTS_T, typename TTS_R>(::tts::type<TTS_T>, ::tts::type<TTS_R>)                    \
-  {                                                                                                \
-    if constexpr(std::is_same_v<TTS_T, TTS_R>)                                                     \
-    {                                                                                              \
-      TTS_PASS("Type: '%s' is '%s'.",                                                              \
-               TTS_STRING(TTS_REMOVE_PARENS(TYPE)),                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(REF)));                                                \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'.",                  \
-              TTS_STRING(TTS_REMOVE_PARENS(TYPE)),                                                 \
-              TTS_STRING(TTS_REMOVE_PARENS(REF)),                                                  \
-              ::tts::typename_<TTS_T>.size(),                                                      \
-              ::tts::typename_<TTS_T>.data(),                                                      \
-              ::tts::typename_<TTS_R>.size(),                                                      \
-              ::tts::typename_<TTS_R>.data());                                                     \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(::tts::type<TTS_REMOVE_PARENS(TYPE)> {}, ::tts::type<TTS_REMOVE_PARENS(REF)> {}) /**/
+  ::tts::_::check_type<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(REF)>(                           \
+  TTS_CHECK_SITE(                                                                                  \
+  FAILURE, TTS_STRING(TTS_REMOVE_PARENS(TYPE)), "", TTS_STRING(TTS_REMOVE_PARENS(REF)), ""),       \
+  false) /**/
 
 //======================================================================================================================
 /**
@@ -90,45 +122,20 @@
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FATAL)
 
 #define TTS_EXPR_IS_IMPL(EXPR, TYPE, FAILURE)                                                      \
-  [ & ]<typename TTS_T, typename TTS_R>(::tts::type<TTS_T>, ::tts::type<TTS_R>)                    \
-  {                                                                                                \
-    if constexpr(std::is_same_v<TTS_T, TTS_R>)                                                     \
-    {                                                                                              \
-      TTS_PASS("Expression: '%s' is of type '%s'.",                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(TYPE)));                                               \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'.",                \
-              TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                 \
-              TTS_STRING(TTS_REMOVE_PARENS(TYPE)),                                                 \
-              ::tts::typename_<TTS_T>.size(),                                                      \
-              ::tts::typename_<TTS_T>.data(),                                                      \
-              ::tts::typename_<TTS_R>.size(),                                                      \
-              ::tts::typename_<TTS_R>.data());                                                     \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(::tts::type<decltype(TTS_REMOVE_PARENS(EXPR))> {},                                             \
-    ::tts::type<TTS_REMOVE_PARENS(TYPE)> {}) /**/
+  ::tts::_::check_type<decltype(TTS_REMOVE_PARENS(EXPR)), TTS_REMOVE_PARENS(TYPE)>(                \
+  TTS_CHECK_SITE(                                                                                  \
+  FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", TTS_STRING(TTS_REMOVE_PARENS(TYPE)), ""),      \
+  true) /**/
 
 #define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                        \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW                                                                       \
   [ & ](TTS_ARG(__VA_ARGS__))                                                                      \
   {                                                                                                \
-    if constexpr(requires TTS_REMOVE_PARENS(EXPR))                                                 \
-    {                                                                                              \
-      TTS_PASS("Expression: '%s' compiles as expected.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));     \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_FAIL("Expression: '%s' does not compile as expected.",                                   \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)));                                               \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
+    return ::tts::_::check_compiles(                                                               \
+    requires TTS_REMOVE_PARENS(EXPR),                                                              \
+    true,                                                                                          \
+    TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
     TTS_DISABLE_WARNING_POP                                                                        \
   }(__VA_ARGS__) /**/
 
@@ -156,17 +163,10 @@ context.
   TTS_DISABLE_WARNING_SHADOW                                                                       \
   [ & ](TTS_ARG(__VA_ARGS__))                                                                      \
   {                                                                                                \
-    if constexpr(!(requires TTS_REMOVE_PARENS(EXPR)))                                              \
-    {                                                                                              \
-      TTS_PASS("Expression: '%s' does not compile as expected.",                                   \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)));                                               \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_FAIL("Expression: '%s' compiles unexpectedly.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));    \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
+    return ::tts::_::check_compiles(                                                               \
+    requires TTS_REMOVE_PARENS(EXPR),                                                              \
+    false,                                                                                         \
+    TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
     TTS_DISABLE_WARNING_POP                                                                        \
   }(__VA_ARGS__) /**/
 
