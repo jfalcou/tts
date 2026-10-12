@@ -140,3 +140,11 @@ namespace tts::_
 #define TTS_MAYBE_STRIP_PARENS_1(x)          x
 #define TTS_MAYBE_STRIP_PARENS_2(x)          TTS_APPLY(TTS_MAYBE_STRIP_PARENS_2_I, x)
 #define TTS_MAYBE_STRIP_PARENS_2_I(...)      __VA_ARGS__
+
+//======================================================================================================================
+// clang 22 reports __COUNTER__ under -Wpedantic and ignores a local suppression: the whole unit that
+// includes TTS ignores it.
+//======================================================================================================================
+#if defined(__clang__) && !defined(__APPLE__) && __clang_major__ >= 22
+#pragma clang diagnostic ignored "-Wc2y-extensions"
+#endif
