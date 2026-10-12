@@ -285,7 +285,7 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+#define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -428,7 +428,7 @@ same.
 #define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)
 #else
 #define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)                                                     \
-  TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+  TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -578,7 +578,7 @@ same.
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)
 #else
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                                 \
-  TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+  TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -607,7 +607,7 @@ same.
 #define TTS_TYPED_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)                                              \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                           \
-  TTS_TYPED_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 
 //======================================================================================================================
 /// @}
