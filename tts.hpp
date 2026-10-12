@@ -3692,6 +3692,68 @@ namespace tts::_
 #else
 #define TTS_TIMEOUT(MS, ID) ::tts::with_timeout(MS, ID)
 #endif
+namespace tts::_
+{
+  struct check_site
+  {
+    char const* file;
+    int         line;
+    bool        fatal;
+    char const* lhs     = "";
+    char const* op      = "";
+    char const* rhs     = "";
+    char const* negated = "";
+  };
+  inline bool check_passed()
+  {
+    ::tts::global_runtime.pass();
+    return ::tts::is_detailed();
+  }
+  inline void check_report(check_site const& site, ::tts::text const& message)
+  {
+    report_pass(source_location::current(site.file, site.line).data(), message.data());
+  }
+  inline logger check_failed(check_site const& site, ::tts::text const& message)
+  {
+    ::tts::global_runtime.fail();
+    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;
+    auto location = source_location::current(site.file, site.line);
+    if(site.fatal)
+    {
+      report_fatal(location.data(), message.data(), current_type);
+      ::tts::fatal_error_status = true;
+      [[maybe_unused]] logger local_tts_fail_hard {};
+    }
+    else
+    {
+      report_fail(location.data(), message.data(), current_type);
+    }
+    return logger {};
+  }
+}
+#define TTS_CHECK_SITE(FAILURE, LHS, OP, RHS, NEGATED)                                             \
+  ::tts::_::check_site                                                                             \
+  {                                                                                                \
+    __builtin_FILE(), __builtin_LINE(), TTS_IS_FATAL_##FAILURE, LHS, OP, RHS, NEGATED              \
+  }
+#define TTS_IS_FATAL_TTS_FAIL  false
+#define TTS_IS_FATAL_TTS_FATAL true
+namespace tts::_
+{
+  inline logger
+  check_expect(bool value, bool expected, check_site const& site, char const* kind = "Expression")
+  {
+    if(value == expected)
+    {
+      if(check_passed())
+        check_report(
+        site, ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, expected ? "true" : "false"});
+      return logger {false};
+    }
+    return check_failed(
+    site, ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, value ? "true" : "false"});
+  }
+}
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT(EXPR, ...)
 #else
@@ -3700,19 +3762,10 @@ namespace tts::_
 #define TTS_EXPECT_(EXPR)         TTS_EXPECT_IMPL((EXPR), TTS_FAIL)
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR), TTS_FATAL)
 #define TTS_EXPECT_IMPL(EXPR, FAILURE)                                                             \
-  [ & ](auto&& local_tts_expr)                                                                     \
-  {                                                                                                \
-    if(local_tts_expr)                                                                             \
-    {                                                                                              \
-      TTS_PASS("Expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));          \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));          \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(EXPR) 
+  ::tts::_::check_expect(                                                                          \
+  static_cast<bool>(EXPR),                                                                         \
+  true,                                                                                            \
+  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT_NOT(EXPR, ...)
 #else
@@ -3721,19 +3774,10 @@ namespace tts::_
 #define TTS_EXPECT_NOT_(EXPR)         TTS_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
 #define TTS_EXPECT_NOT_REQUIRED(EXPR) TTS_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 #define TTS_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                         \
-  [ & ](auto&& local_tts_expr)                                                                     \
-  {                                                                                                \
-    if(!local_tts_expr)                                                                            \
-    {                                                                                              \
-      TTS_PASS("Expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));         \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));           \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(EXPR) 
+  ::tts::_::check_expect(                                                                          \
+  static_cast<bool>(EXPR),                                                                         \
+  false,                                                                                           \
+  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EXPECT(EXPR, ...)
 #else
@@ -3742,25 +3786,10 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR, FAILURE)                                                       \
-  ::tts::global_logger_status = false;                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    constexpr auto local_tts_expr = EXPR;                                                          \
-    if constexpr(local_tts_expr)                                                                   \
-    {                                                                                              \
-      TTS_PASS("Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR))); \
-      ::tts::global_logger_status = false;                                                         \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Constant expression: %s evaluates to false.", TTS_STRING(TTS_REMOVE_PARENS(EXPR))); \
-      ::tts::global_logger_status = true;                                                          \
-    }                                                                                              \
-  } while(0);                                                                                      \
-  ::tts::_::logger                                                                                 \
-  {                                                                                                \
-    ::tts::global_logger_status                                                                    \
-  }
+  ::tts::_::check_expect(std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
+                         true,                                                                     \
+                         TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
+                         "Constant expression")
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EXPECT_NOT(EXPR, ...)
 #else
@@ -3769,60 +3798,51 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                   \
-  ::tts::global_logger_status = false;                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    constexpr auto local_tts_expr = EXPR;                                                          \
-    if constexpr(!local_tts_expr)                                                                  \
-    {                                                                                              \
-      TTS_PASS("Constant expression: %s evaluates to false.",                                      \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)));                                               \
-      ::tts::global_logger_status = false;                                                         \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Constant expression: %s evaluates to true.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));  \
-      ::tts::global_logger_status = true;                                                          \
-    }                                                                                              \
-  } while(0);                                                                                      \
-  ::tts::_::logger                                                                                 \
-  {                                                                                                \
-    ::tts::global_logger_status                                                                    \
-  }                                                                                                \
-  
+  ::tts::_::check_expect(std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
+                         false,                                                                    \
+                         TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
+                         "Constant expression") 
+namespace tts::_
+{
+  inline logger check_throw(bool caught, check_site const& site)
+  {
+    if(caught)
+    {
+      if(check_passed())
+        check_report(site, ::tts::text {"Expected: %s throws %s.", site.lhs, site.rhs});
+      return logger {false};
+    }
+    return check_failed(site, ::tts::text {"Expected: %s failed to throw %s.", site.lhs, site.rhs});
+  }
+  inline logger check_no_throw(bool caught, check_site const& site)
+  {
+    if(!caught)
+    {
+      if(check_passed()) check_report(site, ::tts::text {"Expected: %s does not throw.", site.lhs});
+      return logger {false};
+    }
+    return check_failed(site, ::tts::text {"Expected: %s throws unexpectedly.", site.lhs});
+  }
+}
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                   \
-  [ & ]()                                                                                          \
+  ::tts::_::check_throw(                                                                           \
+  [ & ]() -> bool                                                                                  \
   {                                                                                                \
-    bool tts_caught = false;                                                                       \
-                                                                                                   \
     try                                                                                            \
     {                                                                                              \
       EXPR;                                                                                        \
     }                                                                                              \
     catch(EXCEPTION&)                                                                              \
     {                                                                                              \
-      tts_caught = true;                                                                           \
+      return true;                                                                                 \
     }                                                                                              \
     catch(...)                                                                                     \
     {                                                                                              \
     }                                                                                              \
-                                                                                                   \
-    if(tts_caught)                                                                                 \
-    {                                                                                              \
-      TTS_PASS("Expected: %s throws %s.",                                                          \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(EXCEPTION)));                                          \
-      ::tts::global_runtime.pass();                                                                \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expected: %s failed to throw %s.",                                                  \
-              TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                 \
-              TTS_STRING(TTS_REMOVE_PARENS(EXCEPTION)));                                           \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }()
+    return false;                                                                                  \
+  }(),                                                                                             \
+  TTS_CHECK_SITE(                                                                                  \
+  FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", TTS_STRING(TTS_REMOVE_PARENS(EXCEPTION)), ""))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_THROW(EXPR, EXCEPTION, ...)
 #else
@@ -3831,31 +3851,20 @@ namespace tts::_
 #define TTS_THROW_(EXPR, EXCEPTION)         TTS_THROW_IMPL(EXPR, EXCEPTION, TTS_FAIL)
 #define TTS_THROW_REQUIRED(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION, TTS_FATAL)
 #define TTS_NO_THROW_IMPL(EXPR, FAILURE)                                                           \
-  [ & ]()                                                                                          \
+  ::tts::_::check_no_throw(                                                                        \
+  [ & ]() -> bool                                                                                  \
   {                                                                                                \
-    bool tts_caught = false;                                                                       \
-                                                                                                   \
     try                                                                                            \
     {                                                                                              \
       EXPR;                                                                                        \
     }                                                                                              \
     catch(...)                                                                                     \
     {                                                                                              \
-      tts_caught = true;                                                                           \
+      return true;                                                                                 \
     }                                                                                              \
-                                                                                                   \
-    if(!tts_caught)                                                                                \
-    {                                                                                              \
-      TTS_PASS("Expected: %s does not throw.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));               \
-      ::tts::global_runtime.pass();                                                                \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expected: %s throws unexpectedly.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));           \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }()
+    return false;                                                                                  \
+  }(),                                                                                             \
+  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_NO_THROW(EXPR, ...)
 #else
@@ -3898,112 +3907,174 @@ namespace tts
 }
 namespace tts::_
 {
-  template<typename L, typename R> inline constexpr bool bit_eq(L const& l, R const& r)
+  struct bit_eq_t
   {
-    if constexpr(requires { comparison<L, R>::bit_equal(l, r); })
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      return comparison<L, R>::bit_equal(l, r);
+      if constexpr(requires { comparison<L, R>::bit_equal(l, r); })
+      {
+        return comparison<L, R>::bit_equal(l, r);
+      }
+      else
+      {
+        static_assert(
+        !requires { comparison<L, R>::bit_equal; },
+        "[TTS] tts::comparison<L, R>::bit_equal does not accept the two operands.");
+        return builtin_comparison<L, R>::bit_equal(l, r);
+      }
+    }
+  };
+  inline constexpr bit_eq_t bit_eq {};
+  struct bit_neq_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return !bit_eq(l, r);
+    }
+  };
+  inline constexpr bit_neq_t bit_neq {};
+  struct eq_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      if constexpr(requires { comparison<L, R>::equal(l, r); })
+      {
+        return comparison<L, R>::equal(l, r);
+      }
+      else
+      {
+        static_assert(
+        !requires { comparison<L, R>::equal; },
+        "[TTS] tts::comparison<L, R>::equal does not accept the two operands.");
+        return builtin_comparison<L, R>::equal(l, r);
+      }
+    }
+  };
+  inline constexpr eq_t eq {};
+  struct neq_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return !eq(l, r);
+    }
+  };
+  inline constexpr neq_t neq {};
+  struct lt_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      if constexpr(requires { comparison<L, R>::less(l, r); })
+      {
+        return comparison<L, R>::less(l, r);
+      }
+      else
+      {
+        static_assert(
+        !requires { comparison<L, R>::less; },
+        "[TTS] tts::comparison<L, R>::less does not accept the two operands.");
+        return builtin_comparison<L, R>::less(l, r);
+      }
+    }
+  };
+  inline constexpr lt_t lt {};
+  struct le_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return lt(l, r) || eq(l, r);
+    }
+  };
+  inline constexpr le_t le {};
+  struct gt_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return !le(l, r);
+    }
+  };
+  inline constexpr gt_t gt {};
+  struct ge_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return !lt(l, r);
+    }
+  };
+  inline constexpr ge_t ge {};
+}
+namespace tts::_
+{
+  template<typename A, typename B>
+  logger relation_failed(A const& a, B const& b, check_site const& site, char const* kind)
+  {
+    return check_failed(site,
+                        ::tts::text {"%s: %s %s %s is false because %s %s %s.",
+                                     kind,
+                                     site.lhs,
+                                     site.op,
+                                     site.rhs,
+                                     ::tts::as_text(a).data(),
+                                     site.negated,
+                                     ::tts::as_text(b).data()});
+  }
+  template<typename Relation, typename A, typename B>
+  logger check_relation(Relation relation, A const& a, B const& b, check_site const& site)
+  {
+    if(relation(a, b))
+    {
+      if(check_passed())
+        check_report(site,
+                     ::tts::text {"Expression: %s %s %s is true.", site.lhs, site.op, site.rhs});
+      return logger {false};
+    }
+    return relation_failed(a, b, site, "Expression");
+  }
+  template<typename A, typename B> logger types_differ(check_site const& site)
+  {
+    return check_failed(site,
+                        ::tts::text {"'%s %s %s' is false because '%.*s' is not '%.*s'.",
+                                     site.lhs,
+                                     site.op,
+                                     site.rhs,
+                                     ::tts::typename_<A>.size(),
+                                     ::tts::typename_<A>.data(),
+                                     ::tts::typename_<B>.size(),
+                                     ::tts::typename_<B>.data()});
+  }
+  template<typename Relation, typename A, typename B>
+  logger check_typed_relation(Relation relation, A const& a, B const& b, check_site const& site)
+  {
+    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(site);
+    else return check_relation(relation, a, b, site);
+  }
+  template<bool Holds, typename A, typename B>
+  logger check_constant_relation(A const& a, B const& b, check_site const& site)
+  {
+    if constexpr(Holds)
+    {
+      if(check_passed())
+        check_report(
+        site, ::tts::text {"Constant expression: %s %s %s is true.", site.lhs, site.op, site.rhs});
+      return logger {false};
     }
     else
     {
-      static_assert(
-      !requires { comparison<L, R>::bit_equal; },
-      "[TTS] tts::comparison<L, R>::bit_equal does not accept the two operands.");
-      return builtin_comparison<L, R>::bit_equal(l, r);
+      return relation_failed(a, b, site, "Constant expression");
     }
   }
-  template<typename L, typename R> inline constexpr bool bit_neq(L const& l, R const& r)
+  template<bool Holds, typename A, typename B>
+  logger check_typed_constant_relation(A const& a, B const& b, check_site const& site)
   {
-    return !bit_eq(l, r);
-  }
-  template<typename L, typename R> inline constexpr bool eq(L const& l, R const& r)
-  {
-    if constexpr(requires { comparison<L, R>::equal(l, r); })
-    {
-      return comparison<L, R>::equal(l, r);
-    }
-    else
-    {
-      static_assert(
-      !requires { comparison<L, R>::equal; },
-      "[TTS] tts::comparison<L, R>::equal does not accept the two operands.");
-      return builtin_comparison<L, R>::equal(l, r);
-    }
-  }
-  template<typename L, typename R> inline constexpr bool neq(L const& l, R const& r)
-  {
-    return !eq(l, r);
-  }
-  template<typename L, typename R> inline constexpr bool lt(L const& l, R const& r)
-  {
-    if constexpr(requires { comparison<L, R>::less(l, r); })
-    {
-      return comparison<L, R>::less(l, r);
-    }
-    else
-    {
-      static_assert(
-      !requires { comparison<L, R>::less; },
-      "[TTS] tts::comparison<L, R>::less does not accept the two operands.");
-      return builtin_comparison<L, R>::less(l, r);
-    }
-  }
-  template<typename L, typename R> inline constexpr bool le(L const& l, R const& r)
-  {
-    return lt(l, r) || eq(l, r);
-  }
-  template<typename L, typename R> inline constexpr bool gt(L const& l, R const& r)
-  {
-    return !le(l, r);
-  }
-  template<typename L, typename R> inline constexpr bool ge(L const& l, R const& r)
-  {
-    return !lt(l, r);
+    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(site);
+    else return check_constant_relation<Holds>(a, b, site);
   }
 }
-#define TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                 \
-  if(::tts::_::OP(local_tts_a, local_tts_b))                                                       \
-  {                                                                                                \
-    TTS_PASS("Expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));                    \
-    return ::tts::_::logger {false};                                                               \
-  }                                                                                                \
-  else                                                                                             \
-  {                                                                                                \
-    FAILURE("Expression: %s %s %s is false because %s %s %s.",                                     \
-            TTS_STRING(A),                                                                         \
-            T,                                                                                     \
-            TTS_STRING(B),                                                                         \
-            ::tts::as_text(local_tts_a).data(),                                                    \
-            F,                                                                                     \
-            ::tts::as_text(local_tts_b).data());                                                   \
-    return ::tts::_::logger {};                                                                    \
-  }                                                                                                \
-  
-#define TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                           \
-  constexpr auto local_tts_expr = ::tts::_::OP(A, B);                                              \
-  if constexpr(local_tts_expr)                                                                     \
-  {                                                                                                \
-    TTS_PASS("Constant expression: %s %s %s is true.", TTS_STRING(A), T, TTS_STRING(B));           \
-    ::tts::global_logger_status = false;                                                           \
-  }                                                                                                \
-  else                                                                                             \
-  {                                                                                                \
-    FAILURE("Constant expression: %s %s %s is false because %s %s %s.",                            \
-            TTS_STRING(A),                                                                         \
-            T,                                                                                     \
-            TTS_STRING(B),                                                                         \
-            ::tts::as_text(A).data(),                                                              \
-            F,                                                                                     \
-            ::tts::as_text(B).data());                                                             \
-    ::tts::global_logger_status = true;                                                            \
-  }                                                                                                \
-  
 #define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_##__VA_ARGS__(A, B, OP, T, F)
 #define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                 \
-  [ & ](auto const& local_tts_a, auto const& local_tts_b)                                          \
-  { TTS_RELATION_BASE(A, B, OP, T, F, FAILURE) }(A, B) 
+  ::tts::_::check_relation(                                                                        \
+  ::tts::_::OP, A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_BIT_EQUAL(LHS, RHS, ...)
 #else
@@ -4042,35 +4113,15 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_GREATER_EQUAL(LHS, RHS, ...)
 #else
-#define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+#define TTS_GREATER_EQUAL(LHS, RHS, ...) TTS_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 #endif
 #define TTS_TYPED_RELATION(A, B, OP, T, F, ...) TTS_TYPED_RELATION_##__VA_ARGS__(A, B, OP, T, F)
 #define TTS_TYPED_RELATION_(A, B, OP, T, F)     TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F)                                                \
   TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
-  [ & ](auto&& local_tts_a, auto&& local_tts_b)                                                    \
-  {                                                                                                \
-    using type_a = std::remove_cvref_t<decltype(local_tts_a)>;                                     \
-    using type_b = std::remove_cvref_t<decltype(local_tts_b)>;                                     \
-                                                                                                   \
-    if constexpr(!std::same_as<type_a, type_b>)                                                    \
-    {                                                                                              \
-      FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
-              TTS_STRING(A),                                                                       \
-              T,                                                                                   \
-              TTS_STRING(B),                                                                       \
-              ::tts::typename_<type_a>.size(),                                                     \
-              ::tts::typename_<type_a>.data(),                                                     \
-              ::tts::typename_<type_b>.size(),                                                     \
-              ::tts::typename_<type_b>.data());                                                    \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_RELATION_BASE(A, B, OP, T, F, FAILURE)                                                   \
-    }                                                                                              \
-  }(A, B) 
+  ::tts::_::check_typed_relation(                                                                  \
+  ::tts::_::OP, A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_EQUAL(LHS, RHS, ...)
 #else
@@ -4101,23 +4152,15 @@ namespace tts::_
 #define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)
 #else
 #define TTS_TYPED_GREATER_EQUAL(LHS, RHS, ...)                                                     \
-  TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+  TTS_TYPED_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 #endif
 #define TTS_CEXPR_RELATION(A, B, OP, T, F, ...) TTS_CEXPR_RELATION_##__VA_ARGS__(A, B, OP, T, F)
 #define TTS_CEXPR_RELATION_(A, B, OP, T, F)     TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_CEXPR_RELATION_REQUIRED(A, B, OP, T, F)                                                \
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
-  ::tts::global_logger_status = false;                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                               \
-  } while(0);                                                                                      \
-  ::tts::_::logger                                                                                 \
-  {                                                                                                \
-    ::tts::global_logger_status                                                                    \
-  }                                                                                                \
-
+  ::tts::_::check_constant_relation<(::tts::_::OP(A, B))>(                                         \
+  A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
 #else
@@ -4150,7 +4193,7 @@ namespace tts::_
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)
 #else
 #define TTS_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                                 \
-  TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+  TTS_CEXPR_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 #endif
 #define TTS_TYPED_CEXPR_RELATION(A, B, OP, T, F, ...)                                              \
   TTS_TYPED_CEXPR_RELATION_##__VA_ARGS__(A, B, OP, T, F)
@@ -4159,34 +4202,8 @@ namespace tts::_
 #define TTS_TYPED_CEXPR_RELATION_REQUIRED(A, B, OP, T, F)                                          \
   TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
-  ::tts::global_logger_status = false;                                                             \
-  do                                                                                               \
-  {                                                                                                \
-    using type_a = std::remove_cvref_t<decltype(A)>;                                               \
-    using type_b = std::remove_cvref_t<decltype(B)>;                                               \
-                                                                                                   \
-    if(!std::same_as<type_a, type_b>)                                                              \
-    {                                                                                              \
-      FAILURE("'%s %s %s' is false because '%.*s' is not '%.*s'.",                                 \
-              TTS_STRING(A),                                                                       \
-              T,                                                                                   \
-              TTS_STRING(B),                                                                       \
-              ::tts::typename_<type_a>.size(),                                                     \
-              ::tts::typename_<type_a>.data(),                                                     \
-              ::tts::typename_<type_b>.size(),                                                     \
-              ::tts::typename_<type_b>.data());                                                    \
-      ::tts::global_logger_status = false;                                                         \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_CEXPR_RELATION_BASE(A, B, OP, T, F, FAILURE)                                             \
-    }                                                                                              \
-  } while(0);                                                                                      \
-  ::tts::_::logger                                                                                 \
-  {                                                                                                \
-    ::tts::global_logger_status                                                                    \
-  }                                                                                                \
-  
+  ::tts::_::check_typed_constant_relation<(::tts::_::OP(A, B))>(                                   \
+  A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                               \
@@ -4198,7 +4215,52 @@ namespace tts::_
 #define TTS_TYPED_CONSTEXPR_LESS_EQUAL(LHS, RHS, ...)                                              \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, le, "<=", ">", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_GREATER_EQUAL(LHS, RHS, ...)                                           \
-  TTS_TYPED_CEXPR_RELATION(LHS, RHS, ge, ">=", "<=", __VA_ARGS__)
+  TTS_TYPED_CEXPR_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
+namespace tts::_
+{
+  template<typename T, typename R> logger check_type(check_site const& site, bool expression)
+  {
+    if constexpr(std::is_same_v<T, R>)
+    {
+      if(check_passed())
+        check_report(site,
+                     expression
+                     ? ::tts::text {"Expression: '%s' is of type '%s'.", site.lhs, site.rhs}
+                     : ::tts::text {"Type: '%s' is '%s'.", site.lhs, site.rhs});
+      return logger {false};
+    }
+    else
+    {
+      char const* format = expression
+                           ? "Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'."
+                           : "Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'.";
+      return check_failed(site,
+                          ::tts::text {format,
+                                       site.lhs,
+                                       site.rhs,
+                                       ::tts::typename_<T>.size(),
+                                       ::tts::typename_<T>.data(),
+                                       ::tts::typename_<R>.size(),
+                                       ::tts::typename_<R>.data()});
+    }
+  }
+  inline logger check_compiles(bool compiles, bool expected, check_site const& site)
+  {
+    if(compiles == expected)
+    {
+      if(check_passed())
+        check_report(site,
+                     ::tts::text {compiles ? "Expression: '%s' compiles as expected."
+                                           : "Expression: '%s' does not compile as expected.",
+                                  site.lhs});
+      return logger {false};
+    }
+    return check_failed(site,
+                        ::tts::text {compiles ? "Expression: '%s' compiles unexpectedly."
+                                              : "Expression: '%s' does not compile as expected.",
+                                     site.lhs});
+  }
+}
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPE_IS(TYPE, REF, ...)
 #else
@@ -4207,27 +4269,10 @@ namespace tts::_
 #define TTS_TYPE_IS_(TYPE, REF)         TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FAIL)
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FATAL)
 #define TTS_TYPE_IS_IMPL(TYPE, REF, FAILURE)                                                       \
-  [ & ]<typename TTS_T, typename TTS_R>(::tts::type<TTS_T>, ::tts::type<TTS_R>)                    \
-  {                                                                                                \
-    if constexpr(std::is_same_v<TTS_T, TTS_R>)                                                     \
-    {                                                                                              \
-      TTS_PASS("Type: '%s' is '%s'.",                                                              \
-               TTS_STRING(TTS_REMOVE_PARENS(TYPE)),                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(REF)));                                                \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'.",                  \
-              TTS_STRING(TTS_REMOVE_PARENS(TYPE)),                                                 \
-              TTS_STRING(TTS_REMOVE_PARENS(REF)),                                                  \
-              ::tts::typename_<TTS_T>.size(),                                                      \
-              ::tts::typename_<TTS_T>.data(),                                                      \
-              ::tts::typename_<TTS_R>.size(),                                                      \
-              ::tts::typename_<TTS_R>.data());                                                     \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(::tts::type<TTS_REMOVE_PARENS(TYPE)> {}, ::tts::type<TTS_REMOVE_PARENS(REF)> {}) 
+  ::tts::_::check_type<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(REF)>(                           \
+  TTS_CHECK_SITE(                                                                                  \
+  FAILURE, TTS_STRING(TTS_REMOVE_PARENS(TYPE)), "", TTS_STRING(TTS_REMOVE_PARENS(REF)), ""),       \
+  false) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPR_IS(EXPR, TYPE, ...)
 #else
@@ -4236,44 +4281,19 @@ namespace tts::_
 #define TTS_EXPR_IS_(EXPR, TYPE)         TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FAIL)
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FATAL)
 #define TTS_EXPR_IS_IMPL(EXPR, TYPE, FAILURE)                                                      \
-  [ & ]<typename TTS_T, typename TTS_R>(::tts::type<TTS_T>, ::tts::type<TTS_R>)                    \
-  {                                                                                                \
-    if constexpr(std::is_same_v<TTS_T, TTS_R>)                                                     \
-    {                                                                                              \
-      TTS_PASS("Expression: '%s' is of type '%s'.",                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(TYPE)));                                               \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'.",                \
-              TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                 \
-              TTS_STRING(TTS_REMOVE_PARENS(TYPE)),                                                 \
-              ::tts::typename_<TTS_T>.size(),                                                      \
-              ::tts::typename_<TTS_T>.data(),                                                      \
-              ::tts::typename_<TTS_R>.size(),                                                      \
-              ::tts::typename_<TTS_R>.data());                                                     \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(::tts::type<decltype(TTS_REMOVE_PARENS(EXPR))> {},                                             \
-    ::tts::type<TTS_REMOVE_PARENS(TYPE)> {}) 
+  ::tts::_::check_type<decltype(TTS_REMOVE_PARENS(EXPR)), TTS_REMOVE_PARENS(TYPE)>(                \
+  TTS_CHECK_SITE(                                                                                  \
+  FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", TTS_STRING(TTS_REMOVE_PARENS(TYPE)), ""),      \
+  true) 
 #define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                        \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW                                                                       \
   [ & ](TTS_ARG(__VA_ARGS__))                                                                      \
   {                                                                                                \
-    if constexpr(requires TTS_REMOVE_PARENS(EXPR))                                                 \
-    {                                                                                              \
-      TTS_PASS("Expression: '%s' compiles as expected.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));     \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_FAIL("Expression: '%s' does not compile as expected.",                                   \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)));                                               \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
+    return ::tts::_::check_compiles(                                                               \
+    requires TTS_REMOVE_PARENS(EXPR),                                                              \
+    true,                                                                                          \
+    TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
     TTS_DISABLE_WARNING_POP                                                                        \
   }(__VA_ARGS__) 
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -4286,17 +4306,10 @@ namespace tts::_
   TTS_DISABLE_WARNING_SHADOW                                                                       \
   [ & ](TTS_ARG(__VA_ARGS__))                                                                      \
   {                                                                                                \
-    if constexpr(!(requires TTS_REMOVE_PARENS(EXPR)))                                              \
-    {                                                                                              \
-      TTS_PASS("Expression: '%s' does not compile as expected.",                                   \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)));                                               \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_FAIL("Expression: '%s' compiles unexpectedly.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));    \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
+    return ::tts::_::check_compiles(                                                               \
+    requires TTS_REMOVE_PARENS(EXPR),                                                              \
+    false,                                                                                         \
+    TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
     TTS_DISABLE_WARNING_POP                                                                        \
   }(__VA_ARGS__) 
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -4511,48 +4524,103 @@ namespace tts
     else return _::eq(a, b);
   }
 }
-#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, FUNC, PREC, FAILURE)                                 \
-  [ & ](auto local_tts_a, auto local_tts_b)                                                        \
-  {                                                                                                \
-    auto local_tts_r = FUNC(local_tts_a, local_tts_b);                                             \
-                                                                                                   \
-    if(local_tts_r <= N)                                                                           \
-    {                                                                                              \
-      TTS_PASS("Expression: %s == %s within %.*g %s (over %.*g %s).",                              \
-               TTS_STRING(LHS),                                                                    \
-               TTS_STRING(RHS),                                                                    \
-               PREC,                                                                               \
-               local_tts_r,                                                                        \
-               UNIT,                                                                               \
-               PREC,                                                                               \
-               static_cast<double>(N),                                                             \
-               UNIT);                                                                              \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expected: %s == %s but %s == %s within %.*g %s when  %.*g %s were expected.",       \
-              TTS_STRING(LHS),                                                                     \
-              TTS_STRING(RHS),                                                                     \
-              ::tts::as_text(local_tts_a).data(),                                                  \
-              ::tts::as_text(local_tts_b).data(),                                                  \
-              PREC,                                                                                \
-              local_tts_r,                                                                         \
-              UNIT,                                                                                \
-              PREC,                                                                                \
-              static_cast<double>(N),                                                              \
-              UNIT);                                                                               \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(LHS, RHS) 
+namespace tts::_::measure
+{
+  struct absolute
+  {
+    template<typename A, typename B> static double of(A const& a, B const& b)
+    {
+      return ::tts::absolute_check(a, b);
+    }
+  };
+  struct relative
+  {
+    template<typename A, typename B> static double of(A const& a, B const& b)
+    {
+      return ::tts::relative_check(a, b);
+    }
+  };
+  struct ulp
+  {
+    template<typename A, typename B> static double of(A const& a, B const& b)
+    {
+      return ::tts::ulp_check(a, b);
+    }
+  };
+}
+namespace tts::_
+{
+  template<typename Measure, typename A, typename B, typename N>
+  logger check_precision(A const&          a,
+                         B const&          b,
+                         N const&          n,
+                         char const*       unit,
+                         int               digits,
+                         check_site const& site)
+  {
+    double distance = Measure::of(a, b);
+    if(distance <= n)
+    {
+      if(check_passed())
+        check_report(site,
+                     ::tts::text {"Expression: %s == %s within %.*g %s (over %.*g %s).",
+                                  site.lhs,
+                                  site.rhs,
+                                  digits,
+                                  distance,
+                                  unit,
+                                  digits,
+                                  static_cast<double>(n),
+                                  unit});
+      return logger {false};
+    }
+    return check_failed(
+    site,
+    ::tts::text {"Expected: %s == %s but %s == %s within %.*g %s when  %.*g %s were expected.",
+                 site.lhs,
+                 site.rhs,
+                 ::tts::as_text(a).data(),
+                 ::tts::as_text(b).data(),
+                 digits,
+                 distance,
+                 unit,
+                 digits,
+                 static_cast<double>(n),
+                 unit});
+  }
+  template<typename A, typename B> logger check_ieee(A const& a, B const& b, check_site const& site)
+  {
+    if(::tts::ieee_check(a, b))
+    {
+      if(check_passed())
+        check_report(site, ::tts::text {"Expression: %s == %s.", site.lhs, site.rhs});
+      return logger {false};
+    }
+    return check_failed(site,
+                        ::tts::text {"Expression: %s == %s is false because %s != %s.",
+                                     site.lhs,
+                                     site.rhs,
+                                     ::tts::as_text(a).data(),
+                                     ::tts::as_text(b).data()});
+  }
+  inline logger check_percent_tolerance(double n, check_site const& site)
+  {
+    return check_failed(
+    site,
+    ::tts::text {
+    "Tolerance %.*g reads as a percentage: TTS 4 compares a ratio, divide it by a hundred.", 8, n});
+  }
+}
+#define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, MEASURE, PREC, FAILURE)                              \
+  ::tts::_::check_precision<::tts::_::measure::MEASURE>(                                           \
+  LHS, RHS, N, UNIT, PREC, TTS_CHECK_SITE(FAILURE, TTS_STRING(LHS), "", TTS_STRING(RHS), "")) 
 #define TTS_PRECISION(L, R, N, U, F, P, ...)     TTS_PRECISION_##__VA_ARGS__(L, R, N, U, F, P)
 #define TTS_PRECISION_(L, R, N, U, F, P)         TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FAIL)
 #define TTS_PRECISION_REQUIRED(L, R, N, U, F, P) TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FATAL)
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_ABSOLUTE_EQUAL(L, R, N, ...)
 #else
-#define TTS_ABSOLUTE_EQUAL(L, R, N, ...)                                                           \
-  TTS_PRECISION(L, R, N, "unit", ::tts::absolute_check, 8, __VA_ARGS__)
+#define TTS_ABSOLUTE_EQUAL(L, R, N, ...) TTS_PRECISION(L, R, N, "unit", absolute, 8, __VA_ARGS__)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_RELATIVE_EQUAL(L, R, N, ...)
@@ -4561,42 +4629,21 @@ namespace tts
   (                                                                                                \
   ::tts::_::reads_as_percent<decltype(L)>(N)                                                       \
   ? TTS_PERCENT_TOLERANCE_##__VA_ARGS__(N)                                                         \
-  : TTS_PRECISION(L, R, N, "rel", ::tts::relative_check, 8, __VA_ARGS__))
+  : TTS_PRECISION(L, R, N, "rel", relative, 8, __VA_ARGS__))
 #define TTS_PERCENT_TOLERANCE_(N)         TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FAIL)
 #define TTS_PERCENT_TOLERANCE_REQUIRED(N) TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FATAL)
 #define TTS_PERCENT_TOLERANCE_IMPL(N, FAILURE)                                                     \
-  [ & ]()                                                                                          \
-  {                                                                                                \
-    FAILURE("Tolerance %.*g reads as a percentage: TTS 4 compares a ratio, divide it by a "        \
-            "hundred.",                                                                            \
-            8,                                                                                     \
-            static_cast<double>(N));                                                               \
-    return ::tts::_::logger {};                                                                    \
-  }()
+  ::tts::_::check_percent_tolerance(static_cast<double>(N),                                        \
+                                    TTS_CHECK_SITE(FAILURE, "", "", "", "")) 
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_ULP_EQUAL(L, R, N, ...)
 #else
-#define TTS_ULP_EQUAL(L, R, N, ...) TTS_PRECISION(L, R, N, "ULP", ::tts::ulp_check, 2, __VA_ARGS__)
+#define TTS_ULP_EQUAL(L, R, N, ...) TTS_PRECISION(L, R, N, "ULP", ulp, 2, __VA_ARGS__)
 #endif
 #define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                  \
-  [ & ](auto local_tts_a, auto local_tts_b)                                                        \
-  {                                                                                                \
-    if(::tts::ieee_check(local_tts_a, local_tts_b))                                                \
-    {                                                                                              \
-      TTS_PASS("Expression: %s == %s.", TTS_STRING(LHS), TTS_STRING(RHS));                         \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expression: %s == %s is false because %s != %s.",                                   \
-              TTS_STRING(LHS),                                                                     \
-              TTS_STRING(RHS),                                                                     \
-              ::tts::as_text(local_tts_a).data(),                                                  \
-              ::tts::as_text(local_tts_b).data());                                                 \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }(LHS, RHS) 
+  ::tts::_::check_ieee(                                                                            \
+  LHS, RHS, TTS_CHECK_SITE(FAILURE, TTS_STRING(LHS), "", TTS_STRING(RHS), "")) 
 #define TTS_DO_IEEE_EQUAL(L, R, ...)     TTS_DO_IEEE_EQUAL_##__VA_ARGS__(L, R)
 #define TTS_DO_IEEE_EQUAL_(L, R)         TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L, R) TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FATAL)
