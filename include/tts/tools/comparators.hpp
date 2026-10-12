@@ -97,76 +97,116 @@ namespace tts
 namespace tts::_
 {
   // The fallback refuses a member that is there but does not take the operands.
-  template<typename L, typename R> inline constexpr bool bit_eq(L const& l, R const& r)
+  struct bit_eq_t
   {
-    if constexpr(requires { comparison<L, R>::bit_equal(l, r); })
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      return comparison<L, R>::bit_equal(l, r);
+      if constexpr(requires { comparison<L, R>::bit_equal(l, r); })
+      {
+        return comparison<L, R>::bit_equal(l, r);
+      }
+      else
+      {
+        static_assert(
+        !requires { comparison<L, R>::bit_equal; },
+        "[TTS] tts::comparison<L, R>::bit_equal does not accept the two operands.");
+
+        return builtin_comparison<L, R>::bit_equal(l, r);
+      }
     }
-    else
+  };
+
+  inline constexpr bit_eq_t bit_eq {};
+
+  struct bit_neq_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      static_assert(
-      !requires { comparison<L, R>::bit_equal; },
-      "[TTS] tts::comparison<L, R>::bit_equal does not accept the two operands.");
-
-      return builtin_comparison<L, R>::bit_equal(l, r);
+      return !bit_eq(l, r);
     }
-  }
+  };
 
-  template<typename L, typename R> inline constexpr bool bit_neq(L const& l, R const& r)
-  {
-    return !bit_eq(l, r);
-  }
+  inline constexpr bit_neq_t bit_neq {};
 
-  template<typename L, typename R> inline constexpr bool eq(L const& l, R const& r)
+  struct eq_t
   {
-    if constexpr(requires { comparison<L, R>::equal(l, r); })
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      return comparison<L, R>::equal(l, r);
+      if constexpr(requires { comparison<L, R>::equal(l, r); })
+      {
+        return comparison<L, R>::equal(l, r);
+      }
+      else
+      {
+        static_assert(
+        !requires { comparison<L, R>::equal; },
+        "[TTS] tts::comparison<L, R>::equal does not accept the two operands.");
+
+        return builtin_comparison<L, R>::equal(l, r);
+      }
     }
-    else
+  };
+
+  inline constexpr eq_t eq {};
+
+  struct neq_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      static_assert(
-      !requires { comparison<L, R>::equal; },
-      "[TTS] tts::comparison<L, R>::equal does not accept the two operands.");
-
-      return builtin_comparison<L, R>::equal(l, r);
+      return !eq(l, r);
     }
-  }
+  };
 
-  template<typename L, typename R> inline constexpr bool neq(L const& l, R const& r)
-  {
-    return !eq(l, r);
-  }
+  inline constexpr neq_t neq {};
 
-  template<typename L, typename R> inline constexpr bool lt(L const& l, R const& r)
+  struct lt_t
   {
-    if constexpr(requires { comparison<L, R>::less(l, r); })
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      return comparison<L, R>::less(l, r);
+      if constexpr(requires { comparison<L, R>::less(l, r); })
+      {
+        return comparison<L, R>::less(l, r);
+      }
+      else
+      {
+        static_assert(
+        !requires { comparison<L, R>::less; },
+        "[TTS] tts::comparison<L, R>::less does not accept the two operands.");
+
+        return builtin_comparison<L, R>::less(l, r);
+      }
     }
-    else
+  };
+
+  inline constexpr lt_t lt {};
+
+  struct le_t
+  {
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
     {
-      static_assert(
-      !requires { comparison<L, R>::less; },
-      "[TTS] tts::comparison<L, R>::less does not accept the two operands.");
-
-      return builtin_comparison<L, R>::less(l, r);
+      return lt(l, r) || eq(l, r);
     }
-  }
+  };
 
-  template<typename L, typename R> inline constexpr bool le(L const& l, R const& r)
-  {
-    return lt(l, r) || eq(l, r);
-  }
+  inline constexpr le_t le {};
 
-  template<typename L, typename R> inline constexpr bool gt(L const& l, R const& r)
+  struct gt_t
   {
-    return !le(l, r);
-  }
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return !le(l, r);
+    }
+  };
 
-  template<typename L, typename R> inline constexpr bool ge(L const& l, R const& r)
+  inline constexpr gt_t gt {};
+
+  struct ge_t
   {
-    return !lt(l, r);
-  }
+    template<typename L, typename R> constexpr bool operator()(L const& l, R const& r) const
+    {
+      return !lt(l, r);
+    }
+  };
+
+  inline constexpr ge_t ge {};
 }

@@ -11,40 +11,53 @@
 #include <tts/tools/preprocessor.hpp>
 #include <tts/engine/info.hpp>
 #include <tts/engine/logger.hpp>
+#include <tts/engine/check.hpp>
+
+namespace tts::_
+{
+  inline logger check_throw(bool caught, check_site const& site)
+  {
+    if(caught)
+    {
+      if(check_passed())
+        check_report(site, ::tts::text {"Expected: %s throws %s.", site.lhs, site.rhs});
+      return logger {false};
+    }
+
+    return check_failed(site, ::tts::text {"Expected: %s failed to throw %s.", site.lhs, site.rhs});
+  }
+
+  inline logger check_no_throw(bool caught, check_site const& site)
+  {
+    if(!caught)
+    {
+      if(check_passed()) check_report(site, ::tts::text {"Expected: %s does not throw.", site.lhs});
+      return logger {false};
+    }
+
+    return check_failed(site, ::tts::text {"Expected: %s throws unexpectedly.", site.lhs});
+  }
+}
 
 #define TTS_THROW_IMPL(EXPR, EXCEPTION, FAILURE)                                                   \
-  [ & ]()                                                                                          \
+  ::tts::_::check_throw(                                                                           \
+  [ & ]() -> bool                                                                                  \
   {                                                                                                \
-    bool tts_caught = false;                                                                       \
-                                                                                                   \
     try                                                                                            \
     {                                                                                              \
       EXPR;                                                                                        \
     }                                                                                              \
     catch(EXCEPTION&)                                                                              \
     {                                                                                              \
-      tts_caught = true;                                                                           \
+      return true;                                                                                 \
     }                                                                                              \
     catch(...)                                                                                     \
     {                                                                                              \
     }                                                                                              \
-                                                                                                   \
-    if(tts_caught)                                                                                 \
-    {                                                                                              \
-      TTS_PASS("Expected: %s throws %s.",                                                          \
-               TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                \
-               TTS_STRING(TTS_REMOVE_PARENS(EXCEPTION)));                                          \
-      ::tts::global_runtime.pass();                                                                \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expected: %s failed to throw %s.",                                                  \
-              TTS_STRING(TTS_REMOVE_PARENS(EXPR)),                                                 \
-              TTS_STRING(TTS_REMOVE_PARENS(EXCEPTION)));                                           \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }()
+    return false;                                                                                  \
+  }(),                                                                                             \
+  TTS_CHECK_SITE(                                                                                  \
+  FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", TTS_STRING(TTS_REMOVE_PARENS(EXCEPTION)), ""))
 /**/
 
 //======================================================================================================================
@@ -79,31 +92,20 @@ fails.
 #define TTS_THROW_REQUIRED(EXPR, EXCEPTION) TTS_THROW_IMPL(EXPR, EXCEPTION, TTS_FATAL)
 
 #define TTS_NO_THROW_IMPL(EXPR, FAILURE)                                                           \
-  [ & ]()                                                                                          \
+  ::tts::_::check_no_throw(                                                                        \
+  [ & ]() -> bool                                                                                  \
   {                                                                                                \
-    bool tts_caught = false;                                                                       \
-                                                                                                   \
     try                                                                                            \
     {                                                                                              \
       EXPR;                                                                                        \
     }                                                                                              \
     catch(...)                                                                                     \
     {                                                                                              \
-      tts_caught = true;                                                                           \
+      return true;                                                                                 \
     }                                                                                              \
-                                                                                                   \
-    if(!tts_caught)                                                                                \
-    {                                                                                              \
-      TTS_PASS("Expected: %s does not throw.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));               \
-      ::tts::global_runtime.pass();                                                                \
-      return ::tts::_::logger {false};                                                             \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      FAILURE("Expected: %s throws unexpectedly.", TTS_STRING(TTS_REMOVE_PARENS(EXPR)));           \
-      return ::tts::_::logger {};                                                                  \
-    }                                                                                              \
-  }()
+    return false;                                                                                  \
+  }(),                                                                                             \
+  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""))
 /**/
 
 //======================================================================================================================

@@ -9,6 +9,7 @@
 #include <tts/tools/bitcast.hpp>
 #include <limits>
 #include <tts/engine/math.hpp>
+#include <tts/tools/comparators.hpp>
 
 namespace tts::_
 {
