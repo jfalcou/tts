@@ -12,22 +12,22 @@
 <text x="459.2" y="224" fill="#808080" text-anchor="middle">10 ms</text>
 <line x1="550.0" x2="550.0" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
 <text x="550.0" y="224" fill="#808080" text-anchor="middle">12.5 ms</text>
-<text x="88" y="58" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
-<rect x="96" y="46" width="170.7" height="16" fill="#2e86ab"/>
-<text x="272.7" y="58" fill="#808080">4.70 ms, 1.68 s for 200 tests</text>
-<text x="88" y="86" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
-<rect x="96" y="74" width="174.3" height="16" fill="#5c8a8a"/>
-<text x="276.3" y="86" fill="#808080">4.80 ms, 2.15 s for 200 tests</text>
-<text x="88" y="114" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
-<rect x="96" y="102" width="197.8" height="16" fill="#3fa34d"/>
-<text x="299.8" y="114" fill="#808080">5.45 ms, 1.12 s for 200 tests</text>
-<text x="88" y="142" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
-<rect x="96" y="130" width="320.1" height="16" fill="#e09f3e"/>
-<text x="422.1" y="142" fill="#808080">8.81 ms, 2.49 s for 200 tests</text>
-<text x="88" y="170" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
-<rect x="96" y="158" width="357.6" height="16" fill="#d1495b"/>
-<text x="459.6" y="170" fill="#808080">9.85 ms, 2.07 s for 200 tests</text>
+<text x="88" y="58" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
+<rect x="96" y="46" width="90.5" height="16" fill="#d1495b"/>
+<text x="192.5" y="58" fill="#808080">2.49 ms, 0.61 s for 200 tests</text>
+<text x="88" y="86" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
+<rect x="96" y="74" width="177.2" height="16" fill="#2e86ab"/>
+<text x="279.2" y="86" fill="#808080">4.88 ms, 1.78 s for 200 tests</text>
+<text x="88" y="114" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
+<rect x="96" y="102" width="207.5" height="16" fill="#5c8a8a"/>
+<text x="309.5" y="114" fill="#808080">5.71 ms, 2.43 s for 200 tests</text>
+<text x="88" y="142" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
+<rect x="96" y="130" width="209.8" height="16" fill="#3fa34d"/>
+<text x="311.8" y="142" fill="#808080">5.78 ms, 1.18 s for 200 tests</text>
+<text x="88" y="170" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
+<rect x="96" y="158" width="325.1" height="16" fill="#e09f3e"/>
+<text x="427.1" y="170" fill="#808080">8.95 ms, 2.57 s for 200 tests</text>
 <text x="88" y="198" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
-<rect x="96" y="186" width="426.4" height="16" fill="#8e6bbf"/>
-<text x="528.4" y="198" fill="#808080">11.74 ms, 3.05 s for 200 tests</text>
+<rect x="96" y="186" width="446.9" height="16" fill="#8e6bbf"/>
+<text x="548.9" y="198" fill="#808080">12.30 ms, 3.22 s for 200 tests</text>
 </svg>
