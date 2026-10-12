@@ -83,16 +83,8 @@ namespace tts::_
   template<bool Holds, typename A, typename B>
   logger check_typed_constant_relation(A const& a, B const& b, check_site const& site)
   {
-    if constexpr(!std::same_as<A, B>)
-    {
-      // No additional information on differing types, as in the published output.
-      types_differ<A, B>(site);
-      return logger {false};
-    }
-    else
-    {
-      return check_constant_relation<Holds>(a, b, site);
-    }
+    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(site);
+    else return check_constant_relation<Holds>(a, b, site);
   }
 }
 
