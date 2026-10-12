@@ -123,7 +123,7 @@
   @snippet doc/precision_relative.cpp snippet
 
   ## Absolute Comparison
-  **TTS** performs all absolute precision checks through the `absolute` member of
+  Absolute precision checks within **TTS** are done through the `absolute` member of
   @ref tts::precision. One can also reuse the pre-existing `tts::absolute_check` to implement their
   own.
 

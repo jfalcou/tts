@@ -167,8 +167,8 @@
 
   @subsection compile-time-comparison-files Tests in many files
 
-  An executable built from a runner and a growing number of files of one test each, linked together.
-  **TTS**, [doctest](https://github.com/doctest/doctest), and
+  An executable built from a runner and a growing number of files of one test each, linked
+  together. **TTS**, [doctest](https://github.com/doctest/doctest), and
   [Boost.Test](https://github.com/boostorg/test) compile their runner once, in its own file;
   [ut](https://github.com/boost-ext/ut) compiles it in each file.
 
