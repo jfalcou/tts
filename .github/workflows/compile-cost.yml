@@ -27,5 +27,6 @@ jobs:
     uses: jfalcou/copacabana/.github/workflows/compile-cost.yml@main
     with:
       project: tts
+      image: ghcr.io/jfalcou/compilers:v11
       series: true
       exclude: '^unit\.doc\.'
