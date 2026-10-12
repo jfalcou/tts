@@ -141,19 +141,16 @@ $(function(){initNavTree('compile-time.html','',''); });
     <a href="#compile-time-headers">Standard headers in TTS </a>
     <ul>
       <li class="level2">
-        <a href="#compile-time-why">Include cost of a test suite </a>
+        <a href="#compile-time-why">Objectives </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-cost">Avoided headers and their cost </a>
+        <a href="#compile-time-cost">Costly headers </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-fine">Headers measured as free </a>
+        <a href="#compile-time-fine">Acceptable headers </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-checklist">Checklist for a new header </a>
-      </li>
-      <li class="level2">
-        <a href="#compile-time-precedent">Replacements written in TTS </a>
+        <a href="#compile-time-precedent">TTS replacements </a>
       </li>
     </ul>
   </li>
@@ -161,16 +158,19 @@ $(function(){initNavTree('compile-time.html','',''); });
     <a href="#compile-time-comparison">Other test libraries </a>
     <ul>
       <li class="level2">
-        <a href="#compile-time-comparison-include">Minimal include cost </a>
+        <a href="#compile-time-comparison-include">Include cost </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-cases">Cost of test cases </a>
+        <a href="#compile-time-comparison-one">One test </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-types">Template machinery </a>
+        <a href="#compile-time-comparison-cases">Tests in one file </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-fits">Fixed cost and crossings </a>
+        <a href="#compile-time-comparison-tests">Cost of one test </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-comparison-files">Tests in many files </a>
       </li>
     </ul>
   </li>
@@ -179,12 +179,12 @@ $(function(){initNavTree('compile-time.html','',''); });
 <div class="textblock"><h1 class="doxsection"><a class="anchor" id="compile-time-headers"></a>
 Standard headers in TTS</h1>
 <h2 class="doxsection"><a class="anchor" id="compile-time-why"></a>
-Include cost of a test suite</h2>
+Objectives</h2>
 <p>The library is header-only, and a test suite holds dozens or hundreds of small translation units, each including <span class="tt">&lt;tts/tts.hpp&gt;</span> on its own. No separately compiled object amortizes the parsing, so each header included by <b>TTS</b> is parsed once per test file and per build, in each project using the library. The CI matrix of the library alone rebuilds the suite on more than a dozen combinations of compiler, system, and standard library per pull request, so a header added to a widely included file adds its parsing time to each of those builds.</p>
-<p>The library therefore holds small replacements for the facilities it needs, listed in <a class="el" href="#compile-time-precedent" title="Replacements written in TTS">Replacements written in TTS</a>, rather than including the standard headers.</p>
+<p>The library therefore holds small replacements for the facilities it needs, listed in <a class="el" href="#compile-time-precedent" title="TTS replacements">TTS replacements</a>, rather than including the standard headers.</p>
 <h2 class="doxsection"><a class="anchor" id="compile-time-cost"></a>
-Avoided headers and their cost</h2>
-<p>The cost of a header is measured before the header is included, since the name of a header does not predict its cost. The times below are what a header adds to a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit, with <span class="tt">g++ 13</span> and <span class="tt">clang++ 18</span>, <span class="tt">-std=c++20</span>, best of eight runs, measured as <a class="el" href="#compile-time-checklist" title="Checklist for a new header">Checklist for a new header</a> describes.</p>
+Costly headers</h2>
+<p>The cost of a header is measured before the header is included, since the name of a header does not predict its cost. The times below are what a header adds to a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit, with <span class="tt">g++ 13</span> and <span class="tt">clang++ 18</span>, <span class="tt">-std=c++20</span>, best of eight runs.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">g++  </th><th class="markdownTableHeadNone">clang++  </th><th class="markdownTableHeadNone">Replacement  </th></tr>
@@ -214,19 +214,17 @@ Avoided headers and their cost</h2>
 <td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">a C array sized by a constant  </td></tr>
 </table>
 <h2 class="doxsection"><a class="anchor" id="compile-time-fine"></a>
-Headers measured as free</h2>
-<p>A standard header is allowed once measured as free. <span class="tt">&lt;windows.h&gt;</span> is included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span>. Measured on <span class="tt">cl.exe</span>, it costs nothing relative to an empty translation unit, and less than declaring by hand the three functions it provides. Platform-specific code is measured on that platform.</p>
-<h2 class="doxsection"><a class="anchor" id="compile-time-checklist"></a>
-Checklist for a new header</h2>
-<ol type="1">
-<li><span class="tt">engine/deps.hpp</span>, included by nearly every <b>TTS</b> header, already includes <span class="tt">&lt;cstdio&gt;</span>, <span class="tt">&lt;cstdlib&gt;</span>, <span class="tt">&lt;cstring&gt;</span>, <span class="tt">&lt;type_traits&gt;</span>, <span class="tt">&lt;utility&gt;</span>, <span class="tt">&lt;initializer_list&gt;</span>, <span class="tt">&lt;cassert&gt;</span>, <span class="tt">&lt;bit&gt;</span>, <span class="tt">&lt;cstddef&gt;</span>, <span class="tt">&lt;compare&gt;</span>, <span class="tt">&lt;concepts&gt;</span>, <span class="tt">&lt;cstdint&gt;</span>, <span class="tt">&lt;limits&gt;</span>, and <span class="tt">&lt;new&gt;</span>. Using one of them costs nothing more.</li>
-<li>A new header is measured on two near-identical translation units, one with the header and one without: <div class="fragment"><div class="line">time g++ -std=c++20 -I include -c file.cpp -o /dev/null</div>
-</div><!-- fragment --> Five to eight runs are taken to amortize scheduling effects; the best time is compared with the baseline. The same header costs different amounts with <span class="tt">g++</span> and <span class="tt">clang++</span> (<span class="tt">&lt;chrono&gt;</span> adds 460 ms with the first and 680 ms with the second), so both are measured.</li>
-<li>A change spread across several files is measured against an untouched copy of <span class="tt">main</span>, created with <span class="tt">git worktree add ../tts-baseline main</span>, by building the same representative translation unit in both trees.</li>
-<li>The pull request gives the numbers before and after the change.</li>
-</ol>
+Acceptable headers</h2>
+<p>A standard header is allowed once measured as free:</p>
+<ul>
+<li>two translation units, identical but for the header, are compiled with <span class="tt">-std=c++20 -c</span> five to eight times each, and their best times are compared;</li>
+<li><span class="tt">g++</span> and <span class="tt">clang++</span> are both measured, since the same header costs them differently;</li>
+<li>the pull request that adds the header gives both times.</li>
+</ul>
+<p><span class="tt">&lt;windows.h&gt;</span> is included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span>. Measured on <span class="tt">cl.exe</span>, it costs nothing relative to an empty translation unit, and less than declaring by hand the three functions it provides. Platform-specific code is measured on that platform.</p>
+<p><span class="tt">engine/deps.hpp</span>, included by nearly every <b>TTS</b> header, already includes the acceptable headers, so using one of them costs nothing more.</p>
 <h2 class="doxsection"><a class="anchor" id="compile-time-precedent"></a>
-Replacements written in TTS</h2>
+TTS replacements</h2>
 <p>Each file below replaces a standard header listed in the table above, and is a model for a new replacement:</p>
 <ul>
 <li><span class="tt">tools/clock.hpp</span>: <span class="tt">now_ns()</span>, a portable monotonic timer in nanoseconds built on <span class="tt">clock_gettime</span> or <span class="tt">QueryPerformanceCounter</span>, in place of <span class="tt">std::chrono</span>.</li>
@@ -237,83 +235,76 @@ Replacements written in TTS</h2>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="compile-time-comparison"></a>
 Other test libraries</h1>
-<p>The CPU time of compiling one test unit with <span class="tt">-std=c++20 -c</span> is measured at each publication of this documentation, for <b>TTS</b>, doctest, Catch2, GoogleTest, Boost.Test, and ut. Each point is the median of several compilations.</p>
-<p>Measured on 2026-10-11 with clang++ 19.1.7 and g++ 15.2.0 and <code>-O0</code>, the median of 3 compilations per point, 2 at a time.</p>
-<p>Catch2 and GoogleTest compile their runner in a separate library, whose compilation time is not measured. The runner of doctest, Boost.Test, ut, and <b>TTS</b> is compiled in the unit that defines it.</p>
+<p>Each publication of this documentation builds test executables with <b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://github.com/google/googletest">GoogleTest</a>, <a href="https://github.com/boostorg/test">Boost.Test</a>, and <a href="https://github.com/boost-ext/ut">ut</a>, and measures the CPU time of their compilation and link with <span class="tt">-std=c++20</span>. Each executable runs and passes before its time is kept, and each point is the median of several builds.</p>
+<p>Measured on 2026-10-12 with clang++ 19.1.7 and g++ 15.2.0 and <code>-O0</code>, the median of 3 builds per point, 2 at a time.</p>
+<p>Every test is the same trivial case, three checks on two integers. Each library is set up as its documentation sets it up:</p>
+<ul>
+<li><b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> compile their runner in the unit that defines <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span>, defines <span class="tt">DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span>, or includes <span class="tt">boost/test/included/unit_test.hpp</span>: the test file of a one-file executable, and a <span class="tt">main.cpp</span> of its own otherwise.</li>
+<li><a href="https://github.com/boost-ext/ut">ut</a> runs its tests from its header, so every test file holds its runner.</li>
+<li><a href="https://github.com/catchorg/Catch2">Catch2</a> and <a href="https://github.com/google/googletest">GoogleTest</a> link <span class="tt">Catch2WithMain</span> and <span class="tt">gtest_main</span>, built once per build tree and left out of the executables.</li>
+<li><a href="https://github.com/doctest/doctest">doctest</a> checks with its decomposing <span class="tt">CHECK(a == b)</span>; its binary <span class="tt">CHECK_EQ(a, b)</span> costs less per test.</li>
+</ul>
 <h2 class="doxsection"><a class="anchor" id="compile-time-comparison-include"></a>
-Minimal include cost</h2>
-<p>The unit holds the test runner and no test case.</p>
+Include cost</h2>
+<p>A test file holding neither runner nor test, compiled with <span class="tt">-c</span>. The unit of <a href="https://github.com/boost-ext/ut">ut</a> holds its runner.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-include.svg" alt="Minimal include cost with gcc"/>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-include.svg" alt="Include cost with gcc"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-include.svg" alt="Minimal include cost with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-include.svg" alt="Include cost with clang"/>
+</li>
+</ul>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-one"></a>
+One test</h2>
+<p>An executable built from one file holding the runner and one test.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-one.svg" alt="One test executable with gcc"/>
+</li>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-one.svg" alt="One test executable with clang"/>
 </li>
 </ul>
 </div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-cases"></a>
-Cost of test cases</h2>
-<p>The unit holds a growing number of test cases. A simple case runs three checks on two integers, and a template case runs the same three checks over <span class="tt">short</span>, <span class="tt">int</span>, <span class="tt">float</span>, and <span class="tt">double</span>.</p>
+Tests in one file</h2>
+<p>An executable built from one file holding the runner and a growing number of tests. Each curve is fitted by least squares to a fixed cost plus a cost per test.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-simple.svg" alt="Compile time of simple test cases with gcc"/>
-<img src="bench/gcc-template.svg" alt="Compile time of template test cases with gcc"/>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-cases.svg" alt="Executables of one file with gcc"/>
+ <p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
+<tr><td>TTS</td><td>\(0.34\,\mathrm{s} + 10.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(6.39\,\mathrm{s} + 10.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(1.12\,\mathrm{s} + 4.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(0.92\,\mathrm{s} + 8.3\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.89\,\mathrm{s} + 4.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(1.96\,\mathrm{s} + 2.7\,\mathrm{ms} \cdot n\)</td></tr>
+</table>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-simple.svg" alt="Compile time of simple test cases with clang"/>
-<img src="bench/clang-template.svg" alt="Compile time of template test cases with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-cases.svg" alt="Executables of one file with clang"/>
+ <p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
+<tr><td>TTS</td><td>\(0.31\,\mathrm{s} + 5.1\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(4.45\,\mathrm{s} + 8.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(1.56\,\mathrm{s} + 3.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(1.47\,\mathrm{s} + 5.0\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.69\,\mathrm{s} + 4.6\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(2.17\,\mathrm{s} + 1.8\,\mathrm{ms} \cdot n\)</td></tr>
+</table>
 </li>
 </ul>
-</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-types"></a>
-Template machinery</h2>
-<p>Two units are compared at the largest N measured. The first holds N test cases, each on a type of its own, and the second a single template test case over the same N types. The difference between the two bars is the cost of the template machinery alone, for each library.</p>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-tests"></a>
+Cost of one test</h2>
+<p>A test file without runner holding 200 tests, compiled with <span class="tt">-c</span>. The cost of one test is its time minus that of the test file with no test, divided by the number of tests. The runner stays out: for some libraries, it varies more between two builds than 50 tests add to the curve above.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-types.svg" alt="Cases on distinct types against one template case, with gcc"/>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-tests.svg" alt="Cost of one test with gcc"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-types.svg" alt="Cases on distinct types against one template case, with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-tests.svg" alt="Cost of one test with clang"/>
 </li>
 </ul>
-</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-fits"></a>
-Fixed cost and crossings</h2>
-<p>Each curve is fitted by least squares to a fixed cost plus a cost per test case. The second table gives the number of test cases in a unit where <b>TTS</b> compiles faster:</p>
-<ul>
-<li><span class="tt">up to N</span>: the other library costs less per case, and its line crosses that of <b>TTS</b> at N;</li>
-<li><span class="tt">from N</span>: the other library costs more per case, and its line crosses that of <b>TTS</b> at N;</li>
-<li><span class="tt">always</span> or <span class="tt">never</span>: the two lines do not cross at a positive number of cases.</li>
-</ul>
-<p>Catch2 and GoogleTest are measured without their runner, so <b>TTS</b> compiles faster over at least the range given against them.</p>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-files"></a>
+Tests in many files</h2>
+<p>An executable built from a runner and a growing number of files of one test each, linked together. TTS**, <a href="https://github.com/doctest/doctest">doctest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> compile their runner once, in its own file; <a href="https://github.com/boost-ext/ut">ut</a> compiles it in each file.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.24\,\mathrm{s} + 8.9\,\mathrm{ms} \cdot n\)</td><td>\(0.25\,\mathrm{s} + 38.9\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(5.37\,\mathrm{s} + 9.9\,\mathrm{ms} \cdot n\)</td><td>\(5.31\,\mathrm{s} + 100.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(0.66\,\mathrm{s} + 4.1\,\mathrm{ms} \cdot n\)</td><td>\(0.71\,\mathrm{s} + 23.6\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(0.69\,\mathrm{s} + 7.2\,\mathrm{ms} \cdot n\)</td><td>\(0.73\,\mathrm{s} + 60.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(1.52\,\mathrm{s} + 5.0\,\mathrm{ms} \cdot n\)</td><td>\(1.53\,\mathrm{s} + 24.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(1.35\,\mathrm{s} + 17.6\,\mathrm{ms} \cdot n\)</td><td>\(1.42\,\mathrm{s} + 71.3\,\mathrm{ms} \cdot n\)</td></tr>
-</table>
-<p>Number of test cases in a unit where <b>TTS</b> compiles faster:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>up to 88</td><td>up to 30</td></tr>
-<tr><td>GoogleTest</td><td>up to 263</td><td>always</td></tr>
-<tr><td>doctest</td><td>up to 327</td><td>up to 86</td></tr>
-<tr><td>ut</td><td>always</td><td>always</td></tr>
-</table>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-files.svg" alt="Executables of many files with gcc"/>
 </li>
-<li><b class="tab-title">clang++</b> <p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.18\,\mathrm{s} + 4.2\,\mathrm{ms} \cdot n\)</td><td>\(0.19\,\mathrm{s} + 16.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(3.34\,\mathrm{s} + 7.3\,\mathrm{ms} \cdot n\)</td><td>\(3.36\,\mathrm{s} + 53.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(1.01\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td><td>\(1.04\,\mathrm{s} + 16.7\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(0.97\,\mathrm{s} + 4.1\,\mathrm{ms} \cdot n\)</td><td>\(1.00\,\mathrm{s} + 26.6\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(1.27\,\mathrm{s} + 3.8\,\mathrm{ms} \cdot n\)</td><td>\(1.29\,\mathrm{s} + 15.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(1.54\,\mathrm{s} + 10.5\,\mathrm{ms} \cdot n\)</td><td>\(1.56\,\mathrm{s} + 35.2\,\mathrm{ms} \cdot n\)</td></tr>
-</table>
-<p>Number of test cases in a unit where <b>TTS</b> compiles faster:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>up to 1223</td><td>up to 16080</td></tr>
-<tr><td>GoogleTest</td><td>up to 8832</td><td>always</td></tr>
-<tr><td>doctest</td><td>up to 2847</td><td>up to 674</td></tr>
-<tr><td>ut</td><td>always</td><td>always</td></tr>
-</table>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-files.svg" alt="Executables of many files with clang"/>
 </li>
 </ul>
 </div><div class="tabbed"></div> </div></div><!-- contents -->

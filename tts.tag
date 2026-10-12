@@ -1875,16 +1875,16 @@
     <title>Compile-Time Cost</title>
     <filename>compile-time.html</filename>
     <docanchor file="compile-time.html" title="Standard headers in TTS">compile-time-headers</docanchor>
-    <docanchor file="compile-time.html" title="Include cost of a test suite">compile-time-why</docanchor>
-    <docanchor file="compile-time.html" title="Avoided headers and their cost">compile-time-cost</docanchor>
-    <docanchor file="compile-time.html" title="Headers measured as free">compile-time-fine</docanchor>
-    <docanchor file="compile-time.html" title="Checklist for a new header">compile-time-checklist</docanchor>
-    <docanchor file="compile-time.html" title="Replacements written in TTS">compile-time-precedent</docanchor>
+    <docanchor file="compile-time.html" title="Objectives">compile-time-why</docanchor>
+    <docanchor file="compile-time.html" title="Costly headers">compile-time-cost</docanchor>
+    <docanchor file="compile-time.html" title="Acceptable headers">compile-time-fine</docanchor>
+    <docanchor file="compile-time.html" title="TTS replacements">compile-time-precedent</docanchor>
     <docanchor file="compile-time.html" title="Other test libraries">compile-time-comparison</docanchor>
-    <docanchor file="compile-time.html" title="Minimal include cost">compile-time-comparison-include</docanchor>
-    <docanchor file="compile-time.html" title="Cost of test cases">compile-time-comparison-cases</docanchor>
-    <docanchor file="compile-time.html" title="Template machinery">compile-time-comparison-types</docanchor>
-    <docanchor file="compile-time.html" title="Fixed cost and crossings">compile-time-comparison-fits</docanchor>
+    <docanchor file="compile-time.html" title="Include cost">compile-time-comparison-include</docanchor>
+    <docanchor file="compile-time.html" title="One test">compile-time-comparison-one</docanchor>
+    <docanchor file="compile-time.html" title="Tests in one file">compile-time-comparison-cases</docanchor>
+    <docanchor file="compile-time.html" title="Cost of one test">compile-time-comparison-tests</docanchor>
+    <docanchor file="compile-time.html" title="Tests in many files">compile-time-comparison-files</docanchor>
   </compound>
   <compound kind="page">
     <name>customize</name>

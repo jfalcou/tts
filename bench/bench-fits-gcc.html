@@ -1,17 +1,9 @@
-<p>Cost of a unit holding \(n\) test cases, fitted as a fixed part and a part per case:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>TTS</td><td>\(0.24\,\mathrm{s} + 8.9\,\mathrm{ms} \cdot n\)</td><td>\(0.25\,\mathrm{s} + 38.9\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Boost.Test</td><td>\(5.37\,\mathrm{s} + 9.9\,\mathrm{ms} \cdot n\)</td><td>\(5.31\,\mathrm{s} + 100.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>Catch2</td><td>\(0.66\,\mathrm{s} + 4.1\,\mathrm{ms} \cdot n\)</td><td>\(0.71\,\mathrm{s} + 23.6\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>GoogleTest</td><td>\(0.69\,\mathrm{s} + 7.2\,\mathrm{ms} \cdot n\)</td><td>\(0.73\,\mathrm{s} + 60.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>doctest</td><td>\(1.52\,\mathrm{s} + 5.0\,\mathrm{ms} \cdot n\)</td><td>\(1.53\,\mathrm{s} + 24.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td>ut</td><td>\(1.35\,\mathrm{s} + 17.6\,\mathrm{ms} \cdot n\)</td><td>\(1.42\,\mathrm{s} + 71.3\,\mathrm{ms} \cdot n\)</td></tr>
-</table>
-<p>Number of test cases in a unit where <b>TTS</b> compiles faster:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Against</th><th>simple cases</th><th>template cases</th></tr>
-<tr><td>Boost.Test</td><td>always</td><td>always</td></tr>
-<tr><td>Catch2</td><td>up to 88</td><td>up to 30</td></tr>
-<tr><td>GoogleTest</td><td>up to 263</td><td>always</td></tr>
-<tr><td>doctest</td><td>up to 327</td><td>up to 86</td></tr>
-<tr><td>ut</td><td>always</td><td>always</td></tr>
+<p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
+<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
+<tr><td>TTS</td><td>\(0.34\,\mathrm{s} + 10.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(6.39\,\mathrm{s} + 10.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(1.12\,\mathrm{s} + 4.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(0.92\,\mathrm{s} + 8.3\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.89\,\mathrm{s} + 4.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(1.96\,\mathrm{s} + 2.7\,\mathrm{ms} \cdot n\)</td></tr>
 </table>

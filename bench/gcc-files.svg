@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="sans-serif" font-size="12">
+<text x="56" y="22" fill="#808080" font-size="14">g++ 15.2.0 -O0, a runner and 1 to 50 files of one test</text>
+<line x1="56" x2="550" y1="356.0" y2="356.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="360.0" fill="#808080" text-anchor="end">0 s</text>
+<line x1="56" x2="550" y1="292.8" y2="292.8" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="296.8" fill="#808080" text-anchor="end">20 s</text>
+<line x1="56" x2="550" y1="229.6" y2="229.6" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="233.6" fill="#808080" text-anchor="end">40 s</text>
+<line x1="56" x2="550" y1="166.4" y2="166.4" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="170.4" fill="#808080" text-anchor="end">60 s</text>
+<line x1="56" x2="550" y1="103.2" y2="103.2" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="107.2" fill="#808080" text-anchor="end">80 s</text>
+<line x1="56" x2="550" y1="40.0" y2="40.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50" y="44.0" fill="#808080" text-anchor="end">100 s</text>
+<text x="65.9" y="372" fill="#808080" text-anchor="middle">1</text>
+<text x="75.8" y="372" fill="#808080" text-anchor="middle">2</text>
+<text x="105.4" y="372" fill="#808080" text-anchor="middle">5</text>
+<text x="154.8" y="372" fill="#808080" text-anchor="middle">10</text>
+<text x="253.6" y="372" fill="#808080" text-anchor="middle">20</text>
+<text x="550.0" y="372" fill="#808080" text-anchor="middle">50</text>
+<text x="303.0" y="392" fill="#808080" text-anchor="middle">files of one test</text>
+<text x="558" y="346.6" fill="#3fa34d" font-weight="bold">doctest +46.2 ms</text>
+<text x="558" y="332.6" fill="#d1495b" font-weight="bold">TTS +153.1 ms</text>
+<text x="558" y="230.2" fill="#e09f3e" font-weight="bold">GoogleTest +818.4 ms</text>
+<text x="558" y="216.2" fill="#2e86ab" font-weight="bold">Catch2 +819.6 ms</text>
+<text x="558" y="202.2" fill="#8e6bbf" font-weight="bold">Boost.Test +803.8 ms</text>
+<text x="558" y="71.1" fill="#5c8a8a" font-weight="bold">ut +1827.1 ms</text>
+<polyline points="65.9,333.4 75.8,330.7 105.4,322.8 154.8,310.8 253.6,284.3 550.0,208.9" fill="none" stroke="#8e6bbf" stroke-width="2.5"/>
+<circle cx="65.9" cy="333.4" r="3" fill="#8e6bbf"/>
+<circle cx="75.8" cy="330.7" r="3" fill="#8e6bbf"/>
+<circle cx="105.4" cy="322.8" r="3" fill="#8e6bbf"/>
+<circle cx="154.8" cy="310.8" r="3" fill="#8e6bbf"/>
+<circle cx="253.6" cy="284.3" r="3" fill="#8e6bbf"/>
+<circle cx="550.0" cy="208.9" r="3" fill="#8e6bbf"/>
+<polyline points="65.9,352.6 75.8,350.2 105.4,342.9 154.8,330.3 253.6,305.9 550.0,225.7" fill="none" stroke="#2e86ab" stroke-width="2.5"/>
+<circle cx="65.9" cy="352.6" r="3" fill="#2e86ab"/>
+<circle cx="75.8" cy="350.2" r="3" fill="#2e86ab"/>
+<circle cx="105.4" cy="342.9" r="3" fill="#2e86ab"/>
+<circle cx="154.8" cy="330.3" r="3" fill="#2e86ab"/>
+<circle cx="253.6" cy="305.9" r="3" fill="#2e86ab"/>
+<circle cx="550.0" cy="225.7" r="3" fill="#2e86ab"/>
+<polyline points="65.9,349.8 75.8,349.5 105.4,349.2 154.8,348.4 253.6,346.9 550.0,342.6" fill="none" stroke="#3fa34d" stroke-width="2.5"/>
+<circle cx="65.9" cy="349.8" r="3" fill="#3fa34d"/>
+<circle cx="75.8" cy="349.5" r="3" fill="#3fa34d"/>
+<circle cx="105.4" cy="349.2" r="3" fill="#3fa34d"/>
+<circle cx="154.8" cy="348.4" r="3" fill="#3fa34d"/>
+<circle cx="253.6" cy="346.9" r="3" fill="#3fa34d"/>
+<circle cx="550.0" cy="342.6" r="3" fill="#3fa34d"/>
+<polyline points="65.9,353.0 75.8,350.4 105.4,342.7 154.8,329.6 253.6,304.3 550.0,226.2" fill="none" stroke="#e09f3e" stroke-width="2.5"/>
+<circle cx="65.9" cy="353.0" r="3" fill="#e09f3e"/>
+<circle cx="75.8" cy="350.4" r="3" fill="#e09f3e"/>
+<circle cx="105.4" cy="342.7" r="3" fill="#e09f3e"/>
+<circle cx="154.8" cy="329.6" r="3" fill="#e09f3e"/>
+<circle cx="253.6" cy="304.3" r="3" fill="#e09f3e"/>
+<circle cx="550.0" cy="226.2" r="3" fill="#e09f3e"/>
+<polyline points="65.9,354.5 75.8,354.0 105.4,352.5 154.8,350.2 253.6,345.3 550.0,330.8" fill="none" stroke="#d1495b" stroke-width="2.5"/>
+<circle cx="65.9" cy="354.5" r="3" fill="#d1495b"/>
+<circle cx="75.8" cy="354.0" r="3" fill="#d1495b"/>
+<circle cx="105.4" cy="352.5" r="3" fill="#d1495b"/>
+<circle cx="154.8" cy="350.2" r="3" fill="#d1495b"/>
+<circle cx="253.6" cy="345.3" r="3" fill="#d1495b"/>
+<circle cx="550.0" cy="330.8" r="3" fill="#d1495b"/>
+<polyline points="65.9,350.1 75.8,344.8 105.4,329.0 154.8,301.4 253.6,248.8 550.0,67.1" fill="none" stroke="#5c8a8a" stroke-width="2.5"/>
+<circle cx="65.9" cy="350.1" r="3" fill="#5c8a8a"/>
+<circle cx="75.8" cy="344.8" r="3" fill="#5c8a8a"/>
+<circle cx="105.4" cy="329.0" r="3" fill="#5c8a8a"/>
+<circle cx="154.8" cy="301.4" r="3" fill="#5c8a8a"/>
+<circle cx="253.6" cy="248.8" r="3" fill="#5c8a8a"/>
+<circle cx="550.0" cy="67.1" r="3" fill="#5c8a8a"/>
+</svg>
