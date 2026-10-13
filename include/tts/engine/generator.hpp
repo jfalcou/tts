@@ -254,7 +254,7 @@ namespace tts
     type. The base type is used to determine the limits and special values for the type `T` when
     generating test data.
 
-    **Helper types:**
+    @par Helper types
     - `base_type_t<T>`: Alias for `typename base_type<T>::type`
 
     @tparam T Type for which to extract the base type.
@@ -273,12 +273,12 @@ namespace tts
 
     This structure is used to compute a boolean type for a type `T`. By default, the boolean type is
     `bool`, but this structure can be specialized for user-defined types to provide a different
-  boolean type.
+    boolean type.
 
-      **Helper types:**
-      - `boolean_type_t<T>`: Alias for `typename boolean_type<T>::type`
+    @par Helper types
+    - `boolean_type_t<T>`: Alias for `typename boolean_type<T>::type`
 
-      @tparam T Type for which to compute the boolean type.
+    @tparam T Type for which to compute the boolean type.
   **/
   //====================================================================================================================
   template<typename T> struct boolean_type

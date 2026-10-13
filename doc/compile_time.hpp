@@ -82,7 +82,8 @@
   [Boost.Test](https://github.com/boostorg/test), and
   [ut](https://github.com/boost-ext/ut), and measures the CPU time of their compilation and link
   with `-std=c++20`. Each executable runs and passes before its time is kept, and each point is the
-  median of several builds.
+  median of several builds. Each publication runs on a new CI machine, named below, and its times
+  compare only with one another.
 
   @htmlinclude bench-meta.html
 
@@ -166,8 +167,8 @@
 
   @subsection compile-time-comparison-files Tests in many files
 
-  An executable built from a runner and a growing number of files of one test each, linked together.
-  **TTS**, [doctest](https://github.com/doctest/doctest), and
+  An executable built from a runner and a growing number of files of one test each, linked
+  together. **TTS**, [doctest](https://github.com/doctest/doctest), and
   [Boost.Test](https://github.com/boostorg/test) compile their runner once, in its own file;
   [ut](https://github.com/boost-ext/ut) compiles it in each file.
 
