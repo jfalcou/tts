@@ -144,9 +144,10 @@ $(function(){initNavTree('structtts_1_1base__type.html','','structtts_1_1base__t
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
 struct tts::base_type&lt; T &gt;</div><p>Base type extraction. </p>
 <p>This structure is used to extract the base type of a type <span class="tt">T</span>. By default, the base type is <span class="tt">T</span> itself, but this structure can be specialized for user-defined types to provide a different base type. The base type is used to determine the limits and special values for the type <span class="tt">T</span> when generating test data.</p>
-<p>Helper types:**</p><ul>
+<dl class="section user"><dt>Helper types</dt><dd><ul>
 <li><span class="tt">base_type_t&lt;T&gt;</span>: Alias for <span class="tt">typename <a class="el" href="structtts_1_1base__type.html" title="Base type extraction.">base_type</a>&lt;T&gt;::<a class="el" href="structtts_1_1type.html" title="Encapsulates a single type into a reusable type object.">type</a></span></li>
 </ul>
+</dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Type for which to extract the base type. </td></tr>

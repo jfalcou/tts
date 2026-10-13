@@ -520,7 +520,7 @@ Relative Comparison</h2>
 <div class="line">};</div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Absolute Comparison</h2>
-<p>TTS** performs all absolute precision checks through the <span class="tt">absolute</span> member of <a class="el" href="structtts_1_1precision.html" title="tts::precision">tts::precision</a>. One can also reuse the pre-existing <span class="tt"><a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a></span> to implement their own.</p>
+<p>Absolute precision checks within <b>TTS</b> are done through the <span class="tt">absolute</span> member of <a class="el" href="structtts_1_1precision.html" title="tts::precision">tts::precision</a>. One can also reuse the pre-existing <span class="tt"><a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a></span> to implement their own.</p>
 <p>The four free functions <span class="tt">ulp_distance</span>, <span class="tt">ieee_equal</span>, <span class="tt">relative_distance</span> and <span class="tt">absolute_distance</span> are gone. One left behind is reported where it would have been used, rather than ignored in silence, so a suite carrying them says so at the first check that needs it.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
