@@ -11,21 +11,21 @@
 <line x1="550.0" x2="550.0" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
 <text x="550.0" y="224" fill="#808080" text-anchor="middle">8 s</text>
 <text x="88" y="58" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
-<rect x="96" y="46" width="19.8" height="16" fill="#d1495b"/>
-<text x="121.8" y="58" fill="#808080">0.35 s</text>
+<rect x="96" y="46" width="19.3" height="16" fill="#d1495b"/>
+<text x="121.3" y="58" fill="#808080">0.34 s</text>
 <text x="88" y="86" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
-<rect x="96" y="74" width="54.0" height="16" fill="#e09f3e"/>
-<text x="156.0" y="86" fill="#808080">0.95 s</text>
+<rect x="96" y="74" width="53.1" height="16" fill="#e09f3e"/>
+<text x="155.1" y="86" fill="#808080">0.94 s</text>
 <text x="88" y="114" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
-<rect x="96" y="102" width="59.0" height="16" fill="#2e86ab"/>
-<text x="161.0" y="114" fill="#808080">1.04 s</text>
+<rect x="96" y="102" width="58.5" height="16" fill="#2e86ab"/>
+<text x="160.5" y="114" fill="#808080">1.03 s</text>
 <text x="88" y="142" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
-<rect x="96" y="130" width="102.6" height="16" fill="#5c8a8a"/>
-<text x="204.6" y="142" fill="#808080">1.81 s</text>
+<rect x="96" y="130" width="100.3" height="16" fill="#5c8a8a"/>
+<text x="202.3" y="142" fill="#808080">1.77 s</text>
 <text x="88" y="170" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
-<rect x="96" y="158" width="104.1" height="16" fill="#3fa34d"/>
-<text x="206.1" y="170" fill="#808080">1.83 s</text>
+<rect x="96" y="158" width="103.3" height="16" fill="#3fa34d"/>
+<text x="205.3" y="170" fill="#808080">1.82 s</text>
 <text x="88" y="198" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
-<rect x="96" y="186" width="355.8" height="16" fill="#8e6bbf"/>
-<text x="457.8" y="198" fill="#808080">6.27 s</text>
+<rect x="96" y="186" width="349.4" height="16" fill="#8e6bbf"/>
+<text x="451.4" y="198" fill="#808080">6.16 s</text>
 </svg>

@@ -14,20 +14,20 @@
 <text x="550.0" y="224" fill="#808080" text-anchor="middle">1.25 s</text>
 <text x="88" y="58" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
 <rect x="96" y="46" width="9.3" height="16" fill="#3fa34d"/>
-<text x="111.3" y="58" fill="#808080">0.026 s, 29 MiB</text>
+<text x="111.3" y="58" fill="#808080">0.025 s, 29 MiB</text>
 <text x="88" y="86" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
-<rect x="96" y="74" width="37.8" height="16" fill="#d1495b"/>
-<text x="139.8" y="86" fill="#808080">0.104 s, 44 MiB</text>
+<rect x="96" y="74" width="37.4" height="16" fill="#d1495b"/>
+<text x="139.4" y="86" fill="#808080">0.103 s, 44 MiB</text>
 <text x="88" y="114" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
 <rect x="96" y="102" width="263.2" height="16" fill="#8e6bbf"/>
-<text x="365.2" y="114" fill="#808080">0.725 s, 189 MiB</text>
-<text x="88" y="142" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
-<rect x="96" y="130" width="277.0" height="16" fill="#2e86ab"/>
-<text x="379.0" y="142" fill="#808080">0.763 s, 162 MiB</text>
-<text x="88" y="170" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
-<rect x="96" y="158" width="277.6" height="16" fill="#e09f3e"/>
-<text x="379.6" y="170" fill="#808080">0.764 s, 177 MiB</text>
+<text x="365.2" y="114" fill="#808080">0.725 s, 193 MiB</text>
+<text x="88" y="142" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
+<rect x="96" y="130" width="266.8" height="16" fill="#e09f3e"/>
+<text x="368.8" y="142" fill="#808080">0.735 s, 177 MiB</text>
+<text x="88" y="170" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
+<rect x="96" y="158" width="276.2" height="16" fill="#2e86ab"/>
+<text x="378.2" y="170" fill="#808080">0.761 s, 162 MiB</text>
 <text x="88" y="198" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
-<rect x="96" y="186" width="448.2" height="16" fill="#5c8a8a"/>
-<text x="550.2" y="198" fill="#808080">1.234 s, 227 MiB</text>
+<rect x="96" y="186" width="441.7" height="16" fill="#5c8a8a"/>
+<text x="543.7" y="198" fill="#808080">1.216 s, 228 MiB</text>
 </svg>

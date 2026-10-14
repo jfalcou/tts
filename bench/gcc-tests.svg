@@ -13,21 +13,21 @@
 <line x1="550.0" x2="550.0" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
 <text x="550.0" y="224" fill="#808080" text-anchor="middle">12.5 ms</text>
 <text x="88" y="58" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
-<rect x="96" y="46" width="88.5" height="16" fill="#d1495b"/>
-<text x="190.5" y="58" fill="#808080">2.44 ms, 0.59 s for 200 tests</text>
+<rect x="96" y="46" width="86.9" height="16" fill="#d1495b"/>
+<text x="188.9" y="58" fill="#808080">2.39 ms, 0.58 s for 200 tests</text>
 <text x="88" y="86" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
-<rect x="96" y="74" width="174.2" height="16" fill="#2e86ab"/>
-<text x="276.2" y="86" fill="#808080">4.80 ms, 1.72 s for 200 tests</text>
+<rect x="96" y="74" width="173.9" height="16" fill="#2e86ab"/>
+<text x="275.9" y="86" fill="#808080">4.79 ms, 1.72 s for 200 tests</text>
 <text x="88" y="114" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
-<rect x="96" y="102" width="179.3" height="16" fill="#5c8a8a"/>
-<text x="281.3" y="114" fill="#808080">4.94 ms, 2.22 s for 200 tests</text>
+<rect x="96" y="102" width="178.6" height="16" fill="#5c8a8a"/>
+<text x="280.6" y="114" fill="#808080">4.92 ms, 2.20 s for 200 tests</text>
 <text x="88" y="142" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
-<rect x="96" y="130" width="202.1" height="16" fill="#3fa34d"/>
-<text x="304.1" y="142" fill="#808080">5.56 ms, 1.14 s for 200 tests</text>
+<rect x="96" y="130" width="203.0" height="16" fill="#3fa34d"/>
+<text x="305.0" y="142" fill="#808080">5.59 ms, 1.14 s for 200 tests</text>
 <text x="88" y="170" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
-<rect x="96" y="158" width="312.0" height="16" fill="#e09f3e"/>
-<text x="414.0" y="170" fill="#808080">8.59 ms, 2.48 s for 200 tests</text>
+<rect x="96" y="158" width="315.8" height="16" fill="#e09f3e"/>
+<text x="417.8" y="170" fill="#808080">8.69 ms, 2.47 s for 200 tests</text>
 <text x="88" y="198" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
-<rect x="96" y="186" width="437.8" height="16" fill="#8e6bbf"/>
-<text x="539.8" y="198" fill="#808080">12.05 ms, 3.14 s for 200 tests</text>
+<rect x="96" y="186" width="431.9" height="16" fill="#8e6bbf"/>
+<text x="533.9" y="198" fill="#808080">11.89 ms, 3.10 s for 200 tests</text>
 </svg>
