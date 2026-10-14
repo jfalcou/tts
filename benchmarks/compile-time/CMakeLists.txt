@@ -40,10 +40,11 @@ set(TTS_BENCH_SINGLE "1;2;5;10;20;50" CACHE STRING "Numbers of tests in the exec
 set(TTS_BENCH_FILES "1;2;5;10;20;50" CACHE STRING "Numbers of one-test files in the executables of many files")
 set(TTS_BENCH_TESTS 200 CACHE STRING "Number of tests in the file without runner that gives the cost of one test")
 
+## clang 22 defines __cpp_modules in C++20, which makes ut.hpp declare a module unless told otherwise.
 set(LIBRARIES
     "--library=tts=-I${PROJECT_SOURCE_DIR}/include"
     "--library=doctest=-I${doctest_SOURCE_DIR}"
-    "--library=ut=-I${ut_SOURCE_DIR}/include"
+    "--library=ut=-DBOOST_UT_DISABLE_MODULE -I${ut_SOURCE_DIR}/include"
     "--library=gtest=-I${googletest_SOURCE_DIR}/googletest/include -I${googletest_SOURCE_DIR}/googletest"
     "--library=catch2=-I${Catch2_SOURCE_DIR}/src -I${CMAKE_CURRENT_BINARY_DIR}/catch2-config"
     "--link=gtest=-pthread"
