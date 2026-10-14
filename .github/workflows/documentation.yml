@@ -20,5 +20,6 @@ jobs:
     uses: jfalcou/copacabana/.github/workflows/documentation.yml@main
     with:
       project: tts
+      image: ghcr.io/jfalcou/compilers:v11
       deploy-options: -DTTS_BENCHMARK_DOCUMENTATION=ON
       coverage: true
