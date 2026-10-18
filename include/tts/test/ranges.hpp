@@ -413,26 +413,37 @@ namespace tts
 /*!
   @def TTS_ULP_RANGE_CHECK
   @ingroup  test-precision
-  @brief Generate a range based test between two functions
+  @brief Checks a function against a reference over a data set, within a given ULP distance
 
-  Evaluates the histogram of ULP difference between two functions run on the same data set and that
-  they lie in a given [ULP distance](rationale.html#ulp).
+  Evaluates `NewFunc` and `RefFunc` on the same data set, sorts the [ULP
+distance](rationale.html#ulp) between their results into a histogram, and passes when the largest
+distance stays within `Ulpmax`. The data set holds `--block` values, 4096 by default, each built by
+the generator from its index.
+  `--ulpmax` replaces `Ulpmax` for every check of the run.
 
   A function of several arguments takes a tts::types list as `RefType` and as `NewType`, one type
-  per argument in the order of the call, and a producer per argument between parentheses, or a
-  single one for all. A block is then the product of the samples of the arguments.
+  per argument in the order of the call, and one generator per argument between parentheses, or a
+  single generator for all. Each generator then produces the smallest number of values whose product
+  over the arguments reaches `--block`, 64 for two arguments by default, and the data set covers
+  every combination of these values.
 
-  The histogram is printed for a check that fails, and for every check under `--verbose`.
+  `NewType` may hold several values of `RefType`, as described by a specialization of tts::adapter.
 
-  @param Producer Data set generator to use, or one per argument between parentheses.
-  @param RefType  Type to use as reference function input, or a tts::types list of them.
-  @param NewType  Type to use as challenger function input, or a tts::types list of them.
-  @param RefFunc  Reference function to compare to.
-  @param NewFunc  Challenger function to be compared to the reference one.
-  @param Ulpmax   Maximal ULPs acceptable for passing the test.
+  A check that fails prints its histogram, and every check prints it under `--verbose`. Each bucket
+  shows the first element whose distance falls in it, marked between stars within its group when
+  `NewType` holds several values.
+
+  @param Producer Data generator, or one per argument between parentheses.
+  @param RefType  Argument type of the reference function, or a tts::types list of them.
+  @param NewType  Argument type of the challenger function, or a tts::types list of them.
+  @param RefFunc  Reference function.
+  @param NewFunc  Function compared to the reference.
+  @param Ulpmax   Largest ULP distance accepted.
 
   @groupheader{Example}
   @snippet doc/ulp_ranges.cpp snippet
+
+  @see tts::adapter
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
