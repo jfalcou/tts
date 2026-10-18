@@ -277,6 +277,10 @@ namespace tts
       }
     };
 
+    // An adapter written for TTS 3, through run and retrieve.
+    template<typename T>
+    concept legacy_adapter = requires { &adapter<T>::retrieve; };
+
     template<typename RefList, typename NewList> struct ulp_scan;
 
     template<typename... As, typename... Ws> struct ulp_scan<types<As...>, types<Ws...>>
@@ -284,7 +288,7 @@ namespace tts
       static_assert(sizeof...(As) == sizeof...(Ws),
                     "[TTS] TTS_ULP_RANGE_CHECK needs one challenger type per reference type.");
 
-      static_assert((!requires { &adapter<Ws>::retrieve; } && ...),
+      static_assert((!legacy_adapter<Ws> && ...),
                     "[TTS] tts::adapter<T>::run and retrieve are no longer the protocol. "
                     "Define element_type, size, load, and store instead.");
 
