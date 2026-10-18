@@ -43,11 +43,6 @@ namespace tts
       dst[ 2 ] = v[ 2 ];
       dst[ 3 ] = v[ 3 ];
     }
-
-    static void display(std::array<X, 4> const& v) noexcept
-    {
-      printf("%s", as_text(v).data());
-    }
   };
 }
 
@@ -153,4 +148,33 @@ TTS_CASE("Range check on two arguments covers the product of the producers")
       pairs += b;
 
   TTS_EQUAL(pairs, 4096);
+};
+
+// The first odd k sits at index 1 of the block: its element alone is the sample of the 0.5 bucket.
+TTS_CASE("Range check reports the element of each bucket, under the call form of each function")
+{
+  ::tts::_::scoped_verbosity verbosity;
+  ::tts::_::set_quiet(false);
+
+  tts::gathering_sink gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK((tts::between(0.f, 100.f), ramp),
+                        (tts::types<float, int>),
+                        (tts::types<std::array<float, 4>, std::array<int, 4>>),
+                        scale,
+                        ajar_scale,
+                        0.5);
+  }
+
+  auto has = [ & ](char const* s)
+  {
+    return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
+  };
+
+  TTS_EXPECT(has("Comparing: scale(float, int) with "
+                 "ajar_scale(std::array<float, 4>, std::array<int, 4>)"));
+  TTS_EXPECT(has("Input:      0, 1\n"));
+  TTS_EXPECT(has("Found:      1\n"));
+  TTS_EXPECT(has("instead of: 0\n"));
 };

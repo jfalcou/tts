@@ -37,11 +37,6 @@ namespace tts
       for(std::size_t i = 0; i < 4; ++i)
         dst[ i ] = v[ i ];
     }
-
-    static void display(pack4 const& v)
-    {
-      tts::output().write(tts::as_text(v));
-    }
   };
 }
 

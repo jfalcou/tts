@@ -39,10 +39,6 @@ namespace tts
     {
       *dst = v;
     }
-    static void display(T const& v) noexcept
-    {
-      output().write(as_text(v));
-    }
   };
 
   namespace _
@@ -160,15 +156,29 @@ namespace tts
 
     template<typename V> void show(V const& v)
     {
-      adapter<V>::display(v);
+      ::tts::output().write(::tts::as_text(v));
     }
 
-    template<typename... Ws> void show(pack<Ws...> const& p)
+    template<typename... Ts> void show(pack<Ts...> const& p)
     {
       [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
       {
-        ((::tts::output().write(Ks ? ", " : ""), adapter<Ws>::display(_::get<Ks>(p))), ...);
-      }(std::index_sequence_for<Ws...> {});
+        ((::tts::output().write(Ks ? ", " : ""), show(_::get<Ks>(p))), ...);
+      }(std::index_sequence_for<Ts...> {});
+    }
+
+    template<typename... Ts> void show_call(char const* name, types<Ts...>)
+    {
+      ::tts::output().write(name);
+      ::tts::output().write("(");
+      [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
+      {
+        (
+        (::tts::output().write(Ks ? ", " : ""),
+         ::tts::output().write(::tts::as_text(typename_<Ts>))),
+        ...);
+      }(std::index_sequence_for<Ts...> {});
+      ::tts::output().write(")");
     }
 
     template<typename U, typename R, typename V>
@@ -210,7 +220,7 @@ namespace tts
                     "[TTS] tts::adapter<T>::run and retrieve are no longer the protocol. "
                     "Define element_type, size, load, and store instead.");
 
-      using samples_type = pack<Ws...>;
+      using samples_type = pack<As...>;
 
       template<typename G, typename RefFun, typename NewFun>
       static double run(G const& g, RefFun reference, NewFun challenger)
@@ -271,7 +281,7 @@ namespace tts
         std::size_t          nb_ulps    = 0;
         buffer<unsigned int> ulp_map(nb_buckets, 0);
 
-        buffer<histogram_entry<samples_type, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
+        buffer<histogram_entry<samples_type, out_type>> samples(nb_buckets, {false, {}, {}, {}});
 
         for(std::size_t r = 0; r < repetition; ++r)
         {
@@ -299,12 +309,8 @@ namespace tts
 
             if(!samples[ idx ].status)
             {
-              auto base      = (i / card) * card;
               samples[ idx ] = {
-              true,
-              samples_type {adapter<Ws>::load(_::get<Ks>(inputs).data() + base)...},
-              adapter<nout_type>::load(new_out.data() + base),
-              adapter<nout_type>::load(ref_out.data() + base)};
+              true, samples_type {_::get<Ks>(inputs)[ i ]...}, new_out[ i ], ref_out[ i ]};
             }
           }
         }
@@ -380,11 +386,15 @@ namespace tts
   [ & ]()                                                                                          \
   {                                                                                                \
     if(!::tts::is_quiet())                                                                         \
-      ::tts::output().write("Comparing: %s<%s> with %s<%s> using ",                                \
-                            TTS_STRING(RefFunc),                                                   \
-                            TTS_STRING(TTS_REMOVE_PARENS(RefType)),                                \
-                            TTS_STRING(NewFunc),                                                   \
-                            TTS_STRING(TTS_REMOVE_PARENS(NewType)));                               \
+    {                                                                                              \
+      ::tts::output().write("Comparing: ");                                                        \
+      ::tts::_::show_call(TTS_STRING(RefFunc),                                                     \
+                          ::tts::as_type_list_t<TTS_REMOVE_PARENS(RefType)> {});                   \
+      ::tts::output().write(" with ");                                                             \
+      ::tts::_::show_call(TTS_STRING(NewFunc),                                                     \
+                          ::tts::as_type_list_t<TTS_REMOVE_PARENS(NewType)> {});                   \
+      ::tts::output().write(" using ");                                                            \
+    }                                                                                              \
                                                                                                    \
     auto local_tts_generator = ::tts::_::make_grid(TTS_REMOVE_PARENS(Producer));                   \
     ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));        \
