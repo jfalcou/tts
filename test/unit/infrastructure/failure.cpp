@@ -96,9 +96,42 @@ TTS_CASE("Check broken sequence comparisons")
   TTS_ALL_IEEE_EQUAL(v, w);
 };
 
+int same(int x)
+{
+  return x;
+}
+
+int off_by_two(int x)
+{
+  return x + 2;
+}
+
+// The range check adds one failure, and each expectation on its report one more if it breaks.
+TTS_CASE("Check that a broken range check prints its histogram without --verbose")
+{
+  ::tts::_::scoped_verbosity verbosity;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(false);
+
+  tts::gathering_sink gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK(tts::between(0, 9), int, int, same, off_by_two, 0.);
+  }
+
+  auto has = [ & ](char const* s)
+  {
+    return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
+  };
+
+  TTS_EXPECT(has("Comparing: same(int) with off_by_two(int)"));
+  TTS_EXPECT(has("Found:      2\n"));
+  TTS_EXPECT(has("instead of: 0\n"));
+};
+
 int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);
-  return ::tts::report(31, 2);
+  return ::tts::report(32, 2);
 }
