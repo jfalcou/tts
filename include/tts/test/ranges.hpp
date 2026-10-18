@@ -149,7 +149,6 @@ namespace tts
 
     template<typename... S> void header(S const&... s)
     {
-      if(::tts::is_quiet()) return;
       ((::tts::output().write("%-*s", 16, s)), ...);
       ::tts::output().writeln();
     }
@@ -185,7 +184,6 @@ namespace tts
     void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
       assert(desc && "Description cannot be null");
-      if(::tts::is_quiet()) return;
       if(ulp != -1) ::tts::output().write("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
       else ::tts::output().write("%*s", static_cast<int>(48 + strlen(desc)), desc); // NOSONAR
       show(v);
@@ -194,7 +192,6 @@ namespace tts
 
     template<typename... Gs> void print_producer(grid<Gs...> const& prod, auto alt)
     {
-      if(::tts::is_quiet()) return;
       if constexpr((::tts::_::described<Gs> && ...))
       {
         [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
@@ -208,6 +205,45 @@ namespace tts
       }
       else ::tts::output().writeln(alt);
     }
+
+    template<typename Samples, typename Out> struct ulp_report
+    {
+      static constexpr std::size_t          nb_buckets = 2 + 1 + 16;
+
+      double                                max_ulp    = 0.;
+      std::size_t                           nb_ulps    = 0;
+      buffer<unsigned int>                  ulp_map    = buffer<unsigned int>(nb_buckets, 0u);
+      buffer<histogram_entry<Samples, Out>> samples =
+      buffer<histogram_entry<Samples, Out>>(nb_buckets, {false, {}, {}, {}});
+
+      void print() const
+      {
+        _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
+        _::separator();
+
+        double ratio = 0.;
+
+        for(std::size_t i = 0; i < ulp_map.size(); ++i)
+        {
+          if(ulp_map[ i ] != 0)
+          {
+            double ulps  = 0;
+            ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
+
+            if(i <= 3) ulps = static_cast<double>(i) / 2.0;
+            else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
+            else ulps = 1 << (i - 4);
+
+            auto const& [ s, in, out, ref ] = samples[ i ];
+
+            _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
+            _::results(-1., 0, 0., "Found:      ", out);
+            _::results(-1., 0, 0., "instead of: ", ref);
+            _::separator();
+          }
+        }
+      }
+    };
 
     template<typename RefList, typename NewList> struct ulp_scan;
 
@@ -223,13 +259,13 @@ namespace tts
       using samples_type = pack<As...>;
 
       template<typename G, typename RefFun, typename NewFun>
-      static double run(G const& g, RefFun reference, NewFun challenger)
+      static auto run(G const& g, RefFun reference, NewFun challenger)
       {
         return run(std::index_sequence_for<As...> {}, g, reference, challenger);
       }
 
       template<std::size_t... Ks, typename G, typename RefFun, typename NewFun>
-      static double run(std::index_sequence<Ks...>, G const& g, RefFun reference, NewFun challenger)
+      static auto run(std::index_sequence<Ks...>, G const& g, RefFun reference, NewFun challenger)
       {
         using out_type              = std::decay_t<std::invoke_result_t<RefFun, As...>>;
         using nout_type             = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
@@ -274,14 +310,11 @@ namespace tts
           ...);
         }
 
-        std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+        std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
 
-        double               max_ulp    = 0.;
-        std::size_t          nb_buckets = 2 + 1 + 16;
-        std::size_t          nb_ulps    = 0;
-        buffer<unsigned int> ulp_map(nb_buckets, 0);
-
-        buffer<histogram_entry<samples_type, out_type>> samples(nb_buckets, {false, {}, {}, {}});
+        ulp_report<samples_type, out_type> report;
+        auto& [ max_ulp, nb_ulps, ulp_map, samples ] = report;
+        constexpr std::size_t nb_buckets             = decltype(report)::nb_buckets;
 
         for(std::size_t r = 0; r < repetition; ++r)
         {
@@ -315,32 +348,7 @@ namespace tts
           }
         }
 
-        _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-        _::separator(!::tts::is_quiet());
-
-        double ratio = 0.;
-
-        for(std::size_t i = 0; i < ulp_map.size(); ++i)
-        {
-          if(ulp_map[ i ] != 0)
-          {
-            double ulps  = 0;
-            ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
-
-            if(i <= 3) ulps = static_cast<double>(i) / 2.0;
-            else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
-            else ulps = 1 << (i - 4);
-
-            auto const& [ s, in, out, ref ] = samples[ i ];
-
-            _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-            _::results(-1., 0, 0., "Found:      ", out);
-            _::results(-1., 0, 0., "instead of: ", ref);
-            _::separator(!::tts::is_quiet());
-          }
-        }
-
-        return max_ulp;
+        return report;
       }
     };
   }
@@ -348,10 +356,16 @@ namespace tts
   template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
   double ulp_histogram(Generator g, RefFun reference, NewFun challenger)
   {
-    using scan = _::ulp_scan<as_type_list_t<RefType>, as_type_list_t<NewType>>;
+    using scan  = _::ulp_scan<as_type_list_t<RefType>, as_type_list_t<NewType>>;
 
-    if constexpr(_::is_grid<Generator>::value) return scan::run(g, reference, challenger);
-    else return scan::run(_::make_grid(g), reference, challenger);
+    auto report = [ & ]
+    {
+      if constexpr(_::is_grid<Generator>::value) return scan::run(g, reference, challenger);
+      else return scan::run(_::make_grid(g), reference, challenger);
+    }();
+
+    if(!::tts::is_quiet()) report.print();
+    return report.max_ulp;
   }
 }
 
@@ -367,6 +381,8 @@ namespace tts
   A function of several arguments takes a tts::types list as `RefType` and as `NewType`, one type
   per argument in the order of the call, and a producer per argument between parentheses, or a
   single one for all. A block is then the product of the samples of the arguments.
+
+  The histogram is printed for a check that fails, and for every check under `--verbose`.
 
   @param Producer Data set generator to use, or one per argument between parentheses.
   @param RefType  Type to use as reference function input, or a tts::types list of them.
@@ -385,7 +401,17 @@ namespace tts
 #define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                  \
   [ & ]()                                                                                          \
   {                                                                                                \
-    if(!::tts::is_quiet())                                                                         \
+    auto   local_tts_generator = ::tts::_::make_grid(TTS_REMOVE_PARENS(Producer));                 \
+    double tts_ulp_max         = Ulpmax;                                                           \
+    double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
+    auto   local_tts_report    = ::tts::_::ulp_scan<                                               \
+    ::tts::as_type_list_t<TTS_REMOVE_PARENS(RefType)>,                                             \
+    ::tts::as_type_list_t<TTS_REMOVE_PARENS(NewType)>>::run(local_tts_generator,                   \
+                                                                 RefFunc,                          \
+                                                                 NewFunc);                         \
+    bool local_tts_passed = local_tts_report.max_ulp <= local_tts_threshold;                       \
+                                                                                                   \
+    if(::tts::is_detailed() || (!local_tts_passed && !::tts::is_quiet()))                          \
     {                                                                                              \
       ::tts::output().write("Comparing: ");                                                        \
       ::tts::_::show_call(TTS_STRING(RefFunc),                                                     \
@@ -394,18 +420,11 @@ namespace tts
       ::tts::_::show_call(TTS_STRING(NewFunc),                                                     \
                           ::tts::as_type_list_t<TTS_REMOVE_PARENS(NewType)> {});                   \
       ::tts::output().write(" using ");                                                            \
+      ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));      \
+      local_tts_report.print();                                                                    \
     }                                                                                              \
                                                                                                    \
-    auto local_tts_generator = ::tts::_::make_grid(TTS_REMOVE_PARENS(Producer));                   \
-    ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));        \
-                                                                                                   \
-    double tts_ulp_max         = Ulpmax;                                                           \
-    double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
-    double local_tts_max_ulp =                                                                     \
-    ::tts::ulp_histogram<TTS_REMOVE_PARENS(RefType), TTS_REMOVE_PARENS(NewType)>(                  \
-    local_tts_generator, RefFunc, NewFunc);                                                        \
-                                                                                                   \
-    if(local_tts_max_ulp <= local_tts_threshold)                                                   \
+    if(local_tts_passed)                                                                           \
     {                                                                                              \
       ::tts::global_runtime.pass();                                                                \
     }                                                                                              \
@@ -415,7 +434,7 @@ namespace tts
                TTS_STRING(NewFunc),                                                                \
                TTS_STRING(RefFunc),                                                                \
                ::tts::as_text(local_tts_threshold).data(),                                         \
-               ::tts::as_text(local_tts_max_ulp).data());                                          \
+               ::tts::as_text(local_tts_report.max_ulp).data());                                   \
     }                                                                                              \
   }()
 /**/
