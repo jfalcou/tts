@@ -7,7 +7,7 @@
 """Measure the test files without runner and build the test executables, keeping the median CPU time and the peak RSS.
 
     measure.py <dir> <out.json> --compiler NAME=PATH... --library NAME=FLAGS... [--link NAME=FLAGS...]
-               [--main NAME=SOURCES...] [--ar PATH] [--options FLAGS] [--runs N] [--jobs N]
+               [--main NAME=SOURCES...] [--version NAME=TEXT...] [--ar PATH] [--options FLAGS] [--runs N] [--jobs N]
 
 <dir> is what generate.py wrote. --main names the sources of a library's main library, built once per compiler,
 as a list separated by semicolons or @file with one source per line. Every executable has to run and pass.
@@ -33,16 +33,16 @@ def run(command):
         _, status, usage = os.wait4(process.pid, 0)
         if os.waitstatus_to_exitcode(status) != 0:
             output.seek(0)
-            raise RuntimeError("%s failed:\n%s" % (" ".join(command), output.read().decode(errors="replace")))
+            raise RuntimeError(f"{' '.join(command)} failed:\n{output.read().decode(errors='replace')}")
     return usage.ru_utime + usage.ru_stime, usage.ru_maxrss
 
 
 def version_of(compiler):
     """`g++ 13.3.0`, from the first line of --version."""
-    first = subprocess.run([compiler, "--version"], capture_output=True, text=True).stdout.splitlines()[0]
+    first = subprocess.run([compiler, "--version"], capture_output=True, text=True, check=True).stdout.splitlines()[0]
     numbers = [w for w in first.split() if "." in w and w.replace(".", "").isdigit()]
     number = numbers[-1] if numbers else first
-    return "%s %s" % (pathlib.Path(compiler).name, number)
+    return f"{pathlib.Path(compiler).name} {number}"
 
 
 def compile_unit(compiler, flags, unit, output):
@@ -52,7 +52,7 @@ def compile_unit(compiler, flags, unit, output):
 def build_main(compiler, flags, sources, work, ar):
     objects, cpu = [], 0.0
     for k, source in enumerate(sources):
-        objects.append(work / ("%d.o" % k))
+        objects.append(work / f"{k}.o")
         cpu += compile_unit(compiler, flags, source, objects[-1])[0]
     archive = work / "libmain.a"
     run([ar, "rcs", str(archive), *map(str, objects)])
@@ -65,8 +65,8 @@ def unit_sample(compiler, flags, unit, check):
 
 
 def executable_sample(compiler, flags, link, sources, check):
-    with tempfile.TemporaryDirectory() as work:
-        work = pathlib.Path(work)
+    with tempfile.TemporaryDirectory() as scratch:
+        work = pathlib.Path(scratch)
         objects, cpu, peak = [], 0.0, 0
         for source in sources:
             objects.append(work / (source.stem + ".o"))
@@ -80,7 +80,7 @@ def executable_sample(compiler, flags, link, sources, check):
 
 def cpu_model():
     try:
-        for line in pathlib.Path("/proc/cpuinfo").read_text().split("\n"):
+        for line in pathlib.Path("/proc/cpuinfo").read_text(encoding="utf-8").split("\n"):
             if line.startswith("model name"):
                 return line.split(":", 1)[1].strip()
     except OSError:
@@ -90,7 +90,7 @@ def cpu_model():
 
 def sources_of(text):
     if text.startswith("@"):
-        return [pathlib.Path(line) for line in pathlib.Path(text[1:]).read_text().split("\n") if line]
+        return [pathlib.Path(line) for line in pathlib.Path(text[1:]).read_text(encoding="utf-8").split("\n") if line]
     return [pathlib.Path(s) for s in text.split(";") if s]
 
 
@@ -145,15 +145,20 @@ def measure_rounds(pool, tasks, runs):
         futures = {pool.submit(tasks[k][1], *tasks[k][2], r == 0): k for k in order}
         for future in concurrent.futures.as_completed(futures):
             samples[futures[future]].append(future.result())
-    return [summarize(key, s) for (key, _, _), s in zip(tasks, samples)]
+    return [summarize(key, s) for (key, _, _), s in zip(tasks, samples, strict=True)]
 
 
 def summarize(key, samples):
+    """Medians, the shortest and the longest build, and every build in the order of the rounds."""
     peak = max(s["peak_kib"] for s in samples)
     if "compile" in samples[0]:
+        totals = [s["compile"] + s["link"] for s in samples]
         return {**key, "compile": statistics.median(s["compile"] for s in samples),
-                "link": statistics.median(s["link"] for s in samples), "peak_kib": peak}
-    return {**key, "cpu": statistics.median(s["cpu"] for s in samples), "peak_kib": peak}
+                "link": statistics.median(s["link"] for s in samples), "low": min(totals), "high": max(totals),
+                "rounds": totals, "peak_kib": peak}
+    cpus = [s["cpu"] for s in samples]
+    return {**key, "cpu": statistics.median(cpus), "low": min(cpus), "high": max(cpus), "rounds": cpus,
+            "peak_kib": peak}
 
 
 def main():
@@ -164,6 +169,7 @@ def main():
     ap.add_argument("--library", action="append", default=[])
     ap.add_argument("--link", action="append", default=[])
     ap.add_argument("--main", action="append", default=[])
+    ap.add_argument("--version", action="append", default=[])
     ap.add_argument("--ar", default="ar")
     ap.add_argument("--options", default="-O0")
     ap.add_argument("--runs", type=int, default=3)
@@ -190,12 +196,13 @@ def main():
         built = [p for p in points if "shape" in p]
 
     versions = {name: version_of(path) for name, path in compilers.items()}
-    report = {"compilers": versions, "cpu": cpu_model(), "cores": os.cpu_count(), "options": args.options,
+    report = {"compilers": versions, "libraries": pairs(args.version), "cpu": cpu_model(), "cores": os.cpu_count(),
+              "options": args.options,
               "runs": args.runs, "jobs": args.jobs,
               "date": datetime.date.today().isoformat(), "units": units, "mains": mains_built,
               "executables": built}
     text = json.dumps(report, indent=1, sort_keys=True)
-    pathlib.Path(args.output).write_text(text)  # NOSONAR - a path the build gives
+    pathlib.Path(args.output).write_text(text, encoding="utf-8")  # NOSONAR - a path the build gives
 
 
 if __name__ == "__main__":
