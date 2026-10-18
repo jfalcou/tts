@@ -154,6 +154,7 @@ TTS_CASE("Range check on two arguments covers the product of the producers")
 TTS_CASE("Range check reports the element of each bucket, under the call form of each function")
 {
   ::tts::_::scoped_verbosity verbosity;
+  ::tts::_::set_verbose(true);
   ::tts::_::set_quiet(false);
 
   tts::gathering_sink gs;
@@ -177,4 +178,19 @@ TTS_CASE("Range check reports the element of each bucket, under the call form of
   TTS_EXPECT(has("Input:      0, 1\n"));
   TTS_EXPECT(has("Found:      1\n"));
   TTS_EXPECT(has("instead of: 0\n"));
+};
+
+TTS_CASE("Range check that passes prints nothing without --verbose")
+{
+  ::tts::_::scoped_verbosity verbosity;
+  ::tts::_::set_verbose(false);
+  ::tts::_::set_quiet(false);
+
+  tts::gathering_sink gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK(tts::between(0.f, 100.f), float, (std::array<float, 4>), ok_x, ajar_ax, 64);
+  }
+
+  TTS_EXPECT(gs.content().is_empty());
 };
