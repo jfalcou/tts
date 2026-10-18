@@ -11,5 +11,6 @@ var searchData=
   ['precision_20utilities_8',['Precision Utilities',['../group__tools-precision.html',1,'']]],
   ['produce_9',['produce',['../group__tools-generators-custom.html#ga932f1a56fbe54c1347f9e4c8331dee49',1,'tts']]],
   ['producing_20values_20of_20a_20user_20defined_20type_10',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]],
-  ['public_20release_11',['First public release.',['../changelog.html#autotoc_md27',1,'']]]
+  ['protocol_11',['Protocol',['../compile-time.html#compile-time-comparison-protocol',1,'']]],
+  ['public_20release_12',['First public release.',['../changelog.html#autotoc_md27',1,'']]]
 ];

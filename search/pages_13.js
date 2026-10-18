@@ -6,5 +6,6 @@ var searchData=
   ['precision_20metric_3',['Precision metric',['../rationale.html#ulp-metric',1,'']]],
   ['precision_20testing_4',['Precision testing',['../rationale.html#ulp',1,'']]],
   ['producing_20values_20of_20a_20user_20defined_20type_5',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]],
-  ['public_20release_6',['First public release.',['../changelog.html#autotoc_md27',1,'']]]
+  ['protocol_6',['Protocol',['../compile-time.html#compile-time-comparison-protocol',1,'']]],
+  ['public_20release_7',['First public release.',['../changelog.html#autotoc_md27',1,'']]]
 ];

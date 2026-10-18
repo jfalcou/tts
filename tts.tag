@@ -1880,11 +1880,14 @@
     <docanchor file="compile-time.html" title="Acceptable headers">compile-time-fine</docanchor>
     <docanchor file="compile-time.html" title="TTS replacements">compile-time-precedent</docanchor>
     <docanchor file="compile-time.html" title="Other test libraries">compile-time-comparison</docanchor>
+    <docanchor file="compile-time.html" title="Protocol">compile-time-comparison-protocol</docanchor>
+    <docanchor file="compile-time.html" title="Test code">compile-time-comparison-code</docanchor>
     <docanchor file="compile-time.html" title="Include cost">compile-time-comparison-include</docanchor>
-    <docanchor file="compile-time.html" title="One test">compile-time-comparison-one</docanchor>
-    <docanchor file="compile-time.html" title="Tests in one file">compile-time-comparison-cases</docanchor>
-    <docanchor file="compile-time.html" title="Cost of one test">compile-time-comparison-tests</docanchor>
-    <docanchor file="compile-time.html" title="Tests in many files">compile-time-comparison-files</docanchor>
+    <docanchor file="compile-time.html" title="Runner libraries">compile-time-comparison-mains</docanchor>
+    <docanchor file="compile-time.html" title="Smallest executable">compile-time-comparison-one</docanchor>
+    <docanchor file="compile-time.html" title="Single-file executables">compile-time-comparison-cases</docanchor>
+    <docanchor file="compile-time.html" title="Marginal cost of a test">compile-time-comparison-tests</docanchor>
+    <docanchor file="compile-time.html" title="Multi-file executables">compile-time-comparison-files</docanchor>
   </compound>
   <compound kind="page">
     <name>customize</name>

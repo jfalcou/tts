@@ -158,19 +158,28 @@ $(function(){initNavTree('compile-time.html','',''); });
     <a href="#compile-time-comparison">Other test libraries </a>
     <ul>
       <li class="level2">
+        <a href="#compile-time-comparison-protocol">Protocol </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-comparison-code">Test code </a>
+      </li>
+      <li class="level2">
         <a href="#compile-time-comparison-include">Include cost </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-one">One test </a>
+        <a href="#compile-time-comparison-mains">Runner libraries </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-cases">Tests in one file </a>
+        <a href="#compile-time-comparison-one">Smallest executable </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-tests">Cost of one test </a>
+        <a href="#compile-time-comparison-cases">Single-file executables </a>
       </li>
       <li class="level2">
-        <a href="#compile-time-comparison-files">Tests in many files </a>
+        <a href="#compile-time-comparison-tests">Marginal cost of a test </a>
+      </li>
+      <li class="level2">
+        <a href="#compile-time-comparison-files">Multi-file executables </a>
       </li>
     </ul>
   </li>
@@ -184,42 +193,42 @@ Objectives</h2>
 <p>The library therefore holds small replacements for the facilities it needs, listed in <a class="el" href="#compile-time-precedent" title="TTS replacements">TTS replacements</a>, rather than including the standard headers.</p>
 <h2 class="doxsection"><a class="anchor" id="compile-time-cost"></a>
 Costly headers</h2>
-<p>The cost of a header is measured before the header is included, since the name of a header does not predict its cost. The times below are what a header adds to a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit, with <span class="tt">g++ 13</span> and <span class="tt">clang++ 18</span>, <span class="tt">-std=c++20</span>, best of eight runs.</p>
+<p>The cost of a header is measured before the header is included, since the name of a header does not predict its cost. The times below are what a header adds to a minimal <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> translation unit, with <span class="tt">g++ 15.2</span> and <span class="tt">clang++ 22.1</span>, <span class="tt">-std=c++20</span>, best of eight runs.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Header  </th><th class="markdownTableHeadNone">g++  </th><th class="markdownTableHeadNone">clang++  </th><th class="markdownTableHeadNone">Replacement  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;chrono&gt;</span>  </td><td class="markdownTableBodyNone">+460ms  </td><td class="markdownTableBodyNone">+680ms  </td><td class="markdownTableBodyNone"><span class="tt">now_ns()</span> in <span class="tt">tools/clock.hpp</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;chrono&gt;</span>  </td><td class="markdownTableBodyNone">+500ms  </td><td class="markdownTableBodyNone">+920ms  </td><td class="markdownTableBodyNone"><span class="tt">now_ns()</span> in <span class="tt">tools/clock.hpp</span>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;regex&gt;</span>  </td><td class="markdownTableBodyNone">+270ms  </td><td class="markdownTableBodyNone">+350ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;regex&gt;</span>  </td><td class="markdownTableBodyNone">+250ms  </td><td class="markdownTableBodyNone">+370ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;thread&gt;</span>  </td><td class="markdownTableBodyNone">+200ms  </td><td class="markdownTableBodyNone">+240ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;thread&gt;</span>  </td><td class="markdownTableBodyNone">+200ms  </td><td class="markdownTableBodyNone">+260ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;memory&gt;</span>  </td><td class="markdownTableBodyNone">+170ms  </td><td class="markdownTableBodyNone">+210ms  </td><td class="markdownTableBodyNone"><span class="tt">file_guard</span> in <span class="tt">tools/file.hpp</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;memory&gt;</span>  </td><td class="markdownTableBodyNone">+150ms  </td><td class="markdownTableBodyNone">+240ms  </td><td class="markdownTableBodyNone"><span class="tt">file_guard</span> in <span class="tt">tools/file.hpp</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;sstream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+190ms  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="structtts_1_1text.html" title="Lightweight string-like object.">tts::text</a></span> in <span class="tt">tools/text.hpp</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;sstream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+210ms  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="structtts_1_1text.html" title="Lightweight string-like object.">tts::text</a></span> in <span class="tt">tools/text.hpp</span>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;iostream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+170ms  </td><td class="markdownTableBodyNone"><span class="tt">fputs</span> on a <span class="tt">FILE*</span>, in place of <span class="tt">std::cout</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;iostream&gt;</span>  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone">+200ms  </td><td class="markdownTableBodyNone"><span class="tt">fputs</span> on a <span class="tt">FILE*</span>, in place of <span class="tt">std::cout</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;functional&gt;</span>  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone">+100ms  </td><td class="markdownTableBodyNone"><span class="tt">callable</span> in <span class="tt">tools/erased.hpp</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;functional&gt;</span>  </td><td class="markdownTableBodyNone">+90ms  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone"><span class="tt">callable</span> in <span class="tt">tools/erased.hpp</span>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;string&gt;</span>  </td><td class="markdownTableBodyNone">+90ms  </td><td class="markdownTableBodyNone">+110ms  </td><td class="markdownTableBodyNone"><a class="el" href="structtts_1_1text.html" title="tts::text">tts::text</a> in <span class="tt">tools/text.hpp</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;string&gt;</span>  </td><td class="markdownTableBodyNone">+90ms  </td><td class="markdownTableBodyNone">+140ms  </td><td class="markdownTableBodyNone"><a class="el" href="structtts_1_1text.html" title="tts::text">tts::text</a> in <span class="tt">tools/text.hpp</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;unordered_map&gt;</span>  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;unordered_map&gt;</span>  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone">+80ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;vector&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone"><span class="tt">tts::buffer</span> in <span class="tt">tools/buffer.hpp</span>  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;vector&gt;</span>  </td><td class="markdownTableBodyNone">+60ms  </td><td class="markdownTableBodyNone">+90ms  </td><td class="markdownTableBodyNone"><span class="tt">tts::buffer</span> in <span class="tt">tools/buffer.hpp</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">&lt;map&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;map&gt;</span>  </td><td class="markdownTableBodyNone">+50ms  </td><td class="markdownTableBodyNone">+70ms  </td><td class="markdownTableBodyNone">none, not used  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">a C array sized by a constant  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">&lt;array&gt;</span>  </td><td class="markdownTableBodyNone">+10ms  </td><td class="markdownTableBodyNone">+20ms  </td><td class="markdownTableBodyNone">a C array sized by a constant  </td></tr>
 </table>
 <h2 class="doxsection"><a class="anchor" id="compile-time-fine"></a>
 Acceptable headers</h2>
 <p>A standard header is allowed once measured as free:</p>
 <ul>
-<li>two translation units, identical but for the header, are compiled with <span class="tt">-std=c++20 -c</span> five to eight times each, and their best times are compared;</li>
-<li><span class="tt">g++</span> and <span class="tt">clang++</span> are both measured, since the same header costs them differently;</li>
-<li>the pull request that adds the header gives both times.</li>
+<li>Two translation units, identical but for the header, are compiled with <span class="tt">-std=c++20 -c</span> five to eight times each, and their best times are compared.</li>
+<li><span class="tt">g++</span> and <span class="tt">clang++</span> are both measured, since the same header costs them differently.</li>
+<li>The pull request that adds the header gives both times.</li>
 </ul>
 <p><span class="tt">&lt;windows.h&gt;</span> is included only on the Windows branch of <span class="tt">tools/clock.hpp</span>, guarded by <span class="tt">WIN32_LEAN_AND_MEAN</span> and <span class="tt">NOMINMAX</span>. Measured on <span class="tt">cl.exe</span>, it costs nothing relative to an empty translation unit, and less than declaring by hand the three functions it provides. Platform-specific code is measured on that platform.</p>
 <p><span class="tt">engine/deps.hpp</span>, included by nearly every <b>TTS</b> header, already includes the acceptable headers, so using one of them costs nothing more.</p>
@@ -235,76 +244,173 @@ TTS replacements</h2>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="compile-time-comparison"></a>
 Other test libraries</h1>
-<p>Each publication of this documentation builds test executables with <b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://github.com/google/googletest">GoogleTest</a>, <a href="https://github.com/boostorg/test">Boost.Test</a>, and <a href="https://github.com/boost-ext/ut">ut</a>, and measures the CPU time of their compilation and link with <span class="tt">-std=c++20</span>. Each executable runs and passes before its time is kept, and each point is the median of several builds. Each publication runs on a new CI machine, named below, and its times compare only with one another.</p>
-<p>Measured on 2026-10-18 on AMD EPYC 9V74 80-Core Processor, 4 cores, with clang++ 22.1.2, g++ 15.2.0 and <code>-O0</code>: the median of 3 builds per point, made in rounds that alternate the libraries, 2 at a time.</p>
-<p>Every test is the same trivial case, three checks on two integers. Each library is set up as its documentation sets it up:</p>
+<p>Each publication of this documentation builds test executables with <b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://github.com/google/googletest">GoogleTest</a>, <a href="https://github.com/boostorg/test">Boost.Test</a>, and <a href="https://github.com/boost-ext/ut">ut</a>, and measures the CPU time of their compilation and link with <span class="tt">-std=c++20 -O0</span>. Each executable runs and passes before its time is kept. A chart gives the median of the builds of each point, and its whisker spans the shortest and the longest of them. Each publication runs on a new CI machine, and its times compare only with one another.</p>
+<h2 class="doxsection"><a class="anchor" id="compile-time-comparison-protocol"></a>
+Protocol</h2>
 <ul>
-<li><b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> compile their runner in the unit that defines <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span>, defines <span class="tt">DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span>, or includes <span class="tt">boost/test/included/unit_test.hpp</span>: the test file of a one-file executable, and a <span class="tt">main.cpp</span> of its own otherwise.</li>
-<li><a href="https://github.com/boost-ext/ut">ut</a> runs its tests from its header, so every test file holds its runner.</li>
-<li><a href="https://github.com/catchorg/Catch2">Catch2</a> and <a href="https://github.com/google/googletest">GoogleTest</a> link <span class="tt">Catch2WithMain</span> and <span class="tt">gtest_main</span>, built once per build tree and left out of the executables.</li>
-<li><a href="https://github.com/doctest/doctest">doctest</a> checks with its decomposing <span class="tt">CHECK(a == b)</span>; its binary <span class="tt">CHECK_EQ(a, b)</span> costs less per test.</li>
+<li><b>Machine</b>: AMD EPYC 7763 64-Core Processor, 4 cores, on 2026-10-18</li>
+<li><b>Compilers</b>: clang++ 22.1.2 and g++ 15.2.0, with <code>-std=c++20 -O0</code></li>
+<li><b>Builds</b>: the median of 3 builds per point, made in rounds that alternate the libraries, 2 at a time</li>
+<li><b>Libraries</b>:<ul><li>TTS at 4.0.0</li><li>Boost.Test 1.90</li><li>Catch2 3.16.1</li><li>GoogleTest 1.18.0</li><li>doctest 2.5.3</li><li>ut 2.3.1</li></ul></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="compile-time-comparison-include"></a>
-Include cost</h2>
-<p>A test file holding neither runner nor test, compiled with <span class="tt">-c</span>. The unit of <a href="https://github.com/boost-ext/ut">ut</a> holds its runner.</p>
+<h2 class="doxsection"><a class="anchor" id="compile-time-comparison-code"></a>
+Test code</h2>
+<p>Every test is the same trivial case, which passes: two integers <span class="tt">a</span> and <span class="tt">b = a + 1</span>, and three checks.</p>
+<ul>
+<li><span class="tt">a</span> equal to its value</li>
+<li><span class="tt">a</span> different from <span class="tt">b</span></li>
+<li><span class="tt">a</span> less than <span class="tt">b</span></li>
+</ul>
+<p>Each library writes them with the checks its documentation shows, which report both operands of a failure, and runs in its default configuration. doctest and Catch2 are measured a second time with the setting their documentation gives for faster compilation, as doctest fast and Catch2 fast. The benchmark writes the code below for an executable of several files: a runner file when the library compiles its runner with the tests, and one file per test. A one-file executable holds its tests, and the runner of such a library.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-include.svg" alt="Include cost with gcc"/>
+<li><p class="startli"><b class="tab-title">TTS</b></p>
+<p class="startli"><span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span>, defined before <span class="tt">&lt;tts/tts.hpp&gt;</span>, compiles the runner in its unit: a <span class="tt">main.cpp</span> of its own, or the test file of a one-file executable. <span class="tt"><a class="el" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1" title="Performs equality comparison between two expressions.">TTS_EQUAL</a></span>, <span class="tt"><a class="el" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257" title="Performs inequality comparison between two expressions.">TTS_NOT_EQUAL</a></span>, and <span class="tt"><a class="el" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399" title="Performs less-than comparison between two expressions.">TTS_LESS</a></span> compare two values and report both on failure.</p>
+<div class="fragment"><div class="line"><span class="comment">// main.cpp</span></div>
+<div class="line"><span class="preprocessor">#define TTS_MAIN</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// test.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;case 0&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">int</span> a = 0, b = 0 + 1;</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(a, 0);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(a, b);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(a, b);</div>
+<div class="line">};</div>
+<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:215</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:194</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:173</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:204</div></div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b class="tab-title">doctest</b></p>
+<p class="startli">A test file holds no runner. Each executable links a library that the benchmark builds once per compiler from <span class="tt">doctest.h</span> with <span class="tt">DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span> defined, as the <span class="tt">doctest_with_main</span> target of its build does. That build stays out of the other results, and <a class="el" href="#compile-time-comparison-mains" title="Runner libraries">Runner libraries</a> gives its time. <span class="tt">CHECK</span> decomposes the expression it receives to report both operands of a failure. Its binary form, <span class="tt">CHECK_EQ(a, b)</span>, costs less per test. The doctest fast series compiles the same files and the library with <span class="tt">DOCTEST_CONFIG_SUPER_FAST_ASSERTS</span>, the setting its documentation gives for the fastest compile times.</p>
+<div class="fragment"><div class="line"><span class="comment">// runner, built once into a library</span></div>
+<div class="line"><span class="preprocessor">#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span></div>
+<div class="line"><span class="preprocessor">#include &lt;doctest/doctest.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// test.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;doctest/doctest.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;case 0&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">int</span> a = 0, b = 0 + 1;</div>
+<div class="line">  CHECK(a == 0);</div>
+<div class="line">  CHECK(a != b);</div>
+<div class="line">  CHECK(a &lt; b);</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b class="tab-title">Catch2</b></p>
+<p class="startli">A test file holds no runner. Each executable links a library that the benchmark builds once per compiler from the sources of <a href="https://github.com/catchorg/Catch2">Catch2</a>, <span class="tt">main</span> included, as <span class="tt">Catch2WithMain</span> does. That build stays out of the other results, and <a class="el" href="#compile-time-comparison-mains" title="Runner libraries">Runner libraries</a> gives its time. <span class="tt">CHECK</span> decomposes its expression, as in doctest. The Catch2 fast series compiles the same files and the library with <span class="tt">CATCH_CONFIG_FAST_COMPILE</span>, the setting its documentation gives for faster compilation of assertions.</p>
+<div class="fragment"><div class="line"><span class="comment">// test.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;case 0&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">int</span> a = 0, b = 0 + 1;</div>
+<div class="line">  CHECK(a == 0);</div>
+<div class="line">  CHECK(a != b);</div>
+<div class="line">  CHECK(a &lt; b);</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b class="tab-title">GoogleTest</b></p>
+<p class="startli">A test file holds no runner. Each executable links, with <span class="tt">-pthread</span>, a library that the benchmark builds once per compiler from <span class="tt">gtest-all.cc</span> and <span class="tt">gtest_main.cc</span>, as <span class="tt">gtest_main</span> does. That build stays out of the other results, and <a class="el" href="#compile-time-comparison-mains" title="Runner libraries">Runner libraries</a> gives its time. <span class="tt">EXPECT_EQ</span>, <span class="tt">EXPECT_NE</span>, and <span class="tt">EXPECT_LT</span> receive the two operands as separate arguments.</p>
+<div class="fragment"><div class="line"><span class="comment">// test.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;gtest/gtest.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line">TEST(Suite, Case0)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">int</span> a = 0, b = 0 + 1;</div>
+<div class="line">  EXPECT_EQ(a, 0);</div>
+<div class="line">  EXPECT_NE(a, b);</div>
+<div class="line">  EXPECT_LT(a, b);</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b class="tab-title">Boost.Test</b></p>
+<p class="startli">A test file holds no runner. Each executable links a library that the benchmark builds once per compiler from a unit defining <span class="tt">BOOST_TEST_MODULE</span> and including <span class="tt">boost/test/included/unit_test.hpp</span>, the compiled library its documentation recommends. That build stays out of the other results, and <a class="el" href="#compile-time-comparison-mains" title="Runner libraries">Runner libraries</a> gives its time. <span class="tt">BOOST_TEST</span> decomposes its expression. Boost.Test comes from the system of the build machine, and its results are missing without it.</p>
+<div class="fragment"><div class="line"><span class="comment">// runner, built once into a library</span></div>
+<div class="line"><span class="preprocessor">#define BOOST_TEST_MODULE bench</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/test/included/unit_test.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// test.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/test/unit_test.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line">BOOST_AUTO_TEST_CASE(case_0)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">int</span> a = 0, b = 0 + 1;</div>
+<div class="line">  BOOST_TEST(a == 0);</div>
+<div class="line">  BOOST_TEST(a != b);</div>
+<div class="line">  BOOST_TEST(a &lt; b);</div>
+<div class="line">}</div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b class="tab-title">ut</b></p>
+<p class="startli"><a href="https://github.com/boost-ext/ut">ut</a> runs the tests from the destructor of a static object of its header, so <span class="tt">main</span> is empty and each test file compiles the runner. <span class="tt">eq</span>, <span class="tt">neq</span>, and <span class="tt">lt</span> compare plain <span class="tt">int</span> and report both values, where <span class="tt">1_i</span> would create a type per value. The tests of a file share one <span class="tt">suite</span>, since <span class="tt">suite&lt;"name"&gt;</span> creates an instantiation per name.</p>
+<div class="fragment"><div class="line"><span class="comment">// test.cpp</span></div>
+<div class="line"><span class="preprocessor">#include &lt;boost/ut.hpp&gt;</span></div>
+<div class="line"><span class="keyword">using namespace </span>boost::ut;</div>
+<div class="line"><span class="keyword">static</span> suite&lt;<span class="stringliteral">&quot;s0&quot;</span>&gt; s0 = [] {</div>
+<div class="line">  <span class="stringliteral">&quot;case 0&quot;</span>_test = [] {</div>
+<div class="line">    <span class="keywordtype">int</span> a = 0, b = 0 + 1;</div>
+<div class="line">    expect(eq(a, 0));</div>
+<div class="line">    expect(neq(a, b));</div>
+<div class="line">    expect(lt(a, b));</div>
+<div class="line">  };</div>
+<div class="line">};</div>
+</div><!-- fragment --></li>
+</ul>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-include"></a>
+Include cost</h2>
+<p>A test file holding neither runner nor test, compiled with <span class="tt">-c</span>. The header of <a href="https://github.com/boost-ext/ut">ut</a> declares its runner, which the first test instantiates. The test files include no standard header: the code under test adds its own, the same for every library.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-include.svg" alt="Include cost with g++ 15.2.0 -O0"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-include.svg" alt="Include cost with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-include.svg" alt="Include cost with clang++ 22.1.2 -O0"/>
+</li>
+</ul>
+</div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-mains"></a>
+Runner libraries</h2>
+<p><a href="https://github.com/doctest/doctest">doctest</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://github.com/google/googletest">GoogleTest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> link their runner from a library, compiled from its sources once per compiler and per build tree. The executables of the next sections link it, and their times leave its build out. Each bar is one build of the library.</p>
+<div class="tabbed"></div><div class="tabbed"><ul>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-mains.svg" alt="Runner libraries with g++ 15.2.0 -O0"/>
+</li>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-mains.svg" alt="Runner libraries with clang++ 22.1.2 -O0"/>
 </li>
 </ul>
 </div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-one"></a>
-One test</h2>
-<p>An executable built from one file holding the runner and one test.</p>
+Smallest executable</h2>
+<p>An executable built from one file holding one test. The file also holds the runner of <b>TTS</b> and <a href="https://github.com/boost-ext/ut">ut</a>, and the other libraries link their library of <a class="el" href="#compile-time-comparison-mains" title="Runner libraries">Runner libraries</a>.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-one.svg" alt="One test executable with gcc"/>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-one.svg" alt="One test executable with g++ 15.2.0 -O0"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-one.svg" alt="One test executable with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-one.svg" alt="One test executable with clang++ 22.1.2 -O0"/>
 </li>
 </ul>
 </div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-cases"></a>
-Tests in one file</h2>
-<p>An executable built from one file holding the runner and a growing number of tests. Each curve is fitted by least squares to a fixed cost plus a cost per test.</p>
+Single-file executables</h2>
+<p>An executable built from one file holding the runner and a growing number of tests. The curves give no cost per test: for some libraries, the runner varies more between two builds than 50 tests add, and <a class="el" href="#compile-time-comparison-tests" title="Marginal cost of a test">Marginal cost of a test</a> measures that cost without it.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-cases.svg" alt="Executables of one file with gcc"/>
- <p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
-<tr><td>TTS</td><td>\(0.27\,\mathrm{s} + 1.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(5.12\,\mathrm{s} + 7.7\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(0.83\,\mathrm{s} + 2.9\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(0.74\,\mathrm{s} + 5.9\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.44\,\mathrm{s} + 3.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(1.40\,\mathrm{s} + 1.6\,\mathrm{ms} \cdot n\)</td></tr>
-</table>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-cases.svg" alt="Executables of one file with g++ 15.2.0 -O0"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-cases.svg" alt="Executables of one file with clang"/>
- <p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
-<table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
-<tr><td>TTS</td><td>\(0.25\,\mathrm{s} + 0.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(3.53\,\mathrm{s} + 6.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(1.59\,\mathrm{s} + 3.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(1.16\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.41\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(2.07\,\mathrm{s} + 0.6\,\mathrm{ms} \cdot n\)</td></tr>
-</table>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-cases.svg" alt="Executables of one file with clang++ 22.1.2 -O0"/>
 </li>
 </ul>
 </div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-tests"></a>
-Cost of one test</h2>
-<p>A test file without runner holding 200 tests, compiled with <span class="tt">-c</span>. The cost of one test is its time minus that of the test file with no test, divided by the number of tests. The runner stays out: for some libraries, it varies more between two builds than 50 tests add to the curve above.</p>
+Marginal cost of a test</h2>
+<p>A test file without runner holding 200 tests, compiled with <span class="tt">-c</span>. The cost of one test is its time minus that of the same file holding one test, divided by 199. The first test stays out, with what it instantiates once, such as the runner of <a href="https://github.com/boost-ext/ut">ut</a>.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-tests.svg" alt="Cost of one test with gcc"/>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-tests.svg" alt="Cost of one test with g++ 15.2.0 -O0"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-tests.svg" alt="Cost of one test with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-tests.svg" alt="Cost of one test with clang++ 22.1.2 -O0"/>
 </li>
 </ul>
 </div><div class="tabbed"></div><h2 class="doxsection"><a class="anchor" id="compile-time-comparison-files"></a>
-Tests in many files</h2>
-<p>An executable built from a runner and a growing number of files of one test each, linked together. <b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> compile their runner once, in its own file; <a href="https://github.com/boost-ext/ut">ut</a> compiles it in each file.</p>
+Multi-file executables</h2>
+<p>An executable built from a runner and a growing number of files of one test each, linked together. <b>TTS</b> compiles its runner once, in its own file. <a href="https://github.com/doctest/doctest">doctest</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://github.com/google/googletest">GoogleTest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> link it, and <a href="https://github.com/boost-ext/ut">ut</a> compiles it in each file.</p>
 <div class="tabbed"></div><div class="tabbed"><ul>
-<li><b class="tab-title">g++</b> <img src="bench/gcc-files.svg" alt="Executables of many files with gcc"/>
+<li><b class="tab-title">g++</b> <img src="bench/gcc-files.svg" alt="Executables of many files with g++ 15.2.0 -O0"/>
 </li>
-<li><b class="tab-title">clang++</b> <img src="bench/clang-files.svg" alt="Executables of many files with clang"/>
+<li><b class="tab-title">clang++</b> <img src="bench/clang-files.svg" alt="Executables of many files with clang++ 22.1.2 -O0"/>
 </li>
 </ul>
 </div><div class="tabbed"></div> </div></div><!-- contents -->

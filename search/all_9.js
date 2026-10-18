@@ -6,5 +6,7 @@ var searchData=
   ['equality_20and_20ordering_3',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['example_4',['Example',['../index.html#autotoc_md41',1,'A Short Example'],['../output-sinks.html#autotoc_md50',1,'Example'],['../output-sinks.html#autotoc_md55',1,'Example'],['../output-sinks.html#autotoc_md60',1,'Example'],['../output-sinks.html#autotoc_md67',1,'Example'],['../output-sinks.html#autotoc_md73',1,'Example']]],
   ['exception_20tests_20macros_5',['Exception Tests Macros',['../group__test-exceptions.html',1,'']]],
-  ['execution_20control_6',['Execution Control',['../cli.html#autotoc_md31',1,'']]]
+  ['executable_6',['Smallest executable',['../compile-time.html#compile-time-comparison-one',1,'']]],
+  ['executables_7',['executables',['../compile-time.html#compile-time-comparison-files',1,'Multi-file executables'],['../compile-time.html#compile-time-comparison-cases',1,'Single-file executables']]],
+  ['execution_20control_8',['Execution Control',['../cli.html#autotoc_md31',1,'']]]
 ];
