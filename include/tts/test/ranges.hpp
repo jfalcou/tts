@@ -158,6 +158,38 @@ namespace tts
       ::tts::output().write(::tts::as_text(v));
     }
 
+    // One value of the challenger as its scalars, the element of the bucket at position mark.
+    template<typename T, std::size_t N> struct group
+    {
+      T           values[ N ]; // NOSONAR - <array> costs compile time
+      std::size_t mark;
+    };
+
+    template<std::size_t N, typename T> group<T, N> make_group(T const* first, std::size_t mark)
+    {
+      group<T, N> g {{}, mark};
+      for(std::size_t k = 0; k < N; ++k)
+        g.values[ k ] = first[ k ];
+      return g;
+    }
+
+    template<typename T, std::size_t N> void show(group<T, N> const& g)
+    {
+      if constexpr(N == 1) show(g.values[ 0 ]);
+      else
+      {
+        ::tts::output().write("{ ");
+        for(std::size_t k = 0; k < N; ++k)
+        {
+          ::tts::output().write(k == 0 ? "" : " ");
+          if(k == g.mark) ::tts::output().write("*");
+          show(g.values[ k ]);
+          if(k == g.mark) ::tts::output().write("*");
+        }
+        ::tts::output().write(" }");
+      }
+    }
+
     template<typename... Ts> void show(pack<Ts...> const& p)
     {
       [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
@@ -256,8 +288,6 @@ namespace tts
                     "[TTS] tts::adapter<T>::run and retrieve are no longer the protocol. "
                     "Define element_type, size, load, and store instead.");
 
-      using samples_type = pack<As...>;
-
       template<typename G, typename RefFun, typename NewFun>
       static auto run(G const& g, RefFun reference, NewFun challenger)
       {
@@ -312,7 +342,9 @@ namespace tts
 
         std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
 
-        ulp_report<samples_type, out_type> report;
+        using samples_type     = pack<group<As, card>...>;
+
+        ulp_report<samples_type, group<out_type, card>> report;
         auto& [ max_ulp, nb_ulps, ulp_map, samples ] = report;
         constexpr std::size_t nb_buckets             = decltype(report)::nb_buckets;
 
@@ -342,8 +374,13 @@ namespace tts
 
             if(!samples[ idx ].status)
             {
+              auto mark      = i % card;
+              auto first     = i - mark;
               samples[ idx ] = {
-              true, samples_type {_::get<Ks>(inputs)[ i ]...}, new_out[ i ], ref_out[ i ]};
+              true,
+              samples_type {make_group<card>(_::get<Ks>(inputs).data() + first, mark)...},
+              make_group<card>(new_out.data() + first, mark),
+              make_group<card>(ref_out.data() + first, mark)};
             }
           }
         }

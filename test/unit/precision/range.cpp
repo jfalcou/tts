@@ -150,8 +150,9 @@ TTS_CASE("Range check on two arguments covers the product of the producers")
   TTS_EQUAL(pairs, 4096);
 };
 
-// The first odd k sits at index 1 of the block: its element alone is the sample of the 0.5 bucket.
-TTS_CASE("Range check reports the element of each bucket, under the call form of each function")
+// The first odd k sits at index 1 of the block: the 0.5 bucket marks the second lane of the first group.
+TTS_CASE(
+"Range check marks the element of each bucket in its group, under the call form of each function")
 {
   ::tts::_::scoped_verbosity verbosity;
   ::tts::_::set_verbose(true);
@@ -175,9 +176,9 @@ TTS_CASE("Range check reports the element of each bucket, under the call form of
 
   TTS_EXPECT(has("Comparing: scale(float, int) with "
                  "ajar_scale(std::array<float, 4>, std::array<int, 4>)"));
-  TTS_EXPECT(has("Input:      0, 1\n"));
-  TTS_EXPECT(has("Found:      1\n"));
-  TTS_EXPECT(has("instead of: 0\n"));
+  TTS_EXPECT(has("Input:      { 0 *0* 0 0 }, { 0 *1* 2 3 }\n"));
+  TTS_EXPECT(has("Found:      { 0 *1* 0 1 }\n"));
+  TTS_EXPECT(has("instead of: { 0 *0* 0 0 }\n"));
 };
 
 TTS_CASE("Range check that passes prints nothing without --verbose")
