@@ -336,7 +336,10 @@ namespace tts
         {
           (
           (_::get<Ks>(inputs)[ i ] =
-           ::tts::produce(type<As> {}, g.template leaf<Ks>(), (i / stride[ Ks ]) % side, side)),
+           ::tts::produce(type<As> {},
+                          g.template leaf<Ks>(),
+                          static_cast<std::ptrdiff_t>((i / stride[ Ks ]) % side),
+                          static_cast<std::ptrdiff_t>(side))),
           ...);
         }
 
