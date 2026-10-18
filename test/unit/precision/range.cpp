@@ -174,8 +174,13 @@ TTS_CASE(
     return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
   };
 
-  TTS_EXPECT(has("Comparing: scale(float, int) with "
-                 "ajar_scale(std::array<float, 4>, std::array<int, 4>)"));
+  // Type names come from tts::typename_, whose spelling depends on the compiler
+  TTS_EXPECT(has(tts::text("Comparing: scale(%s, %s) with ajar_scale(%s, %s)",
+                           tts::as_text(tts::typename_<float>).data(),
+                           tts::as_text(tts::typename_<int>).data(),
+                           tts::as_text(tts::typename_<std::array<float, 4>>).data(),
+                           tts::as_text(tts::typename_<std::array<int, 4>>).data())
+                 .data()));
   TTS_EXPECT(has("Input:      { 0 *0* 0 0 }, { 0 *1* 2 3 }\n"));
   TTS_EXPECT(has("Found:      { 0 *1* 0 1 }\n"));
   TTS_EXPECT(has("instead of: { 0 *0* 0 0 }\n"));

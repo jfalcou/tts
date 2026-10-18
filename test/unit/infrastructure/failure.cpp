@@ -124,7 +124,10 @@ TTS_CASE("Check that a broken range check prints its histogram without --verbose
     return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
   };
 
-  TTS_EXPECT(has("Comparing: same(int) with off_by_two(int)"));
+  // Type names come from tts::typename_, whose spelling depends on the compiler
+  auto int_name = tts::as_text(tts::typename_<int>);
+  TTS_EXPECT(has(
+  tts::text("Comparing: same(%s) with off_by_two(%s)", int_name.data(), int_name.data()).data()));
   TTS_EXPECT(has("Found:      2\n"));
   TTS_EXPECT(has("instead of: 0\n"));
 };
