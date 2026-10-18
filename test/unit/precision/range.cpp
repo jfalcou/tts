@@ -195,3 +195,17 @@ TTS_CASE("Range check that passes prints nothing without --verbose")
 
   TTS_EXPECT(gs.content().is_empty());
 };
+
+TTS_CASE("Range check hands its generators the signed index of TTS_CASE_WITH")
+{
+  bool signed_index = false;
+  auto probe        = [ & ](auto, auto i, auto)
+  {
+    signed_index = std::is_signed_v<decltype(i)>;
+    return static_cast<int>(i);
+  };
+
+  auto same = [](int x) { return x; };
+  TTS_ULP_RANGE_CHECK(probe, int, int, same, same, 0.);
+  TTS_EXPECT(signed_index);
+};
