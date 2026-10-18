@@ -80,7 +80,7 @@ if(TTS_BUILD_DOCUMENTATION)
     add_dependencies(tts-doxygen tts-compile-bench)
   else()
     # The page includes this block whether or not the comparison runs.
-    foreach(block meta include-gcc include-clang one-gcc one-clang cases-gcc cases-clang fits-gcc fits-clang
+    foreach(block meta include-gcc include-clang one-gcc one-clang mains-gcc mains-clang cases-gcc cases-clang
                   tests-gcc tests-clang files-gcc files-clang)
       file(WRITE "${PROJECT_BINARY_DIR}/doc/bench/bench-${block}.html"
            "<p>This build of the documentation did not run the comparison.</p>\n")
