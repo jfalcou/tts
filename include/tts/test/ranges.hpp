@@ -10,17 +10,36 @@
 
 namespace tts
 {
-  template<typename Base> struct adapter
+  //====================================================================================================================
+  /*!
+    @ingroup tools-precision
+    @brief Make a type usable in a range check
+
+    A range check stores its data as scalars, and a specialization maps a type to them:
+    `element_type` is the scalar, `size` the number of scalars per value, `load` and `store` the
+    conversions between a value and `size` consecutive scalars. The primary template covers a
+    scalar type, with `size` equal to one.
+
+    @groupheader{Example}
+    @snippet doc/range_adapter.cpp snippet
+
+    @tparam T Type to adapt
+  **/
+  //====================================================================================================================
+  template<typename T> struct adapter
   {
-    template<typename U, typename Func> static void run(Base const*& src, U*& dst, Func f) noexcept
-    {
-      *dst++ = f(*src++);
-    }
-    static auto retrieve(Base const* src) noexcept
+    using element_type                = T;
+    static constexpr std::size_t size = 1;
+
+    static T                     load(T const* src) noexcept
     {
       return *src;
     }
-    static void display(Base const& v) noexcept
+    static void store(T const& v, T* dst) noexcept
+    {
+      *dst = v;
+    }
+    static void display(T const& v) noexcept
     {
       output().write(as_text(v));
     }
@@ -28,22 +47,87 @@ namespace tts
 
   namespace _
   {
+    // A tuple, <tuple> being outside the include budget of TTS. Can't use kumi for dependency issues.
+    template<std::size_t I, typename T> struct leaf
+    {
+      T value;
+    };
+
+    template<typename Seq, typename... Ts> struct pack_base;
+
+    template<std::size_t... Is, typename... Ts>
+    struct pack_base<std::index_sequence<Is...>, Ts...> : leaf<Is, Ts>...
+    {
+      pack_base() = default;
+      explicit pack_base(Ts... ts)
+          : leaf<Is, Ts> {static_cast<Ts&&>(ts)}...
+      {
+      }
+    };
+
+    template<typename... Ts> struct pack : pack_base<std::index_sequence_for<Ts...>, Ts...>
+    {
+      using base_type = pack_base<std::index_sequence_for<Ts...>, Ts...>;
+      using base_type::base_type;
+    };
+
+    template<std::size_t I, typename T> constexpr T& get(leaf<I, T>& l) noexcept
+    {
+      return l.value;
+    }
+
+    template<std::size_t I, typename T> constexpr T const& get(leaf<I, T> const& l) noexcept
+    {
+      return l.value;
+    }
+
+    // A single producer serves every argument of the check.
+    template<typename... Gs> struct grid
+    {
+      template<std::size_t K> auto const& leaf() const noexcept
+      {
+        if constexpr(sizeof...(Gs) == 1) return _::get<0>(leaves);
+        else return _::get<K>(leaves);
+      }
+
+      pack<Gs...> leaves;
+    };
+
+    template<typename T> struct is_grid : std::false_type
+    {
+    };
+
+    template<typename... Gs> struct is_grid<grid<Gs...>> : std::true_type
+    {
+    };
+
+    template<typename... Gs> grid<Gs...> make_grid(Gs... gs)
+    {
+      return grid<Gs...> {pack<Gs...> {static_cast<Gs&&>(gs)...}};
+    }
+
+    // A block of count tuples is the full product of r samples per argument.
+    inline std::size_t grid_side(std::size_t count, std::size_t arity) noexcept
+    {
+      if(arity == 1) return count;
+
+      std::size_t r = 1;
+      for(;;)
+      {
+        std::size_t p = 1;
+        for(std::size_t k = 0; k < arity; ++k)
+          p *= r;
+        if(p >= count) return r;
+        ++r;
+      }
+    }
+
     template<typename Input, typename Output> struct histogram_entry
     {
       bool   status;
       Input  input_value;
       Output found_value, ref_value;
     };
-
-    template<typename Type, typename In, typename Out, typename Func>
-    void compute(In const& inputs, Out& outputs, Func fn)
-    {
-      auto in  = inputs.data();
-      auto end = inputs.data() + inputs.size();
-      auto out = outputs.data();
-      while(in != end)
-        adapter<Type>::run(in, out, fn);
-    }
 
     inline std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
     {
@@ -74,6 +158,19 @@ namespace tts
       ::tts::output().writeln();
     }
 
+    template<typename V> void show(V const& v)
+    {
+      adapter<V>::display(v);
+    }
+
+    template<typename... Ws> void show(pack<Ws...> const& p)
+    {
+      [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
+      {
+        ((::tts::output().write(Ks ? ", " : ""), adapter<Ws>::display(_::get<Ks>(p))), ...);
+      }(std::index_sequence_for<Ws...> {});
+    }
+
     template<typename U, typename R, typename V>
     void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
     {
@@ -81,97 +178,174 @@ namespace tts
       if(::tts::is_quiet()) return;
       if(ulp != -1) ::tts::output().write("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
       else ::tts::output().write("%*s", static_cast<int>(48 + strlen(desc)), desc); // NOSONAR
-      adapter<V>::display(v);
+      show(v);
       ::tts::output().writeln();
     }
 
-    template<typename P> void print_producer(P const& prod, auto alt)
+    template<typename... Gs> void print_producer(grid<Gs...> const& prod, auto alt)
     {
       if(::tts::is_quiet()) return;
-      if constexpr(::tts::_::described<P>) ::tts::output().writeln(::tts::as_text(prod));
+      if constexpr((::tts::_::described<Gs> && ...))
+      {
+        [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
+        {
+          (
+          (::tts::output().write(Ks ? ", " : ""),
+           ::tts::output().write(::tts::as_text(_::get<Ks>(prod.leaves)))),
+          ...);
+        }(std::index_sequence_for<Gs...> {});
+        ::tts::output().writeln();
+      }
       else ::tts::output().writeln(alt);
     }
+
+    template<typename RefList, typename NewList> struct ulp_scan;
+
+    template<typename... As, typename... Ws> struct ulp_scan<types<As...>, types<Ws...>>
+    {
+      static_assert(sizeof...(As) == sizeof...(Ws),
+                    "[TTS] TTS_ULP_RANGE_CHECK needs one challenger type per reference type.");
+
+      static_assert((!requires { &adapter<Ws>::retrieve; } && ...),
+                    "[TTS] tts::adapter<T>::run and retrieve are no longer the protocol. "
+                    "Define element_type, size, load, and store instead.");
+
+      using samples_type = pack<Ws...>;
+
+      template<typename G, typename RefFun, typename NewFun>
+      static double run(G const& g, RefFun reference, NewFun challenger)
+      {
+        return run(std::index_sequence_for<As...> {}, g, reference, challenger);
+      }
+
+      template<std::size_t... Ks, typename G, typename RefFun, typename NewFun>
+      static double run(std::index_sequence<Ks...>, G const& g, RefFun reference, NewFun challenger)
+      {
+        using out_type              = std::decay_t<std::invoke_result_t<RefFun, As...>>;
+        using nout_type             = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
+
+        constexpr std::size_t arity = sizeof...(As);
+        constexpr std::size_t card  = adapter<nout_type>::size;
+
+        static_assert(((adapter<Ws>::size == card) && ...),
+                      "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type and its result to "
+                      "hold the same number of elements.");
+        static_assert((std::is_same_v<typename adapter<Ws>::element_type, As> && ...),
+                      "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type to hold elements of "
+                      "its reference type.");
+        static_assert(std::is_same_v<typename adapter<nout_type>::element_type, out_type>,
+                      "[TTS] TTS_ULP_RANGE_CHECK needs the challenger result to hold elements of "
+                      "the reference result type.");
+
+        //-- Find how many elements in a block, whole groups only
+        std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
+        count             = ((count + card - 1) / card) * card;
+
+        //-- Prepare blocks: every combination of the arguments' samples
+        std::size_t side = grid_side(count, arity);
+        std::size_t stride[ arity ]; // NOSONAR - <array> costs compile time
+        {
+          std::size_t s = 1;
+          for(std::size_t k = arity; k-- > 0;)
+          {
+            stride[ k ]  = s;
+            s           *= side;
+          }
+        }
+
+        buffer<out_type>    ref_out(count), new_out(count);
+        pack<buffer<As>...> inputs {buffer<As>(count)...};
+
+        for(std::size_t i = 0; i < count; ++i)
+        {
+          (
+          (_::get<Ks>(inputs)[ i ] =
+           ::tts::produce(type<As> {}, g.template leaf<Ks>(), (i / stride[ Ks ]) % side, side)),
+          ...);
+        }
+
+        std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+
+        double               max_ulp    = 0.;
+        std::size_t          nb_buckets = 2 + 1 + 16;
+        std::size_t          nb_ulps    = 0;
+        buffer<unsigned int> ulp_map(nb_buckets, 0);
+
+        buffer<histogram_entry<samples_type, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
+
+        for(std::size_t r = 0; r < repetition; ++r)
+        {
+          //--- Compute reference & challenger outputs
+          for(std::size_t i = 0; i < count; ++i)
+          {
+            ref_out[ i ] = reference(_::get<Ks>(inputs)[ i ]...);
+          }
+
+          for(std::size_t i = 0; i < count; i += card)
+          {
+            auto res = challenger(adapter<Ws>::load(_::get<Ks>(inputs).data() + i)...);
+            adapter<nout_type>::store(res, new_out.data() + i);
+          }
+
+          //--- Compute ulp distances
+          for(std::size_t i = 0; i < count; ++i)
+          {
+            nb_ulps++;
+            auto ulp = ::tts::ulp_check(ref_out[ i ], new_out[ i ]);
+            max_ulp  = _::max(max_ulp, ulp);
+
+            auto idx = _::last_bucket_less(nb_buckets, ulp);
+            ulp_map[ idx ]++;
+
+            if(!samples[ idx ].status)
+            {
+              auto base      = (i / card) * card;
+              samples[ idx ] = {
+              true,
+              samples_type {adapter<Ws>::load(_::get<Ks>(inputs).data() + base)...},
+              adapter<nout_type>::load(new_out.data() + base),
+              adapter<nout_type>::load(ref_out.data() + base)};
+            }
+          }
+        }
+
+        _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
+        _::separator(!::tts::is_quiet());
+
+        double ratio = 0.;
+
+        for(std::size_t i = 0; i < ulp_map.size(); ++i)
+        {
+          if(ulp_map[ i ] != 0)
+          {
+            double ulps  = 0;
+            ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
+
+            if(i <= 3) ulps = static_cast<double>(i) / 2.0;
+            else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
+            else ulps = 1 << (i - 4);
+
+            auto const& [ s, in, out, ref ] = samples[ i ];
+
+            _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
+            _::results(-1., 0, 0., "Found:      ", out);
+            _::results(-1., 0, 0., "instead of: ", ref);
+            _::separator(!::tts::is_quiet());
+          }
+        }
+
+        return max_ulp;
+      }
+    };
   }
 
   template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
   double ulp_histogram(Generator g, RefFun reference, NewFun challenger)
   {
-    using out_type  = std::decay_t<std::invoke_result_t<RefFun, RefType>>;
-    using nout_type = std::decay_t<std::invoke_result_t<NewFun, NewType>>;
+    using scan = _::ulp_scan<as_type_list_t<RefType>, as_type_list_t<NewType>>;
 
-    //-- Find how many elements in a block
-    std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
-
-    //-- Prepare blocks
-    buffer<out_type> ref_out(count), new_out(count);
-    buffer<RefType>  inputs(count);
-
-    for(std::size_t i = 0; i < inputs.size(); ++i)
-      inputs[ i ] = ::tts::produce(type<RefType> {}, g, i, count);
-
-    std::size_t          repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
-
-    double               max_ulp    = 0.;
-    std::size_t          nb_buckets = 2 + 1 + 16;
-    std::size_t          nb_ulps    = 0;
-    buffer<unsigned int> ulp_map(nb_buckets, 0);
-
-    buffer<_::histogram_entry<NewType, nout_type>> samples(nb_buckets, {false, {}, {}, {}});
-
-    for(std::size_t r = 0; r < repetition; ++r)
-    {
-      //--- Compute reference & challenger outputs
-      _::compute<RefType>(inputs, ref_out, reference);
-      _::compute<NewType>(inputs, new_out, challenger);
-
-      //--- Compute ulp distances
-      buffer<double> ulpdists(count);
-
-      for(std::size_t i = 0; i < ulpdists.size(); ++i)
-      {
-        nb_ulps++;
-        ulpdists[ i ] = ::tts::ulp_check(ref_out[ i ], new_out[ i ]);
-        max_ulp       = _::max(max_ulp, ulpdists[ i ]);
-
-        auto idx      = _::last_bucket_less(nb_buckets, ulpdists[ i ]);
-        ulp_map[ idx ]++;
-
-        if(!samples[ idx ].status)
-        {
-          samples[ idx ] = {true,
-                            adapter<NewType>::retrieve(&inputs[ i ]),
-                            adapter<nout_type>::retrieve(&new_out[ i ]),
-                            adapter<nout_type>::retrieve(&ref_out[ i ])};
-        }
-      }
-    }
-
-    _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
-    _::separator(!::tts::is_quiet());
-
-    double ratio = 0.;
-
-    for(std::size_t i = 0; i < ulp_map.size(); ++i)
-    {
-      if(ulp_map[ i ] != 0)
-      {
-        double ulps  = 0;
-        ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
-
-        if(i <= 3) ulps = static_cast<double>(i) / 2.0;
-        else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
-        else ulps = 1 << (i - 4);
-
-        auto [ s, in, out, ref ] = samples[ i ];
-
-        _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-        _::results(-1., 0, 0., "Found:      ", out);
-        _::results(-1., 0, 0., "instead of: ", ref);
-        _::separator(!::tts::is_quiet());
-      }
-    }
-
-    return max_ulp;
+    if constexpr(_::is_grid<Generator>::value) return scan::run(g, reference, challenger);
+    else return scan::run(_::make_grid(g), reference, challenger);
   }
 }
 
@@ -184,9 +358,13 @@ namespace tts
   Evaluates the histogram of ULP difference between two functions run on the same data set and that
   they lie in a given [ULP distance](rationale.html#ulp).
 
-  @param Producer Data set generator to use.
-  @param RefType  Type to use as reference function input.
-  @param NewType  Type to use as challenger function input.
+  A function of several arguments takes a tts::types list as `RefType` and as `NewType`, one type
+  per argument in the order of the call, and a producer per argument between parentheses, or a
+  single one for all. A block is then the product of the samples of the arguments.
+
+  @param Producer Data set generator to use, or one per argument between parentheses.
+  @param RefType  Type to use as reference function input, or a tts::types list of them.
+  @param NewType  Type to use as challenger function input, or a tts::types list of them.
   @param RefFunc  Reference function to compare to.
   @param NewFunc  Challenger function to be compared to the reference one.
   @param Ulpmax   Maximal ULPs acceptable for passing the test.
@@ -208,7 +386,7 @@ namespace tts
                             TTS_STRING(NewFunc),                                                   \
                             TTS_STRING(TTS_REMOVE_PARENS(NewType)));                               \
                                                                                                    \
-    auto local_tts_generator = TTS_REMOVE_PARENS(Producer);                                        \
+    auto local_tts_generator = ::tts::_::make_grid(TTS_REMOVE_PARENS(Producer));                   \
     ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));        \
                                                                                                    \
     double tts_ulp_max         = Ulpmax;                                                           \
