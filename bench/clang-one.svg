@@ -2,28 +2,30 @@
 <text x="96" y="22" fill="#808080" font-size="14">clang++ 22.1.2 -O0, one file: runner and 1 test</text>
 <line x1="96.0" x2="96.0" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
 <text x="96.0" y="224" fill="#808080" text-anchor="middle">0 s</text>
-<line x1="247.3" x2="247.3" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
-<text x="247.3" y="224" fill="#808080" text-anchor="middle">2 s</text>
-<line x1="398.7" x2="398.7" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
-<text x="398.7" y="224" fill="#808080" text-anchor="middle">4 s</text>
+<line x1="209.5" x2="209.5" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
+<text x="209.5" y="224" fill="#808080" text-anchor="middle">1 s</text>
+<line x1="323.0" x2="323.0" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
+<text x="323.0" y="224" fill="#808080" text-anchor="middle">2 s</text>
+<line x1="436.5" x2="436.5" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
+<text x="436.5" y="224" fill="#808080" text-anchor="middle">3 s</text>
 <line x1="550.0" x2="550.0" y1="40" y2="208" stroke="#808080" stroke-opacity="0.3"/>
-<text x="550.0" y="224" fill="#808080" text-anchor="middle">6 s</text>
+<text x="550.0" y="224" fill="#808080" text-anchor="middle">4 s</text>
 <text x="88" y="58" fill="#d1495b" font-weight="bold" text-anchor="end">TTS</text>
-<rect x="96" y="46" width="25.7" height="16" fill="#d1495b"/>
-<text x="127.7" y="58" fill="#808080">0.34 s</text>
+<rect x="96" y="46" width="27.9" height="16" fill="#d1495b"/>
+<text x="129.9" y="58" fill="#808080">0.25 s</text>
 <text x="88" y="86" fill="#e09f3e" font-weight="bold" text-anchor="end">GoogleTest</text>
-<rect x="96" y="74" width="123.4" height="16" fill="#e09f3e"/>
-<text x="225.4" y="86" fill="#808080">1.63 s</text>
+<rect x="96" y="74" width="131.6" height="16" fill="#e09f3e"/>
+<text x="233.6" y="86" fill="#808080">1.16 s</text>
 <text x="88" y="114" fill="#3fa34d" font-weight="bold" text-anchor="end">doctest</text>
-<rect x="96" y="102" width="155.7" height="16" fill="#3fa34d"/>
-<text x="257.7" y="114" fill="#808080">2.06 s</text>
+<rect x="96" y="102" width="159.1" height="16" fill="#3fa34d"/>
+<text x="261.1" y="114" fill="#808080">1.40 s</text>
 <text x="88" y="142" fill="#2e86ab" font-weight="bold" text-anchor="end">Catch2</text>
-<rect x="96" y="130" width="167.5" height="16" fill="#2e86ab"/>
-<text x="269.5" y="142" fill="#808080">2.21 s</text>
+<rect x="96" y="130" width="179.5" height="16" fill="#2e86ab"/>
+<text x="281.5" y="142" fill="#808080">1.58 s</text>
 <text x="88" y="170" fill="#5c8a8a" font-weight="bold" text-anchor="end">ut</text>
-<rect x="96" y="158" width="224.8" height="16" fill="#5c8a8a"/>
-<text x="326.8" y="170" fill="#808080">2.97 s</text>
+<rect x="96" y="158" width="236.2" height="16" fill="#5c8a8a"/>
+<text x="338.2" y="170" fill="#808080">2.08 s</text>
 <text x="88" y="198" fill="#8e6bbf" font-weight="bold" text-anchor="end">Boost.Test</text>
-<rect x="96" y="186" width="381.0" height="16" fill="#8e6bbf"/>
-<text x="483.0" y="198" fill="#808080">5.03 s</text>
+<rect x="96" y="186" width="400.4" height="16" fill="#8e6bbf"/>
+<text x="502.4" y="198" fill="#808080">3.53 s</text>
 </svg>

@@ -236,7 +236,7 @@ TTS replacements</h2>
 <h1 class="doxsection"><a class="anchor" id="compile-time-comparison"></a>
 Other test libraries</h1>
 <p>Each publication of this documentation builds test executables with <b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, <a href="https://github.com/catchorg/Catch2">Catch2</a>, <a href="https://github.com/google/googletest">GoogleTest</a>, <a href="https://github.com/boostorg/test">Boost.Test</a>, and <a href="https://github.com/boost-ext/ut">ut</a>, and measures the CPU time of their compilation and link with <span class="tt">-std=c++20</span>. Each executable runs and passes before its time is kept, and each point is the median of several builds. Each publication runs on a new CI machine, named below, and its times compare only with one another.</p>
-<p>Measured on 2026-10-14 on AMD EPYC 7763 64-Core Processor, 4 cores, with clang++ 22.1.2, g++ 15.2.0 and <code>-O0</code>: the median of 3 builds per point, made in rounds that alternate the libraries, 2 at a time.</p>
+<p>Measured on 2026-10-18 on AMD EPYC 9V74 80-Core Processor, 4 cores, with clang++ 22.1.2, g++ 15.2.0 and <code>-O0</code>: the median of 3 builds per point, made in rounds that alternate the libraries, 2 at a time.</p>
 <p>Every test is the same trivial case, three checks on two integers. Each library is set up as its documentation sets it up:</p>
 <ul>
 <li><b>TTS</b>, <a href="https://github.com/doctest/doctest">doctest</a>, and <a href="https://github.com/boostorg/test">Boost.Test</a> compile their runner in the unit that defines <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span>, defines <span class="tt">DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span>, or includes <span class="tt">boost/test/included/unit_test.hpp</span>: the test file of a one-file executable, and a <span class="tt">main.cpp</span> of its own otherwise.</li>
@@ -269,23 +269,23 @@ Tests in one file</h2>
 <li><b class="tab-title">g++</b> <img src="bench/gcc-cases.svg" alt="Executables of one file with gcc"/>
  <p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
-<tr><td>TTS</td><td>\(0.34\,\mathrm{s} + 2.1\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(6.17\,\mathrm{s} + 12.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(1.02\,\mathrm{s} + 4.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(0.92\,\mathrm{s} + 8.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.81\,\mathrm{s} + 5.4\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(1.76\,\mathrm{s} + 2.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>TTS</td><td>\(0.27\,\mathrm{s} + 1.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(5.12\,\mathrm{s} + 7.7\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(0.83\,\mathrm{s} + 2.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(0.74\,\mathrm{s} + 5.9\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.44\,\mathrm{s} + 3.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(1.40\,\mathrm{s} + 1.6\,\mathrm{ms} \cdot n\)</td></tr>
 </table>
 </li>
 <li><b class="tab-title">clang++</b> <img src="bench/clang-cases.svg" alt="Executables of one file with clang"/>
  <p>Cost of an executable from one file holding \(n\) tests, fitted as a fixed part and a part per test:</p>
 <table class="markdownTable"><tr class="markdownTableHead"><th>Library</th><th>Cost</th></tr>
-<tr><td>TTS</td><td>\(0.34\,\mathrm{s} + 1.2\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(5.01\,\mathrm{s} + 9.8\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(2.20\,\mathrm{s} + 5.0\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(1.63\,\mathrm{s} + 5.5\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(2.05\,\mathrm{s} + 4.9\,\mathrm{ms} \cdot n\)</td></tr>
-<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(2.97\,\mathrm{s} + 1.2\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td>TTS</td><td>\(0.25\,\mathrm{s} + 0.8\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boostorg/test">Boost.Test</a></td><td>\(3.53\,\mathrm{s} + 6.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/catchorg/Catch2">Catch2</a></td><td>\(1.59\,\mathrm{s} + 3.4\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/google/googletest">GoogleTest</a></td><td>\(1.16\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/doctest/doctest">doctest</a></td><td>\(1.41\,\mathrm{s} + 3.5\,\mathrm{ms} \cdot n\)</td></tr>
+<tr><td><a href="https://github.com/boost-ext/ut">ut</a></td><td>\(2.07\,\mathrm{s} + 0.6\,\mathrm{ms} \cdot n\)</td></tr>
 </table>
 </li>
 </ul>
