@@ -9,24 +9,23 @@
 //! [snippet]
 #define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
+#include <cmath>
 
-float ok_x(float x)
+float my_ldexp(float x, int n)
 {
-  return x;
-}
-float bad_x(float x)
-{
-  return x + x * 1e-7f;
+  return x * std::exp2(static_cast<float>(n));
 }
 
-TTS_CASE("Test range check")
+TTS_CASE("Check my_ldexp against std::ldexp")
 {
-  TTS_ULP_RANGE_CHECK([](auto, auto i, auto c)
-                      { return 100.f * static_cast<float>(i) / static_cast<float>(c); },
-                      float,
-                      float,
-                      ok_x,
-                      bad_x,
-                      2.);
+  auto std_ldexp = [](float x, int n) { return std::ldexp(x, n); };
+
+  // One generator per argument: every x is checked with every n from -32 to 31
+  TTS_ULP_RANGE_CHECK((tts::between(-1.f, 1.f), tts::ramp(-32)),
+                      (tts::types<float, int>),
+                      (tts::types<float, int>),
+                      std_ldexp,
+                      my_ldexp,
+                      0.);
 };
 //! [snippet]
