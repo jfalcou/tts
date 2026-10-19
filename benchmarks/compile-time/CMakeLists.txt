@@ -63,13 +63,16 @@ set(LIBRARIES
     "--main=catch2_fast=@${CMAKE_CURRENT_BINARY_DIR}/catch2-main.txt"
     "--main=gtest=@${CMAKE_CURRENT_BINARY_DIR}/gtest-main.txt")
 
-execute_process(COMMAND git rev-parse --short HEAD WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+## The CI container checks the sources out under another user, which git refuses without safe.directory.
+execute_process(COMMAND git -c safe.directory=* rev-parse --short HEAD WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                 OUTPUT_VARIABLE TTS_BENCH_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-if(NOT TTS_BENCH_COMMIT)
-  set(TTS_BENCH_COMMIT "${PROJECT_VERSION}")
+if(TTS_BENCH_COMMIT)
+  set(TTS_BENCH_VERSION "at ${TTS_BENCH_COMMIT}")
+else()
+  set(TTS_BENCH_VERSION "${PROJECT_VERSION}")
 endif()
 set(VERSIONS
-    "--version=tts=at ${TTS_BENCH_COMMIT}"
+    "--version=tts=${TTS_BENCH_VERSION}"
     "--version=doctest=${TTS_BENCH_DOCTEST_VERSION}"
     "--version=catch2=${TTS_BENCH_CATCH2_VERSION}"
     "--version=gtest=${TTS_BENCH_GTEST_VERSION}"
