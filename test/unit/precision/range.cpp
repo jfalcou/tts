@@ -145,7 +145,7 @@ TTS_CASE("Range check on two arguments covers the product of the producers")
   int pairs = 0;
   for(auto const& row: seen)
     for(bool b: row)
-      pairs += b;
+      pairs += b ? 1 : 0;
 
   TTS_EQUAL(pairs, 4096);
 };
@@ -204,9 +204,9 @@ TTS_CASE("Range check that passes prints nothing without --verbose")
 TTS_CASE("Range check hands its generators the signed index of TTS_CASE_WITH")
 {
   bool signed_index = false;
-  auto probe        = [ & ](auto, auto i, auto)
+  auto probe        = [ & ]<typename I>(auto, I i, auto)
   {
-    signed_index = std::is_signed_v<decltype(i)>;
+    signed_index = std::is_signed_v<I>;
     return static_cast<int>(i);
   };
 
