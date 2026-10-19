@@ -21,17 +21,17 @@
 <text x="326.0" y="324.2" fill="#808080" text-anchor="middle">4.9 s</text>
 <text x="326.0" y="356.0" fill="#8e6bbf" font-weight="bold" text-anchor="middle">Boost.Test</text>
 <text x="326.0" y="369.0" fill="#808080" text-anchor="middle">1 unit</text>
-<rect x="401.6" y="327.5" width="64.8" height="12.5" fill="#e09f3e"/>
-<text x="434.0" y="321.5" fill="#808080" text-anchor="middle">6.3 s</text>
+<rect x="401.6" y="327.7" width="64.8" height="12.3" fill="#e09f3e"/>
+<text x="434.0" y="321.7" fill="#808080" text-anchor="middle">6.2 s</text>
 <text x="434.0" y="356.0" fill="#e09f3e" font-weight="bold" text-anchor="middle">GoogleTest</text>
 <text x="434.0" y="369.0" fill="#808080" text-anchor="middle">2 units</text>
-<rect x="509.6" y="54.8" width="64.8" height="285.2" fill="#7fb8d6"/>
-<text x="542.0" y="48.8" fill="#808080" text-anchor="middle">142.6 s</text>
+<rect x="509.6" y="57.3" width="64.8" height="282.7" fill="#7fb8d6"/>
+<text x="542.0" y="51.3" fill="#808080" text-anchor="middle">141.3 s</text>
 <text x="542.0" y="356.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">Catch2</text>
 <text x="542.0" y="369.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">fast</text>
 <text x="542.0" y="382.0" fill="#808080" text-anchor="middle">108 units</text>
-<rect x="617.6" y="52.6" width="64.8" height="287.4" fill="#2e86ab"/>
-<text x="650.0" y="46.6" fill="#808080" text-anchor="middle">143.7 s</text>
+<rect x="617.6" y="56.0" width="64.8" height="284.0" fill="#2e86ab"/>
+<text x="650.0" y="50.0" fill="#808080" text-anchor="middle">142.0 s</text>
 <text x="650.0" y="356.0" fill="#2e86ab" font-weight="bold" text-anchor="middle">Catch2</text>
 <text x="650.0" y="369.0" fill="#808080" text-anchor="middle">108 units</text>
 </svg>
