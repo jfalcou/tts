@@ -61,6 +61,15 @@ namespace tts::_
 #endif
 
 //======================================================================================================================
+// MSVC ignores [[no_unique_address]] and clang-cl rejects it: both take the msvc:: spelling
+//======================================================================================================================
+#if defined(_MSC_VER)
+#define TTS_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
+#else
+#define TTS_NO_UNIQUE_ADDRESS [[no_unique_address]]
+#endif
+
+//======================================================================================================================
 // Macro chains for proper unique line based ID generation
 //======================================================================================================================
 #ifndef TTS_FUNCTION

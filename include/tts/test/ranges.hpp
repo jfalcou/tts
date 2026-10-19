@@ -46,7 +46,7 @@ namespace tts
     // A tuple, <tuple> being outside the include budget of TTS. Can't use kumi for dependency issues.
     template<std::size_t I, typename T> struct leaf
     {
-      [[no_unique_address]] T value;
+      TTS_NO_UNIQUE_ADDRESS T value;
     };
 
     template<typename Seq, typename... Ts> struct pack_base;
@@ -86,7 +86,7 @@ namespace tts
         else return _::get<K>(leaves);
       }
 
-      pack<Gs...> leaves;
+      TTS_NO_UNIQUE_ADDRESS pack<Gs...> leaves;
     };
 
     template<typename T> struct is_grid : std::false_type
