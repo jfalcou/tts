@@ -2,61 +2,56 @@
 <text x="56.0" y="22.0" fill="#808080" font-size="14">clang++ 22.1.2 -O0, a test file with no test</text>
 <line x1="56.0" x2="704.0" y1="340.0" y2="340.0" stroke="#808080" stroke-opacity="0.3"/>
 <text x="50.0" y="344.0" fill="#808080" text-anchor="end">0 s</text>
-<line x1="56.0" x2="704.0" y1="265.0" y2="265.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="269.0" fill="#808080" text-anchor="end">0.5 s</text>
-<line x1="56.0" x2="704.0" y1="190.0" y2="190.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="194.0" fill="#808080" text-anchor="end">1 s</text>
-<line x1="56.0" x2="704.0" y1="115.0" y2="115.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="119.0" fill="#808080" text-anchor="end">1.5 s</text>
+<line x1="56.0" x2="704.0" y1="240.0" y2="240.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50.0" y="244.0" fill="#808080" text-anchor="end">1 s</text>
+<line x1="56.0" x2="704.0" y1="140.0" y2="140.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50.0" y="144.0" fill="#808080" text-anchor="end">2 s</text>
 <line x1="56.0" x2="704.0" y1="40.0" y2="40.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="44.0" fill="#808080" text-anchor="end">2 s</text>
-<rect x="72.2" y="333.9" width="48.6" height="6.1" fill="#3fa34d"/>
-<text x="96.5" y="327.6" fill="#808080" text-anchor="middle">0.041 s</text>
-<text x="96.5" y="356.0" fill="#3fa34d" font-weight="bold" text-anchor="middle">doctest</text>
-<text x="96.5" y="369.0" fill="#808080" text-anchor="middle">102 MiB</text>
-<rect x="153.2" y="333.8" width="48.6" height="6.2" fill="#86c98e"/>
-<text x="177.5" y="327.7" fill="#808080" text-anchor="middle">0.042 s</text>
-<text x="177.5" y="356.0" fill="#86c98e" font-weight="bold" text-anchor="middle">doctest</text>
-<text x="177.5" y="369.0" fill="#86c98e" font-weight="bold" text-anchor="middle">fast</text>
-<text x="177.5" y="382.0" fill="#808080" text-anchor="middle">103 MiB</text>
-<rect x="234.2" y="321.4" width="48.6" height="18.6" fill="#d1495b"/>
-<text x="258.5" y="314.6" fill="#808080" text-anchor="middle">0.124 s</text>
+<text x="50.0" y="44.0" fill="#808080" text-anchor="end">3 s</text>
+<rect x="72.2" y="335.0" width="48.6" height="5.0" fill="#86c98e"/>
+<text x="96.5" y="328.9" fill="#808080" text-anchor="middle">0.050 s</text>
+<text x="96.5" y="356.0" fill="#86c98e" font-weight="bold" text-anchor="middle">doctest</text>
+<text x="96.5" y="369.0" fill="#86c98e" font-weight="bold" text-anchor="middle">fast</text>
+<text x="96.5" y="382.0" fill="#808080" text-anchor="middle">102 MiB</text>
+<rect x="153.2" y="334.9" width="48.6" height="5.1" fill="#3fa34d"/>
+<text x="177.5" y="328.9" fill="#808080" text-anchor="middle">0.051 s</text>
+<text x="177.5" y="356.0" fill="#3fa34d" font-weight="bold" text-anchor="middle">doctest</text>
+<text x="177.5" y="369.0" fill="#808080" text-anchor="middle">102 MiB</text>
+<rect x="234.2" y="323.0" width="48.6" height="17.0" fill="#d1495b"/>
+<text x="258.5" y="316.8" fill="#808080" text-anchor="middle">0.170 s</text>
 <text x="258.5" y="356.0" fill="#d1495b" font-weight="bold" text-anchor="middle">TTS</text>
-<text x="258.5" y="369.0" fill="#808080" text-anchor="middle">112 MiB</text>
-<rect x="315.2" y="206.1" width="48.6" height="133.9" fill="#8e6bbf"/>
-<line x1="339.5" x2="339.5" y1="207.5" y2="205.3" stroke="#808080" stroke-width="1.5"/>
-<line x1="334.5" x2="344.5" y1="207.5" y2="207.5" stroke="#808080" stroke-width="1.5"/>
-<line x1="334.5" x2="344.5" y1="205.3" y2="205.3" stroke="#808080" stroke-width="1.5"/>
-<text x="339.5" y="199.3" fill="#808080" text-anchor="middle">0.892 s</text>
+<text x="258.5" y="369.0" fill="#808080" text-anchor="middle">111 MiB</text>
+<rect x="315.2" y="212.5" width="48.6" height="127.5" fill="#8e6bbf"/>
+<line x1="339.5" x2="339.5" y1="214.4" y2="211.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="334.5" x2="344.5" y1="214.4" y2="214.4" stroke="#808080" stroke-width="1.5"/>
+<line x1="334.5" x2="344.5" y1="211.9" y2="211.9" stroke="#808080" stroke-width="1.5"/>
+<text x="339.5" y="205.9" fill="#808080" text-anchor="middle">1.275 s</text>
 <text x="339.5" y="356.0" fill="#8e6bbf" font-weight="bold" text-anchor="middle">Boost.Test</text>
-<text x="339.5" y="369.0" fill="#808080" text-anchor="middle">181 MiB</text>
-<rect x="396.2" y="181.0" width="48.6" height="159.0" fill="#e09f3e"/>
-<line x1="420.5" x2="420.5" y1="187.3" y2="172.5" stroke="#808080" stroke-width="1.5"/>
-<line x1="415.5" x2="425.5" y1="187.3" y2="187.3" stroke="#808080" stroke-width="1.5"/>
-<line x1="415.5" x2="425.5" y1="172.5" y2="172.5" stroke="#808080" stroke-width="1.5"/>
-<text x="420.5" y="166.5" fill="#808080" text-anchor="middle">1.060 s</text>
+<text x="339.5" y="369.0" fill="#808080" text-anchor="middle">182 MiB</text>
+<rect x="396.2" y="193.0" width="48.6" height="147.0" fill="#e09f3e"/>
+<text x="420.5" y="186.3" fill="#808080" text-anchor="middle">1.470 s</text>
 <text x="420.5" y="356.0" fill="#e09f3e" font-weight="bold" text-anchor="middle">GoogleTest</text>
 <text x="420.5" y="369.0" fill="#808080" text-anchor="middle">174 MiB</text>
-<rect x="477.2" y="134.3" width="48.6" height="205.7" fill="#2e86ab"/>
-<line x1="501.5" x2="501.5" y1="135.2" y2="126.5" stroke="#808080" stroke-width="1.5"/>
-<line x1="496.5" x2="506.5" y1="135.2" y2="135.2" stroke="#808080" stroke-width="1.5"/>
-<line x1="496.5" x2="506.5" y1="126.5" y2="126.5" stroke="#808080" stroke-width="1.5"/>
-<text x="501.5" y="120.5" fill="#808080" text-anchor="middle">1.371 s</text>
+<rect x="477.2" y="146.8" width="48.6" height="193.2" fill="#2e86ab"/>
+<line x1="501.5" x2="501.5" y1="148.7" y2="140.3" stroke="#808080" stroke-width="1.5"/>
+<line x1="496.5" x2="506.5" y1="148.7" y2="148.7" stroke="#808080" stroke-width="1.5"/>
+<line x1="496.5" x2="506.5" y1="140.3" y2="140.3" stroke="#808080" stroke-width="1.5"/>
+<text x="501.5" y="134.3" fill="#808080" text-anchor="middle">1.932 s</text>
 <text x="501.5" y="356.0" fill="#2e86ab" font-weight="bold" text-anchor="middle">Catch2</text>
 <text x="501.5" y="369.0" fill="#808080" text-anchor="middle">210 MiB</text>
-<rect x="558.2" y="133.1" width="48.6" height="206.9" fill="#7fb8d6"/>
-<line x1="582.5" x2="582.5" y1="137.7" y2="122.2" stroke="#808080" stroke-width="1.5"/>
-<line x1="577.5" x2="587.5" y1="137.7" y2="137.7" stroke="#808080" stroke-width="1.5"/>
-<line x1="577.5" x2="587.5" y1="122.2" y2="122.2" stroke="#808080" stroke-width="1.5"/>
-<text x="582.5" y="116.2" fill="#808080" text-anchor="middle">1.379 s</text>
+<rect x="558.2" y="145.6" width="48.6" height="194.4" fill="#7fb8d6"/>
+<line x1="582.5" x2="582.5" y1="146.9" y2="143.8" stroke="#808080" stroke-width="1.5"/>
+<line x1="577.5" x2="587.5" y1="146.9" y2="146.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="577.5" x2="587.5" y1="143.8" y2="143.8" stroke="#808080" stroke-width="1.5"/>
+<text x="582.5" y="137.8" fill="#808080" text-anchor="middle">1.944 s</text>
 <text x="582.5" y="356.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">Catch2</text>
 <text x="582.5" y="369.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">fast</text>
 <text x="582.5" y="382.0" fill="#808080" text-anchor="middle">214 MiB</text>
-<rect x="639.2" y="54.3" width="48.6" height="285.7" fill="#5c8a8a"/>
-<line x1="663.5" x2="663.5" y1="63.1" y2="47.1" stroke="#808080" stroke-width="1.5"/>
-<line x1="658.5" x2="668.5" y1="63.1" y2="63.1" stroke="#808080" stroke-width="1.5"/>
-<line x1="658.5" x2="668.5" y1="47.1" y2="47.1" stroke="#808080" stroke-width="1.5"/>
-<text x="663.5" y="41.1" fill="#808080" text-anchor="middle">1.905 s</text>
+<rect x="639.2" y="76.7" width="48.6" height="263.3" fill="#5c8a8a"/>
+<line x1="663.5" x2="663.5" y1="81.1" y2="75.5" stroke="#808080" stroke-width="1.5"/>
+<line x1="658.5" x2="668.5" y1="81.1" y2="81.1" stroke="#808080" stroke-width="1.5"/>
+<line x1="658.5" x2="668.5" y1="75.5" y2="75.5" stroke="#808080" stroke-width="1.5"/>
+<text x="663.5" y="69.5" fill="#808080" text-anchor="middle">2.633 s</text>
 <text x="663.5" y="356.0" fill="#5c8a8a" font-weight="bold" text-anchor="middle">ut</text>
 <text x="663.5" y="369.0" fill="#808080" text-anchor="middle">247 MiB</text>
 </svg>
