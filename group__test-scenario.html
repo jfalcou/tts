@@ -132,6 +132,8 @@ $(function(){initNavTree('group__test-scenario.html','',''); });
 </div>
 
 <div class="header">
+  <div class="summary">
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Tests definition macros </div></div>
 </div><!--header-->
 <div class="contents">
@@ -139,10 +141,27 @@ $(function(){initNavTree('group__test-scenario.html','',''); });
 <p>Macros for defining tests scenarios.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga3d74a197bd657f33f78ed7ab4ed6d25f" id="r_ga3d74a197bd657f33f78ed7ab4ed6d25f"><td class="memItemLeft">constexpr tts_implementation_defined&#160;</td><td class="memItemRight"><a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a> = {}</td></tr>
+<tr class="memdesc:ga3d74a197bd657f33f78ed7ab4ed6d25f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context running a case body in a constant evaluation.  <br /></td></tr>
+<tr class="memitem:gaeab789e76bc924d4181b88c6801aaeea" id="r_gaeab789e76bc924d4181b88c6801aaeea"><td class="memItemLeft">constexpr tts_implementation_defined&#160;</td><td class="memItemRight"><a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea">tts::runtime</a> = {}</td></tr>
+<tr class="memdesc:gaeab789e76bc924d4181b88c6801aaeea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context running a case body as ordinary code.  <br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
 Scenarios Definitions</h2></td></tr>
 <tr class="memitem:ga8f02c0809d6d7acc4b7eadd9d269cdc5" id="r_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(ID)</td></tr>
 <tr class="memdesc:ga8f02c0809d6d7acc4b7eadd9d269cdc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Introduces a new test scenario and registers it into the current test driver.  <br /></td></tr>
+<tr class="memitem:ga17983c7153185ce22470c8bd2b712485" id="r_ga17983c7153185ce22470c8bd2b712485"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga17983c7153185ce22470c8bd2b712485">TTS_CONTEXT</a>(...)</td></tr>
+<tr class="memdesc:ga17983c7153185ce22470c8bd2b712485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameter list of a case body run in a named context.  <br /></td></tr>
+<tr class="memitem:gafb43727306d05936445bdbfc19271faf" id="r_gafb43727306d05936445bdbfc19271faf"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gafb43727306d05936445bdbfc19271faf">TTS_CASE_IN</a>(ID, ...)</td></tr>
+<tr class="memdesc:gafb43727306d05936445bdbfc19271faf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Introduces a test scenario run in the contexts given, and registers it into the current test driver.  <br /></td></tr>
+<tr class="memitem:ga0ae70a27320c95cf79dded90b1bfe335" id="r_ga0ae70a27320c95cf79dded90b1bfe335"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga0ae70a27320c95cf79dded90b1bfe335">TTS_CASE_TPL_IN</a>(ID,  TYPES, ...)</td></tr>
+<tr class="memdesc:ga0ae70a27320c95cf79dded90b1bfe335"><td class="mdescLeft">&#160;</td><td class="mdescRight">Introduces a template test case run in the contexts given, and registers it into the current test driver.  <br /></td></tr>
+<tr class="memitem:ga42099927b0ce397c53f0faf21f702a20" id="r_ga42099927b0ce397c53f0faf21f702a20"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga42099927b0ce397c53f0faf21f702a20">TTS_CONSTEXPR</a>(ID)</td></tr>
+<tr class="memdesc:ga42099927b0ce397c53f0faf21f702a20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs a case as ordinary code and in constant evaluation.  <br /></td></tr>
+<tr class="memitem:ga56836491fb49db2f46b28859756efc7c" id="r_ga56836491fb49db2f46b28859756efc7c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga56836491fb49db2f46b28859756efc7c">TTS_CONSTEVAL</a>(ID)</td></tr>
+<tr class="memdesc:ga56836491fb49db2f46b28859756efc7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs a case in constant evaluation alone.  <br /></td></tr>
 <tr class="memitem:ga00d91e3b8e2f57672cd95ee48992c707" id="r_ga00d91e3b8e2f57672cd95ee48992c707"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(ID, ...)</td></tr>
 <tr class="memdesc:ga00d91e3b8e2f57672cd95ee48992c707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Introduces a template test case and registers it into the current test driver.  <br /></td></tr>
 <tr class="memitem:ga0a60c7376c3894c5d3b7c5be8201478f" id="r_ga0a60c7376c3894c5d3b7c5be8201478f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga0a60c7376c3894c5d3b7c5be8201478f">TTS_CASE_WITH</a>(ID,  TYPES, ...)</td></tr>
@@ -234,9 +253,10 @@ Scoped scenarios</h2></td></tr>
 
 <p>Introduces a new test scenario and registers it into the current test driver. </p>
 <p>The code block following TTS_CASE contains user-defined code for a given test case. Test cases performing no actual tests will be reported as invalid.</p>
+<p>The case runs in <a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea" title="tts::runtime">tts::runtime</a> when its title names no context. A title wrapped by <a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="TTS_CONSTEXPR">TTS_CONSTEXPR</a> or <a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="TTS_CONSTEVAL">TTS_CONSTEVAL</a> names the contexts the case runs in, and <a class="el" href="#gafb43727306d05936445bdbfc19271faf" title="TTS_CASE_IN">TTS_CASE_IN</a> names any list of them.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents.</td></tr>
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents, or a wrapped title.</td></tr>
   </table>
   </dd>
 </dl>
@@ -247,6 +267,70 @@ Scoped scenarios</h2></td></tr>
 <div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check basic arithmetic&quot;</span>)</div>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(2 + 2, 4);</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="gafb43727306d05936445bdbfc19271faf" name="gafb43727306d05936445bdbfc19271faf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafb43727306d05936445bdbfc19271faf">&#9670;&#160;</a></span>TTS_CASE_IN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_CASE_IN</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ID</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/case.hpp&gt;</code></p>
+
+<p>Introduces a test scenario run in the contexts given, and registers it into the current test driver. </p>
+<p>The code block following TTS_CASE_IN contains user-defined code for a given test case, as for <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a>, and runs once per context, in the order given: <a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea" title="tts::runtime">tts::runtime</a>, <a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="tts::constant">tts::constant</a>, or both. <a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="TTS_CONSTEXPR">TTS_CONSTEXPR</a> and <a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="TTS_CONSTEVAL">TTS_CONSTEVAL</a> on the title of a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> name the two usual lists.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents, or a title wrapped by <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a>, <a class="el" href="#ga4b8a89f672881723dbe70f50e627ebf8" title="TTS_MAYFAIL">TTS_MAYFAIL</a>, <a class="el" href="#gaf1c68a2be4317b8c67da12e50e997406" title="TTS_XINVALID">TTS_XINVALID</a>, or <a class="el" href="#ga761dc95ad62ab8e7781f003c60888386" title="TTS_TIMEOUT">TTS_TIMEOUT</a>. </td></tr>
+    <tr><td class="paramname">...</td><td>The contexts.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="Runs a case as ordinary code and in constant evaluation.">TTS_CONSTEXPR</a> </dd>
+<dd>
+<a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="Runs a case in constant evaluation alone.">TTS_CONSTEVAL</a></dd></dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keywordtype">int</span> twice(<span class="keywordtype">int</span> x)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> 2 * x;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// The constant context first, then the runtime one</span></div>
+<div class="line"><a class="code hl_define" href="#gafb43727306d05936445bdbfc19271faf">TTS_CASE_IN</a>(<span class="stringliteral">&quot;Check twice in a chosen order of contexts&quot;</span>, <a class="code hl_variable" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a>, <a class="code hl_variable" href="#gaeab789e76bc924d4181b88c6801aaeea">tts::runtime</a>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(twice(21), 42);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A tag wrapper on the title</span></div>
+<div class="line"><a class="code hl_define" href="#gafb43727306d05936445bdbfc19271faf">TTS_CASE_IN</a>(<a class="code hl_define" href="#gad72988c12f401bb1eb13a4f6788f1d10">TTS_XFAIL</a>(<span class="stringliteral">&quot;Check a wrong expectation in constant evaluation&quot;</span>), <a class="code hl_variable" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(twice(21), 41);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A template case, its types in parentheses, in constant evaluation alone</span></div>
+<div class="line"><a class="code hl_define" href="#ga0ae70a27320c95cf79dded90b1bfe335">TTS_CASE_TPL_IN</a>(<span class="stringliteral">&quot;Check twice for each type&quot;</span>,</div>
+<div class="line">                (<span class="keywordtype">int</span>, <span class="keywordtype">long</span>),</div>
+<div class="line">                <a class="code hl_variable" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a>)&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_define" href="#ga17983c7153185ce22470c8bd2b712485">TTS_CONTEXT</a>(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(twice(T(21)), T(42));</div>
 <div class="line">};</div>
 </div><!-- fragment --> 
 </div>
@@ -280,9 +364,10 @@ Scoped scenarios</h2></td></tr>
 <li>an instance of a Type Generator, ie a type exposing a public <span class="tt">types_list</span> type definition</li>
 </ul>
 <p>Test cases performing no actual tests will be reported as invalid.</p>
+<p>A title wrapped by <a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="TTS_CONSTEXPR">TTS_CONSTEXPR</a> or <a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="TTS_CONSTEVAL">TTS_CONSTEVAL</a> names the contexts the case runs in, for each type in turn, <a class="el" href="#ga0ae70a27320c95cf79dded90b1bfe335" title="TTS_CASE_TPL_IN">TTS_CASE_TPL_IN</a> names any list of them, and the body then declares its type through <a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="TTS_CONTEXT">TTS_CONTEXT</a>: <span class="tt">&lt;typename T&gt;(<a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="Parameter list of a case body run in a named context.">TTS_CONTEXT</a>(<a class="el" href="structtts_1_1type.html" title="Encapsulates a single type into a reusable type object.">tts::type</a>&lt;T&gt;))</span>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents. </td></tr>
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents, or a wrapped title. </td></tr>
     <tr><td class="paramname">...</td><td>Lists of types to generate the test case from.</td></tr>
   </table>
   </dd>
@@ -324,6 +409,76 @@ Scoped scenarios</h2></td></tr>
 </div><!-- fragment --> 
 </div>
 </div>
+<a id="ga0ae70a27320c95cf79dded90b1bfe335" name="ga0ae70a27320c95cf79dded90b1bfe335"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0ae70a27320c95cf79dded90b1bfe335">&#9670;&#160;</a></span>TTS_CASE_TPL_IN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_CASE_TPL_IN</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ID</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>TYPES</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/case.hpp&gt;</code></p>
+
+<p>Introduces a template test case run in the contexts given, and registers it into the current test driver. </p>
+<p>The code block following TTS_CASE_TPL_IN contains user-defined code for a given test case, as for <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>, with the types list in parentheses, and runs once per context for each type, in the order given: <a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea" title="tts::runtime">tts::runtime</a>, <a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="tts::constant">tts::constant</a>, or both. The body declares its type through <a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="TTS_CONTEXT">TTS_CONTEXT</a>: <span class="tt">&lt;typename T&gt;(<a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="Parameter list of a case body run in a named context.">TTS_CONTEXT</a>(<a class="el" href="structtts_1_1type.html" title="Encapsulates a single type into a reusable type object.">tts::type</a>&lt;T&gt;))</span>. <a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="TTS_CONSTEXPR">TTS_CONSTEXPR</a> and <a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="TTS_CONSTEVAL">TTS_CONSTEVAL</a> on the title of a <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> name the two usual lists.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents, or a title wrapped by <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a>, <a class="el" href="#ga4b8a89f672881723dbe70f50e627ebf8" title="TTS_MAYFAIL">TTS_MAYFAIL</a>, <a class="el" href="#gaf1c68a2be4317b8c67da12e50e997406" title="TTS_XINVALID">TTS_XINVALID</a>, or <a class="el" href="#ga761dc95ad62ab8e7781f003c60888386" title="TTS_TIMEOUT">TTS_TIMEOUT</a>. </td></tr>
+    <tr><td class="paramname">TYPES</td><td>A parenthesized list of types to generate the test case from, as <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> accepts it. </td></tr>
+    <tr><td class="paramname">...</td><td>The contexts.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gafb43727306d05936445bdbfc19271faf" title="Introduces a test scenario run in the contexts given, and registers it into the current test driver.">TTS_CASE_IN</a> </dd>
+<dd>
+<a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="Parameter list of a case body run in a named context.">TTS_CONTEXT</a></dd></dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keywordtype">int</span> twice(<span class="keywordtype">int</span> x)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> 2 * x;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// The constant context first, then the runtime one</span></div>
+<div class="line"><a class="code hl_define" href="#gafb43727306d05936445bdbfc19271faf">TTS_CASE_IN</a>(<span class="stringliteral">&quot;Check twice in a chosen order of contexts&quot;</span>, <a class="code hl_variable" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a>, <a class="code hl_variable" href="#gaeab789e76bc924d4181b88c6801aaeea">tts::runtime</a>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(twice(21), 42);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A tag wrapper on the title</span></div>
+<div class="line"><a class="code hl_define" href="#gafb43727306d05936445bdbfc19271faf">TTS_CASE_IN</a>(<a class="code hl_define" href="#gad72988c12f401bb1eb13a4f6788f1d10">TTS_XFAIL</a>(<span class="stringliteral">&quot;Check a wrong expectation in constant evaluation&quot;</span>), <a class="code hl_variable" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a>)</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(twice(21), 41);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A template case, its types in parentheses, in constant evaluation alone</span></div>
+<div class="line"><a class="code hl_define" href="#ga0ae70a27320c95cf79dded90b1bfe335">TTS_CASE_TPL_IN</a>(<span class="stringliteral">&quot;Check twice for each type&quot;</span>,</div>
+<div class="line">                (<span class="keywordtype">int</span>, <span class="keywordtype">long</span>),</div>
+<div class="line">                <a class="code hl_variable" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">tts::constant</a>)&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_define" href="#ga17983c7153185ce22470c8bd2b712485">TTS_CONTEXT</a>(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(twice(T(21)), T(42));</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
 <a id="ga0a60c7376c3894c5d3b7c5be8201478f" name="ga0a60c7376c3894c5d3b7c5be8201478f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga0a60c7376c3894c5d3b7c5be8201478f">&#9670;&#160;</a></span>TTS_CASE_WITH</h2>
 
@@ -358,6 +513,7 @@ Scoped scenarios</h2></td></tr>
 <li>an instance of a Type Generator, ie a type exposing a public <span class="tt">types_list</span> type definition</li>
 </ul>
 <p>Test cases performing no actual tests will be reported as invalid.</p>
+<p>A generated case runs at run time alone, where its generators produce its values: a title wrapped by <a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="TTS_CONSTEXPR">TTS_CONSTEXPR</a> or <a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="TTS_CONSTEVAL">TTS_CONSTEVAL</a> is refused.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents. </td></tr>
@@ -384,6 +540,154 @@ Scoped scenarios</h2></td></tr>
 <div class="line"> </div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23">TTS_GREATER_EQUAL</a>(r, R {0});</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga1439009af7ca90350dfe8859bde88926">TTS_LESS_EQUAL</a>(r, R {10});</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga56836491fb49db2f46b28859756efc7c" name="ga56836491fb49db2f46b28859756efc7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga56836491fb49db2f46b28859756efc7c">&#9670;&#160;</a></span>TTS_CONSTEVAL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_CONSTEVAL</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ID</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/case.hpp&gt;</code></p>
+
+<p>Runs a case in constant evaluation alone. </p>
+<p>Wraps the title of a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> or a <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>, as <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a> does, and names the context <a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="tts::constant">tts::constant</a>. The body runs as a constant expression, and its checks are reported after the evaluation, each failure with its expression and its position. A <span class="tt">consteval</span> function is callable in that context alone, which is what the wrapper tests of the code it calls.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents, or a title already wrapped by <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a>, <a class="el" href="#ga4b8a89f672881723dbe70f50e627ebf8" title="TTS_MAYFAIL">TTS_MAYFAIL</a>, <a class="el" href="#gaf1c68a2be4317b8c67da12e50e997406" title="TTS_XINVALID">TTS_XINVALID</a>, or <a class="el" href="#ga761dc95ad62ab8e7781f003c60888386" title="TTS_TIMEOUT">TTS_TIMEOUT</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="Runs a case as ordinary code and in constant evaluation.">TTS_CONSTEXPR</a> </dd>
+<dd>
+<a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="Parameter list of a case body run in a named context.">TTS_CONTEXT</a> </dd>
+<dd>
+<a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="Context running a case body in a constant evaluation.">tts::constant</a></dd></dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">consteval</span> <span class="keywordtype">int</span> table_size(<span class="keywordtype">int</span> n)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> n * n + 1;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// The body runs as one constant expression, the only context a consteval function allows</span></div>
+<div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="#ga56836491fb49db2f46b28859756efc7c">TTS_CONSTEVAL</a>(<span class="stringliteral">&quot;Check table_size in constant evaluation&quot;</span>))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(table_size(0), 1);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(table_size(4), 17);</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga42099927b0ce397c53f0faf21f702a20" name="ga42099927b0ce397c53f0faf21f702a20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga42099927b0ce397c53f0faf21f702a20">&#9670;&#160;</a></span>TTS_CONSTEXPR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_CONSTEXPR</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ID</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/case.hpp&gt;</code></p>
+
+<p>Runs a case as ordinary code and in constant evaluation. </p>
+<p>Wraps the title of a <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> or a <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a>, as <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a> does, and names the contexts <a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea" title="tts::runtime">tts::runtime</a> and <a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="tts::constant">tts::constant</a>. The body runs as ordinary code, then as a constant expression, and both runs count and report their checks. A <span class="tt">constexpr</span> function is callable in both contexts, which is what the wrapper tests of the code it calls.</p>
+<p>The body is written with the ordinary checks. In constant evaluation, a failure is reported with its expression, its position, and the values the check compares at run time. A body that calls a function the language refuses in a constant expression does not compile.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ID</td><td>A literal string describing the scenario intents, or a title already wrapped by <a class="el" href="#gad72988c12f401bb1eb13a4f6788f1d10" title="TTS_XFAIL">TTS_XFAIL</a>, <a class="el" href="#ga4b8a89f672881723dbe70f50e627ebf8" title="TTS_MAYFAIL">TTS_MAYFAIL</a>, <a class="el" href="#gaf1c68a2be4317b8c67da12e50e997406" title="TTS_XINVALID">TTS_XINVALID</a>, or <a class="el" href="#ga761dc95ad62ab8e7781f003c60888386" title="TTS_TIMEOUT">TTS_TIMEOUT</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="Runs a case in constant evaluation alone.">TTS_CONSTEVAL</a> </dd>
+<dd>
+<a class="el" href="#ga17983c7153185ce22470c8bd2b712485" title="Parameter list of a case body run in a named context.">TTS_CONTEXT</a> </dd>
+<dd>
+<a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="Context running a case body in a constant evaluation.">tts::constant</a></dd></dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keywordtype">int</span> square(<span class="keywordtype">int</span> x)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> x * x;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// The body runs as ordinary code, then as one constant expression</span></div>
+<div class="line"><a class="code hl_define" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<a class="code hl_define" href="#ga42099927b0ce397c53f0faf21f702a20">TTS_CONSTEXPR</a>(<span class="stringliteral">&quot;Check square in both contexts&quot;</span>))</div>
+<div class="line">{</div>
+<div class="line">  std::array&lt;int, 3&gt; values = {1, 2, 3};</div>
+<div class="line">  <span class="keywordtype">int</span>                sum    = 0;</div>
+<div class="line">  <span class="keywordflow">for</span>(<span class="keyword">auto</span> v: values)</div>
+<div class="line">    sum += square(v);</div>
+<div class="line"> </div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(sum, 14);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(square(-3), 9);</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga17983c7153185ce22470c8bd2b712485" name="ga17983c7153185ce22470c8bd2b712485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga17983c7153185ce22470c8bd2b712485">&#9670;&#160;</a></span>TTS_CONTEXT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TTS_CONTEXT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/case.hpp&gt;</code></p>
+
+<p>Parameter list of a case body run in a named context. </p>
+<p>Wraps the parameter a <a class="el" href="#ga00d91e3b8e2f57672cd95ee48992c707" title="TTS_CASE_TPL">TTS_CASE_TPL</a> body declares, its type, and declares the context in front of it. A <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> body run in a named context declares no parameter, and its macro writes the context itself.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">...</td><td>The parameters the body declares.</td></tr>
+  </table>
+  </dd>
+</dl>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A template case run in both contexts declares its type through TTS_CONTEXT</span></div>
+<div class="line"><a class="code hl_define" href="#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<a class="code hl_define" href="#ga42099927b0ce397c53f0faf21f702a20">TTS_CONSTEXPR</a>(<span class="stringliteral">&quot;Check the sum of two units for each type&quot;</span>), <span class="keywordtype">int</span>, <span class="keywordtype">float</span>, <span class="keywordtype">double</span>)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_define" href="#ga17983c7153185ce22470c8bd2b712485">TTS_CONTEXT</a>(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(T(1) + T(1), T(2));</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A template case run in constant evaluation alone</span></div>
+<div class="line"><a class="code hl_define" href="#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a>(<a class="code hl_define" href="#ga56836491fb49db2f46b28859756efc7c">TTS_CONSTEVAL</a>(<span class="stringliteral">&quot;Check the product of two units for each type&quot;</span>), <span class="keywordtype">int</span>, <span class="keywordtype">float</span>)</div>
+<div class="line">&lt;<span class="keyword">typename</span> T&gt;(<a class="code hl_define" href="#ga17983c7153185ce22470c8bd2b712485">TTS_CONTEXT</a>(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a>))</div>
+<div class="line">{</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(T(2) * T(2), T(4));</div>
 <div class="line">};</div>
 </div><!-- fragment --> 
 </div>
@@ -613,6 +917,67 @@ Scoped scenarios</h2></td></tr>
 <div class="line"><span class="comment">// Intentionally empty - stays a visible reminder in the suite instead of silently vanishing</span></div>
 <div class="line">};</div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="ga3d74a197bd657f33f78ed7ab4ed6d25f" name="ga3d74a197bd657f33f78ed7ab4ed6d25f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3d74a197bd657f33f78ed7ab4ed6d25f">&#9670;&#160;</a></span>constant</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tts_implementation_defined tts::constant = {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/context.hpp&gt;</code></p>
+
+<p>Context running a case body in a constant evaluation. </p>
+<p><a class="el" href="#gafb43727306d05936445bdbfc19271faf" title="TTS_CASE_IN">TTS_CASE_IN</a> names the context, alone or with <a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea" title="tts::runtime">tts::runtime</a>, and <a class="el" href="#ga42099927b0ce397c53f0faf21f702a20" title="TTS_CONSTEXPR">TTS_CONSTEXPR</a> or <a class="el" href="#ga56836491fb49db2f46b28859756efc7c" title="TTS_CONSTEVAL">TTS_CONSTEVAL</a> on the title of a case does the same. The body is evaluated in one constant expression. The checks are reported afterward: each pass counts, each failure names its file, its line, and its expression. If the case runs in <a class="el" href="#gaeab789e76bc924d4181b88c6801aaeea" title="tts::runtime">tts::runtime</a> too, the body runs once more, silently, so that the message adds the values the failed check compares at run time. A body that calls a function the language refuses in a constant expression does not compile. The diagnostic names the call.</p>
+<p>The checks accepted in this context:</p><ul>
+<li>the basic checks, <a class="el" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40" title="TTS_EXPECT">TTS_EXPECT</a> and <a class="el" href="group__test-basic.html#gaaa8c6daa892bf6b6c20d6f049e340567" title="TTS_EXPECT_NOT">TTS_EXPECT_NOT</a>.</li>
+<li>the relation checks, <a class="el" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1" title="TTS_EQUAL">TTS_EQUAL</a> and the others, typed or constexpr included.</li>
+<li>the type checks, <a class="el" href="group__test-types.html#gae409fedd6a2e86ff8cc2f9c832dcff3f" title="TTS_TYPE_IS">TTS_TYPE_IS</a>, <a class="el" href="group__test-types.html#gaefac9e4f88dbb637d5457b45fdd7de5f" title="TTS_EXPR_IS">TTS_EXPR_IS</a>, and <a class="el" href="group__test-types.html#ga9127c128ee9f5b4d6bd3b7e7ce78b027" title="TTS_EXPECT_COMPILES">TTS_EXPECT_COMPILES</a>.</li>
+</ul>
+<p>The precision, sequence, range, and exception checks run at run time alone, and so does a <a class="el" href="#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">TTS_CASE_WITH</a>, whose values the generators produce at run time. </p>
+
+</div>
+</div>
+<a id="gaeab789e76bc924d4181b88c6801aaeea" name="gaeab789e76bc924d4181b88c6801aaeea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeab789e76bc924d4181b88c6801aaeea">&#9670;&#160;</a></span>runtime</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tts_implementation_defined tts::runtime = {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/context.hpp&gt;</code></p>
+
+<p>Context running a case body as ordinary code. </p>
+<p>A plain <a class="el" href="#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="TTS_CASE">TTS_CASE</a> runs in this context. <a class="el" href="#gafb43727306d05936445bdbfc19271faf" title="TTS_CASE_IN">TTS_CASE_IN</a> names the context, alone or with <a class="el" href="#ga3d74a197bd657f33f78ed7ab4ed6d25f" title="tts::constant">tts::constant</a>. The body is called like a function. The checks of the body count and report like those of a plain case. </p>
+
 </div>
 </div>
 </div><!-- contents -->

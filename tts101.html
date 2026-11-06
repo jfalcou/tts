@@ -163,7 +163,7 @@ Specify a Test Case</h1>
 <div class="line">{</div>
 <div class="line">  <span class="comment">// This test case is empty and thus will be reported as invalid</span></div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:204</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:304</div></div>
 </div><!-- fragment --><p>Notice the <span class="tt">#define <a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a></span> line. This is used to notify <b>TTS</b> that the current translation unit will contain the <b>TTS</b> main entry point. You can use <b>TTS</b> in multiple translation units, but only one of them must have the <a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> macro enabled.</p>
 <p>The unit test reports the total number of tests performed, the number of passing tests, the number of failing tests and the number of invalid tests. In this case, unsurprisingly, our empty test is reported as invalid, as we consider an empty test case as erroneous in itself. <b>TTS</b> enforces an <b>Empty Suite Is An Error</b> rule that applies at the test case level: <b>any test case with no actual testing will be considered as a failure and reported as an invalid test</b>.</p>
 <h1 class="doxsection"><a class="anchor" id="tuto-macro"></a>
@@ -176,7 +176,7 @@ Testing Macros</h1>
 <div class="line">{</div>
 <div class="line">  <a class="code hl_define" href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a>( <span class="keyword">true</span> );</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:62</div></div>
+<div class="ttc" id="agroup__test-basic_html_gac6b5f64430d5335450f45c6f7b1bbc40"><div class="ttname"><a href="group__test-basic.html#gac6b5f64430d5335450f45c6f7b1bbc40">TTS_EXPECT</a></div><div class="ttdeci">#define TTS_EXPECT(EXPR,...)</div><div class="ttdoc">Check if a given expression evaluates to true.</div><div class="ttdef"><b>Definition</b> basic.hpp:69</div></div>
 </div><!-- fragment --><p>One may notice that no other information is displayed. This is the default behaviour. You can now use <a class="el" href="tts_reference.html" title="Reference Documentation">the various <b>TTS</b> testing macros</a> to design your own unit tests. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

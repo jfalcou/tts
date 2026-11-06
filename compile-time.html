@@ -248,10 +248,10 @@ Other test libraries</h1>
 <h2 class="doxsection"><a class="anchor" id="compile-time-comparison-protocol"></a>
 Protocol</h2>
 <ul>
-<li><b>Machine</b>: Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz, 4 cores, on 2026-11-02</li>
+<li><b>Machine</b>: AMD EPYC 9V74 80-Core Processor, 4 cores, on 2026-11-06</li>
 <li><b>Compilers</b>: clang++ 22.1.2 and g++ 15.2.0, with <code>-std=c++20 -O0</code></li>
 <li><b>Builds</b>: the median of 3 builds per point, made in rounds that alternate the libraries, 2 at a time</li>
-<li><b>Libraries</b>:<ul><li>TTS at acfc395</li><li>Boost.Test 1.90</li><li>Catch2 3.16.1</li><li>GoogleTest 1.18.0</li><li>doctest 2.5.3</li><li>ut 2.3.1</li></ul></li>
+<li><b>Libraries</b>:<ul><li>TTS at 7be73b5</li><li>Boost.Test 1.90</li><li>Catch2 3.16.1</li><li>GoogleTest 1.18.0</li><li>doctest 2.5.3</li><li>ut 2.3.1</li></ul></li>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="compile-time-comparison-code"></a>
 Test code</h2>
@@ -279,10 +279,10 @@ Test code</h2>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a>(a, b);</div>
 <div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(a, b);</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:215</div></div>
-<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:194</div></div>
-<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:173</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:204</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga7682358fd38e60210da710f7d9ba6399"><div class="ttname"><a href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a></div><div class="ttdeci">#define TTS_LESS(LHS, RHS,...)</div><div class="ttdoc">Performs less-than comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:229</div></div>
+<div class="ttc" id="agroup__test-relation_html_ga8345709fe68ffaec8be13a17cc001257"><div class="ttname"><a href="group__test-relation.html#ga8345709fe68ffaec8be13a17cc001257">TTS_NOT_EQUAL</a></div><div class="ttdeci">#define TTS_NOT_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs inequality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:208</div></div>
+<div class="ttc" id="agroup__test-relation_html_gafc88cdb469bdc19411c7b0e9f7f33ae1"><div class="ttname"><a href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a></div><div class="ttdeci">#define TTS_EQUAL(LHS, RHS,...)</div><div class="ttdoc">Performs equality comparison between two expressions.</div><div class="ttdef"><b>Definition</b> relation.hpp:187</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga8f02c0809d6d7acc4b7eadd9d269cdc5"><div class="ttname"><a href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a></div><div class="ttdeci">#define TTS_CASE(ID)</div><div class="ttdoc">Introduces a new test scenario and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:304</div></div>
 </div><!-- fragment --></li>
 <li><p class="startli"><b class="tab-title">doctest</b></p>
 <p class="startli">A test file holds no runner. Each executable links a library that the benchmark builds once per compiler from <span class="tt">doctest.h</span> with <span class="tt">DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN</span> defined, as the <span class="tt">doctest_with_main</span> target of its build does. That build stays out of the other results, and <a class="el" href="#compile-time-comparison-mains" title="Runner libraries">Runner libraries</a> gives its time. <span class="tt">CHECK</span> decomposes the expression it receives to report both operands of a failure. Its binary form, <span class="tt">CHECK_EQ(a, b)</span>, costs less per test. The doctest fast series compiles the same files and the library with <span class="tt">DOCTEST_CONFIG_SUPER_FAST_ASSERTS</span>, the setting its documentation gives for the fastest compile times.</p>

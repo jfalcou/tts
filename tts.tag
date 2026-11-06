@@ -1664,11 +1664,60 @@
     <name>test-scenario</name>
     <title>Tests definition macros</title>
     <filename>group__test-scenario.html</filename>
+    <member kind="variable">
+      <type>constexpr tts_implementation_defined</type>
+      <name>tts::constant</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga3d74a197bd657f33f78ed7ab4ed6d25f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr tts_implementation_defined</type>
+      <name>tts::runtime</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>gaeab789e76bc924d4181b88c6801aaeea</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="define">
       <type>#define</type>
       <name>TTS_CASE</name>
       <anchorfile>group__test-scenario.html</anchorfile>
       <anchor>ga8f02c0809d6d7acc4b7eadd9d269cdc5</anchor>
+      <arglist>(ID)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_CONTEXT</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga17983c7153185ce22470c8bd2b712485</anchor>
+      <arglist>(...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_CASE_IN</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>gafb43727306d05936445bdbfc19271faf</anchor>
+      <arglist>(ID,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_CASE_TPL_IN</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga0ae70a27320c95cf79dded90b1bfe335</anchor>
+      <arglist>(ID, TYPES,...)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_CONSTEXPR</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga42099927b0ce397c53f0faf21f702a20</anchor>
+      <arglist>(ID)</arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>TTS_CONSTEVAL</name>
+      <anchorfile>group__test-scenario.html</anchorfile>
+      <anchor>ga56836491fb49db2f46b28859756efc7c</anchor>
       <arglist>(ID)</arglist>
     </member>
     <member kind="define">
