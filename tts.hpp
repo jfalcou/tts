@@ -117,6 +117,11 @@ namespace tts::_
 #define TTS_REVERSE_(N, ...)                 TTS_REVERSE_IMPL(N, __VA_ARGS__)
 #define TTS_REVERSE(...)                     TTS_REVERSE_(TTS_COUNT(__VA_ARGS__), __VA_ARGS__)
 #define TTS_REMOVE_PARENS(x)                 TTS_EVAL((TTS_REMOVE_PARENS_I x), x)
+#define TTS_IS_PARENTHESIZED(x)              TTS_IS_PARENTHESIZED_I((TTS_REMOVE_PARENS_I x))
+#define TTS_IS_PARENTHESIZED_I(test)         TTS_IS_PARENTHESIZED_II(TTS_TEST_ARITY test)
+#define TTS_IS_PARENTHESIZED_II(arity)       TTS_CAT(TTS_IS_PARENTHESIZED_, arity)
+#define TTS_IS_PARENTHESIZED_1               0
+#define TTS_IS_PARENTHESIZED_2               1
 #define TTS_REMOVE_PARENS_I(...)             1, 1
 #define TTS_APPLY(macro, args)               TTS_APPLY_I(macro, args)
 #define TTS_APPLY_I(macro, args)             macro args
@@ -1620,6 +1625,7 @@ namespace tts
 namespace tts::_
 {
   inline char const* current_test = "";
+  inline text current_type = {};
   inline ::tts::expected_outcome current_tag = expected_outcome::pass;
   struct tagged_id
   {
@@ -3172,6 +3178,269 @@ namespace tts::_
     [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \
   } while(0) 
 #endif
+namespace tts::_
+{
+  struct check_site
+  {
+    char const* file    = "";
+    int         line    = 0;
+    bool        fatal   = false;
+    char const* lhs     = "";
+    char const* op      = "";
+    char const* rhs     = "";
+    char const* negated = "";
+  };
+  inline bool check_passed()
+  {
+    ::tts::global_runtime.pass();
+    return ::tts::is_detailed();
+  }
+  inline void check_report(check_site const& site, ::tts::text const& message)
+  {
+    report_pass(source_location::current(site.file, site.line).data(), message.data());
+  }
+  inline logger check_failed(check_site const& site, ::tts::text const& message)
+  {
+    ::tts::global_runtime.fail();
+    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;
+    auto location = source_location::current(site.file, site.line);
+    if(site.fatal)
+    {
+      report_fatal(location.data(), message.data(), current_type);
+      ::tts::fatal_error_status = true;
+      [[maybe_unused]] logger local_tts_fail_hard {};
+    }
+    else
+    {
+      report_fail(location.data(), message.data(), current_type);
+    }
+    return logger {};
+  }
+}
+#define TTS_CHECK_SITE(FAILURE, LHS, OP, RHS, NEGATED)                                             \
+  ::tts::_::check_site                                                                             \
+  {                                                                                                \
+    __builtin_FILE(), __builtin_LINE(), TTS_IS_FATAL_##FAILURE, LHS, OP, RHS, NEGATED              \
+  }
+#define TTS_IS_FATAL_TTS_FAIL  false
+#define TTS_IS_FATAL_TTS_FATAL true
+namespace tts::_
+{
+  struct probed_operands
+  {
+    std::size_t ordinal;
+    text        lhs;
+    text        rhs;
+    bool        holds = false;
+  };
+  struct runtime_context
+  {
+    runtime_context& operator()()
+    {
+      return *this;
+    }
+    template<typename Message> logger pass(check_site const& site, Message const& message)
+    {
+      if(probing) return probed_verdict(true);
+      ++ordinal;
+      if(check_passed()) check_report(site, message());
+      return logger {false};
+    }
+    template<typename Message> logger fail(check_site const& site, Message const& message)
+    {
+      if(probing) return probed_verdict(false);
+      ++ordinal;
+      return check_failed(site, message());
+    }
+    template<typename A, typename B> void operands(A const& a, B const& b)
+    {
+      if(!probing || !wanted(ordinal)) return;
+      probed.emplace_back(ordinal, as_text(a), as_text(b));
+    }
+    logger probed_verdict(bool holds)
+    {
+      if(!probed.empty() && probed[ probed.size() - 1 ].ordinal == ordinal)
+        probed[ probed.size() - 1 ].holds = holds;
+      ++ordinal;
+      return logger {false};
+    }
+    bool wanted(std::size_t which) const
+    {
+      for(std::size_t i = 0; i < wanted_count; ++i)
+        if(wanted_ordinals[ i ] == which) return true;
+      return false;
+    }
+    probed_operands const* probed_at(std::size_t which) const
+    {
+      for(auto const& p: probed)
+        if(p.ordinal == which) return &p;
+      return nullptr;
+    }
+    std::size_t             ordinal         = 0;
+    bool                    probing         = false;
+    std::size_t const*      wanted_ordinals = nullptr;
+    std::size_t             wanted_count    = 0;
+    buffer<probed_operands> probed          = {};
+  };
+  inline runtime_context current_runtime = {};
+  struct constant_logger
+  {
+    template<typename Data> constexpr constant_logger& operator<<(Data const&)
+    {
+      return *this;
+    }
+  };
+  struct constant_failure
+  {
+    check_site  site    = {};
+    std::size_t ordinal = 0;
+  };
+  struct constant_context
+  {
+    static constexpr std::size_t capacity = 64;
+    constexpr constant_context&  operator()()
+    {
+      return *this;
+    }
+    template<typename Message> constexpr constant_logger pass(check_site const&, Message const&)
+    {
+      ++passes;
+      return {};
+    }
+    template<typename Message>
+    constexpr constant_logger fail(check_site const& site, Message const&)
+    {
+      if(failures < capacity) failed[ failures ] = {site, passes + failures};
+      ++failures;
+      return {};
+    }
+    template<typename A, typename B> constexpr void operands(A const&, B const&) const
+    {
+    }
+    std::size_t      passes             = 0;
+    std::size_t      failures           = 0;
+    constant_failure failed[ capacity ] = {};
+  };
+  struct direct
+  {
+    static constexpr void apply(auto& body, auto& ctx)
+    {
+      body(ctx);
+    }
+  };
+  template<typename T> struct with_type
+  {
+    static constexpr void apply(auto& body, auto& ctx)
+    {
+      body(ctx, type<T> {});
+    }
+  };
+  template<typename Body, typename Maker = direct> constexpr constant_context evaluate()
+  {
+    constant_context result {};
+    Body             body {};
+    Maker::apply(body, result);
+    return result;
+  }
+  template<typename Body, typename Maker = direct>
+  concept constant_evaluable =
+  requires { typename std::integral_constant<std::size_t, evaluate<Body, Maker>().passes>; };
+  template<typename Body, typename Maker>
+  inline constexpr constant_context constant_outcome = evaluate<Body, Maker>();
+  template<typename Body, typename Maker, std::size_t Recorded> struct failed_ordinals
+  {
+    static constexpr auto make()
+    {
+      struct
+      {
+        std::size_t at[ Recorded ] = {};
+      } that {};
+      for(std::size_t i = 0; i < Recorded; ++i)
+        that.at[ i ] = constant_outcome<Body, Maker>.failed[ i ].ordinal;
+      return that;
+    }
+    static constexpr auto value = make();
+  };
+  inline text constant_failure_message(check_site const& site, probed_operands const* probed)
+  {
+    if(site.op[ 0 ] == '\0') return text {"Constant evaluation: %s evaluates to false.", site.lhs};
+    if(probed)
+      return text {"Constant evaluation: %s %s %s is false, at run time %s %s %s.",
+                   site.lhs,
+                   site.op,
+                   site.rhs,
+                   probed->lhs.data(),
+                   probed->holds ? site.op : site.negated,
+                   probed->rhs.data()};
+    return text {"Constant evaluation: %s %s %s is false.", site.lhs, site.op, site.rhs};
+  }
+  struct runtime_t
+  {
+    static constexpr char const*                                               name = "runtime";
+    template<typename Maker = direct, bool = false, typename Body> static void run(Body body)
+    {
+      current_runtime.ordinal = 0;
+      Maker::apply(body, current_runtime);
+    }
+  };
+  struct constant_t
+  {
+    static constexpr char const* name = "constant";
+    template<typename Maker = direct, bool Probe = false, typename Body> static void run(Body body)
+    {
+      constexpr constant_context const& outcome = constant_outcome<Body, Maker>;
+      if(::tts::is_detailed())
+        ::tts::output().writeln(">  In constant evaluation, %zu check%s passed",
+                                outcome.passes,
+                                outcome.passes > 1 ? "s" : "");
+      for(std::size_t i = 0; i < outcome.passes; ++i)
+        ::tts::global_runtime.pass();
+      constexpr auto recorded =
+      outcome.failures < constant_context::capacity ? outcome.failures : constant_context::capacity;
+      if constexpr(recorded == 0) return;
+      else
+      {
+        if constexpr(Probe)
+        {
+          constexpr auto const& ordinals  = failed_ordinals<Body, Maker, recorded>::value;
+          current_runtime.probing         = true;
+          current_runtime.wanted_ordinals = ordinals.at;
+          current_runtime.wanted_count    = recorded;
+          current_runtime.ordinal         = 0;
+          Maker::apply(body, current_runtime);
+          current_runtime.probing = false;
+        }
+        for(std::size_t i = 0; i < recorded; ++i)
+        {
+          auto const& failure = outcome.failed[ i ];
+          check_failed(
+          failure.site,
+          constant_failure_message(failure.site, current_runtime.probed_at(failure.ordinal)));
+        }
+        current_runtime.probed = {};
+        if(outcome.failures > recorded)
+          check_failed(outcome.failed[ recorded - 1 ].site,
+                       text {"Constant evaluation: %zu more failure%s past the %zu recorded.",
+                             outcome.failures - recorded,
+                             outcome.failures - recorded > 1 ? "s" : "",
+                             recorded});
+      }
+    }
+  };
+  template<typename T>
+  concept context = std::same_as<T, runtime_t> || std::same_as<T, constant_t>;
+  template<typename... Contexts>
+  inline constexpr bool has_runtime = (std::same_as<Contexts, runtime_t> || ...);
+}
+namespace tts
+{
+  inline constexpr _::runtime_t runtime = {};
+  inline constexpr _::constant_t constant = {};
+}
+inline ::tts::_::runtime_context& local_tts_ctx()
+{
+  return ::tts::_::current_runtime;
+}
 namespace tts
 {
   namespace _
@@ -3548,7 +3817,34 @@ namespace tts::_
     nanoseconds             timeout_ns  = 0;
     bool                    timeout_set = false;
   };
-  inline text current_type = {};
+  template<typename... Contexts> struct capture_within
+  {
+    char const*             name;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    nanoseconds             timeout_ns  = 0;
+    bool                    timeout_set = false;
+    capture_within(char const* id, Contexts...)
+        : name(id)
+    {
+    }
+    capture_within(tagged_id id, Contexts...)
+        : name(id.name)
+        , tag(id.tag)
+        , timeout_ns(id.timeout_ns)
+        , timeout_set(id.timeout_set)
+    {
+    }
+    friend auto operator+(capture_within const& self, auto body)
+    {
+      return test::acknowledge(
+      {self.name,
+       [ body ]() { (Contexts::template run<direct, has_runtime<Contexts...>>(body), ...); },
+        {},
+       self.tag,
+       self.timeout_ns,
+       self.timeout_set});
+    }
+  };
   inline text joined_type_names()
   {
     return text {};
@@ -3609,6 +3905,45 @@ namespace tts::_
   struct captures<Generator> : captures<typename Generator::types_list>
   {
   };
+  template<typename Types, typename... Contexts> struct captures_within;
+  template<typename... Types, typename... Contexts>
+  struct captures_within<types<Types...>, Contexts...>
+  {
+    char const*                                     name;
+    ::tts::expected_outcome                         tag         = ::tts::expected_outcome::pass;
+    nanoseconds                                     timeout_ns  = 0;
+    bool                                            timeout_set = false;
+    template<typename T, typename Body> static void process_type(Body body)
+    {
+      static_assert(std::is_invocable_v<Body&, runtime_context&, type<T>>,
+                    "A case run in a context takes TTS_CONTEXT(...) as its parameter list.");
+      current_type = as_text(typename_<T>);
+      if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
+      (Contexts::template run<with_type<T>, has_runtime<Contexts...>>(body), ...);
+    }
+    friend auto operator+(captures_within const& self, auto body)
+    {
+      return test::acknowledge({self.name,
+                                [ body ]()
+                                {
+                                  (process_type<Types>(body), ...);
+                                  current_type = text {""};
+                                },
+                                joined_type_names<Types...>(),
+                                self.tag,
+                                self.timeout_ns,
+                                self.timeout_set});
+    }
+  };
+  template<typename... Types, typename... Contexts> auto within(char const* id, Contexts...)
+  {
+    return captures_within<as_type_list_t<Types...>, Contexts...> {id};
+  }
+  template<typename... Types, typename... Contexts> auto within(tagged_id id, Contexts...)
+  {
+    return captures_within<as_type_list_t<Types...>, Contexts...> {
+    id.name, id.tag, id.timeout_ns, id.timeout_set};
+  }
   template<typename Types, auto... Generators> struct test_generators;
   template<typename... Type, auto... Generators>
   struct test_generators<types<Type...>, Generators...>
@@ -3652,109 +3987,134 @@ namespace tts::_
                                 tg.timeout_set});
     }
   };
+  struct refused_contexts
+  {
+    friend bool operator<<(refused_contexts, auto)
+    {
+      return false;
+    }
+  };
+  template<typename... Contexts> auto refuse_contexts(auto, Contexts...)
+  {
+    static_assert(sizeof...(Contexts) == 0,
+                  "TTS_CASE_WITH takes no context: its values are produced at run time.");
+    return refused_contexts {};
+  }
 }
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE(ID)
 #else
-#define TTS_CASE(ID)                                                                               \
+#define TTS_CASE(...) TTS_CASE_SPLIT(__VA_ARGS__)
+#define TTS_CASE_SPLIT(FIRST, ...)                                                                 \
+  TTS_CAT(TTS_CASE_, TTS_IS_PARENTHESIZED(FIRST))(FIRST __VA_OPT__(, ) __VA_ARGS__)
+#define TTS_CASE_0(ID)                                                                             \
   [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::capture {ID} + +[]() 
+#define TTS_CASE_1(CONTEXTS, ID)                                                                   \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+  ::tts::_::capture_within {ID, TTS_REMOVE_PARENS(CONTEXTS)} + [](TTS_CONTEXT()) 
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONTEXT(...)
+#else
+#define TTS_CONTEXT(...) [[maybe_unused]] auto& local_tts_ctx __VA_OPT__(, ) __VA_ARGS__
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE_IN(ID, ...)
+#else
+#define TTS_CASE_IN(ID, ...) TTS_CASE_1((__VA_ARGS__), ID)
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE_TPL_IN(ID, TYPES, ...)
+#else
+#define TTS_CASE_TPL_IN(ID, TYPES, ...) TTS_CASE_TPL_1((__VA_ARGS__), ID, TTS_REMOVE_PARENS(TYPES))
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR(ID)
+#else
+#define TTS_CONSTEXPR(ID) (::tts::runtime, ::tts::constant), ID
+#endif
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEVAL(ID)
+#else
+#define TTS_CONSTEVAL(ID) (::tts::constant), ID
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_TPL(ID, ...)
 #else
-#define TTS_CASE_TPL(ID, ...)                                                                      \
+#define TTS_CASE_TPL(...) TTS_CASE_TPL_SPLIT(__VA_ARGS__)
+#define TTS_CASE_TPL_SPLIT(FIRST, ...)                                                             \
+  TTS_CAT(TTS_CASE_TPL_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)
+#define TTS_CASE_TPL_0(ID, ...)                                                                    \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::captures<__VA_ARGS__> {ID} + [] 
+#define TTS_CASE_TPL_1(CONTEXTS, ID, ...)                                                          \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+  ::tts::_::within<__VA_ARGS__>(ID, TTS_REMOVE_PARENS(CONTEXTS)) + [] 
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_WITH(ID, TYPES, ...)
 #else
-#define TTS_CASE_WITH(ID, TYPES, ...)                                                              \
+#define TTS_CASE_WITH(...) TTS_CASE_WITH_SPLIT(__VA_ARGS__)
+#define TTS_CASE_WITH_SPLIT(FIRST, ...)                                                            \
+  TTS_CAT(TTS_CASE_WITH_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)
+#define TTS_CASE_WITH_0(ID, TYPES, ...)                                                            \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
   << [] 
+#define TTS_CASE_WITH_1(CONTEXTS, ID, TYPES, ...)                                                  \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+  ::tts::_::refuse_contexts(ID, TTS_REMOVE_PARENS(CONTEXTS)) << [] 
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_XFAIL(ID)
 #else
-#define TTS_XFAIL(ID) ::tts::expect_fail(ID)
+#define TTS_TAG_WRAP(TAG, ...) TTS_TAG_WRAP_SPLIT(TAG, __VA_ARGS__)
+#define TTS_TAG_WRAP_SPLIT(TAG, FIRST, ...)                                                        \
+  TTS_CAT(TTS_TAG_WRAP_, TTS_IS_PARENTHESIZED(FIRST))(TAG, FIRST __VA_OPT__(, ) __VA_ARGS__)
+#define TTS_TAG_WRAP_0(TAG, ID)           ::tts::TAG(ID)
+#define TTS_TAG_WRAP_1(TAG, CONTEXTS, ID) CONTEXTS, ::tts::TAG(ID)
+#define TTS_XFAIL(...)                    TTS_TAG_WRAP(expect_fail, __VA_ARGS__)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_MAYFAIL(ID)
 #else
-#define TTS_MAYFAIL(ID) ::tts::may_fail(ID)
+#define TTS_MAYFAIL(...) TTS_TAG_WRAP(may_fail, __VA_ARGS__)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_XINVALID(ID)
 #else
-#define TTS_XINVALID(ID) ::tts::expect_invalid(ID)
+#define TTS_XINVALID(...) TTS_TAG_WRAP(expect_invalid, __VA_ARGS__)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TIMEOUT(MS, ID)
 #else
-#define TTS_TIMEOUT(MS, ID) ::tts::with_timeout(MS, ID)
+#define TTS_TIMEOUT(MS, ...) TTS_TIMEOUT_SPLIT(MS, __VA_ARGS__)
+#define TTS_TIMEOUT_SPLIT(MS, FIRST, ...)                                                          \
+  TTS_CAT(TTS_TIMEOUT_, TTS_IS_PARENTHESIZED(FIRST))(MS, FIRST __VA_OPT__(, ) __VA_ARGS__)
+#define TTS_TIMEOUT_0(MS, ID)           ::tts::with_timeout(MS, ID)
+#define TTS_TIMEOUT_1(MS, CONTEXTS, ID) CONTEXTS, ::tts::with_timeout(MS, ID)
 #endif
 namespace tts::_
 {
-  struct check_site
-  {
-    char const* file;
-    int         line;
-    bool        fatal;
-    char const* lhs     = "";
-    char const* op      = "";
-    char const* rhs     = "";
-    char const* negated = "";
-  };
-  inline bool check_passed()
-  {
-    ::tts::global_runtime.pass();
-    return ::tts::is_detailed();
-  }
-  inline void check_report(check_site const& site, ::tts::text const& message)
-  {
-    report_pass(source_location::current(site.file, site.line).data(), message.data());
-  }
-  inline logger check_failed(check_site const& site, ::tts::text const& message)
-  {
-    ::tts::global_runtime.fail();
-    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;
-    auto location = source_location::current(site.file, site.line);
-    if(site.fatal)
-    {
-      report_fatal(location.data(), message.data(), current_type);
-      ::tts::fatal_error_status = true;
-      [[maybe_unused]] logger local_tts_fail_hard {};
-    }
-    else
-    {
-      report_fail(location.data(), message.data(), current_type);
-    }
-    return logger {};
-  }
-}
-#define TTS_CHECK_SITE(FAILURE, LHS, OP, RHS, NEGATED)                                             \
-  ::tts::_::check_site                                                                             \
-  {                                                                                                \
-    __builtin_FILE(), __builtin_LINE(), TTS_IS_FATAL_##FAILURE, LHS, OP, RHS, NEGATED              \
-  }
-#define TTS_IS_FATAL_TTS_FAIL  false
-#define TTS_IS_FATAL_TTS_FATAL true
-namespace tts::_
-{
-  inline logger
-  check_expect(bool value, bool expected, check_site const& site, char const* kind = "Expression")
+  template<typename Context>
+  constexpr auto check_expect(Context&          ctx,
+                              bool              value,
+                              bool              expected,
+                              check_site const& site,
+                              char const*       kind = "Expression")
   {
     if(value == expected)
-    {
-      if(check_passed())
-        check_report(
-        site, ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, expected ? "true" : "false"});
-      return logger {false};
-    }
-    return check_failed(
-    site, ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, value ? "true" : "false"});
+      return ctx.pass(site,
+                      [ &kind, &site, &expected ]
+                      {
+                        return ::tts::text {
+                        "%s: %s evaluates to %s.", kind, site.lhs, expected ? "true" : "false"};
+                      });
+    return ctx.fail(
+    site,
+    [ &kind, &site, &value ]
+    { return ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, value ? "true" : "false"}; });
   }
 }
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -3766,6 +4126,7 @@ namespace tts::_
 #define TTS_EXPECT_REQUIRED(EXPR) TTS_EXPECT_IMPL((EXPR), TTS_FATAL)
 #define TTS_EXPECT_IMPL(EXPR, FAILURE)                                                             \
   ::tts::_::check_expect(                                                                          \
+  local_tts_ctx(),                                                                                 \
   static_cast<bool>(EXPR),                                                                         \
   true,                                                                                            \
   TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) 
@@ -3778,6 +4139,7 @@ namespace tts::_
 #define TTS_EXPECT_NOT_REQUIRED(EXPR) TTS_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 #define TTS_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                         \
   ::tts::_::check_expect(                                                                          \
+  local_tts_ctx(),                                                                                 \
   static_cast<bool>(EXPR),                                                                         \
   false,                                                                                           \
   TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) 
@@ -3789,7 +4151,8 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_(EXPR)         TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FAIL)
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FATAL)
 #define TTS_CEXPR_EXPECT_IMPL(EXPR, FAILURE)                                                       \
-  ::tts::_::check_expect(std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
+  ::tts::_::check_expect(local_tts_ctx(),                                                          \
+                         std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
                          true,                                                                     \
                          TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
                          "Constant expression")
@@ -3801,7 +4164,8 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_NOT_(EXPR)         TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FAIL)
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                   \
-  ::tts::_::check_expect(std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
+  ::tts::_::check_expect(local_tts_ctx(),                                                          \
+                         std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
                          false,                                                                    \
                          TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
                          "Constant expression") 
@@ -4008,76 +4372,88 @@ namespace tts::_
 namespace tts::_
 {
   template<typename A, typename B>
-  logger relation_failed(A const& a, B const& b, check_site const& site, char const* kind)
+  text relation_message(A const& a, B const& b, check_site const& site, char const* kind)
   {
-    return check_failed(site,
-                        ::tts::text {"%s: %s %s %s is false because %s %s %s.",
-                                     kind,
-                                     site.lhs,
-                                     site.op,
-                                     site.rhs,
-                                     ::tts::as_text(a).data(),
-                                     site.negated,
-                                     ::tts::as_text(b).data()});
+    return ::tts::text {"%s: %s %s %s is false because %s %s %s.",
+                        kind,
+                        site.lhs,
+                        site.op,
+                        site.rhs,
+                        ::tts::as_text(a).data(),
+                        site.negated,
+                        ::tts::as_text(b).data()};
   }
-  template<typename Relation, typename A, typename B>
-  logger check_relation(Relation relation, A const& a, B const& b, check_site const& site)
+  template<typename A, typename B> text types_differ_message(check_site const& site)
   {
+    return ::tts::text {"'%s %s %s' is false because '%.*s' is not '%.*s'.",
+                        site.lhs,
+                        site.op,
+                        site.rhs,
+                        ::tts::typename_<A>.size(),
+                        ::tts::typename_<A>.data(),
+                        ::tts::typename_<B>.size(),
+                        ::tts::typename_<B>.data()};
+  }
+  template<typename Context, typename Relation, typename A, typename B>
+  constexpr auto
+  check_relation(Context& ctx, Relation relation, A const& a, B const& b, check_site const& site)
+  {
+    ctx.operands(a, b);
     if(relation(a, b))
-    {
-      if(check_passed())
-        check_report(site,
-                     ::tts::text {"Expression: %s %s %s is true.", site.lhs, site.op, site.rhs});
-      return logger {false};
-    }
-    return relation_failed(a, b, site, "Expression");
+      return ctx.pass(
+      site,
+      [ &site ]
+      { return ::tts::text {"Expression: %s %s %s is true.", site.lhs, site.op, site.rhs}; });
+    return ctx.fail(site, [ &a, &b, &site ] { return relation_message(a, b, site, "Expression"); });
   }
-  template<typename A, typename B> logger types_differ(check_site const& site)
+  template<typename A, typename B, typename Context>
+  constexpr auto types_differ(Context& ctx, check_site const& site)
   {
-    return check_failed(site,
-                        ::tts::text {"'%s %s %s' is false because '%.*s' is not '%.*s'.",
-                                     site.lhs,
-                                     site.op,
-                                     site.rhs,
-                                     ::tts::typename_<A>.size(),
-                                     ::tts::typename_<A>.data(),
-                                     ::tts::typename_<B>.size(),
-                                     ::tts::typename_<B>.data()});
+    return ctx.fail(site, [ &site ] { return types_differ_message<A, B>(site); });
   }
-  template<typename Relation, typename A, typename B>
-  logger check_typed_relation(Relation relation, A const& a, B const& b, check_site const& site)
+  template<typename Context, typename Relation, typename A, typename B>
+  constexpr auto check_typed_relation(Context&          ctx,
+                                      Relation          relation,
+                                      A const&          a,
+                                      B const&          b,
+                                      check_site const& site)
   {
-    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(site);
-    else return check_relation(relation, a, b, site);
+    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(ctx, site);
+    else return check_relation(ctx, relation, a, b, site);
   }
-  template<bool Holds, typename A, typename B>
-  logger check_constant_relation(A const& a, B const& b, check_site const& site)
+  template<bool Holds, typename Context, typename A, typename B>
+  constexpr auto
+  check_constant_relation(Context& ctx, A const& a, B const& b, check_site const& site)
   {
+    ctx.operands(a, b);
     if constexpr(Holds)
-    {
-      if(check_passed())
-        check_report(
-        site, ::tts::text {"Constant expression: %s %s %s is true.", site.lhs, site.op, site.rhs});
-      return logger {false};
-    }
+      return ctx.pass(site,
+                      [ &site ]
+                      {
+                        return ::tts::text {
+                        "Constant expression: %s %s %s is true.", site.lhs, site.op, site.rhs};
+                      });
     else
-    {
-      return relation_failed(a, b, site, "Constant expression");
-    }
+      return ctx.fail(
+      site, [ &a, &b, &site ] { return relation_message(a, b, site, "Constant expression"); });
   }
-  template<bool Holds, typename A, typename B>
-  logger check_typed_constant_relation(A const& a, B const& b, check_site const& site)
+  template<bool Holds, typename Context, typename A, typename B>
+  constexpr auto
+  check_typed_constant_relation(Context& ctx, A const& a, B const& b, check_site const& site)
   {
-    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(site);
-    else return check_constant_relation<Holds>(a, b, site);
+    if constexpr(!std::same_as<A, B>) return types_differ<A, B>(ctx, site);
+    else return check_constant_relation<Holds>(ctx, a, b, site);
   }
 }
 #define TTS_RELATION(A, B, OP, T, F, ...)     TTS_RELATION_##__VA_ARGS__(A, B, OP, T, F)
 #define TTS_RELATION_(A, B, OP, T, F)         TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FAIL)
 #define TTS_RELATION_REQUIRED(A, B, OP, T, F) TTS_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                                 \
-  ::tts::_::check_relation(                                                                        \
-  ::tts::_::OP, A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+  ::tts::_::check_relation(local_tts_ctx(),                                                        \
+                           ::tts::_::OP,                                                           \
+                           A,                                                                      \
+                           B,                                                                      \
+                           TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_BIT_EQUAL(LHS, RHS, ...)
 #else
@@ -4123,8 +4499,11 @@ namespace tts::_
 #define TTS_TYPED_RELATION_REQUIRED(A, B, OP, T, F)                                                \
   TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_TYPED_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
-  ::tts::_::check_typed_relation(                                                                  \
-  ::tts::_::OP, A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+  ::tts::_::check_typed_relation(local_tts_ctx(),                                                  \
+                                 ::tts::_::OP,                                                     \
+                                 A,                                                                \
+                                 B,                                                                \
+                                 TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_EQUAL(LHS, RHS, ...)
 #else
@@ -4163,7 +4542,7 @@ namespace tts::_
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
   ::tts::_::check_constant_relation<(::tts::_::OP(A, B))>(                                         \
-  A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+  local_tts_ctx(), A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
 #else
@@ -4206,7 +4585,7 @@ namespace tts::_
   TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
   ::tts::_::check_typed_constant_relation<(::tts::_::OP(A, B))>(                                   \
-  A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+  local_tts_ctx(), A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                               \
@@ -4221,47 +4600,54 @@ namespace tts::_
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, ge, ">=", "<", __VA_ARGS__)
 namespace tts::_
 {
-  template<typename T, typename R> logger check_type(check_site const& site, bool expression)
+  template<typename T, typename R, typename Context>
+  constexpr auto check_type(Context& ctx, check_site const& site, bool expression)
   {
     if constexpr(std::is_same_v<T, R>)
-    {
-      if(check_passed())
-        check_report(site,
-                     expression
-                     ? ::tts::text {"Expression: '%s' is of type '%s'.", site.lhs, site.rhs}
-                     : ::tts::text {"Type: '%s' is '%s'.", site.lhs, site.rhs});
-      return logger {false};
-    }
+      return ctx.pass(
+      site,
+      [ &site, &expression ]
+      {
+        return expression ? ::tts::text {"Expression: '%s' is of type '%s'.", site.lhs, site.rhs}
+                          : ::tts::text {"Type: '%s' is '%s'.", site.lhs, site.rhs};
+      });
     else
-    {
-      char const* format = expression
-                           ? "Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'."
-                           : "Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'.";
-      return check_failed(site,
-                          ::tts::text {format,
-                                       site.lhs,
-                                       site.rhs,
-                                       ::tts::typename_<T>.size(),
-                                       ::tts::typename_<T>.data(),
-                                       ::tts::typename_<R>.size(),
-                                       ::tts::typename_<R>.data()});
-    }
+      return ctx.fail(site,
+                      [ &site, &expression ]
+                      {
+                        char const* format =
+                        expression
+                        ? "Expression: '%s' is not of type '%s' because '%.*s' is not '%.*s'."
+                        : "Type: '%s' is not the same as '%s' because '%.*s' is not '%.*s'.";
+                        return ::tts::text {format,
+                                            site.lhs,
+                                            site.rhs,
+                                            ::tts::typename_<T>.size(),
+                                            ::tts::typename_<T>.data(),
+                                            ::tts::typename_<R>.size(),
+                                            ::tts::typename_<R>.data()};
+                      });
   }
-  inline logger check_compiles(bool compiles, bool expected, check_site const& site)
+  template<typename Context>
+  constexpr auto check_compiles(Context& ctx, bool compiles, bool expected, check_site const& site)
   {
     if(compiles == expected)
-    {
-      if(check_passed())
-        check_report(site,
-                     ::tts::text {compiles ? "Expression: '%s' compiles as expected."
-                                           : "Expression: '%s' does not compile as expected.",
-                                  site.lhs});
-      return logger {false};
-    }
-    return check_failed(site,
-                        ::tts::text {compiles ? "Expression: '%s' compiles unexpectedly."
-                                              : "Expression: '%s' does not compile as expected.",
-                                     site.lhs});
+      return ctx.pass(site,
+                      [ &site, &compiles ]
+                      {
+                        return ::tts::text {compiles
+                                            ? "Expression: '%s' compiles as expected."
+                                            : "Expression: '%s' does not compile as expected.",
+                                            site.lhs};
+                      });
+    return ctx.fail(site,
+                    [ &site, &compiles ]
+                    {
+                      return ::tts::text {compiles
+                                          ? "Expression: '%s' compiles unexpectedly."
+                                          : "Expression: '%s' does not compile as expected.",
+                                          site.lhs};
+                    });
   }
 }
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -4273,6 +4659,7 @@ namespace tts::_
 #define TTS_TYPE_IS_REQUIRED(TYPE, REF) TTS_TYPE_IS_IMPL(TYPE, REF, TTS_FATAL)
 #define TTS_TYPE_IS_IMPL(TYPE, REF, FAILURE)                                                       \
   ::tts::_::check_type<TTS_REMOVE_PARENS(TYPE), TTS_REMOVE_PARENS(REF)>(                           \
+  local_tts_ctx(),                                                                                 \
   TTS_CHECK_SITE(                                                                                  \
   FAILURE, TTS_STRING(TTS_REMOVE_PARENS(TYPE)), "", TTS_STRING(TTS_REMOVE_PARENS(REF)), ""),       \
   false) 
@@ -4285,6 +4672,7 @@ namespace tts::_
 #define TTS_EXPR_IS_REQUIRED(EXPR, TYPE) TTS_EXPR_IS_IMPL(EXPR, TYPE, TTS_FATAL)
 #define TTS_EXPR_IS_IMPL(EXPR, TYPE, FAILURE)                                                      \
   ::tts::_::check_type<decltype(TTS_REMOVE_PARENS(EXPR)), TTS_REMOVE_PARENS(TYPE)>(                \
+  local_tts_ctx(),                                                                                 \
   TTS_CHECK_SITE(                                                                                  \
   FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", TTS_STRING(TTS_REMOVE_PARENS(TYPE)), ""),      \
   true) 
@@ -4294,6 +4682,7 @@ namespace tts::_
   [ & ](TTS_ARG(__VA_ARGS__))                                                                      \
   {                                                                                                \
     return ::tts::_::check_compiles(                                                               \
+    local_tts_ctx(),                                                                               \
     requires TTS_REMOVE_PARENS(EXPR),                                                              \
     true,                                                                                          \
     TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
@@ -4310,6 +4699,7 @@ namespace tts::_
   [ & ](TTS_ARG(__VA_ARGS__))                                                                      \
   {                                                                                                \
     return ::tts::_::check_compiles(                                                               \
+    local_tts_ctx(),                                                                               \
     requires TTS_REMOVE_PARENS(EXPR),                                                              \
     false,                                                                                         \
     TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
