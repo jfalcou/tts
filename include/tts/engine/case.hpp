@@ -8,6 +8,7 @@
 //======================================================================================================================
 #pragma once
 
+#include <tts/engine/context.hpp>
 #include <tts/engine/info.hpp>
 #include <tts/engine/test.hpp>
 #include <tts/engine/generator.hpp>
@@ -43,8 +44,39 @@ namespace tts::_
     bool                    timeout_set = false;
   };
 
-  // Global storage for current type used in a given test
-  inline text current_type = {};
+  // A case run in the contexts named on its title. The body is a generic lambda on the context,
+  // instantiated once per context, and each context runs it its own way.
+  template<typename... Contexts> struct capture_within
+  {
+    // Declared before the operator: nvc++ reads the body of a hidden friend as an incomplete-class
+    // context and finds no member declared below it.
+    char const*             name;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    nanoseconds             timeout_ns  = 0;
+    bool                    timeout_set = false;
+
+    capture_within(char const* id, Contexts...) // NOSONAR
+        : name(id)
+    {
+    }
+    capture_within(tagged_id id, Contexts...) // NOSONAR
+        : name(id.name)
+        , tag(id.tag)
+        , timeout_ns(id.timeout_ns)
+        , timeout_set(id.timeout_set)
+    {
+    }
+    friend auto operator+(capture_within const& self, auto body)
+    {
+      return test::acknowledge(
+      {self.name,
+       [ body ]() { (Contexts::template run<direct, has_runtime<Contexts...>>(body), ...); },
+       /*types=*/ {},
+       self.tag,
+       self.timeout_ns,
+       self.timeout_set});
+    }
+  };
 
   // Builds a ", "-joined list of type names, known at registration time so --dry can display it
   // without running the test.
@@ -77,7 +109,8 @@ namespace tts::_
         , timeout_set(id.timeout_set)
     {
     }
-
+    // The condition depends on Context so that the assertion fires on a use alone: under C++20 a
+    // static_assert(false) in a template fires at its definition.
     auto operator+(auto body) const
     {
       // We register all the types in a single test to keep the compile-time O(1)
@@ -121,6 +154,52 @@ namespace tts::_
   {
   };
 
+  // A template case run in the contexts named on its title: each type, then each context.
+  template<typename Types, typename... Contexts> struct captures_within;
+
+  template<typename... Types, typename... Contexts>
+  struct captures_within<types<Types...>, Contexts...>
+  {
+    char const*                                     name;
+    ::tts::expected_outcome                         tag         = ::tts::expected_outcome::pass;
+    nanoseconds                                     timeout_ns  = 0;
+    bool                                            timeout_set = false;
+
+    template<typename T, typename Body> static void process_type(Body body)
+    {
+      static_assert(std::is_invocable_v<Body&, runtime_context&, type<T>>,
+                    "A case run in a context takes TTS_CONTEXT(...) as its parameter list.");
+      current_type = as_text(typename_<T>);
+      if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
+      (Contexts::template run<with_type<T>, has_runtime<Contexts...>>(body), ...);
+    }
+
+    friend auto operator+(captures_within const& self, auto body)
+    {
+      return test::acknowledge({self.name,
+                                [ body ]()
+                                {
+                                  (process_type<Types>(body), ...);
+                                  current_type = text {""};
+                                },
+                                joined_type_names<Types...>(),
+                                self.tag,
+                                self.timeout_ns,
+                                self.timeout_set});
+    }
+  };
+
+  template<typename... Types, typename... Contexts> auto within(char const* id, Contexts...)
+  {
+    return captures_within<as_type_list_t<Types...>, Contexts...> {id};
+  }
+
+  template<typename... Types, typename... Contexts> auto within(tagged_id id, Contexts...)
+  {
+    return captures_within<as_type_list_t<Types...>, Contexts...> {
+    id.name, id.tag, id.timeout_ns, id.timeout_set};
+  }
+
   template<typename Types, auto... Generators> struct test_generators;
 
   template<typename... Type, auto... Generators>
@@ -142,7 +221,7 @@ namespace tts::_
         , timeout_set(id.timeout_set)
     {
     }
-
+    // The condition depends on Context, as in captures above.
     template<typename... Args> static void process_call(auto body, Args&&... args)
     {
       body(std::forward<Args>(args)...);
@@ -169,6 +248,23 @@ namespace tts::_
                                 tg.timeout_set});
     }
   };
+
+  // A generated case takes no context: its values are produced at run time. The refusal names
+  // the rule, where a brace-init of test_generators with a list of contexts would name nothing.
+  struct refused_contexts
+  {
+    friend bool operator<<(refused_contexts, auto)
+    {
+      return false;
+    }
+  };
+
+  template<typename... Contexts> auto refuse_contexts(auto, Contexts...)
+  {
+    static_assert(sizeof...(Contexts) == 0,
+                  "TTS_CASE_WITH takes no context: its values are produced at run time.");
+    return refused_contexts {};
+  }
 }
 
 //======================================================================================================================
@@ -194,7 +290,11 @@ namespace tts::_
   The code block following TTS_CASE contains user-defined code for a given test case.
   Test cases performing no actual tests will be reported as invalid.
 
-  @param ID A literal string describing the scenario intents.
+  The case runs in @ref tts::runtime when its title names no context. A title wrapped by
+  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs in, and
+  @ref TTS_CASE_IN names any list of them.
+
+  @param ID A literal string describing the scenario intents, or a wrapped title.
 
   @groupheader{Example}
   @snippet doc/case.cpp snippet
@@ -203,9 +303,157 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE(ID)
 #else
-#define TTS_CASE(ID)                                                                               \
+// A wrapped title expands to a parenthesized list of contexts, then the title, so each case macro
+// reads its first argument once expanded and dispatches on its parentheses.
+#define TTS_CASE(...) TTS_CASE_SPLIT(__VA_ARGS__)
+#define TTS_CASE_SPLIT(FIRST, ...)                                                                 \
+  TTS_CAT(TTS_CASE_, TTS_IS_PARENTHESIZED(FIRST))(FIRST __VA_OPT__(, ) __VA_ARGS__)
+#define TTS_CASE_0(ID)                                                                             \
   [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::capture {ID} + +[]() /**/
+#define TTS_CASE_1(CONTEXTS, ID)                                                                   \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+  ::tts::_::capture_within {ID, TTS_REMOVE_PARENS(CONTEXTS)} + [](TTS_CONTEXT()) /**/
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_CONTEXT
+  @brief Parameter list of a case body run in a named context.
+
+  Wraps the parameter a @ref TTS_CASE_TPL body declares, its type, and declares the context in
+  front of it. A @ref TTS_CASE body run in a named context declares no parameter, and its macro
+  writes the context itself.
+
+  @param ... The parameters the body declares.
+
+  @groupheader{Example}
+  @snippet doc/context.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONTEXT(...)
+#else
+#define TTS_CONTEXT(...) [[maybe_unused]] auto& local_tts_ctx __VA_OPT__(, ) __VA_ARGS__
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_CASE_IN
+  @brief Introduces a test scenario run in the contexts given, and registers it into the current
+  test driver.
+
+  The code block following TTS_CASE_IN contains user-defined code for a given test case, as
+  for @ref TTS_CASE, and runs once per context, in the order given: @ref tts::runtime,
+  @ref tts::constant, or both. @ref TTS_CONSTEXPR and @ref TTS_CONSTEVAL on the title of a
+  @ref TTS_CASE name the two usual lists.
+
+  @param ID  A literal string describing the scenario intents, or a title wrapped by
+  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+  @param ... The contexts.
+
+  @see TTS_CONSTEXPR
+  @see TTS_CONSTEVAL
+
+  @groupheader{Example}
+  @snippet doc/case_in.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE_IN(ID, ...)
+#else
+#define TTS_CASE_IN(ID, ...) TTS_CASE_1((__VA_ARGS__), ID)
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_CASE_TPL_IN
+  @brief Introduces a template test case run in the contexts given, and registers it into the
+  current test driver.
+
+  The code block following TTS_CASE_TPL_IN contains user-defined code for a given test case, as
+  for @ref TTS_CASE_TPL, with the types list in parentheses, and runs once per context for each
+  type, in the order given: @ref tts::runtime, @ref tts::constant, or both. The body declares
+  its type through @ref TTS_CONTEXT "TTS_CONTEXT": `<typename T>(TTS_CONTEXT(tts::type<T>))`.
+  @ref TTS_CONSTEXPR and @ref TTS_CONSTEVAL on the title of a @ref TTS_CASE_TPL name the two
+  usual lists.
+
+  @param ID    A literal string describing the scenario intents, or a title wrapped by
+  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+  @param TYPES A parenthesized list of types to generate the test case from, as
+  @ref TTS_CASE_TPL accepts it.
+  @param ...   The contexts.
+
+  @see TTS_CASE_IN
+  @see TTS_CONTEXT
+
+  @groupheader{Example}
+  @snippet doc/case_in.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CASE_TPL_IN(ID, TYPES, ...)
+#else
+#define TTS_CASE_TPL_IN(ID, TYPES, ...) TTS_CASE_TPL_1((__VA_ARGS__), ID, TTS_REMOVE_PARENS(TYPES))
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEXPR
+  @brief Runs a case as ordinary code and in constant evaluation.
+
+  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL, as @ref TTS_XFAIL does, and names
+  the contexts @ref tts::runtime and @ref tts::constant. The body runs as ordinary code,
+  then as a constant expression, and both runs count and report their checks. A `constexpr`
+  function is callable in both contexts, which is what the wrapper tests of the code it calls.
+
+  The body is written with the ordinary checks. In constant evaluation, a failure is reported
+  with its expression, its position, and the values the check compares at run time. A body that
+  calls a function the language refuses in a constant expression does not compile.
+
+  @param ID A literal string describing the scenario intents, or a title already wrapped by
+  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+
+  @see TTS_CONSTEVAL
+  @see TTS_CONTEXT
+  @see tts::constant
+
+  @groupheader{Example}
+  @snippet doc/constexpr.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEXPR(ID)
+#else
+#define TTS_CONSTEXPR(ID) (::tts::runtime, ::tts::constant), ID
+#endif
+
+//======================================================================================================================
+/**
+  @def TTS_CONSTEVAL
+  @brief Runs a case in constant evaluation alone.
+
+  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL, as @ref TTS_XFAIL does, and names
+  the context @ref tts::constant. The body runs as a constant expression, and its checks
+  are reported after the evaluation, each failure with its expression and its position. A
+  `consteval` function is callable in that context alone, which is what the wrapper tests of the
+  code it calls.
+
+  @param ID A literal string describing the scenario intents, or a title already wrapped by
+  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+
+  @see TTS_CONSTEXPR
+  @see TTS_CONTEXT
+  @see tts::constant
+
+  @groupheader{Example}
+  @snippet doc/consteval.cpp snippet
+**/
+//======================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+#define TTS_CONSTEVAL(ID)
+#else
+#define TTS_CONSTEVAL(ID) (::tts::constant), ID
 #endif
 
 //======================================================================================================================
@@ -224,7 +472,12 @@ namespace tts::_
 
   Test cases performing no actual tests will be reported as invalid.
 
-  @param ID   A literal string describing the scenario intents.
+  A title wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs
+  in, for each type in turn, @ref TTS_CASE_TPL_IN names any list of them, and the body then
+  declares its type through
+  @ref TTS_CONTEXT "TTS_CONTEXT": `<typename T>(TTS_CONTEXT(tts::type<T>))`.
+
+  @param ID   A literal string describing the scenario intents, or a wrapped title.
   @param ...  Lists of types to generate the test case from.
 
   @groupheader{Example}
@@ -234,9 +487,15 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_TPL(ID, ...)
 #else
-#define TTS_CASE_TPL(ID, ...)                                                                      \
+#define TTS_CASE_TPL(...) TTS_CASE_TPL_SPLIT(__VA_ARGS__)
+#define TTS_CASE_TPL_SPLIT(FIRST, ...)                                                             \
+  TTS_CAT(TTS_CASE_TPL_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)
+#define TTS_CASE_TPL_0(ID, ...)                                                                    \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::captures<__VA_ARGS__> {ID} + [] /**/
+#define TTS_CASE_TPL_1(CONTEXTS, ID, ...)                                                          \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+  ::tts::_::within<__VA_ARGS__>(ID, TTS_REMOVE_PARENS(CONTEXTS)) + [] /**/
 #endif
 
 //======================================================================================================================
@@ -254,6 +513,9 @@ namespace tts::_
 
   Test cases performing no actual tests will be reported as invalid.
 
+  A generated case runs at run time alone, where its generators produce its values: a title
+  wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL is refused.
+
   @param ID         A literal string describing the scenario intents.
   @param TYPES      Lists of types to generate the test case from.
   @param ...        Lists of generator function
@@ -265,10 +527,16 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_WITH(ID, TYPES, ...)
 #else
-#define TTS_CASE_WITH(ID, TYPES, ...)                                                              \
+#define TTS_CASE_WITH(...) TTS_CASE_WITH_SPLIT(__VA_ARGS__)
+#define TTS_CASE_WITH_SPLIT(FIRST, ...)                                                            \
+  TTS_CAT(TTS_CASE_WITH_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)
+#define TTS_CASE_WITH_0(ID, TYPES, ...)                                                            \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
   << [] /**/
+#define TTS_CASE_WITH_1(CONTEXTS, ID, TYPES, ...)                                                  \
+  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
+  ::tts::_::refuse_contexts(ID, TTS_REMOVE_PARENS(CONTEXTS)) << [] /**/
 #endif
 
 //======================================================================================================================
@@ -299,7 +567,14 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_XFAIL(ID)
 #else
-#define TTS_XFAIL(ID) ::tts::expect_fail(ID)
+// Each tag wrapper expands its argument before reading it and lets a leading list of contexts
+// through, so that the wrappers nest in any order with TTS_CONSTEXPR and TTS_CONSTEVAL.
+#define TTS_TAG_WRAP(TAG, ...) TTS_TAG_WRAP_SPLIT(TAG, __VA_ARGS__)
+#define TTS_TAG_WRAP_SPLIT(TAG, FIRST, ...)                                                        \
+  TTS_CAT(TTS_TAG_WRAP_, TTS_IS_PARENTHESIZED(FIRST))(TAG, FIRST __VA_OPT__(, ) __VA_ARGS__)
+#define TTS_TAG_WRAP_0(TAG, ID)           ::tts::TAG(ID)
+#define TTS_TAG_WRAP_1(TAG, CONTEXTS, ID) CONTEXTS, ::tts::TAG(ID)
+#define TTS_XFAIL(...)                    TTS_TAG_WRAP(expect_fail, __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -326,7 +601,7 @@ namespace tts::_
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_MAYFAIL(ID)
 #else
-#define TTS_MAYFAIL(ID) ::tts::may_fail(ID)
+#define TTS_MAYFAIL(...) TTS_TAG_WRAP(may_fail, __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -350,7 +625,7 @@ empty.
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_XINVALID(ID)
 #else
-#define TTS_XINVALID(ID) ::tts::expect_invalid(ID)
+#define TTS_XINVALID(...) TTS_TAG_WRAP(expect_invalid, __VA_ARGS__)
 #endif
 
 //======================================================================================================================
@@ -374,7 +649,11 @@ empty.
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TIMEOUT(MS, ID)
 #else
-#define TTS_TIMEOUT(MS, ID) ::tts::with_timeout(MS, ID)
+#define TTS_TIMEOUT(MS, ...) TTS_TIMEOUT_SPLIT(MS, __VA_ARGS__)
+#define TTS_TIMEOUT_SPLIT(MS, FIRST, ...)                                                          \
+  TTS_CAT(TTS_TIMEOUT_, TTS_IS_PARENTHESIZED(FIRST))(MS, FIRST __VA_OPT__(, ) __VA_ARGS__)
+#define TTS_TIMEOUT_0(MS, ID)           ::tts::with_timeout(MS, ID)
+#define TTS_TIMEOUT_1(MS, CONTEXTS, ID) CONTEXTS, ::tts::with_timeout(MS, ID)
 #endif
 
 //======================================================================================================================

@@ -36,6 +36,9 @@ namespace tts::_
 
   inline char const* current_test = "";
 
+  // Name of the type a template case is running on, empty outside one.
+  inline text current_type = {}; // NOSONAR - a template case sets it on each type
+
   // The abort path reads it to tell a crash nobody wanted from one a case was tagged for.
   inline ::tts::expected_outcome current_tag = expected_outcome::pass; // NOSONAR - set per case
 
