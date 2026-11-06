@@ -48,6 +48,13 @@ namespace tts::_
   // instantiated once per context, and each context runs it its own way.
   template<typename... Contexts> struct capture_within
   {
+    // Declared before the operator: nvc++ reads the body of a hidden friend as an incomplete-class
+    // context and finds no member declared below it.
+    char const*             name;
+    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
+    nanoseconds             timeout_ns  = 0;
+    bool                    timeout_set = false;
+
     capture_within(char const* id, Contexts...) // NOSONAR
         : name(id)
     {
@@ -69,10 +76,6 @@ namespace tts::_
        self.timeout_ns,
        self.timeout_set});
     }
-    char const*             name;
-    ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
-    nanoseconds             timeout_ns  = 0;
-    bool                    timeout_set = false;
   };
 
   // Builds a ", "-joined list of type names, known at registration time so --dry can display it
