@@ -50,15 +50,16 @@ namespace tts::_
     if(relation(a, b))
       return ctx.pass(
       site,
-      [ & ] { return ::tts::text {"Expression: %s %s %s is true.", site.lhs, site.op, site.rhs}; });
+      [ &site ]
+      { return ::tts::text {"Expression: %s %s %s is true.", site.lhs, site.op, site.rhs}; });
 
-    return ctx.fail(site, [ & ] { return relation_message(a, b, site, "Expression"); });
+    return ctx.fail(site, [ &a, &b, &site ] { return relation_message(a, b, site, "Expression"); });
   }
 
   template<typename A, typename B, typename Context>
   constexpr auto types_differ(Context& ctx, check_site const& site)
   {
-    return ctx.fail(site, [ & ] { return types_differ_message<A, B>(site); });
+    return ctx.fail(site, [ &site ] { return types_differ_message<A, B>(site); });
   }
 
   template<typename Context, typename Relation, typename A, typename B>
@@ -79,13 +80,14 @@ namespace tts::_
     ctx.operands(a, b);
     if constexpr(Holds)
       return ctx.pass(site,
-                      [ & ]
+                      [ &site ]
                       {
                         return ::tts::text {
                         "Constant expression: %s %s %s is true.", site.lhs, site.op, site.rhs};
                       });
     else
-      return ctx.fail(site, [ & ] { return relation_message(a, b, site, "Constant expression"); });
+      return ctx.fail(
+      site, [ &a, &b, &site ] { return relation_message(a, b, site, "Constant expression"); });
   }
 
   template<bool Holds, typename Context, typename A, typename B>

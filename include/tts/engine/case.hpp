@@ -59,15 +59,15 @@ namespace tts::_
         , timeout_set(id.timeout_set)
     {
     }
-    auto operator+(auto body) const
+    friend auto operator+(capture_within const& self, auto body)
     {
       return test::acknowledge(
-      {name,
+      {self.name,
        [ body ]() { (Contexts::template run<direct, has_runtime<Contexts...>>(body), ...); },
        /*types=*/ {},
-       tag,
-       timeout_ns,
-       timeout_set});
+       self.tag,
+       self.timeout_ns,
+       self.timeout_set});
     }
     char const*             name;
     ::tts::expected_outcome tag         = ::tts::expected_outcome::pass;
@@ -157,32 +157,32 @@ namespace tts::_
   template<typename... Types, typename... Contexts>
   struct captures_within<types<Types...>, Contexts...>
   {
-    char const*                      name;
-    ::tts::expected_outcome          tag         = ::tts::expected_outcome::pass;
-    nanoseconds                      timeout_ns  = 0;
-    bool                             timeout_set = false;
+    char const*                                     name;
+    ::tts::expected_outcome                         tag         = ::tts::expected_outcome::pass;
+    nanoseconds                                     timeout_ns  = 0;
+    bool                                            timeout_set = false;
 
-    template<typename T> static void process_type(auto body)
+    template<typename T, typename Body> static void process_type(Body body)
     {
-      static_assert(std::is_invocable_v<decltype(body)&, runtime_context&, type<T>>,
+      static_assert(std::is_invocable_v<Body&, runtime_context&, type<T>>,
                     "A case run in a context takes TTS_CONTEXT(...) as its parameter list.");
       current_type = as_text(typename_<T>);
       if(::tts::is_detailed()) ::tts::output().writeln(">  With <T = %s>", current_type.data());
       (Contexts::template run<with_type<T>, has_runtime<Contexts...>>(body), ...);
     }
 
-    auto operator+(auto body) const
+    friend auto operator+(captures_within const& self, auto body)
     {
-      return test::acknowledge({name,
+      return test::acknowledge({self.name,
                                 [ body ]()
                                 {
                                   (process_type<Types>(body), ...);
                                   current_type = text {""};
                                 },
                                 joined_type_names<Types...>(),
-                                tag,
-                                timeout_ns,
-                                timeout_set});
+                                self.tag,
+                                self.timeout_ns,
+                                self.timeout_set});
     }
   };
 
@@ -250,7 +250,7 @@ namespace tts::_
   // the rule, where a brace-init of test_generators with a list of contexts would name nothing.
   struct refused_contexts
   {
-    bool operator<<(auto) const
+    friend bool operator<<(refused_contexts, auto)
     {
       return false;
     }

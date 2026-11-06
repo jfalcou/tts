@@ -25,7 +25,7 @@ namespace tts::_
   {
     if(value == expected)
       return ctx.pass(site,
-                      [ & ]
+                      [ &kind, &site, &expected ]
                       {
                         return ::tts::text {
                         "%s: %s evaluates to %s.", kind, site.lhs, expected ? "true" : "false"};
@@ -33,7 +33,7 @@ namespace tts::_
 
     return ctx.fail(
     site,
-    [ & ]
+    [ &kind, &site, &value ]
     { return ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, value ? "true" : "false"}; });
   }
 }

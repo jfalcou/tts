@@ -7,6 +7,7 @@
 //==================================================================================================
 #define TTS_MAIN
 #include <tts/tts.hpp>
+#include <array>
 #include <cstring>
 #include <type_traits>
 
@@ -30,7 +31,7 @@ namespace
     return nullptr;
   }
 
-  ::tts::counter successes_before = 0;
+  ::tts::counter successes_before = 0; // NOSONAR - one case writes it, the next reads it
 
   // Runs a body in the constant context alone, under a gathering sink, and gives its report
   // back, the counters the failures moved restored.
@@ -50,7 +51,7 @@ namespace
 
   bool says(::tts::text const& report, char const* what)
   {
-    return std::strstr(report.data(), what) != nullptr;
+    return std::strstr(report.data(), what) != nullptr; // NOSONAR - contains is C++23
   }
 }
 
@@ -62,8 +63,8 @@ TTS_CASE("Reads the success count before the constexpr case")
 
 TTS_CASE(TTS_CONSTEXPR("A constexpr case runs its body in both contexts"))
 {
-  int sum         = 0;
-  int values[ 4 ] = {1, 2, 3, 4};
+  int                sum    = 0;
+  std::array<int, 4> values = {1, 2, 3, 4};
   for(auto v: values)
     sum += v;
 
@@ -105,7 +106,9 @@ TTS_CASE(TTS_MAYFAIL(TTS_CONSTEVAL("TTS_MAYFAIL wraps a consteval title")))
 };
 
 TTS_CASE(TTS_CONSTEVAL(TTS_XINVALID("An empty consteval body is an empty case")))
-{};
+{
+// Empty on purpose: the case is tagged TTS_XINVALID
+};
 
 TTS_CASE(TTS_TIMEOUT(2000, TTS_CONSTEXPR("TTS_TIMEOUT wraps a constexpr title")))
 {

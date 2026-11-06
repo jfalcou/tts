@@ -29,10 +29,10 @@ namespace tts::_
   //====================================================================================================================
   struct probed_operands
   {
-    int  ordinal;
-    text lhs;
-    text rhs;
-    bool holds = false;
+    std::size_t ordinal;
+    text        lhs;
+    text        rhs;
+    bool        holds = false;
   };
 
   struct runtime_context
@@ -65,34 +65,34 @@ namespace tts::_
 
     logger probed_verdict(bool holds)
     {
-      if(probed.size() > 0 && probed[ probed.size() - 1 ].ordinal == ordinal)
+      if(!probed.empty() && probed[ probed.size() - 1 ].ordinal == ordinal)
         probed[ probed.size() - 1 ].holds = holds;
       ++ordinal;
       return logger {false};
     }
 
-    bool wanted(int which) const
+    bool wanted(std::size_t which) const
     {
-      for(int i = 0; i < wanted_count; ++i)
+      for(std::size_t i = 0; i < wanted_count; ++i)
         if(wanted_ordinals[ i ] == which) return true;
       return false;
     }
 
-    probed_operands const* probed_at(int which) const
+    probed_operands const* probed_at(std::size_t which) const
     {
       for(auto const& p: probed)
         if(p.ordinal == which) return &p;
       return nullptr;
     }
 
-    int                     ordinal         = 0;
+    std::size_t             ordinal         = 0;
     bool                    probing         = false;
-    int const*              wanted_ordinals = nullptr;
-    int                     wanted_count    = 0;
+    std::size_t const*      wanted_ordinals = nullptr;
+    std::size_t             wanted_count    = 0;
     buffer<probed_operands> probed          = {};
   };
 
-  inline runtime_context current_runtime = {};
+  inline runtime_context current_runtime = {}; // NOSONAR - the checks of every case move it
 
   //====================================================================================================================
   // Constant context: counts the passes and keeps the sites of the failures during a constant
@@ -108,15 +108,15 @@ namespace tts::_
 
   struct constant_failure
   {
-    check_site site;
-    int        ordinal;
+    check_site  site;
+    std::size_t ordinal;
   };
 
   struct constant_context
   {
-    static constexpr int        capacity = 64;
+    static constexpr std::size_t capacity = 64;
 
-    constexpr constant_context& operator()()
+    constexpr constant_context&  operator()()
     {
       return *this;
     }
@@ -135,13 +135,14 @@ namespace tts::_
       return {};
     }
 
-    template<typename A, typename B> constexpr void operands(A const&, B const&)
+    template<typename A, typename B> constexpr void operands(A const&, B const&) const
     {
+      // Nothing to keep: the values of a failed check are read by the probe, at run time.
     }
 
-    int              passes             = 0;
-    int              failures           = 0;
-    constant_failure failed[ capacity ] = {};
+    std::size_t      passes             = 0;
+    std::size_t      failures           = 0;
+    constant_failure failed[ capacity ] = {}; // NOSONAR - <array> is refused for the compile cost
   };
 
   //====================================================================================================================
@@ -178,22 +179,22 @@ namespace tts::_
   // the constant context refuses.
   template<typename Body, typename Maker = direct>
   concept constant_evaluable =
-  requires { typename std::integral_constant<int, evaluate<Body, Maker>().passes>; };
+  requires { typename std::integral_constant<std::size_t, evaluate<Body, Maker>().passes>; };
 
   // The outcome of the constant evaluation of a body, held once per body and maker.
   template<typename Body, typename Maker>
   inline constexpr constant_context constant_outcome = evaluate<Body, Maker>();
 
   // The ordinals of the recorded failures, as a constexpr array the probe reads.
-  template<typename Body, typename Maker, int Recorded> struct failed_ordinals
+  template<typename Body, typename Maker, std::size_t Recorded> struct failed_ordinals
   {
     static constexpr auto make()
     {
       struct
       {
-        int at[ Recorded ];
+        std::size_t at[ Recorded ]; // NOSONAR - <array> is refused for the compile cost
       } that {};
-      for(int i = 0; i < Recorded; ++i)
+      for(std::size_t i = 0; i < Recorded; ++i)
         that.at[ i ] = constant_outcome<Body, Maker>.failed[ i ].ordinal;
       return that;
     }
@@ -221,9 +222,9 @@ namespace tts::_
   //====================================================================================================================
   struct runtime_t
   {
-    static constexpr char const*                                name = "runtime";
+    static constexpr char const*                                               name = "runtime";
 
-    template<typename Maker = direct, bool = false> static void run(auto body)
+    template<typename Maker = direct, bool = false, typename Body> static void run(Body body)
     {
       current_runtime.ordinal = 0;
       Maker::apply(body, current_runtime);
@@ -236,17 +237,16 @@ namespace tts::_
 
     // Probe tells whether the body also runs at run time, where the operands of a failed check
     // are formatted for its message: a body of a constant context alone is never run that way.
-    template<typename Maker = direct, bool Probe = false> static void run(auto body)
+    template<typename Maker = direct, bool Probe = false, typename Body> static void run(Body body)
     {
-      using body_t                              = decltype(body);
-      constexpr constant_context const& outcome = constant_outcome<body_t, Maker>;
+      constexpr constant_context const& outcome = constant_outcome<Body, Maker>;
 
       if(::tts::is_detailed())
-        ::tts::output().writeln(">  In constant evaluation, %d check%s passed",
+        ::tts::output().writeln(">  In constant evaluation, %zu check%s passed",
                                 outcome.passes,
                                 outcome.passes > 1 ? "s" : "");
 
-      for(int i = 0; i < outcome.passes; ++i)
+      for(std::size_t i = 0; i < outcome.passes; ++i)
         ::tts::global_runtime.pass();
 
       constexpr auto recorded =
@@ -256,7 +256,7 @@ namespace tts::_
       {
         if constexpr(Probe)
         {
-          constexpr auto const& ordinals  = failed_ordinals<body_t, Maker, recorded>::value;
+          constexpr auto const& ordinals  = failed_ordinals<Body, Maker, recorded>::value;
 
           current_runtime.probing         = true;
           current_runtime.wanted_ordinals = ordinals.at;
@@ -266,7 +266,7 @@ namespace tts::_
           current_runtime.probing = false;
         }
 
-        for(int i = 0; i < recorded; ++i)
+        for(std::size_t i = 0; i < recorded; ++i)
         {
           auto const& failure = outcome.failed[ i ];
           check_failed(
@@ -277,7 +277,7 @@ namespace tts::_
 
         if(outcome.failures > recorded)
           check_failed(outcome.failed[ recorded - 1 ].site,
-                       text {"Constant evaluation: %d more failure%s past the %d recorded.",
+                       text {"Constant evaluation: %zu more failure%s past the %zu recorded.",
                              outcome.failures - recorded,
                              outcome.failures - recorded > 1 ? "s" : "",
                              recorded});

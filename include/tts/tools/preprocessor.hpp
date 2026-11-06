@@ -131,8 +131,8 @@ namespace tts::_
 #define TTS_IS_PARENTHESIZED(x)              TTS_IS_PARENTHESIZED_I((TTS_REMOVE_PARENS_I x))
 #define TTS_IS_PARENTHESIZED_I(test)         TTS_IS_PARENTHESIZED_II(TTS_TEST_ARITY test)
 #define TTS_IS_PARENTHESIZED_II(arity)       TTS_CAT(TTS_IS_PARENTHESIZED_, arity)
-#define TTS_IS_PARENTHESIZED_1               0
-#define TTS_IS_PARENTHESIZED_2               1
+#define TTS_IS_PARENTHESIZED_1               0 // NOSONAR - pasted into a macro name by TTS_CAT
+#define TTS_IS_PARENTHESIZED_2               1 // NOSONAR - pasted into a macro name by TTS_CAT
 #define TTS_REMOVE_PARENS_I(...)             1, 1
 #define TTS_APPLY(macro, args)               TTS_APPLY_I(macro, args)
 #define TTS_APPLY_I(macro, args)             macro args

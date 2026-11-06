@@ -9,6 +9,7 @@
 //! [snippet]
 #define TTS_MAIN // No need for main()
 #include <tts/tts.hpp>
+#include <array>
 
 constexpr int square(int x)
 {
@@ -18,8 +19,8 @@ constexpr int square(int x)
 // The body runs as ordinary code, then as one constant expression
 TTS_CASE(TTS_CONSTEXPR("Check square in both contexts"))
 {
-  int values[ 3 ] = {1, 2, 3};
-  int sum         = 0;
+  std::array<int, 3> values = {1, 2, 3};
+  int                sum    = 0;
   for(auto v: values)
     sum += square(v);
 

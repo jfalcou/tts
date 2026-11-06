@@ -23,14 +23,14 @@ namespace tts::_
     if constexpr(std::is_same_v<T, R>)
       return ctx.pass(
       site,
-      [ & ]
+      [ &site, &expression ]
       {
         return expression ? ::tts::text {"Expression: '%s' is of type '%s'.", site.lhs, site.rhs}
                           : ::tts::text {"Type: '%s' is '%s'.", site.lhs, site.rhs};
       });
     else
       return ctx.fail(site,
-                      [ & ]
+                      [ &site, &expression ]
                       {
                         char const* format =
                         expression
@@ -51,7 +51,7 @@ namespace tts::_
   {
     if(compiles == expected)
       return ctx.pass(site,
-                      [ & ]
+                      [ &site, &compiles ]
                       {
                         return ::tts::text {compiles
                                             ? "Expression: '%s' compiles as expected."
@@ -60,7 +60,7 @@ namespace tts::_
                       });
 
     return ctx.fail(site,
-                    [ & ]
+                    [ &site, &compiles ]
                     {
                       return ::tts::text {compiles
                                           ? "Expression: '%s' compiles unexpectedly."
