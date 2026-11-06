@@ -12,22 +12,29 @@
 #include <tts/engine/logger.hpp>
 #include <tts/engine/info.hpp>
 #include <tts/engine/check.hpp>
+#include <tts/engine/context.hpp>
 
 namespace tts::_
 {
-  inline logger
-  check_expect(bool value, bool expected, check_site const& site, char const* kind = "Expression")
+  template<typename Context>
+  constexpr auto check_expect(Context&          ctx,
+                              bool              value,
+                              bool              expected,
+                              check_site const& site,
+                              char const*       kind = "Expression")
   {
     if(value == expected)
-    {
-      if(check_passed())
-        check_report(
-        site, ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, expected ? "true" : "false"});
-      return logger {false};
-    }
+      return ctx.pass(site,
+                      [ & ]
+                      {
+                        return ::tts::text {
+                        "%s: %s evaluates to %s.", kind, site.lhs, expected ? "true" : "false"};
+                      });
 
-    return check_failed(
-    site, ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, value ? "true" : "false"});
+    return ctx.fail(
+    site,
+    [ & ]
+    { return ::tts::text {"%s: %s evaluates to %s.", kind, site.lhs, value ? "true" : "false"}; });
   }
 }
 
@@ -69,6 +76,7 @@ namespace tts::_
 
 #define TTS_EXPECT_IMPL(EXPR, FAILURE)                                                             \
   ::tts::_::check_expect(                                                                          \
+  local_tts_ctx(),                                                                                 \
   static_cast<bool>(EXPR),                                                                         \
   true,                                                                                            \
   TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) /**/
@@ -96,6 +104,7 @@ namespace tts::_
 
 #define TTS_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                         \
   ::tts::_::check_expect(                                                                          \
+  local_tts_ctx(),                                                                                 \
   static_cast<bool>(EXPR),                                                                         \
   false,                                                                                           \
   TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) /**/
@@ -122,7 +131,8 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_IMPL(EXPR, FAILURE)                                                       \
-  ::tts::_::check_expect(std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
+  ::tts::_::check_expect(local_tts_ctx(),                                                          \
+                         std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
                          true,                                                                     \
                          TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
                          "Constant expression")
@@ -150,7 +160,8 @@ namespace tts::_
 #define TTS_CEXPR_EXPECT_NOT_REQUIRED(EXPR) TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, TTS_FATAL)
 
 #define TTS_CEXPR_EXPECT_NOT_IMPL(EXPR, FAILURE)                                                   \
-  ::tts::_::check_expect(std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
+  ::tts::_::check_expect(local_tts_ctx(),                                                          \
+                         std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
                          false,                                                                    \
                          TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
                          "Constant expression") /**/

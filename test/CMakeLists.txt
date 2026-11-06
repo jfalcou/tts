@@ -122,6 +122,25 @@ set_tests_properties( unit.driver.timeout.exe
 
 
 ##======================================================================================================================
+## Units that must fail to compile: the CTest entry builds the excluded target and passes when the
+## build prints the diagnostic. Serial, since two builds in one tree would write the same ninja
+## files at once.
+##======================================================================================================================
+function(tts_expect_compile_failure source diagnostic)
+  get_filename_component(stem ${source} NAME_WE)
+  set(test "ill_formed.${stem}")
+  add_executable(${test} EXCLUDE_FROM_ALL ${root}/ill_formed/${source})
+  target_link_libraries(${test} PRIVATE tts_test)
+  add_test(NAME ${test} COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${test})
+  set_tests_properties(${test} PROPERTIES PASS_REGULAR_EXPRESSION "${diagnostic}" RUN_SERIAL TRUE)
+endfunction()
+
+tts_expect_compile_failure(constexpr_runtime_call.cpp        "constant")
+tts_expect_compile_failure(consteval_precision_check.cpp     "constant")
+tts_expect_compile_failure(template_case_without_context.cpp "takes TTS_CONTEXT")
+tts_expect_compile_failure(generated_case_context.cpp        "TTS_CASE_WITH takes no context")
+
+##======================================================================================================================
 ## Test for TTS Documentation
 ##======================================================================================================================
 copa_glob_unit( QUIET PATTERN "unit/doc/*.cpp"
