@@ -108,8 +108,8 @@ namespace tts::_
 
   struct constant_failure
   {
-    check_site  site;
-    std::size_t ordinal;
+    check_site  site    = {};
+    std::size_t ordinal = 0;
   };
 
   struct constant_context
@@ -192,7 +192,7 @@ namespace tts::_
     {
       struct
       {
-        std::size_t at[ Recorded ]; // NOSONAR - <array> is refused for the compile cost
+        std::size_t at[ Recorded ] = {}; // NOSONAR - <array> is refused for the compile cost
       } that {};
       for(std::size_t i = 0; i < Recorded; ++i)
         that.at[ i ] = constant_outcome<Body, Maker>.failed[ i ].ordinal;

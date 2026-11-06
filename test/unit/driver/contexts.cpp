@@ -191,8 +191,8 @@ TTS_CASE("A consteval failure names its expression alone")
 
 TTS_CASE("The constant context refuses a body with a runtime call")
 {
-  auto with_runtime_call  = [](TTS_CONTEXT()) { TTS_EQUAL(runtime_only(1), 1); };
-  auto with_constant_code = [](TTS_CONTEXT()) { TTS_EQUAL(by_context(1), 2); };
+  [[maybe_unused]] auto with_runtime_call  = [](TTS_CONTEXT()) { TTS_EQUAL(runtime_only(1), 1); };
+  [[maybe_unused]] auto with_constant_code = [](TTS_CONTEXT()) { TTS_EQUAL(by_context(1), 2); };
 
   TTS_EXPECT_NOT(::tts::_::constant_evaluable<decltype(with_runtime_call)>);
   TTS_EXPECT(::tts::_::constant_evaluable<decltype(with_constant_code)>);

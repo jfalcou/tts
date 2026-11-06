@@ -15,11 +15,13 @@
 // What every check macro shares: where it is written, its count and its report.
 namespace tts::_
 {
+  // Every member has an initializer: nvc++ refuses a {}-initialized array of sites in a constant
+  // expression otherwise.
   struct check_site
   {
-    char const* file;
-    int         line;
-    bool        fatal;
+    char const* file    = "";
+    int         line    = 0;
+    bool        fatal   = false;
     char const* lhs     = "";
     char const* op      = "";
     char const* rhs     = "";
