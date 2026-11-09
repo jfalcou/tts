@@ -12,4 +12,4 @@ include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 ##======================================================================================================================
 ## Retrieve dependencies
 ##======================================================================================================================
-CPMAddPackage(NAME COPACABANA GITHUB_REPOSITORY jfalcou/copacabana GIT_TAG 0242be901ffd6fed6cece0e44d1b3c4385e7e38d)
+CPMAddPackage(NAME COPACABANA GITHUB_REPOSITORY jfalcou/copacabana GIT_TAG 064ed5a324ac0fb2629c2a5953b83aac9f9436a5)
