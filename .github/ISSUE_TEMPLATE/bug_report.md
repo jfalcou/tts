@@ -11,15 +11,17 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Provide a code sample exhibiting the incorrect behavior.
+A code sample exhibiting the incorrect behavior, as small as possible while still exhibiting the bug. A Compiler Explorer link is the preferred way to share it.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Desktop (please complete the following information):**
+**Setup:**
+ - Library version: [e.g. 0.1]
+ - Compiler and compiler's version: [e.g. g++ 10]
  - OS: [e.g. Arch Linux]
- - Compiler [e.g. g++ 10.1]
- - Version [e.g. 0.1]
+ - Processor architecture: [e.g. Intel, PowerPC]
+ - Instruction set used: [e.g. SSE, AVX, ARM]
 
 **Additional context**
 Add any other context about the problem here.
