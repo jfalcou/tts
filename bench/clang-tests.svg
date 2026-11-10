@@ -2,69 +2,67 @@
 <text x="56.0" y="22.0" fill="#808080" font-size="14">clang++ 22.1.2 -O0, cost of one test in a file of 200 without runner</text>
 <line x1="56.0" x2="704.0" y1="340.0" y2="340.0" stroke="#808080" stroke-opacity="0.3"/>
 <text x="50.0" y="344.0" fill="#808080" text-anchor="end">0 ms</text>
-<line x1="56.0" x2="704.0" y1="280.0" y2="280.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="284.0" fill="#808080" text-anchor="end">1 ms</text>
-<line x1="56.0" x2="704.0" y1="220.0" y2="220.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="224.0" fill="#808080" text-anchor="end">2 ms</text>
-<line x1="56.0" x2="704.0" y1="160.0" y2="160.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="164.0" fill="#808080" text-anchor="end">3 ms</text>
-<line x1="56.0" x2="704.0" y1="100.0" y2="100.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="104.0" fill="#808080" text-anchor="end">4 ms</text>
+<line x1="56.0" x2="704.0" y1="265.0" y2="265.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50.0" y="269.0" fill="#808080" text-anchor="end">1 ms</text>
+<line x1="56.0" x2="704.0" y1="190.0" y2="190.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50.0" y="194.0" fill="#808080" text-anchor="end">2 ms</text>
+<line x1="56.0" x2="704.0" y1="115.0" y2="115.0" stroke="#808080" stroke-opacity="0.3"/>
+<text x="50.0" y="119.0" fill="#808080" text-anchor="end">3 ms</text>
 <line x1="56.0" x2="704.0" y1="40.0" y2="40.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="44.0" fill="#808080" text-anchor="end">5 ms</text>
-<rect x="72.2" y="306.8" width="48.6" height="33.2" fill="#d1495b"/>
-<text x="96.5" y="299.4" fill="#808080" text-anchor="middle">0.55 ms</text>
+<text x="50.0" y="44.0" fill="#808080" text-anchor="end">4 ms</text>
+<rect x="72.2" y="302.0" width="48.6" height="38.0" fill="#d1495b"/>
+<line x1="96.5" x2="96.5" y1="313.6" y2="288.1" stroke="#808080" stroke-width="1.5"/>
+<line x1="91.5" x2="101.5" y1="313.6" y2="313.6" stroke="#808080" stroke-width="1.5"/>
+<line x1="91.5" x2="101.5" y1="288.1" y2="288.1" stroke="#808080" stroke-width="1.5"/>
+<text x="96.5" y="282.1" fill="#808080" text-anchor="middle">0.51 ms</text>
 <text x="96.5" y="356.0" fill="#d1495b" font-weight="bold" text-anchor="middle">TTS</text>
-<text x="96.5" y="369.0" fill="#808080" text-anchor="middle">0.22 s in all</text>
-<rect x="153.2" y="257.5" width="48.6" height="82.5" fill="#86c98e"/>
-<line x1="177.5" x2="177.5" y1="257.6" y2="253.9" stroke="#808080" stroke-width="1.5"/>
-<line x1="172.5" x2="182.5" y1="257.6" y2="257.6" stroke="#808080" stroke-width="1.5"/>
-<line x1="172.5" x2="182.5" y1="253.9" y2="253.9" stroke="#808080" stroke-width="1.5"/>
-<text x="177.5" y="247.9" fill="#808080" text-anchor="middle">1.37 ms</text>
+<text x="96.5" y="369.0" fill="#808080" text-anchor="middle">0.21 s in all</text>
+<rect x="153.2" y="252.2" width="48.6" height="87.8" fill="#86c98e"/>
+<line x1="177.5" x2="177.5" y1="253.3" y2="249.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="172.5" x2="182.5" y1="253.3" y2="253.3" stroke="#808080" stroke-width="1.5"/>
+<line x1="172.5" x2="182.5" y1="249.9" y2="249.9" stroke="#808080" stroke-width="1.5"/>
+<text x="177.5" y="243.9" fill="#808080" text-anchor="middle">1.17 ms</text>
 <text x="177.5" y="356.0" fill="#86c98e" font-weight="bold" text-anchor="middle">doctest</text>
 <text x="177.5" y="369.0" fill="#86c98e" font-weight="bold" text-anchor="middle">fast</text>
-<text x="177.5" y="382.0" fill="#808080" text-anchor="middle">0.31 s in all</text>
-<rect x="234.2" y="253.5" width="48.6" height="86.5" fill="#5c8a8a"/>
-<line x1="258.5" x2="258.5" y1="277.8" y2="220.3" stroke="#808080" stroke-width="1.5"/>
-<line x1="253.5" x2="263.5" y1="277.8" y2="277.8" stroke="#808080" stroke-width="1.5"/>
-<line x1="253.5" x2="263.5" y1="220.3" y2="220.3" stroke="#808080" stroke-width="1.5"/>
-<text x="258.5" y="214.3" fill="#808080" text-anchor="middle">1.44 ms</text>
+<text x="177.5" y="382.0" fill="#808080" text-anchor="middle">0.27 s in all</text>
+<rect x="234.2" y="217.2" width="48.6" height="122.8" fill="#5c8a8a"/>
+<line x1="258.5" x2="258.5" y1="237.9" y2="206.5" stroke="#808080" stroke-width="1.5"/>
+<line x1="253.5" x2="263.5" y1="237.9" y2="237.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="253.5" x2="263.5" y1="206.5" y2="206.5" stroke="#808080" stroke-width="1.5"/>
+<text x="258.5" y="200.5" fill="#808080" text-anchor="middle">1.64 ms</text>
 <text x="258.5" y="356.0" fill="#5c8a8a" font-weight="bold" text-anchor="middle">ut</text>
-<text x="258.5" y="369.0" fill="#808080" text-anchor="middle">1.87 s in all</text>
-<rect x="315.2" y="199.1" width="48.6" height="140.9" fill="#2e86ab"/>
-<line x1="339.5" x2="339.5" y1="202.8" y2="188.7" stroke="#808080" stroke-width="1.5"/>
-<line x1="334.5" x2="344.5" y1="202.8" y2="202.8" stroke="#808080" stroke-width="1.5"/>
-<line x1="334.5" x2="344.5" y1="188.7" y2="188.7" stroke="#808080" stroke-width="1.5"/>
-<text x="339.5" y="182.7" fill="#808080" text-anchor="middle">2.35 ms</text>
-<text x="339.5" y="356.0" fill="#2e86ab" font-weight="bold" text-anchor="middle">Catch2</text>
-<text x="339.5" y="369.0" fill="#808080" text-anchor="middle">1.58 s in all</text>
-<rect x="396.2" y="195.7" width="48.6" height="144.3" fill="#3fa34d"/>
-<line x1="420.5" x2="420.5" y1="197.0" y2="192.9" stroke="#808080" stroke-width="1.5"/>
-<line x1="415.5" x2="425.5" y1="197.0" y2="197.0" stroke="#808080" stroke-width="1.5"/>
-<line x1="415.5" x2="425.5" y1="192.9" y2="192.9" stroke="#808080" stroke-width="1.5"/>
-<text x="420.5" y="186.9" fill="#808080" text-anchor="middle">2.40 ms</text>
-<text x="420.5" y="356.0" fill="#3fa34d" font-weight="bold" text-anchor="middle">doctest</text>
-<text x="420.5" y="369.0" fill="#808080" text-anchor="middle">0.52 s in all</text>
-<rect x="477.2" y="194.4" width="48.6" height="145.6" fill="#7fb8d6"/>
-<line x1="501.5" x2="501.5" y1="229.9" y2="194.0" stroke="#808080" stroke-width="1.5"/>
-<line x1="496.5" x2="506.5" y1="229.9" y2="229.9" stroke="#808080" stroke-width="1.5"/>
-<line x1="496.5" x2="506.5" y1="194.0" y2="194.0" stroke="#808080" stroke-width="1.5"/>
-<text x="501.5" y="188.0" fill="#808080" text-anchor="middle">2.43 ms</text>
-<text x="501.5" y="356.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">Catch2</text>
-<text x="501.5" y="369.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">fast</text>
-<text x="501.5" y="382.0" fill="#808080" text-anchor="middle">1.51 s in all</text>
-<rect x="558.2" y="170.5" width="48.6" height="169.5" fill="#e09f3e"/>
-<line x1="582.5" x2="582.5" y1="174.3" y2="165.7" stroke="#808080" stroke-width="1.5"/>
-<line x1="577.5" x2="587.5" y1="174.3" y2="174.3" stroke="#808080" stroke-width="1.5"/>
-<line x1="577.5" x2="587.5" y1="165.7" y2="165.7" stroke="#808080" stroke-width="1.5"/>
-<text x="582.5" y="159.7" fill="#808080" text-anchor="middle">2.83 ms</text>
+<text x="258.5" y="369.0" fill="#808080" text-anchor="middle">1.71 s in all</text>
+<rect x="315.2" y="209.9" width="48.6" height="130.1" fill="#7fb8d6"/>
+<line x1="339.5" x2="339.5" y1="214.9" y2="197.8" stroke="#808080" stroke-width="1.5"/>
+<line x1="334.5" x2="344.5" y1="214.9" y2="214.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="334.5" x2="344.5" y1="197.8" y2="197.8" stroke="#808080" stroke-width="1.5"/>
+<text x="339.5" y="191.8" fill="#808080" text-anchor="middle">1.73 ms</text>
+<text x="339.5" y="356.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">Catch2</text>
+<text x="339.5" y="369.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">fast</text>
+<text x="339.5" y="382.0" fill="#808080" text-anchor="middle">1.33 s in all</text>
+<rect x="396.2" y="199.5" width="48.6" height="140.5" fill="#2e86ab"/>
+<line x1="420.5" x2="420.5" y1="224.9" y2="195.8" stroke="#808080" stroke-width="1.5"/>
+<line x1="415.5" x2="425.5" y1="224.9" y2="224.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="415.5" x2="425.5" y1="195.8" y2="195.8" stroke="#808080" stroke-width="1.5"/>
+<text x="420.5" y="189.8" fill="#808080" text-anchor="middle">1.87 ms</text>
+<text x="420.5" y="356.0" fill="#2e86ab" font-weight="bold" text-anchor="middle">Catch2</text>
+<text x="420.5" y="369.0" fill="#808080" text-anchor="middle">1.35 s in all</text>
+<rect x="477.2" y="197.9" width="48.6" height="142.1" fill="#3fa34d"/>
+<text x="501.5" y="191.0" fill="#808080" text-anchor="middle">1.90 ms</text>
+<text x="501.5" y="356.0" fill="#3fa34d" font-weight="bold" text-anchor="middle">doctest</text>
+<text x="501.5" y="369.0" fill="#808080" text-anchor="middle">0.42 s in all</text>
+<rect x="558.2" y="160.5" width="48.6" height="179.5" fill="#e09f3e"/>
+<line x1="582.5" x2="582.5" y1="162.0" y2="152.0" stroke="#808080" stroke-width="1.5"/>
+<line x1="577.5" x2="587.5" y1="162.0" y2="162.0" stroke="#808080" stroke-width="1.5"/>
+<line x1="577.5" x2="587.5" y1="152.0" y2="152.0" stroke="#808080" stroke-width="1.5"/>
+<text x="582.5" y="146.0" fill="#808080" text-anchor="middle">2.39 ms</text>
 <text x="582.5" y="356.0" fill="#e09f3e" font-weight="bold" text-anchor="middle">GoogleTest</text>
-<text x="582.5" y="369.0" fill="#808080" text-anchor="middle">1.40 s in all</text>
-<rect x="639.2" y="59.6" width="48.6" height="280.4" fill="#8e6bbf"/>
-<line x1="663.5" x2="663.5" y1="61.4" y2="42.0" stroke="#808080" stroke-width="1.5"/>
-<line x1="658.5" x2="668.5" y1="61.4" y2="61.4" stroke="#808080" stroke-width="1.5"/>
-<line x1="658.5" x2="668.5" y1="42.0" y2="42.0" stroke="#808080" stroke-width="1.5"/>
-<text x="663.5" y="36.0" fill="#808080" text-anchor="middle">4.67 ms</text>
+<text x="582.5" y="369.0" fill="#808080" text-anchor="middle">1.23 s in all</text>
+<rect x="639.2" y="59.4" width="48.6" height="280.6" fill="#8e6bbf"/>
+<line x1="663.5" x2="663.5" y1="72.5" y2="58.7" stroke="#808080" stroke-width="1.5"/>
+<line x1="658.5" x2="668.5" y1="72.5" y2="72.5" stroke="#808080" stroke-width="1.5"/>
+<line x1="658.5" x2="668.5" y1="58.7" y2="58.7" stroke="#808080" stroke-width="1.5"/>
+<text x="663.5" y="52.7" fill="#808080" text-anchor="middle">3.74 ms</text>
 <text x="663.5" y="356.0" fill="#8e6bbf" font-weight="bold" text-anchor="middle">Boost.Test</text>
-<text x="663.5" y="369.0" fill="#808080" text-anchor="middle">1.67 s in all</text>
+<text x="663.5" y="369.0" fill="#808080" text-anchor="middle">1.39 s in all</text>
 </svg>
