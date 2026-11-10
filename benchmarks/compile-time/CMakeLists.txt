@@ -14,11 +14,26 @@ set(TTS_BENCH_DOCTEST_VERSION 2.5.3)
 set(TTS_BENCH_UT_VERSION 2.3.1)
 set(TTS_BENCH_GTEST_VERSION 1.18.0)
 set(TTS_BENCH_CATCH2_VERSION 3.16.1)
-CPMAddPackage(NAME doctest GITHUB_REPOSITORY doctest/doctest GIT_TAG v${TTS_BENCH_DOCTEST_VERSION} DOWNLOAD_ONLY YES)
-CPMAddPackage(NAME ut GITHUB_REPOSITORY boost-ext/ut GIT_TAG v${TTS_BENCH_UT_VERSION} DOWNLOAD_ONLY YES)
-CPMAddPackage(NAME googletest GITHUB_REPOSITORY google/googletest GIT_TAG v${TTS_BENCH_GTEST_VERSION}
-              DOWNLOAD_ONLY YES)
-CPMAddPackage(NAME Catch2 GITHUB_REPOSITORY catchorg/Catch2 GIT_TAG v${TTS_BENCH_CATCH2_VERSION} DOWNLOAD_ONLY YES)
+CPMAddPackage(
+  NAME doctest
+  GITHUB_REPOSITORY doctest/doctest
+  GIT_TAG v${TTS_BENCH_DOCTEST_VERSION}
+  DOWNLOAD_ONLY YES)
+CPMAddPackage(
+  NAME ut
+  GITHUB_REPOSITORY boost-ext/ut
+  GIT_TAG v${TTS_BENCH_UT_VERSION}
+  DOWNLOAD_ONLY YES)
+CPMAddPackage(
+  NAME googletest
+  GITHUB_REPOSITORY google/googletest
+  GIT_TAG v${TTS_BENCH_GTEST_VERSION}
+  DOWNLOAD_ONLY YES)
+CPMAddPackage(
+  NAME Catch2
+  GITHUB_REPOSITORY catchorg/Catch2
+  GIT_TAG v${TTS_BENCH_CATCH2_VERSION}
+  DOWNLOAD_ONLY YES)
 
 ## Catch2 generates this header when it is configured, which DOWNLOAD_ONLY skips. The two values are its defaults.
 set(CATCH_CONFIG_DEFAULT_REPORTER "console")
@@ -64,18 +79,19 @@ set(LIBRARIES
     "--main=gtest=@${CMAKE_CURRENT_BINARY_DIR}/gtest-main.txt")
 
 ## The CI container checks the sources out under another user, which git refuses without safe.directory.
-execute_process(COMMAND git -c safe.directory=* rev-parse --short HEAD WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-                OUTPUT_VARIABLE TTS_BENCH_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+execute_process(
+  COMMAND git -c safe.directory=* rev-parse --short HEAD
+  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+  OUTPUT_VARIABLE TTS_BENCH_COMMIT
+  OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
 if(TTS_BENCH_COMMIT)
   set(TTS_BENCH_VERSION "at ${TTS_BENCH_COMMIT}")
 else()
   set(TTS_BENCH_VERSION "${PROJECT_VERSION}")
 endif()
 set(VERSIONS
-    "--version=tts=${TTS_BENCH_VERSION}"
-    "--version=doctest=${TTS_BENCH_DOCTEST_VERSION}"
-    "--version=catch2=${TTS_BENCH_CATCH2_VERSION}"
-    "--version=gtest=${TTS_BENCH_GTEST_VERSION}"
+    "--version=tts=${TTS_BENCH_VERSION}" "--version=doctest=${TTS_BENCH_DOCTEST_VERSION}"
+    "--version=catch2=${TTS_BENCH_CATCH2_VERSION}" "--version=gtest=${TTS_BENCH_GTEST_VERSION}"
     "--version=ut=${TTS_BENCH_UT_VERSION}")
 
 if(TTS_BENCH_BOOST_INCLUDE)
@@ -83,7 +99,7 @@ if(TTS_BENCH_BOOST_INCLUDE)
   string(REGEX REPLACE ".*\"([0-9_]+)\".*" "\\1" BOOST_VERSION "${BOOST_LINE}")
   string(REPLACE "_" "." BOOST_VERSION "${BOOST_VERSION}")
   list(APPEND LIBRARIES "--library=boost=-I${TTS_BENCH_BOOST_INCLUDE}"
-                        "--main=boost=${BENCH_DIR}/sources/mains/boost.cpp")
+       "--main=boost=${BENCH_DIR}/sources/mains/boost.cpp")
   list(APPEND VERSIONS "--version=boost=${BOOST_VERSION}")
 else()
   message(STATUS "[TTS] - Boost.Test not found, the compile-time benchmark goes without it")
@@ -100,12 +116,11 @@ endif()
 add_custom_target(
   tts-compile-bench
   COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/generate.py" "${BENCH_DIR}/sources"
-          "--single=${TTS_BENCH_SINGLE}" "--files=${TTS_BENCH_FILES}"
-          "--tests=${TTS_BENCH_TESTS}"
-  COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/measure.py" "${BENCH_DIR}/sources"
-          "${BENCH_DIR}/results.json" ${COMPILERS} ${LIBRARIES} ${VERSIONS} "--ar=${CMAKE_AR}"
-          "--options=${TTS_BENCH_OPTIONS}"
-          --runs ${TTS_BENCH_RUNS} --jobs ${TTS_BENCH_JOBS}
+          "--single=${TTS_BENCH_SINGLE}" "--files=${TTS_BENCH_FILES}" "--tests=${TTS_BENCH_TESTS}"
+  COMMAND
+    ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/measure.py" "${BENCH_DIR}/sources" "${BENCH_DIR}/results.json"
+    ${COMPILERS} ${LIBRARIES} ${VERSIONS} "--ar=${CMAKE_AR}" "--options=${TTS_BENCH_OPTIONS}" --runs ${TTS_BENCH_RUNS}
+    --jobs ${TTS_BENCH_JOBS}
   COMMAND ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/plot.py" "${BENCH_DIR}/results.json"
           "${PROJECT_BINARY_DIR}/doc/bench"
   COMMENT "[TTS] - Measuring what a test executable costs to build with TTS and with other test libraries"

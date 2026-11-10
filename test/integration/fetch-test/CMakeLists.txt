@@ -13,10 +13,7 @@ message(STATUS "Testing FetchContent for branch ${GIT_BRANCH}")
 include(FetchContent)
 
 # Retrieve TTS from relative git directory
-FetchContent_Declare(tts
-  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
-  GIT_TAG ${GIT_BRANCH}
-)
+FetchContent_Declare(tts GIT_REPOSITORY "https://github.com/jfalcou/tts.git" GIT_TAG ${GIT_BRANCH})
 
 ## FetchContent has no per-package OPTIONS: what tts reads is pinned here.
 set(TTS_BUILD_TEST OFF CACHE BOOL "" FORCE)
