@@ -13,11 +13,11 @@ message(STATUS "Testing CPM for branch ${GIT_BRANCH}")
 include(cpm.cmake)
 
 # Add dependencies
-CPMAddPackage ( NAME tts
-                GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
-                GIT_TAG "${GIT_BRANCH}"
-                OPTIONS "TTS_BUILD_TEST OFF"
-              )
+CPMAddPackage(
+  NAME tts
+  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+  GIT_TAG "${GIT_BRANCH}"
+  OPTIONS "TTS_BUILD_TEST OFF")
 
 # Use TTS
 add_executable(test_tts ../main.cpp)

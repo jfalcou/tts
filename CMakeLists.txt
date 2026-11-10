@@ -24,10 +24,15 @@ include(${COPACABANA_SOURCE_DIR}/copacabana/cmake/copacabana.cmake)
 copa_add_option(TTS_BUILD_TEST "Build tests for TTS" ON LABEL "Unit tests")
 copa_add_option(TTS_BUILD_DOCUMENTATION "Build Doxygen for TTS" OFF LABEL "Doxygen")
 copa_add_option(TTS_BENCHMARK_DOCUMENTATION "Compare TTS with other test libraries in the documentation" OFF)
-copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF LABEL "Sanitizers")
+copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + UndefinedBehaviorSanitizer" OFF
+                LABEL "Sanitizers")
 copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
 copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
-copa_project_version(MAJOR 4 MINOR 0 PATCH 0 REPOSITORY https://github.com/jfalcou/tts)
+copa_project_version(
+  MAJOR 4
+  MINOR 0
+  PATCH 0
+  REPOSITORY https://github.com/jfalcou/tts)
 
 ##======================================================================================================================
 ## Summary Display
@@ -48,19 +53,22 @@ copa_setup_precommit_hooks(${QUIET_OPTION})
 ##======================================================================================================================
 ## Install Process setup
 ##======================================================================================================================
-copa_setup_install( LIBRARY tts
-                    FEATURES cxx_std_20
-                    DOC     ${PROJECT_SOURCE_DIR}/LICENSE.md
-                    INCLUDE ${PROJECT_SOURCE_DIR}/include/tts
-                  )
+copa_setup_install(
+  LIBRARY tts
+  FEATURES cxx_std_20
+  DOC ${PROJECT_SOURCE_DIR}/LICENSE.md
+  INCLUDE ${PROJECT_SOURCE_DIR}/include/tts)
 
 ##======================================================================================================================
 ## Standalone generation
 ##======================================================================================================================
-copa_setup_standalone ( QUIET
-                        FILE tts.hpp SOURCE include ROOT tts TARGET tts-standalone
-                        OUTPUT "${PROJECT_BINARY_DIR}"
-                      )
+copa_setup_standalone(
+  QUIET
+  FILE tts.hpp
+  SOURCE include
+  ROOT tts
+  TARGET tts-standalone
+  OUTPUT "${PROJECT_BINARY_DIR}")
 
 ##======================================================================================================================
 ## Setup doxygen
@@ -80,8 +88,21 @@ if(TTS_BUILD_DOCUMENTATION)
     add_dependencies(tts-doxygen tts-compile-bench)
   else()
     # The page includes this block whether or not the comparison runs.
-    foreach(block meta include-gcc include-clang one-gcc one-clang mains-gcc mains-clang cases-gcc cases-clang
-                  tests-gcc tests-clang files-gcc files-clang)
+    foreach(
+      block
+      meta
+      include-gcc
+      include-clang
+      one-gcc
+      one-clang
+      mains-gcc
+      mains-clang
+      cases-gcc
+      cases-clang
+      tests-gcc
+      tests-clang
+      files-gcc
+      files-clang)
       file(WRITE "${PROJECT_BINARY_DIR}/doc/bench/bench-${block}.html"
            "<p>This build of the documentation did not run the comparison.</p>\n")
     endforeach()
@@ -98,7 +119,7 @@ if(TTS_BUILD_TEST)
 
   include(CTest)
   enable_testing()
-  add_custom_target(tts-unit)
+  add_custom_target(tts-unit COMMENT "[tts] - Building the unit tests")
   add_subdirectory(test)
 
   # After the test targets exist, so the coverage targets can depend on them
