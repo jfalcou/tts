@@ -28,6 +28,7 @@ copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + Undef
                 LABEL "Sanitizers")
 copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
 copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
+copa_add_option(TTS_EXTERNAL_DEPENDENCIES "Take dependencies from the environment instead of fetching them" OFF)
 copa_project_version(
   MAJOR 4
   MINOR 0
