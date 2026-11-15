@@ -10,6 +10,13 @@
 
 namespace tts
 {
+  namespace _
+  {
+    struct primary_adapter
+    {
+    };
+  }
+
   //====================================================================================================================
   /*!
     @ingroup tools-precision
@@ -18,7 +25,8 @@ namespace tts
     A range check stores its data as scalars, and a specialization maps a type to them:
     `element_type` is the scalar, `size` the number of scalars per value, `load` and `store` the
     conversions between a value and `size` consecutive scalars. The primary template covers a
-    scalar type, with `size` equal to one.
+    scalar type, with `size` equal to one. A specialization also keeps whole a result that follows
+    the protocol of structured bindings, which the primary template splits into its members.
 
     @groupheader{Example}
     @snippet doc/range_adapter.cpp snippet
@@ -26,7 +34,7 @@ namespace tts
     @tparam T Type to adapt
   **/
   //====================================================================================================================
-  template<typename T> struct adapter
+  template<typename T> struct adapter : _::primary_adapter
   {
     using element_type                = T;
     static constexpr std::size_t size = 1;
@@ -54,7 +62,6 @@ namespace tts
     template<std::size_t... Is, typename... Ts>
     struct pack_base<std::index_sequence<Is...>, Ts...> : leaf<Is, Ts>...
     {
-      pack_base() = default;
       explicit pack_base(Ts... ts)
           : leaf<Is, Ts> {static_cast<Ts&&>(ts)}...
       {
@@ -63,9 +70,10 @@ namespace tts
 
     template<typename... Ts> struct pack : pack_base<std::index_sequence_for<Ts...>, Ts...>
     {
-      using base_type = pack_base<std::index_sequence_for<Ts...>, Ts...>;
-      using base_type::base_type;
+      using pack_base<std::index_sequence_for<Ts...>, Ts...>::pack_base;
     };
+
+    template<typename... Ts> pack(Ts...) -> pack<Ts...>;
 
     template<std::size_t I, typename T> constexpr T& get(leaf<I, T>& l) noexcept
     {
@@ -77,339 +85,374 @@ namespace tts
       return l.value;
     }
 
-    // A single producer serves every argument of the check.
-    template<typename... Gs> struct grid
-    {
-      template<std::size_t K> auto const& leaf() const noexcept
-      {
-        if constexpr(sizeof...(Gs) == 1) return _::get<0>(leaves);
-        else return _::get<K>(leaves);
-      }
+    // A result following the protocol of structured bindings is compared member by member, unless
+    // an adapter describes it as a whole.
+    template<typename T>
+    concept tuple_result =
+    std::is_base_of_v<primary_adapter, adapter<T>> && requires { std::tuple_size<T>::value; };
 
-      TTS_NO_UNIQUE_ADDRESS pack<Gs...> leaves;
+    template<typename T> struct result_members
+    {
+      using type                         = types<T>;
+      static constexpr std::size_t count = 1;
+      static constexpr std::size_t size  = adapter<T>::size;
     };
 
-    template<typename T> struct is_grid : std::false_type
+    template<tuple_result T> struct result_members<T>
     {
+      template<std::size_t... Is>
+      static types<std::decay_t<std::tuple_element_t<Is, T>>...> list(std::index_sequence<Is...>);
+
+      using type = decltype(list(std::make_index_sequence<std::tuple_size<T>::value> {}));
+      static constexpr std::size_t count = std::tuple_size<T>::value;
+      static constexpr std::size_t size  = adapter<std::decay_t<std::tuple_element_t<0, T>>>::size;
     };
 
-    template<typename... Gs> struct is_grid<grid<Gs...>> : std::true_type
+    template<std::size_t I, typename T> decltype(auto) result_member(T const& r)
     {
-    };
-
-    template<typename... Gs> grid<Gs...> make_grid(Gs... gs)
-    {
-      return grid<Gs...> {pack<Gs...> {static_cast<Gs&&>(gs)...}};
+      if constexpr(tuple_result<T>) return get<I>(r);
+      else return (r);
     }
 
-    // A block of count tuples is the full product of r samples per argument.
-    inline std::size_t grid_side(std::size_t count, std::size_t arity) noexcept
+    template<std::size_t Size, typename... Ms, typename... Rs>
+    constexpr bool members_match(types<Ms...>, types<Rs...>)
     {
-      if(arity == 1) return count;
-
-      std::size_t r = 1;
-      for(;;)
-      {
-        std::size_t p = 1;
-        for(std::size_t k = 0; k < arity; ++k)
-          p *= r;
-        if(p >= count) return r;
-        ++r;
-      }
+      if constexpr(sizeof...(Ms) != sizeof...(Rs)) return false;
+      else
+        return (
+        (adapter<Ms>::size == Size && std::is_same_v<typename adapter<Ms>::element_type, Rs>) &&
+        ...);
     }
 
-    template<typename Input, typename Output> struct histogram_entry
+    inline std::size_t power(std::size_t r, std::size_t n) noexcept
     {
-      bool   status;
-      Input  input_value;
-      Output found_value, ref_value;
-    };
+      std::size_t p = 1;
+      for(std::size_t k = 0; k < n; ++k)
+        p *= r;
+      return p;
+    }
 
     inline std::size_t last_bucket_less(std::size_t nb_buckets, double ulp) noexcept
     {
-      auto next2 = [](double x)
-      {
-        auto v = static_cast<std::size_t>(_::ceil(x));
-        v--;
-        v |= v >> 1;
-        v |= v >> 2;
-        v |= v >> 4;
-        v |= v >> 8;
-        v |= v >> 16;
-        v++;
-        return v;
-      };
-
-      std::size_t bucket;
-      if(ulp <= 1.5) bucket = static_cast<std::size_t>(_::ceil(ulp * 2));
-      else if(_::is_inf(ulp)) bucket = nb_buckets - 1;
-      else bucket = _::min(nb_buckets - 2, static_cast<std::size_t>(_::log2(next2(ulp)) + 4));
-      return bucket;
+      if(ulp <= 1.5) return static_cast<std::size_t>(_::ceil(ulp * 2));
+      if(_::is_inf(ulp)) return nb_buckets - 1;
+      auto steps =
+      static_cast<std::size_t>(std::bit_width(static_cast<std::size_t>(_::ceil(ulp)) - 1));
+      return _::min(nb_buckets - 2, steps + 4);
     }
 
-    template<typename... S> void header(S const&... s)
+    // A group of size values, the one at mark between stars.
+    template<typename T> void show_group(T const* p, std::size_t size, std::size_t mark)
     {
-      ((::tts::output().write("%-*s", 16, s)), ...);
-      ::tts::output().writeln();
-    }
-
-    template<typename V> void show(V const& v)
-    {
-      ::tts::output().write(::tts::as_text(v));
-    }
-
-    // One value of the challenger as its scalars, the element of the bucket at position mark.
-    template<typename T, std::size_t N> struct group
-    {
-      T           values[ N ]; // NOSONAR - <array> costs compile time
-      std::size_t mark;
-    };
-
-    template<std::size_t N, typename T> group<T, N> make_group(T const* first, std::size_t mark)
-    {
-      group<T, N> g {{}, mark};
-      for(std::size_t k = 0; k < N; ++k)
-        g.values[ k ] = first[ k ];
-      return g;
-    }
-
-    template<typename T, std::size_t N> void show(group<T, N> const& g)
-    {
-      if constexpr(N == 1) show(g.values[ 0 ]);
+      if(size == 1) ::tts::output().write(::tts::as_text(*p));
       else
       {
-        ::tts::output().write("{ ");
-        for(std::size_t k = 0; k < N; ++k)
-        {
-          ::tts::output().write(k == 0 ? "" : " ");
-          if(k == g.mark) ::tts::output().write("*");
-          show(g.values[ k ]);
-          if(k == g.mark) ::tts::output().write("*");
-        }
+        ::tts::output().write("{");
+        for(std::size_t k = 0; k < size; ++k)
+          ::tts::output().write(k == mark ? " *%s*" : " %s", ::tts::as_text(p[ k ]).data());
         ::tts::output().write(" }");
       }
     }
 
-    template<typename... Ts> void show(pack<Ts...> const& p)
+    template<std::size_t... Ks, typename... As>
+    void show_inputs(pack_base<std::index_sequence<Ks...>, buffer<As>...> const& inputs,
+                     std::size_t                                                 i,
+                     std::size_t                                                 size)
     {
-      [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
-      {
-        ((::tts::output().write(Ks ? ", " : ""), show(_::get<Ks>(p))), ...);
-      }(std::index_sequence_for<Ts...> {});
+      char const* lead = "";
+      (
+      (::tts::output().write(lead),
+       show_group(get<Ks>(inputs).data() + i - i % size, size, i % size),
+       lead = ", "),
+      ...);
     }
 
     template<typename... Ts> void show_call(char const* name, types<Ts...>)
     {
-      ::tts::output().write(name);
-      ::tts::output().write("(");
-      [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
-      {
-        (
-        (::tts::output().write(Ks ? ", " : ""),
-         ::tts::output().write(::tts::as_text(typename_<Ts>))),
-        ...);
-      }(std::index_sequence_for<Ts...> {});
+      char const* lead = "";
+      ::tts::output().write("%s(", name);
+      (
+      (::tts::output().write(lead),
+       ::tts::output().write(::tts::as_text(typename_<Ts>)),
+       lead = ", "),
+      ...);
       ::tts::output().write(")");
     }
 
-    template<typename U, typename R, typename V>
-    void results(U ulp, unsigned int count, R ratio, auto desc, V const& v)
+    template<std::size_t... Ks, typename... Gs>
+    void show_generators(pack_base<std::index_sequence<Ks...>, Gs...> const& generators,
+                         char const*                                         spelling)
     {
-      assert(desc && "Description cannot be null");
-      if(ulp != -1) ::tts::output().write("%-16.1f%-16u%-16g%s", ulp, count, ratio, desc);
-      else ::tts::output().write("%*s", static_cast<int>(48 + strlen(desc)), desc); // NOSONAR
-      show(v);
+      char const* lead = "";
+      if constexpr((described<Gs> && ...))
+        (
+        (::tts::output().write(lead),
+         ::tts::output().write(::tts::as_text(get<Ks>(generators))),
+         lead = ", "),
+        ...);
+      else ::tts::output().write(spelling);
       ::tts::output().writeln();
     }
 
-    template<typename... Gs> void print_producer(grid<Gs...> const& prod, auto alt)
+    // The values of one member of the result, and their histogram.
+    template<typename T> struct member_scan
     {
-      if constexpr((::tts::_::described<Gs> && ...))
+      static constexpr std::size_t nb_buckets = 2 + 1 + 16;
+
+      explicit member_scan(std::size_t count)
+          : expected(count)
+          , found(count)
       {
-        [ & ]<std::size_t... Ks>(std::index_sequence<Ks...>)
-        {
-          (
-          (::tts::output().write(Ks ? ", " : ""),
-           ::tts::output().write(::tts::as_text(_::get<Ks>(prod.leaves)))),
-          ...);
-        }(std::index_sequence_for<Gs...> {});
-        ::tts::output().writeln();
       }
-      else ::tts::output().writeln(alt);
-    }
 
-    template<typename Samples, typename Out> struct ulp_report
-    {
-      static constexpr std::size_t          nb_buckets = 2 + 1 + 16;
-
-      double                                max_ulp    = 0.;
-      std::size_t                           nb_ulps    = 0;
-      buffer<unsigned int>                  ulp_map    = buffer<unsigned int>(nb_buckets, 0u);
-      buffer<histogram_entry<Samples, Out>> samples =
-      buffer<histogram_entry<Samples, Out>>(nb_buckets, {false, {}, {}, {}});
-
-      void print() const
+      void tally()
       {
-        _::header("Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
+        for(std::size_t i = 0; i < expected.size(); ++i)
+        {
+          auto ulp = ::tts::ulp_check(expected[ i ], found[ i ]);
+          auto b   = last_bucket_less(nb_buckets, ulp);
+          max_ulp  = _::max(max_ulp, ulp);
+          if(counts[ b ] == 0) first[ b ] = i;
+          counts[ b ]++;
+        }
+        nb_ulps += expected.size();
+      }
+
+      template<typename Inputs> void print(Inputs const& inputs, std::size_t size) const
+      {
+        ::tts::output().writeln(
+        "%-16s%-16s%-16s%-16s", "Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
         _::separator();
 
         double ratio = 0.;
-
-        for(std::size_t i = 0; i < ulp_map.size(); ++i)
+        for(std::size_t b = 0; b < nb_buckets; ++b)
         {
-          if(ulp_map[ i ] != 0)
-          {
-            double ulps  = 0;
-            ratio       += (100. * ulp_map[ i ]) / static_cast<double>(nb_ulps);
+          if(counts[ b ] == 0) continue;
 
-            if(i <= 3) ulps = static_cast<double>(i) / 2.0;
-            else if(i == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
-            else ulps = 1 << (i - 4);
+          double ulps  = 0;
+          ratio       += (100. * counts[ b ]) / static_cast<double>(nb_ulps);
 
-            auto const& [ s, in, out, ref ] = samples[ i ];
+          if(b <= 3) ulps = static_cast<double>(b) / 2.0;
+          else if(b == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
+          else ulps = 1 << (b - 4);
 
-            _::results(ulps, ulp_map[ i ], ratio, "Input:      ", in);
-            _::results(-1., 0, 0., "Found:      ", out);
-            _::results(-1., 0, 0., "instead of: ", ref);
-            _::separator();
-          }
+          std::size_t i    = first[ b ];
+          std::size_t mark = i % size;
+
+          ::tts::output().write("%-16.1f%-16u%-16gInput:      ", ulps, counts[ b ], ratio);
+          show_inputs(inputs, i, size);
+          ::tts::output().writeln();
+          ::tts::output().write("%48sFound:      ", "");
+          show_group(found.data() + i - mark, size, mark);
+          ::tts::output().writeln();
+          ::tts::output().write("%48sinstead of: ", "");
+          show_group(expected.data() + i - mark, size, mark);
+          ::tts::output().writeln();
+          _::separator();
         }
       }
+
+      buffer<T>            expected;
+      buffer<T>            found;
+      buffer<unsigned int> counts  = buffer<unsigned int>(nb_buckets, 0u);
+      buffer<std::size_t>  first   = buffer<std::size_t>(nb_buckets, 0u);
+      std::size_t          nb_ulps = 0;
+      double               max_ulp = 0.;
     };
+
+    template<typename... Rs> pack<member_scan<Rs>...> make_scans(types<Rs...>, std::size_t count)
+    {
+      return pack<member_scan<Rs>...> {member_scan<Rs>(count)...};
+    }
+
+    // The index comes as a std::integral_constant, usable as a template argument.
+    template<std::size_t... Js, typename... Ms, typename F>
+    void for_each_member(pack_base<std::index_sequence<Js...>, Ms...>& results, F f)
+    {
+      (f(get<Js>(results), std::integral_constant<std::size_t, Js> {}), ...);
+    }
+
+    // The data covers every combination of side values per argument.
+    template<std::size_t... Ks, typename... As, typename... Gs>
+    void fill_inputs(pack_base<std::index_sequence<Ks...>, buffer<As>...>& inputs,
+                     pack<Gs...> const&                                    generators,
+                     std::size_t                                           side)
+    {
+      constexpr std::size_t arity = sizeof...(As);
+      for(std::size_t i = 0; i < get<0>(inputs).size(); ++i)
+      {
+        (
+        (get<Ks>(inputs)[ i ] =
+         ::tts::produce(type<As> {},
+                        get<(sizeof...(Gs) == 1 ? 0 : Ks)>(generators),
+                        static_cast<std::ptrdiff_t>(i / power(side, arity - 1 - Ks) % side),
+                        static_cast<std::ptrdiff_t>(side))),
+        ...);
+      }
+    }
+
+    template<typename F, std::size_t... Ks, typename... As>
+    auto call_reference(F&                                                          f,
+                        pack_base<std::index_sequence<Ks...>, buffer<As>...> const& inputs,
+                        std::size_t                                                 i)
+    {
+      return f(get<Ks>(inputs)[ i ]...);
+    }
+
+    template<typename... Ws, typename F, std::size_t... Ks, typename... As>
+    auto call_challenger(types<Ws...>,
+                         F&                                                          f,
+                         pack_base<std::index_sequence<Ks...>, buffer<As>...> const& inputs,
+                         std::size_t                                                 i)
+    {
+      return f(adapter<Ws>::load(get<Ks>(inputs).data() + i)...);
+    }
 
     // An adapter written for TTS 3, through run and retrieve.
     template<typename T>
     concept legacy_adapter = requires { &adapter<T>::retrieve; };
 
-    template<typename RefList, typename NewList> struct ulp_scan;
-
-    template<typename... As, typename... Ws> struct ulp_scan<types<As...>, types<Ws...>>
+    template<typename... As,
+             typename... Ws,
+             typename... Gs,
+             typename RefFun,
+             typename NewFun,
+             typename... Us>
+    void check_ulp_range(types<As...>,
+                         types<Ws...>,
+                         pack<Gs...> const& generators,
+                         RefFun             reference,
+                         NewFun             challenger,
+                         pack<Us...> const& bounds,
+                         check_site const&  site,
+                         char const*        spelling)
     {
       static_assert(sizeof...(As) == sizeof...(Ws),
                     "[TTS] TTS_ULP_RANGE_CHECK needs one challenger type per reference type.");
-
       static_assert((!legacy_adapter<Ws> && ...),
                     "[TTS] tts::adapter<T>::run and retrieve are no longer the protocol. "
                     "Define element_type, size, load, and store instead.");
+      static_assert(sizeof...(Gs) == 1 || sizeof...(Gs) == sizeof...(As),
+                    "[TTS] TTS_ULP_RANGE_CHECK needs one generator per argument, or one for all.");
 
-      template<typename G, typename RefFun, typename NewFun>
-      static auto run(G const& g, RefFun reference, NewFun challenger)
+      using ref_result              = std::decay_t<std::invoke_result_t<RefFun, As...>>;
+      using new_result              = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
+      using ref_members             = typename result_members<ref_result>::type;
+
+      constexpr std::size_t arity   = sizeof...(As);
+      constexpr std::size_t size    = result_members<new_result>::size;
+      constexpr std::size_t members = result_members<ref_result>::count;
+
+      static_assert(((adapter<Ws>::size == size) && ...),
+                    "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type and its result to "
+                    "hold the same number of elements.");
+      static_assert((std::is_same_v<typename adapter<Ws>::element_type, As> && ...),
+                    "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type to hold elements of "
+                    "its reference type.");
+      static_assert(
+      members_match<size>(typename result_members<new_result>::type {}, ref_members {}),
+      "[TTS] TTS_ULP_RANGE_CHECK needs the challenger result to hold elements of the "
+      "reference result type, member by member for a tuple.");
+      static_assert(sizeof...(Us) == 1 || sizeof...(Us) == members,
+                    "[TTS] TTS_ULP_RANGE_CHECK needs one bound per member of the result, or one "
+                    "for all.");
+
+      std::size_t block = ::tts::arguments().value(std::size_t {4096}, "--block");
+      std::size_t side  = 1;
+      while(power(side, arity) < block)
+        ++side;
+      std::size_t         count = (power(side, arity) + size - 1) / size * size;
+
+      pack<buffer<As>...> inputs {buffer<As>(count)...};
+      fill_inputs(inputs, generators, side);
+
+      auto        results    = make_scans(ref_members {}, count);
+      std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+      for(std::size_t r = 0; r < repetition; ++r)
       {
-        return run(std::index_sequence_for<As...> {}, g, reference, challenger);
-      }
-
-      template<std::size_t... Ks, typename G, typename RefFun, typename NewFun>
-      static auto run(std::index_sequence<Ks...>, G const& g, RefFun reference, NewFun challenger)
-      {
-        using out_type              = std::decay_t<std::invoke_result_t<RefFun, As...>>;
-        using nout_type             = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
-
-        constexpr std::size_t arity = sizeof...(As);
-        constexpr std::size_t card  = adapter<nout_type>::size;
-
-        static_assert(((adapter<Ws>::size == card) && ...),
-                      "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type and its result to "
-                      "hold the same number of elements.");
-        static_assert((std::is_same_v<typename adapter<Ws>::element_type, As> && ...),
-                      "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type to hold elements of "
-                      "its reference type.");
-        static_assert(std::is_same_v<typename adapter<nout_type>::element_type, out_type>,
-                      "[TTS] TTS_ULP_RANGE_CHECK needs the challenger result to hold elements of "
-                      "the reference result type.");
-
-        //-- Find how many elements in a block, whole groups only
-        std::size_t count = ::tts::arguments().value(std::size_t {4096}, "--block");
-        count             = ((count + card - 1) / card) * card;
-
-        //-- Prepare blocks: every combination of the arguments' samples
-        std::size_t side = grid_side(count, arity);
-        std::size_t stride[ arity ]; // NOSONAR - <array> costs compile time
-        {
-          std::size_t s = 1;
-          for(std::size_t k = arity; k-- > 0;)
-          {
-            stride[ k ]  = s;
-            s           *= side;
-          }
-        }
-
-        buffer<out_type>    ref_out(count), new_out(count);
-        pack<buffer<As>...> inputs {buffer<As>(count)...};
-
         for(std::size_t i = 0; i < count; ++i)
         {
-          (
-          (_::get<Ks>(inputs)[ i ] =
-           ::tts::produce(type<As> {},
-                          g.template leaf<Ks>(),
-                          static_cast<std::ptrdiff_t>((i / stride[ Ks ]) % side),
-                          static_cast<std::ptrdiff_t>(side))),
-          ...);
+          auto res = call_reference(reference, inputs, i);
+          for_each_member(
+          results, [ &res, i ](auto& m, auto j) { m.expected[ i ] = result_member<j>(res); });
         }
 
-        std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
-
-        using samples_type     = pack<group<As, card>...>;
-
-        ulp_report<samples_type, group<out_type, card>> report;
-        auto& [ max_ulp, nb_ulps, ulp_map, samples ] = report;
-        constexpr std::size_t nb_buckets             = decltype(report)::nb_buckets;
-
-        for(std::size_t r = 0; r < repetition; ++r)
+        for(std::size_t i = 0; i < count; i += size)
         {
-          //--- Compute reference & challenger outputs
-          for(std::size_t i = 0; i < count; ++i)
-          {
-            ref_out[ i ] = reference(_::get<Ks>(inputs)[ i ]...);
-          }
-
-          for(std::size_t i = 0; i < count; i += card)
-          {
-            auto res = challenger(adapter<Ws>::load(_::get<Ks>(inputs).data() + i)...);
-            adapter<nout_type>::store(res, new_out.data() + i);
-          }
-
-          //--- Compute ulp distances
-          for(std::size_t i = 0; i < count; ++i)
-          {
-            nb_ulps++;
-            auto ulp = ::tts::ulp_check(ref_out[ i ], new_out[ i ]);
-            max_ulp  = _::max(max_ulp, ulp);
-
-            auto idx = _::last_bucket_less(nb_buckets, ulp);
-            ulp_map[ idx ]++;
-
-            if(!samples[ idx ].status)
-            {
-              auto mark      = i % card;
-              auto first     = i - mark;
-              samples[ idx ] = {
-              true,
-              samples_type {make_group<card>(_::get<Ks>(inputs).data() + first, mark)...},
-              make_group<card>(new_out.data() + first, mark),
-              make_group<card>(ref_out.data() + first, mark)};
-            }
-          }
+          auto res = call_challenger(types<Ws...> {}, challenger, inputs, i);
+          for_each_member(results,
+                          [ &res, i ](auto& m, auto j)
+                          {
+                            auto const& v = result_member<j>(res);
+                            adapter<std::decay_t<decltype(v)>>::store(v, m.found.data() + i);
+                          });
         }
 
-        return report;
+        for_each_member(results, [](auto& m, auto) { m.tally(); });
       }
-    };
-  }
 
-  template<typename RefType, typename NewType, typename Generator, typename RefFun, typename NewFun>
-  double ulp_histogram(Generator g, RefFun reference, NewFun challenger)
-  {
-    using scan  = _::ulp_scan<as_type_list_t<RefType>, as_type_list_t<NewType>>;
+      std::size_t failed  = members;
+      double      limit   = 0.;
+      double      found   = 0.;
+      double      largest = 0.;
+      for_each_member(results,
+                      [ &bounds, &failed, &limit, &found, &largest ](auto const& m, auto j)
+                      {
+                        double l = ::tts::arguments().value(
+                        static_cast<double>(get<sizeof...(Us) == 1 ? 0 : j()>(bounds)), "--ulpmax");
+                        largest = _::max(largest, m.max_ulp);
+                        if(failed == members && !(m.max_ulp <= l))
+                        {
+                          failed = j;
+                          limit  = l;
+                          found  = m.max_ulp;
+                        }
+                      });
 
-    auto report = [ & ]
-    {
-      if constexpr(_::is_grid<Generator>::value) return scan::run(g, reference, challenger);
-      else return scan::run(_::make_grid(g), reference, challenger);
-    }();
+      if(::tts::is_detailed() || (failed != members && !::tts::is_quiet()))
+      {
+        ::tts::output().write("Comparing: ");
+        show_call(site.lhs, types<As...> {});
+        ::tts::output().write(" with ");
+        show_call(site.rhs, types<Ws...> {});
+        ::tts::output().write(" using ");
+        show_generators(generators, spelling);
 
-    if(!::tts::is_quiet()) report.print();
-    return report.max_ulp;
+        for_each_member(results,
+                        [ &inputs ](auto const& m, auto j)
+                        {
+                          if constexpr(tuple_result<ref_result>)
+                            ::tts::output().writeln("Member %d of the result",
+                                                    static_cast<int>(j()));
+                          m.print(inputs, size);
+                        });
+      }
+
+      if(failed == members)
+      {
+        if(check_passed())
+          check_report(site,
+                       ::tts::text {"Expression: %s similar to %s, at most %s ULP apart",
+                                    site.rhs,
+                                    site.lhs,
+                                    ::tts::as_text(largest).data()});
+      }
+      else
+      {
+        ::tts::text member;
+        if constexpr(tuple_result<ref_result>)
+          member = ::tts::text {" on member %d of the result", static_cast<int>(failed)};
+
+        check_failed(
+        site,
+        ::tts::text {"Expecting: %s similar to %s within %s ULP%s but found: %s ULP instead",
+                     site.rhs,
+                     site.lhs,
+                     ::tts::as_text(limit).data(),
+                     member.data(),
+                     ::tts::as_text(found).data()});
+      }
+    }
   }
 }
 
@@ -419,30 +462,36 @@ namespace tts
   @ingroup  test-precision
   @brief Checks a function against a reference over a data set, within a given ULP distance
 
-  Evaluates `NewFunc` and `RefFunc` on the same data set, sorts the [ULP
-distance](rationale.html#ulp) between their results into a histogram, and passes when the largest
-distance stays within `Ulpmax`. The data set holds `--block` values, 4096 by default, each built by
-the generator from its index.
-  `--ulpmax` replaces `Ulpmax` for every check of the run.
+  Evaluates `NewFunc` and `RefFunc` on the same data set and sorts the [ULP
+  distance](rationale.html#ulp) between their results into a histogram. The check passes when the
+  largest distance stays within the bound given after `NewFunc`. The data set holds at least
+  `--block` values, 4096 by default, and the generator builds each value from its index.
+  `--ulpmax` replaces the bounds for every check of the run.
 
-  A function of several arguments takes a tts::types list as `RefType` and as `NewType`, one type
-  per argument in the order of the call, and one generator per argument between parentheses, or a
-  single generator for all. Each generator then produces the smallest number of values whose product
-  over the arguments reaches `--block`, 64 for two arguments by default, and the data set covers
-  every combination of these values.
+  A function of several arguments takes tts::types lists as `RefType` and `NewType`, with the types
+  in call order. Its generators are given between parentheses, as many as arguments, or as a single
+  generator shared by all arguments. Each generator then produces the smallest number of values
+  whose product over the arguments reaches `--block`: 64 values for two arguments by default. The
+  data set covers every combination of these values.
 
-  `NewType` may hold several values of `RefType`, as described by a specialization of tts::adapter.
+  `NewType` may hold several values of `RefType`, as a specialization of tts::adapter describes.
+
+  `std::pair`, `std::tuple`, and any result type that specializes `std::tuple_size` and provides a
+  `get` found by argument-dependent lookup are tuples, unless tts::adapter is specialized for them.
+  The members of a tuple are compared separately, each with its own histogram, and the check takes
+  a bound for all members or a bound per member.
 
   A check that fails prints its histogram, and every check prints it under `--verbose`. Each bucket
-  shows the first element whose distance falls in it, marked between stars within its group when
-  `NewType` holds several values.
+  shows the first element whose distance falls in it, with the results of the last pass under
+  `--loop`. When `NewType` holds several values, that element is marked between stars within its
+  group.
 
-  @param Producer Data generator, or one per argument between parentheses.
+  @param Producer Data generator, or a generator per argument between parentheses.
   @param RefType  Argument type of the reference function, or a tts::types list of them.
   @param NewType  Argument type of the challenger function, or a tts::types list of them.
   @param RefFunc  Reference function.
   @param NewFunc  Function compared to the reference.
-  @param Ulpmax   Largest ULP distance accepted.
+  @param ...      Largest ULP distance accepted, or one per member of a tuple result.
 
   @groupheader{Example}
   @snippet doc/ulp_ranges.cpp snippet
@@ -451,48 +500,18 @@ the generator from its index.
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
-#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, ...)
 #else
-#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)                  \
-  [ & ]()                                                                                          \
-  {                                                                                                \
-    auto   local_tts_generator = ::tts::_::make_grid(TTS_REMOVE_PARENS(Producer));                 \
-    double tts_ulp_max         = Ulpmax;                                                           \
-    double local_tts_threshold = ::tts::arguments().value(tts_ulp_max, "--ulpmax");                \
-    auto   local_tts_report    = ::tts::_::ulp_scan<                                               \
-    ::tts::as_type_list_t<TTS_REMOVE_PARENS(RefType)>,                                             \
-    ::tts::as_type_list_t<TTS_REMOVE_PARENS(NewType)>>::run(local_tts_generator,                   \
-                                                                 RefFunc,                          \
-                                                                 NewFunc);                         \
-    bool local_tts_passed = local_tts_report.max_ulp <= local_tts_threshold;                       \
-                                                                                                   \
-    if(::tts::is_detailed() || (!local_tts_passed && !::tts::is_quiet()))                          \
-    {                                                                                              \
-      ::tts::output().write("Comparing: ");                                                        \
-      ::tts::_::show_call(TTS_STRING(RefFunc),                                                     \
-                          ::tts::as_type_list_t<TTS_REMOVE_PARENS(RefType)> {});                   \
-      ::tts::output().write(" with ");                                                             \
-      ::tts::_::show_call(TTS_STRING(NewFunc),                                                     \
-                          ::tts::as_type_list_t<TTS_REMOVE_PARENS(NewType)> {});                   \
-      ::tts::output().write(" using ");                                                            \
-      ::tts::_::print_producer(local_tts_generator, TTS_STRING(TTS_REMOVE_PARENS(Producer)));      \
-      local_tts_report.print();                                                                    \
-    }                                                                                              \
-                                                                                                   \
-    if(local_tts_passed)                                                                           \
-    {                                                                                              \
-      ::tts::global_runtime.pass();                                                                \
-    }                                                                                              \
-    else                                                                                           \
-    {                                                                                              \
-      TTS_FAIL("Expecting: %s similar to %s within %s ULP but found: %s ULP instead",              \
-               TTS_STRING(NewFunc),                                                                \
-               TTS_STRING(RefFunc),                                                                \
-               ::tts::as_text(local_tts_threshold).data(),                                         \
-               ::tts::as_text(local_tts_report.max_ulp).data());                                   \
-    }                                                                                              \
-  }()
-/**/
+#define TTS_ULP_RANGE_CHECK(Producer, RefType, NewType, RefFunc, NewFunc, ...)                     \
+  ::tts::_::check_ulp_range(                                                                       \
+  ::tts::as_type_list_t<TTS_REMOVE_PARENS(RefType)> {},                                            \
+  ::tts::as_type_list_t<TTS_REMOVE_PARENS(NewType)> {},                                            \
+  ::tts::_::pack {TTS_REMOVE_PARENS(Producer)},                                                    \
+  RefFunc,                                                                                         \
+  NewFunc,                                                                                         \
+  ::tts::_::pack {__VA_ARGS__},                                                                    \
+  TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(RefFunc), "", TTS_STRING(NewFunc), ""),                      \
+  TTS_STRING(TTS_REMOVE_PARENS(Producer))) /**/
 #endif
 
 namespace tts

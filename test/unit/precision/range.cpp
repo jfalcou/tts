@@ -7,6 +7,8 @@
 //==================================================================================================
 #include <tts/tts.hpp>
 #include <array>
+#include <limits>
+#include <utility>
 
 int ok_x(float x)
 {
@@ -154,11 +156,9 @@ TTS_CASE("Range check on two arguments covers the product of the producers")
 TTS_CASE(
 "Range check marks the element of each bucket in its group, under the call form of each function")
 {
-  ::tts::_::scoped_verbosity verbosity;
-  ::tts::_::set_verbose(true);
-  ::tts::_::set_quiet(false);
+  ::tts::_::scoped_verbosity verbosity({.verbose = true, .quiet = false});
 
-  tts::gathering_sink gs;
+  tts::gathering_sink        gs;
   {
     tts::scoped_sink scope(gs);
     TTS_ULP_RANGE_CHECK((tts::between(0.f, 100.f), ramp),
@@ -181,6 +181,7 @@ TTS_CASE(
                            tts::as_text(tts::typename_<std::array<float, 4>>).data(),
                            tts::as_text(tts::typename_<std::array<int, 4>>).data())
                  .data()));
+  TTS_EXPECT(has("Expression: ajar_scale similar to scale, at most 0.5 ULP apart"));
   TTS_EXPECT(has("Input:      { 0 *0* 0 0 }, { 0 *1* 2 3 }\n"));
   TTS_EXPECT(has("Found:      { 0 *1* 0 1 }\n"));
   TTS_EXPECT(has("instead of: { 0 *0* 0 0 }\n"));
@@ -188,11 +189,9 @@ TTS_CASE(
 
 TTS_CASE("Range check that passes prints nothing without --verbose")
 {
-  ::tts::_::scoped_verbosity verbosity;
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(false);
+  ::tts::_::scoped_verbosity verbosity({.verbose = false, .quiet = false});
 
-  tts::gathering_sink gs;
+  tts::gathering_sink        gs;
   {
     tts::scoped_sink scope(gs);
     TTS_ULP_RANGE_CHECK(tts::between(0.f, 100.f), float, (std::array<float, 4>), ok_x, ajar_ax, 64);
@@ -213,4 +212,148 @@ TTS_CASE("Range check hands its generators the signed index of TTS_CASE_WITH")
   auto same = [](int x) { return x; };
   TTS_ULP_RANGE_CHECK(probe, int, int, same, same, 0.);
   TTS_EXPECT(signed_index);
+};
+
+// 4096 is no fifth power: the data set grows to 6^5 values, six per argument.
+TTS_CASE("Range check on five arguments covers every combination of their values")
+{
+  static std::array<bool, 7776> seen = {};
+
+  auto                          note = [](int a, int b, int c, int d, int e)
+  {
+    seen[ static_cast<std::size_t>((((a * 6 + b) * 6 + c) * 6 + d) * 6 + e) ] = true;
+    return a;
+  };
+
+  TTS_ULP_RANGE_CHECK(ramp,
+                      (tts::types<int, int, int, int, int>),
+                      (tts::types<int, int, int, int, int>),
+                      note,
+                      note,
+                      0.);
+
+  int combinations = 0;
+  for(bool b: seen)
+    combinations += b ? 1 : 0;
+
+  TTS_EQUAL(combinations, 7776);
+};
+
+//==================================================================================================
+// Functions whose result is a tuple
+//==================================================================================================
+std::pair<int, int> halve(int x)
+{
+  return {x / 2, x % 2};
+}
+
+// The remainder of an odd value is 3 instead of 1: one ULP away
+std::pair<std::array<int, 4>, std::array<int, 4>> ajar_halve(std::array<int, 4> const& x)
+{
+  std::pair<std::array<int, 4>, std::array<int, 4>> that {};
+  for(std::size_t k = 0; k < 4; ++k)
+  {
+    that.first[ k ]  = x[ k ] / 2;
+    that.second[ k ] = 3 * (x[ k ] % 2);
+  }
+  return that;
+}
+
+TTS_CASE("Range check on a tuple result holds each member to its own bound")
+{
+  TTS_ULP_RANGE_CHECK(ramp, int, (std::array<int, 4>), halve, ajar_halve, 0., 1.);
+};
+
+TTS_CASE(TTS_XFAIL("Range check on a tuple result applies the bounds in the order of the members"))
+{
+  TTS_ULP_RANGE_CHECK(ramp, int, (std::array<int, 4>), halve, ajar_halve, 1., 0.);
+};
+
+TTS_CASE(TTS_XFAIL("Range check on a tuple result applies a single bound to every member"))
+{
+  TTS_ULP_RANGE_CHECK(ramp, int, (std::array<int, 4>), halve, ajar_halve, 0.5);
+};
+
+// The first odd value sits at index 1: the 1 ULP bucket of the remainder marks the second lane.
+TTS_CASE("Range check prints one histogram per member of a tuple result")
+{
+  ::tts::_::scoped_verbosity verbosity({.verbose = true, .quiet = false});
+
+  tts::gathering_sink        gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK(ramp, int, (std::array<int, 4>), halve, ajar_halve, 0., 1.);
+  }
+
+  auto has = [ & ](char const* s)
+  {
+    return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
+  };
+
+  TTS_EXPECT(has("Member 0 of the result\n"));
+  TTS_EXPECT(has("Member 1 of the result\n"));
+  TTS_EXPECT(has("Input:      { 0 *1* 2 3 }\n"));
+  TTS_EXPECT(has("Found:      { 0 *3* 0 3 }\n"));
+  TTS_EXPECT(has("instead of: { 0 *1* 0 1 }\n"));
+};
+
+// (1. + 1.) * 2. is a bound of 4, and 1. + 1. * 2. one of 3.
+TTS_CASE("Range check takes a bound that opens with a parenthesis")
+{
+  auto same = [](int x) { return x; };
+  auto off8 = [](int x) { return x + 8; };
+  TTS_ULP_RANGE_CHECK(ramp, int, int, same, off8, (1. + 1.) * 2.);
+};
+
+TTS_CASE(TTS_XFAIL("Range check fails on a bound that is not a number"))
+{
+  auto same = [](int x) { return x; };
+  TTS_ULP_RANGE_CHECK(ramp, int, int, same, same, std::numeric_limits<double>::quiet_NaN());
+};
+
+// A pair of shorts measured as a whole, the sum of the distances of its members
+using duo = std::pair<short, short>;
+
+namespace tts
+{
+  template<> struct precision<duo>
+  {
+    static double ulp(duo const& a, duo const& b)
+    {
+      return ::tts::ulp_check(a.first, b.first) + ::tts::ulp_check(a.second, b.second);
+    }
+  };
+
+  template<> struct adapter<duo>
+  {
+    using element_type                = duo;
+    static constexpr std::size_t size = 1;
+
+    static duo                   load(duo const* src) noexcept
+    {
+      return *src;
+    }
+
+    static void store(duo const& v, duo* dst) noexcept
+    {
+      *dst = v;
+    }
+  };
+}
+
+duo twin(int x)
+{
+  return {static_cast<short>(x), static_cast<short>(x)};
+}
+
+// Each member is one ULP away, the pair two
+duo twin_off(int x)
+{
+  return {static_cast<short>(x + 2), static_cast<short>(x + 2)};
+}
+
+// Split into its members, the result would stay within 1.5 ULP.
+TTS_CASE(TTS_XFAIL("Range check measures a result with an adapter of its own as a whole"))
+{
+  TTS_ULP_RANGE_CHECK(ramp, int, int, twin, twin_off, 1.5);
 };
