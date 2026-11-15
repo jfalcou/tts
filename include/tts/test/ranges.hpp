@@ -141,14 +141,14 @@ namespace tts
       return _::min(nb_buckets - 2, steps + 4);
     }
 
-    // A group of size values, the one at mark between stars.
-    template<typename T> void show_group(T const* p, std::size_t size, std::size_t mark)
+    // A group of group_size values, the one at mark between stars.
+    template<typename T> void show_group(T const* p, std::size_t group_size, std::size_t mark)
     {
-      if(size == 1) ::tts::output().write(::tts::as_text(*p));
+      if(group_size == 1) ::tts::output().write(::tts::as_text(*p));
       else
       {
         ::tts::output().write("{");
-        for(std::size_t k = 0; k < size; ++k)
+        for(std::size_t k = 0; k < group_size; ++k)
           ::tts::output().write(k == mark ? " *%s*" : " %s", ::tts::as_text(p[ k ]).data());
         ::tts::output().write(" }");
       }
@@ -157,12 +157,12 @@ namespace tts
     template<std::size_t... Ks, typename... As>
     void show_inputs(pack_base<std::index_sequence<Ks...>, buffer<As>...> const& inputs,
                      std::size_t                                                 i,
-                     std::size_t                                                 size)
+                     std::size_t                                                 group_size)
     {
       char const* lead = "";
       (
       (::tts::output().write(lead),
-       show_group(get<Ks>(inputs).data() + i - i % size, size, i % size),
+       show_group(get<Ks>(inputs).data() + i - i % group_size, group_size, i % group_size),
        lead = ", "),
       ...);
     }
@@ -218,7 +218,7 @@ namespace tts
         nb_ulps += expected.size();
       }
 
-      template<typename Inputs> void print(Inputs const& inputs, std::size_t size) const
+      template<typename Inputs> void print(Inputs const& inputs, std::size_t group_size) const
       {
         ::tts::output().writeln(
         "%-16s%-16s%-16s%-16s", "Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
@@ -237,16 +237,16 @@ namespace tts
           else ulps = 1 << (b - 4);
 
           std::size_t i    = first[ b ];
-          std::size_t mark = i % size;
+          std::size_t mark = i % group_size;
 
           ::tts::output().write("%-16.1f%-16u%-16gInput:      ", ulps, counts[ b ], ratio);
-          show_inputs(inputs, i, size);
+          show_inputs(inputs, i, group_size);
           ::tts::output().writeln();
           ::tts::output().write("%48sFound:      ", "");
-          show_group(found.data() + i - mark, size, mark);
+          show_group(found.data() + i - mark, group_size, mark);
           ::tts::output().writeln();
           ::tts::output().write("%48sinstead of: ", "");
-          show_group(expected.data() + i - mark, size, mark);
+          show_group(expected.data() + i - mark, group_size, mark);
           ::tts::output().writeln();
           _::separator();
         }
@@ -318,7 +318,7 @@ namespace tts
              typename RefFun,
              typename NewFun,
              typename... Us>
-    void check_ulp_range(types<As...>,
+    void check_ulp_range(types<As...>, // NOSONAR - six macro arguments, call site, generator text
                          types<Ws...>,
                          pack<Gs...> const& generators,
                          RefFun             reference,
@@ -335,22 +335,22 @@ namespace tts
       static_assert(sizeof...(Gs) == 1 || sizeof...(Gs) == sizeof...(As),
                     "[TTS] TTS_ULP_RANGE_CHECK needs one generator per argument, or one for all.");
 
-      using ref_result              = std::decay_t<std::invoke_result_t<RefFun, As...>>;
-      using new_result              = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
-      using ref_members             = typename result_members<ref_result>::type;
+      using ref_result                 = std::decay_t<std::invoke_result_t<RefFun, As...>>;
+      using new_result                 = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
+      using ref_members                = typename result_members<ref_result>::type;
 
-      constexpr std::size_t arity   = sizeof...(As);
-      constexpr std::size_t size    = result_members<new_result>::size;
-      constexpr std::size_t members = result_members<ref_result>::count;
+      constexpr std::size_t arity      = sizeof...(As);
+      constexpr std::size_t group_size = result_members<new_result>::size;
+      constexpr std::size_t members    = result_members<ref_result>::count;
 
-      static_assert(((adapter<Ws>::size == size) && ...),
+      static_assert(((adapter<Ws>::size == group_size) && ...),
                     "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type and its result to "
                     "hold the same number of elements.");
       static_assert((std::is_same_v<typename adapter<Ws>::element_type, As> && ...),
                     "[TTS] TTS_ULP_RANGE_CHECK needs every challenger type to hold elements of "
                     "its reference type.");
       static_assert(
-      members_match<size>(typename result_members<new_result>::type {}, ref_members {}),
+      members_match<group_size>(typename result_members<new_result>::type {}, ref_members {}),
       "[TTS] TTS_ULP_RANGE_CHECK needs the challenger result to hold elements of the "
       "reference result type, member by member for a tuple.");
       static_assert(sizeof...(Us) == 1 || sizeof...(Us) == members,
@@ -361,7 +361,7 @@ namespace tts
       std::size_t side  = 1;
       while(power(side, arity) < block)
         ++side;
-      std::size_t         count = (power(side, arity) + size - 1) / size * size;
+      std::size_t         count = (power(side, arity) + group_size - 1) / group_size * group_size;
 
       pack<buffer<As>...> inputs {buffer<As>(count)...};
       fill_inputs(inputs, generators, side);
@@ -377,7 +377,7 @@ namespace tts
           results, [ &res, i ](auto& m, auto j) { m.expected[ i ] = result_member<j>(res); });
         }
 
-        for(std::size_t i = 0; i < count; i += size)
+        for(std::size_t i = 0; i < count; i += group_size)
         {
           auto res = call_challenger(types<Ws...> {}, challenger, inputs, i);
           for_each_member(results,
@@ -424,7 +424,7 @@ namespace tts
                           if constexpr(tuple_result<ref_result>)
                             ::tts::output().writeln("Member %d of the result",
                                                     static_cast<int>(j()));
-                          m.print(inputs, size);
+                          m.print(inputs, group_size);
                         });
       }
 
