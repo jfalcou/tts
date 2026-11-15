@@ -9,10 +9,7 @@
 
 TTS_CASE("Check set_verbose and set_quiet are the only writers of current_verbosity")
 {
-  ::tts::_::scoped_verbosity scope;
-
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(false);
+  ::tts::_::scoped_verbosity scope({.verbose = false, .quiet = false});
   TTS_EXPECT_NOT(::tts::_::current_verbosity.verbose);
   TTS_EXPECT_NOT(::tts::_::current_verbosity.quiet);
 
@@ -31,15 +28,11 @@ TTS_CASE("Check set_verbose and set_quiet are the only writers of current_verbos
 
 TTS_CASE("Check scoped_verbosity saves and restores current_verbosity")
 {
-  ::tts::_::scoped_verbosity outer; // restores whatever was in place before this test ran
-
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(true);
+  // Restores whatever was in place before this test ran
+  ::tts::_::scoped_verbosity outer({.verbose = false, .quiet = true});
 
   {
-    ::tts::_::scoped_verbosity inner;
-    ::tts::_::set_verbose(true);
-    ::tts::_::set_quiet(false);
+    ::tts::_::scoped_verbosity inner({.verbose = true, .quiet = false});
     TTS_EXPECT(tts::is_verbose());
     TTS_EXPECT_NOT(tts::is_quiet());
   }
@@ -50,10 +43,7 @@ TTS_CASE("Check scoped_verbosity saves and restores current_verbosity")
 
 TTS_CASE("Check is_verbose and is_quiet reflect the current verbosity state")
 {
-  ::tts::_::scoped_verbosity scope;
-
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(false);
+  ::tts::_::scoped_verbosity scope({.verbose = false, .quiet = false});
   TTS_EXPECT_NOT(tts::is_verbose());
   TTS_EXPECT_NOT(tts::is_quiet());
 
@@ -68,10 +58,7 @@ TTS_CASE("Check is_verbose and is_quiet reflect the current verbosity state")
 
 TTS_CASE("Check is_detailed is true only when verbose is set and quiet is not")
 {
-  ::tts::_::scoped_verbosity scope;
-
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(false);
+  ::tts::_::scoped_verbosity scope({.verbose = false, .quiet = false});
   TTS_EXPECT_NOT(tts::is_detailed());
 
   ::tts::_::set_verbose(true);
@@ -259,14 +246,12 @@ TTS_CASE("Check output_sink::flush defaults to a no-op")
 
 TTS_CASE("Check report_fail only shows the failing type outside verbose mode")
 {
-  ::tts::_::scoped_verbosity scope;
+  // Quiet hides the "[X] ... FAILURE ..." line so only the type hint remains, isolating it.
+  ::tts::_::scoped_verbosity scope({.verbose = false, .quiet = true});
 
   tts::gathering_sink        gs;
   tts::scoped_sink           sink_scope(gs);
 
-  // Quiet hides the "[X] ... FAILURE ..." line so only the type hint remains, isolating it.
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(true);
   ::tts::_::report_fail("[loc]", "msg", ::tts::text {"int"});
   TTS_EQUAL(gs.content(), ">  With <T = int>\n");
 
@@ -278,13 +263,11 @@ TTS_CASE("Check report_fail only shows the failing type outside verbose mode")
 
 TTS_CASE("Check report_fatal shares the same type hint behavior as report_fail")
 {
-  ::tts::_::scoped_verbosity scope;
+  ::tts::_::scoped_verbosity scope({.verbose = false, .quiet = false});
 
   tts::gathering_sink        gs;
   tts::scoped_sink           sink_scope(gs);
 
-  ::tts::_::set_verbose(false);
-  ::tts::_::set_quiet(false);
   ::tts::_::report_fatal("[loc]", "msg", ::tts::text {"int"});
   TTS_EQUAL(gs.content(), ">  With <T = int>\n  [@] [loc] : @@ FATAL @@ : msg\n");
 
