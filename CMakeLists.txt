@@ -31,7 +31,7 @@ copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile"
 copa_add_option(TTS_EXTERNAL_DEPENDENCIES "Take dependencies from the environment instead of fetching them" OFF)
 copa_project_version(
   MAJOR 4
-  MINOR 0
+  MINOR 1
   PATCH 0
   REPOSITORY https://github.com/jfalcou/tts)
 
