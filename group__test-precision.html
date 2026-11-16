@@ -151,8 +151,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga66fac5cd0984cf9238901308cc60df3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if values are within a given relative distance.  <br /></td></tr>
 <tr class="memitem:ga5813c6197c7af5b0ed77d88ce63592a1" id="r_ga5813c6197c7af5b0ed77d88ce63592a1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5813c6197c7af5b0ed77d88ce63592a1">TTS_ULP_EQUAL</a>(L,  R,  N, ...)</td></tr>
 <tr class="memdesc:ga5813c6197c7af5b0ed77d88ce63592a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if two values are within a given ULP distance.  <br /></td></tr>
-<tr class="memitem:ga7de5e8bb8cb6f1397f2a0a2505def241" id="r_ga7de5e8bb8cb6f1397f2a0a2505def241"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a>(Producer,  RefType,  NewType,  RefFunc,  NewFunc,  Ulpmax)</td></tr>
-<tr class="memdesc:ga7de5e8bb8cb6f1397f2a0a2505def241"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a range based test between two functions.  <br /></td></tr>
+<tr class="memitem:gaa839a99324a6f4a03c536a433d30d2b9" id="r_gaa839a99324a6f4a03c536a433d30d2b9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(Producer,  RefType,  NewType,  RefFunc,  NewFunc, ...)</td></tr>
+<tr class="memdesc:gaa839a99324a6f4a03c536a433d30d2b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks a function against a reference over a data set, within a given ULP distance.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="gaf540e2316ab84407390f0b62febfffd1" name="gaf540e2316ab84407390f0b62febfffd1"></a>
@@ -386,8 +386,8 @@ Macros</h2></td></tr>
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="ga7de5e8bb8cb6f1397f2a0a2505def241" name="ga7de5e8bb8cb6f1397f2a0a2505def241"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7de5e8bb8cb6f1397f2a0a2505def241">&#9670;&#160;</a></span>TTS_ULP_RANGE_CHECK</h2>
+<a id="gaa839a99324a6f4a03c536a433d30d2b9" name="gaa839a99324a6f4a03c536a433d30d2b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa839a99324a6f4a03c536a433d30d2b9">&#9670;&#160;</a></span>TTS_ULP_RANGE_CHECK</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,50 +420,74 @@ Macros</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>Ulpmax</em></span>&#160;)</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><code>#include &lt;tts/test/ranges.hpp&gt;</code></p>
 
-<p>Generate a range based test between two functions. </p>
-<p>Evaluates the histogram of ULP difference between two functions run on the same data set and that they lie in a given <a href="rationale.html#ulp">ULP distance</a>.</p>
+<p>Checks a function against a reference over a data set, within a given ULP distance. </p>
+<p>Evaluates <span class="tt">NewFunc</span> and <span class="tt">RefFunc</span> on the same data set and sorts the <a href="rationale.html#ulp">ULP distance</a> between their results into a histogram. The check passes when the largest distance stays within the bound given after <span class="tt">NewFunc</span>. The data set holds at least <span class="tt">--block</span> values, 4096 by default, and the generator builds each value from its index. <span class="tt">--ulpmax</span> replaces the bounds for every check of the run.</p>
+<p>A function of several arguments takes <a class="el" href="structtts_1_1types.html" title="Encapsulates a variadic list of types into a reusable object.">tts::types</a> lists as <span class="tt">RefType</span> and <span class="tt">NewType</span>, with the types in call order. Its generators are given between parentheses, as many as arguments, or as a single generator shared by all arguments. Each generator then produces the smallest number of values whose product over the arguments reaches <span class="tt">--block</span>: 64 values for two arguments by default. The data set covers every combination of these values.</p>
+<p><span class="tt">NewType</span> may hold several values of <span class="tt">RefType</span>, as a specialization of <a class="el" href="structtts_1_1adapter.html" title="Make a type usable in a range check.">tts::adapter</a> describes.</p>
+<p><span class="tt">std::pair</span>, <span class="tt">std::tuple</span>, and any result type that specializes <span class="tt">std::tuple_size</span> and provides a <span class="tt">get</span> found by argument-dependent lookup are tuples, unless <a class="el" href="structtts_1_1adapter.html" title="Make a type usable in a range check.">tts::adapter</a> is specialized for them. The members of a tuple are compared separately, each with its own histogram, and the check takes a bound for all members or a bound per member.</p>
+<p>A check that fails prints its histogram, and every check prints it under <span class="tt">--verbose</span>. Each bucket shows the first element whose distance falls in it, with the results of the last pass under <span class="tt">--loop</span>. When <span class="tt">NewType</span> holds several values, that element is marked between stars within its group.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Producer</td><td>Data set generator to use. </td></tr>
-    <tr><td class="paramname">RefType</td><td>Type to use as reference function input. </td></tr>
-    <tr><td class="paramname">NewType</td><td>Type to use as challenger function input. </td></tr>
-    <tr><td class="paramname">RefFunc</td><td>Reference function to compare to. </td></tr>
-    <tr><td class="paramname">NewFunc</td><td>Challenger function to be compared to the reference one. </td></tr>
-    <tr><td class="paramname">Ulpmax</td><td>Maximal ULPs acceptable for passing the test.</td></tr>
+    <tr><td class="paramname">Producer</td><td>Data generator, or a generator per argument between parentheses. </td></tr>
+    <tr><td class="paramname">RefType</td><td>Argument type of the reference function, or a <a class="el" href="structtts_1_1types.html" title="Encapsulates a variadic list of types into a reusable object.">tts::types</a> list of them. </td></tr>
+    <tr><td class="paramname">NewType</td><td>Argument type of the challenger function, or a <a class="el" href="structtts_1_1types.html" title="Encapsulates a variadic list of types into a reusable object.">tts::types</a> list of them. </td></tr>
+    <tr><td class="paramname">RefFunc</td><td>Reference function. </td></tr>
+    <tr><td class="paramname">NewFunc</td><td>Function compared to the reference. </td></tr>
+    <tr><td class="paramname">...</td><td>Largest ULP distance accepted, or one per member of a tuple result.</td></tr>
   </table>
   </dd>
 </dl>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">float</span> ok_x(<span class="keywordtype">float</span> x)</div>
+<div class="line"><span class="keywordtype">float</span> my_ldexp(<span class="keywordtype">float</span> x, <span class="keywordtype">int</span> n)</div>
 <div class="line">{</div>
-<div class="line">  <span class="keywordflow">return</span> x;</div>
-<div class="line">}</div>
-<div class="line"><span class="keywordtype">float</span> bad_x(<span class="keywordtype">float</span> x)</div>
-<div class="line">{</div>
-<div class="line">  <span class="keywordflow">return</span> x + x * 1e-7f;</div>
+<div class="line">  <span class="keywordflow">return</span> x * std::exp2(<span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(n));</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Test range check&quot;</span>)</div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check my_ldexp against std::ldexp&quot;</span>)</div>
 <div class="line">{</div>
-<div class="line">  <a class="code hl_define" href="#ga7de5e8bb8cb6f1397f2a0a2505def241">TTS_ULP_RANGE_CHECK</a>([](<span class="keyword">auto</span>, <span class="keyword">auto</span> i, <span class="keyword">auto</span> c)</div>
-<div class="line">                      { <span class="keywordflow">return</span> 100.f * <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(i) / <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(c); },</div>
-<div class="line">                      float,</div>
-<div class="line">                      float,</div>
-<div class="line">                      ok_x,</div>
-<div class="line">                      bad_x,</div>
-<div class="line">                      2.);</div>
+<div class="line">  <span class="keyword">auto</span> std_ldexp = [](<span class="keywordtype">float</span> x, <span class="keywordtype">int</span> n) { <span class="keywordflow">return</span> std::ldexp(x, n); };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// One generator per argument: every x is checked with every n from -32 to 31</span></div>
+<div class="line">  <a class="code hl_define" href="#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>((<a class="code hl_struct" href="structtts_1_1between.html">tts::between</a>(-1.f, 1.f), <a class="code hl_struct" href="structtts_1_1ramp.html">tts::ramp</a>(-32)),</div>
+<div class="line">                      (<a class="code hl_struct" href="structtts_1_1types.html">tts::types&lt;float, int&gt;</a>),</div>
+<div class="line">                      (<a class="code hl_struct" href="structtts_1_1types.html">tts::types&lt;float, int&gt;</a>),</div>
+<div class="line">                      std_ldexp,</div>
+<div class="line">                      my_ldexp,</div>
+<div class="line">                      0.);</div>
 <div class="line">};</div>
-</div><!-- fragment --> 
+<div class="line"> </div>
+<div class="line">std::pair&lt;float, int&gt; my_frexp(<span class="keywordtype">float</span> x)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordtype">int</span> e = std::ilogb(x) + 1;</div>
+<div class="line">  <span class="keywordflow">return</span> {std::scalbn(x, -e), e};</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check my_frexp against std::frexp&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">auto</span> std_frexp = [](<span class="keywordtype">float</span> x)</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keywordtype">int</span>   e = 0;</div>
+<div class="line">    <span class="keywordtype">float</span> m = std::frexp(x, &amp;e);</div>
+<div class="line">    <span class="keywordflow">return</span> std::pair {m, e};</div>
+<div class="line">  };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// A tuple result is compared member by member, with one bound per member</span></div>
+<div class="line">  <a class="code hl_define" href="#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(<a class="code hl_struct" href="structtts_1_1between.html">tts::between</a>(1.f, 1000.f), <span class="keywordtype">float</span>, <span class="keywordtype">float</span>, std_frexp, my_frexp, 0., 0.);</div>
+<div class="line">};</div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structtts_1_1adapter.html" title="Make a type usable in a range check.">tts::adapter</a> </dd></dl>
+
 </div>
 </div>
 </div><!-- contents -->

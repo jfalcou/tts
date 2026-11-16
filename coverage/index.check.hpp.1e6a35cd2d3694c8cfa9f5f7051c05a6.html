@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2026-11-16 10:10:15</td>
+      <td>2026-11-16 13:11:42</td>
     </tr>
   </table>
 </div>
@@ -73,9 +73,9 @@
       <th>Call count</th>
       <th>Block coverage</th>
     </tr>
-    <tr><td><a href="#l42">tts::_::check_failed(tts::_::check_site const&amp;, tts::text const&amp;) (line 42)</a></td><td>called 55 times, returned 55 times</td><td>54.0%</td></tr>
-    <tr><td><a href="#l31">tts::_::check_passed() (line 31)</a></td><td>called 1601557 times, returned 1601557 times</td><td>100.0%</td></tr>
-    <tr><td><a href="#l37">tts::_::check_report(tts::_::check_site const&amp;, tts::text const&amp;) (line 37)</a></td><td>called 8 times, returned 8 times</td><td>78.0%</td></tr>
+    <tr><td><a href="#l42">tts::_::check_failed(tts::_::check_site const&amp;, tts::text const&amp;) (line 42)</a></td><td>called 62 times, returned 62 times</td><td>54.0%</td></tr>
+    <tr><td><a href="#l31">tts::_::check_passed() (line 31)</a></td><td>called 1601592 times, returned 1601592 times</td><td>100.0%</td></tr>
+    <tr><td><a href="#l37">tts::_::check_report(tts::_::check_site const&amp;, tts::text const&amp;) (line 37)</a></td><td>called 20 times, returned 20 times</td><td>78.0%</td></tr>
   </table>
 </details>
 
@@ -304,7 +304,7 @@
       <td class="lineno"><a id="l31" href="#l31">31</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">1601557</td>
+      <td class="linecount coveredLine">1601592</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">check_passed</span><span class="p">()</span></td>
     </tr>
     <tr class="source-line">
@@ -318,14 +318,14 @@
       <td class="lineno"><a id="l33" href="#l33">33</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">1601557</td>
+      <td class="linecount coveredLine">1601592</td>
       <td class="src coveredLine"><span class="w">    </span><span class="o">::</span><span class="n">tts</span><span class="o">::</span><span class="n">global_runtime</span><span class="p">.</span><span class="n">pass</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l34" href="#l34">34</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">1601557</td>
+      <td class="linecount coveredLine">1601592</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">::</span><span class="n">tts</span><span class="o">::</span><span class="n">is_detailed</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
@@ -346,7 +346,7 @@
       <td class="lineno"><a id="l37" href="#l37">37</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">20</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">check_report</span><span class="p">(</span><span class="n">check_site</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">site</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">tts</span><span class="o">::</span><span class="n">text</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">message</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -362,18 +362,18 @@
         <details class="linebranchDetails">
         <summary class="linebranchSummary">1/1</summary>
         <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 4 taken 8 times.</div>
+          <div class="takenBranch">&check; Branch 4 taken 20 times.</div>
         </div>
         </details>
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">20</td>
       <td class="src coveredLine"><span class="w">    </span><span class="n">report_pass</span><span class="p">(</span><span class="n">source_location</span><span class="o">::</span><span class="n">current</span><span class="p">(</span><span class="n">site</span><span class="p">.</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">site</span><span class="p">.</span><span class="n">line</span><span class="p">).</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">message</span><span class="p">.</span><span class="n">data</span><span class="p">());</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l40" href="#l40">40</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">8</td>
+      <td class="linecount coveredLine">20</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">
@@ -387,7 +387,7 @@
       <td class="lineno"><a id="l42" href="#l42">42</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">55</td>
+      <td class="linecount coveredLine">62</td>
       <td class="src coveredLine"><span class="w">  </span><span class="kr">inline</span><span class="w"> </span><span class="n">logger</span><span class="w"> </span><span class="nf">check_failed</span><span class="p">(</span><span class="n">check_site</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">site</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">tts</span><span class="o">::</span><span class="n">text</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">message</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -401,7 +401,7 @@
       <td class="lineno"><a id="l44" href="#l44">44</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">55</td>
+      <td class="linecount coveredLine">62</td>
       <td class="src coveredLine"><span class="w">    </span><span class="o">::</span><span class="n">tts</span><span class="o">::</span><span class="n">global_runtime</span><span class="p">.</span><span class="n">fail</span><span class="p">();</span></td>
     </tr>
     <tr class="source-line">
@@ -410,12 +410,12 @@
         <details class="linebranchDetails">
         <summary class="linebranchSummary">2/2</summary>
         <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 0 taken 32 times.</div>
+          <div class="takenBranch">&check; Branch 0 taken 39 times.</div>
           <div class="takenBranch">&check; Branch 1 taken 23 times.</div>
         </div>
         </details>
       </td>
-      <td class="linecount coveredLine">55</td>
+      <td class="linecount coveredLine">62</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="o">!::</span><span class="n">tts</span><span class="o">::</span><span class="n">global_runtime</span><span class="p">.</span><span class="n">fail_status</span><span class="p">)</span><span class="w"> </span><span class="o">::</span><span class="n">tts</span><span class="o">::</span><span class="n">global_runtime</span><span class="p">.</span><span class="n">fail_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span></td>
     </tr>
     <tr class="source-line">
@@ -429,7 +429,7 @@
       <td class="lineno"><a id="l47" href="#l47">47</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">55</td>
+      <td class="linecount coveredLine">62</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">source_location</span><span class="o">::</span><span class="n">current</span><span class="p">(</span><span class="n">site</span><span class="p">.</span><span class="n">file</span><span class="p">,</span><span class="w"> </span><span class="n">site</span><span class="p">.</span><span class="n">line</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -439,11 +439,11 @@
         <summary class="linebranchSummary">1/2</summary>
         <div class="linebranchContents">
           <div class="notTakenBranch">&cross; Branch 0 not taken.</div>
-          <div class="takenBranch">&check; Branch 1 taken 55 times.</div>
+          <div class="takenBranch">&check; Branch 1 taken 62 times.</div>
         </div>
         </details>
       </td>
-      <td class="linecount partialCoveredLine">55</td>
+      <td class="linecount partialCoveredLine">62</td>
       <td class="src partialCoveredLine"><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">site</span><span class="p">.</span><span class="n">fatal</span><span class="p">)</span></td>
     </tr>
     <tr class="source-line">
@@ -501,11 +501,11 @@
         <details class="linebranchDetails">
         <summary class="linebranchSummary">1/1</summary>
         <div class="linebranchContents">
-          <div class="takenBranch">&check; Branch 3 taken 55 times.</div>
+          <div class="takenBranch">&check; Branch 3 taken 62 times.</div>
         </div>
         </details>
       </td>
-      <td class="linecount coveredLine">55</td>
+      <td class="linecount coveredLine">62</td>
       <td class="src coveredLine"><span class="w">      </span><span class="n">report_fail</span><span class="p">(</span><span class="n">location</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">message</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span><span class="w"> </span><span class="n">current_type</span><span class="p">);</span></td>
     </tr>
     <tr class="source-line">
@@ -526,14 +526,14 @@
       <td class="lineno"><a id="l59" href="#l59">59</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">110</td>
+      <td class="linecount coveredLine">124</td>
       <td class="src coveredLine"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">logger</span><span class="w"> </span><span class="p">{};</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l60" href="#l60">60</a></td>
       <td class="linebranch">
       </td>
-      <td class="linecount coveredLine">55</td>
+      <td class="linecount coveredLine">62</td>
       <td class="src coveredLine"><span class="w">  </span><span class="p">}</span></td>
     </tr>
     <tr class="source-line">

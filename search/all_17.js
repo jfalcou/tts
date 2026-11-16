@@ -86,7 +86,7 @@ var searchData=
   ['tts_5ftyped_5fless_5fequal_83',['TTS_TYPED_LESS_EQUAL',['../group__test-relation.html#gaf05aa77455a2ae962c6e00f2086d063d',1,'relation.hpp']]],
   ['tts_5ftyped_5fnot_5fequal_84',['TTS_TYPED_NOT_EQUAL',['../group__test-relation.html#gab49da0ae0de2c26fc284f41bf04557d4',1,'relation.hpp']]],
   ['tts_5fulp_5fequal_85',['TTS_ULP_EQUAL',['../group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1',1,'precision.hpp']]],
-  ['tts_5fulp_5frange_5fcheck_86',['TTS_ULP_RANGE_CHECK',['../group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241',1,'ranges.hpp']]],
+  ['tts_5fulp_5frange_5fcheck_86',['TTS_ULP_RANGE_CHECK',['../group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9',1,'ranges.hpp']]],
   ['tts_5fwhen_87',['TTS_WHEN',['../group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3',1,'when.hpp']]],
   ['tts_5fxfail_88',['TTS_XFAIL',['../group__test-scenario.html#gad72988c12f401bb1eb13a4f6788f1d10',1,'case.hpp']]],
   ['tts_5fxinvalid_89',['TTS_XINVALID',['../group__test-scenario.html#gaf1c68a2be4317b8c67da12e50e997406',1,'case.hpp']]],
@@ -101,6 +101,7 @@ var searchData=
   ['types_3c_20std_3a_3aint64_5ft_2c_20std_3a_3aint32_5ft_2c_20std_3a_3aint16_5ft_2c_20std_3a_3aint8_5ft_20_3e_98',['types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
   ['types_3c_20std_3a_3aint64_5ft_2c_20std_3a_3aint32_5ft_2c_20std_3a_3aint16_5ft_2c_20std_3a_3aint8_5ft_2c_20std_3a_3auint64_5ft_2c_20std_3a_3auint32_5ft_2c_20std_3a_3auint16_5ft_2c_20std_3a_3auint8_5ft_20_3e_99',['types&lt; std::int64_t, std::int32_t, std::int16_t, std::int8_t, std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
   ['types_3c_20std_3a_3auint64_5ft_2c_20std_3a_3auint32_5ft_2c_20std_3a_3auint16_5ft_2c_20std_3a_3auint8_5ft_20_3e_100',['types&lt; std::uint64_t, std::uint32_t, std::uint16_t, std::uint8_t &gt;',['../structtts_1_1types.html',1,'tts']]],
-  ['types_3c_20t_2e_2e_2e_20_3e_101',['types&lt; T... &gt;',['../structtts_1_1types.html',1,'tts']]],
-  ['types_3c_20types_3c_20t_2c_20us_20_3e_2e_2e_2e_20_3e_102',['types&lt; types&lt; T, Us &gt;... &gt;',['../structtts_1_1types.html',1,'tts']]]
+  ['types_3c_20t_20_3e_101',['types&lt; T &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20t_2e_2e_2e_20_3e_102',['types&lt; T... &gt;',['../structtts_1_1types.html',1,'tts']]],
+  ['types_3c_20types_3c_20t_2c_20us_20_3e_2e_2e_2e_20_3e_103',['types&lt; types&lt; T, Us &gt;... &gt;',['../structtts_1_1types.html',1,'tts']]]
 ];

@@ -1,6 +1,11 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <tagfile doxygen_version="1.16.1" doxygen_gitid="669aeeefca743c148e2d935b3d3c69535c7491e6">
   <compound kind="struct">
+    <name>tts::adapter</name>
+    <filename>structtts_1_1adapter.html</filename>
+    <templarg>typename T</templarg>
+  </compound>
+  <compound kind="struct">
     <name>tts::as_integer</name>
     <filename>structtts_1_1as__integer.html</filename>
     <templarg>typename G</templarg>
@@ -1437,14 +1442,15 @@
       <type>#define</type>
       <name>TTS_ULP_RANGE_CHECK</name>
       <anchorfile>group__test-precision.html</anchorfile>
-      <anchor>ga7de5e8bb8cb6f1397f2a0a2505def241</anchor>
-      <arglist>(Producer, RefType, NewType, RefFunc, NewFunc, Ulpmax)</arglist>
+      <anchor>gaa839a99324a6f4a03c536a433d30d2b9</anchor>
+      <arglist>(Producer, RefType, NewType, RefFunc, NewFunc,...)</arglist>
     </member>
   </compound>
   <compound kind="group">
     <name>tools-precision</name>
     <title>Precision Utilities</title>
     <filename>group__tools-precision.html</filename>
+    <class kind="struct">tts::adapter</class>
     <class kind="struct">tts::precision</class>
     <member kind="function">
       <type>double</type>

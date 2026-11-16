@@ -557,7 +557,7 @@ Absolute Comparison</h2>
 <div class="line">};</div>
 </div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Data Generator</h1>
-<p><a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">Test cases based on data sets</a> and <a class="el" href="group__test-precision.html#ga7de5e8bb8cb6f1397f2a0a2505def241" title="TTS_ULP_RANGE_CHECK">range checks</a> require one or more data generators to perform. If the pre-existing data generators are not suitable, define your own by providing a <span class="tt">constexpr</span> callable object with the following signature:</p>
+<p><a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="TTS_CASE_WITH">Test cases based on data sets</a> and <a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="TTS_ULP_RANGE_CHECK">range checks</a> require one or more data generators to perform. If the pre-existing data generators are not suitable, define your own by providing a <span class="tt">constexpr</span> callable object with the following signature:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line">T operator()(<a class="code hl_struct" href="structtts_1_1type.html">tts::type&lt;T&gt;</a> target, <span class="keyword">auto</span> index, <span class="keyword">auto</span> count);</div>
 <div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
