@@ -1,65 +1,69 @@
 Change Log {#changelog}
 ==========
 
+# Version 4.1
+
+## What's Changed
+
+### New Features
+  * Fix #266 - Run a test body at run time and in constant evaluation (https://github.com/jfalcou/tts/pull/267)
+    - `TTS_CONSTEXPR("...")` on the title of a `TTS_CASE` or a `TTS_CASE_TPL` runs the body at run time and in constant evaluation. `TTS_CONSTEVAL("...")` runs it in constant evaluation only.
+    - Both nest with `TTS_XFAIL`, `TTS_MAYFAIL`, `TTS_XINVALID`, and `TTS_TIMEOUT` in either order.
+    - `TTS_CASE_IN` and `TTS_CASE_TPL_IN` take `tts::runtime`, `tts::constant`, or both, and run the body once per context in the order given.
+    - The body of a `TTS_CASE_TPL` with a wrapped title, or of a `TTS_CASE_TPL_IN`, declares its parameter as `<typename T>(TTS_CONTEXT(tts::type<T>))`.
+    - A failure in constant evaluation reports its expression, file, and line, and the compared values when the case also runs at run time.
+    - The basic, relation, and type checks run in constant evaluation, with their typed and constexpr forms. The precision, sequence, range, and exception checks fail to compile there.
+    - A `TTS_CASE_WITH` titled with `TTS_CONSTEXPR` or `TTS_CONSTEVAL` fails on a `static_assert`.
+  * `TTS_ULP_RANGE_CHECK` accepts functions of several arguments (https://github.com/jfalcou/tts/pull/260)
+    - `RefType` and `NewType` list the argument types in call order as `tts::types`, and `Producer` holds one generator per argument between parentheses, or one for all.
+  * `TTS_ULP_RANGE_CHECK` compares a `std::pair`, a `std::tuple`, or another tuple-like result member by member, with one bound for all members or one per member (https://github.com/jfalcou/tts/pull/260)
+  * `TTS_ULP_RANGE_CHECK` prints its histogram only on failure or under `--verbose` (https://github.com/jfalcou/tts/pull/260)
+  * The report of `TTS_ULP_RANGE_CHECK` writes each function as a call, `ref(float, int)`, and puts stars around the sampled element of a `NewType` that holds several values (https://github.com/jfalcou/tts/pull/260)
+  * `tts::adapter<T>` replaces `run`, `retrieve`, and `display` with `element_type`, `size`, `load`, and `store`, and a 4.0 adapter fails on a `static_assert` that names them (https://github.com/jfalcou/tts/pull/260)
+  * Removed `tts::ulp_histogram`: run `TTS_ULP_RANGE_CHECK` under `--verbose` to print the histogram (https://github.com/jfalcou/tts/pull/260)
+  * The generators of `TTS_ULP_RANGE_CHECK` receive their index and count as `std::ptrdiff_t` instead of `std::size_t` (https://github.com/jfalcou/tts/pull/260)
+  * Reduced the compile time of a test to about a quarter with g++ 15 and clang++ 19 (https://github.com/jfalcou/tts/pull/253)
+  * Added the CMake option `TTS_EXTERNAL_DEPENDENCIES`, `OFF` by default, to take copacabana from `COPACABANA_SOURCE_DIR` instead of downloading it through CPM (https://github.com/jfalcou/tts/pull/276)
+
+### Bug Fixes
+  * Fix #255 - Disable `-Wc2y-extensions` in every translation unit that includes TTS under clang 22 and later, except on Apple platforms, so `TTS_CASE` compiles under `-Wpedantic -Werror` (https://github.com/jfalcou/tts/pull/256)
+  * Fix `-Wshadow` warnings when a test variable has the name of a local of a check macro (https://github.com/jfalcou/tts/pull/247)
+  * `tts::buffer` allocates through `malloc` except for over-aligned types, so a test that replaces `operator new` to count its allocations no longer counts those of `tts::buffer` (https://github.com/jfalcou/tts/pull/248)
+  * A passing `TTS_THROW` or `TTS_NO_THROW` counts once in the summary (https://github.com/jfalcou/tts/pull/253)
+  * A failing `TTS_GREATER_EQUAL` and its typed and constexpr forms print `<` as their negation instead of `<=` (https://github.com/jfalcou/tts/pull/253)
+  * A typed constexpr check, such as `TTS_TYPED_CONSTEXPR_EQUAL`, that fails on a type mismatch prints the message streamed after it (https://github.com/jfalcou/tts/pull/253)
+
+### Infrastructure
+  * Run the nightly CI matrix on demand (https://github.com/jfalcou/tts/pull/262)
+  * Added a [compile-time comparison](https://jfalcou.github.io/tts/compile-time.html) with doctest, Catch2, GoogleTest, Boost.Test, and ut to the documentation (https://github.com/jfalcou/tts/pull/245, https://github.com/jfalcou/tts/pull/252, https://github.com/jfalcou/tts/pull/254, https://github.com/jfalcou/tts/pull/257, https://github.com/jfalcou/tts/pull/259, https://github.com/jfalcou/tts/pull/261)
+  * Move the CI to the compilers:v11 image, with clang 22 (https://github.com/jfalcou/tts/pull/256)
+  * Move the macOS jobs to macos-15 (https://github.com/jfalcou/tts/pull/265)
+  * Rebuild and redeploy the documentation on demand (https://github.com/jfalcou/tts/pull/272)
+  * Check the CMake files with cmake-format and cmake-lint, and the workflows with actionlint, in pre-commit (https://github.com/jfalcou/tts/pull/273)
+
 # Version 4.0 - V.I. Warshawski
 
 ## What's Changed
 
 ### Breaking Changes
-  * `tts::reverse_ramp` is a ramp read backward: for a size `N`, its values are
-    `start+(N-1)*step` down to `start`, so the last one is `start` and none of them falls below it.
-    It used to count down from `start`, which put `reverse_ramp{0}` entirely on negative values and
-    made it unusable for anything indexed from zero.
-  * `TTS_ABSOLUTE_EQUAL`, `TTS_RELATIVE_EQUAL` and `TTS_ULP_EQUAL` now require both operands to have
-    the same type. They used to compare them after promoting both to their common type, which
-    measured the distance in the unit of the promoted type rather than the one under test: comparing
-    a `float` against its own value as a `double` reported 9.84e+07 ULP instead of 0. A mismatch is
-    now a compile-time error naming both types; convert the expected value at the call site.
-  * `TTS_RELATIVE_EQUAL` and `TTS_ALL_RELATIVE_EQUAL` report a ratio where they used to report a
-    percentage, and the unit they print is `rel` rather than `%`. `abs(L-R) / max(abs(L), abs(R), 1)`
-    is compared to the tolerance directly, so every existing tolerance has to be divided by a
-    hundred. The factor was the odd one out: `ulp` and `absolute` already reported the quantity
-    itself, and a consumer overloading the hook naturally returns the quotient; one that did was
-    testing a hundred times looser than its tolerances read.
-  * A relative tolerance of one or more is reported as a failure rather than compared: it accepts
-    any error up to the value itself, and is a percentage left over from the previous unit. The
-    message says to divide it by a hundred. This applies to the native floating point path only; a
-    `tts::precision` specialisation keeps whatever unit it returns.
-  * Equality and ordering checks are unchanged. `TTS_EQUAL` and its typed counterparts forward to
-    `operator==` or to a `compare_equal` overload, and introduce no conversion of their own.
-  * `TTS_BIT_EQUAL` and `TTS_BIT_NOT_EQUAL` go through the `bit_equal` member of
-    `tts::comparison<L, R>` rather than calling `memcmp` themselves. The default is that same
-    `memcmp`, so an unspecialized type behaves as before; a type whose storage holds padding can now
-    say which bits carry a value.
-
-  * Every customization point is a trait, and the free functions they replace are gone.
-    `tts::precision<T>`, `tts::display<T>`, `tts::comparison<L, R>`, `tts::generation<T>` and
-    `tts::conversion<T, V>` stand where `ulp_distance`, `relative_distance`, `absolute_distance`,
-    `ieee_equal`, `to_text`, `compare_equal`, `compare_less`, `produce` and `convert_as` used to be
-    reached by name. A specialization writes the members it changes and leaves the rest out: every
-    member has a default, and a member the specialization does not carry keeps it. A member that is
-    there but does not accept the operands is reported rather than ignored.
-  * `operator<<` is not consulted when a value is rendered, and has not been since 3.0, which
-    dropped that path along with `<sstream>` without saying so. Up to 2.2, `as_text` tried an
-    ostream insertion before falling back on the element dump for a range and on the byte dump for
-    anything else. A type that used to print through its own `operator<<` now prints as a byte
-    dump, and one that also exposes `begin` and `end` prints element by element, which fails to
-    compile when its iterator is a proxy. Specialise `tts::display<T>` for such a type. Bringing
-    the path back costs 13% of median compile memory across the suite, measured, which is what 3.0
-    bought by removing it.
-  * An overload of one of the seven customization names left behind is reported where it would have
-    been used, rather than ignored in silence. `produce` and `convert_as` are the exception: they
-    are the dispatchers rather than customization points, and **TTS** reaches them qualified, so an
-    overload of either name in another namespace is never found.
-  * The built-in sinks come with `#include <tts/tts.hpp>` only in the translation unit that defines
-    `TTS_MAIN`. Any other translation unit that builds one includes `<tts/sinks/sinks.hpp>`, and no
-    longer parses the driver it does not run.
-  * `<tts/tts.hpp>` no longer brings `<array>` along. A test that uses `std::array` includes it.
+  * `tts::reverse_ramp` counts down to `start` instead of from it, so `reverse_ramp{0}` gives no negative value (https://github.com/jfalcou/tts/pull/229)
+  * `TTS_ABSOLUTE_EQUAL`, `TTS_RELATIVE_EQUAL`, and `TTS_ULP_EQUAL` require both operands to have the same type (https://github.com/jfalcou/tts/pull/229)
+  * `TTS_RELATIVE_EQUAL` and `TTS_ALL_RELATIVE_EQUAL` measure a ratio instead of a percentage: divide existing tolerances by 100 (https://github.com/jfalcou/tts/pull/229)
+  * `TTS_RELATIVE_EQUAL` and `TTS_ALL_RELATIVE_EQUAL` fail on an arithmetic type given a finite tolerance of 1 or more (https://github.com/jfalcou/tts/pull/229)
+  * Replaced the customization functions with traits (https://github.com/jfalcou/tts/pull/229)
+    - `tts::precision<T>` for `ulp_distance`, `relative_distance`, `absolute_distance`, and `ieee_equal`
+    - `tts::display<T>` for `to_text`
+    - `tts::comparison<L, R>` for `compare_equal` and `compare_less`
+    - `tts::generation<T>` for an overload of `produce`
+    - `tts::conversion<T, V>` for an overload of `convert_as`
+  * A leftover overload of a former customization function fails to compile where it is used, and a leftover `produce` or `convert_as` outside namespace `tts` is ignored (https://github.com/jfalcou/tts/pull/229)
+  * Values have not been printed through `operator<<` since 3.0: specialize `tts::display<T>` for them (https://github.com/jfalcou/tts/pull/229)
+  * `<tts/tts.hpp>` brings the built-in sinks only into the translation unit that defines `TTS_MAIN`: include `<tts/sinks/sinks.hpp>` to use one elsewhere (https://github.com/jfalcou/tts/pull/244)
+  * `<tts/tts.hpp>` no longer includes `<array>` (https://github.com/jfalcou/tts/pull/244)
 
 ### New Features
-  * `tts::is_randoms` and its `tts::is_randoms_v` alias name the range generator by its type. A
-    `tts::generation` specialization keys on the type being built and cannot see the generator in
-    an overload set, so a range that has to be drawn apart is recognized this way.
+  * A specialization of `tts::comparison<L, R>::bit_equal` customizes `TTS_BIT_EQUAL` and `TTS_BIT_NOT_EQUAL`, which default to `memcmp` (https://github.com/jfalcou/tts/pull/229)
+  * Added `tts::is_randoms` and `tts::is_randoms_v` to detect a `tts::randoms` generator by its type (https://github.com/jfalcou/tts/pull/229)
 
 # Version 3.0 - Beatrice Adela Bradley
 
