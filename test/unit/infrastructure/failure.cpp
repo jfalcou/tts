@@ -10,6 +10,7 @@
 #include <tts/tts.hpp>
 #include <stdexcept>
 #include <list>
+#include <utility>
 #include <vector>
 
 TTS_CASE("Invalid test")
@@ -96,9 +97,72 @@ TTS_CASE("Check broken sequence comparisons")
   TTS_ALL_IEEE_EQUAL(v, w);
 };
 
+int same(int x)
+{
+  return x;
+}
+
+int off_by_two(int x)
+{
+  return x + 2;
+}
+
+// The range check adds one failure, and each expectation on its report one more if it breaks.
+TTS_CASE("Check that a broken range check prints its histogram without --verbose")
+{
+  ::tts::_::scoped_verbosity verbosity({.verbose = false, .quiet = false});
+
+  tts::gathering_sink        gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK(tts::between(0, 9), int, int, same, off_by_two, 0.);
+  }
+
+  auto has = [ & ](char const* s)
+  {
+    return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
+  };
+
+  // Type names come from tts::typename_, whose spelling depends on the compiler
+  auto int_name = tts::as_text(tts::typename_<int>);
+  TTS_EXPECT(has(
+  tts::text("Comparing: same(%s) with off_by_two(%s)", int_name.data(), int_name.data()).data()));
+  TTS_EXPECT(has("Found:      2\n"));
+  TTS_EXPECT(has("instead of: 0\n"));
+};
+
+std::pair<int, int> same_pair(int x)
+{
+  return {x, x};
+}
+
+std::pair<int, int> second_off_by_two(int x)
+{
+  return {x, x + 2};
+}
+
+TTS_CASE("Check that a broken range check on a tuple result names the member over its bound")
+{
+  ::tts::_::scoped_verbosity verbosity({.verbose = false, .quiet = false});
+
+  tts::gathering_sink        gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK(tts::between(0, 9), int, int, same_pair, second_off_by_two, 0.);
+  }
+
+  auto has = [ & ](char const* s)
+  {
+    return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
+  };
+
+  TTS_EXPECT(has("Member 1 of the result\n"));
+  TTS_EXPECT(has("within 0 ULP on member 1 of the result but found: 1 ULP instead"));
+};
+
 int main(int argc, char const** argv)
 {
   ::tts::initialize(argc, argv);
   fail_main(argc, argv);
-  return ::tts::report(31, 2);
+  return ::tts::report(33, 2);
 }

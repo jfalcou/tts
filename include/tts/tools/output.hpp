@@ -41,13 +41,20 @@ namespace tts::_
   }
 
   //====================================================================================================================
-  // RAII guard saving current_verbosity on construction and restoring it on destruction. Meant for
-  // tests that need to exercise a specific verbose/quiet combination without leaking that state
-  // into the rest of the running test suite, even if the test exits early.
+  // RAII guard saving current_verbosity on construction, setting the state it is given if any, and
+  // restoring it on destruction. Meant for tests that need to exercise a specific verbose/quiet
+  // combination without leaking that state into the rest of the running test suite, even if the
+  // test exits early.
   //====================================================================================================================
   struct scoped_verbosity
   {
     scoped_verbosity() = default;
+
+    explicit scoped_verbosity(verbosity state)
+    {
+      set_verbose(state.verbose);
+      set_quiet(state.quiet);
+    }
 
     ~scoped_verbosity()
     {

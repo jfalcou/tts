@@ -5,8 +5,9 @@
   SPDX-License-Identifier: BSL-1.0
 */
 //==================================================================================================
-#include <tts/tts.hpp>
+#include "range.hpp"
 #include <array>
+#include <limits>
 
 int ok_x(float x)
 {
@@ -24,38 +25,6 @@ std::array<int, 4> ajar_ax(std::array<float, 4> const& x)
   return that;
 }
 
-namespace tts
-{
-  template<typename X> struct adapter<std::array<X, 4>>
-  {
-    template<typename U, typename Func> static void run(X const*& src, U*& dst, Func f) noexcept
-    {
-      std::array<X, 4> that {*src++, *src++, *src++, *src++};
-      auto             res = f(that);
-      *dst++               = res[ 0 ];
-      *dst++               = res[ 1 ];
-      *dst++               = res[ 2 ];
-      *dst++               = res[ 3 ];
-    }
-
-    static auto retrieve(X const* src) noexcept
-    {
-      // realign on 4*4
-      auto b             = reinterpret_cast<std::uintptr_t>(src);
-      b                  = (b / 16) * 16;
-      auto             p = reinterpret_cast<X*>(b);
-
-      std::array<X, 4> that {*p++, *p++, *p++, *p++};
-      return that;
-    }
-
-    static void display(std::array<X, 4> const& v) noexcept
-    {
-      printf("%s", as_text(v).data());
-    }
-  };
-}
-
 TTS_CASE("Test stateless range check")
 {
   TTS_ULP_RANGE_CHECK(tts::between(0.f, 100.f), float, (std::array<float, 4>), ok_x, ajar_ax, 64);
@@ -71,4 +40,45 @@ TTS_CASE("Range check next to a local named like a macro local")
 {
   auto generator = tts::between(0.f, 100.f);
   TTS_ULP_RANGE_CHECK(generator, float, (std::array<float, 4>), ok_x, ajar_ax, 64);
+};
+
+TTS_CASE("Range check that passes prints nothing without --verbose")
+{
+  ::tts::_::scoped_verbosity verbosity({.verbose = false, .quiet = false});
+
+  tts::gathering_sink        gs;
+  {
+    tts::scoped_sink scope(gs);
+    TTS_ULP_RANGE_CHECK(tts::between(0.f, 100.f), float, (std::array<float, 4>), ok_x, ajar_ax, 64);
+  }
+
+  TTS_EXPECT(gs.content().is_empty());
+};
+
+TTS_CASE("Range check hands its generators the signed index of TTS_CASE_WITH")
+{
+  bool signed_index = false;
+  auto probe        = [ & ]<typename I>(auto, I i, auto)
+  {
+    signed_index = std::is_signed_v<I>;
+    return static_cast<int>(i);
+  };
+
+  auto same = [](int x) { return x; };
+  TTS_ULP_RANGE_CHECK(probe, int, int, same, same, 0.);
+  TTS_EXPECT(signed_index);
+};
+
+// (1. + 1.) * 2. is a bound of 4, and 1. + 1. * 2. one of 3.
+TTS_CASE("Range check takes a bound that opens with a parenthesis")
+{
+  auto same = [](int x) { return x; };
+  auto off8 = [](int x) { return x + 8; };
+  TTS_ULP_RANGE_CHECK(ramp, int, int, same, off8, (1. + 1.) * 2.);
+};
+
+TTS_CASE(TTS_XFAIL("Range check fails on a bound that is not a number"))
+{
+  auto same = [](int x) { return x; };
+  TTS_ULP_RANGE_CHECK(ramp, int, int, same, same, std::numeric_limits<double>::quiet_NaN());
 };
