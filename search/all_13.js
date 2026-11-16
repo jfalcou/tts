@@ -2,7 +2,7 @@ var searchData=
 [
   ['objectives_0',['Objectives',['../compile-time.html#compile-time-why',1,'']]],
   ['of_20a_20test_1',['Marginal cost of a test',['../compile-time.html#compile-time-comparison-tests',1,'']]],
-  ['of_20a_20user_20defined_20type_2',['Producing values of a user-defined type',['../customize.html#autotoc_md39',1,'']]],
+  ['of_20a_20user_20defined_20type_2',['Producing values of a user-defined type',['../customize.html#autotoc_md44',1,'']]],
   ['operator_28_29_3',['operator()',['../structtts_1_1options.html#a8a7749b4f27e452561ac66b689c87d5d',1,'tts::options']]],
   ['operator_2b_4',['operator+',['../structtts_1_1text.html#ac14b492db7e2f184e2f2d25a7f1ccdac',1,'tts::text']]],
   ['operator_2b_3d_5',['operator+=',['../structtts_1_1text.html#ac229fb794ee24caf1c1829e53da68bef',1,'tts::text::operator+=(text const &amp;other)'],['../structtts_1_1text.html#aff9e4812e78307ed288f044575d60586',1,'tts::text::operator+=(char const *other)']]],
@@ -11,7 +11,7 @@ var searchData=
   ['operator_3d_8',['operator=',['../structtts_1_1text.html#a8bc9cf2f63accfa8938fb597d26067f1',1,'tts::text::operator=(text const &amp;other)'],['../structtts_1_1text.html#a9cbef17a36a80da358be2cfebdc57496',1,'tts::text::operator=(text &amp;&amp;other) noexcept']]],
   ['operator_3d_3d_9',['operator==',['../structtts_1_1text.html#a80ccce1207f2c1cbee1e0def444710af',1,'tts::text::operator==(text const &amp;a, text const &amp;b) noexcept'],['../structtts_1_1text.html#a9657802a107531ee24f60e585ae80fa9',1,'tts::text::operator==(text const &amp;a, char const (&amp;b)[N]) noexcept']]],
   ['operator_5b_5d_10',['operator[]',['../structtts_1_1options.html#a0eab710faf43ec53f037b07c4d94cead',1,'tts::options']]],
-  ['options_11',['Display Options',['../cli.html#autotoc_md30',1,'']]],
+  ['options_11',['Display Options',['../cli.html#autotoc_md35',1,'']]],
   ['options_12',['options',['../structtts_1_1options.html',1,'tts']]],
   ['ordering_13',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['other_20test_20libraries_14',['Other test libraries',['../compile-time.html#compile-time-comparison',1,'']]],
@@ -22,5 +22,5 @@ var searchData=
   ['output_20utilities_19',['Output Utilities',['../group__tools-output.html',1,'']]],
   ['output_5fhandler_20',['output_handler',['../classtts_1_1output__handler.html',1,'tts::output_handler'],['../classtts_1_1output__handler.html#af9136631b1485d7dde14f729368f91ab',1,'tts::output_handler::output_handler()']]],
   ['output_5fsink_21',['output_sink',['../structtts_1_1output__sink.html',1,'tts']]],
-  ['overview_22',['Overview',['../output-sinks.html#autotoc_md44',1,'']]]
+  ['overview_22',['Overview',['../output-sinks.html#autotoc_md49',1,'']]]
 ];

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['1_200_20phoebe_20daring_0',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md22',1,'']]],
-  ['1_20cadfael_1',['Version 0.1 - Cadfael',['../changelog.html#autotoc_md26',1,'']]],
-  ['1_20cordelia_20gray_2',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md17',1,'']]]
+  ['1_0',['Version 4.1',['../changelog.html#autotoc_md0',1,'']]],
+  ['1_200_20phoebe_20daring_1',['Version 1.0 - Phoebe Daring',['../changelog.html#autotoc_md27',1,'']]],
+  ['1_20cadfael_2',['Version 0.1 - Cadfael',['../changelog.html#autotoc_md31',1,'']]],
+  ['1_20cordelia_20gray_3',['Version 2.1 - Cordelia Gray',['../changelog.html#autotoc_md22',1,'']]]
 ];

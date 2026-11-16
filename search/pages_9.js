@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['effect_0',['Effect',['../output-sinks.html#autotoc_md47',1,'Effect'],['../output-sinks.html#autotoc_md52',1,'Effect'],['../output-sinks.html#autotoc_md57',1,'Effect'],['../output-sinks.html#autotoc_md63',1,'Effect'],['../output-sinks.html#autotoc_md69',1,'Effect']]],
-  ['environment_20variable_20fallback_1',['Environment Variable Fallback',['../cli.html#autotoc_md29',1,'']]],
+  ['effect_0',['Effect',['../output-sinks.html#autotoc_md52',1,'Effect'],['../output-sinks.html#autotoc_md57',1,'Effect'],['../output-sinks.html#autotoc_md62',1,'Effect'],['../output-sinks.html#autotoc_md68',1,'Effect'],['../output-sinks.html#autotoc_md74',1,'Effect']]],
+  ['environment_20variable_20fallback_1',['Environment Variable Fallback',['../cli.html#autotoc_md34',1,'']]],
   ['equality_20and_20ordering_2',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
-  ['example_3',['Example',['../index.html#autotoc_md41',1,'A Short Example'],['../output-sinks.html#autotoc_md50',1,'Example'],['../output-sinks.html#autotoc_md55',1,'Example'],['../output-sinks.html#autotoc_md60',1,'Example'],['../output-sinks.html#autotoc_md67',1,'Example'],['../output-sinks.html#autotoc_md73',1,'Example']]],
+  ['example_3',['Example',['../index.html#autotoc_md46',1,'A Short Example'],['../output-sinks.html#autotoc_md55',1,'Example'],['../output-sinks.html#autotoc_md60',1,'Example'],['../output-sinks.html#autotoc_md65',1,'Example'],['../output-sinks.html#autotoc_md72',1,'Example'],['../output-sinks.html#autotoc_md78',1,'Example']]],
   ['executable_4',['Smallest executable',['../compile-time.html#compile-time-comparison-one',1,'']]],
   ['executables_5',['executables',['../compile-time.html#compile-time-comparison-files',1,'Multi-file executables'],['../compile-time.html#compile-time-comparison-cases',1,'Single-file executables']]],
-  ['execution_20control_6',['Execution Control',['../cli.html#autotoc_md31',1,'']]]
+  ['execution_20control_6',['Execution Control',['../cli.html#autotoc_md36',1,'']]]
 ];
