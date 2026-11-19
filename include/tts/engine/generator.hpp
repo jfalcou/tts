@@ -336,19 +336,20 @@ namespace tts
   /**
     @brief Enumerates the values of a type in increasing order
 
-    tts::enumeration lists the values of a type `T` in increasing order, and the position of a value
-    in that list is its rank: for `std::int8_t`, -128 has rank 0 and 127 has rank 255. Its three
-    members are static:
+    Gives each value of `T` its rank, its position among the values of `T` in increasing order.
+    For `std::int8_t`, -128 has rank 0 and 127 has rank 255. The specialization for `T` has three
+    static members:
 
-    - `last`: largest rank, a `std::uint64_t`, given instead of the number of values, which does not
-      fit in 64 bits for a 64-bit integer type.
-    - `index(v)`: rank of `v`, a `std::uint64_t`.
-    - `value(i)`: value of rank `i`, for `i` from 0 to `last`.
+    - `last`, the largest rank, a `std::uint64_t`. The number of values, `last + 1`, does not fit in
+      64 bits for a 64-bit integer type.
+    - `index(v)`, the rank of `v`, a `std::uint64_t`.
+    - `value(i)`, the value of rank `i`, for `i` from 0 to `last`.
 
-    Specialized for every integer type except `bool`, and for `float` and `double`. For `float` and
-    `double`, the ranks follow the totalOrder of IEEE 754-2019 without NaN: -inf has rank 0, -0
-    comes just before +0, and +inf has rank `last`. NaN has no rank, and `index` must not be given
-    one. A user-defined type specializes tts::enumeration with the same three static members.
+    Specialized for every integer type except `bool`, and for `float` and `double`. The ranks of
+    `float` and `double` follow the totalOrder of IEEE 754-2019 without NaN. -inf has rank 0, -0
+    precedes +0, and +inf has rank `last`. NaN has no rank, and `index` must not receive a NaN.
+
+    A user-defined type specializes tts::enumeration with the same three static members.
 
     @groupheader{Example}
     @snippet doc/enumeration.cpp snippet
@@ -423,8 +424,8 @@ namespace tts::_
     return z ^ (z >> 31);
   }
 
-  // Special values of T, produced at the indices 1 to their count of a sample when they lie
-  // between its bounds.
+  // Special values of T, which a sample takes at its first indices when they lie between its
+  // bounds.
   template<typename T> struct specials
   {
     static constexpr T values[] = {T(-1), T(0), T(1)}; // NOSONAR - <array> costs compile time
@@ -955,33 +956,37 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Generator of every value of a type, or of a sample spread over its range
+    @brief Generates every value of a type, or a sample spread over its range
 
-    - `tts::sweep`: every value of the argument type but NaN, from -inf to +inf for a
-      floating-point type.
-    - `tts::sweep(lo, hi)`: the values from `lo` to `hi`, both included.
-    - `tts::sweep(n)` and `tts::sweep(lo, hi, n)`: the same, with a scope of `n` calls for this
-      check.
+    Produces the values of the argument type in increasing order, through tts::enumeration. A range
+    check whose generators are all tts::sweep runs every value, or every combination of values for
+    several arguments, as long as their number does not exceed the scope of the check, 16777216 by
+    default. Above the scope, the check makes as many calls as the scope and samples the values.
 
-    A range check whose generators are all tts::sweep tests every value, or every combination of
-    values for several arguments, when there are at most `n` of them. `n` is the largest scope its
-    generators give, 16777216 when none does, and [`--scope`](cli.html) on the command line replaces
-    it. Above `n`, the check makes `n` calls, and each argument takes `n` values:
+    - `tts::sweep` covers every value but NaN, from -inf to +inf for a floating-point type.
+    - `tts::sweep(lo, hi)` covers the values from `lo` to `hi`, both included, given in either
+      order.
+    - `tts::sweep(n)` and `tts::sweep(lo, hi, n)` set the scope of the check to `n`.
+
+    When several generators set a scope, the check takes the largest. [`--scope`](cli.html) on the
+    command line replaces the scope of every check.
+
+    The sample of an argument holds:
 
     - the bounds,
     - the special values between the bounds:
-      - floating-point: the finite values of largest magnitude, -1 and 1, the smallest positive
-        normal and subnormal values and their negatives, -0 and +0,
-      - integer: -1, 0, 1,
-    - the other values, spread evenly over the ranks: for a floating-point type, the same number in
-      each binade, the subnormals of each sign counting as one binade.
+      - for a floating-point type, the finite values of largest magnitude, -1 and 1, the smallest
+        positive normal and subnormal values and their negatives, and -0 and +0,
+      - for an integer type, -1, 0, and 1,
+    - other values spread evenly over the ranks, the same number in each binade for a
+      floating-point type, where the subnormals of each sign count as one binade.
 
-    Call `i` takes the `i`-th value of the first argument, and of each other argument the value at a
-    fixed shuffled position, so a check of several arguments tests `n` combinations and leaves the
-    others out.
+    With several arguments, call `i` takes the `i`-th value of the first argument, and for each
+    other argument the value at a fixed shuffled position. A sample of several arguments thus tests
+    as many combinations as the scope, and leaves the others out.
 
-    NaN is never produced, since tts::enumeration gives it no rank. The values depend on `n` and
-    not on `--seed`. The argument type needs a specialization of tts::enumeration.
+    Never produces NaN, which tts::enumeration does not rank. The sample depends on the scope, and
+    not on `--seed`.
 
     @groupheader{Example}
     @snippet doc/generator_sweep.cpp snippet

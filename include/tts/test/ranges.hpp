@@ -341,7 +341,7 @@ namespace tts
       }
     }
 
-    // Bijection of [0, n): SplitMix64 steps on the bits of n, repeated until back below n.
+    // Shuffles [0, n) with SplitMix64 steps on the bits of n, repeated until the result is below n.
     inline std::uint64_t permute(std::uint64_t i, std::uint64_t n, std::uint64_t seed) noexcept
     {
       auto          bits  = static_cast<unsigned>(std::bit_width(n - 1));
@@ -561,39 +561,44 @@ namespace tts
 /*!
   @def TTS_ULP_RANGE_CHECK
   @ingroup  test-precision
-  @brief Checks a function against a reference over a data set, within a given ULP distance
+  @brief Checks a function against a reference over a range of inputs, within a ULP distance.
 
-  Evaluates `NewFunc` and `RefFunc` on the same data set and sorts the [ULP
-  distance](rationale.html#ulp) between their results into a histogram. The check passes when the
-  largest distance stays within the bound given after `NewFunc`. The data set holds at least
-  `--block` values, 4096 by default, and the generator builds each value from its index.
-  `--ulpmax` replaces the bounds for every check of the run.
+  Generates inputs with `Producer`, calls `RefFunc` and `NewFunc` on each of them, and records the
+  ULP distance between the two results. The distances are then gathered in a histogram, and the
+  check passes if none exceeds the bound given after `NewFunc`. See the
+  [ULP rationale](rationale.html#ulp) for how the distance is measured.
 
-  A function of several arguments takes tts::types lists as `RefType` and `NewType`, with the types
-  in call order. Its generators are given between parentheses, as many as arguments, or as a single
-  generator shared by all arguments. Each generator then produces the smallest number of values
-  whose product over the arguments reaches `--block`: 64 values for two arguments by default. The
-  data set covers every combination of these values.
+  - For a function of one argument, `RefType` and `NewType` are its type, and `Producer` builds
+    `--block` inputs, 4096 by default.
+  - For a function of several arguments, `RefType` and `NewType` are tts::types lists between
+    parentheses, in call order. `Producer` is one generator per argument between parentheses, or a
+    single generator for all. Each generator builds the smallest number of values whose
+    combinations reach `--block`, 64 for two arguments by default, and the check runs every
+    combination.
 
-  When every generator is tts::sweep, the check uses [`--scope`](cli.html), 16777216 by default, in
-  place of `--block`, as tts::sweep describes. Memory use does not depend on `--scope`:
-  `--scope=4294967296` checks every float but NaN, one call each.
+  When every generator is tts::sweep, the scope of the check replaces `--block`, as tts::sweep
+  describes. Memory does not grow with the number of calls, so `--scope=4294967296` checks each
+  float but NaN once.
+
+  `RefFunc` returns the element type of the result of `NewFunc`, or the check does not compile. A
+  reference computed in `double` for a function of `float` casts its result to `float`.
 
   `NewType` may hold several values of `RefType`, as a specialization of tts::adapter describes.
 
-  `std::pair`, `std::tuple`, and any result type that specializes `std::tuple_size` and provides a
-  `get` found by argument-dependent lookup are tuples, unless tts::adapter is specialized for them.
-  The members of a tuple are compared separately, each with its own histogram, and the check takes
-  a bound for all members or a bound per member.
+  A result of type `std::pair` or `std::tuple`, or of any type that specializes `std::tuple_size`
+  and provides a `get` found by argument-dependent lookup, is compared member by member, each
+  member with its own histogram, unless tts::adapter is specialized for it. The check then takes
+  one bound for all members or one bound per member.
 
-  A check that fails prints its histogram, and every check prints it under `--verbose`. Each bucket
-  shows the first element whose distance falls in it. When `NewType` holds several values, that
-  element is marked between stars within its group.
+  A check that fails prints its histogram, and `--verbose` prints it for every check. Each bucket
+  shows the first input whose distance falls in it. When `NewType` holds several values, that input
+  is marked between stars within its group. `--ulpmax` replaces the bounds of every check of the
+  run.
 
-  @param Producer Data generator, or a generator per argument between parentheses.
-  @param RefType  Argument type of the reference function, or a tts::types list of them.
-  @param NewType  Argument type of the challenger function, or a tts::types list of them.
-  @param RefFunc  Reference function.
+  @param Producer Generator of the inputs, or one generator per argument between parentheses.
+  @param RefType  Argument type of `RefFunc`, or a tts::types list of them.
+  @param NewType  Argument type of `NewFunc`, or a tts::types list of them.
+  @param RefFunc  Function whose results are the reference.
   @param NewFunc  Function compared to the reference.
   @param ...      Largest ULP distance accepted, or one per member of a tuple result.
 

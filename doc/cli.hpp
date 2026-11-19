@@ -123,7 +123,7 @@
   Options      | Description
   ------------ | -----------------------------------------------------------------------
   `--block=N`  | Set size of range checks samples to `N`. `./my_test --block=4096`
-  `--scope=N`  | Set the number of calls of every range check whose generators are all tts::sweep: every value or combination when there are at most `N`, `N` sampled calls otherwise. `N` is a decimal integer, 16777216 by default, and replaces the scope given to tts::sweep in the code. `./my_test --scope=4294967296`
+  `--scope=N`  | Set to `N` the scope of every range check whose generators are all tts::sweep, in place of the scope given in the code. Such a check runs every value or combination up to `N`, and `N` sampled calls above. `N` is a decimal integer, 16777216 by default. `./my_test --scope=4294967296`
   `--loop=N`   | Repeat each range checks `N` times. `./my_test --loop=100`
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
   `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
