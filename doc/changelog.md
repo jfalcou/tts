@@ -1,12 +1,19 @@
 Change Log {#changelog}
 ==========
 
-# Upcoming version
+# Version 4.2
 
 ## What's Changed
 
+### New Features
+  * Added `tts::sweep` to run a range check on every value of a type, or on a sample when there are more than `--scope` values
+  * Added `tts::enumeration<T>`, which numbers the values of a type in order for `tts::sweep`
+  * `tts::sweep(n)` and `tts::sweep(lo, hi, n)` give one range check its own scope of `n` calls
+  * Range checks no longer keep all their inputs and results in memory
+
 ### Bug Fixes
   * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)
+
 
 # Version 4.1
 

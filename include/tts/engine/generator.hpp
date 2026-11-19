@@ -328,6 +328,199 @@ namespace tts
   }
 
   //====================================================================================================================
+  /// @addtogroup tools-generators-custom
+  /// @{
+  //====================================================================================================================
+
+  //====================================================================================================================
+  /**
+    @brief Enumerates the values of a type in increasing order
+
+    tts::enumeration lists the values of a type `T` in increasing order, and the position of a value
+    in that list is its rank: for `std::int8_t`, -128 has rank 0 and 127 has rank 255. Its three
+    members are static:
+
+    - `last`: largest rank, a `std::uint64_t`, given instead of the number of values, which does not
+      fit in 64 bits for a 64-bit integer type.
+    - `index(v)`: rank of `v`, a `std::uint64_t`.
+    - `value(i)`: value of rank `i`, for `i` from 0 to `last`.
+
+    Specialized for every integer type except `bool`, and for `float` and `double`. For `float` and
+    `double`, the ranks follow the totalOrder of IEEE 754-2019 without NaN: -inf has rank 0, -0
+    comes just before +0, and +inf has rank `last`. NaN has no rank, and `index` must not be given
+    one. A user-defined type specializes tts::enumeration with the same three static members.
+
+    @groupheader{Example}
+    @snippet doc/enumeration.cpp snippet
+
+    @tparam T Type whose values are enumerated
+  **/
+  //====================================================================================================================
+  template<typename T> struct enumeration;
+
+  template<std::integral T>
+    requires(!std::same_as<T, bool>)
+  struct enumeration<T>
+  {
+  private:
+    using u_t = _::sized_integer_t<T>;
+
+    // The sign bit flipped puts the negative values first.
+    static constexpr u_t flip = std::is_signed_v<T> ? u_t(u_t(~u_t(0)) / 2 + 1) : u_t(0);
+
+  public:
+    static constexpr std::uint64_t last = u_t(~u_t(0));
+
+    static constexpr std::uint64_t index(T v) noexcept
+    {
+      return u_t(u_t(v) ^ flip);
+    }
+    static constexpr T value(std::uint64_t i) noexcept
+    {
+      return T(u_t(u_t(i) ^ flip));
+    }
+  };
+
+  template<std::floating_point T>
+    requires(sizeof(T) == 4 || sizeof(T) == 8)
+  struct enumeration<T>
+  {
+  private:
+    using u_t = _::sized_integer_t<T>;
+
+    // -inf has rank 0, -0 rank inf, +0 rank inf + 1, +inf rank last.
+    static constexpr u_t inf  = std::bit_cast<u_t>(std::numeric_limits<T>::infinity());
+    static constexpr u_t sign = u_t(u_t(~u_t(0)) / 2 + 1);
+
+  public:
+    static constexpr std::uint64_t last = 2 * std::uint64_t(inf) + 1;
+
+    static constexpr std::uint64_t index(T v) noexcept
+    {
+      auto b = std::bit_cast<u_t>(v);
+      return b & sign ? inf - (b ^ sign) : inf + 1 + std::uint64_t(b);
+    }
+
+    static constexpr T value(std::uint64_t i) noexcept
+    {
+      return std::bit_cast<T>(u_t(i <= inf ? sign | (inf - i) : i - inf - 1));
+    }
+  };
+
+  //====================================================================================================================
+  /// @}
+  //====================================================================================================================
+}
+
+namespace tts::_
+{
+  // SplitMix64 finalizer.
+  constexpr std::uint64_t mix(std::uint64_t z) noexcept
+  {
+    z += 0x9e3779b97f4a7c15ULL;
+    z  = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+    z  = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+    return z ^ (z >> 31);
+  }
+
+  // Special values of T, produced at the indices 1 to their count of a sample when they lie
+  // between its bounds.
+  template<typename T> struct specials
+  {
+    static constexpr T values[] = {T(-1), T(0), T(1)}; // NOSONAR - <array> costs compile time
+  };
+
+  template<std::floating_point T> struct specials<T>
+  {
+    using l_t                   = std::numeric_limits<T>;
+    static constexpr T values[] = {// NOSONAR - <array> costs compile time
+                                   l_t::lowest(),
+                                   T(-1),
+                                   -l_t::min(),
+                                   -l_t::denorm_min(),
+                                   T(-0.),
+                                   T(0),
+                                   l_t::denorm_min(),
+                                   l_t::min(),
+                                   T(1),
+                                   l_t::max()};
+  };
+
+  template<typename T>
+  T sweep_value(std::uint64_t first, std::uint64_t n, std::uint64_t idx, std::uint64_t sz)
+  {
+    using e_t = enumeration<T>;
+
+    if(sz - 1 >= n) return e_t::value(first + idx % (n + 1));
+    if(idx == 0) return e_t::value(first);
+    if(idx + 1 == sz) return e_t::value(first + n);
+
+    if(idx <= sizeof(specials<T>::values) / sizeof(T))
+      if(T v = specials<T>::values[ idx - 1 ]; e_t::index(v) - first <= n) return v;
+
+    std::uint64_t w = n / sz;
+    std::uint64_t r = n % sz;
+    return e_t::value(first + idx * w + _::min(idx, r) + mix(idx) % (w + (idx < r)));
+  }
+
+  template<typename T> struct bounded_sweep
+  {
+    template<typename D> std::uint64_t first(tts::type<D> t) const
+    {
+      auto a = enumeration<D>::index(::tts::convert_as(lo, t));
+      auto b = enumeration<D>::index(::tts::convert_as(hi, t));
+      return a < b ? a : b;
+    }
+
+    template<typename D> std::uint64_t span(tts::type<D> t) const
+    {
+      auto a = enumeration<D>::index(::tts::convert_as(lo, t));
+      auto b = enumeration<D>::index(::tts::convert_as(hi, t));
+      return a < b ? b - a : a - b;
+    }
+
+    template<typename D> D operator()(tts::type<D> t, auto idx, auto sz, auto...) const
+    {
+      return sweep_value<D>(
+      first(t), span(t), static_cast<std::uint64_t>(idx), static_cast<std::uint64_t>(sz));
+    }
+
+    T           lo;
+    T           hi;
+    std::size_t scope = 0;
+  };
+
+  // A scope of 0 leaves the one of --scope.
+  struct whole_sweep
+  {
+    constexpr whole_sweep operator()(std::size_t n) const
+    {
+      return {n};
+    }
+
+    template<typename T> constexpr bounded_sweep<T> operator()(T lo, T hi, std::size_t n = 0) const
+    {
+      return {lo, hi, n};
+    }
+
+    template<typename D> std::uint64_t span(tts::type<D>) const
+    {
+      return enumeration<D>::last;
+    }
+
+    template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
+    {
+      return sweep_value<D>(
+      0, enumeration<D>::last, static_cast<std::uint64_t>(idx), static_cast<std::uint64_t>(sz));
+    }
+
+    std::size_t scope = 0;
+  };
+}
+
+namespace tts
+{
+  //====================================================================================================================
   /**
     @defgroup tools-generators-class Data Generators
     @brief Generators to produce data samples for testing.
@@ -754,6 +947,42 @@ namespace tts
     }
     G generator_;
   };
+
+  //====================================================================================================================
+  /**
+    @brief Generator of every value of a type, or of a sample spread over its range
+
+    - `tts::sweep`: every value of the argument type but NaN, from -inf to +inf for a
+      floating-point type.
+    - `tts::sweep(lo, hi)`: the values from `lo` to `hi`, both included.
+    - `tts::sweep(n)` and `tts::sweep(lo, hi, n)`: the same, with a scope of `n` calls for this
+      check.
+
+    A range check whose generators are all tts::sweep tests every value, or every combination of
+    values for several arguments, when there are at most `n` of them. `n` is the largest scope its
+    generators give, 16777216 when none does, and [`--scope`](cli.html) on the command line replaces
+    it. Above `n`, the check makes `n` calls, and each argument takes `n` values:
+
+    - the bounds,
+    - the special values between the bounds:
+      - floating-point: the finite values of largest magnitude, -1 and 1, the smallest positive
+        normal and subnormal values and their negatives, -0 and +0,
+      - integer: -1, 0, 1,
+    - the other values, spread evenly over the ranks: for a floating-point type, the same number in
+      each binade, the subnormals of each sign counting as one binade.
+
+    Call `i` takes the `i`-th value of the first argument, and of each other argument the value at a
+    fixed shuffled position, so a check of several arguments tests `n` combinations and leaves the
+    others out.
+
+    NaN is never produced, since tts::enumeration gives it no rank. The values depend on `n` and
+    not on `--seed`. The argument type needs a specialization of tts::enumeration.
+
+    @groupheader{Example}
+    @snippet doc/generator_sweep.cpp snippet
+  **/
+  //====================================================================================================================
+  inline constexpr _::whole_sweep sweep = {};
 
   //====================================================================================================================
   /// @}

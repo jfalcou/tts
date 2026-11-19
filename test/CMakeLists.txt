@@ -64,6 +64,7 @@ copa_make_single_unit(
         unit/precision/range.cpp
         unit/precision/range_arguments.cpp
         unit/precision/range_results.cpp
+        unit/precision/range_sweep.cpp
         unit/precision/relative.cpp
         unit/precision/sequence.cpp
         unit/precision/ulp.cpp
