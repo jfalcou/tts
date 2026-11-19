@@ -1,6 +1,13 @@
 Change Log {#changelog}
 ==========
 
+# Upcoming version
+
+## What's Changed
+
+### Bug Fixes
+  * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)
+
 # Version 4.1
 
 ## What's Changed
