@@ -28,6 +28,7 @@ copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + Undef
                 LABEL "Sanitizers")
 copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
 copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
+copa_add_option(TTS_BENCHMARKS "Provide tts::benchmarks, which needs nanobench" OFF LABEL "Benchmarks")
 copa_add_option(TTS_EXTERNAL_DEPENDENCIES "Take dependencies from the environment instead of fetching them" OFF)
 copa_project_version(
   MAJOR 4
@@ -59,6 +60,13 @@ copa_setup_install(
   FEATURES cxx_std_20
   DOC ${PROJECT_SOURCE_DIR}/LICENSE.md
   INCLUDE ${PROJECT_SOURCE_DIR}/include/tts)
+
+if(TTS_BENCHMARKS)
+  add_library(tts_benchmarks INTERFACE)
+  add_library(tts::benchmarks ALIAS tts_benchmarks)
+  target_link_libraries(tts_benchmarks INTERFACE tts::tts)
+  target_include_directories(tts_benchmarks SYSTEM INTERFACE $<BUILD_INTERFACE:${TTS_NANOBENCH_INCLUDE_DIR}>)
+endif()
 
 ##======================================================================================================================
 ## Standalone generation
