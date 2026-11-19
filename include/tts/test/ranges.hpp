@@ -315,15 +315,13 @@ namespace tts
         buffer<std::uint64_t> spans {generator_of<Ks>(generators).span(type<As> {})...};
         std::size_t           calls = 1;
         bool                  fits  = true;
-        for(std::size_t k = 0; k < arity && fits; ++k)
+        for(std::size_t k = 0; k < arity; ++k)
         {
           // Do not multiply by spans[k] + 1: it overflows for a 64-bit type.
           fits = spans[ k ] < scope && calls <= scope / (spans[ k ] + 1);
-          if(fits)
-          {
-            sides[ k ]  = static_cast<std::size_t>(spans[ k ] + 1);
-            calls      *= sides[ k ];
-          }
+          if(!fits) break;
+          sides[ k ]  = static_cast<std::size_t>(spans[ k ] + 1);
+          calls      *= sides[ k ];
         }
         if(fits) return calls;
 
