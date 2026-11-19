@@ -1,7 +1,7 @@
 Change Log {#changelog}
 ==========
 
-# Version 4.2
+# Upcoming version
 
 ## What's Changed
 
