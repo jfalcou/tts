@@ -81,15 +81,14 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPE_IS
-  @brief Checks if two types satisfy `std::is_same_v<Type,Target> == true`.
+  @brief Checks that two types are the same.
 
-  @param TYPE Type to compare.
-  @param REF  Expected type.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param TYPE Type to check.
+  @param REF  Type expected.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/type_is.cpp snippet
-
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -111,11 +110,14 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_EXPR_IS
-  @brief Checks if an Expression evaluates to a value of a given Type.
+  @brief Checks that an expression has the type `TYPE`.
 
-  @param EXPR Expression to evaluate.
-  @param TYPE Expected type.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Compares `decltype(EXPR)` to `TYPE`, so an expression that names a variable gives its declared
+  type.
+
+  @param EXPR Expression whose type is checked.
+  @param TYPE Type expected.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/expr_is.cpp snippet
@@ -153,11 +155,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_EXPECT_COMPILES
-  @brief Checks if an `Expression` based on a list of `Symbols` will compile properly in a SFINAE
-context.
+  @brief Checks that an expression on the given symbols compiles.
 
-  @param Symbols Variadic lists of symbols used in the tests
-  @param Expression Brace-enclosed expression to validate.
+  Checks the expression in a `requires` expression over the symbols, so a failure to compile is
+  reported as a failed check instead of a compiler error.
+
+  @param Symbols    Names the expression uses.
+  @param Expression Expression to check, between braces.
 
   @groupheader{Example}
   @snippet doc/expect_compiles.cpp snippet
@@ -185,11 +189,13 @@ context.
 //======================================================================================================================
 /**
   @def TTS_EXPECT_NOT_COMPILES
-  @brief Checks if an `Expression` based on a list of `Symbols` will not compile properly in a
-SFINAE context.
+  @brief Checks that an expression on the given symbols does not compile.
 
-  @param Symbols Variadic lists of symbols used in the tests
-  @param Expression Brace-enclosed expression to validate.
+  Checks the expression in a `requires` expression over the symbols, so a failure to compile is
+  reported as a failed check instead of a compiler error.
+
+  @param Symbols    Names the expression uses.
+  @param Expression Expression to check, between braces.
 
   @groupheader{Example}
   @snippet doc/expect_not_compiles.cpp snippet

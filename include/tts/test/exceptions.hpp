@@ -71,12 +71,11 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_THROW
-  @brief Checks if a given expression throws an exception of a given type
+  @brief Checks that an expression throws an exception of type `EXCEPTION`.
 
-  @param EXPR       Expression to evaluate.
-  @param EXCEPTION  Expected exception type to be thrown.
-  @param ...        Optional tag. If equals to `REQUIRED`, this test will stop the program if it
-fails.
+  @param EXPR      Expression to evaluate.
+  @param EXCEPTION Type of the exception expected.
+  @param ...       `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/throw.cpp snippet
@@ -111,11 +110,10 @@ fails.
 //======================================================================================================================
 /**
   @def TTS_NO_THROW
-  @brief Checks if a given expression throws no exception
+  @brief Checks that an expression throws no exception.
 
-  @param EXPR       Expression to evaluate.
-  @param ...        Optional tag. If equals to `REQUIRED`, this test will stop the program if it
-fails.
+  @param EXPR Expression to evaluate.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/no_throw.cpp snippet

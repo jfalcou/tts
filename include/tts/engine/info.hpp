@@ -64,10 +64,10 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_PASS
-  @brief Force a passing test and display a message.
   @ingroup test-basic
+  @brief Reports a passing check with a message.
 
-  @param ... A format string and potential arguments to display as additional informations
+  @param ... A format string and its arguments, printed with the report.
 
   @groupheader{Example}
   @snippet doc/pass_fail.cpp snippet1
@@ -89,10 +89,10 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_FAIL
-  @brief Force a failing test and display a message.
   @ingroup test-basic
+  @brief Reports a failing check with a message.
 
-  @param ... A format string and potential arguments to display as additional informations
+  @param ... A format string and its arguments, printed with the report.
 
   @groupheader{Example}
   @snippet doc/pass_fail.cpp snippet2
@@ -115,10 +115,12 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_FATAL
-  @brief Force a failing test, display a message and halt the test suite.
   @ingroup test-basic
+  @brief Reports a failing check with a message and ends the run.
 
-  @param ... A format string and potential arguments to display as additional informations
+  Skips the cases left, and reports how many were skipped.
+
+  @param ... A format string and its arguments, printed with the report.
 
   @groupheader{Example}
   @snippet doc/pass_fail.cpp snippet3
