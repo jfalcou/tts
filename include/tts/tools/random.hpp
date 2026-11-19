@@ -162,7 +162,8 @@ namespace tts
         return quiet_nan;
       }
 
-      return value;
+      // exp10 of a log rounds, and can land a step past either bound of a narrow range.
+      return min(max(value, mini), maxi);
     }
   }
 
