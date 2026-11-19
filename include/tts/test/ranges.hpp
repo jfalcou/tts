@@ -314,19 +314,22 @@ namespace tts
         ::tts::arguments().value(wanted ? wanted : std::size_t {1} << 24, "--scope");
         buffer<std::uint64_t> spans {generator_of<Ks>(generators).span(type<As> {})...};
         std::size_t           calls = 1;
-        for(std::size_t k = 0; k < arity; ++k)
+        bool                  fits  = true;
+        for(std::size_t k = 0; k < arity && fits; ++k)
         {
           // Do not multiply by spans[k] + 1: it overflows for a 64-bit type.
-          if(spans[ k ] >= scope || calls > scope / (spans[ k ] + 1))
+          fits = spans[ k ] < scope && calls <= scope / (spans[ k ] + 1);
+          if(fits)
           {
-            for(std::size_t j = 0; j < arity; ++j)
-              sides[ j ] = 0;
-            return scope;
+            sides[ k ]  = static_cast<std::size_t>(spans[ k ] + 1);
+            calls      *= sides[ k ];
           }
-          sides[ k ]  = static_cast<std::size_t>(spans[ k ] + 1);
-          calls      *= sides[ k ];
         }
-        return calls;
+        if(fits) return calls;
+
+        for(std::size_t k = 0; k < arity; ++k)
+          sides[ k ] = 0;
+        return scope;
       }
       else
       {

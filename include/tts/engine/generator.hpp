@@ -446,6 +446,11 @@ namespace tts::_
                                    l_t::max()};
   };
 
+  template<typename T, std::size_t N> constexpr std::uint64_t count_of(T const (&)[ N ]) noexcept
+  {
+    return N;
+  }
+
   template<typename T>
   T sweep_value(std::uint64_t first, std::uint64_t n, std::uint64_t idx, std::uint64_t sz)
   {
@@ -455,12 +460,12 @@ namespace tts::_
     if(idx == 0) return e_t::value(first);
     if(idx + 1 == sz) return e_t::value(first + n);
 
-    if(idx <= sizeof(specials<T>::values) / sizeof(T))
+    if(idx <= count_of(specials<T>::values))
       if(T v = specials<T>::values[ idx - 1 ]; e_t::index(v) - first <= n) return v;
 
     std::uint64_t w = n / sz;
     std::uint64_t r = n % sz;
-    return e_t::value(first + idx * w + _::min(idx, r) + mix(idx) % (w + (idx < r)));
+    return e_t::value(first + idx * w + _::min(idx, r) + mix(idx) % (w + (idx < r ? 1 : 0)));
   }
 
   template<typename T> struct bounded_sweep
