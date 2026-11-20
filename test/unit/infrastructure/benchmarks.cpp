@@ -94,6 +94,28 @@ TTS_CASE("Check that a benchmark reports one row per run under its name")
   TTS_EXPECT(sink.holds("| first "));
   TTS_EXPECT(sink.holds("| second "));
   TTS_EXPECT(sink.holds(" ns/elem |"));
+  TTS_EXPECT(sink.holds(" IPC |"));
+  TTS_EXPECT(sink.holds(" bra/elem |"));
+  TTS_EXPECT(sink.holds(" miss% |"));
+};
+
+TTS_CASE("Check that a benchmark states whether the assertions of its unit are enabled")
+{
+  auto           x     = tts::bench::random<int>(-20, 20);
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("assertions", 3);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+
+#if defined(NDEBUG)
+  TTS_EXPECT(sink.holds("Assertions: disabled"));
+#else
+  TTS_EXPECT(sink.holds("Assertions: enabled"));
+#endif
 };
 
 TTS_CASE("Check that a benchmark reads the lanes and the machine from its traits")

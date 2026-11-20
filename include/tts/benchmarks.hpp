@@ -56,8 +56,9 @@
 
   @groupheader{Table}
 
-  An element is a single value, so a call of a row with `N` lanes processes `N` elements. The table
-  has one row per function, with these columns:
+  The line under the title states whether the assertions of the translation unit are enabled, from
+  `NDEBUG`. An element is a single value, so a call of a row with `N` lanes processes `N` elements.
+  The table has one row per function, with these columns:
 
   | Column | Content |
   |---|---|
@@ -69,10 +70,14 @@
   | `elem/s` | elements per second, the inverse of the median time per element |
   | `cyc/elem` | median CPU cycles per element |
   | `ins/elem` | median instructions per element |
+  | `IPC` | instructions per cycle, the median instructions over the median cycles |
+  | `bra/elem` | median branch instructions per element |
+  | `miss%` | median mispredicted branches over the median branch instructions, in percent |
 
   `err%` is the median of `|t - m| / t` over the epochs, where `t` is the duration of an epoch and
   `m` is the median duration. If the operating system blocks the hardware counters (as many
-  containers do), `cyc/elem` and `ins/elem` read `0.00`.
+  containers do), `cyc/elem`, `ins/elem`, and `bra/elem` read `0.00`, and `IPC` and `miss%` read
+  `-`.
 
   If the executable is run with `-d` or `--dump`, it also writes `<title>.csv` in the working
   directory, with:
@@ -543,6 +548,11 @@ namespace tts::bench
 
       auto& out = tts::output();
       out.writeln("# Benchmarking for : `%s`", base_file_name_.data());
+#if defined(NDEBUG)
+      out.writeln("Assertions: disabled");
+#else
+      out.writeln("Assertions: enabled");
+#endif
       if(tts::text const env = Traits::environment(); !env.is_empty()) out.writeln(env);
       if(!dump_note.is_empty()) out.writeln(dump_note);
       out.writeln();
@@ -553,12 +563,23 @@ namespace tts::bench
         name_width = tts::_::max(name_width, res.config().mBenchmarkName.size());
       }
 
-      constexpr int columns            = 10;
-      char const*   headers[ columns ] = {
-      "N", "Speedup", "Eff.", "ns/elem", "min", "max", "err%", "elem/s", "cyc/elem", "ins/elem"};
-      int const widths[ columns ] = {4, 9, 8, 10, 10, 10, 6, 12, 10, 10};
+      constexpr int columns            = 13;
+      char const*   headers[ columns ] = {"N",
+                                          "Speedup",
+                                          "Eff.",
+                                          "ns/elem",
+                                          "min",
+                                          "max",
+                                          "err%",
+                                          "elem/s",
+                                          "cyc/elem",
+                                          "ins/elem",
+                                          "IPC",
+                                          "bra/elem",
+                                          "miss%"};
+      int const     widths[ columns ]  = {4, 9, 8, 10, 10, 10, 6, 12, 10, 10, 6, 10, 6};
 
-      auto      print_row         = [ & ](char const* name, tts::text const* cells)
+      auto          print_row          = [ & ](char const* name, tts::text const* cells)
       {
         tts::text line("| ");
         line += tts::text("%-*s", static_cast<int>(name_width), name);
@@ -602,8 +623,12 @@ namespace tts::bench
         double         speedup      = elem_per_sec / baseline_elem_per_sec;
         double         efficiency   = speedup / static_cast<double>(N);
 
-        double         ins_per_elem = res.median(measure::instructions) / batch_size;
-        double         cyc_per_elem = res.median(measure::cpucycles) / batch_size;
+        double         instructions = res.median(measure::instructions);
+        double         cycles       = res.median(measure::cpucycles);
+        double         branches     = res.median(measure::branchinstructions);
+        double         ins_per_elem = instructions / batch_size;
+        double         cyc_per_elem = cycles / batch_size;
+        double         bra_per_elem = branches / batch_size;
         double         ns_per_elem  = 1e9 * current_time / batch_size;
         double         min_ns_elem  = 1e9 * res.minimum(measure::elapsed) / batch_size;
         double         max_ns_elem  = 1e9 * res.maximum(measure::elapsed) / batch_size;
@@ -611,17 +636,21 @@ namespace tts::bench
 
         if(cyc_per_elem == 0.0 && ins_per_elem == 0.0) counters_failed = true;
 
-        tts::text cells[ columns ] = {tts::text("%td", N),
-                                      tts::text("x") + _::digits(speedup),
-                                      (N == 1 && i != 0) ? tts::text("-")
-                                                         : tts::text("%.1f%%", efficiency * 100.0),
-                                      _::digits(ns_per_elem),
-                                      _::digits(min_ns_elem),
-                                      _::digits(max_ns_elem),
-                                      tts::text("%.1f%%", error * 100.0),
-                                      tts::text("%.0f", elem_per_sec),
-                                      tts::text("%.2f", cyc_per_elem),
-                                      tts::text("%.2f", ins_per_elem)};
+        tts::text cells[ columns ] = {
+        tts::text("%td", N),
+        tts::text("x") + _::digits(speedup),
+        (N == 1 && i != 0) ? tts::text("-") : tts::text("%.1f%%", efficiency * 100.0),
+        _::digits(ns_per_elem),
+        _::digits(min_ns_elem),
+        _::digits(max_ns_elem),
+        tts::text("%.1f%%", error * 100.0),
+        tts::text("%.0f", elem_per_sec),
+        tts::text("%.2f", cyc_per_elem),
+        tts::text("%.2f", ins_per_elem),
+        cycles > 0.0 ? tts::text("%.2f", instructions / cycles) : tts::text("-"),
+        tts::text("%.2f", bra_per_elem),
+        branches > 0.0 ? tts::text("%.1f%%", 100.0 * res.median(measure::branchmisses) / branches)
+                       : tts::text("-")};
 
         print_row(res.config().mBenchmarkName.c_str(), cells);
       }
@@ -629,7 +658,8 @@ namespace tts::bench
       if(counters_failed)
       {
         out.writeln();
-        out.writeln("> Note: CPU cycles and instructions were 0.00. OS blocked hardware counters.");
+        out.writeln("> Note: CPU cycles, instructions, and branches were 0.00. OS blocked hardware "
+                    "counters.");
       }
 
       out.writeln();
