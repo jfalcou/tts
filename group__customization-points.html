@@ -142,9 +142,9 @@ $(function(){initNavTree('group__customization-points.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:gac451ae42ba6d30988c42480129c8bb59" id="r_gac451ae42ba6d30988c42480129c8bb59"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gac451ae42ba6d30988c42480129c8bb59">TTS_CUSTOM_DRIVER_FUNCTION</a></td></tr>
-<tr class="memdesc:gac451ae42ba6d30988c42480129c8bb59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test application entry-point customization.  <br /></td></tr>
+<tr class="memdesc:gac451ae42ba6d30988c42480129c8bb59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Names the function that runs the tests when <span class="tt">main</span> comes from elsewhere.  <br /></td></tr>
 <tr class="memitem:ga38edfacbc423bfee9ab6bcbd24c6eef5" id="r_ga38edfacbc423bfee9ab6bcbd24c6eef5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga38edfacbc423bfee9ab6bcbd24c6eef5">TTS_MAIN</a></td></tr>
-<tr class="memdesc:ga38edfacbc423bfee9ab6bcbd24c6eef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identify the file containing tests entry point.  <br /></td></tr>
+<tr class="memdesc:ga38edfacbc423bfee9ab6bcbd24c6eef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the entry point of the test program in the translation unit that defines it.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -171,13 +171,8 @@ Functions</h2></td></tr>
 
 <p><code>#include &lt;tts/engine/main.hpp&gt;</code></p>
 
-<p>Test application entry-point customization. </p>
-<p>In case where the <span class="tt">main</span> function is to be provided externally, one can redefine <a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> in order to specify the name of the test executable entry point.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Identify the file containing tests entry point.">TTS_MAIN</a> </dd>
-<dd>
-<a class="el" href="#ga8b25d232b7bc19668349b1defdc1e7f9" title="Initializes a TTS test suite.">tts::initialize</a> </dd>
-<dd>
-<a class="el" href="#ga308d4804d5e8a1913628d60ec1b481bb" title="Test reporting customization point.">tts::report</a></dd></dl>
+<p>Names the function that runs the tests when <span class="tt">main</span> comes from elsewhere. </p>
+<p>A program that writes its own <span class="tt">main</span> defines <a class="el" href="#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> and <a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="TTS_CUSTOM_DRIVER_FUNCTION">TTS_CUSTOM_DRIVER_FUNCTION</a> before including tts/tts.hpp. Its <span class="tt">main</span> calls <a class="el" href="#ga8b25d232b7bc19668349b1defdc1e7f9" title="Initializes a TTS test suite.">tts::initialize</a>, the function of that name with <span class="tt">argc</span> and <span class="tt">argv</span>, then <a class="el" href="#ga308d4804d5e8a1913628d60ec1b481bb" title="Test reporting customization point.">tts::report</a>.</p>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN</span></div>
 <div class="line"><span class="preprocessor">#define TTS_CUSTOM_DRIVER_FUNCTION my_test_main</span></div>
@@ -200,7 +195,12 @@ Functions</h2></td></tr>
 <div class="line">  std::cout &lt;&lt; <span class="stringliteral">&quot;Finalizing tests...\n&quot;</span>;</div>
 <div class="line">  return ::tts::report(0, 1);</div>
 <div class="line">}</div>
-</div><!-- fragment --> 
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Defines the entry point of the test program in the translation unit that defines it.">TTS_MAIN</a> </dd>
+<dd>
+<a class="el" href="#ga8b25d232b7bc19668349b1defdc1e7f9" title="Initializes a TTS test suite.">tts::initialize</a> </dd>
+<dd>
+<a class="el" href="#ga308d4804d5e8a1913628d60ec1b481bb" title="Test reporting customization point.">tts::report</a> </dd></dl>
+
 </div>
 </div>
 <a id="ga38edfacbc423bfee9ab6bcbd24c6eef5" name="ga38edfacbc423bfee9ab6bcbd24c6eef5"></a>
@@ -217,8 +217,8 @@ Functions</h2></td></tr>
 
 <p><code>#include &lt;tts/engine/main.hpp&gt;</code></p>
 
-<p>Identify the file containing tests entry point. </p>
-<p>Users can dispatch tests in multiple Translation Units to be linked afterward. In this scenario, one single Translation Unit must define <a class="el" href="#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> to generate the test entry point function. </p>
+<p>Defines the entry point of the test program in the translation unit that defines it. </p>
+<p>A program split over several translation units defines <a class="el" href="#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="TTS_MAIN">TTS_MAIN</a> in a single unit, before including tts/tts.hpp. </p>
 
 </div>
 </div>
@@ -261,7 +261,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="Test application entry-point customization.">TTS_CUSTOM_DRIVER_FUNCTION</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="Names the function that runs the tests when main comes from elsewhere.">TTS_CUSTOM_DRIVER_FUNCTION</a> </dd></dl>
 
 </div>
 </div>
@@ -344,7 +344,7 @@ template&lt;typename Handler&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The handler installed before this call, empty if there was none.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="Test application entry-point customization.">TTS_CUSTOM_DRIVER_FUNCTION</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gac451ae42ba6d30988c42480129c8bb59" title="Names the function that runs the tests when main comes from elsewhere.">TTS_CUSTOM_DRIVER_FUNCTION</a></dd></dl>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Choosing what a crashed or stuck run does before exiting&quot;</span>)</div>
 <div class="line">{</div>

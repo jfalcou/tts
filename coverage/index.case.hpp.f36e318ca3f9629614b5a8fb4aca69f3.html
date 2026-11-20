@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2026-11-16 23:04:37</td>
+      <td>2026-11-20 15:54:22</td>
     </tr>
   </table>
 </div>
@@ -2659,7 +2659,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Introduces a new test scenario and registers it into the current test driver.</span></td>
+      <td class="src "><span class="cm">  @brief Defines a test case and registers it with the test driver.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l289" href="#l289">289</a></td>
@@ -2673,14 +2673,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The code block following TTS_CASE contains user-defined code for a given test case.</span></td>
+      <td class="src "><span class="cm">  The block after the macro is the body of the case. A case that runs no check is reported as</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l291" href="#l291">291</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Test cases performing no actual tests will be reported as invalid.</span></td>
+      <td class="src "><span class="cm">  invalid.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l292" href="#l292">292</a></td>
@@ -2701,14 +2701,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs in, and</span></td>
+      <td class="src "><span class="cm">  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs in, and @ref TTS_CASE_IN</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l295" href="#l295">295</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CASE_IN names any list of them.</span></td>
+      <td class="src "><span class="cm">  names any list of them.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l296" href="#l296">296</a></td>
@@ -2722,7 +2722,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents, or a wrapped title.</span></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, or a title wrapped by a tag.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l298" href="#l298">298</a></td>
@@ -2897,7 +2897,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Parameter list of a case body run in a named context.</span></td>
+      <td class="src "><span class="cm">  @brief Declares the parameter of a @ref TTS_CASE_TPL body run in a named context.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l323" href="#l323">323</a></td>
@@ -2911,182 +2911,182 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Wraps the parameter a @ref TTS_CASE_TPL body declares, its type, and declares the context in</span></td>
+      <td class="src "><span class="cm">  Wraps the parameter that declares the type, `TTS_CONTEXT(tts::type&lt;T&gt;)`, and adds the context in</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l325" href="#l325">325</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  front of it. A @ref TTS_CASE body run in a named context declares no parameter, and its macro</span></td>
+      <td class="src "><span class="cm">  front of it. A @ref TTS_CASE body declares no parameter, and needs no wrapper.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l326" href="#l326">326</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  writes the context itself.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l327" href="#l327">327</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @param ... The parameter the body declares.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l328" href="#l328">328</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ... The parameters the body declares.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l329" href="#l329">329</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l330" href="#l330">330</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">  @snippet doc/context.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l331" href="#l331">331</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/context.cpp snippet</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l332" href="#l332">332</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l333" href="#l333">333</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l334" href="#l334">334</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cp">#define TTS_CONTEXT(...)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l335" href="#l335">335</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CONTEXT(...)</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l336" href="#l336">336</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">#define TTS_CONTEXT(...) [[maybe_unused]] auto&amp; local_tts_ctx __VA_OPT__(, ) __VA_ARGS__</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l337" href="#l337">337</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CONTEXT(...) [[maybe_unused]] auto&amp; local_tts_ctx __VA_OPT__(, ) __VA_ARGS__</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l338" href="#l338">338</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l339" href="#l339">339</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l340" href="#l340">340</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l341" href="#l341">341</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "><span class="cm">  @def TTS_CASE_IN</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l342" href="#l342">342</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_CASE_IN</span></td>
+      <td class="src "><span class="cm">  @brief Defines a test case run in each of the given contexts, and registers it with the test</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l343" href="#l343">343</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Introduces a test scenario run in the contexts given, and registers it into the current</span></td>
+      <td class="src "><span class="cm">  driver.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l344" href="#l344">344</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  test driver.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l345" href="#l345">345</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  The contexts follow the title, among @ref tts::runtime and @ref tts::constant. The body runs once</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l346" href="#l346">346</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The code block following TTS_CASE_IN contains user-defined code for a given test case, as</span></td>
+      <td class="src "><span class="cm">  in each, in the order they are given.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l347" href="#l347">347</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  for @ref TTS_CASE, and runs once per context, in the order given: @ref tts::runtime,</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l348" href="#l348">348</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref tts::constant, or both. @ref TTS_CONSTEXPR and @ref TTS_CONSTEVAL on the title of a</span></td>
+      <td class="src "><span class="cm">  A @ref TTS_CASE whose title is wrapped by @ref TTS_CONSTEXPR runs in both contexts, and one</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l349" href="#l349">349</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CASE name the two usual lists.</span></td>
+      <td class="src "><span class="cm">  wrapped by @ref TTS_CONSTEVAL in @ref tts::constant alone.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l350" href="#l350">350</a></td>
@@ -3100,14 +3100,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID  A literal string describing the scenario intents, or a title wrapped by</span></td>
+      <td class="src "><span class="cm">  @param ID  Title of the case, or a title wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l352" href="#l352">352</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
+      <td class="src "><span class="cm">             @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l353" href="#l353">353</a></td>
@@ -3128,14 +3128,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONSTEXPR</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l356" href="#l356">356</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONSTEVAL</span></td>
+      <td class="src "><span class="cm">  @snippet doc/case_in.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l357" href="#l357">357</a></td>
@@ -3149,14 +3149,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">  @see TTS_CONSTEXPR</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l359" href="#l359">359</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/case_in.cpp snippet</span></td>
+      <td class="src "><span class="cm">  @see TTS_CONSTEVAL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l360" href="#l360">360</a></td>
@@ -3240,14 +3240,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Introduces a template test case run in the contexts given, and registers it into the</span></td>
+      <td class="src "><span class="cm">  @brief Defines a test case run for each type of a list, in each of the given contexts, and</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l372" href="#l372">372</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  current test driver.</span></td>
+      <td class="src "><span class="cm">  registers it with the test driver.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l373" href="#l373">373</a></td>
@@ -3261,42 +3261,42 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The code block following TTS_CASE_TPL_IN contains user-defined code for a given test case, as</span></td>
+      <td class="src "><span class="cm">  The types follow the title, between parentheses, in any form @ref TTS_CASE_TPL accepts. The</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l375" href="#l375">375</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  for @ref TTS_CASE_TPL, with the types list in parentheses, and runs once per context for each</span></td>
+      <td class="src "><span class="cm">  contexts come last, among @ref tts::runtime and @ref tts::constant. For each type, the body runs</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l376" href="#l376">376</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  type, in the order given: @ref tts::runtime, @ref tts::constant, or both. The body declares</span></td>
+      <td class="src "><span class="cm">  once in each context, in the order they are given.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l377" href="#l377">377</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  its type through @ref TTS_CONTEXT &quot;TTS_CONTEXT&quot;: `&lt;typename T&gt;(TTS_CONTEXT(tts::type&lt;T&gt;))`.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l378" href="#l378">378</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CONSTEXPR and @ref TTS_CONSTEVAL on the title of a @ref TTS_CASE_TPL name the two</span></td>
+      <td class="src "><span class="cm">  The body declares its type with @ref TTS_CONTEXT &quot;TTS_CONTEXT&quot;, as in</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l379" href="#l379">379</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  usual lists.</span></td>
+      <td class="src "><span class="cm">  `&lt;typename T&gt;(TTS_CONTEXT(tts::type&lt;T&gt;))`.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l380" href="#l380">380</a></td>
@@ -3310,273 +3310,273 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID    A literal string describing the scenario intents, or a title wrapped by</span></td>
+      <td class="src "><span class="cm">  A @ref TTS_CASE_TPL whose title is wrapped by @ref TTS_CONSTEXPR runs in both contexts, and one</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l382" href="#l382">382</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
+      <td class="src "><span class="cm">  wrapped by @ref TTS_CONSTEVAL in @ref tts::constant alone.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l383" href="#l383">383</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param TYPES A parenthesized list of types to generate the test case from, as</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l384" href="#l384">384</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CASE_TPL accepts it.</span></td>
+      <td class="src "><span class="cm">  @param ID    Title of the case, or a title wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l385" href="#l385">385</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ...   The contexts.</span></td>
+      <td class="src "><span class="cm">               @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l386" href="#l386">386</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @param TYPES Types to run the case for, between parentheses.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l387" href="#l387">387</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CASE_IN</span></td>
+      <td class="src "><span class="cm">  @param ...   The contexts.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l388" href="#l388">388</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONTEXT</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l389" href="#l389">389</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l390" href="#l390">390</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">  @snippet doc/case_in.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l391" href="#l391">391</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/case_in.cpp snippet</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l392" href="#l392">392</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cm">  @see TTS_CASE_IN</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l393" href="#l393">393</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  @see TTS_CONTEXT</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l394" href="#l394">394</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l395" href="#l395">395</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL_IN(ID, TYPES, ...)</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l396" href="#l396">396</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l397" href="#l397">397</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL_IN(ID, TYPES, ...) TTS_CASE_TPL_1((__VA_ARGS__), ID, TTS_REMOVE_PARENS(TYPES))</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL_IN(ID, TYPES, ...)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l398" href="#l398">398</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l399" href="#l399">399</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL_IN(ID, TYPES, ...) TTS_CASE_TPL_1((__VA_ARGS__), ID, TTS_REMOVE_PARENS(TYPES))</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l400" href="#l400">400</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l401" href="#l401">401</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l402" href="#l402">402</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_CONSTEXPR</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l403" href="#l403">403</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Runs a case as ordinary code and in constant evaluation.</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l404" href="#l404">404</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @def TTS_CONSTEXPR</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l405" href="#l405">405</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL, as @ref TTS_XFAIL does, and names</span></td>
+      <td class="src "><span class="cm">  @brief Runs a test case as ordinary code and in constant evaluation.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l406" href="#l406">406</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  the contexts @ref tts::runtime and @ref tts::constant. The body runs as ordinary code,</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l407" href="#l407">407</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  then as a constant expression, and both runs count and report their checks. A `constexpr`</span></td>
+      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL and names the contexts @ref tts::runtime</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l408" href="#l408">408</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  function is callable in both contexts, which is what the wrapper tests of the code it calls.</span></td>
+      <td class="src "><span class="cm">  and @ref tts::constant. The body runs as ordinary code, then as a constant expression, and the</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l409" href="#l409">409</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  checks of both runs are counted and reported.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l410" href="#l410">410</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The body is written with the ordinary checks. In constant evaluation, a failure is reported</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l411" href="#l411">411</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  with its expression, its position, and the values the check compares at run time. A body that</span></td>
+      <td class="src "><span class="cm">  The body uses the ordinary checks. In constant evaluation, a failure is reported with its</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l412" href="#l412">412</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  calls a function the language refuses in a constant expression does not compile.</span></td>
+      <td class="src "><span class="cm">  expression, its position, and the values the check compares at run time. A body that calls a</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l413" href="#l413">413</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  function the language refuses in a constant expression does not compile.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l414" href="#l414">414</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents, or a title already wrapped by</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l415" href="#l415">415</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, or a title already wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l416" href="#l416">416</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">            @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l417" href="#l417">417</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONSTEVAL</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l418" href="#l418">418</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONTEXT</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l419" href="#l419">419</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see tts::constant</span></td>
+      <td class="src "><span class="cm">  @snippet doc/constexpr.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l420" href="#l420">420</a></td>
@@ -3590,140 +3590,140 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">  @see TTS_CONSTEVAL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l422" href="#l422">422</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/constexpr.cpp snippet</span></td>
+      <td class="src "><span class="cm">  @see TTS_CONTEXT</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l423" href="#l423">423</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cm">  @see tts::constant</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l424" href="#l424">424</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l425" href="#l425">425</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l426" href="#l426">426</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CONSTEXPR(ID)</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l427" href="#l427">427</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">#define TTS_CONSTEXPR(ID)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l428" href="#l428">428</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CONSTEXPR(ID) (::tts::runtime, ::tts::constant), ID</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l429" href="#l429">429</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cp">#define TTS_CONSTEXPR(ID) (::tts::runtime, ::tts::constant), ID</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l430" href="#l430">430</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l431" href="#l431">431</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l432" href="#l432">432</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l433" href="#l433">433</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_CONSTEVAL</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l434" href="#l434">434</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Runs a case in constant evaluation alone.</span></td>
+      <td class="src "><span class="cm">  @def TTS_CONSTEVAL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l435" href="#l435">435</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @brief Runs a test case in constant evaluation alone.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l436" href="#l436">436</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL, as @ref TTS_XFAIL does, and names</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l437" href="#l437">437</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  the context @ref tts::constant. The body runs as a constant expression, and its checks</span></td>
+      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL and names the context</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l438" href="#l438">438</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  are reported after the evaluation, each failure with its expression and its position. A</span></td>
+      <td class="src "><span class="cm">  @ref tts::constant. The body runs as a constant expression, and its checks are reported after the</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l439" href="#l439">439</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  `consteval` function is callable in that context alone, which is what the wrapper tests of the</span></td>
+      <td class="src "><span class="cm">  evaluation, each failure with its expression and its position. A body that calls a `consteval`</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l440" href="#l440">440</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  code it calls.</span></td>
+      <td class="src "><span class="cm">  function needs this tag, since such a function is callable in constant evaluation alone.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l441" href="#l441">441</a></td>
@@ -3737,14 +3737,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents, or a title already wrapped by</span></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, or a title already wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l443" href="#l443">443</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
+      <td class="src "><span class="cm">            @ref TTS_XINVALID, or @ref TTS_TIMEOUT.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l444" href="#l444">444</a></td>
@@ -3758,42 +3758,42 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONSTEXPR</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l446" href="#l446">446</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_CONTEXT</span></td>
+      <td class="src "><span class="cm">  @snippet doc/consteval.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l447" href="#l447">447</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see tts::constant</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l448" href="#l448">448</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @see TTS_CONSTEXPR</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l449" href="#l449">449</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">  @see TTS_CONTEXT</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l450" href="#l450">450</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/consteval.cpp snippet</span></td>
+      <td class="src "><span class="cm">  @see tts::constant</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l451" href="#l451">451</a></td>
@@ -3877,7 +3877,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Introduces a template test case  and registers it into the current test driver.</span></td>
+      <td class="src "><span class="cm">  @brief Defines a test case run for each type of a list, and registers it with the test driver.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l463" href="#l463">463</a></td>
@@ -3891,56 +3891,56 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The code block following TTS_CASE contains user-defined code for a given test case.</span></td>
+      <td class="src "><span class="cm">  The block after the macro is a generic lambda, `&lt;typename T&gt;(tts::type&lt;T&gt;) { ... }`, run once per</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l465" href="#l465">465</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Those tests are parametrized by a template type of your choice passed as lambda function</span></td>
+      <td class="src "><span class="cm">  type. The types are given as:</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l466" href="#l466">466</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  parameters of the template type `tts::type` and instantiated for each type in the types list.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l467" href="#l467">467</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  - types separated by commas,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l468" href="#l468">468</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Such types list can be provided as:</span></td>
+      <td class="src "><span class="cm">  - a tts::types list,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l469" href="#l469">469</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  + a variadic list of types separated by commas</span></td>
+      <td class="src "><span class="cm">  - a type whose public member type `types_list` is the list.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l470" href="#l470">470</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  + an instance of the tts::types template class</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l471" href="#l471">471</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  + an instance of a Type Generator, ie a type exposing a public `types_list` type definition</span></td>
+      <td class="src "><span class="cm">  A case that runs no check is reported as invalid.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l472" href="#l472">472</a></td>
@@ -3954,42 +3954,42 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Test cases performing no actual tests will be reported as invalid.</span></td>
+      <td class="src "><span class="cm">  A title wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts each type runs in,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l474" href="#l474">474</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  and @ref TTS_CASE_TPL_IN names any list of them. The body then declares its type through</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l475" href="#l475">475</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  A title wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs</span></td>
+      <td class="src "><span class="cm">  @ref TTS_CONTEXT &quot;TTS_CONTEXT&quot;, as in `&lt;typename T&gt;(TTS_CONTEXT(tts::type&lt;T&gt;))`.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l476" href="#l476">476</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  in, for each type in turn, @ref TTS_CASE_TPL_IN names any list of them, and the body then</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l477" href="#l477">477</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  declares its type through</span></td>
+      <td class="src "><span class="cm">  @param ID  Title of the case, or a title wrapped by a tag.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l478" href="#l478">478</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CONTEXT &quot;TTS_CONTEXT&quot;: `&lt;typename T&gt;(TTS_CONTEXT(tts::type&lt;T&gt;))`.</span></td>
+      <td class="src "><span class="cm">  @param ... Types to run the case for.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l479" href="#l479">479</a></td>
@@ -4003,98 +4003,98 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID   A literal string describing the scenario intents, or a wrapped title.</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l481" href="#l481">481</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ...  Lists of types to generate the test case from.</span></td>
+      <td class="src "><span class="cm">  @snippet doc/case_tpl.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l482" href="#l482">482</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l483" href="#l483">483</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l484" href="#l484">484</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/case_tpl.cpp snippet</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l485" href="#l485">485</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL(ID, ...)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l486" href="#l486">486</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l487" href="#l487">487</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL(...) TTS_CASE_TPL_SPLIT(__VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l488" href="#l488">488</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL(ID, ...)</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL_SPLIT(FIRST, ...)                                                             \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l489" href="#l489">489</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">  TTS_CAT(TTS_CASE_TPL_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l490" href="#l490">490</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL(...) TTS_CASE_TPL_SPLIT(__VA_ARGS__)</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL_0(ID, ...)                                                                    \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l491" href="#l491">491</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL_SPLIT(FIRST, ...)                                                             \</span></td>
+      <td class="src "><span class="cp">  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l492" href="#l492">492</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  TTS_CAT(TTS_CASE_TPL_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)</span></td>
+      <td class="src "><span class="cp">  ::tts::_::captures&lt;__VA_ARGS__&gt; {ID} + [] </span><span class="cm">/**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l493" href="#l493">493</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL_0(ID, ...)                                                                    \</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_TPL_1(CONTEXTS, ID, ...)                                                          \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l494" href="#l494">494</a></td>
@@ -4108,126 +4108,126 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  ::tts::_::captures&lt;__VA_ARGS__&gt; {ID} + [] </span><span class="cm">/**/</span></td>
+      <td class="src "><span class="cp">  ::tts::_::within&lt;__VA_ARGS__&gt;(ID, TTS_REMOVE_PARENS(CONTEXTS)) + [] </span><span class="cm">/**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l496" href="#l496">496</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_TPL_1(CONTEXTS, ID, ...)                                                          \</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l497" href="#l497">497</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l498" href="#l498">498</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  ::tts::_::within&lt;__VA_ARGS__&gt;(ID, TTS_REMOVE_PARENS(CONTEXTS)) + [] </span><span class="cm">/**/</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l499" href="#l499">499</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l500" href="#l500">500</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @def TTS_CASE_WITH</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l501" href="#l501">501</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  @brief Defines a test case run for each type of a list on generated values, and registers it with</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l502" href="#l502">502</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "><span class="cm">  the test driver.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l503" href="#l503">503</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_CASE_WITH</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l504" href="#l504">504</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Introduces a template test case providing dynamically generated data to the test code.</span></td>
+      <td class="src "><span class="cm">  The block after the macro is a generic lambda with one argument per generator. The lambda runs</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l505" href="#l505">505</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  once per type of the list, each generator building its argument for that type. The types are given</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l506" href="#l506">506</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The following code block will contain tests parametrized by a template type of your choice passed</span></td>
+      <td class="src "><span class="cm">  as:</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l507" href="#l507">507</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  as lambda function parameters and generated for each type in the types list.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l508" href="#l508">508</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  - types separated by commas, between parentheses,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l509" href="#l509">509</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Such types list can be provided as:</span></td>
+      <td class="src "><span class="cm">  - a tts::types list,</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l510" href="#l510">510</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">    + a parenthesised list of types separated by comma.</span></td>
+      <td class="src "><span class="cm">  - a type whose public member type `types_list` is the list.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l511" href="#l511">511</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">    + an instance of the tts::types template class.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l512" href="#l512">512</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">    + an instance of a Type Generator, ie a type exposing a public `types_list` type definition</span></td>
+      <td class="src "><span class="cm">  A case that runs no check is reported as invalid.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l513" href="#l513">513</a></td>
@@ -4241,280 +4241,280 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Test cases performing no actual tests will be reported as invalid.</span></td>
+      <td class="src "><span class="cm">  The case runs at run time alone, where its generators produce their values, so a title wrapped by</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l515" href="#l515">515</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL does not compile.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l516" href="#l516">516</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  A generated case runs at run time alone, where its generators produce its values: a title</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l517" href="#l517">517</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL is refused.</span></td>
+      <td class="src "><span class="cm">  @param ID    Title of the case, a string literal.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l518" href="#l518">518</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @param TYPES Types to run the case for.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l519" href="#l519">519</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID         A literal string describing the scenario intents.</span></td>
+      <td class="src "><span class="cm">  @param ...   Generators, one per argument of the body.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l520" href="#l520">520</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param TYPES      Lists of types to generate the test case from.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l521" href="#l521">521</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ...        Lists of generator function</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l522" href="#l522">522</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @snippet doc/case_with.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l523" href="#l523">523</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l524" href="#l524">524</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/case_with.cpp snippet</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l525" href="#l525">525</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l526" href="#l526">526</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_WITH(ID, TYPES, ...)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l527" href="#l527">527</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l528" href="#l528">528</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_WITH(ID, TYPES, ...)</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_WITH(...) TTS_CASE_WITH_SPLIT(__VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l529" href="#l529">529</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_WITH_SPLIT(FIRST, ...)                                                            \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l530" href="#l530">530</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_WITH(...) TTS_CASE_WITH_SPLIT(__VA_ARGS__)</span></td>
+      <td class="src "><span class="cp">  TTS_CAT(TTS_CASE_WITH_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l531" href="#l531">531</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_WITH_SPLIT(FIRST, ...)                                                            \</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_WITH_0(ID, TYPES, ...)                                                            \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l532" href="#l532">532</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  TTS_CAT(TTS_CASE_WITH_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)</span></td>
+      <td class="src "><span class="cp">  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l533" href="#l533">533</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_WITH_0(ID, TYPES, ...)                                                            \</span></td>
+      <td class="src "><span class="cp">  ::tts::_::test_generators&lt;::tts::as_type_list_t&lt;TTS_REMOVE_PARENS(TYPES)&gt;, __VA_ARGS__&gt; {ID}     \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l534" href="#l534">534</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \</span></td>
+      <td class="src "><span class="cp">  &lt;&lt; [] </span><span class="cm">/**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l535" href="#l535">535</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  ::tts::_::test_generators&lt;::tts::as_type_list_t&lt;TTS_REMOVE_PARENS(TYPES)&gt;, __VA_ARGS__&gt; {ID}     \</span></td>
+      <td class="src "><span class="cp">#define TTS_CASE_WITH_1(CONTEXTS, ID, TYPES, ...)                                                  \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l536" href="#l536">536</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  &lt;&lt; [] </span><span class="cm">/**/</span></td>
+      <td class="src "><span class="cp">  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l537" href="#l537">537</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_CASE_WITH_1(CONTEXTS, ID, TYPES, ...)                                                  \</span></td>
+      <td class="src "><span class="cp">  ::tts::_::refuse_contexts(ID, TTS_REMOVE_PARENS(CONTEXTS)) &lt;&lt; [] </span><span class="cm">/**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l538" href="#l538">538</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l539" href="#l539">539</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  ::tts::_::refuse_contexts(ID, TTS_REMOVE_PARENS(CONTEXTS)) &lt;&lt; [] </span><span class="cm">/**/</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l540" href="#l540">540</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l541" href="#l541">541</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l542" href="#l542">542</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  @def TTS_XFAIL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l543" href="#l543">543</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "><span class="cm">  @brief Marks a test case as expected to fail.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l544" href="#l544">544</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_XFAIL</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l545" href="#l545">545</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as expected to fail.</span></td>
+      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH, as in</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l546" href="#l546">546</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  `TTS_CASE(TTS_XFAIL(&quot;...&quot;))`. Nests with @ref TTS_TIMEOUT, @ref TTS_CONSTEXPR, and</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l547" href="#l547">547</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Wraps the case&#39;s ID instead of changing the enclosing macro&#39;s signature, so it composes with</span></td>
+      <td class="src "><span class="cm">  @ref TTS_CONSTEVAL in either order.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l548" href="#l548">548</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_CASE, @ref TTS_CASE_TPL and @ref TTS_CASE_WITH unchanged: `TTS_CASE(TTS_XFAIL(&quot;...&quot;))`.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l549" href="#l549">549</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  The case passes when at least one of its checks fails, and fails when every check passes.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l550" href="#l550">550</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The case is expected to produce at least one failing assertion. If it runs with no failures</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l551" href="#l551">551</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  instead, that mismatch is reported and fails the suite - matching the &quot;X = expected&quot; naming</span></td>
+      <td class="src "><span class="cm">  A case that runs no check fails too. @ref TTS_XINVALID marks a case expected to run none.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l552" href="#l552">552</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  convention already used by other test frameworks (pytest&#39;s `xfail`, DejaGnu, Perl&#39;s</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l553" href="#l553">553</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  `Test::More`), so it reads the same way to anyone coming from one of those.</span></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, a string literal.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l554" href="#l554">554</a></td>
@@ -4528,14 +4528,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  An empty case (no assertion ran at all) does not satisfy `TTS_XFAIL` either - use</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l556" href="#l556">556</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ref TTS_XINVALID for that.</span></td>
+      <td class="src "><span class="cm">  @snippet doc/xfail.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l557" href="#l557">557</a></td>
@@ -4549,147 +4549,147 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents.</span></td>
+      <td class="src "><span class="cm">  @see TTS_MAYFAIL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l559" href="#l559">559</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @see TTS_XINVALID</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l560" href="#l560">560</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_MAYFAIL</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l561" href="#l561">561</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_XINVALID</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l562" href="#l562">562</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l563" href="#l563">563</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cp">#define TTS_XFAIL(ID)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l564" href="#l564">564</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/xfail.cpp snippet</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l565" href="#l565">565</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="c1">// Each tag wrapper expands its argument before reading it and lets a leading list of contexts</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l566" href="#l566">566</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="c1">// through, so that the wrappers nest in any order with TTS_CONSTEXPR and TTS_CONSTEVAL.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l567" href="#l567">567</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cp">#define TTS_TAG_WRAP(TAG, ...) TTS_TAG_WRAP_SPLIT(TAG, __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l568" href="#l568">568</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_XFAIL(ID)</span></td>
+      <td class="src "><span class="cp">#define TTS_TAG_WRAP_SPLIT(TAG, FIRST, ...)                                                        \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l569" href="#l569">569</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">  TTS_CAT(TTS_TAG_WRAP_, TTS_IS_PARENTHESIZED(FIRST))(TAG, FIRST __VA_OPT__(, ) __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l570" href="#l570">570</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">// Each tag wrapper expands its argument before reading it and lets a leading list of contexts</span></td>
+      <td class="src "><span class="cp">#define TTS_TAG_WRAP_0(TAG, ID)           ::tts::TAG(ID)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l571" href="#l571">571</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">// through, so that the wrappers nest in any order with TTS_CONSTEXPR and TTS_CONSTEVAL.</span></td>
+      <td class="src "><span class="cp">#define TTS_TAG_WRAP_1(TAG, CONTEXTS, ID) CONTEXTS, ::tts::TAG(ID)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l572" href="#l572">572</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_TAG_WRAP(TAG, ...) TTS_TAG_WRAP_SPLIT(TAG, __VA_ARGS__)</span></td>
+      <td class="src "><span class="cp">#define TTS_XFAIL(...)                    TTS_TAG_WRAP(expect_fail, __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l573" href="#l573">573</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_TAG_WRAP_SPLIT(TAG, FIRST, ...)                                                        \</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l574" href="#l574">574</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  TTS_CAT(TTS_TAG_WRAP_, TTS_IS_PARENTHESIZED(FIRST))(TAG, FIRST __VA_OPT__(, ) __VA_ARGS__)</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l575" href="#l575">575</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_TAG_WRAP_0(TAG, ID)           ::tts::TAG(ID)</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l576" href="#l576">576</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_TAG_WRAP_1(TAG, CONTEXTS, ID) CONTEXTS, ::tts::TAG(ID)</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l577" href="#l577">577</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_XFAIL(...)                    TTS_TAG_WRAP(expect_fail, __VA_ARGS__)</span></td>
+      <td class="src "><span class="cm">  @def TTS_MAYFAIL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l578" href="#l578">578</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cm">  @brief Marks a test case as allowed to fail.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l579" href="#l579">579</a></td>
@@ -4703,224 +4703,224 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH. Nests with</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l581" href="#l581">581</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "><span class="cm">  @ref TTS_TIMEOUT, @ref TTS_CONSTEXPR, and @ref TTS_CONSTEVAL in either order.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l582" href="#l582">582</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_MAYFAIL</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l583" href="#l583">583</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as allowed to fail.</span></td>
+      <td class="src "><span class="cm">  The case is accepted whether its checks pass or fail, and neither outcome is reported as a</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l584" href="#l584">584</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  failure.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l585" href="#l585">585</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  Unlike @ref TTS_XFAIL, nothing specific is expected: the case may pass or fail, either is</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l586" href="#l586">586</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  accepted and neither is reported. Useful for flagging a work-in-progress or a known issue</span></td>
+      <td class="src "><span class="cm">  A case that runs no check is still reported as invalid, as for a case without the tag.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l587" href="#l587">587</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  that shouldn&#39;t block the suite without pretending to require a specific outcome.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l588" href="#l588">588</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, a string literal.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l589" href="#l589">589</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  An empty case is still reported, exactly as for an untagged @ref TTS_CASE - `TTS_MAYFAIL`</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l590" href="#l590">590</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  only relaxes the pass/fail expectation, not the &quot;did anything actually run&quot; one.</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l591" href="#l591">591</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @snippet doc/mayfail.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l592" href="#l592">592</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l593" href="#l593">593</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @see TTS_XFAIL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l594" href="#l594">594</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_XFAIL</span></td>
+      <td class="src "><span class="cm">  @see TTS_XINVALID</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l595" href="#l595">595</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_XINVALID</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l596" href="#l596">596</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l597" href="#l597">597</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l598" href="#l598">598</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/mayfail.cpp snippet</span></td>
+      <td class="src "><span class="cp">#define TTS_MAYFAIL(ID)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l599" href="#l599">599</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l600" href="#l600">600</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#define TTS_MAYFAIL(...) TTS_TAG_WRAP(may_fail, __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l601" href="#l601">601</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l602" href="#l602">602</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_MAYFAIL(ID)</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l603" href="#l603">603</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l604" href="#l604">604</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_MAYFAIL(...) TTS_TAG_WRAP(may_fail, __VA_ARGS__)</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l605" href="#l605">605</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cm">  @def TTS_XINVALID</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l606" href="#l606">606</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @brief Marks a test case as expected to run no check.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l607" href="#l607">607</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l608" href="#l608">608</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH. Nests with</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l609" href="#l609">609</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_XINVALID</span></td>
+      <td class="src "><span class="cm">  @ref TTS_TIMEOUT, @ref TTS_CONSTEXPR, and @ref TTS_CONSTEVAL in either order.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l610" href="#l610">610</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as expected to be</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l611" href="#l611">611</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">empty.</span></td>
+      <td class="src "><span class="cm">  The case fails when it runs any check, passing or failing.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l612" href="#l612">612</a></td>
@@ -4934,28 +4934,28 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The case is expected to register no assertion at all. If it runs any assertion instead</span></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, a string literal.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l614" href="#l614">614</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  (passing or failing), that mismatch is reported and fails the suite.</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l615" href="#l615">615</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l616" href="#l616">616</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents.</span></td>
+      <td class="src "><span class="cm">  @snippet doc/xinvalid.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l617" href="#l617">617</a></td>
@@ -4983,133 +4983,133 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l621" href="#l621">621</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l622" href="#l622">622</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/xinvalid.cpp snippet</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l623" href="#l623">623</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cp">#define TTS_XINVALID(ID)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l624" href="#l624">624</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l625" href="#l625">625</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cp">#define TTS_XINVALID(...) TTS_TAG_WRAP(expect_invalid, __VA_ARGS__)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l626" href="#l626">626</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_XINVALID(ID)</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l627" href="#l627">627</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l628" href="#l628">628</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_XINVALID(...) TTS_TAG_WRAP(expect_invalid, __VA_ARGS__)</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l629" href="#l629">629</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l630" href="#l630">630</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @def TTS_TIMEOUT</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l631" href="#l631">631</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  @brief Gives a test case a deadline of its own.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l632" href="#l632">632</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l633" href="#l633">633</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @def TTS_TIMEOUT</span></td>
+      <td class="src "><span class="cm">  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH. Kills the case</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l634" href="#l634">634</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Gives a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) a deadline of its own.</span></td>
+      <td class="src "><span class="cm">  once it has run for `MS` milliseconds, and ends the run there. `0` removes, for that case, the</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l635" href="#l635">635</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  deadline `--timeout` sets.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l636" href="#l636">636</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  The case is killed once it has been running for MS milliseconds, and the run ends there. `0`</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l637" href="#l637">637</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  removes the deadline `--timeout` set for that one case. Wrapping the ID is how the tag travels,</span></td>
+      <td class="src "><span class="cm">  Nests with @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, @ref TTS_CONSTEXPR, and</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l638" href="#l638">638</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  so it nests with @ref TTS_XFAIL in either order.</span></td>
+      <td class="src "><span class="cm">  @ref TTS_CONSTEVAL in either order.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l639" href="#l639">639</a></td>
@@ -5130,7 +5130,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ID A literal string describing the scenario intents.</span></td>
+      <td class="src "><span class="cm">  @param ID Title of the case, a string literal.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l642" href="#l642">642</a></td>
@@ -5144,28 +5144,28 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @see TTS_XFAIL</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l644" href="#l644">644</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cm">  @snippet doc/timeout.cpp snippet</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l645" href="#l645">645</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l646" href="#l646">646</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/timeout.cpp snippet</span></td>
+      <td class="src "><span class="cm">  @see TTS_XFAIL</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l647" href="#l647">647</a></td>

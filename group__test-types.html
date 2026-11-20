@@ -144,13 +144,13 @@ $(function(){initNavTree('group__test-types.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga9127c128ee9f5b4d6bd3b7e7ce78b027" id="r_ga9127c128ee9f5b4d6bd3b7e7ce78b027"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga9127c128ee9f5b4d6bd3b7e7ce78b027">TTS_EXPECT_COMPILES</a>(Symbols,  Expression, ...)</td></tr>
-<tr class="memdesc:ga9127c128ee9f5b4d6bd3b7e7ce78b027"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an <span class="tt">Expression</span> based on a list of <span class="tt">Symbols</span> will compile properly in a SFINAE context.  <br /></td></tr>
+<tr class="memdesc:ga9127c128ee9f5b4d6bd3b7e7ce78b027"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that an expression on the given symbols compiles.  <br /></td></tr>
 <tr class="memitem:ga4047df0595cb9937d9d0406581e66a2f" id="r_ga4047df0595cb9937d9d0406581e66a2f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga4047df0595cb9937d9d0406581e66a2f">TTS_EXPECT_NOT_COMPILES</a>(Symbols...,  Expression, ...)</td></tr>
-<tr class="memdesc:ga4047df0595cb9937d9d0406581e66a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an <span class="tt">Expression</span> based on a list of <span class="tt">Symbols</span> will not compile properly in a SFINAE context.  <br /></td></tr>
+<tr class="memdesc:ga4047df0595cb9937d9d0406581e66a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that an expression on the given symbols does not compile.  <br /></td></tr>
 <tr class="memitem:gaefac9e4f88dbb637d5457b45fdd7de5f" id="r_gaefac9e4f88dbb637d5457b45fdd7de5f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaefac9e4f88dbb637d5457b45fdd7de5f">TTS_EXPR_IS</a>(EXPR,  TYPE, ...)</td></tr>
-<tr class="memdesc:gaefac9e4f88dbb637d5457b45fdd7de5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if an Expression evaluates to a value of a given Type.  <br /></td></tr>
+<tr class="memdesc:gaefac9e4f88dbb637d5457b45fdd7de5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that an expression has the type <span class="tt">TYPE</span>.  <br /></td></tr>
 <tr class="memitem:gae409fedd6a2e86ff8cc2f9c832dcff3f" id="r_gae409fedd6a2e86ff8cc2f9c832dcff3f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae409fedd6a2e86ff8cc2f9c832dcff3f">TTS_TYPE_IS</a>(TYPE,  REF, ...)</td></tr>
-<tr class="memdesc:gae409fedd6a2e86ff8cc2f9c832dcff3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if two types satisfy <span class="tt">std::is_same_v&lt;Type,Target&gt; == true</span>.  <br /></td></tr>
+<tr class="memdesc:gae409fedd6a2e86ff8cc2f9c832dcff3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that two types are the same.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="ga9127c128ee9f5b4d6bd3b7e7ce78b027" name="ga9127c128ee9f5b4d6bd3b7e7ce78b027"></a>
@@ -179,11 +179,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/types.hpp&gt;</code></p>
 
-<p>Checks if an <span class="tt">Expression</span> based on a list of <span class="tt">Symbols</span> will compile properly in a SFINAE context. </p>
+<p>Checks that an expression on the given symbols compiles. </p>
+<p>Checks the expression in a <span class="tt">requires</span> expression over the symbols, so a failure to compile is reported as a failed check instead of a compiler error.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Symbols</td><td>Variadic lists of symbols used in the tests </td></tr>
-    <tr><td class="paramname">Expression</td><td>Brace-enclosed expression to validate.</td></tr>
+    <tr><td class="paramname">Symbols</td><td>Names the expression uses. </td></tr>
+    <tr><td class="paramname">Expression</td><td>Expression to check, between braces.</td></tr>
   </table>
   </dd>
 </dl>
@@ -226,11 +227,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/types.hpp&gt;</code></p>
 
-<p>Checks if an <span class="tt">Expression</span> based on a list of <span class="tt">Symbols</span> will not compile properly in a SFINAE context. </p>
+<p>Checks that an expression on the given symbols does not compile. </p>
+<p>Checks the expression in a <span class="tt">requires</span> expression over the symbols, so a failure to compile is reported as a failed check instead of a compiler error.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">Symbols</td><td>Variadic lists of symbols used in the tests </td></tr>
-    <tr><td class="paramname">Expression</td><td>Brace-enclosed expression to validate.</td></tr>
+    <tr><td class="paramname">Symbols</td><td>Names the expression uses. </td></tr>
+    <tr><td class="paramname">Expression</td><td>Expression to check, between braces.</td></tr>
   </table>
   </dd>
 </dl>
@@ -273,12 +275,13 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/types.hpp&gt;</code></p>
 
-<p>Checks if an Expression evaluates to a value of a given Type. </p>
+<p>Checks that an expression has the type <span class="tt">TYPE</span>. </p>
+<p>Compares <span class="tt">decltype(EXPR)</span> to <span class="tt">TYPE</span>, so an expression that names a variable gives its declared type.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">EXPR</td><td>Expression to evaluate. </td></tr>
-    <tr><td class="paramname">TYPE</td><td>Expected type. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">EXPR</td><td>Expression whose type is checked. </td></tr>
+    <tr><td class="paramname">TYPE</td><td>Type expected. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
@@ -323,12 +326,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/types.hpp&gt;</code></p>
 
-<p>Checks if two types satisfy <span class="tt">std::is_same_v&lt;Type,Target&gt; == true</span>. </p>
+<p>Checks that two types are the same. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">TYPE</td><td>Type to compare. </td></tr>
-    <tr><td class="paramname">REF</td><td>Expected type. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">TYPE</td><td>Type to check. </td></tr>
+    <tr><td class="paramname">REF</td><td>Type expected. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>

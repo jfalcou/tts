@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['i_20warshawski_0',['Version 4.0 - V.I. Warshawski',['../changelog.html#autotoc_md5',1,'']]],
-  ['ieee_20comparison_1',['IEEE Comparison',['../customize.html#autotoc_md40',1,'']]],
+  ['i_20warshawski_0',['Version 4.0 - V.I. Warshawski',['../changelog.html#autotoc_md8',1,'']]],
+  ['ieee_20comparison_1',['IEEE Comparison',['../customize.html#autotoc_md43',1,'']]],
   ['ieee_5fcheck_2',['ieee_check',['../group__tools-precision.html#ga5ad6651e0bf21e28acd2103d87d37ec3',1,'tts']]],
   ['in_20output_20sinks_3',['Built-in Output Sinks',['../output-sinks.html',1,'']]],
   ['in_20tts_4',['Standard headers in TTS',['../compile-time.html#compile-time-headers',1,'']]],
   ['include_20cost_5',['Include cost',['../compile-time.html#compile-time-comparison-include',1,'']]],
-  ['infrastructure_6',['Infrastructure',['../changelog.html#autotoc_md4',1,'Infrastructure'],['../changelog.html#autotoc_md11',1,'Infrastructure'],['../changelog.html#autotoc_md18',1,'Infrastructure']]],
+  ['infrastructure_6',['Infrastructure',['../changelog.html#autotoc_md7',1,'Infrastructure'],['../changelog.html#autotoc_md14',1,'Infrastructure'],['../changelog.html#autotoc_md21',1,'Infrastructure']]],
   ['initialize_7',['initialize',['../group__customization-points.html#ga8b25d232b7bc19668349b1defdc1e7f9',1,'tts']]],
   ['install_20from_20the_20source_8',['Install from the source',['../setup.html#setup-source',1,'']]],
   ['int_5ftypes_9',['int_types',['../group__tools-types.html#gadc998a2d00a61bdc9de24e8631429bfe',1,'tts']]],

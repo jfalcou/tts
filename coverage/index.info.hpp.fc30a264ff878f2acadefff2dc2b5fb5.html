@@ -27,7 +27,7 @@
     </tr>
     <tr>
       <th scope="row">Date:</th>
-      <td>2026-11-16 23:04:37</td>
+      <td>2026-11-20 15:54:22</td>
     </tr>
   </table>
 </div>
@@ -601,14 +601,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Force a passing test and display a message.</span></td>
+      <td class="src "><span class="cm">  @ingroup test-basic</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l68" href="#l68">68</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ingroup test-basic</span></td>
+      <td class="src "><span class="cm">  @brief Reports a passing check with a message.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l69" href="#l69">69</a></td>
@@ -622,7 +622,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ... A format string and potential arguments to display as additional informations</span></td>
+      <td class="src "><span class="cm">  @param ... A format string and its arguments, printed with the report.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l71" href="#l71">71</a></td>
@@ -776,14 +776,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Force a failing test and display a message.</span></td>
+      <td class="src "><span class="cm">  @ingroup test-basic</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l93" href="#l93">93</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ingroup test-basic</span></td>
+      <td class="src "><span class="cm">  @brief Reports a failing check with a message.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l94" href="#l94">94</a></td>
@@ -797,7 +797,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ... A format string and potential arguments to display as additional informations</span></td>
+      <td class="src "><span class="cm">  @param ... A format string and its arguments, printed with the report.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l96" href="#l96">96</a></td>
@@ -958,14 +958,14 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @brief Force a failing test, display a message and halt the test suite.</span></td>
+      <td class="src "><span class="cm">  @ingroup test-basic</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l119" href="#l119">119</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @ingroup test-basic</span></td>
+      <td class="src "><span class="cm">  @brief Reports a failing check with a message and ends the run.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l120" href="#l120">120</a></td>
@@ -979,7 +979,7 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @param ... A format string and potential arguments to display as additional informations</span></td>
+      <td class="src "><span class="cm">  Skips the cases left, and reports how many were skipped.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l122" href="#l122">122</a></td>
@@ -993,178 +993,192 @@
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
+      <td class="src "><span class="cm">  @param ... A format string and its arguments, printed with the report.</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l124" href="#l124">124</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @snippet doc/pass_fail.cpp snippet3</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l125" href="#l125">125</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cm">  @groupheader{Example}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l126" href="#l126">126</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  @snippet doc/pass_fail.cpp snippet3</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l127" href="#l127">127</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
+      <td class="src "><span class="cm">**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l128" href="#l128">128</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_FATAL(...)</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l129" href="#l129">129</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#else</span></td>
+      <td class="src "><span class="cp">#if defined(TTS_DOXYGEN_INVOKED)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l130" href="#l130">130</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#define TTS_FATAL(...)                                                                             \</span></td>
+      <td class="src "><span class="cp">#define TTS_FATAL(...)</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l131" href="#l131">131</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  do                                                                                               \</span></td>
+      <td class="src "><span class="cp">#else</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l132" href="#l132">132</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  {                                                                                                \</span></td>
+      <td class="src "><span class="cp">#define TTS_FATAL(...)                                                                             \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l133" href="#l133">133</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">    ::tts::global_runtime.fail();                                                                  \</span></td>
+      <td class="src "><span class="cp">  do                                                                                               \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l134" href="#l134">134</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \</span></td>
+      <td class="src "><span class="cp">  {                                                                                                \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l135" href="#l135">135</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">    ::tts::_::report_fatal(::tts::_::source_location::current().data(),                            \</span></td>
+      <td class="src "><span class="cp">    ::tts::global_runtime.fail();                                                                  \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l136" href="#l136">136</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">                           ::tts::text {__VA_ARGS__}.data(),                                       \</span></td>
+      <td class="src "><span class="cp">    if(!::tts::global_runtime.fail_status) ::tts::global_runtime.fail_status = true;               \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l137" href="#l137">137</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">                           ::tts::_::current_type);                                                \</span></td>
+      <td class="src "><span class="cp">    ::tts::_::report_fatal(::tts::_::source_location::current().data(),                            \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l138" href="#l138">138</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">    ::tts::fatal_error_status = true;                                                              \</span></td>
+      <td class="src "><span class="cp">                           ::tts::text {__VA_ARGS__}.data(),                                       \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l139" href="#l139">139</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">    [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \</span></td>
+      <td class="src "><span class="cp">                           ::tts::_::current_type);                                                \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l140" href="#l140">140</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">  } while(0) </span><span class="cm">/**/</span></td>
+      <td class="src "><span class="cp">    ::tts::fatal_error_status = true;                                                              \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l141" href="#l141">141</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cp">#endif</span></td>
+      <td class="src "><span class="cp">    [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l142" href="#l142">142</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "></td>
+      <td class="src "><span class="cp">  } while(0) </span><span class="cm">/**/</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l143" href="#l143">143</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cp">#endif</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l144" href="#l144">144</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">/**</span></td>
+      <td class="src "></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l145" href="#l145">145</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">  @}</span></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l146" href="#l146">146</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="cm">**/</span></td>
+      <td class="src "><span class="cm">/**</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l147" href="#l147">147</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>
-      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+      <td class="src "><span class="cm">  @}</span></td>
     </tr>
     <tr class="source-line">
       <td class="lineno"><a id="l148" href="#l148">148</a></td>
+      <td class="linebranch">
+      </td>
+      <td class="linecount "></td>
+      <td class="src "><span class="cm">**/</span></td>
+    </tr>
+    <tr class="source-line">
+      <td class="lineno"><a id="l149" href="#l149">149</a></td>
+      <td class="linebranch">
+      </td>
+      <td class="linecount "></td>
+      <td class="src "><span class="c1">//======================================================================================================================</span></td>
+    </tr>
+    <tr class="source-line">
+      <td class="lineno"><a id="l150" href="#l150">150</a></td>
       <td class="linebranch">
       </td>
       <td class="linecount "></td>

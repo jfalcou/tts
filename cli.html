@@ -138,23 +138,23 @@ $(function(){initNavTree('cli.html','',''); });
 <div class="toc"><h3>Table of Contents</h3>
 <ul>
   <li class="level1">
-    <a href="#autotoc_md34">Environment Variable Fallback </a>
+    <a href="#autotoc_md37">Environment Variable Fallback </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md35">Display Options </a>
+    <a href="#autotoc_md38">Display Options </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md36">Execution Control </a>
+    <a href="#autotoc_md39">Execution Control </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md37">Tests Parameters </a>
+    <a href="#autotoc_md40">Tests Parameters </a>
   </li>
   <li class="level1">
-    <a href="#autotoc_md38">Range Parameters </a>
+    <a href="#autotoc_md41">Range Parameters </a>
   </li>
 </ul>
 </div>
-<div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<div class="textblock"><h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Environment Variable Fallback</h1>
 <p>Every long-form option below (<span class="tt">--xxx</span> or <span class="tt">--xxx=value</span>) can also be set via a matching <span class="tt">TTS_XXX</span> environment variable instead of a command line flag - derived by uppercasing the flag name and replacing <span class="tt">-</span> with <span class="tt">_</span>. Short forms (<span class="tt">-v</span>, <span class="tt">-q</span>, ...) have no environment variable equivalent. A CLI flag always takes precedence over its environment variable when both are set.</p>
 <p>This exists mainly for CI systems where the test command itself is fixed (e.g. <span class="tt">ctest</span> invokes every registered binary through a command line set once at configure time) and can't easily template a different flag value per parallel job, but can set a different environment variable per job instead:</p>
@@ -197,7 +197,7 @@ Environment Variable Fallback</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">TTS_VALMAX</span>  </td><td class="markdownTableBodyNone"><span class="tt">--valmax=N</span>  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Display Options</h1>
 <p>The following options modify how the tests are run and the results displayed.</p>
 <table class="markdownTable">
@@ -214,7 +214,7 @@ Display Options</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">--quiet</span>  </td><td class="markdownTableBodyNone"><span class="tt">-q</span>  </td><td class="markdownTableBodyNone">Remove all tests results regardless of their status. <span class="tt">./my_test --quiet</span>  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 Execution Control</h1>
 <p>These options change what actually gets run and how results are reported, mostly useful for CI integration. Those options have no short form.</p>
 <table class="markdownTable">
@@ -243,13 +243,13 @@ Execution Control</h1>
 <div class="line">    <a class="code hl_define" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a>(<span class="stringliteral">&quot;pop is a no-op&quot;</span>)          { };</div>
 <div class="line">  };</div>
 <div class="line">};</div>
-<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Introduces a template test case and registers it into the current test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:488</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga36226295afb27d17e36249a61a3864af"><div class="ttname"><a href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(MESSAGE)</div><div class="ttdoc">Add a scoped tests to current scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:115</div></div>
-<div class="ttc" id="agroup__test-scenario_html_ga70b895c13fd5ab455fb7c46226fdc6b3"><div class="ttname"><a href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a></div><div class="ttdeci">#define TTS_WHEN(STORY)</div><div class="ttdoc">Start a block of scoped environment.</div><div class="ttdef"><b>Definition</b> when.hpp:74</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga00d91e3b8e2f57672cd95ee48992c707"><div class="ttname"><a href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707">TTS_CASE_TPL</a></div><div class="ttdeci">#define TTS_CASE_TPL(ID,...)</div><div class="ttdoc">Defines a test case run for each type of a list, and registers it with the test driver.</div><div class="ttdef"><b>Definition</b> case.hpp:485</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga36226295afb27d17e36249a61a3864af"><div class="ttname"><a href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af">TTS_AND_THEN</a></div><div class="ttdeci">#define TTS_AND_THEN(MESSAGE)</div><div class="ttdoc">Adds a section to a TTS_WHEN block.</div><div class="ttdef"><b>Definition</b> when.hpp:116</div></div>
+<div class="ttc" id="agroup__test-scenario_html_ga70b895c13fd5ab455fb7c46226fdc6b3"><div class="ttname"><a href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3">TTS_WHEN</a></div><div class="ttdeci">#define TTS_WHEN(STORY)</div><div class="ttdoc">Starts a block whose code runs again before each of its sections.</div><div class="ttdef"><b>Definition</b> when.hpp:74</div></div>
 <div class="ttc" id="astructtts_1_1type_html"><div class="ttname"><a href="structtts_1_1type.html">tts::type</a></div><div class="ttdoc">Encapsulates a single type into a reusable type object.</div><div class="ttdef"><b>Definition</b> types.hpp:112</div></div>
 </div><!-- fragment --><p><span class="tt">./my_test --dry</span> prints the case name with its types, but the <span class="tt">WHEN</span>/<span class="tt">AND_THEN</span> sub-scenarios stay invisible:</p>
 <div class="fragment"><div class="line">Check stack behavior &lt;int, double&gt;</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
 Tests Parameters</h1>
 <p>These options are provided to control the specifics of the tests parameters. Those options require a value and have no short form.</p>
 <table class="markdownTable">
@@ -260,7 +260,7 @@ Tests Parameters</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt">--seed=N</span>  </td><td class="markdownTableBodyNone">Set the PRNG seeds (default is time-based) <span class="tt">./my_test --valmin=-100</span>  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
 Range Parameters</h1>
 <p>This set of options controls the specifics of the range check tests. Those options require a value and have no short form.</p>
 <table class="markdownTable">

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['macros_0',['Macros',['../tts_reference.html#autotoc_md47',1,'Testing Macros'],['../tts101.html#tuto-macro',1,'Testing Macros']]],
-  ['manual_20usage_1',['Manual Usage',['../output-sinks.html#autotoc_md53',1,'Manual Usage'],['../output-sinks.html#autotoc_md58',1,'Manual Usage'],['../output-sinks.html#autotoc_md63',1,'Manual Usage'],['../output-sinks.html#autotoc_md70',1,'Manual Usage'],['../output-sinks.html#autotoc_md76',1,'Manual Usage']]],
+  ['macros_0',['Macros',['../tts_reference.html#autotoc_md50',1,'Testing Macros'],['../tts101.html#tuto-macro',1,'Testing Macros']]],
+  ['manual_20usage_1',['Manual Usage',['../output-sinks.html#autotoc_md56',1,'Manual Usage'],['../output-sinks.html#autotoc_md61',1,'Manual Usage'],['../output-sinks.html#autotoc_md66',1,'Manual Usage'],['../output-sinks.html#autotoc_md73',1,'Manual Usage'],['../output-sinks.html#autotoc_md79',1,'Manual Usage']]],
   ['marginal_20cost_20of_20a_20test_2',['Marginal cost of a test',['../compile-time.html#compile-time-comparison-tests',1,'']]],
   ['measurement_3',['Precision Measurement',['../customize.html#customize-precision',1,'']]],
   ['metric_4',['Precision metric',['../rationale.html#ulp-metric',1,'']]],

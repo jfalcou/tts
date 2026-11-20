@@ -144,15 +144,15 @@ $(function(){initNavTree('group__test-sequence.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:gad825e0df73e1fb1669837cdbd8f4ba40" id="r_gad825e0df73e1fb1669837cdbd8f4ba40"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gad825e0df73e1fb1669837cdbd8f4ba40">TTS_ALL_ABSOLUTE_EQUAL</a>(L,  R,  N, ...)</td></tr>
-<tr class="memdesc:gad825e0df73e1fb1669837cdbd8f4ba40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within a given absolute distance and that their sizes are equal.  <br /></td></tr>
+<tr class="memdesc:gad825e0df73e1fb1669837cdbd8f4ba40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that two sequences have the same size and that their elements are at most <span class="tt">N</span> apart.  <br /></td></tr>
 <tr class="memitem:ga5a93eb80d6f11fdddb2b00616e8c33b7" id="r_ga5a93eb80d6f11fdddb2b00616e8c33b7"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5a93eb80d6f11fdddb2b00616e8c33b7">TTS_ALL_EQUAL</a>(L,  R, ...)</td></tr>
-<tr class="memdesc:ga5a93eb80d6f11fdddb2b00616e8c33b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are all equal and that their sizes are equal.  <br /></td></tr>
+<tr class="memdesc:ga5a93eb80d6f11fdddb2b00616e8c33b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that two sequences have the same size and equal elements.  <br /></td></tr>
 <tr class="memitem:gaa8195215a7938bde4219b81dbc772a92" id="r_gaa8195215a7938bde4219b81dbc772a92"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa8195215a7938bde4219b81dbc772a92">TTS_ALL_IEEE_EQUAL</a>(L,  R, ...)</td></tr>
-<tr class="memdesc:gaa8195215a7938bde4219b81dbc772a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within 0 ULP and that their sizes are equal.  <br /></td></tr>
+<tr class="memdesc:gaa8195215a7938bde4219b81dbc772a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that two sequences have the same size and that their elements are 0 ULP apart, that is equal or both NaN.  <br /></td></tr>
 <tr class="memitem:gaac398cee8b7655a7e49ed6047d7c233b" id="r_gaac398cee8b7655a7e49ed6047d7c233b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaac398cee8b7655a7e49ed6047d7c233b">TTS_ALL_RELATIVE_EQUAL</a>(L,  R,  N, ...)</td></tr>
-<tr class="memdesc:gaac398cee8b7655a7e49ed6047d7c233b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within a given relative distance and that their sizes are equal.  <br /></td></tr>
+<tr class="memdesc:gaac398cee8b7655a7e49ed6047d7c233b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that two sequences have the same size and that their elements are within a combined relative and absolute tolerance <span class="tt">N</span>.  <br /></td></tr>
 <tr class="memitem:gab7e461674c9066bbd4c333e50595ab09" id="r_gab7e461674c9066bbd4c333e50595ab09"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gab7e461674c9066bbd4c333e50595ab09">TTS_ALL_ULP_EQUAL</a>(L,  R,  N, ...)</td></tr>
-<tr class="memdesc:gab7e461674c9066bbd4c333e50595ab09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if all elements of two sequences are within a given ULP distance and that their sizes are equal.  <br /></td></tr>
+<tr class="memdesc:gab7e461674c9066bbd4c333e50595ab09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that two sequences have the same size and that their elements are at most <span class="tt">N</span> ULP apart.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="gad825e0df73e1fb1669837cdbd8f4ba40" name="gad825e0df73e1fb1669837cdbd8f4ba40"></a>
@@ -186,13 +186,13 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/sequence.hpp&gt;</code></p>
 
-<p>Checks if all elements of two sequences are within a given absolute distance and that their sizes are equal. </p>
-<p>This comparison is performed by using the proper <a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a> overload.</p>
+<p>Checks that two sequences have the same size and that their elements are at most <span class="tt">N</span> apart. </p>
+<p>Measures each pair of elements with <a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a>, as <a class="el" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1" title="TTS_ABSOLUTE_EQUAL">TTS_ABSOLUTE_EQUAL</a> does.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">L,R</td><td>Sequences to compare. </td></tr>
-    <tr><td class="paramname">N</td><td>Maximum absolute distance accepted between <span class="tt">L</span> and <span class="tt">R</span>. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">L,R</td><td>Sequences to compare, each with a <span class="tt">size()</span> member or a <span class="tt">size</span> found by argument-dependent lookup. </td></tr>
+    <tr><td class="paramname">N</td><td>Largest distance accepted. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
@@ -238,12 +238,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/sequence.hpp&gt;</code></p>
 
-<p>Checks if all elements of two sequences are all equal and that their sizes are equal. </p>
-<p>This comparison is performed by using the proper <a class="el" href="group__tools-precision.html#ga839002675e78cc93d0c421beeb976014" title="Compute the absolute distance between two values.">tts::absolute_check</a> overload.</p>
+<p>Checks that two sequences have the same size and equal elements. </p>
+<p>Compares the elements as <a class="el" href="#gad825e0df73e1fb1669837cdbd8f4ba40" title="TTS_ALL_ABSOLUTE_EQUAL">TTS_ALL_ABSOLUTE_EQUAL</a> does with <span class="tt">N</span> = 0.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">L,R</td><td>Sequences to compare. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">L,R</td><td>Sequences to compare, each with a <span class="tt">size()</span> member or a <span class="tt">size</span> found by argument-dependent lookup. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
@@ -289,12 +289,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/sequence.hpp&gt;</code></p>
 
-<p>Checks if all elements of two sequences are within 0 ULP and that their sizes are equal. </p>
-<p>This also allow for infinites and NaNs to be compared equal if both values are the same infinites or are both $NaN$. This comparison is performed by using the proper <a class="el" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf" title="Compute the distance in ULP between two values.">tts::ulp_check</a> overload.</p>
+<p>Checks that two sequences have the same size and that their elements are 0 ULP apart, that is equal or both NaN. </p>
+<p>Compares the elements as <a class="el" href="#gab7e461674c9066bbd4c333e50595ab09" title="TTS_ALL_ULP_EQUAL">TTS_ALL_ULP_EQUAL</a> does with <span class="tt">N</span> = 0.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">L,R</td><td>Sequences to compare. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">L,R</td><td>Sequences to compare, each with a <span class="tt">size()</span> member or a <span class="tt">size</span> found by argument-dependent lookup. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
@@ -346,13 +346,14 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/sequence.hpp&gt;</code></p>
 
-<p>Checks if all elements of two sequences are within a given relative distance and that their sizes are equal. </p>
-<p>This comparison is performed by using the proper <a class="el" href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1" title="Compute the relative distance between two values.">tts::relative_check</a> overload.</p>
+<p>Checks that two sequences have the same size and that their elements are within a combined relative and absolute tolerance <span class="tt">N</span>. </p>
+<p>Each pair of elements <span class="tt">a</span> and <span class="tt">b</span> passes if <span class="tt">abs(a - b) &lt;= N * max(1, abs(a), abs(b))</span>, the <a href="https://realtimecollisiondetection.net/blog/?p=89">combined tolerance test</a> of <a class="el" href="group__tools-precision.html#ga6e18df7e178a3bcd4720b26430669df1" title="Compute the relative distance between two values.">tts::relative_check</a>. <span class="tt">N</span> acts as an absolute tolerance where both values are at most 1 in magnitude, and as a relative one elsewhere. Two NaNs or two equal infinities pass, and any other NaN or infinity fails.</p>
+<p><span class="tt">N</span> is a ratio, so <span class="tt">0.005</span> accepts half a percent. On an arithmetic type, a finite <span class="tt">N</span> of 1 or more fails the check with a message asking for <span class="tt">N</span> divided by a hundred, since TTS 3 took a percentage.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">L,R</td><td>Sequences to compare. </td></tr>
-    <tr><td class="paramname">N</td><td>Maximum relative distance accepted between <span class="tt">L</span> and <span class="tt">R</span>, as a ratio: <span class="tt">0.005</span> is half a percent. <span class="tt">abs(L-R) / max(abs(L), abs(R), 1)</span> is what gets compared to it. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">L,R</td><td>Sequences to compare, each with a <span class="tt">size()</span> member or a <span class="tt">size</span> found by argument-dependent lookup. </td></tr>
+    <tr><td class="paramname">N</td><td>Tolerance, as a ratio. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
@@ -403,13 +404,13 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/sequence.hpp&gt;</code></p>
 
-<p>Checks if all elements of two sequences are within a given ULP distance and that their sizes are equal. </p>
-<p>This comparison is performed by using the proper <a class="el" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf" title="Compute the distance in ULP between two values.">tts::ulp_check</a> overload.</p>
+<p>Checks that two sequences have the same size and that their elements are at most <span class="tt">N</span> ULP apart. </p>
+<p>Measures each pair of elements with <a class="el" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf" title="Compute the distance in ULP between two values.">tts::ulp_check</a>, as <a class="el" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1" title="TTS_ULP_EQUAL">TTS_ULP_EQUAL</a> does.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">L,R</td><td>Sequences to compare. </td></tr>
-    <tr><td class="paramname">N</td><td>Maximum ULPs accepted between <span class="tt">L</span> and <span class="tt">R</span>. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">L,R</td><td>Sequences to compare, each with a <span class="tt">size()</span> member or a <span class="tt">size</span> found by argument-dependent lookup. </td></tr>
+    <tr><td class="paramname">N</td><td>Largest distance accepted, in ULP. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>

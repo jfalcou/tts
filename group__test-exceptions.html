@@ -144,9 +144,9 @@ $(function(){initNavTree('group__test-exceptions.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga73a53c85dca47c0b593e451e30d62bec" id="r_ga73a53c85dca47c0b593e451e30d62bec"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga73a53c85dca47c0b593e451e30d62bec">TTS_NO_THROW</a>(EXPR, ...)</td></tr>
-<tr class="memdesc:ga73a53c85dca47c0b593e451e30d62bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a given expression throws no exception.  <br /></td></tr>
+<tr class="memdesc:ga73a53c85dca47c0b593e451e30d62bec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that an expression throws no exception.  <br /></td></tr>
 <tr class="memitem:ga55820a3f048b29e7e4f33d0730d072c8" id="r_ga55820a3f048b29e7e4f33d0730d072c8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga55820a3f048b29e7e4f33d0730d072c8">TTS_THROW</a>(EXPR,  EXCEPTION, ...)</td></tr>
-<tr class="memdesc:ga55820a3f048b29e7e4f33d0730d072c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a given expression throws an exception of a given type.  <br /></td></tr>
+<tr class="memdesc:ga55820a3f048b29e7e4f33d0730d072c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that an expression throws an exception of type <span class="tt">EXCEPTION</span>.  <br /></td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="ga73a53c85dca47c0b593e451e30d62bec" name="ga73a53c85dca47c0b593e451e30d62bec"></a>
@@ -170,11 +170,11 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/exceptions.hpp&gt;</code></p>
 
-<p>Checks if a given expression throws no exception. </p>
+<p>Checks that an expression throws no exception. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">EXPR</td><td>Expression to evaluate. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
@@ -222,12 +222,12 @@ Macros</h2></td></tr>
 
 <p><code>#include &lt;tts/test/exceptions.hpp&gt;</code></p>
 
-<p>Checks if a given expression throws an exception of a given type. </p>
+<p>Checks that an expression throws an exception of type <span class="tt">EXCEPTION</span>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">EXPR</td><td>Expression to evaluate. </td></tr>
-    <tr><td class="paramname">EXCEPTION</td><td>Expected exception type to be thrown. </td></tr>
-    <tr><td class="paramname">...</td><td>Optional tag. If equals to <span class="tt">REQUIRED</span>, this test will stop the program if it fails.</td></tr>
+    <tr><td class="paramname">EXCEPTION</td><td>Type of the exception expected. </td></tr>
+    <tr><td class="paramname">...</td><td><span class="tt">REQUIRED</span> ends the run when the check fails.</td></tr>
   </table>
   </dd>
 </dl>
