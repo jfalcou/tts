@@ -3158,7 +3158,7 @@ namespace tts::_
     ::tts::global_runtime.pass();                                                                  \
     ::tts::_::report_pass(::tts::_::source_location::current().data(),                             \
                           ::tts::text {__VA_ARGS__}.data());                                       \
-  } while(0) 
+  } while(0)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_FAIL(...)
@@ -3171,7 +3171,7 @@ namespace tts::_
     ::tts::_::report_fail(::tts::_::source_location::current().data(),                             \
                           ::tts::text {__VA_ARGS__}.data(),                                        \
                           ::tts::_::current_type);                                                 \
-  } while(0) 
+  } while(0)
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_FATAL(...)
@@ -3186,7 +3186,7 @@ namespace tts::_
                            ::tts::_::current_type);                                                \
     ::tts::fatal_error_status = true;                                                              \
     [[maybe_unused]] ::tts::_::logger _local_tts_fail_hard {};                                     \
-  } while(0) 
+  } while(0)
 #endif
 namespace tts::_
 {
@@ -4019,10 +4019,10 @@ namespace tts::_
   TTS_CAT(TTS_CASE_, TTS_IS_PARENTHESIZED(FIRST))(FIRST __VA_OPT__(, ) __VA_ARGS__)
 #define TTS_CASE_0(ID)                                                                             \
   [[maybe_unused]] static auto const TTS_CAT(case_, TTS_FUNCTION) =                                \
-  ::tts::_::capture {ID} + +[]() 
+  ::tts::_::capture {ID} + +[]()
 #define TTS_CASE_1(CONTEXTS, ID)                                                                   \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-  ::tts::_::capture_within {ID, TTS_REMOVE_PARENS(CONTEXTS)} + [](TTS_CONTEXT()) 
+  ::tts::_::capture_within {ID, TTS_REMOVE_PARENS(CONTEXTS)} + [](TTS_CONTEXT())
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONTEXT(...)
@@ -4057,10 +4057,10 @@ namespace tts::_
   TTS_CAT(TTS_CASE_TPL_, TTS_IS_PARENTHESIZED(FIRST))(FIRST, __VA_ARGS__)
 #define TTS_CASE_TPL_0(ID, ...)                                                                    \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-  ::tts::_::captures<__VA_ARGS__> {ID} + [] 
+  ::tts::_::captures<__VA_ARGS__> {ID} + []
 #define TTS_CASE_TPL_1(CONTEXTS, ID, ...)                                                          \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-  ::tts::_::within<__VA_ARGS__>(ID, TTS_REMOVE_PARENS(CONTEXTS)) + [] 
+  ::tts::_::within<__VA_ARGS__>(ID, TTS_REMOVE_PARENS(CONTEXTS)) + []
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CASE_WITH(ID, TYPES, ...)
@@ -4071,10 +4071,10 @@ namespace tts::_
 #define TTS_CASE_WITH_0(ID, TYPES, ...)                                                            \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
   ::tts::_::test_generators<::tts::as_type_list_t<TTS_REMOVE_PARENS(TYPES)>, __VA_ARGS__> {ID}     \
-  << [] 
+  << []
 #define TTS_CASE_WITH_1(CONTEXTS, ID, TYPES, ...)                                                  \
   [[maybe_unused]] static bool const TTS_CAT(case_, TTS_FUNCTION) =                                \
-  ::tts::_::refuse_contexts(ID, TTS_REMOVE_PARENS(CONTEXTS)) << [] 
+  ::tts::_::refuse_contexts(ID, TTS_REMOVE_PARENS(CONTEXTS)) << []
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_XFAIL(ID)
@@ -4139,7 +4139,7 @@ namespace tts::_
   local_tts_ctx(),                                                                                 \
   static_cast<bool>(EXPR),                                                                         \
   true,                                                                                            \
-  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) 
+  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT_NOT(EXPR, ...)
 #else
@@ -4152,7 +4152,7 @@ namespace tts::_
   local_tts_ctx(),                                                                                 \
   static_cast<bool>(EXPR),                                                                         \
   false,                                                                                           \
-  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", "")) 
+  TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EXPECT(EXPR, ...)
 #else
@@ -4178,7 +4178,7 @@ namespace tts::_
                          std::bool_constant<static_cast<bool>(EXPR)>::value,                       \
                          false,                                                                    \
                          TTS_CHECK_SITE(FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""), \
-                         "Constant expression") 
+                         "Constant expression")
 namespace tts::_
 {
   inline logger check_throw(bool caught, check_site const& site)
@@ -4463,7 +4463,7 @@ namespace tts::_
                            ::tts::_::OP,                                                           \
                            A,                                                                      \
                            B,                                                                      \
-                           TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+                           TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_BIT_EQUAL(LHS, RHS, ...)
 #else
@@ -4513,7 +4513,7 @@ namespace tts::_
                                  ::tts::_::OP,                                                     \
                                  A,                                                                \
                                  B,                                                                \
-                                 TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+                                 TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_TYPED_EQUAL(LHS, RHS, ...)
 #else
@@ -4552,7 +4552,7 @@ namespace tts::_
   TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                           \
   ::tts::_::check_constant_relation<(::tts::_::OP(A, B))>(                                         \
-  local_tts_ctx(), A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+  local_tts_ctx(), A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F))
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_CONSTEXPR_EQUAL(LHS, RHS, ...)
 #else
@@ -4595,7 +4595,7 @@ namespace tts::_
   TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, TTS_FATAL)
 #define TTS_TYPED_CEXPR_RELATION_IMPL(A, B, OP, T, F, FAILURE)                                     \
   ::tts::_::check_typed_constant_relation<(::tts::_::OP(A, B))>(                                   \
-  local_tts_ctx(), A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F)) 
+  local_tts_ctx(), A, B, TTS_CHECK_SITE(FAILURE, TTS_STRING(A), T, TTS_STRING(B), F))
 #define TTS_TYPED_CONSTEXPR_EQUAL(LHS, RHS, ...)                                                   \
   TTS_TYPED_CEXPR_RELATION(LHS, RHS, eq, "==", "!=", __VA_ARGS__)
 #define TTS_TYPED_CONSTEXPR_NOT_EQUAL(LHS, RHS, ...)                                               \
@@ -4672,7 +4672,7 @@ namespace tts::_
   local_tts_ctx(),                                                                                 \
   TTS_CHECK_SITE(                                                                                  \
   FAILURE, TTS_STRING(TTS_REMOVE_PARENS(TYPE)), "", TTS_STRING(TTS_REMOVE_PARENS(REF)), ""),       \
-  false) 
+  false)
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPR_IS(EXPR, TYPE, ...)
 #else
@@ -4685,7 +4685,7 @@ namespace tts::_
   local_tts_ctx(),                                                                                 \
   TTS_CHECK_SITE(                                                                                  \
   FAILURE, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", TTS_STRING(TTS_REMOVE_PARENS(TYPE)), ""),      \
-  true) 
+  true)
 #define TTS_EXPECT_COMPILES_IMPL(EXPR, ...)                                                        \
   TTS_DISABLE_WARNING_PUSH                                                                         \
   TTS_DISABLE_WARNING_SHADOW                                                                       \
@@ -4697,7 +4697,7 @@ namespace tts::_
     true,                                                                                          \
     TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
     TTS_DISABLE_WARNING_POP                                                                        \
-  }(__VA_ARGS__) 
+  }(__VA_ARGS__)
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT_COMPILES(Symbols, Expression, ...)
 #else
@@ -4714,7 +4714,7 @@ namespace tts::_
     false,                                                                                         \
     TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(TTS_REMOVE_PARENS(EXPR)), "", "", ""));                    \
     TTS_DISABLE_WARNING_POP                                                                        \
-  }(__VA_ARGS__) 
+  }(__VA_ARGS__)
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_EXPECT_NOT_COMPILES(Symbols..., Expression, ...)
 #else
@@ -5016,7 +5016,7 @@ namespace tts::_
 }
 #define TTS_PRECISION_IMPL(LHS, RHS, N, UNIT, MEASURE, PREC, FAILURE)                              \
   ::tts::_::check_precision<::tts::_::measure::MEASURE>(                                           \
-  LHS, RHS, N, UNIT, PREC, TTS_CHECK_SITE(FAILURE, TTS_STRING(LHS), "", TTS_STRING(RHS), "")) 
+  LHS, RHS, N, UNIT, PREC, TTS_CHECK_SITE(FAILURE, TTS_STRING(LHS), "", TTS_STRING(RHS), ""))
 #define TTS_PRECISION(L, R, N, U, F, P, ...)     TTS_PRECISION_##__VA_ARGS__(L, R, N, U, F, P)
 #define TTS_PRECISION_(L, R, N, U, F, P)         TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FAIL)
 #define TTS_PRECISION_REQUIRED(L, R, N, U, F, P) TTS_PRECISION_IMPL(L, R, N, U, F, P, TTS_FATAL)
@@ -5037,7 +5037,7 @@ namespace tts::_
 #define TTS_PERCENT_TOLERANCE_REQUIRED(N) TTS_PERCENT_TOLERANCE_IMPL(N, TTS_FATAL)
 #define TTS_PERCENT_TOLERANCE_IMPL(N, FAILURE)                                                     \
   ::tts::_::check_percent_tolerance(static_cast<double>(N),                                        \
-                                    TTS_CHECK_SITE(FAILURE, "", "", "", "")) 
+                                    TTS_CHECK_SITE(FAILURE, "", "", "", ""))
 #endif
 #if defined(TTS_DOXYGEN_INVOKED)
 #define TTS_ULP_EQUAL(L, R, N, ...)
@@ -5046,7 +5046,7 @@ namespace tts::_
 #endif
 #define TTS_DO_IEEE_EQUAL_IMPL(LHS, RHS, FAILURE)                                                  \
   ::tts::_::check_ieee(                                                                            \
-  LHS, RHS, TTS_CHECK_SITE(FAILURE, TTS_STRING(LHS), "", TTS_STRING(RHS), "")) 
+  LHS, RHS, TTS_CHECK_SITE(FAILURE, TTS_STRING(LHS), "", TTS_STRING(RHS), ""))
 #define TTS_DO_IEEE_EQUAL(L, R, ...)     TTS_DO_IEEE_EQUAL_##__VA_ARGS__(L, R)
 #define TTS_DO_IEEE_EQUAL_(L, R)         TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FAIL)
 #define TTS_DO_IEEE_EQUAL_REQUIRED(L, R) TTS_DO_IEEE_EQUAL_IMPL(L, R, TTS_FATAL)
@@ -5144,7 +5144,7 @@ namespace tts::_
                                                                                                    \
     ::tts::global_runtime.pass();                                                                  \
     return ::tts::_::logger {false};                                                               \
-  }(SEQ1, SEQ2) 
+  }(SEQ1, SEQ2)
 #define TTS_ALL(L, R, F, N, U, ...)     TTS_ALL_##__VA_ARGS__(L, R, F, N, U)
 #define TTS_ALL_(L, R, F, N, U)         TTS_ALL_IMPL(L, R, F, N, U, TTS_FAIL)
 #define TTS_ALL_REQUIRED(L, R, F, N, U) TTS_ALL_IMPL(L, R, F, N, U, TTS_FATAL)
@@ -5620,7 +5620,7 @@ namespace tts
   NewFunc,                                                                                         \
   ::tts::_::pack {__VA_ARGS__},                                                                    \
   TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(RefFunc), "", TTS_STRING(NewFunc), ""),                      \
-  TTS_STRING(TTS_REMOVE_PARENS(Producer))) 
+  TTS_STRING(TTS_REMOVE_PARENS(Producer)))
 #endif
 namespace tts
 {
