@@ -10,6 +10,7 @@ Change Log {#changelog}
     - The CMake option `TTS_BENCHMARKS`, `OFF` by default, fetches [nanobench](https://nanobench.ankerl.com) v4.6.0 and defines the target `tts::benchmarks`.
     - `tts::bench::random` draws its buffers from a generator of its own at a fixed seed, so two executions time the same values.
     - A traits class passed to `tts::bench::basic_benchmark` builds the input of each row, so a library can feed SIMD registers or other types from the same draws.
+    - `--epochs=N` and `--warmup=N` set the epochs and the warmup of every row of an executable, and the third argument of `tts::bench::random` sets the size of a buffer.
 
 ### Bug Fixes
   * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)

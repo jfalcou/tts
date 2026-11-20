@@ -43,6 +43,8 @@
   `TTS_VALMIN`          | `--valmin=N`
   `TTS_VALMAX`          | `--valmax=N`
   `TTS_DUMP`            | `--dump` / `-d`
+  `TTS_EPOCHS`          | `--epochs=N`
+  `TTS_WARMUP`          | `--warmup=N`
 
   # Display Options
 
@@ -129,11 +131,13 @@
   `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
 
   # Benchmark Parameters
-  This option controls the output of the benchmarks of @ref tools-benchmarks.
+  These options control the benchmarks of @ref tools-benchmarks.
 
   Options          | Description
   ---------------- | -----------------------------------------------------------------------
   `-d`, `--dump`   | Write the time per element of every epoch of each benchmark to `<title>.csv` in the working directory. `./my_bench --dump`
+  `--epochs=N`     | Run `N` epochs for each row, in place of the count given to the benchmark. `./my_bench --epochs=20`
+  `--warmup=N`     | Run `N` passes over the buffers before the first epoch of each row, in place of the count given to the benchmark. `./my_bench --warmup=100`
 
 **/
 //==================================================================================================

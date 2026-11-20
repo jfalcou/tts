@@ -8,6 +8,7 @@
 #define TTS_MAIN
 #include <tts/benchmarks.hpp>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 
@@ -23,6 +24,31 @@ struct recording_sink : tts::output_sink
   bool holds(char const* s) const
   {
     return std::strstr(all.data(), s) != nullptr;
+  }
+};
+
+// Sets an environment variable for its lifetime, which the options read as --name=value.
+struct scoped_env
+{
+  char const* name;
+
+  scoped_env(char const* n, char const* value)
+      : name(n)
+  {
+#if defined(_WIN32)
+    _putenv_s(name, value);
+#else
+    setenv(name, value, 1);
+#endif
+  }
+
+  ~scoped_env()
+  {
+#if defined(_WIN32)
+    _putenv_s(name, "");
+#else
+    unsetenv(name);
+#endif
   }
 };
 
@@ -54,6 +80,11 @@ TTS_CASE("Check that tts::bench::random draws in its range, the same values from
   }
   TTS_EXPECT(in_range);
   TTS_EXPECT(same);
+};
+
+TTS_CASE("Check that tts::bench::random draws the number of values it is given")
+{
+  TTS_EQUAL(tts::bench::random<int>(0, 9, 10).size(), std::size_t {10});
 };
 
 TTS_CASE("Check that a draw of tts::bench::random leaves the generator of the run untouched")
@@ -169,4 +200,36 @@ TTS_CASE("Check that the CSV quotes a name and doubles its quotes")
   TTS_EXPECT(std::fgets(read, sizeof(read), file) != nullptr);
   TTS_EQUAL(tts::text(read), tts::text("\"pow(x, \"\"3\"\")\""));
   std::fclose(file);
+};
+
+TTS_CASE("Check that a benchmark prints the epochs and the warmup of its constructor")
+{
+  auto           x     = tts::bench::random<int>(-20, 20);
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("counts", 3, 2);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+
+  TTS_EXPECT(sink.holds(" - Epochs: 3 - Warmup: 2"));
+};
+
+TTS_CASE("Check that --epochs and --warmup take precedence over the constructor")
+{
+  auto           x     = tts::bench::random<int>(-20, 20);
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    scoped_env            epochs("TTS_EPOCHS", "4");
+    scoped_env            warmup("TTS_WARMUP", "5");
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("override", 3, 2);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+
+  TTS_EXPECT(sink.holds(" - Epochs: 4 - Warmup: 5"));
 };

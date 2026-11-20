@@ -48,17 +48,19 @@
   called through a pointer, so every call is indirect.
 
   An epoch is a sequence of complete passes over all buffers, whose number
-  [nanobench](https://nanobench.ankerl.com) chooses so that the epoch lasts at least 1 ms. Each row
-  runs 100 epochs after a single warmup pass. A sink follows every call to keep its result alive, so
-  the measured time includes the loop, the loads, and the sink, and consecutive calls cannot be
-  vectorized. The calls are independent and the buffers stay in cache, so a row measures throughput
-  on hot data, not latency.
+  [nanobench](https://nanobench.ankerl.com) chooses so that the epoch lasts at least 1 ms. By
+  default, each row runs 100 epochs after a single warmup pass. Both counts are parameters of the
+  benchmark constructor, and `--epochs=N` and `--warmup=N` override them for an entire executable. A
+  sink follows every call to keep its result alive, so the measured time includes the loop, the
+  loads, and the sink, and consecutive calls cannot be vectorized. The calls are independent and the
+  buffers stay in cache, so a row measures throughput on hot data, not latency.
 
   @groupheader{Table}
 
-  The line under the title states whether the assertions of the translation unit are enabled, from
-  `NDEBUG`. An element is a single value, so a call of a row with `N` lanes processes `N` elements.
-  The table has one row per function, with these columns:
+  A line under the title, such as `Assertions: disabled - Epochs: 100 - Warmup: 1`, tells whether
+  assertions are enabled in the translation unit (from `NDEBUG`) and gives both counts. An element
+  is a single value, so a call of a row with `N` lanes processes `N` elements. The table has one row
+  per function, with these columns:
 
   | Column | Content |
   |---|---|
@@ -70,9 +72,9 @@
   | `elem/s` | elements per second, the inverse of the median time per element |
   | `cyc/elem` | median CPU cycles per element |
   | `ins/elem` | median instructions per element |
-  | `IPC` | instructions per cycle, the median instructions over the median cycles |
+  | `IPC` | instructions per cycle, median instructions over median cycles |
   | `bra/elem` | median branch instructions per element |
-  | `miss%` | median mispredicted branches over the median branch instructions, in percent |
+  | `miss%` | median mispredicted branches over median branch instructions, in percent |
 
   `err%` is the median of `|t - m| / t` over the epochs, where `t` is the duration of an epoch and
   `m` is the median duration. If the operating system blocks the hardware counters (as many
@@ -95,6 +97,8 @@
 
   - `tts::bench::random` returns a `tts::buffer`, the vector type of TTS, which provides `size()`,
     `operator[]`, and `push_back`, and supports range-based for loops.
+  - The number of values drawn is the third argument of `tts::bench::random`, which is
+    `tts::bench::size` if not specified.
   - The draws come from a dedicated generator, so they depend neither on the seed that TTS prints
     at startup nor on `--seed`.
   - Under `tts::bench::default_traits`, a row:
@@ -150,8 +154,8 @@ namespace tts::bench
   /**
     @public
     @ingroup tools-benchmarks
-    @brief The number of values in every buffer drawn by `tts::bench::random` (a multiple of the
-           usual SIMD register widths).
+    @brief The default number of values in each buffer that `tts::bench::random` draws (a
+           multiple of common SIMD register widths).
 
     @groupheader{Example}
     @snippet benchmarks/draws.cpp snippet
@@ -205,15 +209,16 @@ namespace tts::bench
   /**
     @public
     @ingroup tools-benchmarks
-    @brief Draws a buffer of `tts::bench::size` values uniformly distributed on [mini, maxi].
+    @brief Draws a buffer of `count` values uniformly distributed over [mini, maxi].
 
     Floating-point values are drawn uniformly, whereas `tts::random_value` draws them
     log-uniformly.
 
-    @tparam T   Arithmetic type of the values.
-    @param mini Inclusive lower bound of the drawn range.
-    @param maxi Inclusive upper bound of the drawn range.
-    @return A `tts::buffer` holding `tts::bench::size` values of type `T`.
+    @tparam T    Arithmetic type of the values.
+    @param mini  Inclusive lower bound of the drawn range.
+    @param maxi  Inclusive upper bound of the drawn range.
+    @param count Number of values to draw (`tts::bench::size` if not specified).
+    @return A `tts::buffer` holding `count` values of type `T`.
 
     @groupheader{Example}
     @snippet benchmarks/draws.cpp snippet
@@ -221,9 +226,9 @@ namespace tts::bench
   //======================================================================================================================
   template<typename T>
     requires(std::is_arithmetic_v<T>)
-  tts::buffer<T> random(T mini, T maxi)
+  tts::buffer<T> random(T mini, T maxi, std::size_t count = size)
   {
-    tts::buffer<T> values(size);
+    tts::buffer<T> values(count);
     for(auto& v: values)
       v = roll(mini, maxi);
     return values;
@@ -361,6 +366,7 @@ namespace tts::bench
   private:
     ankerl::nanobench::Bench    bench_;
     std::size_t                 repetitions_;
+    std::size_t                 warmup_;
 
     tts::buffer<std::ptrdiff_t> run_cardinals_;
     tts::text                   base_file_name_;
@@ -369,8 +375,8 @@ namespace tts::bench
     {
       bench_.output(nullptr);
       bench_.performanceCounters(true);
-      bench_.epochs(repetitions_);
-      bench_.warmup(1);
+      bench_.epochs(::tts::arguments().value(repetitions_, "--epochs"));
+      bench_.warmup(::tts::arguments().value(warmup_, "--warmup"));
     }
 
     template<typename Row, typename Func, typename... Inputs>
@@ -413,11 +419,15 @@ namespace tts::bench
     /**
       @brief Builds a benchmark whose table is titled `benchmark`.
 
+      Both counts can be overridden with `--epochs=N` and `--warmup=N`.
+
       @param repetitions Number of epochs for each row (100 if not specified).
+      @param warmup      Number of warmup passes over all buffers (1 if not specified).
     **/
     //======================================================================================================================
-    explicit basic_benchmark(std::size_t repetitions = 100)
+    explicit basic_benchmark(std::size_t repetitions = 100, std::size_t warmup = 1)
         : repetitions_(repetitions)
+        , warmup_(warmup)
         , base_file_name_("benchmark")
     {
       configure_bench();
@@ -427,15 +437,21 @@ namespace tts::bench
     /**
       @brief Builds a benchmark whose table is titled `name`.
 
+      Both counts can be overridden with `--epochs=N` and `--warmup=N`.
+
       @param name        Title of the table, also the base name of its CSV file.
       @param repetitions Number of epochs for each row (100 if not specified).
+      @param warmup      Number of warmup passes over all buffers (1 if not specified).
     **/
     //======================================================================================================================
     // Do not drop the constraint: an integer would select this constructor and be taken as a name.
     template<typename Name>
-    explicit basic_benchmark(Name const& name, std::size_t repetitions = 100)
+    explicit basic_benchmark(Name const& name,
+                             std::size_t repetitions = 100,
+                             std::size_t warmup      = 1)
       requires(!std::is_integral_v<Name>)
         : repetitions_(repetitions)
+        , warmup_(warmup)
         , base_file_name_(tts::text(name))
     {
       configure_bench();
@@ -549,10 +565,14 @@ namespace tts::bench
       auto& out = tts::output();
       out.writeln("# Benchmarking for : `%s`", base_file_name_.data());
 #if defined(NDEBUG)
-      out.writeln("Assertions: disabled");
+      char const* assertions = "disabled";
 #else
-      out.writeln("Assertions: enabled");
+      char const* assertions = "enabled";
 #endif
+      out.writeln("Assertions: %s - Epochs: %zu - Warmup: %llu",
+                  assertions,
+                  bench_.epochs(),
+                  static_cast<unsigned long long>(bench_.warmup()));
       if(tts::text const env = Traits::environment(); !env.is_empty()) out.writeln(env);
       if(!dump_note.is_empty()) out.writeln(dump_note);
       out.writeln();
