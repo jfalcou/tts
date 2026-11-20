@@ -9,6 +9,7 @@
 #include <tts/benchmarks.hpp>
 #include <cstdio>
 #include <cstring>
+#include <vector>
 
 struct recording_sink : tts::output_sink
 {
@@ -109,6 +110,21 @@ TTS_CASE("Check that a benchmark reads the lanes and the machine from its traits
 
   TTS_EXPECT(sink.holds("**Machine:** test"));
   TTS_EXPECT(sink.holds("| wide |    4 |"));
+};
+
+TTS_CASE("Check that a benchmark reads a std::vector under the default traits")
+{
+  std::vector<int> x(tts::bench::size, 3);
+  auto             twice = [](int v) { return 2 * v; };
+
+  recording_sink   sink;
+  {
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("vector", 3);
+    TTS_RUN_BENCHMARK(b, int, "from a vector", twice, x);
+  }
+
+  TTS_EXPECT(sink.holds("| from a vector "));
 };
 
 TTS_CASE("Check that the table prints three significant digits")

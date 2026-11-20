@@ -65,8 +65,7 @@ namespace tts::bench
 
   struct default_traits
   {
-    template<typename Row, typename Value>
-    static tts::buffer<Value> const& input(tts::buffer<Value> const& values)
+    template<typename Row, typename Buffer> static Buffer const& input(Buffer const& values)
     {
       return values;
     }
