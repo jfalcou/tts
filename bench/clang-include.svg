@@ -3,55 +3,61 @@
 <line x1="56.0" x2="704.0" y1="340.0" y2="340.0" stroke="#808080" stroke-opacity="0.3"/>
 <text x="50.0" y="344.0" fill="#808080" text-anchor="end">0 s</text>
 <line x1="56.0" x2="704.0" y1="240.0" y2="240.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="244.0" fill="#808080" text-anchor="end">1 s</text>
+<text x="50.0" y="244.0" fill="#808080" text-anchor="end">0.5 s</text>
 <line x1="56.0" x2="704.0" y1="140.0" y2="140.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="144.0" fill="#808080" text-anchor="end">2 s</text>
+<text x="50.0" y="144.0" fill="#808080" text-anchor="end">1 s</text>
 <line x1="56.0" x2="704.0" y1="40.0" y2="40.0" stroke="#808080" stroke-opacity="0.3"/>
-<text x="50.0" y="44.0" fill="#808080" text-anchor="end">3 s</text>
-<rect x="72.2" y="335.1" width="48.6" height="4.9" fill="#86c98e"/>
-<text x="96.5" y="329.0" fill="#808080" text-anchor="middle">0.049 s</text>
-<text x="96.5" y="356.0" fill="#86c98e" font-weight="bold" text-anchor="middle">doctest</text>
-<text x="96.5" y="369.0" fill="#86c98e" font-weight="bold" text-anchor="middle">fast</text>
-<text x="96.5" y="382.0" fill="#808080" text-anchor="middle">103 MiB</text>
-<rect x="153.2" y="335.1" width="48.6" height="4.9" fill="#3fa34d"/>
-<text x="177.5" y="329.0" fill="#808080" text-anchor="middle">0.049 s</text>
-<text x="177.5" y="356.0" fill="#3fa34d" font-weight="bold" text-anchor="middle">doctest</text>
-<text x="177.5" y="369.0" fill="#808080" text-anchor="middle">102 MiB</text>
-<rect x="234.2" y="321.5" width="48.6" height="18.5" fill="#d1495b"/>
-<text x="258.5" y="315.4" fill="#808080" text-anchor="middle">0.185 s</text>
+<text x="50.0" y="44.0" fill="#808080" text-anchor="end">1.5 s</text>
+<rect x="72.2" y="333.6" width="48.6" height="6.4" fill="#3fa34d"/>
+<text x="96.5" y="327.3" fill="#808080" text-anchor="middle">0.032 s</text>
+<text x="96.5" y="356.0" fill="#3fa34d" font-weight="bold" text-anchor="middle">doctest</text>
+<text x="96.5" y="369.0" fill="#808080" text-anchor="middle">102 MiB</text>
+<rect x="153.2" y="333.4" width="48.6" height="6.6" fill="#86c98e"/>
+<text x="177.5" y="326.9" fill="#808080" text-anchor="middle">0.033 s</text>
+<text x="177.5" y="356.0" fill="#86c98e" font-weight="bold" text-anchor="middle">doctest</text>
+<text x="177.5" y="369.0" fill="#86c98e" font-weight="bold" text-anchor="middle">fast</text>
+<text x="177.5" y="382.0" fill="#808080" text-anchor="middle">102 MiB</text>
+<rect x="234.2" y="319.9" width="48.6" height="20.1" fill="#d1495b"/>
+<line x1="258.5" x2="258.5" y1="322.7" y2="319.8" stroke="#808080" stroke-width="1.5"/>
+<line x1="253.5" x2="263.5" y1="322.7" y2="322.7" stroke="#808080" stroke-width="1.5"/>
+<line x1="253.5" x2="263.5" y1="319.8" y2="319.8" stroke="#808080" stroke-width="1.5"/>
+<text x="258.5" y="313.8" fill="#808080" text-anchor="middle">0.101 s</text>
 <text x="258.5" y="356.0" fill="#d1495b" font-weight="bold" text-anchor="middle">TTS</text>
 <text x="258.5" y="369.0" fill="#808080" text-anchor="middle">112 MiB</text>
-<rect x="315.2" y="209.7" width="48.6" height="130.3" fill="#8e6bbf"/>
-<line x1="339.5" x2="339.5" y1="210.2" y2="207.0" stroke="#808080" stroke-width="1.5"/>
-<line x1="334.5" x2="344.5" y1="210.2" y2="210.2" stroke="#808080" stroke-width="1.5"/>
-<line x1="334.5" x2="344.5" y1="207.0" y2="207.0" stroke="#808080" stroke-width="1.5"/>
-<text x="339.5" y="201.0" fill="#808080" text-anchor="middle">1.303 s</text>
+<rect x="315.2" y="207.7" width="48.6" height="132.3" fill="#8e6bbf"/>
+<line x1="339.5" x2="339.5" y1="220.4" y2="205.7" stroke="#808080" stroke-width="1.5"/>
+<line x1="334.5" x2="344.5" y1="220.4" y2="220.4" stroke="#808080" stroke-width="1.5"/>
+<line x1="334.5" x2="344.5" y1="205.7" y2="205.7" stroke="#808080" stroke-width="1.5"/>
+<text x="339.5" y="199.7" fill="#808080" text-anchor="middle">0.662 s</text>
 <text x="339.5" y="356.0" fill="#8e6bbf" font-weight="bold" text-anchor="middle">Boost.Test</text>
-<text x="339.5" y="369.0" fill="#808080" text-anchor="middle">181 MiB</text>
-<rect x="396.2" y="189.6" width="48.6" height="150.4" fill="#e09f3e"/>
-<line x1="420.5" x2="420.5" y1="191.8" y2="189.6" stroke="#808080" stroke-width="1.5"/>
-<line x1="415.5" x2="425.5" y1="191.8" y2="191.8" stroke="#808080" stroke-width="1.5"/>
-<line x1="415.5" x2="425.5" y1="189.6" y2="189.6" stroke="#808080" stroke-width="1.5"/>
-<text x="420.5" y="183.6" fill="#808080" text-anchor="middle">1.504 s</text>
+<text x="339.5" y="369.0" fill="#808080" text-anchor="middle">182 MiB</text>
+<rect x="396.2" y="184.5" width="48.6" height="155.5" fill="#e09f3e"/>
+<line x1="420.5" x2="420.5" y1="206.9" y2="179.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="415.5" x2="425.5" y1="206.9" y2="206.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="415.5" x2="425.5" y1="179.9" y2="179.9" stroke="#808080" stroke-width="1.5"/>
+<text x="420.5" y="173.9" fill="#808080" text-anchor="middle">0.777 s</text>
 <text x="420.5" y="356.0" fill="#e09f3e" font-weight="bold" text-anchor="middle">GoogleTest</text>
 <text x="420.5" y="369.0" fill="#808080" text-anchor="middle">174 MiB</text>
-<rect x="477.2" y="144.4" width="48.6" height="195.6" fill="#7fb8d6"/>
-<text x="501.5" y="137.5" fill="#808080" text-anchor="middle">1.956 s</text>
+<rect x="477.2" y="136.9" width="48.6" height="203.1" fill="#7fb8d6"/>
+<line x1="501.5" x2="501.5" y1="149.5" y2="130.7" stroke="#808080" stroke-width="1.5"/>
+<line x1="496.5" x2="506.5" y1="149.5" y2="149.5" stroke="#808080" stroke-width="1.5"/>
+<line x1="496.5" x2="506.5" y1="130.7" y2="130.7" stroke="#808080" stroke-width="1.5"/>
+<text x="501.5" y="124.7" fill="#808080" text-anchor="middle">1.015 s</text>
 <text x="501.5" y="356.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">Catch2</text>
 <text x="501.5" y="369.0" fill="#7fb8d6" font-weight="bold" text-anchor="middle">fast</text>
-<text x="501.5" y="382.0" fill="#808080" text-anchor="middle">213 MiB</text>
-<rect x="558.2" y="142.3" width="48.6" height="197.7" fill="#2e86ab"/>
-<line x1="582.5" x2="582.5" y1="144.4" y2="141.8" stroke="#808080" stroke-width="1.5"/>
-<line x1="577.5" x2="587.5" y1="144.4" y2="144.4" stroke="#808080" stroke-width="1.5"/>
-<line x1="577.5" x2="587.5" y1="141.8" y2="141.8" stroke="#808080" stroke-width="1.5"/>
-<text x="582.5" y="135.8" fill="#808080" text-anchor="middle">1.977 s</text>
+<text x="501.5" y="382.0" fill="#808080" text-anchor="middle">214 MiB</text>
+<rect x="558.2" y="134.4" width="48.6" height="205.6" fill="#2e86ab"/>
+<line x1="582.5" x2="582.5" y1="162.9" y2="121.3" stroke="#808080" stroke-width="1.5"/>
+<line x1="577.5" x2="587.5" y1="162.9" y2="162.9" stroke="#808080" stroke-width="1.5"/>
+<line x1="577.5" x2="587.5" y1="121.3" y2="121.3" stroke="#808080" stroke-width="1.5"/>
+<text x="582.5" y="115.3" fill="#808080" text-anchor="middle">1.028 s</text>
 <text x="582.5" y="356.0" fill="#2e86ab" font-weight="bold" text-anchor="middle">Catch2</text>
-<text x="582.5" y="369.0" fill="#808080" text-anchor="middle">210 MiB</text>
-<rect x="639.2" y="71.4" width="48.6" height="268.6" fill="#5c8a8a"/>
-<line x1="663.5" x2="663.5" y1="76.3" y2="66.8" stroke="#808080" stroke-width="1.5"/>
-<line x1="658.5" x2="668.5" y1="76.3" y2="76.3" stroke="#808080" stroke-width="1.5"/>
-<line x1="658.5" x2="668.5" y1="66.8" y2="66.8" stroke="#808080" stroke-width="1.5"/>
-<text x="663.5" y="60.8" fill="#808080" text-anchor="middle">2.686 s</text>
+<text x="582.5" y="369.0" fill="#808080" text-anchor="middle">211 MiB</text>
+<rect x="639.2" y="63.9" width="48.6" height="276.1" fill="#5c8a8a"/>
+<line x1="663.5" x2="663.5" y1="97.0" y2="56.3" stroke="#808080" stroke-width="1.5"/>
+<line x1="658.5" x2="668.5" y1="97.0" y2="97.0" stroke="#808080" stroke-width="1.5"/>
+<line x1="658.5" x2="668.5" y1="56.3" y2="56.3" stroke="#808080" stroke-width="1.5"/>
+<text x="663.5" y="50.3" fill="#808080" text-anchor="middle">1.380 s</text>
 <text x="663.5" y="356.0" fill="#5c8a8a" font-weight="bold" text-anchor="middle">ut</text>
-<text x="663.5" y="369.0" fill="#808080" text-anchor="middle">245 MiB</text>
+<text x="663.5" y="369.0" fill="#808080" text-anchor="middle">246 MiB</text>
 </svg>
