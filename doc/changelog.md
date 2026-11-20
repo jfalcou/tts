@@ -5,6 +5,9 @@ Change Log {#changelog}
 
 ## What's Changed
 
+### Breaking Changes
+  * Removed `tts::realistic_generator`: `tts::randoms` gives the same draw (https://github.com/jfalcou/tts/pull/279)
+
 ### New Features
   * Added `tts::sweep` to run a range check on every value of a type, or on a sample when there are more than `--scope` values (https://github.com/jfalcou/tts/pull/279)
   * Added `tts::enumeration<T>` to enumerate the values of a type for `tts::sweep` (https://github.com/jfalcou/tts/pull/279)
