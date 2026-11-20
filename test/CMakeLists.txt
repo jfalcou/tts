@@ -51,6 +51,15 @@ if(TTS_BENCHMARKS)
     ROOT ${TEST_ROOT}
     NAME unit.infrastructure.benchmarks.cpp)
   target_link_libraries(unit.infrastructure.benchmarks.exe PRIVATE tts::benchmarks)
+
+  foreach(example draws hypot traits)
+    copa_make_single_unit(
+      INTERFACE tts_test
+      FILES unit/benchmarks/${example}.cpp
+      ROOT ${TEST_ROOT}
+      NAME unit.benchmarks.${example}.cpp)
+    target_link_libraries(unit.benchmarks.${example}.exe PRIVATE tts::benchmarks)
+  endforeach()
 endif()
 
 ##======================================================================================================================

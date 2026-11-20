@@ -23,18 +23,169 @@
 #include <type_traits>
 #include <utility>
 
+//======================================================================================================================
+/**
+  @defgroup tools-benchmarks Benchmark Utilities
+  @brief Tools to time functions with [nanobench](https://nanobench.ankerl.com) and print their
+  times and throughput as Markdown tables.
+
+  `tts/benchmarks.hpp` is a separate header, not included by `tts/tts.hpp` or by the standalone
+  header. This header includes `nanobench.h`, which the CMake option `TTS_BENCHMARKS` provides
+  through the `tts::benchmarks` target (see @ref setup-benchmarks). The implementation of
+  [nanobench](https://nanobench.ankerl.com) is compiled in the translation unit that defines
+  @ref TTS_MAIN, and no other macro needs to be defined.
+
+  A benchmark is a TTS case that draws its inputs once (usually through `tts::bench::random`), then
+  measures each function as a table row with @ref TTS_RUN_BENCHMARK. The table is printed when
+  the benchmark goes out of scope, and its first row is the baseline of every speedup. Such a case
+  records no check, so it will not count as a success unless it ends with @ref TTS_PASS.
+
+  @groupheader{Measurement}
+
+  Each row calls its function once per index of its buffers, and the `i`-th call receives the `i`-th
+  value of every buffer. If the buffers differ in length, the shortest buffer determines the number
+  of calls. A lambda or a function object can be inlined in the timed loop, but a function name is
+  called through a pointer, so every call is indirect.
+
+  An epoch is a sequence of complete passes over all buffers, whose number
+  [nanobench](https://nanobench.ankerl.com) chooses so that the epoch lasts at least 1 ms. Each row
+  runs 100 epochs after a single warmup pass. A sink follows every call to keep its result alive, so
+  the measured time includes the loop, the loads, and the sink, and consecutive calls cannot be
+  vectorized. The calls are independent and the buffers stay in cache, so a row measures throughput
+  on hot data, not latency.
+
+  @groupheader{Table}
+
+  An element is a single value, so a call of a row with `N` lanes processes `N` elements. The table
+  has one row per function, with these columns:
+
+  | Column | Content |
+  |---|---|
+  | `N` | values processed per call, from the traits |
+  | `Speedup` | elements per second of the row over those of the first row |
+  | `Eff.` | the speedup over `N` in percent, `-` on a single-lane row after the first |
+  | `ns/elem`, `min`, `max` | median, smallest, and largest time per element, in nanoseconds |
+  | `err%` | median absolute percentage error of the epoch times |
+  | `elem/s` | elements per second, the inverse of the median time per element |
+  | `cyc/elem` | median CPU cycles per element |
+  | `ins/elem` | median instructions per element |
+
+  `err%` is the median of `|t - m| / t` over the epochs, where `t` is the duration of an epoch and
+  `m` is the median duration. If the operating system blocks the hardware counters (as many
+  containers do), `cyc/elem` and `ins/elem` read `0.00`.
+
+  If the executable is run with `-d` or `--dump`, it also writes `<title>.csv` in the working
+  directory, with:
+
+  - one quoted column name per row.
+  - one line per epoch.
+  - each epoch's time per element, in seconds.
+
+  If this file cannot be opened (for instance, because the title contains a `/`), a note under the
+  table title reports the failure.
+
+  @groupheader{Inputs}
+
+  The inputs of a row are buffers, one per parameter of its function.
+
+  - `tts::bench::random` returns a `tts::buffer`, the vector type of TTS, which provides `size()`,
+    `operator[]`, and `push_back`, and supports range-based for loops.
+  - The draws come from a dedicated generator, so they depend neither on the seed that TTS prints
+    at startup nor on `--seed`.
+  - Under `tts::bench::default_traits`, a row:
+    - reads its buffers unchanged, a `tts::buffer` or any other container with `size()` and
+      `operator[]`, such as `std::vector`.
+    - has `N` set to 1, whatever its type.
+
+  @groupheader{Example}
+  @snippet benchmarks/hypot.cpp snippet
+  @{
+**/
+//======================================================================================================================
+
+//======================================================================================================================
+/**
+  @def TTS_RUN_BENCHMARK
+  @brief Times a benchmark row.
+
+  @param RUNNER Benchmark receiving the row.
+  @param TYPE   Type of the row, used by the traits to build its input and to count its lanes.
+                Under `tts::bench::default_traits`, this type only sets `N` to 1.
+  @param NAME   Name of the row, as printed in the table.
+  @param FUNC   Function to time, called once per index of the buffers. A lambda or a function
+                object should be preferred, since the compiler can then inline each call.
+  @param ...    Buffers holding the arguments for `FUNC`, in parameter order. The `i`-th call
+                takes the `i`-th value of each buffer.
+
+  @groupheader{Example}
+  @snippet benchmarks/hypot.cpp snippet
+**/
+//======================================================================================================================
 #define TTS_RUN_BENCHMARK(RUNNER, TYPE, NAME, FUNC, ...)                                           \
   (RUNNER).run<TYPE>(NAME, FUNC, __VA_ARGS__) /**/
 
+//======================================================================================================================
+/**
+  @def TTS_RUN_BENCHMARK_TPL
+  @brief Times a benchmark row whose type depends on a template parameter.
+
+  This macro inserts the `.template` keyword that a benchmark of dependent type requires. Its
+  parameters are those of @ref TTS_RUN_BENCHMARK.
+
+  @groupheader{Example}
+  @snippet benchmarks/hypot.cpp snippet
+**/
+//======================================================================================================================
 #define TTS_RUN_BENCHMARK_TPL(RUNNER, TYPE, NAME, FUNC, ...)                                       \
   (RUNNER).template run<TYPE>(NAME, FUNC, __VA_ARGS__) /**/
 
 namespace tts::bench
 {
-  inline constexpr std::size_t size       = 1024;
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief The number of values in every buffer drawn by `tts::bench::random` (a multiple of the
+           usual SIMD register widths).
 
-  inline std::uint64_t         prng_state = 0x853c49e6748fea9bULL;
+    @groupheader{Example}
+    @snippet benchmarks/draws.cpp snippet
+  **/
+  //======================================================================================================================
+  inline constexpr std::size_t size = 1024;
 
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief The state of the generator that draws every benchmark buffer.
+
+    Its initial value is a fixed seed, so two executions will time the same values. This generator
+    is independent from the generator used by the test run, so `--seed` and `tts::set_random_seed`
+  do not affect its draws. Assigning a new state changes the values of the following draws.
+
+    @groupheader{Example}
+    @snippet benchmarks/draws.cpp snippet
+  **/
+  //======================================================================================================================
+  inline std::uint64_t prng_state = 0x853c49e6748fea9bULL;
+
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief Draws a value uniformly on [mini, maxi] with the benchmark generator, as
+           `tts::bench::random` does for each element.
+
+    @tparam T   Arithmetic type of the value.
+    @param mini Inclusive lower bound of the drawn range.
+    @param maxi Inclusive upper bound of the drawn range.
+    @return A value of type `T` between `mini` and `maxi`.
+
+    @groupheader{Example}
+    @snippet benchmarks/draws.cpp snippet
+  **/
+  //======================================================================================================================
   // Do not draw from tts::_::prng_state as it stands: the run seeds it from the clock, and two
   // executions would time different values.
   template<typename T> T roll(T mini, T maxi)
@@ -45,6 +196,24 @@ namespace tts::bench
     return value;
   }
 
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief Draws a buffer of `tts::bench::size` values uniformly distributed on [mini, maxi].
+
+    Floating-point values are drawn uniformly, whereas `tts::random_value` draws them
+    log-uniformly.
+
+    @tparam T   Arithmetic type of the values.
+    @param mini Inclusive lower bound of the drawn range.
+    @param maxi Inclusive upper bound of the drawn range.
+    @return A `tts::buffer` holding `tts::bench::size` values of type `T`.
+
+    @groupheader{Example}
+    @snippet benchmarks/draws.cpp snippet
+  **/
+  //======================================================================================================================
   template<typename T>
     requires(std::is_arithmetic_v<T>)
   tts::buffer<T> random(T mini, T maxi)
@@ -55,6 +224,21 @@ namespace tts::bench
     return values;
   }
 
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief Converts every value of a buffer to `U`, so that a row can time the same values in
+           another type.
+
+    @tparam U     Type to which every value is converted.
+    @param values Buffer to convert (not modified).
+    @return A `tts::buffer` holding `U(v)` for every value `v` of `values`.
+
+    @groupheader{Example}
+    @snippet benchmarks/traits.cpp snippet
+  **/
+  //======================================================================================================================
   template<typename U, typename T> tts::buffer<U> convert(tts::buffer<T> const& values)
   {
     tts::buffer<U> out;
@@ -63,20 +247,63 @@ namespace tts::bench
     return out;
   }
 
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief Traits under which a row reads its buffers as drawn and processes a single value per
+           call.
+
+    `tts::bench::basic_benchmark` uses four members of its traits. A library may derive from
+    `default_traits` to replace only the members it needs.
+
+    - `input<Row>(values)` builds the input of a row from a buffer.
+    - `lanes<Row>` is the number of values that a call processes.
+    - `sink(result)` keeps a result from being optimized away.
+    - `environment()` returns a line printed under the table title.
+
+    @groupheader{Example}
+    @snippet benchmarks/traits.cpp snippet
+  **/
+  //======================================================================================================================
   struct default_traits
   {
+    //======================================================================================================================
+    /**
+      @brief Returns `values` unchanged, as the buffer read by a row of type `Row`.
+
+      `values` may be any buffer with `size()` and `operator[]`.
+    **/
+    //======================================================================================================================
     template<typename Row, typename Buffer> static Buffer const& input(Buffer const& values)
     {
       return values;
     }
 
+    //======================================================================================================================
+    /**
+      @brief The number of values that each call processes for a row of type `Row` (1 under the
+             default traits).
+    **/
+    //======================================================================================================================
     template<typename Row> static constexpr std::size_t lanes = 1;
 
-    template<typename Result> static void               sink(Result const& r)
+    //======================================================================================================================
+    /**
+      @brief Keeps a result from being optimized away, with
+             [`ankerl::nanobench::doNotOptimizeAway`](https://nanobench.ankerl.com/reference.html).
+    **/
+    //======================================================================================================================
+    template<typename Result> static void sink(Result const& r)
     {
       ankerl::nanobench::doNotOptimizeAway(r);
     }
 
+    //======================================================================================================================
+    /**
+      @brief Returns an empty text, so no line is printed under the table title.
+    **/
+    //======================================================================================================================
     static tts::text environment()
     {
       return tts::text {};
@@ -111,6 +338,19 @@ namespace tts::bench
   TTS_DISABLE_WARNING_PUSH
   TTS_DISABLE_WARNING_CRT_SECURE
 
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief Times the rows of a table with [nanobench](https://nanobench.ankerl.com) and prints this
+           table when the benchmark goes out of scope.
+
+    @tparam Traits Traits of the rows (`tts::bench::default_traits` if not specified).
+
+    @groupheader{Example}
+    @snippet benchmarks/traits.cpp snippet
+  **/
+  //======================================================================================================================
   template<typename Traits = default_traits> class basic_benchmark
   {
   private:
@@ -164,6 +404,13 @@ namespace tts::bench
     }
 
   public:
+    //======================================================================================================================
+    /**
+      @brief Builds a benchmark whose table is titled `benchmark`.
+
+      @param repetitions Number of epochs for each row (100 if not specified).
+    **/
+    //======================================================================================================================
     explicit basic_benchmark(std::size_t repetitions = 100)
         : repetitions_(repetitions)
         , base_file_name_("benchmark")
@@ -171,6 +418,14 @@ namespace tts::bench
       configure_bench();
     }
 
+    //======================================================================================================================
+    /**
+      @brief Builds a benchmark whose table is titled `name`.
+
+      @param name        Title of the table, also the base name of its CSV file.
+      @param repetitions Number of epochs for each row (100 if not specified).
+    **/
+    //======================================================================================================================
     // Do not drop the constraint: an integer would select this constructor and be taken as a name.
     template<typename Name>
     explicit basic_benchmark(Name const& name, std::size_t repetitions = 100)
@@ -184,11 +439,23 @@ namespace tts::bench
     basic_benchmark(basic_benchmark const&)            = delete;
     basic_benchmark& operator=(basic_benchmark const&) = delete;
 
+    //======================================================================================================================
+    /**
+      @brief Prints the table with `tts::bench::basic_benchmark::report`.
+    **/
+    //======================================================================================================================
     ~basic_benchmark()
     {
       report();
     }
 
+    //======================================================================================================================
+    /**
+      @brief Drops the rows timed so far, so that the destructor prints no table for them.
+
+      @return A reference to the benchmark, to allow chained calls.
+    **/
+    //======================================================================================================================
     basic_benchmark& reset()
     {
       bench_         = ankerl::nanobench::Bench();
@@ -197,6 +464,18 @@ namespace tts::bench
       return *this;
     }
 
+    //======================================================================================================================
+    /**
+      @brief Times a row of type `Row` (the function called by @ref TTS_RUN_BENCHMARK).
+
+      @tparam Row   Type of the row, used by the traits to build its input and to count its
+                    lanes.
+      @param name   Name of the row, as printed in the table.
+      @param func   Function to time, called once per index of the buffers.
+      @param values Buffers holding the arguments for `func`, in parameter order.
+      @return A reference to the benchmark, to allow chained calls.
+    **/
+    //======================================================================================================================
     template<typename Row, typename Name, typename Func, typename... Values>
     basic_benchmark& run(Name const& name, Func&& func, Values const&... values)
     {
@@ -204,6 +483,17 @@ namespace tts::bench
       return *this;
     }
 
+    //======================================================================================================================
+    /**
+      @brief Prints the table of the rows timed so far, and writes the CSV file if `-d` or `--dump`
+             is given.
+
+      The destructor calls this function as well, so a call by hand that is followed by
+      `tts::bench::basic_benchmark::reset` prints the table only once.
+
+      @return A reference to the benchmark, to allow chained calls.
+    **/
+    //======================================================================================================================
     basic_benchmark& report()
     {
       auto const& results = bench_.results();
@@ -350,5 +640,17 @@ namespace tts::bench
 
   TTS_DISABLE_WARNING_POP
 
+  //======================================================================================================================
+  /**
+    @public
+    @ingroup tools-benchmarks
+    @brief A `tts::bench::basic_benchmark` on `tts::bench::default_traits`.
+
+    @groupheader{Example}
+    @snippet benchmarks/hypot.cpp snippet
+  **/
+  //======================================================================================================================
   using benchmark = basic_benchmark<default_traits>;
 }
+
+/// @}

@@ -42,6 +42,7 @@
   `TTS_ULPMAX`          | `--ulpmax=N`
   `TTS_VALMIN`          | `--valmin=N`
   `TTS_VALMAX`          | `--valmax=N`
+  `TTS_DUMP`            | `--dump` / `-d`
 
   # Display Options
 
@@ -126,6 +127,13 @@
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
   `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
   `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
+
+  # Benchmark Parameters
+  This option controls the output of the benchmarks of @ref tools-benchmarks.
+
+  Options          | Description
+  ---------------- | -----------------------------------------------------------------------
+  `-d`, `--dump`   | Write the time per element of every epoch of each benchmark to `<title>.csv` in the working directory. `./my_bench --dump`
 
 **/
 //==================================================================================================

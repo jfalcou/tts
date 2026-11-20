@@ -98,5 +98,30 @@
   add_executable(test_tts ../main.cpp)
   target_link_libraries(test_tts PUBLIC tts::tts)
   @endcode
+
+  @section setup-benchmarks Benchmark utilities
+
+  The CMake option `TTS_BENCHMARKS` is `OFF` by default. When this option is enabled, TTS fetches
+  [nanobench](https://nanobench.ankerl.com) v4.6.0 and defines a `tts::benchmarks` target for the
+  benchmark utilities (see @ref tools-benchmarks), carrying `tts::tts` and the include path of
+  `nanobench.h`. With CPM, the option goes in the `OPTIONS` of `CPMAddPackage`:
+
+  @code{cmake}
+  include(cpm.cmake)
+
+  CPMAddPackage ( NAME tts
+                  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+                  OPTIONS "TTS_BUILD_TEST OFF" "TTS_BENCHMARKS ON"
+                )
+
+  add_executable(my_bench my_bench.cpp)
+  target_link_libraries(my_bench PRIVATE tts::benchmarks)
+  @endcode
+
+  With FetchContent, `set(TTS_BENCHMARKS ON)` must be called before
+  `FetchContent_MakeAvailable(tts)`. An installed TTS provides no `tts::benchmarks` target, so a
+  project using an installation must put `nanobench.h` v4.6.0 on its include path itself. A
+  benchmark cannot be built from the standalone file alone, since `tts/benchmarks.hpp` includes
+  `tts/tts.hpp` and `tts/tools/file.hpp` by path.
 **/
 //==================================================================================================
