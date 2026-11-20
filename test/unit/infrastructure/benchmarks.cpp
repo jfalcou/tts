@@ -7,6 +7,7 @@
 //==================================================================================================
 #define TTS_MAIN
 #include <tts/benchmarks.hpp>
+#include <cstdio>
 #include <cstring>
 
 struct recording_sink : tts::output_sink
@@ -116,4 +117,18 @@ TTS_CASE("Check that the table prints three significant digits")
   TTS_EQUAL(tts::bench::_::digits(24.13), tts::text("24.1"));
   TTS_EQUAL(tts::bench::_::digits(0.0412), tts::text("0.0412"));
   TTS_EQUAL(tts::bench::_::digits(7140.), tts::text("7140"));
+};
+
+TTS_CASE("Check that the CSV quotes a name and doubles its quotes")
+{
+  FILE* file = std::tmpfile();
+  TTS_EXPECT(file != nullptr);
+
+  tts::bench::_::quoted(file, "pow(x, \"3\")");
+  std::rewind(file);
+
+  char read[ 32 ] = {};
+  TTS_EXPECT(std::fgets(read, sizeof(read), file) != nullptr);
+  TTS_EQUAL(tts::text(read), tts::text("\"pow(x, \"\"3\"\")\""));
+  std::fclose(file);
 };

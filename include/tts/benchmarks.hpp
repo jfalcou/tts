@@ -97,6 +97,16 @@ namespace tts::bench
       return tts::text("%.*f", decimals, v);
     }
 
+    inline void quoted(FILE* file, char const* name)
+    {
+      std::fputc('"', file);
+      for(char const* c = name; *c; ++c)
+      {
+        if(*c == '"') std::fputc('"', file);
+        std::fputc(*c, file);
+      }
+      std::fputc('"', file);
+    }
   }
 
   TTS_DISABLE_WARNING_PUSH
@@ -202,6 +212,7 @@ namespace tts::bench
 
       // One CSV column per run and one line per epoch, each time divided by the number of elements
       // of its run.
+      tts::text dump_note;
       if(::tts::arguments()("-d", "--dump"))
       {
         tts::text          filename = base_file_name_ + ".csv";
@@ -212,7 +223,7 @@ namespace tts::bench
           std::size_t epochs = 0;
           for(std::size_t r = 0; r < results.size(); ++r)
           {
-            std::fputs(results[ r ].config().mBenchmarkName.c_str(), out_file.get());
+            _::quoted(out_file.get(), results[ r ].config().mBenchmarkName.c_str());
             std::fputs(r + 1 < results.size() ? "," : "\n", out_file.get());
             epochs = tts::_::max(epochs, results[ r ].size());
           }
@@ -235,11 +246,16 @@ namespace tts::bench
             std::fputs("\n", out_file.get());
           }
         }
+        else
+        {
+          dump_note = tts::text("> Note: %s could not be opened for writing.", filename.data());
+        }
       }
 
       auto& out = tts::output();
       out.writeln("# Benchmarking for : `%s`", base_file_name_.data());
       if(tts::text const env = Traits::environment(); !env.is_empty()) out.writeln(env);
+      if(!dump_note.is_empty()) out.writeln(dump_note);
       out.writeln();
 
       std::size_t name_width = 4;
