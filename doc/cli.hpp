@@ -126,8 +126,8 @@
   `--scope=N`  | Set to `N` the scope of every range check whose generators are all tts::sweep, in place of the scope given in the code. Such a check runs every value or combination up to `N`, and `N` sampled calls above. `N` is a decimal integer, 16777216 by default. `./my_test --scope=4294967296`
   `--loop=N`   | Repeat each range checks `N` times. `./my_test --loop=100`
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
-  `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
-  `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
+  `--valmin=N` | Set to `N` the lowest value of tts::sweep and tts::randoms in every range check. `./my_test --valmin=-100`
+  `--valmax=N` | Set to `N` the highest value of tts::sweep and tts::randoms in every range check. `./my_test --valmax=1000`
 
 **/
 //==================================================================================================

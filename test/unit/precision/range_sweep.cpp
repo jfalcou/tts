@@ -311,3 +311,54 @@ TTS_CASE("tts::sweep(n) and tts::sweep(lo, hi, n) set the scope of their check")
   TTS_ULP_RANGE_CHECK(tts::sweep(1.f, 4.f, 4096), float, float, ref, same, 0.);
   TTS_EQUAL(count, std::size_t {4096});
 };
+
+// A check reads --valmin and --valmax when it starts, so a case can set them for its checks.
+TTS_CASE("--valmin and --valmax replace the bounds of tts::sweep")
+{
+  std::vector<int> values;
+
+  auto             ref = [ &values ](std::int16_t x)
+  {
+    values.push_back(x);
+    return x;
+  };
+  auto                       same  = [](std::int16_t x) { return x; };
+
+  auto                       saved = ::tts::_::current_arguments;
+  std::array<char const*, 3> argv {"range_sweep", "--valmin=-3", "--valmax=5"};
+  ::tts::_::current_arguments = ::tts::options {3, argv.data()};
+
+  TTS_ULP_RANGE_CHECK(tts::sweep, std::int16_t, std::int16_t, ref, same, 0.);
+  auto whole = values;
+
+  values.clear();
+  TTS_ULP_RANGE_CHECK(tts::sweep(0, 100), std::int16_t, std::int16_t, ref, same, 0.);
+
+  ::tts::_::current_arguments = saved;
+
+  std::vector<int> expected {-3, -2, -1, 0, 1, 2, 3, 4, 5};
+  TTS_EXPECT(whole == expected);
+  TTS_EXPECT(values == expected);
+};
+
+TTS_CASE("--valmin and --valmax replace the bounds of tts::randoms")
+{
+  std::size_t outside = 0;
+
+  auto        ref     = [ &outside ](float x)
+  {
+    outside += (x < 1.f || x > 2.f) ? 1 : 0;
+    return x;
+  };
+  auto                       same  = [](float x) { return x; };
+
+  auto                       saved = ::tts::_::current_arguments;
+  std::array<char const*, 3> argv {"range_sweep", "--valmin=1", "--valmax=2"};
+  ::tts::_::current_arguments = ::tts::options {3, argv.data()};
+
+  TTS_ULP_RANGE_CHECK(tts::randoms(-1000.f, 1000.f), float, float, ref, same, 0.);
+
+  ::tts::_::current_arguments = saved;
+
+  TTS_EQUAL(outside, std::size_t {0});
+};

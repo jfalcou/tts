@@ -17,6 +17,7 @@ Change Log {#changelog}
 ### Bug Fixes
   * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)
   * `tts::random_value` keeps a floating-point value within its bounds, which the rounding of its log-uniform draw could overstep (https://github.com/jfalcou/tts/pull/279)
+  * `--valmin` and `--valmax` set the lowest and the highest value of `tts::sweep` and `tts::randoms` in range checks, as they did before 3.0 (https://github.com/jfalcou/tts/pull/279)
 
 # Version 4.1
 

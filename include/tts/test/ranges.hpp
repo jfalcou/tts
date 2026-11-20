@@ -296,6 +296,45 @@ namespace tts
       return get<(sizeof...(Gs) == 1 ? 0 : K)>(generators);
     }
 
+    template<typename G> inline constexpr bool is_bounded_sweep                   = false;
+    template<typename T> inline constexpr bool is_bounded_sweep<bounded_sweep<T>> = true;
+
+    // Read --valmin and --valmax once per check, never in a generator, which runs once per value.
+    struct option_bounds
+    {
+      template<typename T> static T low(T v)
+      {
+        return ::tts::arguments().value(v, "--valmin");
+      }
+
+      template<typename T> static T high(T v)
+      {
+        return ::tts::arguments().value(v, "--valmax");
+      }
+
+      template<typename A, typename G> static auto apply(type<A> t, G const& g)
+      {
+        if constexpr(std::is_same_v<G, whole_sweep>)
+        {
+          using e_t = enumeration<A>;
+          return bounded_sweep<A> {low(e_t::value(0)), high(e_t::value(e_t::last)), g.scope};
+        }
+        else if constexpr(is_bounded_sweep<G>)
+          return bounded_sweep<A> {
+          low(::tts::convert_as(g.lo, t)), high(::tts::convert_as(g.hi, t)), g.scope};
+        else if constexpr(is_randoms_v<G>)
+          return randoms<A, A> {low(::tts::convert_as(g.mini, t)),
+                                high(::tts::convert_as(g.maxi, t))};
+        else return g;
+      }
+    };
+
+    template<typename... As, std::size_t... Ks, typename... Gs>
+    auto with_option_bounds(types<As...>, std::index_sequence<Ks...>, pack<Gs...> const& generators)
+    {
+      return pack {option_bounds::apply(type<As> {}, generator_of<Ks>(generators))...};
+    }
+
     // Returns the number of calls. A side of 0 marks an argument drawn rather than on a grid.
     template<typename... As, std::size_t... Ks, typename... Gs>
     std::size_t layout_of(types<As...>,
@@ -458,9 +497,11 @@ namespace tts
                     "[TTS] TTS_ULP_RANGE_CHECK needs one bound per member of the result, or one "
                     "for all.");
 
+      auto bounded =
+      with_option_bounds(types<As...> {}, std::index_sequence_for<As...> {}, generators);
       std::size_t sides[ sizeof...(As) ]; // NOSONAR - <array> costs compile time
       std::size_t calls =
-      layout_of(types<As...> {}, std::index_sequence_for<As...> {}, generators, sides);
+      layout_of(types<As...> {}, std::index_sequence_for<As...> {}, bounded, sides);
       std::size_t         count = (calls + group_size - 1) / group_size * group_size;
 
       pack<buffer<As>...> group {buffer<As>(group_size)...};
@@ -469,7 +510,7 @@ namespace tts
 
       for(std::size_t i = 0; i < count; i += group_size)
       {
-        fill_group(group, generators, sides, i, count);
+        fill_group(group, bounded, sides, i, count);
 
         for(std::size_t r = 0; r < repetition; ++r)
         {
@@ -579,6 +620,9 @@ namespace tts
   When every generator is tts::sweep, the scope of the check replaces `--block`, as tts::sweep
   describes. Memory does not grow with the number of calls, so `--scope=4294967296` checks each
   float but NaN once.
+
+  `--valmin` and `--valmax` replace the lowest and the highest value of tts::sweep and
+  tts::randoms, for every argument of every check of the run.
 
   `RefFunc` returns the element type of the result of `NewFunc`, or the check does not compile. A
   reference computed in `double` for a function of `float` casts its result to `float`.
