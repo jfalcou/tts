@@ -23,7 +23,7 @@ struct recording_sink : tts::output_sink
 
   bool holds(char const* s) const
   {
-    return std::strstr(all.data(), s) != nullptr;
+    return std::strstr(all.data(), s) != nullptr; // NOSONAR - C++23 on a C++20 project
   }
 };
 
@@ -42,6 +42,9 @@ struct scoped_env
 #endif
   }
 
+  scoped_env(scoped_env const&)            = delete;
+  scoped_env& operator=(scoped_env const&) = delete;
+
   ~scoped_env()
   {
 #if defined(_WIN32)
@@ -55,7 +58,7 @@ struct scoped_env
 // Reads every buffer with four lanes, and names the machine.
 struct four_lanes : tts::bench::default_traits
 {
-  template<typename Row> static constexpr std::size_t lanes = 4;
+  template<typename Row> static constexpr std::size_t lanes = 4; // NOSONAR - traits hide by design
 
   static tts::text                                    environment()
   {
@@ -72,7 +75,8 @@ TTS_CASE("Check that tts::bench::random draws in its range, the same values from
 
   TTS_EQUAL(first.size(), tts::bench::size);
 
-  bool in_range = true, same = true;
+  bool in_range = true;
+  bool same     = true;
   for(std::size_t i = 0; i < first.size(); ++i)
   {
     in_range = in_range && first[ i ] >= -20 && first[ i ] <= 20;
@@ -167,10 +171,10 @@ TTS_CASE("Check that a benchmark reads the lanes and the machine from its traits
 
 TTS_CASE("Check that a benchmark reads a std::vector under the default traits")
 {
-  std::vector<int> x(tts::bench::size, 3);
-  auto             twice = [](int v) { return 2 * v; };
+  std::vector    x(tts::bench::size, 3);
+  auto           twice = [](int v) { return 2 * v; };
 
-  recording_sink   sink;
+  recording_sink sink;
   {
     tts::scoped_sink      scope(sink);
     tts::bench::benchmark b("vector", 3);
@@ -196,9 +200,9 @@ TTS_CASE("Check that the CSV quotes a name and doubles its quotes")
   tts::bench::_::quoted(file, "pow(x, \"3\")");
   std::rewind(file);
 
-  char read[ 32 ] = {};
-  TTS_EXPECT(std::fgets(read, sizeof(read), file) != nullptr);
-  TTS_EQUAL(tts::text(read), tts::text("\"pow(x, \"\"3\"\")\""));
+  tts::buffer<char> read(32, '\0');
+  TTS_EXPECT(std::fgets(read.data(), static_cast<int>(read.size()), file) != nullptr);
+  TTS_EQUAL(tts::text(read.data()), tts::text("\"pow(x, \"\"3\"\")\""));
   std::fclose(file);
 };
 

@@ -12,7 +12,8 @@
 
 struct interval
 {
-  double lo, hi;
+  double lo;
+  double hi;
 };
 
 TTS_CASE("Draw a buffer of intervals, and the same values from the same seed")
