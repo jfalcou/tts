@@ -94,6 +94,17 @@ copa_make_single_unit(
   ROOT ${TEST_ROOT}
   NAME unit.generator.cpp)
 
+find_package(OpenMP COMPONENTS CXX)
+if(OpenMP_CXX_FOUND)
+  copa_make_single_unit(
+    INTERFACE tts_test
+    DEPENDENCIES unit.infrastructure.exe
+    FILES unit/threads/threads.cpp
+    ROOT ${TEST_ROOT}
+    NAME unit.threads.cpp)
+  target_link_libraries(unit.threads.exe PRIVATE OpenMP::OpenMP_CXX)
+endif()
+
 ##======================================================================================================================
 ## Test for TTS driver, options and sinks - one executable per file as each installs its own driver
 ##======================================================================================================================
