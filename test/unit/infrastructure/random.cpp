@@ -214,8 +214,9 @@ TTS_CASE_TPL("Check random values stay within ranges one step wide", float, doub
 <typename T>(tts::type<T>)
 {
   std::size_t outside = 0;
+  T           a       = T(1);
 
-  for(T a = T(1); a < T(1000); a = std::nextafter(a * T(1.37), T(2000)))
+  for(int step = 0; step < 22; ++step)
   {
     T b = std::nextafter(a, T(2000));
     for(int k = 0; k < 1000; ++k)
@@ -225,6 +226,7 @@ TTS_CASE_TPL("Check random values stay within ranges one step wide", float, doub
       outside += (v < a || v > b) ? 1 : 0;
       outside += (w < -b || w > -a) ? 1 : 0;
     }
+    a = std::nextafter(a * T(1.37), T(2000));
   }
 
   TTS_EQUAL(outside, std::size_t {0});
