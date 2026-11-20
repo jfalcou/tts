@@ -15,6 +15,7 @@ namespace tts
     struct primary_adapter
     {
     };
+
   }
 
   //====================================================================================================================
@@ -231,6 +232,32 @@ namespace tts
         nb_ulps += group_size;
       }
 
+      // Adds the histogram of the next slice of the calls, whose samples come after this one's.
+      void merge(member_scan const& next)
+      {
+        for(std::size_t b = 0; b < nb_buckets; ++b)
+        {
+          if(counts[ b ] == 0 && next.counts[ b ] != 0)
+            take_sample(b, next, std::index_sequence_for<As...> {});
+          counts[ b ] += next.counts[ b ];
+        }
+        nb_ulps += next.nb_ulps;
+        max_ulp  = _::max(max_ulp, next.max_ulp);
+      }
+
+      template<std::size_t... Ks>
+      void take_sample(std::size_t b, member_scan const& next, std::index_sequence<Ks...>)
+      {
+        std::size_t group_size = expected.size();
+        marks[ b ]             = next.marks[ b ];
+        for(std::size_t k = b * group_size; k < (b + 1) * group_size; ++k)
+        {
+          first_expected[ k ] = next.first_expected[ k ];
+          first_found[ k ]    = next.first_found[ k ];
+          ((get<Ks>(inputs)[ k ] = get<Ks>(next.inputs)[ k ]), ...);
+        }
+      }
+
       void print() const
       {
         ::tts::output().writeln(
@@ -296,6 +323,15 @@ namespace tts
       return get<(sizeof...(Gs) == 1 ? 0 : K)>(generators);
     }
 
+    // Whether every argument comes from a generator over tts::enumeration, given its pack.
+    template<typename P, typename... As, std::size_t... Ks>
+    constexpr bool all_enumerated(std::index_sequence<Ks...>)
+    {
+      return (
+      enumerated<std::remove_cvref_t<decltype(generator_of<Ks>(std::declval<P const&>()))>, As> &&
+      ...);
+    }
+
     template<typename G> inline constexpr bool is_bounded_sweep                   = false;
     template<typename T> inline constexpr bool is_bounded_sweep<bounded_sweep<T>> = true;
 
@@ -343,8 +379,7 @@ namespace tts
                           std::size_t*       sides)
     {
       constexpr std::size_t arity = sizeof...(As);
-      if constexpr((enumerated<std::remove_cvref_t<decltype(generator_of<Ks>(generators))>, As> &&
-                    ...))
+      if constexpr(all_enumerated<pack<Gs...>, As...>(std::index_sequence<Ks...> {}))
       {
         // The largest scope given to a tts::sweep of the check, which --scope still replaces.
         std::size_t wanted = 0;
@@ -502,36 +537,80 @@ namespace tts
       std::size_t sides[ sizeof...(As) ]; // NOSONAR - <array> costs compile time
       std::size_t calls =
       layout_of(types<As...> {}, std::index_sequence_for<As...> {}, bounded, sides);
-      std::size_t         count = (calls + group_size - 1) / group_size * group_size;
+      std::size_t count      = (calls + group_size - 1) / group_size * group_size;
 
-      pack<buffer<As>...> group {buffer<As>(group_size)...};
-      auto                results    = make_scans(ref_members {}, types<As...> {}, group_size);
-      std::size_t         repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+      std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+      std::size_t groups     = count / group_size;
 
-      for(std::size_t i = 0; i < count; i += group_size)
+      using scans            = decltype(make_scans(ref_members {}, types<As...> {}, group_size));
+      auto scan              = [ &reference, &challenger, &bounded, &sides, count, repetition ](
+                               std::size_t first, std::size_t last)
       {
-        fill_group(group, bounded, sides, i, count);
+        // Do not scan into partial[u]: the histograms of neighboring slices share cache lines.
+        scans               results = make_scans(ref_members {}, types<As...> {}, group_size);
+        pack<buffer<As>...> group {buffer<As>(group_size)...};
 
-        for(std::size_t r = 0; r < repetition; ++r)
+        for(std::size_t i = first; i < last; i += group_size)
         {
-          for(std::size_t e = 0; e < group_size; ++e)
+          fill_group(group, bounded, sides, i, count);
+
+          for(std::size_t r = 0; r < repetition; ++r)
           {
-            auto res = call_reference(reference, group, e);
-            for_each_member(
-            results, [ &res, e ](auto& m, auto j) { m.expected[ e ] = result_member<j>(res); });
+            for(std::size_t e = 0; e < group_size; ++e)
+            {
+              auto res = call_reference(reference, group, e);
+              for_each_member(
+              results, [ &res, e ](auto& m, auto j) { m.expected[ e ] = result_member<j>(res); });
+            }
+
+            auto res = call_challenger(types<Ws...> {}, challenger, group);
+            for_each_member(results,
+                            [ &res ](auto& m, auto j)
+                            {
+                              auto const& v = result_member<j>(res);
+                              adapter<std::decay_t<decltype(v)>>::store(v, m.found.data());
+                            });
+
+            for_each_member(results, [ &group ](auto& m, auto) { m.tally(group); });
           }
-
-          auto res = call_challenger(types<Ws...> {}, challenger, group);
-          for_each_member(results,
-                          [ &res ](auto& m, auto j)
-                          {
-                            auto const& v = result_member<j>(res);
-                            adapter<std::decay_t<decltype(v)>>::store(v, m.found.data());
-                          });
-
-          for_each_member(results, [ &group ](auto& m, auto) { m.tally(group); });
         }
+
+        return results;
+      };
+
+#if defined(_OPENMP)
+      // Only a sweep builds each value from its index alone. Any other generator, a random one above
+      // all, gives values that depend on the thread calling it, so its check keeps one thread.
+      constexpr bool swept =
+      all_enumerated<decltype(bounded), As...>(std::index_sequence_for<As...> {});
+      std::size_t cores =
+      ::tts::arguments().value(static_cast<std::size_t>(omp_get_max_threads()), "--cores");
+      int threads = swept && cores > 1 ? static_cast<int>(cores) : 1;
+
+      // Several slices per thread even out the slices whose values cost more.
+      std::size_t slices = threads == 1 ? 1 : _::min(groups, std::size_t {16} * cores);
+#else
+      std::size_t slices = 1;
+#endif
+
+      // Each slice keeps its own histograms, merged in the order of the calls, so that the report
+      // does not depend on the number of threads.
+      buffer<scans> partial(slices, make_scans(ref_members {}, types<As...> {}, group_size));
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(dynamic) num_threads(threads)
+#endif
+      for(int s = 0; s < static_cast<int>(slices); ++s)
+      {
+        auto u = static_cast<std::size_t>(s);
+        partial[ u ] =
+        scan((groups / slices * u + _::min(u, groups % slices)) * group_size,
+             (groups / slices * (u + 1) + _::min(u + 1, groups % slices)) * group_size);
       }
+
+      scans& results = partial[ 0 ];
+      for(std::size_t s = 1; s < slices; ++s)
+        for_each_member(results,
+                        [ &next = partial[ s ] ](auto& m, auto j) { m.merge(get<j()>(next)); });
 
       std::size_t failed  = members;
       double      limit   = 0.;
@@ -623,6 +702,11 @@ namespace tts
 
   `--valmin` and `--valmax` replace the lowest and the highest value of tts::sweep and
   tts::randoms, for every argument of every check of the run.
+
+  Compiled with OpenMP, a check whose generators are all tts::sweep splits its calls between
+  `--cores` threads, or the default number of OpenMP threads without it. `RefFunc` and `NewFunc`
+  are then called from several threads at once, and the report does not depend on the number of
+  threads.
 
   `RefFunc` returns the element type of the result of `NewFunc`, or the check does not compile. A
   reference computed in `double` for a function of `float` casts its result to `float`.

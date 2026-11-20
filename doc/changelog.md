@@ -13,6 +13,7 @@ Change Log {#changelog}
   * Added `tts::enumeration<T>` to enumerate the values of a type for `tts::sweep` (https://github.com/jfalcou/tts/pull/279)
   * Added `tts::sweep(n)` and `tts::sweep(lo, hi, n)` to give one range check its own scope of `n` calls (https://github.com/jfalcou/tts/pull/279)
   * Range checks no longer keep all their inputs and results in memory (https://github.com/jfalcou/tts/pull/279)
+  * Range checks over `tts::sweep` compiled with OpenMP split their calls between `--cores` threads (https://github.com/jfalcou/tts/pull/279)
 
 ### Bug Fixes
   * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)

@@ -313,6 +313,7 @@ TTS_CASE("tts::sweep(n) and tts::sweep(lo, hi, n) set the scope of their check")
 };
 
 // A check reads --valmin and --valmax when it starts, so a case can set them for its checks.
+// --cores=1 keeps the reference on one thread under OpenMP, since it records its calls.
 TTS_CASE("--valmin and --valmax replace the bounds of tts::sweep")
 {
   std::vector<int> values;
@@ -325,8 +326,8 @@ TTS_CASE("--valmin and --valmax replace the bounds of tts::sweep")
   auto                       same  = [](std::int16_t x) { return x; };
 
   auto                       saved = ::tts::_::current_arguments;
-  std::array<char const*, 3> argv {"range_sweep", "--valmin=-3", "--valmax=5"};
-  ::tts::_::current_arguments = ::tts::options {3, argv.data()};
+  std::array<char const*, 4> argv {"range_sweep", "--valmin=-3", "--valmax=5", "--cores=1"};
+  ::tts::_::current_arguments = ::tts::options {4, argv.data()};
 
   TTS_ULP_RANGE_CHECK(tts::sweep, std::int16_t, std::int16_t, ref, same, 0.);
   auto whole = values;
