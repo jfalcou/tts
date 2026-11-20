@@ -285,16 +285,16 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CASE
-  @brief Introduces a new test scenario and registers it into the current test driver.
+  @brief Defines a test case and registers it with the test driver.
 
-  The code block following TTS_CASE contains user-defined code for a given test case.
-  Test cases performing no actual tests will be reported as invalid.
+  The block after the macro is the body of the case. A case that runs no check is reported as
+  invalid.
 
   The case runs in @ref tts::runtime when its title names no context. A title wrapped by
-  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs in, and
-  @ref TTS_CASE_IN names any list of them.
+  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs in, and @ref TTS_CASE_IN
+  names any list of them.
 
-  @param ID A literal string describing the scenario intents, or a wrapped title.
+  @param ID Title of the case, or a title wrapped by a tag.
 
   @groupheader{Example}
   @snippet doc/case.cpp snippet
@@ -319,13 +319,12 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CONTEXT
-  @brief Parameter list of a case body run in a named context.
+  @brief Declares the parameter of a @ref TTS_CASE_TPL body run in a named context.
 
-  Wraps the parameter a @ref TTS_CASE_TPL body declares, its type, and declares the context in
-  front of it. A @ref TTS_CASE body run in a named context declares no parameter, and its macro
-  writes the context itself.
+  Wraps the parameter that declares the type, `TTS_CONTEXT(tts::type<T>)`, and adds the context in
+  front of it. A @ref TTS_CASE body declares no parameter, and needs no wrapper.
 
-  @param ... The parameters the body declares.
+  @param ... The parameter the body declares.
 
   @groupheader{Example}
   @snippet doc/context.cpp snippet
@@ -340,23 +339,24 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CASE_IN
-  @brief Introduces a test scenario run in the contexts given, and registers it into the current
-  test driver.
+  @brief Defines a test case run in each of the given contexts, and registers it with the test
+  driver.
 
-  The code block following TTS_CASE_IN contains user-defined code for a given test case, as
-  for @ref TTS_CASE, and runs once per context, in the order given: @ref tts::runtime,
-  @ref tts::constant, or both. @ref TTS_CONSTEXPR and @ref TTS_CONSTEVAL on the title of a
-  @ref TTS_CASE name the two usual lists.
+  The contexts follow the title, among @ref tts::runtime and @ref tts::constant. The body runs once
+  in each, in the order they are given.
 
-  @param ID  A literal string describing the scenario intents, or a title wrapped by
-  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+  A @ref TTS_CASE whose title is wrapped by @ref TTS_CONSTEXPR runs in both contexts, and one
+  wrapped by @ref TTS_CONSTEVAL in @ref tts::constant alone.
+
+  @param ID  Title of the case, or a title wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,
+             @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
   @param ... The contexts.
-
-  @see TTS_CONSTEXPR
-  @see TTS_CONSTEVAL
 
   @groupheader{Example}
   @snippet doc/case_in.cpp snippet
+
+  @see TTS_CONSTEXPR
+  @see TTS_CONSTEVAL
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -368,27 +368,29 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CASE_TPL_IN
-  @brief Introduces a template test case run in the contexts given, and registers it into the
-  current test driver.
+  @brief Defines a test case run for each type of a list, in each of the given contexts, and
+  registers it with the test driver.
 
-  The code block following TTS_CASE_TPL_IN contains user-defined code for a given test case, as
-  for @ref TTS_CASE_TPL, with the types list in parentheses, and runs once per context for each
-  type, in the order given: @ref tts::runtime, @ref tts::constant, or both. The body declares
-  its type through @ref TTS_CONTEXT "TTS_CONTEXT": `<typename T>(TTS_CONTEXT(tts::type<T>))`.
-  @ref TTS_CONSTEXPR and @ref TTS_CONSTEVAL on the title of a @ref TTS_CASE_TPL name the two
-  usual lists.
+  The types follow the title, between parentheses, in any form @ref TTS_CASE_TPL accepts. The
+  contexts come last, among @ref tts::runtime and @ref tts::constant. For each type, the body runs
+  once in each context, in the order they are given.
 
-  @param ID    A literal string describing the scenario intents, or a title wrapped by
-  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
-  @param TYPES A parenthesized list of types to generate the test case from, as
-  @ref TTS_CASE_TPL accepts it.
+  The body declares its type with @ref TTS_CONTEXT "TTS_CONTEXT", as in
+  `<typename T>(TTS_CONTEXT(tts::type<T>))`.
+
+  A @ref TTS_CASE_TPL whose title is wrapped by @ref TTS_CONSTEXPR runs in both contexts, and one
+  wrapped by @ref TTS_CONSTEVAL in @ref tts::constant alone.
+
+  @param ID    Title of the case, or a title wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,
+               @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+  @param TYPES Types to run the case for, between parentheses.
   @param ...   The contexts.
-
-  @see TTS_CASE_IN
-  @see TTS_CONTEXT
 
   @groupheader{Example}
   @snippet doc/case_in.cpp snippet
+
+  @see TTS_CASE_IN
+  @see TTS_CONTEXT
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -400,26 +402,25 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR
-  @brief Runs a case as ordinary code and in constant evaluation.
+  @brief Runs a test case as ordinary code and in constant evaluation.
 
-  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL, as @ref TTS_XFAIL does, and names
-  the contexts @ref tts::runtime and @ref tts::constant. The body runs as ordinary code,
-  then as a constant expression, and both runs count and report their checks. A `constexpr`
-  function is callable in both contexts, which is what the wrapper tests of the code it calls.
+  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL and names the contexts @ref tts::runtime
+  and @ref tts::constant. The body runs as ordinary code, then as a constant expression, and the
+  checks of both runs are counted and reported.
 
-  The body is written with the ordinary checks. In constant evaluation, a failure is reported
-  with its expression, its position, and the values the check compares at run time. A body that
-  calls a function the language refuses in a constant expression does not compile.
+  The body uses the ordinary checks. In constant evaluation, a failure is reported with its
+  expression, its position, and the values the check compares at run time. A body that calls a
+  function the language refuses in a constant expression does not compile.
 
-  @param ID A literal string describing the scenario intents, or a title already wrapped by
-  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+  @param ID Title of the case, or a title already wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,
+            @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+
+  @groupheader{Example}
+  @snippet doc/constexpr.cpp snippet
 
   @see TTS_CONSTEVAL
   @see TTS_CONTEXT
   @see tts::constant
-
-  @groupheader{Example}
-  @snippet doc/constexpr.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -431,23 +432,22 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CONSTEVAL
-  @brief Runs a case in constant evaluation alone.
+  @brief Runs a test case in constant evaluation alone.
 
-  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL, as @ref TTS_XFAIL does, and names
-  the context @ref tts::constant. The body runs as a constant expression, and its checks
-  are reported after the evaluation, each failure with its expression and its position. A
-  `consteval` function is callable in that context alone, which is what the wrapper tests of the
-  code it calls.
+  Wraps the title of a @ref TTS_CASE or a @ref TTS_CASE_TPL and names the context
+  @ref tts::constant. The body runs as a constant expression, and its checks are reported after the
+  evaluation, each failure with its expression and its position. A body that calls a `consteval`
+  function needs this tag, since such a function is callable in constant evaluation alone.
 
-  @param ID A literal string describing the scenario intents, or a title already wrapped by
-  @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+  @param ID Title of the case, or a title already wrapped by @ref TTS_XFAIL, @ref TTS_MAYFAIL,
+            @ref TTS_XINVALID, or @ref TTS_TIMEOUT.
+
+  @groupheader{Example}
+  @snippet doc/consteval.cpp snippet
 
   @see TTS_CONSTEXPR
   @see TTS_CONTEXT
   @see tts::constant
-
-  @groupheader{Example}
-  @snippet doc/consteval.cpp snippet
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -459,26 +459,23 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CASE_TPL
-  @brief Introduces a template test case  and registers it into the current test driver.
+  @brief Defines a test case run for each type of a list, and registers it with the test driver.
 
-  The code block following TTS_CASE contains user-defined code for a given test case.
-  Those tests are parametrized by a template type of your choice passed as lambda function
-  parameters of the template type `tts::type` and instantiated for each type in the types list.
+  The block after the macro is a generic lambda, `<typename T>(tts::type<T>) { ... }`, run once per
+  type. The types are given as:
 
-  Such types list can be provided as:
-  + a variadic list of types separated by commas
-  + an instance of the tts::types template class
-  + an instance of a Type Generator, ie a type exposing a public `types_list` type definition
+  - types separated by commas,
+  - a tts::types list,
+  - a type whose public member type `types_list` is the list.
 
-  Test cases performing no actual tests will be reported as invalid.
+  A case that runs no check is reported as invalid.
 
-  A title wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts the case runs
-  in, for each type in turn, @ref TTS_CASE_TPL_IN names any list of them, and the body then
-  declares its type through
-  @ref TTS_CONTEXT "TTS_CONTEXT": `<typename T>(TTS_CONTEXT(tts::type<T>))`.
+  A title wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL names the contexts each type runs in,
+  and @ref TTS_CASE_TPL_IN names any list of them. The body then declares its type through
+  @ref TTS_CONTEXT "TTS_CONTEXT", as in `<typename T>(TTS_CONTEXT(tts::type<T>))`.
 
-  @param ID   A literal string describing the scenario intents, or a wrapped title.
-  @param ...  Lists of types to generate the test case from.
+  @param ID  Title of the case, or a title wrapped by a tag.
+  @param ... Types to run the case for.
 
   @groupheader{Example}
   @snippet doc/case_tpl.cpp snippet
@@ -501,24 +498,25 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CASE_WITH
-  @brief Introduces a template test case providing dynamically generated data to the test code.
+  @brief Defines a test case run for each type of a list on generated values, and registers it with
+  the test driver.
 
-  The following code block will contain tests parametrized by a template type of your choice passed
-  as lambda function parameters and generated for each type in the types list.
+  The block after the macro is a generic lambda with one argument per generator. The lambda runs
+  once per type of the list, each generator building its argument for that type. The types are given
+  as:
 
-  Such types list can be provided as:
-    + a parenthesised list of types separated by comma.
-    + an instance of the tts::types template class.
-    + an instance of a Type Generator, ie a type exposing a public `types_list` type definition
+  - types separated by commas, between parentheses,
+  - a tts::types list,
+  - a type whose public member type `types_list` is the list.
 
-  Test cases performing no actual tests will be reported as invalid.
+  A case that runs no check is reported as invalid.
 
-  A generated case runs at run time alone, where its generators produce its values: a title
-  wrapped by @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL is refused.
+  The case runs at run time alone, where its generators produce their values, so a title wrapped by
+  @ref TTS_CONSTEXPR or @ref TTS_CONSTEVAL does not compile.
 
-  @param ID         A literal string describing the scenario intents.
-  @param TYPES      Lists of types to generate the test case from.
-  @param ...        Lists of generator function
+  @param ID    Title of the case, a string literal.
+  @param TYPES Types to run the case for.
+  @param ...   Generators, one per argument of the body.
 
   @groupheader{Example}
   @snippet doc/case_with.cpp snippet
@@ -542,26 +540,23 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_XFAIL
-  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as expected to fail.
+  @brief Marks a test case as expected to fail.
 
-  Wraps the case's ID instead of changing the enclosing macro's signature, so it composes with
-  @ref TTS_CASE, @ref TTS_CASE_TPL and @ref TTS_CASE_WITH unchanged: `TTS_CASE(TTS_XFAIL("..."))`.
+  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH, as in
+  `TTS_CASE(TTS_XFAIL("..."))`. Nests with @ref TTS_TIMEOUT, @ref TTS_CONSTEXPR, and
+  @ref TTS_CONSTEVAL in either order.
 
-  The case is expected to produce at least one failing assertion. If it runs with no failures
-  instead, that mismatch is reported and fails the suite - matching the "X = expected" naming
-  convention already used by other test frameworks (pytest's `xfail`, DejaGnu, Perl's
-  `Test::More`), so it reads the same way to anyone coming from one of those.
+  The case passes when at least one of its checks fails, and fails when every check passes.
 
-  An empty case (no assertion ran at all) does not satisfy `TTS_XFAIL` either - use
-  @ref TTS_XINVALID for that.
+  A case that runs no check fails too. @ref TTS_XINVALID marks a case expected to run none.
 
-  @param ID A literal string describing the scenario intents.
-
-  @see TTS_MAYFAIL
-  @see TTS_XINVALID
+  @param ID Title of the case, a string literal.
 
   @groupheader{Example}
   @snippet doc/xfail.cpp snippet
+
+  @see TTS_MAYFAIL
+  @see TTS_XINVALID
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -580,22 +575,23 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_MAYFAIL
-  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as allowed to fail.
+  @brief Marks a test case as allowed to fail.
 
-  Unlike @ref TTS_XFAIL, nothing specific is expected: the case may pass or fail, either is
-  accepted and neither is reported. Useful for flagging a work-in-progress or a known issue
-  that shouldn't block the suite without pretending to require a specific outcome.
+  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH. Nests with
+  @ref TTS_TIMEOUT, @ref TTS_CONSTEXPR, and @ref TTS_CONSTEVAL in either order.
 
-  An empty case is still reported, exactly as for an untagged @ref TTS_CASE - `TTS_MAYFAIL`
-  only relaxes the pass/fail expectation, not the "did anything actually run" one.
+  The case is accepted whether its checks pass or fail, and neither outcome is reported as a
+  failure.
 
-  @param ID A literal string describing the scenario intents.
+  A case that runs no check is still reported as invalid, as for a case without the tag.
 
-  @see TTS_XFAIL
-  @see TTS_XINVALID
+  @param ID Title of the case, a string literal.
 
   @groupheader{Example}
   @snippet doc/mayfail.cpp snippet
+
+  @see TTS_XFAIL
+  @see TTS_XINVALID
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -607,19 +603,20 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_XINVALID
-  @brief Tags a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) ID as expected to be
-empty.
+  @brief Marks a test case as expected to run no check.
 
-  The case is expected to register no assertion at all. If it runs any assertion instead
-  (passing or failing), that mismatch is reported and fails the suite.
+  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH. Nests with
+  @ref TTS_TIMEOUT, @ref TTS_CONSTEXPR, and @ref TTS_CONSTEVAL in either order.
 
-  @param ID A literal string describing the scenario intents.
+  The case fails when it runs any check, passing or failing.
 
-  @see TTS_XFAIL
-  @see TTS_MAYFAIL
+  @param ID Title of the case, a string literal.
 
   @groupheader{Example}
   @snippet doc/xinvalid.cpp snippet
+
+  @see TTS_XFAIL
+  @see TTS_MAYFAIL
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -631,19 +628,22 @@ empty.
 //======================================================================================================================
 /**
   @def TTS_TIMEOUT
-  @brief Gives a @ref TTS_CASE (or @ref TTS_CASE_TPL / @ref TTS_CASE_WITH) a deadline of its own.
+  @brief Gives a test case a deadline of its own.
 
-  The case is killed once it has been running for MS milliseconds, and the run ends there. `0`
-  removes the deadline `--timeout` set for that one case. Wrapping the ID is how the tag travels,
-  so it nests with @ref TTS_XFAIL in either order.
+  Wraps the title of a @ref TTS_CASE, a @ref TTS_CASE_TPL, or a @ref TTS_CASE_WITH. Kills the case
+  once it has run for `MS` milliseconds, and ends the run there. `0` removes, for that case, the
+  deadline `--timeout` sets.
+
+  Nests with @ref TTS_XFAIL, @ref TTS_MAYFAIL, @ref TTS_XINVALID, @ref TTS_CONSTEXPR, and
+  @ref TTS_CONSTEVAL in either order.
 
   @param MS Deadline in milliseconds.
-  @param ID A literal string describing the scenario intents.
-
-  @see TTS_XFAIL
+  @param ID Title of the case, a string literal.
 
   @groupheader{Example}
   @snippet doc/timeout.cpp snippet
+
+  @see TTS_XFAIL
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)

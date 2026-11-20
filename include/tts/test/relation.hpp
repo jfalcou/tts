@@ -128,13 +128,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_BIT_EQUAL
-  @brief Performs equality comparison between the bits of two expressions
+  @brief Checks that two expressions have the same bits.
 
-  This comparison goes through the `bit_equal` member of tts::comparison, a `memcmp` over the whole
-  object unless the type specializes it.
+  Compares with the `bit_equal` member of tts::comparison, a `memcmp` over the whole object unless
+  the type specializes it.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/bit_equal.cpp snippet
@@ -149,13 +149,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_BIT_NOT_EQUAL
-  @brief Performs inequality comparison between the bits of two expressions
+  @brief Checks that two expressions have different bits.
 
-  This comparison goes through the `bit_equal` member of tts::comparison, a `memcmp` over the whole
-  object unless the type specializes it.
+  Compares with the `bit_equal` member of tts::comparison, a `memcmp` over the whole object unless
+  the type specializes it.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/bit_not_equal.cpp snippet
@@ -170,14 +170,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_EQUAL
-  @brief Performs equality comparison between two expressions
+  @brief Checks that two expressions are equal.
 
-  This comparison is performed by using the proper `operator==` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator==`, or with the [custom comparison](@ref customize-comparison) of the two
+  types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
-
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/equal.cpp snippet
@@ -192,13 +191,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_NOT_EQUAL
-  @brief Performs inequality comparison between two expressions
+  @brief Checks that two expressions are not equal.
 
-  This comparison is performed by using the proper `operator==` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator==`, or with the [custom comparison](@ref customize-comparison) of the two
+  types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/not_equal.cpp snippet
@@ -213,13 +212,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_LESS
-  @brief Performs less-than comparison between two expressions
+  @brief Checks that `LHS` is less than `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator<`, or with the [custom comparison](@ref customize-comparison) of the two
+  types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/less.cpp snippet
@@ -234,13 +233,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_GREATER
-  @brief Performs greater-than comparison between two expressions
+  @brief Checks that `LHS` is greater than `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Holds when `LHS` is neither less than nor equal to `RHS`. Compares with `operator<` and
+  `operator==`, or with the [custom comparison](@ref customize-comparison) of the two types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/greater.cpp snippet
@@ -255,13 +254,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_LESS_EQUAL
-  @brief Performs less-or-equal-than comparison between two expressions
+  @brief Checks that `LHS` is less than or equal to `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator<` and `operator==`, or with the
+  [custom comparison](@ref customize-comparison) of the two types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/less_equal.cpp snippet
@@ -276,13 +275,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_GREATER_EQUAL
-  @brief Performs greater-or-equal-than comparison between two expressions
+  @brief Checks that `LHS` is greater than or equal to `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Holds when `LHS` is not less than `RHS`. Compares with `operator<`, or with the
+  [custom comparison](@ref customize-comparison) of the two types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/greater_equal.cpp snippet
@@ -320,12 +319,12 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPED_EQUAL
-  @brief Performs type and equality comparison between two expressions
+  @brief Checks that two expressions are of the same type and that they are equal.
 
-  This test behaves as @ref TTS_EQUAL but also verify that both arguments's types are the same.
+  Behaves as @ref TTS_EQUAL, and also fails when `LHS` and `RHS` differ in type.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/typed_equal.cpp snippet
@@ -340,12 +339,12 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPED_NOT_EQUAL
-  @brief Performs type and equality comparison between two expressions
+  @brief Checks that two expressions are of the same type and that they are not equal.
 
-  This test behaves as @ref TTS_NOT_EQUAL but also verify that both arguments's types are the same.
+  Behaves as @ref TTS_NOT_EQUAL, and also fails when `LHS` and `RHS` differ in type.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/typed_not_equal.cpp snippet
@@ -361,12 +360,12 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPED_LESS
-  @brief Performs type and equality comparison between two expressions
+  @brief Checks that two expressions are of the same type and that `LHS` is less than `RHS`.
 
-  This test behaves as @ref TTS_LESS but also verify that both arguments's types are the same.
+  Behaves as @ref TTS_LESS, and also fails when `LHS` and `RHS` differ in type.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/typed_less.cpp snippet
@@ -381,12 +380,12 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPED_GREATER
-  @brief Performs type and equality comparison between two expressions
+  @brief Checks that two expressions are of the same type and that `LHS` is greater than `RHS`.
 
-  This test behaves as @ref TTS_GREATER but also verify that both arguments's types are the same.
+  Behaves as @ref TTS_GREATER, and also fails when `LHS` and `RHS` differ in type.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/typed_greater.cpp snippet
@@ -401,12 +400,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPED_LESS_EQUAL
-  @brief Performs type and equality comparison between two expressions
+  @brief Checks that two expressions are of the same type and that `LHS` is less than or equal to
+  `RHS`.
 
-  This test behaves as @ref TTS_LESS_EQUAL but also verify that both arguments's types are the same.
+  Behaves as @ref TTS_LESS_EQUAL, and also fails when `LHS` and `RHS` differ in type.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/typed_less_equal.cpp snippet
@@ -421,13 +421,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_TYPED_GREATER_EQUAL
-  @brief Performs type and equality comparison between two expressions
+  @brief Checks that two expressions are of the same type and that `LHS` is greater than or equal to
+  `RHS`.
 
-  This test behaves as @ref TTS_GREATER_EQUAL but also verify that both arguments's types are the
-same.
+  Behaves as @ref TTS_GREATER_EQUAL, and also fails when `LHS` and `RHS` differ in type.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/typed_greater_equal.cpp snippet
@@ -463,13 +463,16 @@ same.
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_EQUAL
-  @brief Performs equality comparison between two expressions at compile-time
+  @brief Checks at compile time that two constant expressions are equal.
 
-  This comparison is performed by using the proper `operator==` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator==`, or with the [custom comparison](@ref customize-comparison) of the two
+  types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_equal.cpp snippet
@@ -484,13 +487,16 @@ same.
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_NOT_EQUAL
-  @brief Performs inequality comparison between two expressions at compile-time
+  @brief Checks at compile time that two constant expressions are not equal.
 
-  This comparison is performed by using the proper `operator==` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator==`, or with the [custom comparison](@ref customize-comparison) of the two
+  types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_not_equal.cpp snippet
@@ -506,13 +512,16 @@ same.
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_LESS
-  @brief Performs less-than comparison between two expressions at compile-time.
+  @brief Checks at compile time that `LHS` is less than `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator<`, or with the [custom comparison](@ref customize-comparison) of the two
+  types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_less.cpp snippet
@@ -527,13 +536,16 @@ same.
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_GREATER
-  @brief Performs greater-than comparison between two expressions at compile-time.
+  @brief Checks at compile time that `LHS` is greater than `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Holds when `LHS` is neither less than nor equal to `RHS`. Compares with `operator<` and
+  `operator==`, or with the [custom comparison](@ref customize-comparison) of the two types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_greater.cpp snippet
@@ -549,13 +561,16 @@ same.
 
 /**
   @def TTS_CONSTEXPR_LESS_EQUAL
-  @brief Performs less-or-equal-than comparison between two expressions at compile-time
+  @brief Checks at compile time that `LHS` is less than or equal to `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Compares with `operator<` and `operator==`, or with the
+  [custom comparison](@ref customize-comparison) of the two types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_less_equal.cpp snippet
@@ -571,13 +586,16 @@ same.
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_GREATER_EQUAL
-  @brief Performs greater-or-equal-than comparison between two expressions at compile-time
+  @brief Checks at compile time that `LHS` is greater than or equal to `RHS`.
 
-  This comparison is performed by using the proper `operator<` overload or by a
-  [custom comparison](@ref customize-comparison).
+  Holds when `LHS` is not less than `RHS`. Compares with `operator<`, or with the
+  [custom comparison](@ref customize-comparison) of the two types.
 
-  @param LHS, RHS  Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param LHS, RHS Expressions to compare.
+  @param ...      `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_greater_equal.cpp snippet

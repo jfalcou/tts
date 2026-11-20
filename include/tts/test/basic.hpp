@@ -56,10 +56,10 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_EXPECT
-  @brief Check if a given expression evaluates to true
+  @brief Checks that an expression is `true`.
 
-  @param EXPR Expression to evaluate and compare to `true`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param EXPR Expression to check, converted to `bool`.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/expect.cpp snippet
@@ -84,10 +84,10 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_EXPECT_NOT
-  @brief Check if a given expression evaluates to false
+  @brief Checks that an expression is `false`.
 
-  @param EXPR Expression to evaluate and compare to `false`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param EXPR Expression to check, converted to `bool`.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/expect_not.cpp snippet
@@ -112,10 +112,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_EXPECT
-  @brief Check if a given expression evaluates to true at compile-time
+  @brief Checks at compile time that a constant expression is `true`.
 
-  @param EXPR Expression to evaluate and compare to `true`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param EXPR Constant expression to check, converted to `bool`.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_expect.cpp snippet
@@ -141,10 +144,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_CONSTEXPR_EXPECT_NOT
-  @brief Check if a given expression evaluates to false at compile-time
+  @brief Checks at compile time that a constant expression is `false`.
 
-  @param EXPR Expression to evaluate and compare to `false`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  Evaluates the expression at compile time, so it must be a constant expression, or the test does
+  not compile. Reports the check at run time with the others, as a pass or a failure.
+
+  @param EXPR Constant expression to check, converted to `bool`.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/cexpr_expect_not.cpp snippet

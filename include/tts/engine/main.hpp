@@ -27,17 +27,18 @@
 //======================================================================================================================
 /*!
   @def TTS_CUSTOM_DRIVER_FUNCTION
-  @brief Test application entry-point customization
+  @brief Names the function that runs the tests when `main` comes from elsewhere.
 
-  In case where the `main` function is to be provided externally, one can redefine
-  @ref TTS_CUSTOM_DRIVER_FUNCTION in order to specify the name of the test executable entry point.
+  A program that writes its own `main` defines @ref TTS_MAIN and @ref TTS_CUSTOM_DRIVER_FUNCTION
+  before including tts/tts.hpp. Its `main` calls tts::initialize, the function of that name with
+  `argc` and `argv`, then tts::report.
+
+  @groupheader{Example}
+  @snippet doc/custom_driver.cpp snippet
 
   @see TTS_MAIN
   @see tts::initialize
   @see tts::report
-
-  @groupheader{Example}
-  @snippet doc/custom_driver.cpp snippet
 **/
 //======================================================================================================================
 #define TTS_CUSTOM_DRIVER_FUNCTION
@@ -45,10 +46,10 @@
 //======================================================================================================================
 /*!
   @def TTS_MAIN
-  @brief Identify the file containing tests entry point
+  @brief Defines the entry point of the test program in the translation unit that defines it.
 
-  Users can dispatch tests in multiple Translation Units to be linked afterward. In this scenario,
-one single Translation Unit must define @ref TTS_MAIN to generate the test entry point function.
+  A program split over several translation units defines @ref TTS_MAIN in a single unit, before
+  including tts/tts.hpp.
 **/
 //======================================================================================================================
 #define TTS_MAIN

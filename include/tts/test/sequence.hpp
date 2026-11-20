@@ -124,14 +124,14 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_ALL_ABSOLUTE_EQUAL
-  @brief Checks if all elements of two sequences are within a given absolute distance  and that
-their sizes are equal.
+  @brief Checks that two sequences have the same size and that their elements are at most `N` apart.
 
-  This comparison is performed by using the proper tts::absolute_check overload.
+  Measures each pair of elements with tts::absolute_check, as @ref TTS_ABSOLUTE_EQUAL does.
 
-  @param L, R Sequences to compare.
-  @param N    Maximum absolute distance accepted between `L` and `R`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Sequences to compare, each with a `size()` member or a `size` found by
+              argument-dependent lookup.
+  @param N    Largest distance accepted.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/all_absolute.cpp snippet
@@ -147,15 +147,23 @@ their sizes are equal.
 //======================================================================================================================
 /**
   @def TTS_ALL_RELATIVE_EQUAL
-  @brief Checks if all elements of two sequences are within a given relative distance and that
-their sizes are equal.
+  @brief Checks that two sequences have the same size and that their elements are within a combined
+  relative and absolute tolerance `N`.
 
-  This comparison is performed by using the proper tts::relative_check overload.
+  Each pair of elements `a` and `b` passes if `abs(a - b) <= N * max(1, abs(a), abs(b))`, the
+  [combined tolerance test](https://realtimecollisiondetection.net/blog/?p=89) of
+  tts::relative_check. `N` acts as an absolute tolerance where both values are at most 1 in
+  magnitude, and as a relative one elsewhere. Two NaNs or two equal infinities pass, and any other
+  NaN or infinity fails.
 
-  @param L, R Sequences to compare.
-  @param N    Maximum relative distance accepted between `L` and `R`, as a ratio: `0.005` is
-              half a percent. `abs(L-R) / max(abs(L), abs(R), 1)` is what gets compared to it.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  `N` is a ratio, so `0.005` accepts half a percent. On an arithmetic type, a finite `N` of 1 or
+  more fails the check with a message asking for `N` divided by a hundred, since TTS 3 took a
+  percentage.
+
+  @param L, R Sequences to compare, each with a `size()` member or a `size` found by
+              argument-dependent lookup.
+  @param N    Tolerance, as a ratio.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/all_relative.cpp snippet
@@ -174,14 +182,15 @@ their sizes are equal.
 //======================================================================================================================
 /**
   @def TTS_ALL_ULP_EQUAL
-  @brief Checks if all elements of two sequences are within a given ULP distance  and that their
-sizes are equal.
+  @brief Checks that two sequences have the same size and that their elements are at most `N` ULP
+  apart.
 
-  This comparison is performed by using the proper tts::ulp_check overload.
+  Measures each pair of elements with tts::ulp_check, as @ref TTS_ULP_EQUAL does.
 
-  @param L, R Sequences to compare.
-  @param N    Maximum ULPs accepted between `L` and `R`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Sequences to compare, each with a `size()` member or a `size` found by
+              argument-dependent lookup.
+  @param N    Largest distance accepted, in ULP.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/all_ulp.cpp snippet
@@ -196,14 +205,14 @@ sizes are equal.
 //======================================================================================================================
 /**
   @def TTS_ALL_IEEE_EQUAL
-  @brief Checks if all elements of two sequences are within 0 ULP and that their sizes are equal.
+  @brief Checks that two sequences have the same size and that their elements are 0 ULP apart, that
+  is equal or both NaN.
 
-  This also allow for infinites and NaNs to be compared equal if both values are the
-  same infinites or are both $NaN$. This comparison is performed by using the proper tts::ulp_check
-overload.
+  Compares the elements as @ref TTS_ALL_ULP_EQUAL does with `N` = 0.
 
-  @param L, R Sequences to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Sequences to compare, each with a `size()` member or a `size` found by
+              argument-dependent lookup.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/all_ieee.cpp snippet
@@ -218,12 +227,13 @@ overload.
 //======================================================================================================================
 /**
   @def TTS_ALL_EQUAL
-  @brief Checks if all elements of two sequences are all equal and that their sizes are equal.
+  @brief Checks that two sequences have the same size and equal elements.
 
-  This comparison is performed by using the proper tts::absolute_check overload.
+  Compares the elements as @ref TTS_ALL_ABSOLUTE_EQUAL does with `N` = 0.
 
-  @param L, R Sequences to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Sequences to compare, each with a `size()` member or a `size` found by
+              argument-dependent lookup.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/all_equal.cpp snippet

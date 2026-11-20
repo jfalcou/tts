@@ -58,16 +58,16 @@ namespace tts::_
 /**
   @def TTS_WHEN
   @ingroup test-scenario
-  @brief Start a block of scoped environment.
+  @brief Starts a block whose code runs again before each of its sections.
 
-  Code in a scoped environment can contain:
-    + Normal expressions.
-    + scoped tests introduced by @ref TTS_AND_THEN.
+  A section is a @ref TTS_AND_THEN block inside it.
 
-  @see TTS_AND_THEN
+  @param STORY Text printed under `--verbose` when the block starts.
 
   @groupheader{Example}
   @snippet doc/when.cpp snippet
+
+  @see TTS_AND_THEN
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)
@@ -100,15 +100,16 @@ namespace tts::_
 /**
   @def TTS_AND_THEN
   @ingroup test-scenario
-  @brief Add a scoped tests to current scoped environment.
+  @brief Adds a section to a @ref TTS_WHEN block.
 
-  Compared to regular local scope, whenever a scoped test is run, the data defined in the enclosing
-  @ref TTS_WHEN are re-initialized, thus serving as a setup/tear-down system.
+  A change that a section makes to a variable of the block does not reach the next section.
 
-  @see TTS_WHEN
+  @param MESSAGE Text printed under `--verbose` when the section starts.
 
   @groupheader{Example}
   @snippet doc/when.cpp snippet
+
+  @see TTS_WHEN
 **/
 //======================================================================================================================
 #if defined(TTS_DOXYGEN_INVOKED)

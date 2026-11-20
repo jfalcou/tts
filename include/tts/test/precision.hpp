@@ -130,17 +130,15 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_ABSOLUTE_EQUAL
-  @brief Checks if the absolute distance between values is less or equal to a threshold
+  @brief Checks that two values are at most `N` apart.
 
-  This comparison is performed by using the proper tts::absolute_distance overload.
+  Measures the distance `abs(L - R)` with tts::absolute_check.
 
-  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
-  be measured after promotion to the common type, hence in the unit of that type rather than
-  the one under test.
+  `L` and `R` must be of the same type, or the check does not compile.
 
-  @param L, R Expressions to compare.
-  @param N    Maximum absolute distance accepted between `L` and `R`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Values to compare.
+  @param N    Largest distance accepted.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/absolute.cpp snippet
@@ -155,18 +153,23 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_RELATIVE_EQUAL
-  @brief Checks if values are within a given relative distance.
+  @brief Checks that two values are within a combined relative and absolute tolerance `N`.
 
-  This comparison is performed by using the proper tts::relative_distance overload.
+  Passes if `abs(L - R) <= N * max(1, abs(L), abs(R))`, the
+  [combined tolerance test](https://realtimecollisiondetection.net/blog/?p=89) of
+  tts::relative_check. `N` acts as an absolute tolerance where both values are at most 1 in
+  magnitude, and as a relative one elsewhere. Two NaNs or two equal infinities pass, and any other
+  NaN or infinity fails.
 
-  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
-  be measured after promotion to the common type, hence in the unit of that type rather than
-  the one under test.
+  `N` is a ratio, so `0.005` accepts half a percent. On an arithmetic type, a finite `N` of 1 or
+  more fails the check with a message asking for `N` divided by a hundred, since TTS 3 took a
+  percentage.
 
-  @param L, R Expressions to compare.
-  @param N    Maximum relative distance accepted between `L` and `R`, as a ratio: `0.005` is
-              half a percent. `abs(L-R) / max(abs(L), abs(R), 1)` is what gets compared to it.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  `L` and `R` must be of the same type, or the check does not compile.
+
+  @param L, R Values to compare.
+  @param N    Tolerance, as a ratio.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/relative.cpp snippet
@@ -191,17 +194,18 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_ULP_EQUAL
-  @brief Checks if two values are within a given ULP distance
+  @brief Checks that two values are at most `N` ULP apart.
 
-  This comparison is performed by using the proper tts::ulp_distance overload.
+  Measures the distance with tts::ulp_check. See the [ULP rationale](rationale.html#ulp) for how the
+  distance is measured.
 
-  `L` and `R` must have the same type. A mismatch is a compile-time error: the distance would
-  be measured after promotion to the common type, hence in the unit of that type rather than
-  the one under test.
+  `L` and `R` must be of the same type, or the check does not compile. The distance would be
+  measured after promotion to the common type, in the ULP of that type and not of the type under
+  test.
 
-  @param L, R Expressions to compare.
-  @param N    Maximum ULPs accepted between `L` and `R`.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Values to compare.
+  @param N    Largest distance accepted, in ULP.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/ulp.cpp snippet
@@ -224,14 +228,13 @@ namespace tts::_
 //======================================================================================================================
 /**
   @def TTS_IEEE_EQUAL
-  @brief Checks if two values are exactly within 0 ULP.
+  @brief Checks that two values are 0 ULP apart, that is equal or both NaN.
 
-  This also allow for infinites and NaNs to be compared equal if both values are the
-  same infinites or are both $NaN$. This comparison is performed by using the proper
-tts::ulp_distance overload.
+  Compares with tts::ieee_check, which uses `operator==` and counts two NaNs as equal, the 0 ULP
+  case of @ref TTS_ULP_EQUAL without measuring a distance.
 
-  @param L, R Expressions to compare.
-  @param ...  Optional tag. If equals to `REQUIRED`, this test will stop the program if it fails.
+  @param L, R Values to compare.
+  @param ...  `REQUIRED` ends the run when the check fails.
 
   @groupheader{Example}
   @snippet doc/ieee.cpp snippet
