@@ -84,6 +84,21 @@ namespace tts::bench
     }
   };
 
+  namespace _
+  {
+    // Do not print with %.3g instead: it writes 7140 as 7.14e+03.
+    inline tts::text digits(double v)
+    {
+      int decimals = 2;
+      for(double m = 10.; decimals > 0 && v >= m; m *= 10.)
+        --decimals;
+      for(double m = 1.; v > 0. && v < m && decimals < 9; m /= 10.)
+        ++decimals;
+      return tts::text("%.*f", decimals, v);
+    }
+
+  }
+
   TTS_DISABLE_WARNING_PUSH
   TTS_DISABLE_WARNING_CRT_SECURE
 
@@ -233,52 +248,32 @@ namespace tts::bench
         name_width = tts::_::max(name_width, res.config().mBenchmarkName.size());
       }
 
-      int const w_n = 4, w_spd = 9, w_eff = 8, w_cyc = 10, w_min = 8, w_max = 8, w_elem = 12,
-                w_err = 6, w_ins = 10;
+      constexpr int columns            = 10;
+      char const*   headers[ columns ] = {
+      "N", "Speedup", "Eff.", "ns/elem", "min", "max", "err%", "elem/s", "cyc/elem", "ins/elem"};
+      int const widths[ columns ] = {4, 9, 8, 10, 10, 10, 6, 12, 10, 10};
 
-      auto      print_row = [ & ](char const* n_val,
-                                  char const* n,
-                                  char const* spd,
-                                  char const* eff,
-                                  char const* cyc,
-                                  char const* min,
-                                  char const* max,
-                                  char const* elem,
-                                  char const* err,
-                                  char const* ins)
+      auto      print_row         = [ & ](char const* name, tts::text const* cells)
       {
-        out.writeln("| %-*s | %*s | %*s | %*s | %*s | %*s | %*s | %*s | %*s | %*s |",
-                    static_cast<int>(name_width),
-                    n_val,
-                    w_n,
-                    n,
-                    w_spd,
-                    spd,
-                    w_eff,
-                    eff,
-                    w_cyc,
-                    cyc,
-                    w_min,
-                    min,
-                    w_max,
-                    max,
-                    w_elem,
-                    elem,
-                    w_err,
-                    err,
-                    w_ins,
-                    ins);
+        tts::text line("| ");
+        line += tts::text("%-*s", static_cast<int>(name_width), name);
+        for(int c = 0; c < columns; ++c)
+          line += tts::text(" | %*s", widths[ c ], cells[ c ].data());
+        line += " |";
+        out.writeln(line);
       };
 
-      print_row(
-      "Name", "N", "Speedup", "Eff.", "cyc/elem", "min", "max", "elem/s", "err%", "ins/elem");
+      tts::text header_cells[ columns ];
+      for(int c = 0; c < columns; ++c)
+        header_cells[ c ] = tts::text(headers[ c ]);
+      print_row("Name", header_cells);
 
       tts::text separator("|:");
       dashes(separator, static_cast<int>(name_width));
       separator += "-|";
-      for(int w: {w_n, w_spd, w_eff, w_cyc, w_min, w_max, w_elem, w_err, w_ins})
+      for(int c = 0; c < columns; ++c)
       {
-        dashes(separator, w + 1);
+        dashes(separator, widths[ c ] + 1);
         separator += ":|";
       }
       out.writeln(separator);
@@ -304,33 +299,26 @@ namespace tts::bench
 
         double         ins_per_elem = res.median(measure::instructions) / batch_size;
         double         cyc_per_elem = res.median(measure::cpucycles) / batch_size;
-        double         min_cyc_elem = res.minimum(measure::cpucycles) / batch_size;
-        double         max_cyc_elem = res.maximum(measure::cpucycles) / batch_size;
+        double         ns_per_elem  = 1e9 * current_time / batch_size;
+        double         min_ns_elem  = 1e9 * res.minimum(measure::elapsed) / batch_size;
+        double         max_ns_elem  = 1e9 * res.maximum(measure::elapsed) / batch_size;
         double         error        = res.medianAbsolutePercentError(measure::elapsed);
 
         if(cyc_per_elem == 0.0 && ins_per_elem == 0.0) counters_failed = true;
 
-        tts::text n_str {"%td", N};
-        tts::text spd_str = (speedup == 1.0) ? tts::text("x1.00") : tts::text("x%.2f", speedup);
-        tts::text eff_str =
-        (N == 1 && i != 0) ? tts::text("-") : tts::text("%.1f%%", efficiency * 100.0);
-        tts::text cyc_str {"%.2f", cyc_per_elem};
-        tts::text min_str {"%.2f", min_cyc_elem};
-        tts::text max_str {"%.2f", max_cyc_elem};
-        tts::text elem_str {"%.0f", elem_per_sec};
-        tts::text err_str {"%.1f%%", error * 100.0};
-        tts::text ins_str {"%.2f", ins_per_elem};
+        tts::text cells[ columns ] = {tts::text("%td", N),
+                                      tts::text("x") + _::digits(speedup),
+                                      (N == 1 && i != 0) ? tts::text("-")
+                                                         : tts::text("%.1f%%", efficiency * 100.0),
+                                      _::digits(ns_per_elem),
+                                      _::digits(min_ns_elem),
+                                      _::digits(max_ns_elem),
+                                      tts::text("%.1f%%", error * 100.0),
+                                      tts::text("%.0f", elem_per_sec),
+                                      tts::text("%.2f", cyc_per_elem),
+                                      tts::text("%.2f", ins_per_elem)};
 
-        print_row(res.config().mBenchmarkName.c_str(),
-                  n_str.data(),
-                  spd_str.data(),
-                  eff_str.data(),
-                  cyc_str.data(),
-                  min_str.data(),
-                  max_str.data(),
-                  elem_str.data(),
-                  err_str.data(),
-                  ins_str.data());
+        print_row(res.config().mBenchmarkName.c_str(), cells);
       }
 
       if(counters_failed)

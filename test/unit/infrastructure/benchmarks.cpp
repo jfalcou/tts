@@ -91,6 +91,7 @@ TTS_CASE("Check that a benchmark reports one row per run under its name")
   TTS_EXPECT(sink.holds("| Name "));
   TTS_EXPECT(sink.holds("| first "));
   TTS_EXPECT(sink.holds("| second "));
+  TTS_EXPECT(sink.holds(" ns/elem |"));
 };
 
 TTS_CASE("Check that a benchmark reads the lanes and the machine from its traits")
@@ -107,4 +108,12 @@ TTS_CASE("Check that a benchmark reads the lanes and the machine from its traits
 
   TTS_EXPECT(sink.holds("**Machine:** test"));
   TTS_EXPECT(sink.holds("| wide |    4 |"));
+};
+
+TTS_CASE("Check that the table prints three significant digits")
+{
+  TTS_EQUAL(tts::bench::_::digits(1.), tts::text("1.00"));
+  TTS_EQUAL(tts::bench::_::digits(24.13), tts::text("24.1"));
+  TTS_EQUAL(tts::bench::_::digits(0.0412), tts::text("0.0412"));
+  TTS_EQUAL(tts::bench::_::digits(7140.), tts::text("7140"));
 };
