@@ -75,13 +75,12 @@
   | `elem/s` | elements per second, the inverse of the median time per element |
   | `cyc/elem` | median CPU cycles per element |
   | `ins/elem` | median instructions per element |
-  | `IPC` | instructions per cycle, median instructions over median cycles |
   | `bra/elem` | median branch instructions per element |
   | `miss%` | median mispredicted branches over median branch instructions, in percent |
 
   `err%` is the median of `|t - m| / t` over the epochs, where `t` is the time per element in an
   epoch and `m` is their median. If the operating system blocks the hardware counters (as many
-  containers do), their five columns read `-`, and a note under the table says so.
+  containers do), their four columns read `-`, and a note under the table says so.
 
   If the executable is run with `-d` or `--dump`, it also writes `<title>.csv` in the working
   directory, replacing any earlier file of that title. The file holds:
@@ -119,6 +118,9 @@
   @def TTS_RUN_BENCHMARK
   @brief Times a benchmark row.
 
+  The macro writes the `.template` keyword, so it also serves a benchmark whose type depends on a
+  template parameter.
+
   @param RUNNER Benchmark receiving the row.
   @param TYPE   Type of the row, used by the traits to build its input and to count its lanes.
                 Under `tts::bench::default_traits`, this type only sets `N` to 1.
@@ -133,21 +135,6 @@
 **/
 //======================================================================================================================
 #define TTS_RUN_BENCHMARK(RUNNER, TYPE, NAME, FUNC, ...)                                           \
-  (RUNNER).run<TYPE>(NAME, FUNC, __VA_ARGS__) /**/
-
-//======================================================================================================================
-/**
-  @def TTS_RUN_BENCHMARK_TPL
-  @brief Times a benchmark row when the type of the benchmark depends on a template parameter.
-
-  This macro is the form of @ref TTS_RUN_BENCHMARK that inserts the `.template` keyword such a
-  benchmark requires, and its parameters are the same.
-
-  @groupheader{Example}
-  @snippet benchmarks/hypot.cpp snippet
-**/
-//======================================================================================================================
-#define TTS_RUN_BENCHMARK_TPL(RUNNER, TYPE, NAME, FUNC, ...)                                       \
   (RUNNER).template run<TYPE>(NAME, FUNC, __VA_ARGS__) /**/
 
 namespace tts::bench
@@ -165,22 +152,10 @@ namespace tts::bench
   //======================================================================================================================
   inline constexpr std::size_t size = 1024;
 
-  //======================================================================================================================
-  /**
-    @public
-    @ingroup tools-benchmarks
-    @brief The state of the generator that draws every benchmark buffer.
-
-    Its initial value is a fixed seed, which makes two executions time the same values. This
-    generator is independent from the generator of the test run, and neither `--seed` nor
-    `tts::set_random_seed` affects its draws. Assigning a new state changes the values of the
-    following draws.
-
-    @groupheader{Example}
-    @snippet benchmarks/draws.cpp snippet
-  **/
-  //======================================================================================================================
-  inline std::uint64_t prng_state = 0x853c49e6748fea9bULL; // NOSONAR - a draw advances it
+  namespace _
+  {
+    inline std::uint64_t prng_state = 0x853c49e6748fea9bULL; // NOSONAR - a draw advances it
+  }
 
   //======================================================================================================================
   /**
@@ -202,9 +177,9 @@ namespace tts::bench
   // executions would time different values.
   template<typename T> T roll(T mini, T maxi)
   {
-    std::uint64_t const run   = std::exchange(tts::_::prng_state, prng_state);
+    std::uint64_t const run   = std::exchange(tts::_::prng_state, _::prng_state);
     T const             value = tts::_::roll(mini, maxi);
-    prng_state                = std::exchange(tts::_::prng_state, run);
+    _::prng_state             = std::exchange(tts::_::prng_state, run);
     return value;
   }
 
@@ -330,16 +305,11 @@ namespace tts::bench
     // Do not print with %.3g instead: it writes 7140 as 7.14e+03.
     inline tts::text digits(double v)
     {
-      int    decimals = 2;
-      double bound    = 10.;
-      for(int k = 0; k < 2; ++k)
-      {
-        if(v < bound) break;
-        --decimals;
-        bound *= 10.;
-      }
+      int decimals = 2;
+      if(v >= 100.) decimals = 0;
+      else if(v >= 10.) decimals = 1;
 
-      bound = 1.;
+      double bound = 1.;
       for(int k = 0; k < 7; ++k)
       {
         if(v <= 0. || v >= bound) break;
@@ -371,35 +341,52 @@ namespace tts::bench
     @brief Times the rows of a table with [nanobench](https://nanobench.ankerl.com) and prints this
            table when the benchmark goes out of scope.
 
-    @tparam Traits Traits of the rows (`tts::bench::default_traits` if not specified).
+    @tparam Traits Traits of the rows.
 
     @groupheader{Example}
     @snippet benchmarks/traits.cpp snippet
   **/
   //======================================================================================================================
-  template<typename Traits = default_traits> class basic_benchmark
+  template<typename Traits> class basic_benchmark
   {
   private:
-    ankerl::nanobench::Bench    bench_;
-    std::size_t                 epochs_;
-    std::size_t                 warmup_;
+    static constexpr std::size_t columns            = 12;
+    static constexpr char const* headers[ columns ] = {// NOSONAR - no <array> in tts
+                                                       "N",
+                                                       "Speedup",
+                                                       "Eff.",
+                                                       "ns/elem",
+                                                       "min",
+                                                       "max",
+                                                       "err%",
+                                                       "elem/s",
+                                                       "cyc/elem",
+                                                       "ins/elem",
+                                                       "bra/elem",
+                                                       "miss%"};
+    static constexpr int         widths[ columns ]  = {// NOSONAR - no <array> in tts
+                                                       4,
+                                                       9,
+                                                       8,
+                                                       10,
+                                                       10,
+                                                       10,
+                                                       6,
+                                                       12,
+                                                       10,
+                                                       10,
+                                                       10,
+                                                       6};
 
-    tts::buffer<std::ptrdiff_t> run_cardinals_;
-    tts::text                   base_file_name_;
-
-    void                        configure_bench()
-    {
-      bench_.output(nullptr);
-      bench_.performanceCounters(true);
-      bench_.epochs(tts::_::max(std::size_t {1}, ::tts::arguments().value(epochs_, "--epochs")));
-      bench_.warmup(::tts::arguments().value(warmup_, "--warmup"));
-    }
+    ankerl::nanobench::Bench     bench_;
+    tts::buffer<std::size_t>     lanes_;
+    tts::text                    title_;
 
     template<typename Row, typename Func, typename... Inputs> // NOSONAR - <iterator> is refused
     void time_run(tts::text const& name, Func& func, Inputs const&... in)
     {
       constexpr std::size_t N = Traits::template lanes<Row>;
-      run_cardinals_.push_back(static_cast<std::ptrdiff_t>(N));
+      lanes_.push_back(N);
 
       auto count = static_cast<std::size_t>(-1);
       ((count = tts::_::min(count, in.size())), ...);
@@ -418,90 +405,76 @@ namespace tts::bench
                  });
     }
 
-    template<typename Row, typename Func, typename... Values>
-    void execute_single_run(tts::text const& name, Func& func, Values const&... values)
-    {
-      time_run<Row>(name, func, Traits::template input<Row>(values)...);
-    }
-
     static void dashes(tts::text& line, int count)
     {
       while(count-- > 0)
         line += "-";
     }
 
-    // Do not divide by the cardinal of the run: an epoch times one call of the lambda, a pass over
-    // the batch.
-    template<typename Results>
-    static void write_epoch(FILE* file, Results const& results, std::size_t e)
+    static bool counted(ankerl::nanobench::Result const& res)
     {
+      using measure = ankerl::nanobench::Result::Measure;
+      return res.median(measure::cpucycles) > 0.0 || res.median(measure::instructions) > 0.0;
+    }
+
+    // One CSV column per row and one line per epoch. Do not divide by the lanes as well: an epoch
+    // times one call of the lambda, a pass over the batch.
+    void dump_csv() const
+    {
+      auto const&        results  = bench_.results();
+      tts::text const    filename = title_ + ".csv";
+      tts::_::file_guard file(std::fopen(filename.data(), "w"));
+      if(!file)
+      {
+        tts::output().writeln("> Note: %s could not be opened for writing.", filename.data());
+        return;
+      }
+
       for(std::size_t r = 0; r < results.size(); ++r)
       {
-        if(auto const& res = results[ r ]; e < res.size())
+        if(r != 0) std::fputc(',', file.get());
+        _::quoted(file.get(), results[ r ].config().mBenchmarkName.c_str());
+      }
+      for(std::size_t e = 0; e < bench_.epochs(); ++e)
+      {
+        std::fputc('\n', file.get());
+        for(std::size_t r = 0; r < results.size(); ++r)
         {
+          if(r != 0) std::fputc(',', file.get());
+          auto const&  res     = results[ r ];
           double const elapsed = res.get(e, ankerl::nanobench::Result::Measure::elapsed);
-          tts::text    val {"%g", elapsed / static_cast<double>(res.config().mBatch)};
-          std::fputs(val.data(), file);
+          std::fprintf(file.get(), "%g", elapsed / static_cast<double>(res.config().mBatch));
         }
-        if(r + 1 < results.size()) std::fputs(",", file);
       }
-      std::fputs("\n", file);
+      std::fputc('\n', file.get());
     }
 
-    // One CSV column per run and one line per epoch, each time divided by the number of elements of
-    // its run.
-    template<typename Results> tts::text dump_csv(Results const& results) const
-    {
-      tts::text          filename = base_file_name_ + ".csv";
-      tts::_::file_guard out_file(std::fopen(filename.data(), "w"));
-      if(!out_file)
-        return tts::text("> Note: %s could not be opened for writing.", filename.data());
-
-      std::size_t epochs = 0;
-      for(std::size_t r = 0; r < results.size(); ++r)
-      {
-        _::quoted(out_file.get(), results[ r ].config().mBenchmarkName.c_str());
-        std::fputs(r + 1 < results.size() ? "," : "\n", out_file.get());
-        epochs = tts::_::max(epochs, results[ r ].size());
-      }
-
-      for(std::size_t e = 0; e < epochs; ++e)
-        write_epoch(out_file.get(), results, e);
-      return tts::text {};
-    }
-
-    template<typename Out>
-    static void print_row(Out&                          out,
-                          std::size_t                   name_width,
-                          char const*                   name,
-                          tts::buffer<tts::text> const& cells,
-                          tts::buffer<int> const&       widths)
+    static void
+    print_row(std::size_t name_width, char const* name, tts::buffer<tts::text> const& cells)
     {
       tts::text line("| ");
       line += tts::text("%-*s", static_cast<int>(name_width), name);
-      for(std::size_t c = 0; c < cells.size(); ++c)
+      for(std::size_t c = 0; c < columns; ++c)
         line += tts::text(" | %*s", widths[ c ], cells[ c ].data());
       line += " |";
-      out.writeln(line);
+      tts::output().writeln(line);
     }
 
-    template<typename Result>
-    tts::buffer<tts::text>
-    row_cells(Result const& res, std::size_t i, double baseline_elem_per_sec) const
+    tts::buffer<tts::text> row_cells(ankerl::nanobench::Result const& res,
+                                     std::size_t                      i,
+                                     double                           baseline_elem_per_sec) const
     {
-      using measure               = ankerl::nanobench::Result::Measure;
-      auto const     batch_size   = static_cast<double>(res.config().mBatch);
-      std::ptrdiff_t N            = run_cardinals_[ i ];
-      double const   current_time = res.median(measure::elapsed);
-      double const   elem_per_sec = batch_size / current_time;
-      double const   speedup      = elem_per_sec / baseline_elem_per_sec;
-      double const   efficiency   = speedup / static_cast<double>(N);
-      double const   instructions = res.median(measure::instructions);
-      double const   cycles       = res.median(measure::cpucycles);
-      double const   branches     = res.median(measure::branchinstructions);
-      bool const     counted      = cycles > 0.0 || instructions > 0.0;
+      using measure             = ankerl::nanobench::Result::Measure;
+      auto const   batch_size   = static_cast<double>(res.config().mBatch);
+      std::size_t  N            = lanes_[ i ];
+      double const current_time = res.median(measure::elapsed);
+      double const elem_per_sec = batch_size / current_time;
+      double const speedup      = elem_per_sec / baseline_elem_per_sec;
+      double const efficiency   = speedup / static_cast<double>(N);
+      double const branches     = res.median(measure::branchinstructions);
+      bool const   has_counters = counted(res);
 
-      return {tts::text("%td", N),
+      return {tts::text("%zu", N),
               tts::text("x") + _::digits(speedup),
               (N == 1 && i != 0) ? tts::text("-") : tts::text("%.1f%%", efficiency * 100.0),
               _::digits(1e9 * current_time / batch_size),
@@ -509,114 +482,103 @@ namespace tts::bench
               _::digits(1e9 * res.maximum(measure::elapsed) / batch_size),
               tts::text("%.1f%%", res.medianAbsolutePercentError(measure::elapsed) * 100.0),
               tts::text("%.0f", elem_per_sec),
-              counted ? tts::text("%.2f", cycles / batch_size) : tts::text("-"),
-              counted ? tts::text("%.2f", instructions / batch_size) : tts::text("-"),
-              cycles > 0.0 ? tts::text("%.2f", instructions / cycles) : tts::text("-"),
-              counted ? tts::text("%.2f", branches / batch_size) : tts::text("-"),
+              has_counters ? tts::text("%.2f", res.median(measure::cpucycles) / batch_size)
+                           : tts::text("-"),
+              has_counters ? tts::text("%.2f", res.median(measure::instructions) / batch_size)
+                           : tts::text("-"),
+              has_counters ? tts::text("%.2f", branches / batch_size) : tts::text("-"),
               branches > 0.0
               ? tts::text("%.1f%%", 100.0 * res.median(measure::branchmisses) / branches)
               : tts::text("-")};
     }
 
-    template<typename Results> void print_table(Results const& results) const
+    void print_table() const
     {
+      auto const& results    = bench_.results();
       auto&       out        = tts::output();
       std::size_t name_width = 4;
       for(auto const& res: results)
         name_width = tts::_::max(name_width, res.config().mBenchmarkName.size());
 
-      tts::buffer<char const*> const headers = {"N",
-                                                "Speedup",
-                                                "Eff.",
-                                                "ns/elem",
-                                                "min",
-                                                "max",
-                                                "err%",
-                                                "elem/s",
-                                                "cyc/elem",
-                                                "ins/elem",
-                                                "IPC",
-                                                "bra/elem",
-                                                "miss%"};
-      tts::buffer const              widths  = {4, 9, 8, 10, 10, 10, 6, 12, 10, 10, 6, 10, 6};
-
-      tts::buffer<tts::text>         header_cells;
-      for(char const* h: headers)
-        header_cells.push_back(tts::text(h));
-      print_row(out, name_width, "Name", header_cells, widths);
-
+      tts::text header("| ");
+      header += tts::text("%-*s", static_cast<int>(name_width), "Name");
       tts::text separator("|:");
       dashes(separator, static_cast<int>(name_width));
       separator += "-|";
-      for(int w: widths)
+      for(std::size_t c = 0; c < columns; ++c)
       {
-        dashes(separator, w + 1);
+        header += tts::text(" | %*s", widths[ c ], headers[ c ]);
+        dashes(separator, widths[ c ] + 1);
         separator += ":|";
       }
+      header += " |";
+      out.writeln(header);
       out.writeln(separator);
 
-      using measure     = ankerl::nanobench::Result::Measure;
-      auto const& first = results.front();
-      auto const  baseline =
-      static_cast<double>(first.config().mBatch) / first.median(measure::elapsed);
+      auto const& first    = results.front();
+      auto const  baseline = static_cast<double>(first.config().mBatch) /
+                             first.median(ankerl::nanobench::Result::Measure::elapsed);
 
-      bool counters_failed = false;
+      bool        blocked  = false;
       for(std::size_t i = 0; i < results.size(); ++i)
       {
-        auto const& res = results[ i ];
-        if(res.median(measure::cpucycles) == 0.0 && res.median(measure::instructions) == 0.0)
-          counters_failed = true;
-        print_row(
-        out, name_width, res.config().mBenchmarkName.c_str(), row_cells(res, i, baseline), widths);
+        blocked = blocked || !counted(results[ i ]);
+        print_row(name_width,
+                  results[ i ].config().mBenchmarkName.c_str(),
+                  row_cells(results[ i ], i, baseline));
       }
 
-      if(counters_failed)
+      if(blocked)
       {
         out.writeln();
-        out.writeln("> Note: the OS blocks the hardware counters, so their five columns read -.");
+        out.writeln("> Note: the OS blocks the hardware counters, so their four columns read -.");
       }
+    }
+
+    void report() const
+    {
+      if(bench_.results().empty()) return;
+
+      auto& out = tts::output();
+      out.writeln("# Benchmarking for : `%s`", title_.data());
+#if defined(NDEBUG)
+      char const* assertions = "disabled";
+#else
+      char const* assertions = "enabled";
+#endif
+      out.writeln("Assertions: %s - Epochs: %zu - Warmup: %llu",
+                  assertions,
+                  bench_.epochs(),
+                  static_cast<unsigned long long>(bench_.warmup()));
+      if(tts::text const env = Traits::environment(); !env.is_empty()) out.writeln(env);
+      if(::tts::arguments()("-d", "--dump")) dump_csv();
+      out.writeln();
+
+      print_table();
+
+      out.writeln();
+      out.flush();
     }
 
   public:
-    //======================================================================================================================
-    /**
-      @brief Builds a benchmark whose table is titled `benchmark`.
-
-      Both counts can be overridden with `--epochs=N` and `--warmup=N`.
-
-      @param epochs      Number of epochs for each row, at least 1 (100 if not specified).
-      @param warmup      Number of warmup passes over all buffers (100 if not specified).
-    **/
-    //======================================================================================================================
-    explicit basic_benchmark(std::size_t epochs = 100, std::size_t warmup = 100)
-        : epochs_(epochs)
-        , warmup_(warmup)
-        , base_file_name_("benchmark")
-    {
-      configure_bench();
-    }
-
     //======================================================================================================================
     /**
       @brief Builds a benchmark whose table bears the title @p title.
 
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
-      @param title       Title of the table, a character string, also the base name of its CSV
-                         file.
-      @param epochs      Number of epochs for each row, at least 1 (100 if not specified).
-      @param warmup      Number of warmup passes over all buffers (100 if not specified).
+      @param title  Title of the table, a character string, also the base name of its CSV file.
+      @param epochs Number of epochs for each row, at least 1 (100 if not specified).
+      @param warmup Number of warmup passes over all buffers (100 if not specified).
     **/
     //======================================================================================================================
-    // Do not drop the constraint: an integer would select this constructor and be taken as a name.
     template<typename Name>
     explicit basic_benchmark(Name const& title, std::size_t epochs = 100, std::size_t warmup = 100)
-      requires(!std::is_integral_v<Name>)
-        : epochs_(epochs)
-        , warmup_(warmup)
-        , base_file_name_(tts::text(title))
+        : title_(tts::text(title))
     {
-      configure_bench();
+      bench_.output(nullptr);
+      bench_.epochs(tts::_::max(std::size_t {1}, ::tts::arguments().value(epochs, "--epochs")));
+      bench_.warmup(::tts::arguments().value(warmup, "--warmup"));
     }
 
     basic_benchmark(basic_benchmark const&)            = delete;
@@ -624,27 +586,12 @@ namespace tts::bench
 
     //======================================================================================================================
     /**
-      @brief Prints the table with `tts::bench::basic_benchmark::report`.
+      @brief Prints the table, and writes the CSV file if `-d` or `--dump` is given.
     **/
     //======================================================================================================================
     ~basic_benchmark()
     {
       report();
-    }
-
-    //======================================================================================================================
-    /**
-      @brief Drops the rows timed so far, so that the destructor prints no table for them.
-
-      @return A reference to the benchmark, to allow chained calls.
-    **/
-    //======================================================================================================================
-    basic_benchmark& reset()
-    {
-      bench_         = ankerl::nanobench::Bench();
-      run_cardinals_ = tts::buffer<std::ptrdiff_t>();
-      configure_bench();
-      return *this;
     }
 
     //======================================================================================================================
@@ -656,55 +603,12 @@ namespace tts::bench
       @param row_name Name of the row, as printed in the table.
       @param func     Function to time, called once per index of the buffers.
       @param values   Buffers holding the arguments for `func`, in parameter order.
-      @return A reference to the benchmark, to allow chained calls.
     **/
     //======================================================================================================================
     template<typename Row, typename Name, typename Func, typename... Values>
-    basic_benchmark& run(Name const& row_name, Func&& func, Values const&... values)
+    void run(Name const& row_name, Func&& func, Values const&... values)
     {
-      execute_single_run<Row>(tts::text(row_name), func, values...);
-      return *this;
-    }
-
-    //======================================================================================================================
-    /**
-      @brief Prints the table of the rows timed so far, and writes the CSV file if `-d` or `--dump`
-             is given.
-
-      The destructor calls this function as well, and a call by hand followed by
-      `tts::bench::basic_benchmark::reset` prints the table only once.
-
-      @return A reference to the benchmark, to allow chained calls.
-    **/
-    //======================================================================================================================
-    basic_benchmark& report()
-    {
-      auto const& results = bench_.results();
-      if(results.empty()) return *this;
-
-      tts::text dump_note;
-      if(::tts::arguments()("-d", "--dump")) dump_note = dump_csv(results);
-
-      auto& out = tts::output();
-      out.writeln("# Benchmarking for : `%s`", base_file_name_.data());
-#if defined(NDEBUG)
-      char const* assertions = "disabled";
-#else
-      char const* assertions = "enabled";
-#endif
-      out.writeln("Assertions: %s - Epochs: %zu - Warmup: %llu",
-                  assertions,
-                  bench_.epochs(),
-                  static_cast<unsigned long long>(bench_.warmup()));
-      if(tts::text const env = Traits::environment(); !env.is_empty()) out.writeln(env);
-      if(!dump_note.is_empty()) out.writeln(dump_note);
-      out.writeln();
-
-      print_table(results);
-
-      out.writeln();
-      out.flush();
-      return *this;
+      time_run<Row>(tts::text(row_name), func, Traits::template input<Row>(values)...);
     }
   };
 

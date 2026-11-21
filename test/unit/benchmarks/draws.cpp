@@ -16,7 +16,7 @@ struct interval
   double hi;
 };
 
-TTS_CASE("Draw a buffer of intervals, and the same values from the same seed")
+TTS_CASE("Draw a buffer of intervals")
 {
   // An interval takes two values of the generator of the benchmarks, its width on [0, 0.5]
   tts::buffer<interval> values(tts::bench::size);
@@ -26,12 +26,6 @@ TTS_CASE("Draw a buffer of intervals, and the same values from the same seed")
     v               = {lo, lo + tts::bench::roll(0., 0.5)};
   }
 
-  tts::bench::prng_state = 7;
-  auto first             = tts::bench::random<int>(0, 9);
-  tts::bench::prng_state = 7;
-  auto again             = tts::bench::random<int>(0, 9);
-
   TTS_LESS_EQUAL(values[ 0 ].lo, values[ 0 ].hi);
-  TTS_EQUAL(first[ 0 ], again[ 0 ]);
 };
 //! [snippet]

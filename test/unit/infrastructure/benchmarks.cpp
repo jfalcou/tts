@@ -68,10 +68,10 @@ struct four_lanes : tts::bench::default_traits
 
 TTS_CASE("Check that tts::bench::random draws in its range, the same values from the same state")
 {
-  tts::bench::prng_state = 42;
-  auto first             = tts::bench::random<int>(-20, 20);
-  tts::bench::prng_state = 42;
-  auto again             = tts::bench::random<int>(-20, 20);
+  tts::bench::_::prng_state = 42;
+  auto first                = tts::bench::random<int>(-20, 20);
+  tts::bench::_::prng_state = 42;
+  auto again                = tts::bench::random<int>(-20, 20);
 
   TTS_EQUAL(first.size(), tts::bench::size);
 
@@ -129,7 +129,6 @@ TTS_CASE("Check that a benchmark reports one row per run under its name")
   TTS_EXPECT(sink.holds("| first "));
   TTS_EXPECT(sink.holds("| second "));
   TTS_EXPECT(sink.holds(" ns/elem |"));
-  TTS_EXPECT(sink.holds(" IPC |"));
   TTS_EXPECT(sink.holds(" bra/elem |"));
   TTS_EXPECT(sink.holds(" miss% |"));
 };
