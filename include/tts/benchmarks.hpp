@@ -51,7 +51,7 @@
   Each row is timed when its @ref TTS_RUN_BENCHMARK runs, after its traits have built its inputs
   outside the timing. An epoch is a sequence of complete passes over all buffers, and
   [nanobench](https://nanobench.ankerl.com) calibrates the passes per epoch for each row, so that an
-  epoch lasts at least 1 ms. By default, each row runs 100 epochs after a single warmup pass. Both
+  epoch lasts at least 1 ms. By default, each row runs 100 epochs after 100 warmup passes. Both
   counts are parameters of the benchmark constructor (the epochs must be at least one), and
   `--epochs=N` and `--warmup=N` override them for an entire executable. Every call is followed by a
   sink, to keep its result alive. The measured time therefore includes the loop, the loads, and the
@@ -61,9 +61,9 @@
   @groupheader{Table}
 
   Under the title line, which names the benchmark, a line such as `Assertions: disabled - Epochs:
-  100 - Warmup: 1` tells whether assertions are enabled in the translation unit (from `NDEBUG`) and
-  gives both counts. An element is a single value, and each call of a row with `N` lanes processes
-  `N` elements. The table has one row per function, with these columns:
+  100 - Warmup: 100` tells whether assertions are enabled in the translation unit (from `NDEBUG`)
+  and gives both counts. An element is a single value, and each call of a row with `N` lanes
+  processes `N` elements. The table has one row per function, with these columns:
 
   | Column | Content |
   |---|---|
@@ -585,10 +585,10 @@ namespace tts::bench
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
       @param epochs      Number of epochs for each row, at least 1 (100 if not specified).
-      @param warmup      Number of warmup passes over all buffers (1 if not specified).
+      @param warmup      Number of warmup passes over all buffers (100 if not specified).
     **/
     //======================================================================================================================
-    explicit basic_benchmark(std::size_t epochs = 100, std::size_t warmup = 1)
+    explicit basic_benchmark(std::size_t epochs = 100, std::size_t warmup = 100)
         : epochs_(epochs)
         , warmup_(warmup)
         , base_file_name_("benchmark")
@@ -605,12 +605,12 @@ namespace tts::bench
       @param title       Title of the table, a character string, also the base name of its CSV
                          file.
       @param epochs      Number of epochs for each row, at least 1 (100 if not specified).
-      @param warmup      Number of warmup passes over all buffers (1 if not specified).
+      @param warmup      Number of warmup passes over all buffers (100 if not specified).
     **/
     //======================================================================================================================
     // Do not drop the constraint: an integer would select this constructor and be taken as a name.
     template<typename Name>
-    explicit basic_benchmark(Name const& title, std::size_t epochs = 100, std::size_t warmup = 1)
+    explicit basic_benchmark(Name const& title, std::size_t epochs = 100, std::size_t warmup = 100)
       requires(!std::is_integral_v<Name>)
         : epochs_(epochs)
         , warmup_(warmup)

@@ -253,3 +253,18 @@ TTS_CASE("Check that a benchmark runs one epoch at least")
 
   TTS_EXPECT(sink.holds(" - Epochs: 1 - Warmup: 2"));
 };
+
+TTS_CASE("Check that a benchmark warms up 100 passes by default")
+{
+  auto           x     = tts::bench::random<int>(-20, 20);
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("default warmup", 3);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+
+  TTS_EXPECT(sink.holds(" - Epochs: 3 - Warmup: 100"));
+};
