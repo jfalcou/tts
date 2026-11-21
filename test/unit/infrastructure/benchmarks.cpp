@@ -279,3 +279,20 @@ TTS_CASE("Check that a benchmark warms up 100 passes by default")
 
   TTS_EXPECT(sink.holds(" - Epochs: 3 - Warmup: 100"));
 };
+
+TTS_CASE("Check that a negative count falls to its minimum")
+{
+  auto           x     = tts::bench::random<int>(-20, 20);
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    scoped_env            epochs("TTS_EPOCHS", "-5");
+    scoped_env            warmup("TTS_WARMUP", "-1");
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("negative counts", 3, 2);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+
+  TTS_EXPECT(sink.holds(" - Epochs: 1 - Warmup: 0"));
+};

@@ -580,8 +580,11 @@ namespace tts::bench
         : title_(tts::text(title))
     {
       bench_.output(nullptr);
-      bench_.epochs(tts::_::max(std::size_t {1}, ::tts::arguments().value(epochs, "--epochs")));
-      bench_.warmup(::tts::arguments().value(warmup, "--warmup"));
+      // Do not read the counts as std::size_t: -1 would wrap to a count that no run ends.
+      long long const e = ::tts::arguments().value(static_cast<long long>(epochs), "--epochs");
+      long long const w = ::tts::arguments().value(static_cast<long long>(warmup), "--warmup");
+      bench_.epochs(static_cast<std::size_t>(e < 1 ? 1 : e));
+      bench_.warmup(static_cast<std::uint64_t>(w < 0 ? 0 : w));
     }
 
     basic_benchmark(basic_benchmark const&)            = delete;
