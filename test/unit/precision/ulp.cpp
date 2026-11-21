@@ -106,8 +106,10 @@ TTS_CASE_TPL("ULP distance between floating points of opposite signs", float, do
   using l_t = std::numeric_limits<T>;
   using u_t = std::conditional_t<sizeof(T) == 4, std::uint32_t, std::uint64_t>;
 
-  TTS_EQUAL(tts::ulp_check(T {-0.}, -l_t::denorm_min()), 0.5);
-  TTS_EQUAL(tts::ulp_check(T {0}, -l_t::denorm_min()), 1.);
+  // Do not use subnormals here: nvc++ flushes them, which makes -denorm_min equal to -0.
+  auto const steps = static_cast<double>(std::bit_cast<u_t>(l_t::min()));
+  TTS_EQUAL(tts::ulp_check(-T {0}, -l_t::min()), steps / 2);
+  TTS_EQUAL(tts::ulp_check(T {0}, -l_t::min()), (steps + 1) / 2);
   TTS_EQUAL(tts::ulp_check(T {-1}, T {1}), static_cast<double>(std::bit_cast<u_t>(T {1})) + 0.5);
   TTS_EQUAL(tts::ulp_check(l_t::max(), l_t::lowest()), tts::ulp_check(l_t::lowest(), l_t::max()));
 };
