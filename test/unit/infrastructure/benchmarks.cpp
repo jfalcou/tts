@@ -20,11 +20,6 @@ struct recording_sink : tts::output_sink
   {
     all += t;
   }
-
-  bool holds(char const* s) const
-  {
-    return std::strstr(all.data(), s) != nullptr; // NOSONAR - C++23 on a C++20 project
-  }
 };
 
 // Sets an environment variable for its lifetime, which the options read as --name=value.
@@ -65,6 +60,26 @@ struct four_lanes : tts::bench::default_traits
     return tts::text("**Machine:** test");
   }
 };
+
+// The output of a benchmark that times one row, twice, over the buffer x.
+template<typename Traits = tts::bench::default_traits, typename Buffer, typename... Counts>
+tts::text table_of(char const* title, Buffer const& x, Counts... counts)
+{
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    tts::scoped_sink                    scope(sink);
+    tts::bench::basic_benchmark<Traits> b(title, static_cast<std::size_t>(counts)...);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+  return sink.all;
+}
+
+bool holds(tts::text const& output, char const* s)
+{
+  return std::strstr(output.data(), s) != nullptr; // NOSONAR - C++23 on a C++20 project
+}
 
 TTS_CASE("Check that tts::bench::random draws in its range, the same values from the same state")
 {
@@ -136,63 +151,39 @@ TTS_CASE("Check that a benchmark reports one row per run under its name")
     TTS_RUN_BENCHMARK(b, int, "second", twice, x);
   }
 
-  TTS_EXPECT(sink.holds("# Benchmarking for : `table`"));
-  TTS_EXPECT(sink.holds("| Name "));
-  TTS_EXPECT(sink.holds("| first "));
-  TTS_EXPECT(sink.holds("| second "));
-  TTS_EXPECT(sink.holds(" ns/elem |"));
-  TTS_EXPECT(sink.holds(" bra/elem |"));
-  TTS_EXPECT(sink.holds(" miss% |"));
+  TTS_EXPECT(holds(sink.all, "# Benchmarking for : `table`"));
+  TTS_EXPECT(holds(sink.all, "| Name "));
+  TTS_EXPECT(holds(sink.all, "| first "));
+  TTS_EXPECT(holds(sink.all, "| second "));
+  TTS_EXPECT(holds(sink.all, " ns/elem |"));
+  TTS_EXPECT(holds(sink.all, " bra/elem |"));
+  TTS_EXPECT(holds(sink.all, " miss% |"));
 };
 
 TTS_CASE("Check that a benchmark states whether the assertions of its unit are enabled")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
-
-  recording_sink sink;
-  {
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("assertions", 3);
-    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
-  }
+  auto const output = table_of("assertions", tts::bench::random<int>(-20, 20), 3);
 
 #if defined(NDEBUG)
-  TTS_EXPECT(sink.holds("Assertions: disabled"));
+  TTS_EXPECT(holds(output, "Assertions: disabled"));
 #else
-  TTS_EXPECT(sink.holds("Assertions: enabled"));
+  TTS_EXPECT(holds(output, "Assertions: enabled"));
 #endif
 };
 
 TTS_CASE("Check that a benchmark reads the lanes and the machine from its traits")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
+  auto const output = table_of<four_lanes>("traits", tts::bench::random<int>(-20, 20), 3);
 
-  recording_sink sink;
-  {
-    tts::scoped_sink                        scope(sink);
-    tts::bench::basic_benchmark<four_lanes> b("traits", 3);
-    TTS_RUN_BENCHMARK(b, int, "wide", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds("**Machine:** test"));
-  TTS_EXPECT(sink.holds("| wide |    4 |"));
+  TTS_EXPECT(holds(output, "**Machine:** test"));
+  TTS_EXPECT(holds(output, "| twice |    4 |"));
 };
 
 TTS_CASE("Check that a benchmark reads a std::vector under the default traits")
 {
-  std::vector    x(tts::bench::size, 3);
-  auto           twice = [](int v) { return 2 * v; };
+  auto const output = table_of("vector", std::vector(tts::bench::size, 3), 3);
 
-  recording_sink sink;
-  {
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("vector", 3);
-    TTS_RUN_BENCHMARK(b, int, "from a vector", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds("| from a vector "));
+  TTS_EXPECT(holds(output, "| twice "));
 };
 
 TTS_CASE("Check that the table prints three significant digits")
@@ -219,82 +210,40 @@ TTS_CASE("Check that the CSV quotes a name and doubles its quotes")
 
 TTS_CASE("Check that a benchmark prints the epochs and the warmup of its constructor")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
-
-  recording_sink sink;
-  {
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("counts", 3, 2);
-    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds(" - Epochs: 3 - Warmup: 2"));
+  TTS_EXPECT(
+  holds(table_of("counts", tts::bench::random<int>(-20, 20), 3, 2), " - Epochs: 3 - Warmup: 2"));
 };
 
 TTS_CASE("Check that --epochs and --warmup take precedence over the constructor")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
+  scoped_env epochs("TTS_EPOCHS", "4");
+  scoped_env warmup("TTS_WARMUP", "5");
 
-  recording_sink sink;
-  {
-    scoped_env            epochs("TTS_EPOCHS", "4");
-    scoped_env            warmup("TTS_WARMUP", "5");
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("override", 3, 2);
-    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds(" - Epochs: 4 - Warmup: 5"));
+  TTS_EXPECT(
+  holds(table_of("override", tts::bench::random<int>(-20, 20), 3, 2), " - Epochs: 4 - Warmup: 5"));
 };
 
 TTS_CASE("Check that a benchmark runs one epoch at least")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
+  scoped_env epochs("TTS_EPOCHS", "0");
 
-  recording_sink sink;
-  {
-    scoped_env            epochs("TTS_EPOCHS", "0");
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("one epoch", 3, 2);
-    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds(" - Epochs: 1 - Warmup: 2"));
+  TTS_EXPECT(
+  holds(table_of("one epoch", tts::bench::random<int>(-20, 20), 3, 2), " - Epochs: 1 - Warmup: 2"));
 };
 
 TTS_CASE("Check that a benchmark warms up 100 passes by default")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
-
-  recording_sink sink;
-  {
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("default warmup", 3);
-    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds(" - Epochs: 3 - Warmup: 100"));
+  TTS_EXPECT(holds(table_of("default warmup", tts::bench::random<int>(-20, 20), 3),
+                   " - Epochs: 3 - Warmup: 100"));
 };
 
 TTS_CASE("Check that a negative count falls to its minimum")
 {
-  auto           x     = tts::bench::random<int>(-20, 20);
-  auto           twice = [](int v) { return 2 * v; };
+  scoped_env epochs("TTS_EPOCHS", "-5");
+  scoped_env warmup("TTS_WARMUP", "-1");
 
-  recording_sink sink;
-  {
-    scoped_env            epochs("TTS_EPOCHS", "-5");
-    scoped_env            warmup("TTS_WARMUP", "-1");
-    tts::scoped_sink      scope(sink);
-    tts::bench::benchmark b("negative counts", 3, 2);
-    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
-  }
-
-  TTS_EXPECT(sink.holds(" - Epochs: 1 - Warmup: 0"));
+  TTS_EXPECT(holds(table_of("negative counts", tts::bench::random<int>(-20, 20), 3, 2),
+                   " - Epochs: 1 - Warmup: 0"));
 };
 
 TTS_CASE("Check that an err% above 5% carries a mark")

@@ -462,7 +462,8 @@ namespace tts::bench
           if(r != 0) std::fputc(',', file.get());
           auto const&  res     = results[ r ];
           double const elapsed = res.get(e, ankerl::nanobench::Result::Measure::elapsed);
-          std::fprintf(file.get(), "%g", elapsed / static_cast<double>(res.config().mBatch));
+          double const element = elapsed / static_cast<double>(res.config().mBatch);
+          std::fprintf(file.get(), "%g", element); // NOSONAR - C++23 on a C++20 project
         }
       }
       std::fputc('\n', file.get());
@@ -633,7 +634,7 @@ namespace tts::bench
     **/
     //======================================================================================================================
     template<typename Row, typename Name, typename Func, typename... Values>
-    void run(Name const& row_name, Func&& func, Values const&... values)
+    void run(Name const& row_name, Func func, Values const&... values)
     {
       time_run<Row>(tts::text(row_name), func, Traits::template input<Row>(values)...);
     }
