@@ -38,8 +38,8 @@
   A benchmark is a TTS case that draws its inputs once (usually through `tts::bench::random`), then
   measures each function as a table row through @ref TTS_RUN_BENCHMARK. The table is printed when
   the benchmark goes out of scope, and its first row is the baseline of every speedup. Two
-  benchmarks in one scope print in reverse construction order. Such a case records no check, so it
-  will count as a success only if it ends with @ref TTS_PASS.
+  benchmarks in one scope print in reverse construction order. Such a case records no check, so TTS
+  reports it as invalid unless it ends with @ref TTS_PASS.
 
   @groupheader{Measurement}
 
@@ -51,9 +51,10 @@
   Each row is timed when its @ref TTS_RUN_BENCHMARK runs, after its traits have built its inputs
   outside the timing. An epoch is a sequence of complete passes over all buffers, and
   [nanobench](https://nanobench.ankerl.com) calibrates the passes per epoch for each row, so that an
-  epoch lasts at least 1 ms. By default, each row runs 100 epochs after 100 warmup passes. Both
-  counts are parameters of the benchmark constructor (the epochs must be at least one), and
-  `--epochs=N` and `--warmup=N` override them for an entire executable. Every call is followed by a
+  epoch lasts at least 1 ms, the default of nanobench. By default, each row runs 100 epochs after
+  100 warmup passes. Both counts are the second and third parameters of the benchmark constructor,
+  and `--epochs=N` and `--warmup=N` override them for an entire executable. A count below its
+  minimum (one epoch, zero warmup passes) is raised to that minimum. Every call is followed by a
   sink, to keep its result alive. The measured time therefore includes the loop, the loads, and the
   sink, and consecutive calls cannot be vectorized. Since the calls are independent and the buffers
   stay in cache, a row measures throughput on hot data, not latency.
@@ -68,10 +69,10 @@
   | Column | Content |
   |---|---|
   | `N` | values processed per call, from the traits |
-  | `Speedup` | elements per second of the row over those of the first row |
+  | `Speedup` | elements per second over those of the first row, the rows timed in turn |
   | `Eff.` | the speedup over `N` in percent, `-` on a single-lane row after the first |
   | `ns/elem`, `min`, `max` | median, smallest, and largest time per element, in nanoseconds |
-  | `err%` | median absolute percentage error of the epoch times |
+  | `err%` | median absolute percentage error of the epoch times, with `~` above 5% |
   | `elem/s` | elements per second, the inverse of the median time per element |
   | `cyc/elem` | median CPU cycles per element |
   | `ins/elem` | median instructions per element |
@@ -80,7 +81,8 @@
 
   `err%` is the median of `|t - m| / t` over the epochs, where `t` is the time per element in an
   epoch and `m` is their median. If the operating system blocks the hardware counters (as many
-  containers do), their four columns read `-`, and a note under the table says so.
+  containers do), their four columns read `-`, and a note under the table says so. Above 5%, the
+  threshold of nanobench for an unstable measure, a `~` follows `err%`, and a note says so as well.
 
   If the executable is run with `-d` or `--dump`, it also writes `<title>.csv` in the working
   directory, replacing any earlier file of that title. The file holds:
@@ -88,8 +90,11 @@
   - a header line of quoted row names.
   - one line per epoch, holding a time per element for every row, in seconds.
 
-  If this file cannot be opened (for instance, because the title contains a `/`), a note under the
-  table title reports the failure.
+  The rows are timed one after the other, so a line puts side by side epochs taken at different
+  times.
+
+  If this file cannot be opened (for instance, because the title contains a `/`), a note above the
+  table reports the failure.
 
   @groupheader{Inputs}
 
@@ -99,8 +104,10 @@
     provides `size()`, `operator[]`, and `push_back`, and supports range-based for loops.
   - The number of values drawn is the third argument of `tts::bench::random`, which is
     `tts::bench::size` if not specified.
-  - The draws come from a dedicated generator, independent of the seed that TTS prints at startup
-    and of `--seed`.
+  - The draws come from a dedicated generator at a fixed seed, so every run draws the same values,
+    whatever the seed that TTS prints at startup and `--seed`.
+  - The cases of an executable draw from this generator in turn, so the inputs of a case depend on
+    the cases that ran before it, under `--shard` as well.
   - A buffer drawn once can be reused by several benchmarks.
   - Under `tts::bench::default_traits`, a row:
     - reads its buffers unchanged, a `tts::buffer` or any other container with `size()` and
@@ -250,7 +257,8 @@ namespace tts::bench
     members it needs, `lanes` by a variable template of its own,
     `template<typename Row> static constexpr std::size_t lanes = 4;`.
 
-    - `input<Row>(values)` builds the input of a row from a buffer.
+    - `input<Row>(values)` builds the input of a row from a buffer, by value or by reference,
+      and that input lives until the row is timed.
     - `lanes<Row>` is the number of values that a call processes.
     - `sink(result)` keeps a result from being optimized away.
     - `environment()` returns a line printed under the table title.
@@ -582,7 +590,8 @@ namespace tts::bench
 
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
-      @param title  Title of the table, a character string, also the base name of its CSV file.
+      @param title  Title of the table, a string literal or a `tts::text`, also the base name of its
+                    CSV file.
       @param epochs Number of epochs for each row, at least 1 (100 if not specified).
       @param warmup Number of warmup passes over all buffers (100 if not specified).
     **/
