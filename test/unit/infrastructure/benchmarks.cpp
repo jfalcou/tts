@@ -200,7 +200,7 @@ TTS_CASE("Check that the CSV quotes a name and doubles its quotes")
   tts::bench::_::quoted(file, "pow(x, \"3\")");
   std::rewind(file);
 
-  tts::buffer<char> read(32, '\0');
+  tts::buffer read(32, '\0');
   TTS_EXPECT(std::fgets(read.data(), static_cast<int>(read.size()), file) != nullptr);
   TTS_EQUAL(tts::text(read.data()), tts::text("\"pow(x, \"\"3\"\")\""));
   std::fclose(file);

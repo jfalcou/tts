@@ -306,7 +306,7 @@ namespace tts::bench
     //======================================================================================================================
     template<typename Result> static void sink(Result const& result)
     {
-      ankerl::nanobench::doNotOptimizeAway(result);
+      ankerl::nanobench::doNotOptimizeAway(result); // NOSONAR - names this parameter itself
     }
 
     //======================================================================================================================
@@ -532,7 +532,7 @@ namespace tts::bench
                                                 "IPC",
                                                 "bra/elem",
                                                 "miss%"};
-      tts::buffer<int> const         widths  = {4, 9, 8, 10, 10, 10, 6, 12, 10, 10, 6, 10, 6};
+      tts::buffer const              widths  = {4, 9, 8, 10, 10, 10, 6, 12, 10, 10, 6, 10, 6};
 
       tts::buffer<tts::text>         header_cells;
       for(char const* h: headers)
