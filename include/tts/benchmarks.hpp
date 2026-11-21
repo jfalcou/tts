@@ -36,32 +36,34 @@
   @ref TTS_MAIN, and no other macro needs to be defined.
 
   A benchmark is a TTS case that draws its inputs once (usually through `tts::bench::random`), then
-  measures each function as a table row with @ref TTS_RUN_BENCHMARK. The table is printed when
-  the benchmark goes out of scope, and its first row is the baseline of every speedup. Such a case
-  records no check, so it will not count as a success unless it ends with @ref TTS_PASS.
+  measures each function as a table row through @ref TTS_RUN_BENCHMARK. The table is printed when
+  the benchmark goes out of scope, and its first row is the baseline of every speedup. Two
+  benchmarks in one scope print in reverse construction order. Such a case records no check, so it
+  will count as a success only if it ends with @ref TTS_PASS.
 
   @groupheader{Measurement}
 
   Each row calls its function once per index of its buffers, and the `i`-th call receives the `i`-th
   value of every buffer. If the buffers differ in length, the shortest buffer determines the number
-  of calls. A lambda or a function object can be inlined in the timed loop, but a function name is
-  called through a pointer, so every call is indirect.
+  of calls. Lambdas and function objects can be inlined in the timed loop, but function names are
+  called through pointers, making every call indirect.
 
-  An epoch is a sequence of complete passes over all buffers, whose number
-  [nanobench](https://nanobench.ankerl.com) chooses so that the epoch lasts at least 1 ms. By
-  default, each row runs 100 epochs after a single warmup pass. Both counts are parameters of the
-  benchmark constructor (the epochs must be at least one), and `--epochs=N` and `--warmup=N`
-  override them for an entire executable. A sink follows every call to keep its result alive, so the
-  measured time includes the loop, the loads, and the sink, and consecutive calls cannot be
-  vectorized. The calls are independent and the buffers stay in cache, so a row measures throughput
-  on hot data, not latency.
+  Each row is timed when its @ref TTS_RUN_BENCHMARK runs, after its traits have built its inputs
+  outside the timing. An epoch is a sequence of complete passes over all buffers, and
+  [nanobench](https://nanobench.ankerl.com) calibrates the passes per epoch for each row, so that an
+  epoch lasts at least 1 ms. By default, each row runs 100 epochs after a single warmup pass. Both
+  counts are parameters of the benchmark constructor (the epochs must be at least one), and
+  `--epochs=N` and `--warmup=N` override them for an entire executable. Every call is followed by a
+  sink, to keep its result alive. The measured time therefore includes the loop, the loads, and the
+  sink, and consecutive calls cannot be vectorized. Since the calls are independent and the buffers
+  stay in cache, a row measures throughput on hot data, not latency.
 
   @groupheader{Table}
 
-  A line under the title, such as `Assertions: disabled - Epochs: 100 - Warmup: 1`, tells whether
-  assertions are enabled in the translation unit (from `NDEBUG`) and gives both counts. An element
-  is a single value, so a call of a row with `N` lanes processes `N` elements. The table has one row
-  per function, with these columns:
+  Under the title line, which names the benchmark, a line such as `Assertions: disabled - Epochs:
+  100 - Warmup: 1` tells whether assertions are enabled in the translation unit (from `NDEBUG`) and
+  gives both counts. An element is a single value, and each call of a row with `N` lanes processes
+  `N` elements. The table has one row per function, with these columns:
 
   | Column | Content |
   |---|---|
@@ -77,16 +79,15 @@
   | `bra/elem` | median branch instructions per element |
   | `miss%` | median mispredicted branches over median branch instructions, in percent |
 
-  `err%` is the median of `|t - m| / t` over the epochs, where `t` is the duration of an epoch and
-  `m` is the median duration. If the operating system blocks the hardware counters (as many
+  `err%` is the median of `|t - m| / t` over the epochs, where `t` is the time per element in an
+  epoch and `m` is their median. If the operating system blocks the hardware counters (as many
   containers do), their five columns read `-`, and a note under the table says so.
 
   If the executable is run with `-d` or `--dump`, it also writes `<title>.csv` in the working
-  directory, with:
+  directory, replacing any earlier file of that title. The file holds:
 
-  - one quoted column name per row.
-  - one line per epoch.
-  - each epoch's time per element, in seconds.
+  - a header line of quoted row names.
+  - one line per epoch, holding a time per element for every row, in seconds.
 
   If this file cannot be opened (for instance, because the title contains a `/`), a note under the
   table title reports the failure.
@@ -95,12 +96,13 @@
 
   The inputs of a row are buffers, one per parameter of its function.
 
-  - `tts::bench::random` returns a `tts::buffer`, the vector type of TTS, which provides `size()`,
-    `operator[]`, and `push_back`, and supports range-based for loops.
+  - The buffer that `tts::bench::random` returns is a `tts::buffer`, the vector type of TTS, which
+    provides `size()`, `operator[]`, and `push_back`, and supports range-based for loops.
   - The number of values drawn is the third argument of `tts::bench::random`, which is
     `tts::bench::size` if not specified.
-  - The draws come from a dedicated generator, so they depend neither on the seed that TTS prints
-    at startup nor on `--seed`.
+  - The draws come from a dedicated generator, independent of the seed that TTS prints at startup
+    and of `--seed`.
+  - A buffer drawn once can be reused by several benchmarks.
   - Under `tts::bench::default_traits`, a row:
     - reads its buffers unchanged, a `tts::buffer` or any other container with `size()` and
       `operator[]`, such as `std::vector`.
@@ -136,10 +138,10 @@
 //======================================================================================================================
 /**
   @def TTS_RUN_BENCHMARK_TPL
-  @brief Times a benchmark row whose type depends on a template parameter.
+  @brief Times a benchmark row when the type of the benchmark depends on a template parameter.
 
-  This macro inserts the `.template` keyword that a benchmark of dependent type requires. Its
-  parameters are those of @ref TTS_RUN_BENCHMARK.
+  This macro is the form of @ref TTS_RUN_BENCHMARK that inserts the `.template` keyword such a
+  benchmark requires, and its parameters are the same.
 
   @groupheader{Example}
   @snippet benchmarks/hypot.cpp snippet
@@ -169,9 +171,10 @@ namespace tts::bench
     @ingroup tools-benchmarks
     @brief The state of the generator that draws every benchmark buffer.
 
-    Its initial value is a fixed seed, so two executions will time the same values. This generator
-    is independent from the generator used by the test run, so `--seed` and `tts::set_random_seed`
-  do not affect its draws. Assigning a new state changes the values of the following draws.
+    Its initial value is a fixed seed, which makes two executions time the same values. This
+    generator is independent from the generator of the test run, and neither `--seed` nor
+    `tts::set_random_seed` affects its draws. Assigning a new state changes the values of the
+    following draws.
 
     @groupheader{Example}
     @snippet benchmarks/draws.cpp snippet
@@ -264,8 +267,10 @@ namespace tts::bench
     @brief Traits under which a row reads its buffers as drawn and processes a single value per
            call.
 
-    `tts::bench::basic_benchmark` uses four members of its traits. A library may derive from
-    `default_traits` to replace only the members it needs.
+    `tts::bench::basic_benchmark` uses four members of its traits, and builds the input of a row
+    once, before its timing. A library may derive from `default_traits` to replace only the
+    members it needs, `lanes` by a variable template of its own,
+    `template<typename Row> static constexpr std::size_t lanes = 4;`.
 
     - `input<Row>(values)` builds the input of a row from a buffer.
     - `lanes<Row>` is the number of values that a call processes.
@@ -282,7 +287,7 @@ namespace tts::bench
     /**
       @brief Returns `values` unchanged, as the buffer read by a row of type `Row`.
 
-      `values` may be any buffer with `size()` and `operator[]`.
+      `values` may be any buffer with <code>%size()</code> and `operator[]`.
     **/
     //======================================================================================================================
     template<typename Row, typename Buffer> static Buffer const& input(Buffer const& values)
@@ -300,7 +305,7 @@ namespace tts::bench
 
     //======================================================================================================================
     /**
-      @brief Keeps a result from being optimized away, with
+      @brief Keeps a result from being optimized away, through
              [`ankerl::nanobench::doNotOptimizeAway`](https://nanobench.ankerl.com/reference.html).
     **/
     //======================================================================================================================
@@ -376,7 +381,7 @@ namespace tts::bench
   {
   private:
     ankerl::nanobench::Bench    bench_;
-    std::size_t                 repetitions_;
+    std::size_t                 epochs_;
     std::size_t                 warmup_;
 
     tts::buffer<std::ptrdiff_t> run_cardinals_;
@@ -386,8 +391,7 @@ namespace tts::bench
     {
       bench_.output(nullptr);
       bench_.performanceCounters(true);
-      bench_.epochs(
-      tts::_::max(std::size_t {1}, ::tts::arguments().value(repetitions_, "--epochs")));
+      bench_.epochs(tts::_::max(std::size_t {1}, ::tts::arguments().value(epochs_, "--epochs")));
       bench_.warmup(::tts::arguments().value(warmup_, "--warmup"));
     }
 
@@ -580,12 +584,12 @@ namespace tts::bench
 
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
-      @param repetitions Number of epochs for each row, at least 1 (100 if not specified).
+      @param epochs      Number of epochs for each row, at least 1 (100 if not specified).
       @param warmup      Number of warmup passes over all buffers (1 if not specified).
     **/
     //======================================================================================================================
-    explicit basic_benchmark(std::size_t repetitions = 100, std::size_t warmup = 1)
-        : repetitions_(repetitions)
+    explicit basic_benchmark(std::size_t epochs = 100, std::size_t warmup = 1)
+        : epochs_(epochs)
         , warmup_(warmup)
         , base_file_name_("benchmark")
     {
@@ -594,24 +598,23 @@ namespace tts::bench
 
     //======================================================================================================================
     /**
-      @brief Builds a benchmark whose table is titled `name`.
+      @brief Builds a benchmark whose table bears the title @p title.
 
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
-      @param name        Title of the table, also the base name of its CSV file.
-      @param repetitions Number of epochs for each row, at least 1 (100 if not specified).
+      @param title       Title of the table, a character string, also the base name of its CSV
+                         file.
+      @param epochs      Number of epochs for each row, at least 1 (100 if not specified).
       @param warmup      Number of warmup passes over all buffers (1 if not specified).
     **/
     //======================================================================================================================
     // Do not drop the constraint: an integer would select this constructor and be taken as a name.
     template<typename Name>
-    explicit basic_benchmark(Name const& name,
-                             std::size_t repetitions = 100,
-                             std::size_t warmup      = 1)
+    explicit basic_benchmark(Name const& title, std::size_t epochs = 100, std::size_t warmup = 1)
       requires(!std::is_integral_v<Name>)
-        : repetitions_(repetitions)
+        : epochs_(epochs)
         , warmup_(warmup)
-        , base_file_name_(tts::text(name))
+        , base_file_name_(tts::text(title))
     {
       configure_bench();
     }
@@ -648,18 +651,18 @@ namespace tts::bench
     /**
       @brief Times a row of type `Row` (the function called by @ref TTS_RUN_BENCHMARK).
 
-      @tparam Row   Type of the row, used by the traits to build its input and to count its
-                    lanes.
-      @param name   Name of the row, as printed in the table.
-      @param func   Function to time, called once per index of the buffers.
-      @param values Buffers holding the arguments for `func`, in parameter order.
+      @tparam Row     Type of the row, used by the traits to build its input and to count its
+                      lanes.
+      @param row_name Name of the row, as printed in the table.
+      @param func     Function to time, called once per index of the buffers.
+      @param values   Buffers holding the arguments for `func`, in parameter order.
       @return A reference to the benchmark, to allow chained calls.
     **/
     //======================================================================================================================
     template<typename Row, typename Name, typename Func, typename... Values>
-    basic_benchmark& run(Name const& name, Func&& func, Values const&... values)
+    basic_benchmark& run(Name const& row_name, Func&& func, Values const&... values)
     {
-      execute_single_run<Row>(tts::text(name), func, values...);
+      execute_single_run<Row>(tts::text(row_name), func, values...);
       return *this;
     }
 
@@ -668,7 +671,7 @@ namespace tts::bench
       @brief Prints the table of the rows timed so far, and writes the CSV file if `-d` or `--dump`
              is given.
 
-      The destructor calls this function as well, so a call by hand that is followed by
+      The destructor calls this function as well, and a call by hand followed by
       `tts::bench::basic_benchmark::reset` prints the table only once.
 
       @return A reference to the benchmark, to allow chained calls.

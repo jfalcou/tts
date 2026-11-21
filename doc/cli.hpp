@@ -12,7 +12,8 @@
   `TTS_XXX` environment variable instead of a command line flag - derived by uppercasing the
   flag name and replacing `-` with `_`. Short forms (`-v`, `-q`, ...) have no environment
   variable equivalent. A CLI flag always takes precedence over its environment variable when
-  both are set.
+  both are set. A flag without value is set by its variable whatever the value, `TTS_DUMP=0`
+  included.
 
   This exists mainly for CI systems where the test command itself is fixed (e.g. `ctest`
   invokes every registered binary through a command line set once at configure time) and
