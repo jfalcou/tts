@@ -16,7 +16,7 @@ struct interval
   double hi;
 };
 
-TTS_CASE("Draw a buffer of intervals")
+TTS_CASE("Draw a buffer of intervals and a buffer of flags")
 {
   // An interval takes two values of the generator of the benchmarks, its width on [0, 0.5]
   tts::buffer<interval> values(tts::bench::size);
@@ -26,6 +26,9 @@ TTS_CASE("Draw a buffer of intervals")
     v               = {lo, lo + tts::bench::roll(0., 0.5)};
   }
 
+  auto flags = tts::bench::random<bool>(false, true, 64);
+
   TTS_LESS_EQUAL(values[ 0 ].lo, values[ 0 ].hi);
+  TTS_EQUAL(flags.size(), std::size_t {64});
 };
 //! [snippet]

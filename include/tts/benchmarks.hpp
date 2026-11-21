@@ -164,7 +164,7 @@ namespace tts::bench
     @brief Draws a value uniformly on [mini, maxi] with the benchmark generator, as
            `tts::bench::random` does for each element.
 
-    @tparam T   Arithmetic type of the value.
+    @tparam T   Arithmetic type of the value, `bool` included.
     @param mini Inclusive lower bound of the drawn range.
     @param maxi Inclusive upper bound of the drawn range.
     @return A value of type `T` between `mini` and `maxi`.
@@ -175,7 +175,9 @@ namespace tts::bench
   //======================================================================================================================
   // Do not draw from tts::_::prng_state as it stands: the run seeds it from the clock, and two
   // executions would time different values.
-  template<typename T> T roll(T mini, T maxi)
+  template<typename T>
+    requires(std::is_arithmetic_v<T>)
+  T roll(T mini, T maxi)
   {
     std::uint64_t const run   = std::exchange(tts::_::prng_state, _::prng_state);
     T const             value = tts::_::roll(mini, maxi);
@@ -190,9 +192,10 @@ namespace tts::bench
     @brief Draws a buffer of `count` values uniformly distributed over [mini, maxi].
 
     Floating-point values are drawn uniformly, whereas `tts::random_value` draws them
-    log-uniformly.
+    log-uniformly, and a buffer of `bool` drawn on [false, true] holds both values with equal
+    odds.
 
-    @tparam T    Arithmetic type of the values.
+    @tparam T    Arithmetic type of the values, `bool` included.
     @param mini  Inclusive lower bound of the drawn range.
     @param maxi  Inclusive upper bound of the drawn range.
     @param count Number of values to draw (`tts::bench::size` if not specified).

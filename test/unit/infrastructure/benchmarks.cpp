@@ -91,6 +91,18 @@ TTS_CASE("Check that tts::bench::random draws the number of values it is given")
   TTS_EQUAL(tts::bench::random<int>(0, 9, 10).size(), std::size_t {10});
 };
 
+TTS_CASE("Check that tts::bench::random draws both values of bool")
+{
+  auto        flags = tts::bench::random<bool>(false, true);
+
+  std::size_t trues = 0;
+  for(bool f: flags)
+    trues += f ? 1U : 0U;
+
+  TTS_GREATER(trues, std::size_t {0});
+  TTS_LESS(trues, flags.size());
+};
+
 TTS_CASE("Check that a draw of tts::bench::random leaves the generator of the run untouched")
 {
   auto const            run    = tts::_::prng_state;
