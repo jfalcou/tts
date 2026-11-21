@@ -322,6 +322,14 @@ namespace tts::bench
       return tts::text("%.*f", decimals, v);
     }
 
+    // nanobench marks a measure above 5% as unstable, and the table uses the same threshold.
+    inline tts::text spread(double error)
+    {
+      tts::text cell("%.1f%%", error * 100.0);
+      if(error > 0.05) cell += "~";
+      return cell;
+    }
+
     inline void quoted(FILE* file, char const* name)
     {
       std::fputc('"', file);
@@ -483,7 +491,7 @@ namespace tts::bench
               _::digits(1e9 * current_time / batch_size),
               _::digits(1e9 * res.minimum(measure::elapsed) / batch_size),
               _::digits(1e9 * res.maximum(measure::elapsed) / batch_size),
-              tts::text("%.1f%%", res.medianAbsolutePercentError(measure::elapsed) * 100.0),
+              _::spread(res.medianAbsolutePercentError(measure::elapsed)),
               tts::text("%.0f", elem_per_sec),
               has_counters ? tts::text("%.2f", res.median(measure::cpucycles) / batch_size)
                            : tts::text("-"),
@@ -522,20 +530,24 @@ namespace tts::bench
       auto const  baseline = static_cast<double>(first.config().mBatch) /
                              first.median(ankerl::nanobench::Result::Measure::elapsed);
 
-      bool        blocked  = false;
+      using measure        = ankerl::nanobench::Result::Measure;
+      bool blocked         = false;
+      bool unstable        = false;
       for(std::size_t i = 0; i < results.size(); ++i)
       {
-        blocked = blocked || !counted(results[ i ]);
+        blocked  = blocked || !counted(results[ i ]);
+        unstable = unstable || results[ i ].medianAbsolutePercentError(measure::elapsed) > 0.05;
         print_row(name_width,
                   results[ i ].config().mBenchmarkName.c_str(),
                   row_cells(results[ i ], i, baseline));
       }
 
+      if(blocked || unstable) out.writeln();
       if(blocked)
-      {
-        out.writeln();
         out.writeln("> Note: the OS blocks the hardware counters, so their four columns read -.");
-      }
+      if(unstable)
+        out.writeln(
+        "> Note: ~ marks an err% above 5%, the threshold of nanobench for an unstable measure.");
     }
 
     void report() const

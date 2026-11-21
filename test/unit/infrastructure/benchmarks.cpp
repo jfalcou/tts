@@ -296,3 +296,9 @@ TTS_CASE("Check that a negative count falls to its minimum")
 
   TTS_EXPECT(sink.holds(" - Epochs: 1 - Warmup: 0"));
 };
+
+TTS_CASE("Check that an err% above 5% carries a mark")
+{
+  TTS_EQUAL(tts::bench::_::spread(0.02), tts::text("2.0%"));
+  TTS_EQUAL(tts::bench::_::spread(0.06), tts::text("6.0%~"));
+};
