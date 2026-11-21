@@ -1,0 +1,10 @@
+{
+   libgomp-worker-threads-alive-at-exit
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:_dl_allocate_tls
+   ...
+   fun:pthread_create*
+   obj:*/libgomp.so*
+}

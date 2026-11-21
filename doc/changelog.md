@@ -5,8 +5,21 @@ Change Log {#changelog}
 
 ## What's Changed
 
+### Breaking Changes
+  * Removed `tts::realistic_generator`: `tts::randoms` gives the same draw (https://github.com/jfalcou/tts/pull/279)
+
+### New Features
+  * Added `tts::sweep` and `tts::sweep(lo, hi)` to run a range check on every value of a type or of a range (https://github.com/jfalcou/tts/pull/279)
+  * Added `tts::enumeration<T>` to enumerate the values of a type for `tts::sweep` (https://github.com/jfalcou/tts/pull/279)
+  * Added `tts::sample(n)` and `tts::sample(lo, hi, n)` to run a range check on `n` values spread over a type or a range, its bounds included (https://github.com/jfalcou/tts/pull/279)
+  * Range checks no longer keep all their inputs and results in memory (https://github.com/jfalcou/tts/pull/279)
+  * Range checks over `tts::sweep` or `tts::sample` compiled with OpenMP split their calls between the threads of OpenMP (https://github.com/jfalcou/tts/pull/279)
+
 ### Bug Fixes
   * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)
+  * `tts::random_value` keeps a floating-point value within its bounds, which the rounding of its log-uniform draw could overstep (https://github.com/jfalcou/tts/pull/279)
+  * `--valmin` and `--valmax` narrow the values of `tts::sweep`, `tts::sample`, and `tts::randoms` in range checks, with a note on each check they narrow, where no generator read them since 3.0 (https://github.com/jfalcou/tts/pull/279)
+  * `tts::ulp_check` measures the distance between values of opposite signs, which it got wrong for floats and for 8- and 16-bit integers, a range check over the latter crashing (https://github.com/jfalcou/tts/pull/279)
 
 # Version 4.1
 

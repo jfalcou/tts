@@ -32,8 +32,8 @@ Range specifics Parameters:
   --block=arg       Set size of range checks samples (min. 32)
   --loop=arg        Repeat each range checks arg times
   --ulpmax=arg      Set global failure ulp threshold for range tests (default is 2.0)
-  --valmax=arg      Set maximal value for range tests (default is code)
-  --valmin=arg      Set minimal value for range tests (default is code)
+  --valmax=arg      Keep the values of range tests at arg or below
+  --valmin=arg      Keep the values of range tests at arg or above
 )";
 
   //====================================================================================================================

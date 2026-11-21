@@ -7,6 +7,7 @@
 //======================================================================================================================
 #pragma once
 #include <tts/tools/bitcast.hpp>
+#include <tts/tools/enumeration.hpp>
 #include <limits>
 #include <tts/engine/math.hpp>
 #include <tts/tools/comparators.hpp>
@@ -84,27 +85,17 @@ namespace tts::_
 
       if constexpr(std::is_same_v<T, bool>)
         return a == b ? 0. : std::numeric_limits<double>::infinity();
-      else if constexpr(std::is_floating_point_v<T>)
+      else if constexpr(std::is_floating_point_v<T> || std::is_integral_v<T>)
       {
-        using ui_t = std::conditional_t<std::is_same_v<T, float>, std::uint32_t, std::uint64_t>;
-        if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
-        else if(is_unordered(a, b)) return std::numeric_limits<double>::infinity();
-        else
+        if constexpr(std::is_floating_point_v<T>)
         {
-          auto aa = bitinteger(a);
-          auto bb = bitinteger(b);
-          if(aa > bb) std::swap(aa, bb);
-          auto z = static_cast<ui_t>(bb - aa);
-          if(signbit(a) != signbit(b)) ++z;
-          return static_cast<double>(z) / 2.;
+          if((a == b) || (is_nan(a) && is_nan(b))) return 0.;
+          if(is_unordered(a, b)) return std::numeric_limits<double>::infinity();
         }
-      }
-      else if constexpr(std::is_integral_v<T>)
-      {
-        using u_t = typename std::make_unsigned<T>::type;
-        auto ua   = static_cast<u_t>(a);
-        auto ub   = static_cast<u_t>(b);
-        return static_cast<double>((a < b) ? (ub - ua) : (ua - ub)) / 2.;
+        // Half the number of steps between the ranks of a and b in the order of the values of T.
+        auto ia = enumeration<T>::index(a);
+        auto ib = enumeration<T>::index(b);
+        return static_cast<double>(ia < ib ? ib - ia : ia - ib) / 2.;
       }
       else
       {

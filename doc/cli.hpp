@@ -124,8 +124,8 @@
   `--block=N`  | Set size of range checks samples to `N`. `./my_test --block=4096`
   `--loop=N`   | Repeat each range checks `N` times. `./my_test --loop=100`
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
-  `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
-  `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
+  `--valmin=N` | Keep the values of tts::sweep, tts::sample, and tts::randoms at `N` or above in every range check, with a note on each check it narrows. `./my_test --valmin=-100`
+  `--valmax=N` | Keep the values of tts::sweep, tts::sample, and tts::randoms at `N` or below in every range check, with a note on each check it narrows. `./my_test --valmax=1000`
 
 **/
 //==================================================================================================

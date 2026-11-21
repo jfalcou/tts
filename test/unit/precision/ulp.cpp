@@ -85,6 +85,35 @@ TTS_CASE_TPL("ULP distance between floating points", double, float)
 #endif
 };
 
+// Small signed integers on both sides of zero.
+TTS_CASE_TPL("ULP distance between small signed integers of opposite signs",
+             std::int8_t,
+             std::int16_t)
+<typename T>(::tts::type<T>)
+{
+  auto lo = std::numeric_limits<T>::min();
+  auto hi = std::numeric_limits<T>::max();
+
+  TTS_EQUAL(tts::ulp_check(T {-1}, T {0}), 0.5);
+  TTS_EQUAL(tts::ulp_check(T {0}, T {-1}), 0.5);
+  TTS_EQUAL(tts::ulp_check(lo, hi), (static_cast<double>(hi) - static_cast<double>(lo)) / 2.);
+};
+
+// The distance counts the steps in the order of the floats, -0 and +0 two of them.
+TTS_CASE_TPL("ULP distance between floating points of opposite signs", float, double)
+<typename T>(::tts::type<T>)
+{
+  using l_t = std::numeric_limits<T>;
+  using u_t = std::conditional_t<sizeof(T) == 4, std::uint32_t, std::uint64_t>;
+
+  // Do not use subnormals here: nvc++ flushes them, which makes -denorm_min equal to -0.
+  auto const steps = static_cast<double>(std::bit_cast<u_t>(l_t::min()));
+  TTS_EQUAL(tts::ulp_check(-T {0}, -l_t::min()), steps / 2);
+  TTS_EQUAL(tts::ulp_check(T {0}, -l_t::min()), (steps + 1) / 2);
+  TTS_EQUAL(tts::ulp_check(T {-1}, T {1}), static_cast<double>(std::bit_cast<u_t>(T {1})) + 0.5);
+  TTS_EQUAL(tts::ulp_check(l_t::max(), l_t::lowest()), tts::ulp_check(l_t::lowest(), l_t::max()));
+};
+
 TTS_CASE("ULP distance avoids signed overflow near a large integral type's limits")
 {
   auto lo       = std::numeric_limits<std::int64_t>::min();

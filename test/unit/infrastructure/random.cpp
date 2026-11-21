@@ -208,3 +208,26 @@ TTS_CASE_TPL("Check degenerate range for integers", int, long, unsigned int)
   TTS_EQUAL(tts::random_value(T(0), T(0)), T(0));
   TTS_EQUAL(tts::random_value(T(7), T(7)), T(7));
 };
+
+// A range one step wide: the log-uniform draw rounds past a bound unless clamped.
+TTS_CASE_TPL("Check random values stay within ranges one step wide", float, double)
+<typename T>(tts::type<T>)
+{
+  std::size_t outside = 0;
+  T           a       = T(1);
+
+  for(int step = 0; step < 22; ++step)
+  {
+    T b = std::nextafter(a, T(2000));
+    for(int k = 0; k < 1000; ++k)
+    {
+      T v      = tts::random_value(a, b);
+      T w      = tts::random_value(-b, -a);
+      outside += (v < a || v > b) ? 1 : 0;
+      outside += (w < -b || w > -a) ? 1 : 0;
+    }
+    a = std::nextafter(a * T(1.37), T(2000));
+  }
+
+  TTS_EQUAL(outside, std::size_t {0});
+};

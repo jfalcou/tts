@@ -17,12 +17,4 @@ namespace tts::_
   {
     return std::bit_cast<std::uint64_t>(a);
   }
-
-  template<typename T> inline auto bitinteger(T a) noexcept
-  {
-    auto ia             = as_int(a);
-    using r_t           = decltype(ia);
-    constexpr auto mask = r_t(1) << (sizeof(r_t) * 8 - 1);
-    return ((ia & mask) == mask) ? mask - ia : ia;
-  }
 }
