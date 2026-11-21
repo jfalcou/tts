@@ -237,3 +237,19 @@ TTS_CASE("Check that --epochs and --warmup take precedence over the constructor"
 
   TTS_EXPECT(sink.holds(" - Epochs: 4 - Warmup: 5"));
 };
+
+TTS_CASE("Check that a benchmark runs one epoch at least")
+{
+  auto           x     = tts::bench::random<int>(-20, 20);
+  auto           twice = [](int v) { return 2 * v; };
+
+  recording_sink sink;
+  {
+    scoped_env            epochs("TTS_EPOCHS", "0");
+    tts::scoped_sink      scope(sink);
+    tts::bench::benchmark b("one epoch", 3, 2);
+    TTS_RUN_BENCHMARK(b, int, "twice", twice, x);
+  }
+
+  TTS_EXPECT(sink.holds(" - Epochs: 1 - Warmup: 2"));
+};

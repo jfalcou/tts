@@ -50,10 +50,11 @@
   An epoch is a sequence of complete passes over all buffers, whose number
   [nanobench](https://nanobench.ankerl.com) chooses so that the epoch lasts at least 1 ms. By
   default, each row runs 100 epochs after a single warmup pass. Both counts are parameters of the
-  benchmark constructor, and `--epochs=N` and `--warmup=N` override them for an entire executable. A
-  sink follows every call to keep its result alive, so the measured time includes the loop, the
-  loads, and the sink, and consecutive calls cannot be vectorized. The calls are independent and the
-  buffers stay in cache, so a row measures throughput on hot data, not latency.
+  benchmark constructor (the epochs must be at least one), and `--epochs=N` and `--warmup=N`
+  override them for an entire executable. A sink follows every call to keep its result alive, so the
+  measured time includes the loop, the loads, and the sink, and consecutive calls cannot be
+  vectorized. The calls are independent and the buffers stay in cache, so a row measures throughput
+  on hot data, not latency.
 
   @groupheader{Table}
 
@@ -78,8 +79,7 @@
 
   `err%` is the median of `|t - m| / t` over the epochs, where `t` is the duration of an epoch and
   `m` is the median duration. If the operating system blocks the hardware counters (as many
-  containers do), `cyc/elem`, `ins/elem`, and `bra/elem` read `0.00`, and `IPC` and `miss%` read
-  `-`.
+  containers do), their five columns read `-`, and a note under the table says so.
 
   If the executable is run with `-d` or `--dump`, it also writes `<title>.csv` in the working
   directory, with:
@@ -386,7 +386,8 @@ namespace tts::bench
     {
       bench_.output(nullptr);
       bench_.performanceCounters(true);
-      bench_.epochs(::tts::arguments().value(repetitions_, "--epochs"));
+      bench_.epochs(
+      tts::_::max(std::size_t {1}, ::tts::arguments().value(repetitions_, "--epochs")));
       bench_.warmup(::tts::arguments().value(warmup_, "--warmup"));
     }
 
@@ -494,6 +495,7 @@ namespace tts::bench
       double const   instructions = res.median(measure::instructions);
       double const   cycles       = res.median(measure::cpucycles);
       double const   branches     = res.median(measure::branchinstructions);
+      bool const     counted      = cycles > 0.0 || instructions > 0.0;
 
       return {tts::text("%td", N),
               tts::text("x") + _::digits(speedup),
@@ -503,10 +505,10 @@ namespace tts::bench
               _::digits(1e9 * res.maximum(measure::elapsed) / batch_size),
               tts::text("%.1f%%", res.medianAbsolutePercentError(measure::elapsed) * 100.0),
               tts::text("%.0f", elem_per_sec),
-              tts::text("%.2f", cycles / batch_size),
-              tts::text("%.2f", instructions / batch_size),
+              counted ? tts::text("%.2f", cycles / batch_size) : tts::text("-"),
+              counted ? tts::text("%.2f", instructions / batch_size) : tts::text("-"),
               cycles > 0.0 ? tts::text("%.2f", instructions / cycles) : tts::text("-"),
-              tts::text("%.2f", branches / batch_size),
+              counted ? tts::text("%.2f", branches / batch_size) : tts::text("-"),
               branches > 0.0
               ? tts::text("%.1f%%", 100.0 * res.median(measure::branchmisses) / branches)
               : tts::text("-")};
@@ -567,8 +569,7 @@ namespace tts::bench
       if(counters_failed)
       {
         out.writeln();
-        out.writeln("> Note: CPU cycles, instructions, and branches were 0.00. OS blocked hardware "
-                    "counters.");
+        out.writeln("> Note: the OS blocks the hardware counters, so their five columns read -.");
       }
     }
 
@@ -579,7 +580,7 @@ namespace tts::bench
 
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
-      @param repetitions Number of epochs for each row (100 if not specified).
+      @param repetitions Number of epochs for each row, at least 1 (100 if not specified).
       @param warmup      Number of warmup passes over all buffers (1 if not specified).
     **/
     //======================================================================================================================
@@ -598,7 +599,7 @@ namespace tts::bench
       Both counts can be overridden with `--epochs=N` and `--warmup=N`.
 
       @param name        Title of the table, also the base name of its CSV file.
-      @param repetitions Number of epochs for each row (100 if not specified).
+      @param repetitions Number of epochs for each row, at least 1 (100 if not specified).
       @param warmup      Number of warmup passes over all buffers (1 if not specified).
     **/
     //======================================================================================================================
