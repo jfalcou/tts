@@ -88,7 +88,7 @@ namespace
         t[ 0 ] = '\n';
         t[ 1 ] = '\0';
       }
-      std::size_t l = strlen(line);
+      std::size_t l = strnlen(line, sizeof(line));
       fits          = n + l < size;
       if(fits)
       {
@@ -110,10 +110,12 @@ int main(int argc, char const** argv)
   static char one[ 1 << 16 ];  // NOSONAR - avoids std::string
   static char four[ 1 << 16 ]; // NOSONAR - avoids std::string
 
-  bool        ok = run("--cores=1", one, sizeof(one)) && run("--cores=4", four, sizeof(four));
-  ok             = ok && strstr(one, "Max ULP") != nullptr && strcmp(one, four) == 0;
+  bool        ok     = run("--cores=1", one, sizeof(one)) && run("--cores=4", four, sizeof(four));
+  bool        report = strstr(one, "Max ULP") != nullptr; // NOSONAR - contains() is C++23
+  ok                 = ok && report && strcmp(one, four) == 0;
 
-  if(!ok) printf("One thread:\n%s\nFour threads:\n%s\n", one, four);
+  if(!ok)
+    printf("One thread:\n%s\nFour threads:\n%s\n", one, four); // NOSONAR - std::print is C++23
   return ok ? 0 : 1;
 }
 TTS_DISABLE_WARNING_POP

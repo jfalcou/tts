@@ -337,7 +337,7 @@ TTS_CASE("--valmin and --valmax replace the bounds of tts::sweep")
 
   ::tts::_::current_arguments = saved;
 
-  std::vector<int> expected {-3, -2, -1, 0, 1, 2, 3, 4, 5};
+  std::vector expected {-3, -2, -1, 0, 1, 2, 3, 4, 5};
   TTS_EXPECT(whole == expected);
   TTS_EXPECT(values == expected);
 };

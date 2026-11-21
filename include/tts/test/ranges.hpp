@@ -484,6 +484,28 @@ namespace tts
       return f(adapter<Ws>::load(get<Ks>(inputs).data())...);
     }
 
+    // Adds the distances between the results of the reference and the challenger on one group.
+    template<typename... Ws, typename S, typename G, typename RefFun, typename NewFun>
+    void scan_group(types<Ws...>, S& results, G const& group, RefFun& reference, NewFun& challenger)
+    {
+      for(std::size_t e = 0; e < get<0>(group).size(); ++e)
+      {
+        auto res = call_reference(reference, group, e);
+        for_each_member(results,
+                        [ &res, e ](auto& m, auto j) { m.expected[ e ] = result_member<j>(res); });
+      }
+
+      auto res = call_challenger(types<Ws...> {}, challenger, group);
+      for_each_member(results,
+                      [ &res ](auto& m, auto j)
+                      {
+                        auto const& v = result_member<j>(res);
+                        adapter<std::decay_t<decltype(v)>>::store(v, m.found.data());
+                      });
+
+      for_each_member(results, [ &group ](auto& m, auto) { m.tally(group); });
+    }
+
     // An adapter written for TTS 3, through run and retrieve.
     template<typename T>
     concept legacy_adapter = requires { &adapter<T>::retrieve; };
@@ -543,8 +565,12 @@ namespace tts
       std::size_t groups     = count / group_size;
 
       using scans            = decltype(make_scans(ref_members {}, types<As...> {}, group_size));
-      auto scan              = [ &reference, &challenger, &bounded, &sides, count, repetition ](
-                               std::size_t first, std::size_t last)
+      auto scan              = [ &reference,
+                                 &challenger,
+                                 &bounded,
+                                 sizes = static_cast<std::size_t const*>(sides),
+                                 count,
+                                 repetition ](std::size_t first, std::size_t last)
       {
         // Do not scan into partial[u]: the histograms of neighboring slices share cache lines.
         scans               results = make_scans(ref_members {}, types<As...> {}, group_size);
@@ -552,27 +578,9 @@ namespace tts
 
         for(std::size_t i = first; i < last; i += group_size)
         {
-          fill_group(group, bounded, sides, i, count);
-
+          fill_group(group, bounded, sizes, i, count);
           for(std::size_t r = 0; r < repetition; ++r)
-          {
-            for(std::size_t e = 0; e < group_size; ++e)
-            {
-              auto res = call_reference(reference, group, e);
-              for_each_member(
-              results, [ &res, e ](auto& m, auto j) { m.expected[ e ] = result_member<j>(res); });
-            }
-
-            auto res = call_challenger(types<Ws...> {}, challenger, group);
-            for_each_member(results,
-                            [ &res ](auto& m, auto j)
-                            {
-                              auto const& v = result_member<j>(res);
-                              adapter<std::decay_t<decltype(v)>>::store(v, m.found.data());
-                            });
-
-            for_each_member(results, [ &group ](auto& m, auto) { m.tally(group); });
-          }
+            scan_group(types<Ws...> {}, results, group, reference, challenger);
         }
 
         return results;
