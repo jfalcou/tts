@@ -44,6 +44,24 @@ copa_make_single_unit(
 set_property(TEST unit.infrastructure.replaced_new.exe APPEND
              PROPERTY ENVIRONMENT "VALGRIND_OPTS=--soname-synonyms=somalloc=nouserintercepts")
 
+if(TTS_BENCHMARKS)
+  copa_make_single_unit(
+    INTERFACE tts_test
+    FILES unit/infrastructure/benchmarks.cpp
+    ROOT ${TEST_ROOT}
+    NAME unit.infrastructure.benchmarks.cpp)
+  target_link_libraries(unit.infrastructure.benchmarks.exe PRIVATE tts::benchmarks)
+
+  foreach(example draws hypot traits)
+    copa_make_single_unit(
+      INTERFACE tts_test
+      FILES unit/benchmarks/${example}.cpp
+      ROOT ${TEST_ROOT}
+      NAME unit.benchmarks.${example}.cpp)
+    target_link_libraries(unit.benchmarks.${example}.exe PRIVATE tts::benchmarks)
+  endforeach()
+endif()
+
 ##======================================================================================================================
 ## Test for TTS tests
 ##======================================================================================================================

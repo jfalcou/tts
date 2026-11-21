@@ -72,6 +72,17 @@ void check_uniform_moments(std::vector<double> const& results,
   TTS_RELATIVE_EQUAL(actual_var, expected_var, var_tol);
 }
 
+TTS_CASE("Check that tts::random_value draws both values of bool")
+{
+  int trues = 0;
+  for(int i = 0; i < 1000; ++i)
+    trues += tts::random_value(false, true) ? 1 : 0;
+
+  TTS_GREATER(trues, 400);
+  TTS_LESS(trues, 600);
+  TTS_EXPECT(tts::random_value(true, true));
+};
+
 TTS_CASE("Check realistic integral distribution")
 {
   int                mini = -10'000;

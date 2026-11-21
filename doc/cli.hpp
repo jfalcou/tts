@@ -12,7 +12,8 @@
   `TTS_XXX` environment variable instead of a command line flag - derived by uppercasing the
   flag name and replacing `-` with `_`. Short forms (`-v`, `-q`, ...) have no environment
   variable equivalent. A CLI flag always takes precedence over its environment variable when
-  both are set.
+  both are set. A flag without value is set by its variable whatever the value, `TTS_DUMP=0`
+  included.
 
   This exists mainly for CI systems where the test command itself is fixed (e.g. `ctest`
   invokes every registered binary through a command line set once at configure time) and
@@ -42,6 +43,9 @@
   `TTS_ULPMAX`          | `--ulpmax=N`
   `TTS_VALMIN`          | `--valmin=N`
   `TTS_VALMAX`          | `--valmax=N`
+  `TTS_DUMP`            | `--dump` / `-d`
+  `TTS_EPOCHS`          | `--epochs=N`
+  `TTS_WARMUP`          | `--warmup=N`
 
   # Display Options
 
@@ -126,6 +130,15 @@
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
   `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
   `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
+
+  # Benchmark Parameters
+  These options control the benchmarks of @ref tools-benchmarks.
+
+  Options          | Description
+  ---------------- | -----------------------------------------------------------------------
+  `-d`, `--dump`   | Write the time per element of every epoch of each benchmark to `<title>.csv` in the working directory. `./my_bench --dump`
+  `--epochs=N`     | Run `N` epochs for each row, in place of the count given to the benchmark. `./my_bench --epochs=20`
+  `--warmup=N`     | Run `N` passes over the buffers before the first epoch of each row, in place of the count given to the benchmark. `./my_bench --warmup=100`
 
 **/
 //==================================================================================================
