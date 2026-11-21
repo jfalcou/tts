@@ -11,7 +11,9 @@
 #include <bit>
 #include <cmath>
 #include <cstdint>
+#include <cstring>
 #include <limits>
+#include <utility>
 #include <vector>
 
 TTS_CASE("tts::enumeration lists every value of an 8-bit integer in order")
@@ -49,26 +51,6 @@ TTS_CASE("tts::enumeration orders the floats from -inf to +inf, without NaN")
     TTS_EQUAL(std::bit_cast<std::uint32_t>(e::value(e::index(x))), std::bit_cast<std::uint32_t>(x));
 };
 
-// When the values, or their combinations, fit in the scope, each one is called exactly once.
-TTS_CASE("tts::sweep calls every value of a 16-bit integer once")
-{
-  std::size_t count = 0;
-  std::vector seen(65536, 0);
-
-  auto        ref = [ &count, &seen ](std::int16_t x)
-  {
-    ++count;
-    ++seen[ static_cast<std::size_t>(x + 32768) ];
-    return x;
-  };
-  auto same = [](std::int16_t x) { return x; };
-
-  TTS_ULP_RANGE_CHECK(tts::sweep, std::int16_t, std::int16_t, ref, same, 0.);
-
-  TTS_EQUAL(count, std::size_t {65536});
-  TTS_EQUAL(std::ranges::count(seen, 1), std::ptrdiff_t {65536});
-};
-
 TTS_CASE("tts::sweep(lo, hi) calls every value from lo to hi once")
 {
   std::size_t      count = 0;
@@ -88,7 +70,7 @@ TTS_CASE("tts::sweep(lo, hi) calls every value from lo to hi once")
   TTS_EXPECT(values == (std::vector<int> {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}));
 };
 
-// 256 values, 256^2 pairs, and 256^3 = 2^24 triples: each fits in the scope of 2^24.
+// A check runs every combination: 256 values, 256^2 pairs, and 256^3 triples.
 TTS_CASE("tts::sweep calls every value, pair, and triple of 8-bit integers once")
 {
   using u8_t                       = std::uint8_t;
@@ -138,9 +120,9 @@ TTS_CASE("tts::sweep calls every value, pair, and triple of 8-bit integers once"
   TTS_EQUAL(once(std::size_t {1} << 24), std::ptrdiff_t {1} << 24);
 };
 
-// The floats from 10 to 11 are 2^20 + 1 values: a scope of that many calls each once, one less
-// samples them and leaves one out.
-TTS_CASE("tts::sweep(lo, hi, n) calls every value once when n reaches their number")
+// The floats from 10 to 11 are 2^20 + 1 values: a sample of that many calls each once, one less
+// leaves one out.
+TTS_CASE("tts::sample(lo, hi, n) calls every value once when n reaches their number")
 {
   using e            = tts::enumeration<float>;
   auto const  values = static_cast<std::size_t>(e::index(11.f) - e::index(10.f) + 1);
@@ -157,164 +139,116 @@ TTS_CASE("tts::sweep(lo, hi, n) calls every value once when n reaches their numb
 
   TTS_EQUAL(values, std::size_t {1048577});
 
-  TTS_ULP_RANGE_CHECK(tts::sweep(10.f, 11.f, values), float, float, ref, same, 0.);
+  TTS_ULP_RANGE_CHECK(tts::sample(10.f, 11.f, values), float, float, ref, same, 0.);
   TTS_EQUAL(count, values);
   TTS_EQUAL(std::ranges::count(seen, 1), static_cast<std::ptrdiff_t>(values));
 
   count = 0;
   std::ranges::fill(seen, 0);
-  TTS_ULP_RANGE_CHECK(tts::sweep(10.f, 11.f, values - 1), float, float, ref, same, 0.);
+  TTS_ULP_RANGE_CHECK(tts::sample(10.f, 11.f, values - 1), float, float, ref, same, 0.);
   TTS_EQUAL(count, values - 1);
   TTS_EQUAL(std::ranges::count(seen, 0), std::ptrdiff_t {1});
 };
 
-// More floats than the scope: 2^24 calls, with the special values, every binade, and no NaN.
-TTS_CASE("Range check samples floats with their special values and every binade")
+TTS_CASE("tts::sample(n) holds its bounds, every binade, and no NaN")
 {
   using l_t         = std::numeric_limits<float>;
 
   std::size_t count = 0;
   std::size_t nans  = 0;
+  bool        low   = false;
+  bool        high  = false;
   std::vector binade(512, false);
-  std::vector special(5, false);
 
-  auto        ref = [ &count, &nans, &binade, &special ](float x)
+  auto        ref = [ &count, &nans, &low, &high, &binade ](float x)
   {
     ++count;
     binade[ std::bit_cast<std::uint32_t>(x) >> 23 ] = true;
-
-    std::array<float, 5> const values               = {
-    -l_t::infinity(), l_t::infinity(), -0.f, 0.f, l_t::denorm_min()};
-    for(std::size_t k = 0; k < values.size(); ++k)
-      if(std::bit_cast<std::uint32_t>(x) == std::bit_cast<std::uint32_t>(values[ k ]))
-        special[ k ] = true;
+    low                                             = low || x == -l_t::infinity();
+    high                                            = high || x == l_t::infinity();
     if(std::isnan(x)) ++nans;
     return x;
   };
   auto same = [](float x) { return x; };
 
-  TTS_ULP_RANGE_CHECK(tts::sweep, float, float, ref, same, 0.);
+  TTS_ULP_RANGE_CHECK(tts::sample(1 << 20), float, float, ref, same, 0.);
 
-  TTS_EQUAL(count, std::size_t {1} << 24);
+  TTS_EQUAL(count, std::size_t {1} << 20);
   TTS_EQUAL(nans, std::size_t {0});
+  TTS_EXPECT(low && high);
   TTS_EQUAL(std::ranges::count(binade, true), std::ptrdiff_t {512});
-  TTS_EQUAL(std::ranges::count(special, true), std::ptrdiff_t {5});
 };
 
-// 2^32 pairs, more than the scope: in 2^24 calls, each argument takes each of its values 256 times.
-TTS_CASE("Range check above the scope gives each 16-bit argument all its values")
+// A sweep times a sample of 256: each value of the first argument meets the same 256 values.
+TTS_CASE("Range check runs every combination of tts::sweep and tts::sample")
 {
+  using i16_t = std::int16_t;
   std::vector as(65536, 0);
   std::vector bs(65536, 0);
-  std::size_t equal = 0;
 
-  auto        ref   = [ &as, &bs, &equal ](std::int16_t a, std::int16_t b)
+  auto        at  = [](int v) { return static_cast<std::size_t>(v + 32768); };
+  auto        ref = [ &as, &bs, &at ](i16_t a, i16_t b)
   {
-    ++as[ static_cast<std::size_t>(tts::enumeration<std::int16_t>::index(a)) ];
-    ++bs[ static_cast<std::size_t>(tts::enumeration<std::int16_t>::index(b)) ];
-    equal += a == b ? 1 : 0;
+    ++as[ at(a) ];
+    ++bs[ at(b) ];
     return a;
   };
-  auto first = [](std::int16_t a, std::int16_t) { return a; };
+  auto first = [](i16_t a, i16_t) { return a; };
 
-  TTS_ULP_RANGE_CHECK(tts::sweep,
-                      (tts::types<std::int16_t, std::int16_t>),
-                      (tts::types<std::int16_t, std::int16_t>),
+  TTS_ULP_RANGE_CHECK((tts::sweep, tts::sample(i16_t {-32768}, i16_t {32767}, 256)),
+                      (tts::types<i16_t, i16_t>),
+                      (tts::types<i16_t, i16_t>),
                       ref,
                       first,
                       0.);
 
   TTS_EQUAL(std::ranges::count(as, 256), std::ptrdiff_t {65536});
-  TTS_EQUAL(std::ranges::count(bs, 256), std::ptrdiff_t {65536});
-  TTS_LESS(equal, std::size_t {512});
+  TTS_EQUAL(std::ranges::count(bs, 65536), std::ptrdiff_t {256});
+  TTS_EQUAL(bs[ at(-32768) ] + bs[ at(32767) ], 2 * 65536);
 };
 
-// Three floats above the scope: each argument still covers every binade.
-TTS_CASE("Range check above the scope gives each float argument every binade")
-{
-  std::vector xs(512, false);
-  std::vector ys(512, false);
-  std::vector zs(512, false);
-
-  auto        ref = [ &xs, &ys, &zs ](float x, float y, float z)
-  {
-    xs[ std::bit_cast<std::uint32_t>(x) >> 23 ] = true;
-    ys[ std::bit_cast<std::uint32_t>(y) >> 23 ] = true;
-    zs[ std::bit_cast<std::uint32_t>(z) >> 23 ] = true;
-    return x;
-  };
-  auto first = [](float x, float, float) { return x; };
-
-  TTS_ULP_RANGE_CHECK(
-  tts::sweep, (tts::types<float, float, float>), (tts::types<float, float, float>), ref, first, 0.);
-
-  TTS_EQUAL(std::ranges::count(xs, true), std::ptrdiff_t {512});
-  TTS_EQUAL(std::ranges::count(ys, true), std::ptrdiff_t {512});
-  TTS_EQUAL(std::ranges::count(zs, true), std::ptrdiff_t {512});
-};
-
-// A ramp is not tts::sweep: the check keeps the --block grid, 64 values per argument.
-TTS_CASE("Range check mixing tts::sweep and another generator uses --block")
+// A ramp is neither tts::sweep nor tts::sample: it gives --block values, 4096, next to the sweep.
+TTS_CASE("Range check gives another generator --block values next to tts::sweep")
 {
   std::size_t count = 0;
 
-  auto        ref   = [ &count ](float x, int)
+  auto        ref   = [ &count ](std::int8_t x, int)
   {
     ++count;
     return x;
   };
-  auto first = [](float x, int) { return x; };
+  auto first = [](std::int8_t x, int) { return x; };
   auto ramp  = [](auto, auto i, auto) { return static_cast<int>(i); };
 
-  TTS_ULP_RANGE_CHECK(
-  (tts::sweep, ramp), (tts::types<float, int>), (tts::types<float, int>), ref, first, 0.);
+  TTS_ULP_RANGE_CHECK((tts::sweep, ramp),
+                      (tts::types<std::int8_t, int>),
+                      (tts::types<std::int8_t, int>),
+                      ref,
+                      first,
+                      0.);
 
-  TTS_EQUAL(count, std::size_t {4096});
+  TTS_EQUAL(count, std::size_t {256} * 4096);
 };
 
-// 16777217 floats from 1 to 4, more than the scope: the sample still holds both bounds.
-TTS_CASE("tts::sweep(lo, hi) sample includes its bounds")
-{
-  bool low  = false;
-  bool high = false;
-
-  auto ref  = [ &low, &high ](float x)
-  {
-    low  = low || x == 1.f;
-    high = high || x == 4.f;
-    return x;
-  };
-  auto same = [](float x) { return x; };
-
-  TTS_ULP_RANGE_CHECK(tts::sweep(1.f, 4.f), float, float, ref, same, 0.);
-
-  TTS_EXPECT(low);
-  TTS_EXPECT(high);
-};
-
-// A scope given to tts::sweep replaces the default for its check alone.
-TTS_CASE("tts::sweep(n) and tts::sweep(lo, hi, n) set the scope of their check")
+// Two doubles have 2^128 combinations: the check fails before its first call.
+TTS_CASE(TTS_XFAIL("Range check fails when its calls do not fit in std::size_t"))
 {
   std::size_t count = 0;
 
-  auto        ref   = [ &count ](float x)
+  auto        ref   = [ &count ](double x, double)
   {
     ++count;
     return x;
   };
-  auto same = [](float x) { return x; };
+  auto first = [](double x, double) { return x; };
 
-  TTS_ULP_RANGE_CHECK(tts::sweep(1024), float, float, ref, same, 0.);
-  TTS_EQUAL(count, std::size_t {1024});
-
-  count = 0;
-  TTS_ULP_RANGE_CHECK(tts::sweep(1.f, 4.f, 4096), float, float, ref, same, 0.);
-  TTS_EQUAL(count, std::size_t {4096});
+  TTS_ULP_RANGE_CHECK(
+  tts::sweep, (tts::types<double, double>), (tts::types<double, double>), ref, first, 0.);
+  TTS_EQUAL(count, std::size_t {0});
 };
 
 // A check reads --valmin and --valmax when it starts, so a case can set them for its checks.
-// --cores=1 keeps the reference on one thread under OpenMP, since it records its calls.
-TTS_CASE("--valmin and --valmax replace the bounds of tts::sweep")
+TTS_CASE("--valmin and --valmax narrow tts::sweep and tts::sample, with a note")
 {
   std::vector<int> values;
 
@@ -326,29 +260,57 @@ TTS_CASE("--valmin and --valmax replace the bounds of tts::sweep")
   auto                       same  = [](std::int16_t x) { return x; };
 
   auto                       saved = ::tts::_::current_arguments;
-  std::array<char const*, 4> argv {"range_sweep", "--valmin=-3", "--valmax=5", "--cores=1"};
-  ::tts::_::current_arguments = ::tts::options {4, argv.data()};
+  std::array<char const*, 3> argv {"range_sweep", "--valmin=-3", "--valmax=5"};
+  ::tts::_::current_arguments = ::tts::options {3, argv.data()};
 
-  TTS_ULP_RANGE_CHECK(tts::sweep, std::int16_t, std::int16_t, ref, same, 0.);
-  auto whole = values;
+  tts::gathering_sink gs;
+  std::vector<int>    whole;
+  std::vector<int>    bounded;
+  std::vector<int>    sampled;
+  std::vector<int>    inside;
+  {
+    tts::scoped_sink scope(gs);
 
-  values.clear();
-  TTS_ULP_RANGE_CHECK(tts::sweep(0, 100), std::int16_t, std::int16_t, ref, same, 0.);
+    TTS_ULP_RANGE_CHECK(tts::sweep, std::int16_t, std::int16_t, ref, same, 0.);
+    whole = std::exchange(values, {});
+    TTS_ULP_RANGE_CHECK(tts::sweep(0, 100), std::int16_t, std::int16_t, ref, same, 0.);
+    bounded = std::exchange(values, {});
+    TTS_ULP_RANGE_CHECK(tts::sample(0, 100, 9), std::int16_t, std::int16_t, ref, same, 0.);
+    sampled = std::exchange(values, {});
+    TTS_ULP_RANGE_CHECK(tts::sweep(-2, 2), std::int16_t, std::int16_t, ref, same, 0.);
+    inside = std::exchange(values, {});
+    TTS_ULP_RANGE_CHECK(tts::sweep(10, 20), std::int16_t, std::int16_t, ref, same, 0.);
+  }
 
   ::tts::_::current_arguments = saved;
 
-  std::vector expected {-3, -2, -1, 0, 1, 2, 3, 4, 5};
-  TTS_EXPECT(whole == expected);
-  TTS_EXPECT(values == expected);
+  auto has                    = [ &gs ](char const* s)
+  {
+    return std::strstr(gs.content().data(), s) != nullptr; // NOSONAR - contains() is C++23
+  };
+
+  TTS_EXPECT(whole == (std::vector {-3, -2, -1, 0, 1, 2, 3, 4, 5}));
+  TTS_EXPECT(bounded == (std::vector {0, 1, 2, 3, 4, 5}));
+  TTS_EXPECT(sampled == (std::vector {0, 1, 2, 3, 4, 5}));
+  TTS_EXPECT(inside == (std::vector {-2, -1, 0, 1, 2}));
+  TTS_EXPECT(values.empty());
+
+  TTS_EXPECT(has("--valmin and --valmax narrow argument 1 to [-3, 5]"));
+  TTS_EXPECT(has("--valmin and --valmax narrow argument 1 to [0, 5]"));
+  TTS_EXPECT(!has("to [-2, 2]"));
+  TTS_EXPECT(has("--valmin and --valmax leave no value of argument 1"));
 };
 
-TTS_CASE("--valmin and --valmax replace the bounds of tts::randoms")
+// [1.5, 1.75] lies inside the options and keeps its own bounds.
+TTS_CASE("--valmin and --valmax narrow tts::randoms")
 {
+  float       lo      = 0.f;
+  float       hi      = 0.f;
   std::size_t outside = 0;
 
-  auto        ref     = [ &outside ](float x)
+  auto        ref     = [ &lo, &hi, &outside ](float x)
   {
-    outside += (x < 1.f || x > 2.f) ? 1 : 0;
+    outside += (x < lo || x > hi) ? 1 : 0;
     return x;
   };
   auto                       same  = [](float x) { return x; };
@@ -357,7 +319,17 @@ TTS_CASE("--valmin and --valmax replace the bounds of tts::randoms")
   std::array<char const*, 3> argv {"range_sweep", "--valmin=1", "--valmax=2"};
   ::tts::_::current_arguments = ::tts::options {3, argv.data()};
 
-  TTS_ULP_RANGE_CHECK(tts::randoms(-1000.f, 1000.f), float, float, ref, same, 0.);
+  tts::gathering_sink gs;
+  {
+    tts::scoped_sink scope(gs);
+
+    lo = 1.f;
+    hi = 2.f;
+    TTS_ULP_RANGE_CHECK(tts::randoms(-1000.f, 1000.f), float, float, ref, same, 0.);
+    lo = 1.5f;
+    hi = 1.75f;
+    TTS_ULP_RANGE_CHECK(tts::randoms(1.5f, 1.75f), float, float, ref, same, 0.);
+  }
 
   ::tts::_::current_arguments = saved;
 

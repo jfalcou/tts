@@ -314,134 +314,146 @@ namespace tts
       (f(get<Js>(results), std::integral_constant<std::size_t, Js> {}), ...);
     }
 
-    // A generator over tts::enumeration<T>, such as tts::sweep.
-    template<typename G, typename T>
-    concept enumerated = requires(G const& g) { g.span(type<T> {}); };
-
-    template<std::size_t K, typename... Gs> auto const& generator_of(pack<Gs...> const& generators)
+    // A tts::sweep or a tts::sample once its bounds are read: values over [first, first + span].
+    template<typename T> struct ranks
     {
-      return get<(sizeof...(Gs) == 1 ? 0 : K)>(generators);
-    }
-
-    // Whether every argument comes from a generator over tts::enumeration, given its pack.
-    template<typename P, typename... As, std::size_t... Ks>
-    constexpr bool all_enumerated(std::index_sequence<Ks...>)
-    {
-      return (
-      enumerated<std::remove_cvref_t<decltype(generator_of<Ks>(std::declval<P const&>()))>, As> &&
-      ...);
-    }
-
-    template<typename G> inline constexpr bool is_bounded_sweep                   = false;
-    template<typename T> inline constexpr bool is_bounded_sweep<bounded_sweep<T>> = true;
-
-    // Read --valmin and --valmax once per check, never in a generator, which runs once per value.
-    struct option_bounds
-    {
-      template<typename T> static T low(T v)
+      T operator()(type<T>, auto idx, auto sz, auto...) const
       {
-        return ::tts::arguments().value(v, "--valmin");
+        return spread_value<T>(
+        first, span, static_cast<std::uint64_t>(idx), static_cast<std::uint64_t>(sz));
       }
 
-      template<typename T> static T high(T v)
-      {
-        return ::tts::arguments().value(v, "--valmax");
-      }
-
-      template<typename A, typename G> static auto apply(type<A> t, G const& g)
-      {
-        if constexpr(std::is_same_v<G, whole_sweep>)
-        {
-          using e_t = enumeration<A>;
-          return bounded_sweep<A> {low(e_t::value(0)), high(e_t::value(e_t::last)), g.scope};
-        }
-        else if constexpr(is_bounded_sweep<G>)
-          return bounded_sweep<A> {
-          low(::tts::convert_as(g.lo, t)), high(::tts::convert_as(g.hi, t)), g.scope};
-        else if constexpr(is_randoms_v<G>)
-          return randoms<A, A> {low(::tts::convert_as(g.mini, t)),
-                                high(::tts::convert_as(g.maxi, t))};
-        else return g;
-      }
+      std::uint64_t first;
+      std::uint64_t span;
+      std::uint64_t samples;
     };
 
-    template<typename... As, std::size_t... Ks, typename... Gs>
-    auto with_option_bounds(types<As...>, std::index_sequence<Ks...>, pack<Gs...> const& generators)
+    template<typename G> inline constexpr bool     is_ranks           = false;
+    template<typename T> inline constexpr bool     is_ranks<ranks<T>> = true;
+
+    template<typename P> inline constexpr bool     swept              = false;
+    template<typename... Gs> inline constexpr bool swept<pack<Gs...>> = (is_ranks<Gs> && ...);
+
+    template<typename G> inline constexpr bool     is_bounded_range   = false;
+    template<typename T> inline constexpr bool     is_bounded_range<bounded_range<T>> = true;
+
+    // A note of a check that is neither a pass nor a failure, printed unless --quiet.
+    inline void report_note(check_site const& site, ::tts::text const& message)
     {
-      return pack {option_bounds::apply(type<As> {}, generator_of<Ks>(generators))...};
+      if(!::tts::is_quiet())
+        ::tts::output().writeln(
+        "  [!] %s : %s", source_location::current(site.file, site.line).data(), message.data());
     }
 
-    // Returns the number of calls. A side of 0 marks an argument drawn rather than on a grid.
-    template<typename... As, std::size_t... Ks, typename... Gs>
-    std::size_t layout_of(types<As...>,
-                          std::index_sequence<Ks...>,
-                          pack<Gs...> const& generators,
-                          std::size_t*       sides)
+    // --valmin and --valmax narrow the range of argument arg to their intersection with it, with a
+    // note. Read them once per check, never in a generator, which runs once per value.
+    template<typename A, typename G>
+    auto bind_generator(type<A> t, G const& g, check_site const& site, int arg, bool& none)
     {
-      constexpr std::size_t arity = sizeof...(As);
-      if constexpr(all_enumerated<pack<Gs...>, As...>(std::index_sequence<Ks...> {}))
+      using e_t = enumeration<A>;
+      auto note = [ &site, arg ](A lo, A hi, bool empty)
       {
-        // The largest scope given to a tts::sweep of the check, which --scope still replaces.
-        std::size_t wanted = 0;
-        ((wanted = _::max(wanted, generator_of<Ks>(generators).scope)), ...);
-        std::size_t scope =
-        ::tts::arguments().value(wanted ? wanted : std::size_t {1} << 24, "--scope");
-        buffer<std::uint64_t> spans {generator_of<Ks>(generators).span(type<As> {})...};
-        std::size_t           calls = 1;
-        bool                  fits  = true;
-        for(std::size_t k = 0; k < arity; ++k)
-        {
-          // Do not multiply by spans[k] + 1: it overflows for a 64-bit type.
-          fits = spans[ k ] < scope && calls <= scope / (spans[ k ] + 1);
-          if(!fits) break;
-          sides[ k ]  = static_cast<std::size_t>(spans[ k ] + 1);
-          calls      *= sides[ k ];
-        }
-        if(fits) return calls;
+        if(empty)
+          report_note(site,
+                      ::tts::text {"--valmin and --valmax leave no value of argument %d, so the "
+                                   "check makes no call",
+                                   arg});
+        else
+          report_note(site,
+                      ::tts::text {"--valmin and --valmax narrow argument %d to [%s, %s]",
+                                   arg,
+                                   ::tts::as_text(lo).data(),
+                                   ::tts::as_text(hi).data()});
+      };
+      auto over = [ &note, &none ](A lo, A hi, std::uint64_t n)
+      {
+        auto a     = _::min(e_t::index(lo), e_t::index(hi));
+        auto b     = _::max(e_t::index(lo), e_t::index(hi));
+        auto first = _::max(a, e_t::index(::tts::arguments().value(e_t::value(a), "--valmin")));
+        auto last  = _::min(b, e_t::index(::tts::arguments().value(e_t::value(b), "--valmax")));
+        if(first != a || last != b) note(e_t::value(first), e_t::value(last), first > last);
+        none = none || first > last;
+        return ranks<A> {first, first > last ? 0 : last - first, n};
+      };
 
-        for(std::size_t k = 0; k < arity; ++k)
-          sides[ k ] = 0;
-        return scope;
+      if constexpr(std::is_same_v<G, whole_sweep>)
+        return over(e_t::value(0), e_t::value(e_t::last), 0);
+      else if constexpr(std::is_same_v<G, whole_sample>)
+        return over(e_t::value(0), e_t::value(e_t::last), g.samples);
+      else if constexpr(is_bounded_range<G>)
+        return over(::tts::convert_as(g.lo, t), ::tts::convert_as(g.hi, t), g.samples);
+      else if constexpr(is_randoms_v<G>)
+      {
+        A lo = ::tts::convert_as(g.mini, t);
+        A hi = ::tts::convert_as(g.maxi, t);
+        A l  = _::max(lo, ::tts::arguments().value(lo, "--valmin"));
+        A h  = _::min(hi, ::tts::arguments().value(hi, "--valmax"));
+        if(l != lo || h != hi) note(l, h, h < l);
+        none = none || h < l;
+        return randoms<A, A> {l, h};
       }
-      else
+      else return g;
+    }
+
+    template<typename... As, std::size_t... Ks, typename... Gs>
+    auto bind_generators(types<As...>,
+                         std::index_sequence<Ks...>,
+                         pack<Gs...> const& generators,
+                         check_site const&  site,
+                         bool&              none)
+    {
+      return pack {bind_generator(type<As> {},
+                                  get<(sizeof...(Gs) == 1 ? 0 : Ks)>(generators),
+                                  site,
+                                  static_cast<int>(Ks) + 1,
+                                  none)...};
+    }
+
+    // The number of values an argument takes, 0 when it does not fit in std::size_t: all or some
+    // of the values of a tts::sweep or a tts::sample, and side for any other generator.
+    template<typename G> std::size_t side_of(G const& g, std::size_t side)
+    {
+      if constexpr(is_ranks<G>)
+      {
+        std::uint64_t all = g.span + 1;
+        std::uint64_t n   = g.samples && (all == 0 || g.samples < all) ? g.samples : all;
+        return n > std::numeric_limits<std::size_t>::max() ? 0 : static_cast<std::size_t>(n);
+      }
+      else return side;
+    }
+
+    // Returns the number of calls, the product of the values of the arguments, or 0 when it does not
+    // fit in std::size_t. The generators other than tts::sweep and tts::sample share --block calls.
+    template<std::size_t... Ks, typename... Gs>
+    std::size_t layout_of(pack_base<std::index_sequence<Ks...>, Gs...> const& generators,
+                          std::size_t*                                        sides)
+    {
+      constexpr std::size_t others = (std::size_t {!is_ranks<Gs>} + ... + 0);
+      std::size_t           side   = 1;
+      if constexpr(others > 0)
       {
         std::size_t block = ::tts::arguments().value(std::size_t {4096}, "--block");
-        std::size_t side  = 1;
-        while(power(side, arity) < block)
+        while(power(side, others) < block)
           ++side;
-        for(std::size_t k = 0; k < arity; ++k)
-          sides[ k ] = side;
-        return power(side, arity);
       }
-    }
 
-    // Shuffles [0, n) with SplitMix64 steps on the bits of n, repeated until the result is below n.
-    inline std::uint64_t permute(std::uint64_t i, std::uint64_t n, std::uint64_t seed) noexcept
-    {
-      auto          bits  = static_cast<unsigned>(std::bit_width(n - 1));
-      std::uint64_t mask  = bits == 64 ? ~std::uint64_t {0} : (std::uint64_t {1} << bits) - 1;
-      unsigned      shift = bits / 2 + 1;
-      std::uint64_t key   = mix(seed);
+      ((sides[ Ks ] = side_of(get<Ks>(generators), side)), ...);
 
-      do
+      std::size_t calls = 1;
+      for(std::size_t k = 0; k < sizeof...(Gs); ++k)
       {
-        i  = (i + key) & mask;
-        i ^= i >> shift;
-        i  = (i * 0xbf58476d1ce4e5b9ULL) & mask;
-        i ^= i >> shift;
-        i  = (i * 0x94d049bb133111ebULL) & mask;
-        i ^= i >> shift;
-      } while(i >= n);
-
-      return i;
+        if(sides[ k ] == 0 || calls > std::numeric_limits<std::size_t>::max() / sides[ k ])
+          return 0;
+        calls *= sides[ k ];
+      }
+      return calls;
     }
 
     template<std::size_t... Ks, typename... As, typename... Gs>
     void fill_group(pack_base<std::index_sequence<Ks...>, buffer<As>...>& group,
                     pack<Gs...> const&                                    generators,
                     std::size_t const*                                    sides,
-                    std::size_t                                           first,
-                    std::size_t                                           count)
+                    std::size_t                                           first)
     {
       for(std::size_t e = 0; e < get<0>(group).size(); ++e)
       {
@@ -449,21 +461,15 @@ namespace tts
         std::size_t idx[ sizeof...(As) ]; // NOSONAR - <array> costs compile time
         for(std::size_t k = sizeof...(As); k-- > 0;)
         {
-          if(sides[ k ] == 0)
-            idx[ k ] = k == 0 ? i : static_cast<std::size_t>(permute(i, count, k));
-          else
-          {
-            idx[ k ]  = i % sides[ k ];
-            i        /= sides[ k ];
-          }
+          idx[ k ]  = i % sides[ k ];
+          i        /= sides[ k ];
         }
 
         (
-        (get<Ks>(group)[ e ] =
-         ::tts::produce(type<As> {},
-                        generator_of<Ks>(generators),
-                        static_cast<std::ptrdiff_t>(idx[ Ks ]),
-                        static_cast<std::ptrdiff_t>(sides[ Ks ] ? sides[ Ks ] : count))),
+        (get<Ks>(group)[ e ] = ::tts::produce(type<As> {},
+                                              get<Ks>(generators),
+                                              static_cast<std::ptrdiff_t>(idx[ Ks ]),
+                                              static_cast<std::ptrdiff_t>(sides[ Ks ]))),
         ...);
       }
     }
@@ -554,11 +560,26 @@ namespace tts
                     "[TTS] TTS_ULP_RANGE_CHECK needs one bound per member of the result, or one "
                     "for all.");
 
+      bool none = false;
       auto bounded =
-      with_option_bounds(types<As...> {}, std::index_sequence_for<As...> {}, generators);
+      bind_generators(types<As...> {}, std::index_sequence_for<As...> {}, generators, site, none);
+      if(none)
+      {
+        if(check_passed())
+          check_report(
+          site, ::tts::text {"Expression: %s similar to %s, on no value", site.rhs, site.lhs});
+        return;
+      }
       std::size_t sides[ sizeof...(As) ]; // NOSONAR - <array> costs compile time
-      std::size_t calls =
-      layout_of(types<As...> {}, std::index_sequence_for<As...> {}, bounded, sides);
+      std::size_t calls = layout_of(bounded, sides);
+      if(calls == 0 || calls > std::numeric_limits<std::size_t>::max() - group_size)
+      {
+        check_failed(
+        site,
+        ::tts::text {
+        "Expecting: %s similar to %s over more calls than std::size_t holds", site.rhs, site.lhs});
+        return;
+      }
       std::size_t count      = (calls + group_size - 1) / group_size * group_size;
 
       std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
@@ -569,7 +590,6 @@ namespace tts
                                  &challenger,
                                  &bounded,
                                  sizes = static_cast<std::size_t const*>(sides),
-                                 count,
                                  repetition ](std::size_t first, std::size_t last)
       {
         // Do not scan into partial[u]: the histograms of neighboring slices share cache lines.
@@ -578,7 +598,7 @@ namespace tts
 
         for(std::size_t i = first; i < last; i += group_size)
         {
-          fill_group(group, bounded, sizes, i, count);
+          fill_group(group, bounded, sizes, i);
           for(std::size_t r = 0; r < repetition; ++r)
             scan_group(types<Ws...> {}, results, group, reference, challenger);
         }
@@ -587,16 +607,14 @@ namespace tts
       };
 
 #if defined(_OPENMP)
-      // Only a sweep builds each value from its index alone. Any other generator, a random one above
-      // all, gives values that depend on the thread calling it, so its check keeps one thread.
-      constexpr bool swept =
-      all_enumerated<decltype(bounded), As...>(std::index_sequence_for<As...> {});
-      std::size_t cores =
-      ::tts::arguments().value(static_cast<std::size_t>(omp_get_max_threads()), "--cores");
-      int threads = swept && cores > 1 ? static_cast<int>(cores) : 1;
+      // Only a sweep or a sample builds each value from its index alone. Any other generator, a
+      // random one above all, gives values that depend on the thread calling it, so its check keeps
+      // one thread.
+      std::size_t threads =
+      swept<decltype(bounded)> ? static_cast<std::size_t>(omp_get_max_threads()) : 1;
 
       // Several slices per thread even out the slices whose values cost more.
-      std::size_t slices = threads == 1 ? 1 : _::min(groups, std::size_t {16} * cores);
+      std::size_t slices = threads == 1 ? 1 : _::min(groups, std::size_t {16} * threads);
 #else
       std::size_t slices = 1;
 #endif
@@ -605,7 +623,7 @@ namespace tts
       // does not depend on the number of threads.
       buffer<scans> partial(slices, make_scans(ref_members {}, types<As...> {}, group_size));
 #if defined(_OPENMP)
-#pragma omp parallel for schedule(dynamic) num_threads(threads)
+#pragma omp parallel for schedule(dynamic) if(slices > 1)
 #endif
       for(int s = 0; s < static_cast<int>(slices); ++s)
       {
@@ -696,35 +714,41 @@ namespace tts
   check passes if none exceeds the bound given after `NewFunc`. See the
   [ULP rationale](rationale.html#ulp) for how the distance is measured.
 
-  - For a function of one argument, `RefType` and `NewType` are its type, and `Producer` builds
-    `--block` inputs, 4096 by default.
-  - For a function of several arguments, `RefType` and `NewType` are tts::types lists between
-    parentheses, in call order. `Producer` is one generator per argument between parentheses, or a
-    single generator for all. Each generator builds the smallest number of values whose
-    combinations reach `--block`, 64 for two arguments by default, and the check runs every
-    combination.
+  - For a unary function, `RefType` and `NewType` are its argument type.
+  - For a function with several arguments, `RefType` and `NewType` are tts::types lists between
+    parentheses, in call order. `Producer` is a generator for each argument, between parentheses,
+    or a single generator that each argument uses on its own, so that tts::sample(4096) for two
+    arguments makes 16777216 calls.
 
-  When every generator is tts::sweep, the scope of the check replaces `--block`, as tts::sweep
-  describes. Memory does not grow with the number of calls, so `--scope=4294967296` checks each
-  float but NaN once.
+  The check runs every combination of the values its arguments take:
 
-  `--valmin` and `--valmax` replace the lowest and the highest value of tts::sweep and
-  tts::randoms, for every argument of every check of the run.
+  - tts::sweep gives every value in its range, and tts::sample its `n` values.
+  - the other generators give together the smallest number of values per argument whose
+    combinations reach `--block`, 4096 by default, which gives 4096 values to a single argument and
+    64 to each of two.
 
-  Compiled with OpenMP, a check whose generators are all tts::sweep splits its calls between
-  `--cores` threads, or the default number of OpenMP threads without it. `RefFunc` and `NewFunc`
-  are then called from several threads at once, and the report does not depend on the number of
+  The number of calls is the product of these counts, and a check whose product does not fit in
+  `std::size_t` fails without running. Memory does not grow with the number of calls,
+  so tts::sweep checks each float but NaN once.
+
+  `--valmin` and `--valmax` narrow the values that tts::sweep, tts::sample, and tts::randoms give
+  to the ones between them, for every argument in every check of the run, and the check prints a
+  note when they do. A check whose values they leave empty makes no call.
+
+  Compiled with OpenMP, a check whose generators are all tts::sweep or tts::sample splits its calls
+  between the threads of OpenMP, whose number `OMP_NUM_THREADS` sets. `RefFunc` and `NewFunc` are
+  then called from several threads at once, and the report does not depend on the number of
   threads.
 
-  `RefFunc` returns the element type of the result of `NewFunc`, or the check does not compile. A
-  reference computed in `double` for a function of `float` casts its result to `float`.
+  `RefFunc` returns the element type that the result of `NewFunc` holds, or the check does not
+  compile. A reference computed in `double` for a `float` function casts its result to `float`.
 
   `NewType` may hold several values of `RefType`, as a specialization of tts::adapter describes.
 
   A result of type `std::pair` or `std::tuple`, or of any type that specializes `std::tuple_size`
   and provides a `get` found by argument-dependent lookup, is compared member by member, each
   member with its own histogram, unless tts::adapter is specialized for it. The check then takes
-  one bound for all members or one bound per member.
+  a bound for all members or a bound for each member.
 
   A check that fails prints its histogram, and `--verbose` prints it for every check. Each bucket
   shows the first input whose distance falls in it. When `NewType` holds several values, that input

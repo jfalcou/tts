@@ -38,8 +38,6 @@
   `TTS_PRECISION`       | `--precision=N`
   `TTS_SEED`            | `--seed=N`
   `TTS_BLOCK`           | `--block=N`
-  `TTS_SCOPE`           | `--scope=N`
-  `TTS_CORES`           | `--cores=N`
   `TTS_LOOP`            | `--loop=N`
   `TTS_ULPMAX`          | `--ulpmax=N`
   `TTS_VALMIN`          | `--valmin=N`
@@ -124,12 +122,10 @@
   Options      | Description
   ------------ | -----------------------------------------------------------------------
   `--block=N`  | Set size of range checks samples to `N`. `./my_test --block=4096`
-  `--scope=N`  | Set to `N` the scope of every range check whose generators are all tts::sweep, in place of the scope given in the code. Such a check runs every value or combination up to `N`, and `N` sampled calls above. `N` is a decimal integer, 16777216 by default. `./my_test --scope=4294967296`
-  `--cores=N`  | Run each range check whose generators are all tts::sweep on `N` threads, when the tests are compiled with OpenMP. The default is the number of OpenMP threads, which `OMP_NUM_THREADS` sets. `./my_test --cores=4`
   `--loop=N`   | Repeat each range checks `N` times. `./my_test --loop=100`
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
-  `--valmin=N` | Set to `N` the lowest value of tts::sweep and tts::randoms in every range check. `./my_test --valmin=-100`
-  `--valmax=N` | Set to `N` the highest value of tts::sweep and tts::randoms in every range check. `./my_test --valmax=1000`
+  `--valmin=N` | Keep the values of tts::sweep, tts::sample, and tts::randoms at `N` or above in every range check, with a note on each check it narrows. `./my_test --valmin=-100`
+  `--valmax=N` | Keep the values of tts::sweep, tts::sample, and tts::randoms at `N` or below in every range check, with a note on each check it narrows. `./my_test --valmax=1000`
 
 **/
 //==================================================================================================

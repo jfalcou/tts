@@ -287,112 +287,43 @@ namespace tts
 
 namespace tts::_
 {
-  // SplitMix64 finalizer.
-  constexpr std::uint64_t mix(std::uint64_t z) noexcept
-  {
-    z += 0x9e3779b97f4a7c15ULL;
-    z  = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
-    z  = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
-    return z ^ (z >> 31);
-  }
-
-  // Special values of T, which a sample takes at its first indices when they lie between its
-  // bounds.
-  template<typename T> struct specials
-  {
-    static constexpr T values[] = {T(-1), T(0), T(1)}; // NOSONAR - <array> costs compile time
-  };
-
-  template<std::floating_point T> struct specials<T>
-  {
-    using l_t                   = std::numeric_limits<T>;
-    static constexpr T values[] = {// NOSONAR - <array> costs compile time
-                                   l_t::lowest(),
-                                   T(-1),
-                                   -l_t::min(),
-                                   -l_t::denorm_min(),
-                                   T(-0.),
-                                   T(0),
-                                   l_t::denorm_min(),
-                                   l_t::min(),
-                                   T(1),
-                                   l_t::max()};
-  };
-
-  template<typename T, std::size_t N> constexpr std::uint64_t count_of(T const (&)[ N ]) noexcept
-  {
-    return N;
-  }
-
+  // Value idx of sz values spread over the ranks [first, first + n]: the bounds, and one value per
+  // slice of equal width between them, at an offset drawn from idx. With sz = n + 1, each slice is
+  // one rank wide and the values are every rank, which makes a sweep a sample of every value.
   template<typename T>
-  T sweep_value(std::uint64_t first, std::uint64_t n, std::uint64_t idx, std::uint64_t sz)
+  T spread_value(std::uint64_t first, std::uint64_t n, std::uint64_t idx, std::uint64_t sz)
   {
     using e_t = enumeration<T>;
 
-    if(sz - 1 >= n) return e_t::value(first + idx % (n + 1));
     if(idx == 0) return e_t::value(first);
     if(idx + 1 == sz) return e_t::value(first + n);
-
-    if(idx <= count_of(specials<T>::values))
-      if(T v = specials<T>::values[ idx - 1 ]; e_t::index(v) - first <= n) return v;
 
     std::uint64_t w = n / sz;
     std::uint64_t r = n % sz;
     return e_t::value(first + idx * w + _::min(idx, r) + mix(idx) % (w + (idx < r ? 1 : 0)));
   }
 
-  template<typename T> struct bounded_sweep
+  // The values of [lo, hi]: every one when samples is 0, else that many spread over the range.
+  template<typename T> struct bounded_range
   {
-    template<typename D> std::uint64_t first(tts::type<D> t) const
-    {
-      auto a = enumeration<D>::index(::tts::convert_as(lo, t));
-      auto b = enumeration<D>::index(::tts::convert_as(hi, t));
-      return a < b ? a : b;
-    }
-
-    template<typename D> std::uint64_t span(tts::type<D> t) const
-    {
-      auto a = enumeration<D>::index(::tts::convert_as(lo, t));
-      auto b = enumeration<D>::index(::tts::convert_as(hi, t));
-      return a < b ? b - a : a - b;
-    }
-
-    template<typename D> D operator()(tts::type<D> t, auto idx, auto sz, auto...) const
-    {
-      return sweep_value<D>(
-      first(t), span(t), static_cast<std::uint64_t>(idx), static_cast<std::uint64_t>(sz));
-    }
-
-    T           lo;
-    T           hi;
-    std::size_t scope = 0;
+    T             lo;
+    T             hi;
+    std::uint64_t samples = 0;
   };
 
-  // A scope of 0 leaves the one of --scope.
+  // tts::sweep: every value of a type, or of [lo, hi] once called with them.
   struct whole_sweep
   {
-    constexpr whole_sweep operator()(std::size_t n) const
+    template<typename T> constexpr bounded_range<T> operator()(T lo, T hi) const
     {
-      return {n};
+      return {lo, hi, 0};
     }
+  };
 
-    template<typename T> constexpr bounded_sweep<T> operator()(T lo, T hi, std::size_t n = 0) const
-    {
-      return {lo, hi, n};
-    }
-
-    template<typename D> std::uint64_t span(tts::type<D>) const
-    {
-      return enumeration<D>::last;
-    }
-
-    template<typename D> D operator()(tts::type<D>, auto idx, auto sz, auto...) const
-    {
-      return sweep_value<D>(
-      0, enumeration<D>::last, static_cast<std::uint64_t>(idx), static_cast<std::uint64_t>(sz));
-    }
-
-    std::size_t scope = 0;
+  // tts::sample(n): samples values spread over a type.
+  struct whole_sample
+  {
+    std::uint64_t samples;
   };
 }
 
@@ -828,43 +759,69 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Generates every value of a type, or a sample spread over its range
+    @brief Generates every value of a type, or of a range
 
-    Produces the values of the argument type in increasing order, through tts::enumeration. A range
-    check whose generators are all tts::sweep runs every value, or every combination of values for
-    several arguments, as long as their number does not exceed the scope of the check, 16777216 by
-    default. Above the scope, the check makes as many calls as the scope and samples the values.
+    Produces each value of the argument type in increasing order, which is the order of
+    tts::enumeration.
 
     - `tts::sweep` covers every value but NaN, from -inf to +inf for a floating-point type.
     - `tts::sweep(lo, hi)` covers the values from `lo` to `hi`, both included, given in either
       order.
-    - `tts::sweep(n)` and `tts::sweep(lo, hi, n)` set the scope of the check to `n`.
 
-    When several generators set a scope, the check takes the largest. [`--scope`](cli.html) on the
-    command line replaces the scope of every check.
+    The number of calls of a check is the product of the numbers of values of its arguments, which
+    is 65536 for two `std::uint8_t` and 4278190082 for a `float`. A check whose product does not fit
+    in `std::size_t`, such as a check over two `double`, fails without running. In such cases, use
+    tts::sample.
 
-    The sample of an argument holds:
-
-    - the bounds,
-    - the special values between the bounds:
-      - for a floating-point type, the finite values of largest magnitude, -1 and 1, the smallest
-        positive normal and subnormal values and their negatives, and -0 and +0,
-      - for an integer type, -1, 0, and 1,
-    - other values spread evenly over the ranks, the same number in each binade for a
-      floating-point type, where the subnormals of each sign count as one binade.
-
-    With several arguments, call `i` takes the `i`-th value of the first argument, and for each
-    other argument the value at a fixed shuffled position. A sample of several arguments thus tests
-    as many combinations as the scope, and leaves the others out.
-
-    Never produces NaN, which tts::enumeration does not rank. The sample depends on the scope, and
-    not on `--seed`.
+    Never produces NaN, since it has no rank in tts::enumeration.
 
     @groupheader{Example}
     @snippet doc/generator_sweep.cpp snippet
   **/
   //====================================================================================================================
   inline constexpr _::whole_sweep sweep = {};
+
+  //====================================================================================================================
+  /**
+    @brief Generates a given number of values spread over a type or a range
+
+    Produces `n` values of the argument type, spread over its values, whose order is the one of
+    tts::enumeration.
+
+    - `tts::sample(n)` covers every value but NaN.
+    - `tts::sample(lo, hi, n)` covers the values from `lo` to `hi`, both included, given in either
+      order.
+
+    The `n` values are:
+
+    - the bounds,
+    - a value per slice of equal width in rank between the bounds, at a position within the slice
+      drawn from its index.
+
+    The number of values is thus the same in each binade of a floating-point type, where the
+    subnormals of each sign form a single binade. A range that spans many binades of small
+    magnitude, such as [-700, 700] in `double`, has most of its values close to zero.
+
+    When `n` is at least the number of values of the range, each value is in the sample once, as
+    with tts::sweep. The values depend on the range and `n` alone, and not on `--seed`. NaN is never
+    part of the sample.
+
+    @groupheader{Example}
+    @snippet doc/generator_sample.cpp snippet
+  **/
+  //====================================================================================================================
+  constexpr _::whole_sample sample(std::uint64_t n)
+  {
+    assert(n > 0 && "[TTS] tts::sample needs at least one value");
+    return {n};
+  }
+
+  //! @overload
+  template<typename T> constexpr _::bounded_range<T> sample(T lo, T hi, std::uint64_t n)
+  {
+    assert(n > 0 && "[TTS] tts::sample needs at least one value");
+    return {lo, hi, n};
+  }
 
   //====================================================================================================================
   /// @}
