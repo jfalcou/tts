@@ -162,7 +162,7 @@ namespace tts
         return quiet_nan;
       }
 
-      return value;
+      return min(max(value, mini), maxi);
     }
   }
 
