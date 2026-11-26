@@ -6,6 +6,6 @@
 ## Read by copacabana's matrix.yml: the rows below are the macos jobs, one per row and configuration.
 runs-on: macos-15
 rows:
-  - { name: "apple-clang"       , preset: "clang"         }
-  - { name: "apple-clang libc++", preset: "clang-libc++"  }
-  - { name: "Android"           , preset: "android-arm64", test: false }
+  - { name: "apple-clang"       , preset: "clang"        , args: "-DTTS_BENCHMARKS=ON" }
+  - { name: "apple-clang libc++", preset: "clang-libc++" , args: "-DTTS_BENCHMARKS=ON" }
+  - { name: "Android"           , preset: "android-arm64", args: "-DTTS_BENCHMARKS=ON", test: false }

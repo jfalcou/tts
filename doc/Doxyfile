@@ -15,7 +15,7 @@ LAYOUT_FILE            = layout.xml
 ## What to read, and where the @include of a snippet looks for its file
 INPUT                  = ../include .
 INCLUDE_PATH           = ../include
-EXAMPLE_PATH           = ../test/unit/doc ../test/integration .
+EXAMPLE_PATH           = ../test/unit/doc ../test/unit/benchmarks ../test/integration .
 EXAMPLE_PATH          += $(DOXYGEN_OUPUT)/bench
 FILE_PATTERNS          = *.hpp *.md
 

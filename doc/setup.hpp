@@ -57,6 +57,14 @@
 
   Use **TTS** by just compiling your code with the include path pointing to the location of this single file.
 
+  The standalone branch also holds `benchmarks.hpp`, a single file that contains all of **TTS** and
+  the benchmark utilities (see @ref setup-benchmarks). A benchmark includes it in place of
+  `tts.hpp`, never next to it, and needs `nanobench.h` v4.6.0 on its include path:
+
+  @code
+  wget https://raw.githubusercontent.com/jfalcou/tts/refs/heads/standalone/benchmarks.hpp
+  @endcode
+
   @section setup-fetchcontent CMake FetchContent
 
   You can also use CMake FetchContent operation and use the `tts::tts` library target that our CMake exports.
@@ -98,5 +106,34 @@
   add_executable(test_tts ../main.cpp)
   target_link_libraries(test_tts PUBLIC tts::tts)
   @endcode
+
+  @section setup-benchmarks Benchmark utilities
+
+  The CMake option `TTS_BENCHMARKS` is `OFF` by default. When it is enabled, **TTS** defines the
+  target `tts::benchmarks` for the benchmark utilities (see @ref tools-benchmarks), which links
+  `tts::tts` and adds the include path of `nanobench.h`. For that target, **TTS** fetches
+  [nanobench](https://nanobench.ankerl.com) v4.6.0, or finds `nanobench.h` in the environment under
+  `TTS_EXTERNAL_DEPENDENCIES`. With CPM, the option goes in the `OPTIONS` of `CPMAddPackage`:
+
+  @code{cmake}
+  cmake_minimum_required(VERSION 3.18)
+  project(tts-bench LANGUAGES CXX)
+
+  include(cpm.cmake)
+
+  CPMAddPackage ( NAME tts
+                  GIT_REPOSITORY "https://github.com/jfalcou/tts.git"
+                  OPTIONS "TTS_BUILD_TEST OFF" "TTS_BENCHMARKS ON"
+                )
+
+  add_executable(my_bench my_bench.cpp)
+  target_link_libraries(my_bench PRIVATE tts::benchmarks)
+  @endcode
+
+  - With FetchContent, `set(TTS_BENCHMARKS ON)` comes before `FetchContent_MakeAvailable(tts)`.
+  - An installed **TTS** provides no `tts::benchmarks` target, so a project using an installation
+    puts `nanobench.h` v4.6.0 on its include path itself.
+  - With the standalone files, a benchmark includes `benchmarks.hpp` in place of `tts.hpp` (see
+    @ref setup-standalone), and `nanobench.h` v4.6.0 goes on its include path.
 **/
 //==================================================================================================

@@ -44,6 +44,24 @@ copa_make_single_unit(
 set_property(TEST unit.infrastructure.replaced_new.exe APPEND
              PROPERTY ENVIRONMENT "VALGRIND_OPTS=--soname-synonyms=somalloc=nouserintercepts")
 
+if(TTS_BENCHMARKS)
+  copa_make_unit(
+    QUIET
+    INTERFACE tts_test
+    EXTERNALS tts::benchmarks
+    FILES unit/infrastructure/benchmarks.cpp
+          unit/benchmarks/calls.cpp
+          unit/benchmarks/counts.cpp
+          unit/benchmarks/hypot.cpp
+          unit/benchmarks/inputs.cpp
+          unit/benchmarks/lanes.cpp
+          unit/benchmarks/measurement.cpp
+          unit/benchmarks/overhead.cpp
+          unit/benchmarks/traits.cpp
+          unit/benchmarks/types.cpp
+    ROOT ${TEST_ROOT})
+endif()
+
 ##======================================================================================================================
 ## Test for TTS tests
 ##======================================================================================================================

@@ -12,7 +12,8 @@
   `TTS_XXX` environment variable instead of a command line flag - derived by uppercasing the
   flag name and replacing `-` with `_`. Short forms (`-v`, `-q`, ...) have no environment
   variable equivalent. A CLI flag always takes precedence over its environment variable when
-  both are set.
+  both are set. A flag that takes no value is set by its variable whatever the variable holds,
+  `TTS_DUMP=0` included.
 
   This exists mainly for CI systems where the test command itself is fixed (e.g. `ctest`
   invokes every registered binary through a command line set once at configure time) and
@@ -41,6 +42,9 @@
   `TTS_ULPMAX`          | `--ulpmax=N`
   `TTS_VALMIN`          | `--valmin=N`
   `TTS_VALMAX`          | `--valmax=N`
+  `TTS_DUMP`            | `--dump` / `-d`
+  `TTS_EPOCHS`          | `--epochs=N`
+  `TTS_WARMUP`          | `--warmup=N`
 
   # Display Options
 
@@ -50,7 +54,7 @@
   --------------- | -------- | ---------------------------------------------------------------
   `--help`        | `-h`     | Display the list of supported options `./my_test --help`
   `--hex`         | `-x`     | Display floating point values as hexadecimal. `./my_test --hex`
-  `--scientific`  | `-s`     | Display floating point values as hexadecimal. `./my_test --scientific`
+  `--scientific`  | `-s`     | Display floating point values in scientific notation. `./my_test --scientific`
   `--verbose`     | `-v`     | Display tests results regardless of their status, and their duration. `./my_test --verbose`
   `--quiet`       | `-q`     | Remove all tests results regardless of their status. `./my_test --quiet`
 
@@ -112,7 +116,7 @@
   Options          | Description
   ---------------- | -----------------------------------------------------------------------
   `--precision=N`  | Set the precision for displaying floating point values `./my_test --precision=12`
-  `--seed=N`       | Set the PRNG seeds (default is time-based) `./my_test --valmin=-100`
+  `--seed=N`       | Set the PRNG seeds (default is the time in seconds) `./my_test --seed=42`
 
   # Range Parameters
   This set of options controls the specifics of the range check tests. Those
@@ -124,6 +128,15 @@
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
   `--valmin=N` | Narrow the values of tts::sweep, tts::sample, and tts::randoms in range checks to `N` and above. `./my_test --valmin=-100`
   `--valmax=N` | Narrow the values of tts::sweep, tts::sample, and tts::randoms in range checks to `N` and below. `./my_test --valmax=1000`
+
+  # Benchmark Parameters
+  These options control the [benchmarks](@ref tools-benchmarks).
+
+  Options         | Shortcut | Description
+  --------------- | -------- | ---------------------------------------------------------------
+  `--dump`        | `-d`     | Write the time per element of every epoch of each benchmark to `<title>.csv` in the working directory. `./my_bench --dump`
+  `--epochs=N`    |          | Measure each function over `N` epochs, overriding the count given to the benchmark. An even `N` is raised to `N + 1`. `./my_bench --epochs=21`
+  `--warmup=N`    |          | Run `N` warmup passes over the buffers before the first epoch of each function, overriding the count given to the benchmark. `./my_bench --warmup=10`
 
 **/
 //==================================================================================================

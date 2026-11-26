@@ -6,5 +6,5 @@
 ## Read by copacabana's matrix.yml: the rows below are the windows jobs, one per row and configuration.
 runs-on: windows-2022
 rows:
-  - { name: "MSVC"    , preset: "msvc"    }
-  - { name: "Clang-CL", preset: "clangcl" }
+  - { name: "MSVC"    , preset: "msvc"   , args: "-DTTS_BENCHMARKS=ON" }
+  - { name: "Clang-CL", preset: "clangcl", args: "-DTTS_BENCHMARKS=ON" }

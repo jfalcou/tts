@@ -7,9 +7,9 @@
 runs-on: ubuntu-latest
 memcheck: true
 rows:
-  - { name: "gcc"           , preset: "gcc"           , image: "v11" }
-  - { name: "clang"         , preset: "clang"         , image: "v11" }
-  - { name: "clang libc++"  , preset: "clang-libc++"  , image: "v11" }
-  - { name: "gcc16"         , preset: "gcc"           , image: "v11"    , setup: "./.github/scripts/g++-16.sh"  }
-  - { name: "icpx"          , preset: "icpx"          , image: "sycl-v1", setup: "/opt/intel/oneapi/setvars.sh", memcheck: false }
-  - { name: "wasm"          , preset: "wasm"          , image: "v11"    , wrapper: "emcmake" }
+  - { name: "gcc"           , preset: "gcc"           , image: "v11"    , args: "-DTTS_BENCHMARKS=ON" }
+  - { name: "clang"         , preset: "clang"         , image: "v11"    , args: "-DTTS_BENCHMARKS=ON" }
+  - { name: "clang libc++"  , preset: "clang-libc++"  , image: "v11"    , args: "-DTTS_BENCHMARKS=ON" }
+  - { name: "gcc16"         , preset: "gcc"           , image: "v11"    , args: "-DTTS_BENCHMARKS=ON", setup: "./.github/scripts/g++-16.sh"  }
+  - { name: "icpx"          , preset: "icpx"          , image: "sycl-v1", args: "-DTTS_BENCHMARKS=ON", setup: "/opt/intel/oneapi/setvars.sh", memcheck: false }
+  - { name: "wasm"          , preset: "wasm"          , image: "v11"    , args: "-DTTS_BENCHMARKS=ON", wrapper: "emcmake" }
