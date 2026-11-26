@@ -5,9 +5,23 @@ Change Log {#changelog}
 
 ## What's Changed
 
+### Breaking Changes
+  * Remove `tts::realistic_generator`: replace it with `tts::randoms` ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Remove `--block` and `TTS_BLOCK`, and keep their default, at least 4096 combinations of values, for the generators other than `tts::sweep` and `tts::sample` ([#279](https://github.com/jfalcou/tts/pull/279))
+
+### New Features
+  * Add `tts::sweep` and `tts::sweep(lo, hi)`, for a range check on every value of a type or of a range, NaN excepted ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Add `tts::sample(n)` and `tts::sample(lo, hi, n)`, for a range check on `n` values spread over a type or a range ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Add `tts::enumeration<T>`, which ranks the values of `T` for `tts::sweep` and `tts::sample`: specialize it for a user-defined type to sweep or sample that type ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Run a range check in a memory that does not grow with its number of calls, without keeping every input and result ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Use OpenMP, when available, to speed up the range checks using `tts::sweep` or `tts::sample` ([#279](https://github.com/jfalcou/tts/pull/279))
+
 ### Bug Fixes
-  * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)
+  * Rewrite the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs ([#280](https://github.com/jfalcou/tts/pull/280))
   * Keep `tts::random_value(lo, hi)` within `[lo, hi]` for a floating-point type, which the rounding of its log-uniform draw could overstep ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Apply `--valmin` and `--valmax` to range checks, which no generator read from 3.0 to 4.1 ([#279](https://github.com/jfalcou/tts/pull/279))
+    - Narrow the values of `tts::sweep`, `tts::sample`, and `tts::randoms` to those between the two options.
+    - Print a note when the two options narrow an argument of a check.
   * Fix the distance `tts::ulp_check` measures between values of opposite signs, of a floating-point type or of a signed 8- or 16-bit integer type, and the crash of a range check over these integers ([#279](https://github.com/jfalcou/tts/pull/279))
 
 # Version 4.1

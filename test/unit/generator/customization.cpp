@@ -128,10 +128,19 @@ TTS_CASE("Check that the built-in conversion is left in place")
 // A specialization keyed on the type being built cannot see the generator in an overload set the
 // way a produce overload could, so recognizing a range is a question about its type.
 //==================================================================================================
+struct unit_randoms : tts::randoms<float, float>
+{
+  unit_randoms()
+      : tts::randoms<float, float>(0.f, 1.f)
+  {
+  }
+};
+
 TTS_CASE("Check that tts::is_randoms recognizes a range generator")
 {
   TTS_EXPECT(tts::is_randoms_v<decltype(tts::randoms(0, 10))>);
   TTS_EXPECT(tts::is_randoms_v<decltype(tts::randoms(0.5, 1.5)) const&>);
+  TTS_EXPECT(tts::is_randoms_v<unit_randoms>);
 
   TTS_EXPECT_NOT(tts::is_randoms_v<decltype(tts::value(3))>);
   TTS_EXPECT_NOT(tts::is_randoms_v<decltype(tts::ramp(0, 2))>);

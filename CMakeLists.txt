@@ -118,6 +118,7 @@ if(TTS_BUILD_TEST)
     copa_setup_sanitizers(tts_test ENABLE_ASAN ENABLE_UBSAN)
   endif()
 
+  set(MEMORYCHECK_SUPPRESSIONS_FILE "${PROJECT_SOURCE_DIR}/test/valgrind.supp")
   include(CTest)
   enable_testing()
   add_custom_target(tts-unit COMMENT "[tts] - Building the unit tests")
