@@ -93,8 +93,7 @@ namespace tts::_
         {
           auto aa = bitinteger(a);
           auto bb = bitinteger(b);
-          if(aa > bb) std::swap(aa, bb);
-          auto z = static_cast<ui_t>(bb - aa);
+          auto z  = static_cast<ui_t>(a < b ? bb - aa : aa - bb);
           if(signbit(a) != signbit(b)) ++z;
           return static_cast<double>(z) / 2.;
         }
@@ -104,7 +103,7 @@ namespace tts::_
         using u_t = typename std::make_unsigned<T>::type;
         auto ua   = static_cast<u_t>(a);
         auto ub   = static_cast<u_t>(b);
-        return static_cast<double>((a < b) ? (ub - ua) : (ua - ub)) / 2.;
+        return static_cast<double>(static_cast<u_t>((a < b) ? (ub - ua) : (ua - ub))) / 2.;
       }
       else
       {

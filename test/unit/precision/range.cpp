@@ -32,8 +32,7 @@ TTS_CASE("Test stateless range check")
 
 TTS_CASE("Test stateful range check")
 {
-  TTS_ULP_RANGE_CHECK(
-  tts::realistic_generator<float>(-10, 10), float, (std::array<float, 4>), ok_x, ajar_ax, 128);
+  TTS_ULP_RANGE_CHECK(tts::randoms(-10.f, 10.f), float, (std::array<float, 4>), ok_x, ajar_ax, 128);
 };
 
 TTS_CASE("Range check next to a local named like a macro local")

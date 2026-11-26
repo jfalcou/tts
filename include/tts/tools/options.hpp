@@ -78,6 +78,10 @@ namespace tts::_
         }
         else
         {
+          static_assert(
+          requires { T {raw}; },
+          "[TTS] An option is read as an integer, as a floating-point value, or as a "
+          "type built from a text, such as tts::text.");
           n    = 1;
           that = T {raw};
         }

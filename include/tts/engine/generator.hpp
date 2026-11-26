@@ -8,6 +8,7 @@
 #pragma once
 
 #include <tts/tools/concepts.hpp>
+#include <tts/tools/enumeration.hpp>
 #include <tts/tools/random.hpp>
 #include <tts/tools/types.hpp>
 
@@ -15,51 +16,6 @@ namespace tts
 {
   namespace _
   {
-    template<std::size_t N, bool Signed> struct sized_integer;
-
-    template<> struct sized_integer<1, true>
-    {
-      using type = std::int8_t;
-    };
-
-    template<> struct sized_integer<2, true>
-    {
-      using type = std::int16_t;
-    };
-
-    template<> struct sized_integer<4, true>
-    {
-      using type = std::int32_t;
-    };
-
-    template<> struct sized_integer<8, true>
-    {
-      using type = std::int64_t;
-    };
-
-    template<> struct sized_integer<1, false>
-    {
-      using type = std::uint8_t;
-    };
-
-    template<> struct sized_integer<2, false>
-    {
-      using type = std::uint16_t;
-    };
-
-    template<> struct sized_integer<4, false>
-    {
-      using type = std::uint32_t;
-    };
-
-    template<> struct sized_integer<8, false>
-    {
-      using type = std::uint64_t;
-    };
-
-    template<typename T, bool Signed = false>
-    using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
-
     template<typename T, typename V> struct builtin_conversion
     {
       static auto from(V const& v)
@@ -72,7 +28,7 @@ namespace tts
   //====================================================================================================================
   /**
     @defgroup tools-generators Data Generators related tools
-    @brief Tools for data generation.
+    @brief Generators of test data and their customization points
     @{
   **/
   //====================================================================================================================
@@ -80,7 +36,7 @@ namespace tts
   //====================================================================================================================
   /**
     @defgroup tools-generators-custom Data Generators Customization Points
-    @brief Customization points to customize data generation for user-defined types.
+    @brief Customization points of the data generation for user-defined types
     @{
   **/
   //====================================================================================================================
@@ -152,19 +108,16 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Data production customization point
+    @brief Produces a value of type `T` from a generator
 
-    This function is in charge of producing data of type `T` using generator `g` and additional
-  parameters `others...`. The default implementation simply calls the generator `g` with the
-  provided parameters.
-
-    By default, this function also handles sequence types by producing each of their elements using
-  the provided generator.
+    If tts::generation is specialized for `T`, calls `tts::generation<T>::make(g, others...)`.
+    Otherwise, calls `g` with `t` and `others...` for a scalar type, or fills a sequence type
+    element by element, each element produced by `g`.
 
     @tparam T Target data type
     @param  t      Type wrapper for the target data type
     @param  g      Data generator to use
-    @param  others Additional parameters forwarded to the generator
+    @param  others Index and size of the element when a sequence is filled, forwarded to `g`
     @return A value of type `T` produced by the generator `g`.
   **/
   //====================================================================================================================
@@ -247,12 +200,12 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Base type extraction
+    @brief Gives the base type of a type `T`
 
-    This structure is used to extract the base type of a type `T`. By default, the base type is `T`
-    itself, but this structure can be specialized for user-defined types to provide a different base
-    type. The base type is used to determine the limits and special values for the type `T` when
-    generating test data.
+    The base type is `T` itself, and can be changed by a specialization of `base_type` for a
+    user-defined type. tts::limits_set takes the limits and special values of `T` from its base
+    type, and tts::random_bits, tts::as_integer, and tts::as_signed_integer take their integer width
+    from it.
 
     @par Helper types
     - `base_type_t<T>`: Alias for `typename base_type<T>::type`
@@ -269,11 +222,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Boolean type computation
+    @brief Gives the boolean type of a type `T`
 
-    This structure is used to compute a boolean type for a type `T`. By default, the boolean type is
-    `bool`, but this structure can be specialized for user-defined types to provide a different
-    boolean type.
+    The boolean type is `bool`, and can be changed by a specialization of `boolean_type` for a
+    user-defined type whose comparisons return another type, such as a mask of several booleans.
+    The values of tts::logicals are of this type.
 
     @par Helper types
     - `boolean_type_t<T>`: Alias for `typename boolean_type<T>::type`
@@ -327,46 +280,83 @@ namespace tts
     };
   }
 
+}
+
+namespace tts::_
+{
+  template<typename T, bool Complete = false> struct bounded_range
+  {
+    T             lo;
+    T             hi;
+    std::uint64_t samples = 0;
+  };
+
+  struct whole_sweep
+  {
+    template<typename T> constexpr bounded_range<T, true> operator()(T lo, T hi) const
+    {
+      return {lo, hi};
+    }
+  };
+
+  struct whole_sample
+  {
+    std::uint64_t samples;
+  };
+}
+
+namespace tts
+{
   //====================================================================================================================
   /**
     @defgroup tools-generators-class Data Generators
-    @brief Generators to produce data samples for testing.
+    @brief Generators of the values of the test cases and the range checks
     @{
   **/
   //====================================================================================================================
 
   //====================================================================================================================
   /**
-    @brief Defines a set of limits for a type `T`.
+    @brief Holds the limits and special values of a type `T`
 
-    This structure provides a set of limits and special values for the type `T` that can be used for
-    generating test data that covers edge cases and special values. The actual limits provided
-    depend on the type `T` and its base type.
-
-    The provided limits include:
-    - `valmax`: The maximum representable value of the base type.
-    - `valmin`: The minimum representable value of the base type.
-    - `zero`: The value representing zero.
-    - `one`: The value representing one.
-
-    For floating-point types, additional limits include:
-    - `nan`: Not-a-Number value.
-    - `inf`: Positive infinity.
-    - `minf`: Negative infinity.
-    - `maxflint`: The largest integer value that can be exactly represented in the type.
-    - `mindenormal`: The smallest positive subnormal value.
-    - `smallestposval`: The smallest positive normal value.
-    - `mzero`: Negative zero.
-    - `mone`: The value representing negative one.
-
-    This class can be specialized for user-defined types to provide custom limits.
+    Each member is a value of `T` and an edge case for the test data. A specialization for a
+    user-defined type can provide limits of its own.
 
     @groupheader{Examples}
     @snippet doc/limits.cpp snippet
 
-    @tparam T Type for which to provide limits for.
+    @tparam T Type whose limits are held
   **/
   //====================================================================================================================
+#if defined(TTS_DOXYGEN_INVOKED)
+  template<typename T> struct limits_set
+  {
+    /// Largest representable value of the base type.
+    T valmax;
+    /// Lowest representable value of the base type, its most negative one.
+    T valmin;
+    /// \f$0\f$.
+    T zero;
+    /// \f$1\f$.
+    T one;
+    /// Quiet NaN, for floating-point base types.
+    T nan;
+    /// \f$+\infty\f$, for floating-point base types.
+    T inf;
+    /// \f$-\infty\f$, for floating-point base types.
+    T minf;
+    /// \f$-0\f$, for floating-point base types.
+    T mzero;
+    /// Largest \f$M\f$ with every integer of \f$[-M, M]\f$ exact, for floating-point base types.
+    T maxflint;
+    /// Smallest positive subnormal value, for floating-point base types.
+    T mindenormal;
+    /// Smallest positive normal value, for floating-point base types.
+    T smallestposval;
+    /// \f$-1\f$, for floating-point base types.
+    T mone;
+  };
+#else
   template<typename T>
   struct limits_set
       : _::common_limits<T>
@@ -374,16 +364,14 @@ namespace tts
   {
     using type = T;
   };
+#endif
 
   //====================================================================================================================
   /**
-    @brief Provides a set of limits for the type `T`.
-
-    This function returns a structure containing various limits and special values for the type `T`
-    that can be used for generating test data that covers edge cases and special values.
+    @brief Returns the limits and special values of a type `T`
 
     @tparam T Type for which to provide limits
-    @return A instance of `limits_set<T>` containing limits and special values for type `T`.
+    @return The tts::limits_set of `T`.
 
     @relates limits_set
   **/
@@ -395,10 +383,10 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that always return the same value.
+    @brief Generates the same value at every call
 
-    This generator produces always the same value provided at construction converted to the target
-    type.
+    Each generated value is the one given at construction, converted to the target type through
+    tts::conversion when it is specialized for that type.
 
     @tparam T Type of the value to be produced
 
@@ -423,14 +411,15 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce logical values in a regular pattern.
+    @brief Generates boolean values in a regular pattern
 
-    This generator produces logical values (true/false) in a regular pattern defined by two
-  parameters: a starting index and a range.
+    The pattern depends on a starting index `start` and a period `range`, given in that order to the
+    constructor. The element at index `i` of a sequence is:
 
-    For a size `N`, the produced values are:
-      - `true` for indices `i` where `(start + i) % range == 0`
-      - `false` for all other indices.
+      - `true` if `(start + i) % range == 0`,
+      - `false` otherwise.
+
+    A scalar target gets `false`.
 
     @tparam T Type of the starting index
     @tparam U Type of the range
@@ -460,11 +449,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce a ramp of data.
+    @brief Generates a ramp of values
 
-    This generator produces a ramp starting from an initial value and increasing by a fixed step at
-    each call. I.e., for a size `N`, the produced values are: `start, start+step, start+2*step, ...,
-    start+(N-1)*step`.
+    The element at index `i` of a sequence is `start + i*step`, the step being 1 when none is given,
+    which for a size `N` gives `start, start+step, ..., start+(N-1)*step`. A scalar target gets
+    `start`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -502,11 +491,10 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce a reverse ramp of data.
+    @brief Generates a ramp of values read backward
 
-    This generator produces a ramp read backward: the last value is `start` and every earlier one
-    stands one step above it. I.e., for a size `N`, the produced values are:
-    `start+(N-1)*step, ..., start+2*step, start+step, start`.
+    The element at index `i` of a sequence of size `N` is `start + (N-1-i)*step`, which gives
+    `start+(N-1)*step, ..., start+step, start`. A scalar target gets `start`.
 
     @tparam T Type of the initial value
     @tparam U Type of the step value
@@ -545,13 +533,12 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Defines a data generator that produce values between two bounds.
+    @brief Generates values linearly spaced between two bounds
 
-    This generator produces values linearly spaced between two bounds (inclusive). For a size `N`,
-    the produced values are: `first, first+step, first+2*step, ..., last`, where `step =
-    (last-first)/(N-1)`.
-
-    When generated values exceed the last bound due to rounding, the last bound is returned instead.
+    The element at index `i` of a sequence of size `N` is `first + i*step`, where `step =
+    (last-first)/(N-1)`, both computed in the target type, so rounding makes the gaps slightly
+    unequal. If rounding carries a value past the last bound, the last bound is returned instead. A
+    sequence of size 1 and a scalar target get the first bound.
 
     @tparam T Type of the first bound
     @tparam U Type of the last bound
@@ -593,11 +580,12 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Random generator between two bounds using realistic_distribution
+    @brief Generates random values between two bounds
 
-    This generator produces random values between two bounds (inclusive) using a realistic
-    distribution. The realistic distribution aims to provide a more uniform coverage of the range by
-    avoiding too many extreme values.
+    The constructor takes the lower bound, then the upper bound. Each value is drawn by
+    tts::random_value, uniformly with both bounds included for an integral type, and log-uniformly
+    for a floating-point type. In a build without `NDEBUG`, a negative bound for an unsigned type
+    stops the run on an assertion.
 
     @tparam Mx Type of the upper bound
     @tparam Mn Type of the lower bound
@@ -608,16 +596,24 @@ namespace tts
   //====================================================================================================================
   template<typename Mx, typename Mn> struct randoms
   {
+    /// Marks tts::randoms and the classes derived from it for tts::is_randoms
+    using random_type = void;
+
     constexpr randoms(Mn mn, Mx mx)
         : mini(mn)
         , maxi(mx)
     {
     }
 
-    template<typename D> D operator()(tts::type<D>, auto...)
+    template<typename D> D operator()(tts::type<D> t, auto...)
     {
-      // A bound is not always a number: it can be a per-type recipe evaluated by convert_as,
-      // which has no ordering against 0. Only check the ones that can actually be compared.
+      check(t);
+      return random_value(::tts::convert_as(mini, t), ::tts::convert_as(maxi, t));
+    }
+
+    /// Stops on a negative bound when `D` is an unsigned type
+    template<typename D> void check(tts::type<D>) const
+    {
       if constexpr(std::is_unsigned_v<D> && requires { mini >= 0; })
       {
         assert(mini >= 0 &&
@@ -628,7 +624,6 @@ namespace tts
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(::tts::convert_as(mini, type<D> {}), ::tts::convert_as(maxi, type<D> {}));
     }
 
     Mn mini;
@@ -638,12 +633,11 @@ namespace tts
   //====================================================================================================================
   /*!
     @ingroup tools-generators-custom
-    @brief Whether a generator is a tts::randoms, by its type
+    @brief Detects tts::randoms and the classes derived from it
 
-    tts::generation keys on the type being built, so a specialization that has to treat a range
-  apart cannot see it in the overload set the way a produce overload could. Recognizing the
-  generator is left here rather than at the point of use, where it would come down to guessing from
-  the members a generator happens to carry.
+    Derives from `std::true_type` when `G` is a tts::randoms or a class derived from it, and from
+    `std::false_type` otherwise. A range check keeps the values of such a generator between
+    `--valmin` and `--valmax`.
 
     @tparam G Generator type being examined
   **/
@@ -651,7 +645,9 @@ namespace tts
   template<typename G> struct is_randoms : std::false_type
   {
   };
-  template<typename Mx, typename Mn> struct is_randoms<randoms<Mx, Mn>> : std::true_type
+  template<typename G>
+    requires requires { typename G::random_type; }
+  struct is_randoms<G> : std::true_type
   {
   };
 
@@ -661,11 +657,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Produces random bits patterns
+    @brief Generates random bit patterns
 
-    This generator produces random bit patterns by generating a random integer value and
-  interpreting its bits as the bits of the target type. The number of bits generated is equal to the
-  number of bits in the target type.
+    Each value is an unsigned integer as wide as the base type of the target type, drawn uniformly
+    over all its values, and `std::bit_cast` reads its bits as a target value. A sequence target
+    gets one such integer per element.
 
     @groupheader{Example}
     @snippet doc/generator_random_bits.cpp snippet
@@ -700,11 +696,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Converts a generator to produce integer values
+    @brief Adapts a generator to produce unsigned integer values
 
-    This generator adapter takes a generator `g` and produces integer values by generating values
-    using `g` and converting them to integers. The conversion is done by interpreting the generated
-    values as integers of the same size as the base type of the target type.
+    Calls the adapted generator, given at construction, for the unsigned integer type as wide as the
+    base type of the target type, element by element for a sequence. The values are integers drawn
+    by that generator, in place of values of the target type.
 
     @groupheader{Example}
     @snippet doc/generator_as_integer.cpp snippet
@@ -728,11 +724,11 @@ namespace tts
 
   //====================================================================================================================
   /**
-    @brief Converts a generator to produce integer values
+    @brief Adapts a generator to produce signed integer values
 
-    This generator adapter takes a generator `g` and produces signed integer values by generating
-  values using `g` and converting them to integers. The conversion is done by interpreting the
-  generated values as integers of the same size as the base type of the target type.
+    Calls the adapted generator, given at construction, for the signed integer type as wide as the
+    base type of the target type, element by element for a sequence. The values are integers drawn
+    by that generator, in place of values of the target type.
 
     @groupheader{Example}
     @snippet doc/generator_as_signed_integer.cpp snippet
@@ -754,6 +750,67 @@ namespace tts
     }
     G generator_;
   };
+
+  //====================================================================================================================
+  /**
+    @brief Generates every value of a type, or of a range
+
+    Produces every value of an argument of a @ref TTS_ULP_RANGE_CHECK, NaN excluded since it has no
+    rank in tts::enumeration.
+
+    - `tts::sweep` covers the whole type, from -inf to +inf for a floating-point type.
+    - `tts::sweep(lo, hi)` covers every value of [`lo`, `hi`], its bounds given in either order.
+
+    A sweep makes 65536 calls over two `std::uint8_t` and 4278190082 over a `float`. If the number
+    of calls exceeds the largest `std::size_t`, as over two `double`, the check fails without
+    running, and tts::sample can run such a check on `n` values per argument.
+
+    @groupheader{Example}
+    @snippet doc/generator_sweep.cpp snippet
+
+    @see tts::sample
+  **/
+  //====================================================================================================================
+  inline constexpr _::whole_sweep sweep = {};
+
+  //====================================================================================================================
+  /**
+    @brief Generates a given number of values spread over a type or a range
+
+    Produces `n` values of an argument of a @ref TTS_ULP_RANGE_CHECK, and never NaN.
+
+    - `tts::sample(n)` spreads its values over the whole type.
+    - `tts::sample(lo, hi, n)` spreads its values over [`lo`, `hi`], its bounds given in either
+      order.
+
+    The values are the two bounds and one value per slice of equal width in the ranks of
+    tts::enumeration. The sample thus holds about the same number of values in each binade of a
+    floating-point type, the subnormals of each sign counting as one binade. A range over many
+    binades of small magnitude, such as [-700, 700] in `double`, has most of its values below 1 in
+    magnitude. If `n` is 1, the sample holds the lower bound alone. A sample of at least as many
+    values as its range holds gives each value once, as tts::sweep does.
+
+    The position of a value within its slice comes from its index and from a value drawn from the
+    generator of the run when the check starts, so each run checks other values, and `--seed`
+    repeats those of a run.
+
+    If `n` is 0, the check makes no call and records no check, so a case without another check is
+    reported as invalid.
+
+    @groupheader{Example}
+    @snippet doc/generator_sample.cpp snippet
+  **/
+  //====================================================================================================================
+  constexpr _::whole_sample sample(std::uint64_t n)
+  {
+    return {n};
+  }
+
+  //! @overload
+  template<typename T> constexpr _::bounded_range<T> sample(T lo, T hi, std::uint64_t n)
+  {
+    return {lo, hi, n};
+  }
 
   //====================================================================================================================
   /// @}

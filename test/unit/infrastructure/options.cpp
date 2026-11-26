@@ -54,7 +54,7 @@ TTS_CASE("Check option built from a separate name/value pair (env var style)")
 
 TTS_CASE("Check option::get from a separate name/value pair parses integrals and floats")
 {
-  tts::_::option i {"--block", "4096"};
+  tts::_::option i {"--loop", "4096"};
   TTS_EQUAL(i.get<int>(), 4096);
 
   tts::_::option f {"--ulpmax", "2.5"};

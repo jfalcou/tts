@@ -37,7 +37,6 @@
   `TTS_SINK`            | `--sink=name`
   `TTS_PRECISION`       | `--precision=N`
   `TTS_SEED`            | `--seed=N`
-  `TTS_BLOCK`           | `--block=N`
   `TTS_LOOP`            | `--loop=N`
   `TTS_ULPMAX`          | `--ulpmax=N`
   `TTS_VALMIN`          | `--valmin=N`
@@ -121,11 +120,10 @@
 
   Options      | Description
   ------------ | -----------------------------------------------------------------------
-  `--block=N`  | Set size of range checks samples to `N`. `./my_test --block=4096`
   `--loop=N`   | Repeat each range checks `N` times. `./my_test --loop=100`
   `--ulpmax=N` | Set global failure ulp threshold for range tests to `N`. `./my_test --ulpmax=4`
-  `--valmin=N` | Set minimal value for range tests to `N`. `./my_test --valmin=-100`
-  `--valmax=N` | Set maximal value for range tests to `N`. `./my_test --valmax=1000`
+  `--valmin=N` | Narrow the values of tts::sweep, tts::sample, and tts::randoms in range checks to `N` and above. `./my_test --valmin=-100`
+  `--valmax=N` | Narrow the values of tts::sweep, tts::sample, and tts::randoms in range checks to `N` and below. `./my_test --valmax=1000`
 
 **/
 //==================================================================================================

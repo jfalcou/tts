@@ -6,6 +6,7 @@
 */
 //==================================================================================================
 #include "range.hpp"
+#include "my_real.hpp"
 #include <array>
 
 int scale(float x, int k)
@@ -41,6 +42,22 @@ TTS_CASE(TTS_XFAIL("Range check on a function of two arguments reads each leaf")
                       scale,
                       ajar_scale,
                       0.4);
+};
+
+TTS_CASE("Range check on a class argument with a generator of its own")
+{
+  int  calls = 0;
+  auto make  = [](auto, auto i, auto) { return n1::my_real {static_cast<float>(i)}; };
+  auto ref   = [ &calls ](n1::my_real r)
+  {
+    ++calls;
+    return r.x;
+  };
+  auto same = [](n1::my_real r) { return r.x; };
+
+  TTS_ULP_RANGE_CHECK(make, n1::my_real, n1::my_real, ref, same, 0.);
+
+  TTS_EQUAL(calls, 4096);
 };
 
 TTS_CASE("Range check with one producer shared by every argument")
