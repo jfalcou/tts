@@ -44,13 +44,22 @@ jobs:
 
       - name: Generate standalone header
         run: |
-          cmake -S . -B build -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=OFF
+          cmake -S . -B build -G Ninja -DTTS_BUILD_TEST=OFF -DTTS_BUILD_DOCUMENTATION=OFF -DTTS_BENCHMARKS=ON
           cmake --build build --target tts-standalone
 
       - name: Test standalone header
         run: |
           cd build
           g++ -std=c++20 -S -I. ../test/integration/main.cpp -DTTS_STANDALONE
+
+      - name: Test standalone benchmark header
+        run: |
+          cd build
+          mkdir -p standalone/tts
+          cp tts.hpp ../include/tts/benchmarks.hpp standalone/tts
+          g++ -std=c++20 -O2 -DNDEBUG -Istandalone -isystem _deps/nanobench-src/src/include \
+            ../test/integration/benchmarks.cpp ../test/integration/benchmarks-unit.cpp -o standalone-benchmarks
+          ./standalone-benchmarks
 
   ##################################################################################################
   ## Sanitizers (ASan+UBSan)

@@ -17,6 +17,7 @@
 
   ### Tools and Helpers
 
+  - @ref tools-benchmarks
   - @ref tools-config
   - @ref tools-generators-class
   - @ref tools-output

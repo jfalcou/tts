@@ -13,6 +13,7 @@
 #include <tts/engine/test.hpp>
 #include <tts/engine/environment.hpp>
 #include <tts/tools/clock.hpp>
+#include <tts/tools/file.hpp>
 #include <tts/tools/options.hpp>
 #include <tts/tools/random.hpp>
 
@@ -79,7 +80,6 @@ namespace tts::_
 #include <tts/engine/sink_selection.hpp> // NOSONAR - only the driver reads it, so only its unit parses it
 #include <tts/engine/usage.hpp> // NOSONAR - only the driver reads it, so only its unit parses it
 #include <tts/sinks/sinks.hpp>  // NOSONAR - only the driver reads it, so only its unit parses it
-#include <tts/tools/file.hpp>   // NOSONAR - only the driver reads it, so only its unit parses it
 
 TTS_DISABLE_WARNING_PUSH
 TTS_DISABLE_WARNING_CRT_SECURE

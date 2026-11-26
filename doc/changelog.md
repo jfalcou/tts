@@ -15,6 +15,15 @@ Change Log {#changelog}
   * Add `tts::enumeration<T>`, which ranks the values of `T` for `tts::sweep` and `tts::sample`: specialize it for a user-defined type to sweep or sample that type ([#279](https://github.com/jfalcou/tts/pull/279))
   * Run a range check in a memory that does not grow with its number of calls, without keeping every input and result ([#279](https://github.com/jfalcou/tts/pull/279))
   * Use OpenMP, when available, to speed up the range checks using `tts::sweep` or `tts::sample` ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Add `tts/benchmarks.hpp`, a header apart from `tts/tts.hpp`, to benchmark functions with [nanobench](https://nanobench.ankerl.com) and print each group of results as a Markdown table ([#282](https://github.com/jfalcou/tts/pull/282))
+    - Add the CMake option `TTS_BENCHMARKS`, `OFF` by default, which fetches [nanobench](https://nanobench.ankerl.com) v4.6.0 and defines the target `tts::benchmarks`.
+    - Generate the buffers of `tts::bench::random` with the random generator of the run, so that `--seed` repeats their values, 1024 of them unless a third argument gives another size.
+    - Build the input of each row from a traits class passed to `tts::bench::basic_benchmark`, so that a library can feed SIMD registers or other types from the same values.
+    - Set the epochs and the warmup of every row of an executable with `--epochs=N` and `--warmup=N`.
+    - Run an odd number of epochs per row, 101 by default, so that the median of a row is the time of one epoch.
+    - Return the `tts::bench::measurement` of a row from `TTS_RUN_BENCHMARK`, so that a test can check a time.
+    - Provide `benchmarks.hpp` next to the standalone `tts.hpp`, both to put in a `tts` directory.
+  * Generate `bool` values in `tts::random_value`, `false` and `true` with equal odds ([#282](https://github.com/jfalcou/tts/pull/282))
 
 ### Bug Fixes
   * Rewrite the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs ([#280](https://github.com/jfalcou/tts/pull/280))

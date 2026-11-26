@@ -19,3 +19,30 @@ jobs:
     with:
       project: tts
       image: ghcr.io/jfalcou/compilers:v11
+
+  package-benchmarks:
+    needs: package-standalone
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch the pushed commit
+        uses: actions/checkout@v7
+        with:
+          path: source
+
+      - name: Fetch the standalone branch
+        uses: actions/checkout@v7
+        with:
+          ref: standalone
+          path: standalone
+
+      - name: Add benchmarks.hpp next to tts.hpp
+        working-directory: standalone
+        run: |
+          cp ../source/include/tts/benchmarks.hpp benchmarks.hpp
+          git config user.email "tts@nowhere.com"
+          git config user.name "TTS Standalone Generator"
+          git add benchmarks.hpp
+          git diff --cached --quiet || git commit -m "Latest TTS standalone benchmarks"
+          git push origin standalone
