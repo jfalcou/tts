@@ -22,7 +22,7 @@ Change Log {#changelog}
     - Set the epochs and the warmup of every row of an executable with `--epochs=N` and `--warmup=N`.
     - Run an odd number of epochs per row, 101 by default, so that the median of a row is the time of one epoch.
     - Return the `tts::bench::measurement` of a row from `TTS_RUN_BENCHMARK`, so that a test can check a time.
-    - Generate `benchmarks.hpp` as a standalone header next to `tts.hpp`, a single file with all of **TTS** and the benchmark utilities.
+    - Provide `benchmarks.hpp` next to the standalone `tts.hpp`, both to put in a `tts` directory.
   * Generate `bool` values in `tts::random_value`, `false` and `true` with equal odds ([#282](https://github.com/jfalcou/tts/pull/282))
 
 ### Bug Fixes

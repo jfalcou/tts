@@ -57,12 +57,14 @@
 
   Use **TTS** by just compiling your code with the include path pointing to the location of this single file.
 
-  The standalone branch also holds `benchmarks.hpp`, a single file that contains all of **TTS** and
-  the benchmark utilities (see @ref setup-benchmarks). A benchmark includes it in place of
-  `tts.hpp`, never next to it, and needs `nanobench.h` v4.6.0 on its include path:
+  The standalone branch also holds `benchmarks.hpp`, the benchmark utilities (see
+  @ref setup-benchmarks), which includes `<tts/tts.hpp>`. Put both files in a `tts` directory,
+  point the include path to its parent, and include `<tts/benchmarks.hpp>` in a benchmark, with
+  `nanobench.h` v4.6.0 on the include path as well:
 
   @code
-  wget https://raw.githubusercontent.com/jfalcou/tts/refs/heads/standalone/benchmarks.hpp
+  wget -P tts https://raw.githubusercontent.com/jfalcou/tts/refs/heads/standalone/tts.hpp
+  wget -P tts https://raw.githubusercontent.com/jfalcou/tts/refs/heads/standalone/benchmarks.hpp
   @endcode
 
   @section setup-fetchcontent CMake FetchContent
@@ -133,7 +135,8 @@
   - With FetchContent, `set(TTS_BENCHMARKS ON)` comes before `FetchContent_MakeAvailable(tts)`.
   - An installed **TTS** provides no `tts::benchmarks` target, so a project using an installation
     puts `nanobench.h` v4.6.0 on its include path itself.
-  - With the standalone files, a benchmark includes `benchmarks.hpp` in place of `tts.hpp` (see
-    @ref setup-standalone), and `nanobench.h` v4.6.0 goes on its include path.
+  - With the standalone files, a benchmark includes `<tts/benchmarks.hpp>` from a `tts` directory
+    that holds both files (see @ref setup-standalone), and `nanobench.h` v4.6.0 goes on its
+    include path.
 **/
 //==================================================================================================

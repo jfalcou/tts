@@ -33,10 +33,10 @@
   @ref benchmarking "Benchmarking with TTS").
 
   The header is separate from `tts/tts.hpp`, which it includes, and it includes `nanobench.h` (see
-  @ref setup-benchmarks). The standalone branch holds it as `benchmarks.hpp`, a single file that
-  contains all of **TTS** (see @ref setup-standalone). The translation unit that defines
-  @ref TTS_MAIN has to include this header, so that the implementation of nanobench is compiled in
-  that unit, with no other macro to define:
+  @ref setup-benchmarks). The standalone branch holds it as `benchmarks.hpp`, unchanged, to put in a
+  `tts` directory with the standalone `tts.hpp` (see @ref setup-standalone). The translation unit
+  that defines @ref TTS_MAIN has to include this header, so that the implementation of nanobench is
+  compiled in that unit, with no other macro to define:
   @code
   #define TTS_MAIN
   #include <tts/benchmarks.hpp>

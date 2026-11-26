@@ -55,7 +55,9 @@ jobs:
       - name: Test standalone benchmark header
         run: |
           cd build
-          g++ -std=c++20 -O2 -DNDEBUG -DTTS_STANDALONE -I. -isystem _deps/nanobench-src/src/include \
+          mkdir -p standalone/tts
+          cp tts.hpp ../include/tts/benchmarks.hpp standalone/tts
+          g++ -std=c++20 -O2 -DNDEBUG -Istandalone -isystem _deps/nanobench-src/src/include \
             ../test/integration/benchmarks.cpp ../test/integration/benchmarks-unit.cpp -o standalone-benchmarks
           ./standalone-benchmarks
 

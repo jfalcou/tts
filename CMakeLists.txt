@@ -28,7 +28,7 @@ copa_add_option(TTS_ENABLE_SANITIZERS "Build tests with AddressSanitizer + Undef
                 LABEL "Sanitizers")
 copa_add_option(TTS_ENABLE_COVERAGE "Build tests with code coverage instrumentation" OFF LABEL "Coverage")
 copa_add_option(TTS_COMPILE_COST "Measure what every test unit costs to compile" OFF)
-copa_add_option(TTS_BENCHMARKS "Provide tts::benchmarks, which benchmarks functions with nanobench" OFF LABEL "Benchmarks")
+copa_add_option(TTS_BENCHMARKS "Activate tts::benchmarks" OFF LABEL "Benchmarks")
 copa_add_option(TTS_EXTERNAL_DEPENDENCIES "Take dependencies from the environment instead of fetching them" OFF)
 copa_project_version(
   MAJOR 4
@@ -78,18 +78,6 @@ copa_setup_standalone(
   ROOT tts
   TARGET tts-standalone
   OUTPUT "${PROJECT_BINARY_DIR}")
-
-copa_setup_standalone(
-  QUIET
-  FILE benchmarks.hpp
-  SOURCE include
-  ROOT tts
-  TARGET tts-standalone-benchmarks
-  OUTPUT "${PROJECT_BINARY_DIR}")
-
-if(TARGET tts-standalone AND TARGET tts-standalone-benchmarks)
-  add_dependencies(tts-standalone tts-standalone-benchmarks)
-endif()
 
 ##======================================================================================================================
 ## Setup doxygen

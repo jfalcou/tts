@@ -1,10 +1,6 @@
 #define TTS_MAIN
 
-#ifdef TTS_STANDALONE
-#include "benchmarks.hpp"
-#else
 #include <tts/benchmarks.hpp>
-#endif
 
 double sqrt_time();
 

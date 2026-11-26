@@ -8,7 +8,7 @@
 ## Take the dependencies from the environment, without CPM
 ##======================================================================================================================
 option(TTS_EXTERNAL_DEPENDENCIES "Take dependencies from the environment instead of fetching them" OFF)
-option(TTS_BENCHMARKS "Provide tts::benchmarks, which benchmarks functions with nanobench" OFF)
+option(TTS_BENCHMARKS "Activate tts::benchmarks" OFF)
 
 if(TTS_EXTERNAL_DEPENDENCIES)
   if(NOT COPACABANA_SOURCE_DIR)

@@ -1,8 +1,4 @@
-#ifdef TTS_STANDALONE
-#include "benchmarks.hpp"
-#else
 #include <tts/benchmarks.hpp>
-#endif
 
 #include <cmath>
 
