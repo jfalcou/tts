@@ -15,6 +15,7 @@ Change Log {#changelog}
   * Add `tts::enumeration<T>`, which ranks the values of `T` for `tts::sweep` and `tts::sample`: specialize it for a user-defined type to sweep or sample that type ([#279](https://github.com/jfalcou/tts/pull/279))
   * Run a range check in a memory that does not grow with its number of calls, without keeping every input and result ([#279](https://github.com/jfalcou/tts/pull/279))
   * Use OpenMP, when available, to speed up the range checks using `tts::sweep` or `tts::sample` ([#279](https://github.com/jfalcou/tts/pull/279))
+  * Generate `bool` values in `tts::random_value`, `false` and `true` with equal odds ([#282](https://github.com/jfalcou/tts/pull/282))
 
 ### Bug Fixes
   * Rewrite the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs ([#280](https://github.com/jfalcou/tts/pull/280))

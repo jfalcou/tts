@@ -68,6 +68,12 @@ namespace tts
       return static_cast<T>(M + static_cast<T>(r / bucket_size));
     }
 
+    inline bool roll(bool M, bool N)
+    {
+      if(M == N) return M;
+      return (next_random() & 1U) != 0U;
+    }
+
     // High-Resolution Float Roll
     // Uses full 64-bit precision to avoid quantization errors (step artifacts)
     template<std::floating_point T> T roll(T M, T N)
