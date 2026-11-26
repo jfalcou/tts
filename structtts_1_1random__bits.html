@@ -138,11 +138,11 @@ $(function(){initNavTree('structtts_1_1random__bits.html','','structtts_1_1rando
 </div><!--header-->
 <div class="contents">
 
-<p>Produces random bits patterns.  
+<p>Generates random bit patterns.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Produces random bits patterns. </p>
-<p>This generator produces random bit patterns by generating a random integer value and interpreting its bits as the bits of the target type. The number of bits generated is equal to the number of bits in the target type.</p>
+<div class="textblock"><p>Generates random bit patterns. </p>
+<p>Each value is an unsigned integer as wide as the base type of the target type, drawn uniformly over all its values, and <span class="tt">std::bit_cast</span> reads its bits as a target value. A sequence target gets one such integer per element.</p>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>

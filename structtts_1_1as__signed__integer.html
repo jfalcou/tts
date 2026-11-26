@@ -138,12 +138,12 @@ $(function(){initNavTree('structtts_1_1as__signed__integer.html','','structtts_1
 </div><!--header-->
 <div class="contents">
 
-<p>Converts a generator to produce integer values.  
+<p>Adapts a generator to produce signed integer values.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename G&gt;<br />
-struct tts::as_signed_integer&lt; G &gt;</div><p>Converts a generator to produce integer values. </p>
-<p>This generator adapter takes a generator <span class="tt">g</span> and produces signed integer values by generating values using <span class="tt">g</span> and converting them to integers. The conversion is done by interpreting the generated values as integers of the same size as the base type of the target type.</p>
+struct tts::as_signed_integer&lt; G &gt;</div><p>Adapts a generator to produce signed integer values. </p>
+<p>Calls the adapted generator, given at construction, for the signed integer type as wide as the base type of the target type, element by element for a sequence. The values are integers drawn by that generator, in place of values of the target type.</p>
 <h2 class="groupheader">Example </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>

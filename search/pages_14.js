@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['range_20parameters_0',['Range Parameters',['../cli.html#autotoc_md41',1,'']]],
+  ['range_20parameters_0',['Range Parameters',['../cli.html#autotoc_md43',1,'']]],
   ['rationale_1',['Rationale',['../rationale.html',1,'']]],
   ['reference_20documentation_2',['Reference Documentation',['../tts_reference.html',1,'']]],
-  ['relative_20comparison_3',['Relative Comparison',['../customize.html#autotoc_md44',1,'']]],
-  ['release_4',['First public release.',['../changelog.html#autotoc_md35',1,'']]],
+  ['relative_20comparison_3',['Relative Comparison',['../customize.html#autotoc_md46',1,'']]],
+  ['release_4',['First public release.',['../changelog.html#autotoc_md37',1,'']]],
   ['replacements_5',['TTS replacements',['../compile-time.html#compile-time-precedent',1,'']]],
   ['runner_20libraries_6',['Runner libraries',['../compile-time.html#compile-time-comparison-mains',1,'']]],
   ['runs_7',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]]

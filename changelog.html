@@ -141,15 +141,37 @@ Upcoming version</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 What's Changed</h2>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+Breaking Changes</h3>
+<ul>
+<li>Remove <span class="tt">tts::realistic_generator</span>: replace it with <span class="tt"><a class="el" href="structtts_1_1randoms.html" title="Generates random values between two bounds.">tts::randoms</a></span> (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+<li>Remove <span class="tt">--block</span> and <span class="tt">TTS_BLOCK</span>, and keep their default, at least 4096 combinations of values, for the generators other than <span class="tt"><a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a></span> and <span class="tt"><a class="el" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a></span> (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+New Features</h3>
+<ul>
+<li>Add <span class="tt"><a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a></span> and <span class="tt"><a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep(lo, hi)</a></span>, for a range check on every value of a type or of a range, NaN excepted (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+<li>Add <span class="tt">tts::sample(n)</span> and <span class="tt">tts::sample(lo, hi, n)</span>, for a range check on <span class="tt">n</span> values spread over a type or a range (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+<li>Add <span class="tt"><a class="el" href="structtts_1_1enumeration.html" title="Enumerates the values of a type in increasing order.">tts::enumeration</a>&lt;T&gt;</span>, which ranks the values of <span class="tt">T</span> for <span class="tt"><a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a></span> and <span class="tt"><a class="el" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a></span>: specialize it for a user-defined type to sweep or sample that type (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+<li>Run a range check in a memory that does not grow with its number of calls, without keeping every input and result (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+<li>Use OpenMP, when available, to speed up the range checks using <span class="tt"><a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a></span> or <span class="tt"><a class="el" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a></span> (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Bug Fixes</h3>
 <ul>
-<li>Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (<a href="https://github.com/jfalcou/tts/pull/280">https://github.com/jfalcou/tts/pull/280</a>)</li>
+<li>Rewrite the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (<a href="https://github.com/jfalcou/tts/pull/280">#280</a>)</li>
+<li>Keep <span class="tt">tts::random_value(lo, hi)</span> within <span class="tt">[lo, hi]</span> for a floating-point type, which the rounding of its log-uniform draw could overstep (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+<li>Apply <span class="tt">--valmin</span> and <span class="tt">--valmax</span> to range checks, which no generator read from 3.0 to 4.1 (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)<ul>
+<li>Narrow the values of <span class="tt"><a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a></span>, <span class="tt"><a class="el" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a></span>, and <span class="tt"><a class="el" href="structtts_1_1randoms.html" title="Generates random values between two bounds.">tts::randoms</a></span> to those between the two options.</li>
+<li>Print a note when the two options narrow an argument of a check.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+</li>
+<li>Fix the distance <span class="tt"><a class="el" href="group__tools-precision.html#ga70797fbc9070b0329ea2ea75fc42d5bf" title="Compute the distance in ULP between two values.">tts::ulp_check</a></span> measures between values of opposite signs, of a floating-point type or of a signed 8- or 16-bit integer type, and the crash of a range check over these integers (<a href="https://github.com/jfalcou/tts/pull/279">#279</a>)</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Version 4.1</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 What's Changed</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 New Features</h3>
 <ul>
 <li>Fix #266 - Run a test body at run time and in constant evaluation (<a href="https://github.com/jfalcou/tts/pull/267">https://github.com/jfalcou/tts/pull/267</a>)<ul>
@@ -162,20 +184,20 @@ New Features</h3>
 <li>A <span class="tt"><a class="el" href="group__test-scenario.html#ga0a60c7376c3894c5d3b7c5be8201478f" title="Defines a test case run for each type of a list on generated values, and registers it with the test d...">TTS_CASE_WITH</a></span> titled with <span class="tt"><a class="el" href="group__test-scenario.html#ga42099927b0ce397c53f0faf21f702a20" title="Runs a test case as ordinary code and in constant evaluation.">TTS_CONSTEXPR</a></span> or <span class="tt"><a class="el" href="group__test-scenario.html#ga56836491fb49db2f46b28859756efc7c" title="Runs a test case in constant evaluation alone.">TTS_CONSTEVAL</a></span> fails on a <span class="tt">static_assert</span>.</li>
 </ul>
 </li>
-<li><span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a data set, within a given ULP distance.">TTS_ULP_RANGE_CHECK</a></span> accepts functions of several arguments (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)<ul>
+<li><span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a range of inputs, within a ULP distance.">TTS_ULP_RANGE_CHECK</a></span> accepts functions of several arguments (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)<ul>
 <li><span class="tt">RefType</span> and <span class="tt">NewType</span> list the argument types in call order as <span class="tt"><a class="el" href="structtts_1_1types.html" title="Encapsulates a variadic list of types into a reusable object.">tts::types</a></span>, and <span class="tt">Producer</span> holds one generator per argument between parentheses, or one for all.</li>
 </ul>
 </li>
-<li><span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a data set, within a given ULP distance.">TTS_ULP_RANGE_CHECK</a></span> compares a <span class="tt">std::pair</span>, a <span class="tt">std::tuple</span>, or another tuple-like result member by member, with one bound for all members or one per member (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
-<li><span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a data set, within a given ULP distance.">TTS_ULP_RANGE_CHECK</a></span> prints its histogram only on failure or under <span class="tt">--verbose</span> (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
-<li>The report of <span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a data set, within a given ULP distance.">TTS_ULP_RANGE_CHECK</a></span> writes each function as a call, <span class="tt">ref(float, int)</span>, and puts stars around the sampled element of a <span class="tt">NewType</span> that holds several values (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
+<li><span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a range of inputs, within a ULP distance.">TTS_ULP_RANGE_CHECK</a></span> compares a <span class="tt">std::pair</span>, a <span class="tt">std::tuple</span>, or another tuple-like result member by member, with one bound for all members or one per member (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
+<li><span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a range of inputs, within a ULP distance.">TTS_ULP_RANGE_CHECK</a></span> prints its histogram only on failure or under <span class="tt">--verbose</span> (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
+<li>The report of <span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a range of inputs, within a ULP distance.">TTS_ULP_RANGE_CHECK</a></span> writes each function as a call, <span class="tt">ref(float, int)</span>, and puts stars around the sampled element of a <span class="tt">NewType</span> that holds several values (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
 <li><span class="tt"><a class="el" href="structtts_1_1adapter.html" title="Make a type usable in a range check.">tts::adapter</a>&lt;T&gt;</span> replaces <span class="tt">run</span>, <span class="tt">retrieve</span>, and <span class="tt">display</span> with <span class="tt">element_type</span>, <span class="tt">size</span>, <span class="tt">load</span>, and <span class="tt">store</span>, and a 4.0 adapter fails on a <span class="tt">static_assert</span> that names them (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
-<li>Removed <span class="tt">tts::ulp_histogram</span>: run <span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a data set, within a given ULP distance.">TTS_ULP_RANGE_CHECK</a></span> under <span class="tt">--verbose</span> to print the histogram (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
-<li>The generators of <span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a data set, within a given ULP distance.">TTS_ULP_RANGE_CHECK</a></span> receive their index and count as <span class="tt">std::ptrdiff_t</span> instead of <span class="tt">std::size_t</span> (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
+<li>Removed <span class="tt">tts::ulp_histogram</span>: run <span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a range of inputs, within a ULP distance.">TTS_ULP_RANGE_CHECK</a></span> under <span class="tt">--verbose</span> to print the histogram (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
+<li>The generators of <span class="tt"><a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="Checks a function against a reference over a range of inputs, within a ULP distance.">TTS_ULP_RANGE_CHECK</a></span> receive their index and count as <span class="tt">std::ptrdiff_t</span> instead of <span class="tt">std::size_t</span> (<a href="https://github.com/jfalcou/tts/pull/260">https://github.com/jfalcou/tts/pull/260</a>)</li>
 <li>Reduced the compile time of a test to about a quarter with g++ 15 and clang++ 19 (<a href="https://github.com/jfalcou/tts/pull/253">https://github.com/jfalcou/tts/pull/253</a>)</li>
 <li>Added the CMake option <span class="tt">TTS_EXTERNAL_DEPENDENCIES</span>, <span class="tt">OFF</span> by default, to take copacabana from <span class="tt">COPACABANA_SOURCE_DIR</span> instead of downloading it through CPM (<a href="https://github.com/jfalcou/tts/pull/276">https://github.com/jfalcou/tts/pull/276</a>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Bug Fixes</h3>
 <ul>
 <li>Fix #255 - Disable <span class="tt">-Wc2y-extensions</span> in every translation unit that includes TTS under clang 22 and later, except on Apple platforms, so <span class="tt"><a class="el" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5" title="Defines a test case and registers it with the test driver.">TTS_CASE</a></span> compiles under <span class="tt">-Wpedantic -Werror</span> (<a href="https://github.com/jfalcou/tts/pull/256">https://github.com/jfalcou/tts/pull/256</a>)</li>
@@ -185,7 +207,7 @@ Bug Fixes</h3>
 <li>A failing <span class="tt"><a class="el" href="group__test-relation.html#gac4de7d35f38edf73b2a602538100ea23" title="Checks that LHS is greater than or equal to RHS.">TTS_GREATER_EQUAL</a></span> and its typed and constexpr forms print <span class="tt">&lt;</span> as their negation instead of <span class="tt">&lt;=</span> (<a href="https://github.com/jfalcou/tts/pull/253">https://github.com/jfalcou/tts/pull/253</a>)</li>
 <li>A typed constexpr check, such as <span class="tt">TTS_TYPED_CONSTEXPR_EQUAL</span>, that fails on a type mismatch prints the message streamed after it (<a href="https://github.com/jfalcou/tts/pull/253">https://github.com/jfalcou/tts/pull/253</a>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Infrastructure</h3>
 <ul>
 <li>Run the nightly CI matrix on demand (<a href="https://github.com/jfalcou/tts/pull/262">https://github.com/jfalcou/tts/pull/262</a>)</li>
@@ -195,14 +217,14 @@ Infrastructure</h3>
 <li>Rebuild and redeploy the documentation on demand (<a href="https://github.com/jfalcou/tts/pull/272">https://github.com/jfalcou/tts/pull/272</a>)</li>
 <li>Check the CMake files with cmake-format and cmake-lint, and the workflows with actionlint, in pre-commit (<a href="https://github.com/jfalcou/tts/pull/273">https://github.com/jfalcou/tts/pull/273</a>)</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 Version 4.0 - V.I. Warshawski</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 What's Changed</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Breaking Changes</h3>
 <ul>
-<li><span class="tt"><a class="el" href="structtts_1_1reverse__ramp.html" title="Defines a data generator that produce a reverse ramp of data.">tts::reverse_ramp</a></span> counts down to <span class="tt">start</span> instead of from it, so <span class="tt">reverse_ramp{0}</span> gives no negative value (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
+<li><span class="tt"><a class="el" href="structtts_1_1reverse__ramp.html" title="Generates a ramp of values read backward.">tts::reverse_ramp</a></span> counts down to <span class="tt">start</span> instead of from it, so <span class="tt">reverse_ramp{0}</span> gives no negative value (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
 <li><span class="tt"><a class="el" href="group__test-precision.html#gaf540e2316ab84407390f0b62febfffd1" title="Checks that two values are at most N apart.">TTS_ABSOLUTE_EQUAL</a></span>, <span class="tt"><a class="el" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e" title="Checks that two values are within a combined relative and absolute tolerance N.">TTS_RELATIVE_EQUAL</a></span>, and <span class="tt"><a class="el" href="group__test-precision.html#ga5813c6197c7af5b0ed77d88ce63592a1" title="Checks that two values are at most N ULP apart.">TTS_ULP_EQUAL</a></span> require both operands to have the same type (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
 <li><span class="tt"><a class="el" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e" title="Checks that two values are within a combined relative and absolute tolerance N.">TTS_RELATIVE_EQUAL</a></span> and <span class="tt"><a class="el" href="group__test-sequence.html#gaac398cee8b7655a7e49ed6047d7c233b" title="Checks that two sequences have the same size and that their elements are within a combined relative a...">TTS_ALL_RELATIVE_EQUAL</a></span> measure a ratio instead of a percentage: divide existing tolerances by 100 (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
 <li><span class="tt"><a class="el" href="group__test-precision.html#ga66fac5cd0984cf9238901308cc60df3e" title="Checks that two values are within a combined relative and absolute tolerance N.">TTS_RELATIVE_EQUAL</a></span> and <span class="tt"><a class="el" href="group__test-sequence.html#gaac398cee8b7655a7e49ed6047d7c233b" title="Checks that two sequences have the same size and that their elements are within a combined relative a...">TTS_ALL_RELATIVE_EQUAL</a></span> fail on an arithmetic type given a finite tolerance of 1 or more (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
@@ -219,18 +241,18 @@ Breaking Changes</h3>
 <li><span class="tt">&lt;tts/tts.hpp&gt;</span> brings the built-in sinks only into the translation unit that defines <span class="tt"><a class="el" href="group__customization-points.html#ga38edfacbc423bfee9ab6bcbd24c6eef5" title="Defines the entry point of the test program in the translation unit that defines it.">TTS_MAIN</a></span>: include <span class="tt">&lt;tts/sinks/sinks.hpp&gt;</span> to use one elsewhere (<a href="https://github.com/jfalcou/tts/pull/244">https://github.com/jfalcou/tts/pull/244</a>)</li>
 <li><span class="tt">&lt;tts/tts.hpp&gt;</span> no longer includes <span class="tt">&lt;array&gt;</span> (<a href="https://github.com/jfalcou/tts/pull/244">https://github.com/jfalcou/tts/pull/244</a>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 New Features</h3>
 <ul>
 <li>A specialization of <span class="tt"><a class="el" href="structtts_1_1comparison.html" title="When two values are equal, when one comes before the other, and when their bits agree.">tts::comparison</a>&lt;L, R&gt;::bit_equal</span> customizes <span class="tt"><a class="el" href="group__test-relation.html#ga7e22dd58cf97c15c43af306d4a851717" title="Checks that two expressions have the same bits.">TTS_BIT_EQUAL</a></span> and <span class="tt"><a class="el" href="group__test-relation.html#ga077362a50ea4b83fe31f75f6c560cfea" title="Checks that two expressions have different bits.">TTS_BIT_NOT_EQUAL</a></span>, which default to <span class="tt">memcmp</span> (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
-<li>Added <span class="tt"><a class="el" href="structtts_1_1is__randoms.html" title="Whether a generator is a tts::randoms, by its type.">tts::is_randoms</a></span> and <span class="tt"><a class="el" href="group__tools-generators-class.html#ga2043fb2d208c08ab1c7ff87b895f4abf" title="Value alias for tts::is_randoms, indifferent to references and cv-qualifiers.">tts::is_randoms_v</a></span> to detect a <span class="tt"><a class="el" href="structtts_1_1randoms.html" title="Random generator between two bounds using realistic_distribution.">tts::randoms</a></span> generator by its type (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
+<li>Added <span class="tt"><a class="el" href="structtts_1_1is__randoms.html" title="Detects tts::randoms and the classes derived from it.">tts::is_randoms</a></span> and <span class="tt"><a class="el" href="group__tools-generators-class.html#ga2043fb2d208c08ab1c7ff87b895f4abf" title="Value alias for tts::is_randoms, indifferent to references and cv-qualifiers.">tts::is_randoms_v</a></span> to detect a <span class="tt"><a class="el" href="structtts_1_1randoms.html" title="Generates random values between two bounds.">tts::randoms</a></span> generator by its type (<a href="https://github.com/jfalcou/tts/pull/229">https://github.com/jfalcou/tts/pull/229</a>)</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Version 3.0 - Beatrice Adela Bradley</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 What's Changed</h2>
 <p>A large body of work (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>) has been done to make <b>TTS</b> compile-time far better. This affects the user API a tiny bit, hence the bump to <b>TTS v3.0</b>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 Infrastructure</h3>
 <ul>
 <li>Fix support for MSVC and clang CL (<a href="https://github.com/jfalcou/tts/pull/75">https://github.com/jfalcou/tts/pull/75</a>)</li>
@@ -239,7 +261,7 @@ Infrastructure</h3>
 <li>Enable WASM tests (<a href="https://github.com/jfalcou/tts/pull/95">https://github.com/jfalcou/tts/pull/95</a>)</li>
 <li>Enable tests with ICPX (<a href="https://github.com/jfalcou/tts/pull/96">https://github.com/jfalcou/tts/pull/96</a>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 Bug Fixes</h3>
 <ul>
 <li>Added static_assert to catch unsupported types in TTS_ABSOLUTE/RELATIVE/ULP_EQUAL (<a href="https://github.com/jfalcou/tts/pull/78">https://github.com/jfalcou/tts/pull/78</a>)</li>
@@ -248,7 +270,7 @@ Bug Fixes</h3>
 <li>Fix #100 - TTS doesn't generate -Wshadow warnings (<a href="https://github.com/jfalcou/tts/pull/102">https://github.com/jfalcou/tts/pull/102</a>)</li>
 <li>Make produce(sequence) use produce(scalar) to allow for easier non-standard type production by <b>SadiinsoSnowfall</b> (<a href="https://github.com/jfalcou/tts/pull/110">https://github.com/jfalcou/tts/pull/110</a>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 New Features</h3>
 <ul>
 <li>Decorrelate IEEE_EQUAL from ULP_DISTANCE (<a href="https://github.com/jfalcou/tts/pull/89">https://github.com/jfalcou/tts/pull/89</a>)</li>
@@ -259,26 +281,26 @@ New Features</h3>
 <li>Summary display now displays percentage of success/failures (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
 <li>Added the <span class="tt">-q/--quiet</span> CLI option to remove all output but summary (<a href="https://github.com/jfalcou/tts/pull/105">https://github.com/jfalcou/tts/pull/105</a>)</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 New Contributors</h3>
 <ul>
 <li><b>SadiinsoSnowfall</b></li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Detective who?</h3>
 <p><a href="https://en.wikipedia.org/wiki/Mrs_Bradley">Beatrice Adela Bradley</a>.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Version 2.2 - Aubrey Bradimore</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 What's Changed</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Infrastructure</h3>
 <ul>
 <li><b>We are now under the Boost Software Licence 1.0</b></li>
 <li>Enable Android tests and support</li>
 <li>Clarify some output when failures occur</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 New Features</h3>
 <ul>
 <li>Implement ALL_EQUAL</li>
@@ -287,18 +309,18 @@ New Features</h3>
 <li>Reimplement <span class="tt"><a class="el" href="group__test-scenario.html#ga70b895c13fd5ab455fb7c46226fdc6b3" title="Starts a block whose code runs again before each of its sections.">TTS_WHEN</a></span> and <span class="tt"><a class="el" href="group__test-scenario.html#ga36226295afb27d17e36249a61a3864af" title="Adds a section to a TTS_WHEN block.">TTS_AND_THEN</a></span> to support sub-tests</li>
 <li>Add typed tests that checks both value and exact type</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Bug Fixes</h3>
 <ul>
 <li>Fix Visual Studio interaction with constexpr tests</li>
 <li>Improve random generators and seed management</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Aubrey_Bradimore">Aubrey Bradimore</a>, this is a Christmas Release afterall</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Version 2.1 - Cordelia Gray</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 What's Changed</h2>
 <ul>
 <li>Fix #42 - Proper FetchContent support</li>
@@ -306,10 +328,10 @@ What's Changed</h2>
 <li>Enable EMSCRIPTEN tests and supports</li>
 <li>Add tests over sequences</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Cordelia_Gray">Cordelia Gray</a>, a very suitable detective</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Version 2.0 - Kay Scarpetta</h1>
 <p><b>TTS</b> version 2.0 is taking a major break from an earlier version. Compile-time was creeping upward and some features were not that useful. So the code base got streamlined and simplified.</p>
 <p>This version is a <b>Major Release With API Changes</b> release:</p>
@@ -323,10 +345,10 @@ Version 2.0 - Kay Scarpetta</h1>
 <li>Output streamlined to fit machine processing in CI context or scripts</li>
 <li>Better handling of template test cases: less generated symbol, better flexibility in inputs (list of types or types list generator)</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Kay_Scarpetta">Kay Scarpetta</a>, the private forensic consultant.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Version 1.0 - Phoebe Daring</h1>
 <p>This version is a <b>Major Release With API Changes</b> release:</p>
 <p><b>Breaking API Changes</b>:</p>
@@ -339,10 +361,10 @@ Version 1.0 - Phoebe Daring</h1>
 <li>Fix #34 - Provide a command-line option to fix precision when displaying floating points</li>
 <li>Fix #37 - Stop displaying <span class="tt">char const*</span> as a string.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Phoebe_Daring">Phoebe Daring</a>, the first half of the Daring Twins since 1912.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Version 0.2 - Kate Fansler</h1>
 <p>This version is a fix+features release:</p>
 <ul>
@@ -352,19 +374,19 @@ Version 0.2 - Kate Fansler</h1>
 <li><span class="tt"><a class="el" href="group__test-scenario.html#ga00d91e3b8e2f57672cd95ee48992c707" title="Defines a test case run for each type of a list, and registers it with the test driver.">TTS_CASE_TPL</a></span> now generates one scenario per type</li>
 <li>Fix #21 - Add runtime filtering for tests based on description string</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Kate_Fansler">Kate Fansler</a>, solving academic crimes since 1964.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
 Version 0.1 - Cadfael</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 First public release.</h2>
 <p><b>TTS</b> first complete release enables numerically oriented TDD including:</p><ul>
 <li>precision testing</li>
 <li>checks over the data set</li>
 <li>easy to customize the use of user-defined types.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Detective who?</h2>
 <p><a href="https://en.wikipedia.org/wiki/Cadfael">Cadfael</a> is probably the eldest of all amateur detectives in history. </p>
 </div></div><!-- contents -->

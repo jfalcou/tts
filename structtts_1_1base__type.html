@@ -138,14 +138,14 @@ $(function(){initNavTree('structtts_1_1base__type.html','','structtts_1_1base__t
 </div><!--header-->
 <div class="contents">
 
-<p>Base type extraction.  
+<p>Gives the base type of a type <span class="tt">T</span>.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-struct tts::base_type&lt; T &gt;</div><p>Base type extraction. </p>
-<p>This structure is used to extract the base type of a type <span class="tt">T</span>. By default, the base type is <span class="tt">T</span> itself, but this structure can be specialized for user-defined types to provide a different base type. The base type is used to determine the limits and special values for the type <span class="tt">T</span> when generating test data.</p>
+struct tts::base_type&lt; T &gt;</div><p>Gives the base type of a type <span class="tt">T</span>. </p>
+<p>The base type is <span class="tt">T</span> itself, and can be changed by a specialization of <span class="tt"><a class="el" href="structtts_1_1base__type.html" title="Gives the base type of a type T.">base_type</a></span> for a user-defined type. <a class="el" href="structtts_1_1limits__set.html" title="Holds the limits and special values of a type T.">tts::limits_set</a> takes the limits and special values of <span class="tt">T</span> from its base type, and <a class="el" href="structtts_1_1random__bits.html" title="Generates random bit patterns.">tts::random_bits</a>, <a class="el" href="structtts_1_1as__integer.html" title="Adapts a generator to produce unsigned integer values.">tts::as_integer</a>, and <a class="el" href="structtts_1_1as__signed__integer.html" title="Adapts a generator to produce signed integer values.">tts::as_signed_integer</a> take their integer width from it.</p>
 <dl class="section user"><dt>Helper types</dt><dd><ul>
-<li><span class="tt">base_type_t&lt;T&gt;</span>: Alias for <span class="tt">typename <a class="el" href="structtts_1_1base__type.html" title="Base type extraction.">base_type</a>&lt;T&gt;::<a class="el" href="structtts_1_1type.html" title="Encapsulates a single type into a reusable type object.">type</a></span></li>
+<li><span class="tt">base_type_t&lt;T&gt;</span>: Alias for <span class="tt">typename <a class="el" href="structtts_1_1base__type.html" title="Gives the base type of a type T.">base_type</a>&lt;T&gt;::<a class="el" href="structtts_1_1type.html" title="Encapsulates a single type into a reusable type object.">type</a></span></li>
 </ul>
 </dd></dl>
 <dl class="tparams"><dt>Template Parameters</dt><dd>

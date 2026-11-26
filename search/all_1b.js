@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7etext_0',['~text',['../structtts_1_1text.html#a3d2428a18170d89744f048ba757559e0',1,'tts::text']]]
+  ['zero_0',['zero',['../group__tools-generators.html#ga54367543eda33e44287a8b078e2cbeb7',1,'tts::limits_set']]]
 ];

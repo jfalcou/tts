@@ -133,35 +133,19 @@ $(function(){initNavTree('structtts_1_1limits__set.html','','structtts_1_1limits
 
 <div class="header">
   <div class="summary">
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#related">Related Symbols</a> &#124;
 <a href="structtts_1_1limits__set-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">tts::limits_set&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a> &raquo; <a class="el" href="group__tools-generators-class.html">Data Generators</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Defines a set of limits for a type <span class="tt">T</span>.  
+<p>Holds the limits and special values of a type <span class="tt">T</span>.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
-struct tts::limits_set&lt; T &gt;</div><p>Defines a set of limits for a type <span class="tt">T</span>. </p>
-<p>This structure provides a set of limits and special values for the type <span class="tt">T</span> that can be used for generating test data that covers edge cases and special values. The actual limits provided depend on the type <span class="tt">T</span> and its base type.</p>
-<p>The provided limits include:</p><ul>
-<li><span class="tt">valmax</span>: The maximum representable value of the base type.</li>
-<li><span class="tt">valmin</span>: The minimum representable value of the base type.</li>
-<li><span class="tt">zero</span>: The value representing zero.</li>
-<li><span class="tt">one</span>: The value representing one.</li>
-</ul>
-<p>For floating-point types, additional limits include:</p><ul>
-<li><span class="tt">nan</span>: Not-a-Number value.</li>
-<li><span class="tt">inf</span>: Positive infinity.</li>
-<li><span class="tt">minf</span>: Negative infinity.</li>
-<li><span class="tt">maxflint</span>: The largest integer value that can be exactly represented in the type.</li>
-<li><span class="tt">mindenormal</span>: The smallest positive subnormal value.</li>
-<li><span class="tt">smallestposval</span>: The smallest positive normal value.</li>
-<li><span class="tt">mzero</span>: Negative zero.</li>
-<li><span class="tt">mone</span>: The value representing negative one.</li>
-</ul>
-<p>This class can be specialized for user-defined types to provide custom limits.</p>
+struct tts::limits_set&lt; T &gt;</div><p>Holds the limits and special values of a type <span class="tt">T</span>. </p>
+<p>Each member is a value of <span class="tt">T</span> and an edge case for the test data. A specialization for a user-defined type can provide limits of its own.</p>
 <h2 class="groupheader">Examples </h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
@@ -180,18 +164,57 @@ struct tts::limits_set&lt; T &gt;</div><p>Defines a set of limits for a type <sp
 <div class="line">};</div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type for which to provide limits for. </td></tr>
+    <tr><td class="paramname">T</td><td>Type whose limits are held </td></tr>
   </table>
   </dd>
 </dl>
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ga35108ac0b3267624fe16db0f96ea3b21" id="r_ga35108ac0b3267624fe16db0f96ea3b21"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>inf</b></td></tr>
+<tr class="memdesc:ga35108ac0b3267624fe16db0f96ea3b21"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(+\infty\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga66829894b6f7e94e4a2d7276a344bae7" id="r_ga66829894b6f7e94e4a2d7276a344bae7"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>maxflint</b></td></tr>
+<tr class="memdesc:ga66829894b6f7e94e4a2d7276a344bae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest \(M\) with every integer of \([-M, M]\) exact, for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga77135a466d780a033552fb29466acb95" id="r_ga77135a466d780a033552fb29466acb95"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>mindenormal</b></td></tr>
+<tr class="memdesc:ga77135a466d780a033552fb29466acb95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smallest positive subnormal value, for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga9857728327fd7f01dd204c932c96bb5f" id="r_ga9857728327fd7f01dd204c932c96bb5f"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>minf</b></td></tr>
+<tr class="memdesc:ga9857728327fd7f01dd204c932c96bb5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(-\infty\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga9bc90b94f194bdef2e44f92abfa969e7" id="r_ga9bc90b94f194bdef2e44f92abfa969e7"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>mone</b></td></tr>
+<tr class="memdesc:ga9bc90b94f194bdef2e44f92abfa969e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(-1\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:gae140017665985f89f74495c18e863a06" id="r_gae140017665985f89f74495c18e863a06"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>mzero</b></td></tr>
+<tr class="memdesc:gae140017665985f89f74495c18e863a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(-0\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:gaf7d91cf5e7da3610836f788856134047" id="r_gaf7d91cf5e7da3610836f788856134047"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>nan</b></td></tr>
+<tr class="memdesc:gaf7d91cf5e7da3610836f788856134047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quiet NaN, for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga623e066d2a8cda4557dc9f22a0038d89" id="r_ga623e066d2a8cda4557dc9f22a0038d89"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>one</b></td></tr>
+<tr class="memdesc:ga623e066d2a8cda4557dc9f22a0038d89"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(1\). <br /></td></tr>
+<tr class="memitem:ga5b483651641046d1a5bdd3360586d564" id="r_ga5b483651641046d1a5bdd3360586d564"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>smallestposval</b></td></tr>
+<tr class="memdesc:ga5b483651641046d1a5bdd3360586d564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smallest positive normal value, for floating-point base types. <br /></td></tr>
+<tr class="memitem:gab50fbdc8526c1367cc8de30c6a57a92f" id="r_gab50fbdc8526c1367cc8de30c6a57a92f"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>valmax</b></td></tr>
+<tr class="memdesc:gab50fbdc8526c1367cc8de30c6a57a92f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest representable value of the base type. <br /></td></tr>
+<tr class="memitem:ga6c0af4b86225bb03526754c503d48b0f" id="r_ga6c0af4b86225bb03526754c503d48b0f"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>valmin</b></td></tr>
+<tr class="memdesc:ga6c0af4b86225bb03526754c503d48b0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lowest representable value of the base type, its most negative one. <br /></td></tr>
+<tr class="memitem:ga54367543eda33e44287a8b078e2cbeb7" id="r_ga54367543eda33e44287a8b078e2cbeb7"><td class="memItemLeft">
+T&#160;</td><td class="memItemRight"><b>zero</b></td></tr>
+<tr class="memdesc:ga54367543eda33e44287a8b078e2cbeb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(0\). <br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-related" class="groupheader"><a id="related" name="related"></a>
 Related Symbols</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>(Note that these are not member symbols.) </p>
 </td></tr>
 <tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727" id="r_ga5bdd075a33a6dcabef5e5d7e33299727"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="group__tools-generators-class.html#ga5bdd075a33a6dcabef5e5d7e33299727">limits</a> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; T &gt;)</td></tr>
-<tr class="memdesc:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a set of limits for the type <span class="tt">T</span>.  <br /></td></tr>
+<tr class="memdesc:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the limits and special values of a type <span class="tt">T</span>.  <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -191,6 +191,32 @@
     <templarg>typename T</templarg>
   </compound>
   <compound kind="struct">
+    <name>tts::enumeration</name>
+    <filename>structtts_1_1enumeration.html</filename>
+    <templarg>typename T</templarg>
+    <member kind="function" static="yes">
+      <type>static constexpr std::uint64_t</type>
+      <name>index</name>
+      <anchorfile>structtts_1_1enumeration.html</anchorfile>
+      <anchor>a66bf9a2ba8729e42c2c57c169fcb4f91</anchor>
+      <arglist>(T v) noexcept</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static constexpr T</type>
+      <name>value</name>
+      <anchorfile>structtts_1_1enumeration.html</anchorfile>
+      <anchor>a1c799509ef80963c0795da7a4993bfb4</anchor>
+      <arglist>(std::uint64_t i) noexcept</arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static constexpr std::uint64_t</type>
+      <name>last</name>
+      <anchorfile>structtts_1_1enumeration.html</anchorfile>
+      <anchor>ac8b180d8a9e17890fa392ea8621c09af</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
     <name>tts::filter</name>
     <filename>structtts_1_1filter.html</filename>
     <templarg>template&lt; typename &gt; typename Pred</templarg>
@@ -498,6 +524,90 @@
     <name>tts::limits_set</name>
     <filename>structtts_1_1limits__set.html</filename>
     <templarg>typename T</templarg>
+    <member kind="variable">
+      <type>T</type>
+      <name>inf</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga35108ac0b3267624fe16db0f96ea3b21</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>maxflint</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga66829894b6f7e94e4a2d7276a344bae7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>mindenormal</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga77135a466d780a033552fb29466acb95</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>minf</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga9857728327fd7f01dd204c932c96bb5f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>mone</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga9bc90b94f194bdef2e44f92abfa969e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>mzero</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>gae140017665985f89f74495c18e863a06</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>nan</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>gaf7d91cf5e7da3610836f788856134047</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>one</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga623e066d2a8cda4557dc9f22a0038d89</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>smallestposval</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga5b483651641046d1a5bdd3360586d564</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>valmax</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>gab50fbdc8526c1367cc8de30c6a57a92f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>valmin</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga6c0af4b86225bb03526754c503d48b0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>zero</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga54367543eda33e44287a8b078e2cbeb7</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type>auto</type>
       <name>limits</name>
@@ -772,11 +882,20 @@
     <filename>structtts_1_1randoms.html</filename>
     <templarg>typename Mx</templarg>
     <templarg>typename Mn</templarg>
-  </compound>
-  <compound kind="struct">
-    <name>tts::realistic_generator</name>
-    <filename>structtts_1_1realistic__generator.html</filename>
-    <templarg>typename T</templarg>
+    <member kind="typedef">
+      <type>void</type>
+      <name>random_type</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga1796a26016d4661e199916cfce32c9f2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>check</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga2d9f38b20d8e381b96873760cecc0312</anchor>
+      <arglist>(tts::type&lt; D &gt;) const</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>tts::rebuild</name>
@@ -1309,11 +1428,32 @@
       <anchor>ga5bdd075a33a6dcabef5e5d7e33299727</anchor>
       <arglist>(tts::type&lt; T &gt;)</arglist>
     </member>
+    <member kind="function">
+      <type>constexpr tts_implementation_defined</type>
+      <name>tts::sample</name>
+      <anchorfile>group__tools-generators-class.html</anchorfile>
+      <anchor>ga4d2960bcca5eaa196236495053fd6807</anchor>
+      <arglist>(std::uint64_t n)</arglist>
+    </member>
+    <member kind="function">
+      <type>constexpr tts_implementation_defined</type>
+      <name>tts::sample</name>
+      <anchorfile>group__tools-generators-class.html</anchorfile>
+      <anchor>ga0e669cfe57deb0b379204ee6146d42c3</anchor>
+      <arglist>(T lo, T hi, std::uint64_t n)</arglist>
+    </member>
     <member kind="variable">
       <type>constexpr bool</type>
       <name>tts::is_randoms_v</name>
       <anchorfile>group__tools-generators-class.html</anchorfile>
       <anchor>ga2043fb2d208c08ab1c7ff87b895f4abf</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>constexpr tts_implementation_defined</type>
+      <name>tts::sweep</name>
+      <anchorfile>group__tools-generators-class.html</anchorfile>
+      <anchor>gae7f38f5eb16072431b9eea5e49ecfb4d</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -1322,6 +1462,7 @@
     <title>Data Generators Customization Points</title>
     <filename>group__tools-generators-custom.html</filename>
     <class kind="struct">tts::conversion</class>
+    <class kind="struct">tts::enumeration</class>
     <class kind="struct">tts::generation</class>
     <class kind="struct">tts::is_randoms</class>
     <class kind="struct">tts::rebuild</class>
@@ -1348,6 +1489,104 @@
     <subgroup>tools-generators-custom</subgroup>
     <class kind="struct">tts::base_type</class>
     <class kind="struct">tts::boolean_type</class>
+    <member kind="typedef">
+      <type>void</type>
+      <name>tts::randoms::random_type</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga1796a26016d4661e199916cfce32c9f2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>tts::randoms::check</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga2d9f38b20d8e381b96873760cecc0312</anchor>
+      <arglist>(tts::type&lt; D &gt;) const</arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::inf</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga35108ac0b3267624fe16db0f96ea3b21</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::maxflint</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga66829894b6f7e94e4a2d7276a344bae7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::mindenormal</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga77135a466d780a033552fb29466acb95</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::minf</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga9857728327fd7f01dd204c932c96bb5f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::mone</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga9bc90b94f194bdef2e44f92abfa969e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::mzero</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>gae140017665985f89f74495c18e863a06</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::nan</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>gaf7d91cf5e7da3610836f788856134047</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::one</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga623e066d2a8cda4557dc9f22a0038d89</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::smallestposval</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga5b483651641046d1a5bdd3360586d564</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::valmax</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>gab50fbdc8526c1367cc8de30c6a57a92f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::valmin</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga6c0af4b86225bb03526754c503d48b0f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>T</type>
+      <name>tts::limits_set::zero</name>
+      <anchorfile>group__tools-generators.html</anchorfile>
+      <anchor>ga54367543eda33e44287a8b078e2cbeb7</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="group">
     <name>test-exceptions</name>

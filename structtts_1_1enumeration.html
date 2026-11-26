@@ -1,0 +1,334 @@
+<!-- HTML header for doxygen 1.16.1-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.16.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="C++20 unit test library with data-driven tests, template test cases and ULP-aware comparisons" />
+<link rel="canonical" href="https://jfalcou.github.io/tts/" />
+<link rel="icon" type="image/svg+xml" href="/logo.svg" />
+<meta property="og:title" content="TTS - The Tiny Test System" />
+<meta property="og:description" content="TTS is a C++20 unit test library offering tests over data sets, template test case generation, and IEEE precision comparisons in ULP, absolute and relative error." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://jfalcou.github.io/tts/" />
+<meta property="og:image" content="https://jfalcou.github.io/tts/card.png" />
+<meta property="og:site_name" content="TTS Documentation" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="TTS - The Tiny Test System" />
+<meta name="twitter:description" content="TTS is a C++20 unit test library offering tests over data sets, template test case generation, and IEEE precision comparisons in ULP, absolute and relative error." />
+<meta name="twitter:image" content="https://jfalcou.github.io/tts/card.png" />
+<title>TTS: tts::enumeration&lt; T &gt; Struct Template Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="godbolt-config.js"></script>
+<script type="text/javascript" src="godbolt.js"></script>
+<script type="text/javascript" src="doxygen-awesome-fragment-copy-button.js"></script>
+<script type="text/javascript" src="doxygen-awesome-paragraph-link.js"></script>
+<script type="text/javascript" src="doxygen-awesome-tabs.js"></script>
+<script type="text/javascript" src="copacabana.js"></script>
+<script type="text/javascript">
+  DoxygenAwesomeParagraphLink.init()
+  DoxygenAwesomeTabs.init()
+  DoxygenAwesomeFragmentCopyButton.init()
+  SendToGodbolt.init(GODBOLT_LIBRARIES, GODBOLT_COMPILER, GODBOLT_OPTIONS)
+  Copacabana.hideImplementationDefined()
+</script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
+<link href="custom.css" rel="stylesheet" type="text/css"/>
+<link href="color.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<a href="https://github.com/jfalcou/tts" class="github-corner" title="View source on GitHub" target="_blank">
+    <svg viewBox="0 0 250 250" width="40" height="40" style="position: absolute; top: 0; border: 0; right: 0; z-index: 99;" aria-hidden="true">
+    <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+<style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectlogo"><img alt="Logo" src="logo.svg"/></td>
+  <td id="projectalign">
+   <div id="projectname">TTS<span id="projectnumber">&#160;v4.1.0</span>
+   </div>
+   <div id="projectbrief">The Tiny Test System</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.16.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Search',true);
+  $(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('structtts_1_1enumeration.html','','structtts_1_1enumeration-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="structtts_1_1enumeration-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">tts::enumeration&lt; T &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a> &raquo; <a class="el" href="group__tools-generators-custom.html">Data Generators Customization Points</a></div></div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Enumerates the values of a type in increasing order.  
+ <a href="#details">More...</a></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
+struct tts::enumeration&lt; T &gt;</div><p>Enumerates the values of a type in increasing order. </p>
+<p>Gives each value of <span class="tt">T</span> its rank, its position among the values of <span class="tt">T</span> in increasing order. <a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a> and <a class="el" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a> take the values of an argument from the ranks of its type.</p>
+<p>Specialized for every integer type of at most 8 bytes, and for every floating-point type of 4 or 8 bytes. A specialization for another type, with <span class="tt"><a class="el" href="#ac8b180d8a9e17890fa392ea8621c09af" title="Largest rank.">last</a></span>, <span class="tt"><a class="el" href="#a66bf9a2ba8729e42c2c57c169fcb4f91" title="Returns the rank of a value.">index</a></span>, and <span class="tt"><a class="el" href="structtts_1_1value.html" title="Generates the same value at every call.">value</a></span>, makes that type usable with <a class="el" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a> and <a class="el" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a>.</p>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;array&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Ranks of the values of an integer&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">using </span>ranks = <a class="code hl_struct" href="structtts_1_1enumeration.html">tts::enumeration&lt;std::int8_t&gt;</a>;</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// The 256 values of std::int8_t, from -128 to 127</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ranks::last, 255ULL);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ranks::index(-128), 0ULL);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ranks::value(255), std::int8_t {127});</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Ranks of the values of a float&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">using </span>ranks = <a class="code hl_struct" href="structtts_1_1enumeration.html">tts::enumeration&lt;float&gt;</a>;</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// -0 and +0 take two neighboring ranks</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ranks::index(0.f), ranks::index(-0.f) + 1);</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#ga7682358fd38e60210da710f7d9ba6399">TTS_LESS</a>(ranks::index(-1.f), ranks::index(1.f));</div>
+<div class="line">  <a class="code hl_define" href="group__test-relation.html#gafc88cdb469bdc19411c7b0e9f7f33ae1">TTS_EQUAL</a>(ranks::value(ranks::index(1.5f)), 1.5f);</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// A type of three values</span></div>
+<div class="line"><span class="keyword">enum class</span> rounding</div>
+<div class="line">{</div>
+<div class="line">  down,</div>
+<div class="line">  nearest,</div>
+<div class="line">  up</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">double</span> shift(rounding r)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(r) - 1.;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>tts</div>
+<div class="line">{</div>
+<div class="line">  <span class="comment">// The name of a rounding in the report of a check</span></div>
+<div class="line">  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1display.html">display</a>&lt;rounding&gt;</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">static</span> text render(rounding r)</div>
+<div class="line">    {</div>
+<div class="line">      std::array names {<span class="stringliteral">&quot;down&quot;</span>, <span class="stringliteral">&quot;nearest&quot;</span>, <span class="stringliteral">&quot;up&quot;</span>};</div>
+<div class="line">      <span class="keywordflow">return</span> text {names[ <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(r) ]};</div>
+<div class="line">    }</div>
+<div class="line">  };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// The three values of rounding, in the order of their declaration</span></div>
+<div class="line">  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1enumeration.html">enumeration</a>&lt;rounding&gt;</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::uint64_t <a class="code hl_variable" href="#ac8b180d8a9e17890fa392ea8621c09af">last</a> = 2;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> std::uint64_t <a class="code hl_function" href="#a66bf9a2ba8729e42c2c57c169fcb4f91">index</a>(rounding r) <span class="keyword">noexcept</span></div>
+<div class="line">    {</div>
+<div class="line">      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(r);</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> rounding <a class="code hl_function" href="#a1c799509ef80963c0795da7a4993bfb4">value</a>(std::uint64_t i) <span class="keyword">noexcept</span></div>
+<div class="line">    {</div>
+<div class="line">      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>rounding<span class="keyword">&gt;</span>(i);</div>
+<div class="line">    }</div>
+<div class="line">  };</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Sweep over the values of a user-defined type&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="comment">// Calls shift on down, nearest, and up</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(<a class="code hl_variable" href="group__tools-generators-class.html#gae7f38f5eb16072431b9eea5e49ecfb4d">tts::sweep</a>, rounding, rounding, shift, shift, 0.);</div>
+<div class="line">};</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type whose values are enumerated </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a66bf9a2ba8729e42c2c57c169fcb4f91" id="r_a66bf9a2ba8729e42c2c57c169fcb4f91"><td class="memItemLeft">static constexpr std::uint64_t&#160;</td><td class="memItemRight"><a class="el" href="#a66bf9a2ba8729e42c2c57c169fcb4f91">index</a> (T v) noexcept</td></tr>
+<tr class="memdesc:a66bf9a2ba8729e42c2c57c169fcb4f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the rank of a value.  <br /></td></tr>
+<tr class="memitem:a1c799509ef80963c0795da7a4993bfb4" id="r_a1c799509ef80963c0795da7a4993bfb4"><td class="memItemLeft">static constexpr T&#160;</td><td class="memItemRight"><a class="el" href="#a1c799509ef80963c0795da7a4993bfb4">value</a> (std::uint64_t i) noexcept</td></tr>
+<tr class="memdesc:a1c799509ef80963c0795da7a4993bfb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of a rank.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ac8b180d8a9e17890fa392ea8621c09af" id="r_ac8b180d8a9e17890fa392ea8621c09af"><td class="memItemLeft"><a id="ac8b180d8a9e17890fa392ea8621c09af" name="ac8b180d8a9e17890fa392ea8621c09af"></a>
+static constexpr std::uint64_t&#160;</td><td class="memItemRight"><b>last</b></td></tr>
+<tr class="memdesc:ac8b180d8a9e17890fa392ea8621c09af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest rank. <br /></td></tr>
+</table>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a66bf9a2ba8729e42c2c57c169fcb4f91" name="a66bf9a2ba8729e42c2c57c169fcb4f91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a66bf9a2ba8729e42c2c57c169fcb4f91">&#9670;&#160;</a></span>index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::uint64_t <a class="el" href="structtts_1_1enumeration.html">tts::enumeration</a>&lt; T &gt;::index </td>
+          <td>(</td>
+          <td class="paramtype">T</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the rank of a value. </p>
+<p>The rank of a value is the number of values of <span class="tt">T</span> that precede it in increasing order. The smallest value of <span class="tt">T</span> has rank 0, the largest has rank <span class="tt"><a class="el" href="#ac8b180d8a9e17890fa392ea8621c09af" title="Largest rank.">last</a></span>, and the value that follows <span class="tt">v</span> has rank <span class="tt">index(v) + 1</span>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>Value of <span class="tt">T</span>, any but a NaN, which has no rank </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The rank of <span class="tt">v</span>, from 0 to <span class="tt"><a class="el" href="#ac8b180d8a9e17890fa392ea8621c09af" title="Largest rank.">last</a></span> </dd></dl>
+
+</div>
+</div>
+<a id="a1c799509ef80963c0795da7a4993bfb4" name="a1c799509ef80963c0795da7a4993bfb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c799509ef80963c0795da7a4993bfb4">&#9670;&#160;</a></span>value()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr T <a class="el" href="structtts_1_1enumeration.html">tts::enumeration</a>&lt; T &gt;::value </td>
+          <td>(</td>
+          <td class="paramtype">std::uint64_t</td>          <td class="paramname"><span class="paramname"><em>i</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns the value of a rank. </p>
+<p>The inverse of <span class="tt"><a class="el" href="#a66bf9a2ba8729e42c2c57c169fcb4f91" title="Returns the rank of a value.">index</a></span>: <span class="tt">value(index(v))</span> is <span class="tt">v</span>, and <span class="tt">index(value(i))</span> is <span class="tt">i</span>. <span class="tt">value(0)</span> is the smallest value of <span class="tt">T</span>, <span class="tt">value(last)</span> is the largest, and <span class="tt"><a class="el" href="structtts_1_1value.html" title="Generates the same value at every call.">value</a>(i + 1)</span> is the value that follows <span class="tt">value(i)</span>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i</td><td>Rank, from 0 to <span class="tt"><a class="el" href="#ac8b180d8a9e17890fa392ea8621c09af" title="Largest rank.">last</a></span> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The value of <span class="tt">T</span> whose rank is <span class="tt">i</span> </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- HTML footer for doxygen 1.8.20-->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><b>tts</b></li><li class="navelem"><a href="structtts_1_1enumeration.html">enumeration</a></li>
+  </ul>
+</div>
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</div> <!-- DOXYSTRAP RELATED -->
+</body>
+</html>

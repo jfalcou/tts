@@ -138,14 +138,13 @@ $(function(){initNavTree('structtts_1_1between.html','','structtts_1_1between-me
 </div><!--header-->
 <div class="contents">
 
-<p>Defines a data generator that produce values between two bounds.  
+<p>Generates values linearly spaced between two bounds.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, typename U = T&gt;<br />
-struct tts::between&lt; T, U &gt;</div><p>Defines a data generator that produce values between two bounds. </p>
-<p>This generator produces values linearly spaced between two bounds (inclusive). For a size <span class="tt">N</span>, the produced values are: <span class="tt">first, first+step, first+2*step, ..., last</span>, where <span class="tt">step =
-(last-first)/(N-1)</span>.</p>
-<p>When generated values exceed the last bound due to rounding, the last bound is returned instead.</p>
+struct tts::between&lt; T, U &gt;</div><p>Generates values linearly spaced between two bounds. </p>
+<p>The element at index <span class="tt">i</span> of a sequence of size <span class="tt">N</span> is <span class="tt">first + i*step</span>, where <span class="tt">step =
+(last-first)/(N-1)</span>, both computed in the target type, so rounding makes the gaps slightly unequal. If rounding carries a value past the last bound, the last bound is returned instead. A sequence of size 1 and a scalar target get the first bound.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Type of the first bound </td></tr>

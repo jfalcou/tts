@@ -138,13 +138,12 @@ $(function(){initNavTree('structtts_1_1ramp.html','','structtts_1_1ramp-members'
 </div><!--header-->
 <div class="contents">
 
-<p>Defines a data generator that produce a ramp of data.  
+<p>Generates a ramp of values.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename T, typename U = T&gt;<br />
-struct tts::ramp&lt; T, U &gt;</div><p>Defines a data generator that produce a ramp of data. </p>
-<p>This generator produces a ramp starting from an initial value and increasing by a fixed step at each call. I.e., for a size <span class="tt">N</span>, the produced values are: <span class="tt">start, start+step, start+2*step, ...,
-start+(N-1)*step</span>.</p>
+struct tts::ramp&lt; T, U &gt;</div><p>Generates a ramp of values. </p>
+<p>The element at index <span class="tt">i</span> of a sequence is <span class="tt">start + i*step</span>, the step being 1 when none is given, which for a size <span class="tt">N</span> gives <span class="tt">start, start+step, ..., start+(N-1)*step</span>. A scalar target gets <span class="tt">start</span>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Type of the initial value </td></tr>

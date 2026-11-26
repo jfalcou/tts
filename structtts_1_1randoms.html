@@ -133,17 +133,19 @@ $(function(){initNavTree('structtts_1_1randoms.html','','structtts_1_1randoms-me
 
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="structtts_1_1randoms-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">tts::randoms&lt; Mx, Mn &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__tools-generators.html">Data Generators related tools</a> &raquo; <a class="el" href="group__tools-generators-class.html">Data Generators</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Random generator between two bounds using realistic_distribution.  
+<p>Generates random values between two bounds.  
  <a href="#details">More...</a></p>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Mx, typename Mn&gt;<br />
-struct tts::randoms&lt; Mx, Mn &gt;</div><p>Random generator between two bounds using realistic_distribution. </p>
-<p>This generator produces random values between two bounds (inclusive) using a realistic distribution. The realistic distribution aims to provide a more uniform coverage of the range by avoiding too many extreme values.</p>
+struct tts::randoms&lt; Mx, Mn &gt;</div><p>Generates random values between two bounds. </p>
+<p>The constructor takes the lower bound, then the upper bound. Each value is drawn by <a class="el" href="group__tools-random.html#ga9dc5772b5c94d78eb16251df77ce161f" title="Generates a random value between two bounds.">tts::random_value</a>, uniformly with both bounds included for an integral type, and log-uniformly for a floating-point type. In a build without <span class="tt">NDEBUG</span>, a negative bound for an unsigned type stops the run on an assertion.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Mx</td><td>Type of the upper bound </td></tr>
@@ -176,7 +178,21 @@ struct tts::randoms&lt; Mx, Mn &gt;</div><p>Random generator between two bounds 
 <div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line">};</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --> </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ga1796a26016d4661e199916cfce32c9f2" id="r_ga1796a26016d4661e199916cfce32c9f2"><td class="memItemLeft">
+using&#160;</td><td class="memItemRight"><b>random_type</b> = void</td></tr>
+<tr class="memdesc:ga1796a26016d4661e199916cfce32c9f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks <a class="el" href="structtts_1_1randoms.html" title="Generates random values between two bounds.">tts::randoms</a> and the classes derived from it for <a class="el" href="structtts_1_1is__randoms.html" title="Detects tts::randoms and the classes derived from it.">tts::is_randoms</a>. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ga2d9f38b20d8e381b96873760cecc0312" id="r_ga2d9f38b20d8e381b96873760cecc0312"><td class="memTemplParams" colspan="2">
+template&lt;typename D&gt; </td></tr>
+<tr class="memitem:ga2d9f38b20d8e381b96873760cecc0312 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>check</b> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; D &gt;) const</td></tr>
+<tr class="memdesc:ga2d9f38b20d8e381b96873760cecc0312"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops on a negative bound when <span class="tt">D</span> is an unsigned type. <br /></td></tr>
+</table>
+</div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
 <!-- HTML footer for doxygen 1.8.20-->

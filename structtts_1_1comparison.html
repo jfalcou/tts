@@ -156,7 +156,7 @@ struct tts::comparison&lt; L, R &gt;</div><p>When two values are equal, when one
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN                   </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>sample</div>
+<div class="line"><span class="keyword">namespace </span><a class="code hl_function" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807">sample</a></div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>box</div>
 <div class="line">  {</div>
@@ -167,7 +167,7 @@ struct tts::comparison&lt; L, R &gt;</div><p>When two values are equal, when one
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>tts</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1comparison.html">comparison</a>&lt;sample::box&lt;T&gt;, sample::box&lt;T&gt;&gt;</div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1comparison.html">comparison</a>&lt;<a class="code hl_function" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807">sample</a>::box&lt;T&gt;, sample::box&lt;T&gt;&gt;</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keyword">static</span> <span class="keywordtype">bool</span> equal(sample::box&lt;T&gt; <span class="keyword">const</span>&amp; l, sample::box&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
 <div class="line">    {</div>
@@ -189,7 +189,7 @@ struct tts::comparison&lt; L, R &gt;</div><p>When two values are equal, when one
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>sample</div>
+<div class="line"><span class="keyword">namespace </span><a class="code hl_function" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807">sample</a></div>
 <div class="line">{</div>
 <div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span>absolute</div>
 <div class="line">  {</div>
@@ -200,7 +200,7 @@ struct tts::comparison&lt; L, R &gt;</div><p>When two values are equal, when one
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>tts</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1comparison.html">comparison</a>&lt;sample::absolute&lt;T&gt;, sample::absolute&lt;T&gt;&gt;</div>
+<div class="line">  <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1comparison.html">comparison</a>&lt;<a class="code hl_function" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807">sample</a>::absolute&lt;T&gt;, sample::absolute&lt;T&gt;&gt;</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keyword">static</span> <span class="keywordtype">bool</span> equal(sample::absolute&lt;T&gt; <span class="keyword">const</span>&amp; l, sample::absolute&lt;T&gt; <span class="keyword">const</span>&amp; r)</div>
 <div class="line">    {</div>
@@ -229,7 +229,7 @@ struct tts::comparison&lt; L, R &gt;</div><p>When two values are equal, when one
 <div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
 <div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">namespace </span>sample</div>
+<div class="line"><span class="keyword">namespace </span><a class="code hl_function" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807">sample</a></div>
 <div class="line">{</div>
 <div class="line">  <span class="comment">// Only the tag carries a value; the rest of the storage is never written.</span></div>
 <div class="line">  <span class="keyword">struct </span>tagged_word</div>
@@ -241,7 +241,7 @@ struct tts::comparison&lt; L, R &gt;</div><p>When two values are equal, when one
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>tts</div>
 <div class="line">{</div>
-<div class="line">  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1comparison.html">comparison</a>&lt;sample::tagged_word, sample::tagged_word&gt;</div>
+<div class="line">  <span class="keyword">template</span>&lt;&gt; <span class="keyword">struct </span><a class="code hl_struct" href="structtts_1_1comparison.html">comparison</a>&lt;<a class="code hl_function" href="group__tools-generators-class.html#ga4d2960bcca5eaa196236495053fd6807">sample</a>::tagged_word, sample::tagged_word&gt;</div>
 <div class="line">  {</div>
 <div class="line">    <span class="keyword">static</span> <span class="keywordtype">bool</span> bit_equal(sample::tagged_word <span class="keyword">const</span>&amp; l, sample::tagged_word <span class="keyword">const</span>&amp; r)</div>
 <div class="line">    {</div>

@@ -140,48 +140,56 @@ $(function(){initNavTree('group__tools-generators-class.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Generators to produce data samples for testing.  
+<p>Generators of the values of the test cases and the range checks.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:tts_3A_3Aas_5Finteger_3C_20G_20_3E" id="r_tts_3A_3Aas_5Finteger_3C_20G_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1as__integer.html">tts::as_integer&lt; G &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a generator to produce integer values.  <a href="structtts_1_1as__integer.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapts a generator to produce unsigned integer values.  <a href="structtts_1_1as__integer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Aas_5Fsigned_5Finteger_3C_20G_20_3E" id="r_tts_3A_3Aas_5Fsigned_5Finteger_3C_20G_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1as__signed__integer.html">tts::as_signed_integer&lt; G &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a generator to produce integer values.  <a href="structtts_1_1as__signed__integer.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapts a generator to produce signed integer values.  <a href="structtts_1_1as__signed__integer.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Abetween_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Abetween_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1between.html">tts::between&lt; T, U &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce values between two bounds.  <a href="structtts_1_1between.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates values linearly spaced between two bounds.  <a href="structtts_1_1between.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Ais_5Frandoms_3C_20G_20_3E" id="r_tts_3A_3Ais_5Frandoms_3C_20G_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1is__randoms.html">tts::is_randoms&lt; G &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether a generator is a <a class="el" href="structtts_1_1randoms.html" title="Random generator between two bounds using realistic_distribution.">tts::randoms</a>, by its type.  <a href="structtts_1_1is__randoms.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects <a class="el" href="structtts_1_1randoms.html" title="Generates random values between two bounds.">tts::randoms</a> and the classes derived from it.  <a href="structtts_1_1is__randoms.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Alimits_5Fset_3C_20T_20_3E" id="r_tts_3A_3Alimits_5Fset_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1limits__set.html">tts::limits_set&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a set of limits for a type <span class="tt">T</span>.  <a href="structtts_1_1limits__set.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the limits and special values of a type <span class="tt">T</span>.  <a href="structtts_1_1limits__set.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Alogicals_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Alogicals_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1logicals.html">tts::logicals&lt; T, U &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce logical values in a regular pattern.  <a href="structtts_1_1logicals.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates boolean values in a regular pattern.  <a href="structtts_1_1logicals.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Aramp_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Aramp_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1ramp.html">tts::ramp&lt; T, U &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce a ramp of data.  <a href="structtts_1_1ramp.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a ramp of values.  <a href="structtts_1_1ramp.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Arandom_5Fbits" id="r_tts_3A_3Arandom_5Fbits"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1random__bits.html">tts::random_bits</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Produces random bits patterns.  <a href="structtts_1_1random__bits.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates random bit patterns.  <a href="structtts_1_1random__bits.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Arandom_5Fshift" id="r_tts_3A_3Arandom_5Fshift"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1random__shift.html">tts::random_shift</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Produces valid shift amounts for the target type.  <a href="structtts_1_1random__shift.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Arandoms_3C_20Mx_2C_20Mn_20_3E" id="r_tts_3A_3Arandoms_3C_20Mx_2C_20Mn_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1randoms.html">tts::randoms&lt; Mx, Mn &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Random generator between two bounds using realistic_distribution.  <a href="structtts_1_1randoms.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates random values between two bounds.  <a href="structtts_1_1randoms.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Areverse_5Framp_3C_20T_2C_20U_20_3E" id="r_tts_3A_3Areverse_5Framp_3C_20T_2C_20U_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1reverse__ramp.html">tts::reverse_ramp&lt; T, U &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that produce a reverse ramp of data.  <a href="structtts_1_1reverse__ramp.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a ramp of values read backward.  <a href="structtts_1_1reverse__ramp.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Avalue_3C_20T_20_3E" id="r_tts_3A_3Avalue_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1value.html">tts::value&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a data generator that always return the same value.  <a href="structtts_1_1value.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the same value at every call.  <a href="structtts_1_1value.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727" id="r_ga5bdd075a33a6dcabef5e5d7e33299727"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga5bdd075a33a6dcabef5e5d7e33299727 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#ga5bdd075a33a6dcabef5e5d7e33299727">limits</a> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; T &gt;)</td></tr>
-<tr class="memdesc:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a set of limits for the type <span class="tt">T</span>.  <br /></td></tr>
+<tr class="memdesc:ga5bdd075a33a6dcabef5e5d7e33299727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the limits and special values of a type <span class="tt">T</span>.  <br /></td></tr>
+<tr class="memitem:ga4d2960bcca5eaa196236495053fd6807" id="r_ga4d2960bcca5eaa196236495053fd6807"><td class="memItemLeft">constexpr tts_implementation_defined&#160;</td><td class="memItemRight"><a class="el" href="#ga4d2960bcca5eaa196236495053fd6807">tts::sample</a> (std::uint64_t n)</td></tr>
+<tr class="memdesc:ga4d2960bcca5eaa196236495053fd6807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a given number of values spread over a type or a range.  <br /></td></tr>
+<tr class="memitem:ga0e669cfe57deb0b379204ee6146d42c3" id="r_ga0e669cfe57deb0b379204ee6146d42c3"><td class="memTemplParams" colspan="2"><a id="ga0e669cfe57deb0b379204ee6146d42c3" name="ga0e669cfe57deb0b379204ee6146d42c3"></a>
+template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga0e669cfe57deb0b379204ee6146d42c3 template"><td class="memItemLeft">constexpr tts_implementation_defined&#160;</td><td class="memItemRight"><b>tts::sample</b> (T lo, T hi, std::uint64_t n)</td></tr>
+<tr class="memdesc:ga0e669cfe57deb0b379204ee6146d42c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ga2043fb2d208c08ab1c7ff87b895f4abf" id="r_ga2043fb2d208c08ab1c7ff87b895f4abf"><td class="memTemplParams" colspan="2"><a id="ga2043fb2d208c08ab1c7ff87b895f4abf" name="ga2043fb2d208c08ab1c7ff87b895f4abf"></a>
 template&lt;typename G&gt; </td></tr>
 <tr class="memitem:ga2043fb2d208c08ab1c7ff87b895f4abf template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>tts::is_randoms_v</b> = <a class="el" href="structtts_1_1is__randoms.html">is_randoms</a>&lt;std::remove_cvref_t&lt;G&gt;&gt;<a class="el" href="structtts_1_1value.html">::value</a></td></tr>
-<tr class="memdesc:ga2043fb2d208c08ab1c7ff87b895f4abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value alias for <a class="el" href="structtts_1_1is__randoms.html" title="Whether a generator is a tts::randoms, by its type.">tts::is_randoms</a>, indifferent to references and cv-qualifiers. <br /></td></tr>
+<tr class="memdesc:ga2043fb2d208c08ab1c7ff87b895f4abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value alias for <a class="el" href="structtts_1_1is__randoms.html" title="Detects tts::randoms and the classes derived from it.">tts::is_randoms</a>, indifferent to references and cv-qualifiers. <br /></td></tr>
+<tr class="memitem:gae7f38f5eb16072431b9eea5e49ecfb4d" id="r_gae7f38f5eb16072431b9eea5e49ecfb4d"><td class="memItemLeft">constexpr tts_implementation_defined&#160;</td><td class="memItemRight"><a class="el" href="#gae7f38f5eb16072431b9eea5e49ecfb4d">tts::sweep</a> = {}</td></tr>
+<tr class="memdesc:gae7f38f5eb16072431b9eea5e49ecfb4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates every value of a type, or of a range.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="ga5bdd075a33a6dcabef5e5d7e33299727" name="ga5bdd075a33a6dcabef5e5d7e33299727"></a>
@@ -209,15 +217,123 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Provides a set of limits for the type <span class="tt">T</span>. </p>
-<p>This function returns a structure containing various limits and special values for the type <span class="tt">T</span> that can be used for generating test data that covers edge cases and special values.</p>
+<p>Returns the limits and special values of a type <span class="tt">T</span>. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>Type for which to provide limits </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A instance of <span class="tt"><a class="el" href="structtts_1_1limits__set.html" title="Defines a set of limits for a type T.">limits_set</a>&lt;T&gt;</span> containing limits and special values for type <span class="tt">T</span>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="structtts_1_1limits__set.html" title="Holds the limits and special values of a type T.">tts::limits_set</a> of <span class="tt">T</span>. </dd></dl>
+
+</div>
+</div>
+<a id="ga4d2960bcca5eaa196236495053fd6807" name="ga4d2960bcca5eaa196236495053fd6807"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4d2960bcca5eaa196236495053fd6807">&#9670;&#160;</a></span>sample()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tts_implementation_defined tts::sample </td>
+          <td>(</td>
+          <td class="paramtype">std::uint64_t</td>          <td class="paramname"><span class="paramname"><em>n</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/generator.hpp&gt;</code></p>
+
+<p>Generates a given number of values spread over a type or a range. </p>
+<p>Produces <span class="tt">n</span> values of an argument of a <a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="TTS_ULP_RANGE_CHECK">TTS_ULP_RANGE_CHECK</a>, and never NaN.</p>
+<ul>
+<li><span class="tt">tts::sample(n)</span> spreads its values over the whole type.</li>
+<li><span class="tt">tts::sample(lo, hi, n)</span> spreads its values over [<span class="tt">lo</span>, <span class="tt">hi</span>], its bounds given in either order.</li>
+</ul>
+<p>The values are the two bounds and one value per slice of equal width in the ranks of <a class="el" href="structtts_1_1enumeration.html" title="Enumerates the values of a type in increasing order.">tts::enumeration</a>. The sample thus holds about the same number of values in each binade of a floating-point type, the subnormals of each sign counting as one binade. A range over many binades of small magnitude, such as [-700, 700] in <span class="tt">double</span>, has most of its values below 1 in magnitude. If <span class="tt">n</span> is 1, the sample holds the lower bound alone. A sample of at least as many values as its range holds gives each value once, as <a class="el" href="#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a> does.</p>
+<p>The position of a value within its slice comes from its index and from a value drawn from the generator of the run when the check starts, so each run checks other values, and <span class="tt">--seed</span> repeats those of a run.</p>
+<p>If <span class="tt">n</span> is 0, the check makes no call and records no check, so a case without another check is reported as invalid.</p>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check two functions over values spread over a range&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">auto</span> half   = [](<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x / 2; };</div>
+<div class="line">  <span class="keyword">auto</span> scaled = [](<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x * 0.5f; };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// 4096 floats from -1 to 1: the bounds and about the same number of values in every binade</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(<a class="code hl_function" href="#ga4d2960bcca5eaa196236495053fd6807">tts::sample</a>(-1.f, 1.f, 4096), <span class="keywordtype">float</span>, <span class="keywordtype">float</span>, half, scaled, 0.);</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> twice = [](<span class="keywordtype">double</span> x) { <span class="keywordflow">return</span> x * 2; };</div>
+<div class="line">  <span class="keyword">auto</span> added = [](<span class="keywordtype">double</span> x) { <span class="keywordflow">return</span> x + x; };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// 2^20 doubles spread over the whole type, which holds too many values for a sweep</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(<a class="code hl_function" href="#ga4d2960bcca5eaa196236495053fd6807">tts::sample</a>(1 &lt;&lt; 20), <span class="keywordtype">double</span>, <span class="keywordtype">double</span>, twice, added, 0.);</div>
+<div class="line">};</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="gae7f38f5eb16072431b9eea5e49ecfb4d" name="gae7f38f5eb16072431b9eea5e49ecfb4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7f38f5eb16072431b9eea5e49ecfb4d">&#9670;&#160;</a></span>sweep</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">tts_implementation_defined tts::sweep = {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><code>#include &lt;tts/engine/generator.hpp&gt;</code></p>
+
+<p>Generates every value of a type, or of a range. </p>
+<p>Produces every value of an argument of a <a class="el" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9" title="TTS_ULP_RANGE_CHECK">TTS_ULP_RANGE_CHECK</a>, NaN excluded since it has no rank in <a class="el" href="structtts_1_1enumeration.html" title="Enumerates the values of a type in increasing order.">tts::enumeration</a>.</p>
+<ul>
+<li><span class="tt"><a class="el" href="#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep</a></span> covers the whole type, from -inf to +inf for a floating-point type.</li>
+<li><span class="tt"><a class="el" href="#gae7f38f5eb16072431b9eea5e49ecfb4d" title="Generates every value of a type, or of a range.">tts::sweep(lo, hi)</a></span> covers every value of [<span class="tt">lo</span>, <span class="tt">hi</span>], its bounds given in either order.</li>
+</ul>
+<p>A sweep makes 65536 calls over two <span class="tt">std::uint8_t</span> and 4278190082 over a <span class="tt">float</span>. If the number of calls exceeds the largest <span class="tt">std::size_t</span>, as over two <span class="tt">double</span>, the check fails without running, and <a class="el" href="#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a> can run such a check on <span class="tt">n</span> values per argument.</p>
+<h2 class="groupheader">Example </h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define TTS_MAIN </span><span class="comment">// No need for main()</span></div>
+<div class="line"><span class="preprocessor">#include &lt;tts/tts.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cmath&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__test-scenario.html#ga8f02c0809d6d7acc4b7eadd9d269cdc5">TTS_CASE</a>(<span class="stringliteral">&quot;Check two functions over every value of a type or a range&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">  <span class="keyword">auto</span> halve_ref = [](std::int16_t x) { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::int16_t<span class="keyword">&gt;</span>(std::floor(x / 2.)); };</div>
+<div class="line">  <span class="keyword">auto</span> halve_new = [](std::int16_t x) { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::int16_t<span class="keyword">&gt;</span>(x &gt;&gt; 1); };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// Each of the 65536 values of std::int16_t</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(<a class="code hl_variable" href="#gae7f38f5eb16072431b9eea5e49ecfb4d">tts::sweep</a>, std::int16_t, std::int16_t, halve_ref, halve_new, 0.);</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> half   = [](<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x / 2; };</div>
+<div class="line">  <span class="keyword">auto</span> scaled = [](<span class="keywordtype">float</span> x) { <span class="keywordflow">return</span> x * 0.5f; };</div>
+<div class="line"> </div>
+<div class="line">  <span class="comment">// Each float from 1 to 2, 8388609 values</span></div>
+<div class="line">  <a class="code hl_define" href="group__test-precision.html#gaa839a99324a6f4a03c536a433d30d2b9">TTS_ULP_RANGE_CHECK</a>(<a class="code hl_variable" href="#gae7f38f5eb16072431b9eea5e49ecfb4d">tts::sweep</a>(1.f, 2.f), <span class="keywordtype">float</span>, <span class="keywordtype">float</span>, half, scaled, 0.);</div>
+<div class="line">};</div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga4d2960bcca5eaa196236495053fd6807" title="Generates a given number of values spread over a type or a range.">tts::sample</a> </dd></dl>
 
 </div>
 </div>

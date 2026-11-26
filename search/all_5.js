@@ -1,15 +1,15 @@
 var searchData=
 [
-  ['a_20short_20example_0',['A Short Example',['../index.html#autotoc_md49',1,'']]],
+  ['a_20short_20example_0',['A Short Example',['../index.html#autotoc_md51',1,'']]],
   ['a_20test_1',['Marginal cost of a test',['../compile-time.html#compile-time-comparison-tests',1,'']]],
   ['a_20test_20case_2',['Specify a Test Case',['../tts101.html#tuto-test-case',1,'']]],
-  ['a_20user_20defined_20type_3',['Producing values of a user-defined type',['../customize.html#autotoc_md47',1,'']]],
-  ['absolute_20comparison_4',['Absolute Comparison',['../customize.html#autotoc_md45',1,'']]],
+  ['a_20user_20defined_20type_3',['Producing values of a user-defined type',['../customize.html#autotoc_md49',1,'']]],
+  ['absolute_20comparison_4',['Absolute Comparison',['../customize.html#autotoc_md47',1,'']]],
   ['absolute_5fcheck_5',['absolute_check',['../group__tools-precision.html#ga839002675e78cc93d0c421beeb976014',1,'tts']]],
   ['acceptable_20headers_6',['Acceptable headers',['../compile-time.html#compile-time-fine',1,'']]],
   ['adapter_7',['adapter',['../structtts_1_1adapter.html',1,'tts']]],
-  ['adela_20bradley_8',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md12',1,'']]],
-  ['and_20helpers_9',['Tools and Helpers',['../tts_reference.html#autotoc_md51',1,'']]],
+  ['adela_20bradley_8',['Version 3.0 - Beatrice Adela Bradley',['../changelog.html#autotoc_md14',1,'']]],
+  ['and_20helpers_9',['Tools and Helpers',['../tts_reference.html#autotoc_md53',1,'']]],
   ['and_20ordering_10',['Equality and Ordering',['../customize.html#customize-comparison',1,'']]],
   ['and_20stuck_20runs_11',['Crashed and Stuck Runs',['../customize.html#customize-abort',1,'']]],
   ['arguments_12',['arguments',['../group__tools-config.html#ga1e9e78ed104b86ad669dbb9bc9471343',1,'tts']]],
@@ -18,5 +18,5 @@ var searchData=
   ['as_5fsigned_5finteger_15',['as_signed_integer',['../structtts_1_1as__signed__integer.html',1,'tts']]],
   ['as_5ftext_16',['as_text',['../group__tools-text.html#ga044124276e1b1e518a746121e16b0fad',1,'tts']]],
   ['assertion_5ffailed_17',['assertion_failed',['../structtts_1_1colorized__sink.html#a806ad2d30a231df71c134781b1eb6ab6',1,'tts::colorized_sink::assertion_failed()'],['../structtts_1_1diagnostics__sink.html#a15356d5ab0183990f681e07ba15b5b03',1,'tts::diagnostics_sink::assertion_failed()'],['../structtts_1_1json__sink.html#afd20e61e1ad28e22d99602472be4e014',1,'tts::json_sink::assertion_failed()'],['../structtts_1_1junit__sink.html#aba10c391b306796c68ff3e7fcb110edb',1,'tts::junit_sink::assertion_failed()'],['../structtts_1_1output__sink.html#a9124eaa6eed5ab0702d2a16e2ccacc66',1,'tts::output_sink::assertion_failed()'],['../classtts_1_1output__handler.html#a6782aab6fbb564e637cd769e9e9f1c44',1,'tts::output_handler::assertion_failed()']]],
-  ['aubrey_20bradimore_18',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md19',1,'']]]
+  ['aubrey_20bradimore_18',['Version 2.2 - Aubrey Bradimore',['../changelog.html#autotoc_md21',1,'']]]
 ];

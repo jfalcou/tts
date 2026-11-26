@@ -134,27 +134,82 @@ $(function(){initNavTree('group__tools-generators.html','',''); });
 <div class="header">
   <div class="summary">
 <a href="#groups">Topics</a> &#124;
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Data Generators related tools </div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Tools for data generation.  
+<p>Generators of test data and their customization points.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-groups" class="groupheader"><a id="groups" name="groups"></a>
 Topics</h2></td></tr>
 <tr class="memitem:tools-generators-class" id="r_tools-generators-class"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__tools-generators-class.html">Data Generators</a></td></tr>
-<tr class="memdesc:group__tools-generators-class"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generators to produce data samples for testing. <br /></td></tr>
+<tr class="memdesc:group__tools-generators-class"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generators of the values of the test cases and the range checks. <br /></td></tr>
 <tr class="memitem:tools-generators-custom" id="r_tools-generators-custom"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="group__tools-generators-custom.html">Data Generators Customization Points</a></td></tr>
-<tr class="memdesc:group__tools-generators-custom"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization points to customize data generation for user-defined types. <br /></td></tr>
+<tr class="memdesc:group__tools-generators-custom"><td class="mdescLeft">&#160;</td><td class="mdescRight">Customization points of the data generation for user-defined types. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:tts_3A_3Abase_5Ftype_3C_20T_20_3E" id="r_tts_3A_3Abase_5Ftype_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1base__type.html">tts::base_type&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base type extraction.  <a href="structtts_1_1base__type.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the base type of a type <span class="tt">T</span>.  <a href="structtts_1_1base__type.html#details">More...</a><br /></td></tr>
 <tr class="memitem:tts_3A_3Aboolean_5Ftype_3C_20T_20_3E" id="r_tts_3A_3Aboolean_5Ftype_3C_20T_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structtts_1_1boolean__type.html">tts::boolean_type&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean type computation.  <a href="structtts_1_1boolean__type.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives the boolean type of a type <span class="tt">T</span>.  <a href="structtts_1_1boolean__type.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga1796a26016d4661e199916cfce32c9f2" id="r_ga1796a26016d4661e199916cfce32c9f2"><td class="memItemLeft"><a id="ga1796a26016d4661e199916cfce32c9f2" name="ga1796a26016d4661e199916cfce32c9f2"></a>
+using&#160;</td><td class="memItemRight"><b>tts::randoms&lt; Mx, Mn &gt;::random_type</b> = void</td></tr>
+<tr class="memdesc:ga1796a26016d4661e199916cfce32c9f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks <a class="el" href="structtts_1_1randoms.html" title="Generates random values between two bounds.">tts::randoms</a> and the classes derived from it for <a class="el" href="structtts_1_1is__randoms.html" title="Detects tts::randoms and the classes derived from it.">tts::is_randoms</a>. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga2d9f38b20d8e381b96873760cecc0312" id="r_ga2d9f38b20d8e381b96873760cecc0312"><td class="memTemplParams" colspan="2"><a id="ga2d9f38b20d8e381b96873760cecc0312" name="ga2d9f38b20d8e381b96873760cecc0312"></a>
+template&lt;typename D&gt; </td></tr>
+<tr class="memitem:ga2d9f38b20d8e381b96873760cecc0312 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>tts::randoms&lt; Mx, Mn &gt;::check</b> (<a class="el" href="structtts_1_1type.html">tts::type</a>&lt; D &gt;) const</td></tr>
+<tr class="memdesc:ga2d9f38b20d8e381b96873760cecc0312"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops on a negative bound when <span class="tt">D</span> is an unsigned type. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga35108ac0b3267624fe16db0f96ea3b21" id="r_ga35108ac0b3267624fe16db0f96ea3b21"><td class="memItemLeft"><a id="ga35108ac0b3267624fe16db0f96ea3b21" name="ga35108ac0b3267624fe16db0f96ea3b21"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::inf</b></td></tr>
+<tr class="memdesc:ga35108ac0b3267624fe16db0f96ea3b21"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(+\infty\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga66829894b6f7e94e4a2d7276a344bae7" id="r_ga66829894b6f7e94e4a2d7276a344bae7"><td class="memItemLeft"><a id="ga66829894b6f7e94e4a2d7276a344bae7" name="ga66829894b6f7e94e4a2d7276a344bae7"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::maxflint</b></td></tr>
+<tr class="memdesc:ga66829894b6f7e94e4a2d7276a344bae7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest \(M\) with every integer of \([-M, M]\) exact, for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga77135a466d780a033552fb29466acb95" id="r_ga77135a466d780a033552fb29466acb95"><td class="memItemLeft"><a id="ga77135a466d780a033552fb29466acb95" name="ga77135a466d780a033552fb29466acb95"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::mindenormal</b></td></tr>
+<tr class="memdesc:ga77135a466d780a033552fb29466acb95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smallest positive subnormal value, for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga9857728327fd7f01dd204c932c96bb5f" id="r_ga9857728327fd7f01dd204c932c96bb5f"><td class="memItemLeft"><a id="ga9857728327fd7f01dd204c932c96bb5f" name="ga9857728327fd7f01dd204c932c96bb5f"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::minf</b></td></tr>
+<tr class="memdesc:ga9857728327fd7f01dd204c932c96bb5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(-\infty\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga9bc90b94f194bdef2e44f92abfa969e7" id="r_ga9bc90b94f194bdef2e44f92abfa969e7"><td class="memItemLeft"><a id="ga9bc90b94f194bdef2e44f92abfa969e7" name="ga9bc90b94f194bdef2e44f92abfa969e7"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::mone</b></td></tr>
+<tr class="memdesc:ga9bc90b94f194bdef2e44f92abfa969e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(-1\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:gae140017665985f89f74495c18e863a06" id="r_gae140017665985f89f74495c18e863a06"><td class="memItemLeft"><a id="gae140017665985f89f74495c18e863a06" name="gae140017665985f89f74495c18e863a06"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::mzero</b></td></tr>
+<tr class="memdesc:gae140017665985f89f74495c18e863a06"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(-0\), for floating-point base types. <br /></td></tr>
+<tr class="memitem:gaf7d91cf5e7da3610836f788856134047" id="r_gaf7d91cf5e7da3610836f788856134047"><td class="memItemLeft"><a id="gaf7d91cf5e7da3610836f788856134047" name="gaf7d91cf5e7da3610836f788856134047"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::nan</b></td></tr>
+<tr class="memdesc:gaf7d91cf5e7da3610836f788856134047"><td class="mdescLeft">&#160;</td><td class="mdescRight">Quiet NaN, for floating-point base types. <br /></td></tr>
+<tr class="memitem:ga623e066d2a8cda4557dc9f22a0038d89" id="r_ga623e066d2a8cda4557dc9f22a0038d89"><td class="memItemLeft"><a id="ga623e066d2a8cda4557dc9f22a0038d89" name="ga623e066d2a8cda4557dc9f22a0038d89"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::one</b></td></tr>
+<tr class="memdesc:ga623e066d2a8cda4557dc9f22a0038d89"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(1\). <br /></td></tr>
+<tr class="memitem:ga5b483651641046d1a5bdd3360586d564" id="r_ga5b483651641046d1a5bdd3360586d564"><td class="memItemLeft"><a id="ga5b483651641046d1a5bdd3360586d564" name="ga5b483651641046d1a5bdd3360586d564"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::smallestposval</b></td></tr>
+<tr class="memdesc:ga5b483651641046d1a5bdd3360586d564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smallest positive normal value, for floating-point base types. <br /></td></tr>
+<tr class="memitem:gab50fbdc8526c1367cc8de30c6a57a92f" id="r_gab50fbdc8526c1367cc8de30c6a57a92f"><td class="memItemLeft"><a id="gab50fbdc8526c1367cc8de30c6a57a92f" name="gab50fbdc8526c1367cc8de30c6a57a92f"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::valmax</b></td></tr>
+<tr class="memdesc:gab50fbdc8526c1367cc8de30c6a57a92f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest representable value of the base type. <br /></td></tr>
+<tr class="memitem:ga6c0af4b86225bb03526754c503d48b0f" id="r_ga6c0af4b86225bb03526754c503d48b0f"><td class="memItemLeft"><a id="ga6c0af4b86225bb03526754c503d48b0f" name="ga6c0af4b86225bb03526754c503d48b0f"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::valmin</b></td></tr>
+<tr class="memdesc:ga6c0af4b86225bb03526754c503d48b0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lowest representable value of the base type, its most negative one. <br /></td></tr>
+<tr class="memitem:ga54367543eda33e44287a8b078e2cbeb7" id="r_ga54367543eda33e44287a8b078e2cbeb7"><td class="memItemLeft"><a id="ga54367543eda33e44287a8b078e2cbeb7" name="ga54367543eda33e44287a8b078e2cbeb7"></a>
+T&#160;</td><td class="memItemRight"><b>tts::limits_set&lt; T &gt;::zero</b></td></tr>
+<tr class="memdesc:ga54367543eda33e44287a8b078e2cbeb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">\(0\). <br /></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
