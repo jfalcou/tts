@@ -7,6 +7,7 @@ Change Log {#changelog}
 
 ### Bug Fixes
   * Rewrote the reference entries of the test macros, which cited functions removed in 4.0 and gave wrong briefs (https://github.com/jfalcou/tts/pull/280)
+  * Fix the distance `tts::ulp_check` measures between values of opposite signs, of a floating-point type or of a signed 8- or 16-bit integer type, and the crash of a range check over these integers ([#279](https://github.com/jfalcou/tts/pull/279))
 
 # Version 4.1
 
