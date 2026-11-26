@@ -35,6 +35,9 @@ namespace tts
 #include <type_traits>
 #include <utility>
 #include <initializer_list>
+#if defined(_OPENMP)
+#include <omp.h>
+#endif
 #if !defined(__GNUC__) && !defined(__clang__)
 #define TTS_USE_STDMATH
 #include <math.h>
@@ -799,6 +802,10 @@ namespace tts::_
         }
         else
         {
+          static_assert(
+          requires { T {raw}; },
+          "[TTS] An option is read as an integer, as a floating-point value, or as a "
+          "type built from a text, such as tts::text.");
           n    = 1;
           that = T {raw};
         }
@@ -1918,12 +1925,16 @@ namespace tts
   namespace _
   {
     inline thread_local std::uint64_t prng_state = 0x853c49e6748fea9bULL;
+    constexpr std::uint64_t           mix(std::uint64_t z) noexcept
+    {
+      z += 0x9e3779b97f4a7c15ULL;
+      z  = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+      z  = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+      return z ^ (z >> 31);
+    }
     inline std::uint64_t next_random()
     {
-      std::uint64_t z = (prng_state += 0x9e3779b97f4a7c15ULL);
-      z               = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
-      z               = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
-      return z ^ (z >> 31);
+      return mix(std::exchange(prng_state, prng_state + 0x9e3779b97f4a7c15ULL));
     }
     template<std::integral T> T roll(T M, T N)
     {
@@ -2007,7 +2018,7 @@ namespace tts
       {
         return quiet_nan;
       }
-      return value;
+      return min(max(value, mini), maxi);
     }
   }
   inline void set_random_seed(std::uint64_t seed)
@@ -2445,11 +2456,10 @@ Parameters:
   --shard=i/n       Only run the tests in shard i of n (0 <= i < n), for CI parallelization
   --timeout=arg     Kill the run when a case is still going after arg milliseconds
 Range specifics Parameters:
-  --block=arg       Set size of range checks samples (min. 32)
   --loop=arg        Repeat each range checks arg times
   --ulpmax=arg      Set global failure ulp threshold for range tests (default is 2.0)
-  --valmax=arg      Set maximal value for range tests (default is code)
-  --valmin=arg      Set minimal value for range tests (default is code)
+  --valmax=arg      Narrow tts::sweep, tts::sample, and tts::randoms to arg or below
+  --valmin=arg      Narrow tts::sweep, tts::sample, and tts::randoms to arg or above
 )";
   inline int usage(char const* name)
   {
@@ -3451,45 +3461,86 @@ inline ::tts::_::runtime_context& local_tts_ctx()
 {
   return ::tts::_::current_runtime;
 }
+namespace tts::_
+{
+  template<std::size_t N>
+  using sized_unsigned_t =
+  std::conditional_t<N == 1, std::uint8_t,
+  std::conditional_t<N == 2, std::uint16_t,
+  std::conditional_t<N == 4, std::uint32_t,
+  std::conditional_t<N == 8, std::uint64_t, void>>>>;
+  template<typename T, bool Signed = false>
+  using sized_integer_t = std::conditional_t<Signed,
+                                             std::make_signed_t<sized_unsigned_t<sizeof(T)>>,
+                                             sized_unsigned_t<sizeof(T)>>;
+}
+namespace tts
+{
+#if defined(TTS_DOXYGEN_INVOKED)
+  template<typename T> struct enumeration
+  {
+    static constexpr std::uint64_t last;
+    static constexpr std::uint64_t index(T v) noexcept;
+    static constexpr T value(std::uint64_t i) noexcept;
+  };
+#else
+  template<typename T> struct enumeration;
+#endif
+  template<std::integral T>
+    requires(!std::same_as<T, bool>)
+  struct enumeration<T>
+  {
+  private:
+    using u_t                 = _::sized_integer_t<T>;
+    static constexpr u_t flip = std::is_signed_v<T> ? u_t(u_t(~u_t(0)) / 2 + 1) : u_t(0);
+  public:
+    static constexpr std::uint64_t last = u_t(~u_t(0));
+    static constexpr std::uint64_t index(T v) noexcept
+    {
+      return u_t(u_t(v) ^ flip);
+    }
+    static constexpr T value(std::uint64_t i) noexcept
+    {
+      return T(u_t(u_t(i) ^ flip));
+    }
+  };
+  template<> struct enumeration<bool>
+  {
+    static constexpr std::uint64_t last = 1;
+    static constexpr std::uint64_t index(bool v) noexcept
+    {
+      return v ? 1 : 0;
+    }
+    static constexpr bool value(std::uint64_t i) noexcept
+    {
+      return i != 0;
+    }
+  };
+  template<std::floating_point T>
+    requires(sizeof(T) == 4 || sizeof(T) == 8)
+  struct enumeration<T>
+  {
+  private:
+    using u_t                 = _::sized_integer_t<T>;
+    static constexpr u_t inf  = std::bit_cast<u_t>(std::numeric_limits<T>::infinity());
+    static constexpr u_t sign = u_t(u_t(~u_t(0)) / 2 + 1);
+  public:
+    static constexpr std::uint64_t last = 2 * std::uint64_t(inf) + 1;
+    static constexpr std::uint64_t index(T v) noexcept
+    {
+      auto b = std::bit_cast<u_t>(v);
+      return b & sign ? inf - (b ^ sign) : inf + 1 + std::uint64_t(b);
+    }
+    static constexpr T value(std::uint64_t i) noexcept
+    {
+      return std::bit_cast<T>(u_t(i <= inf ? sign | (inf - i) : i - inf - 1));
+    }
+  };
+}
 namespace tts
 {
   namespace _
   {
-    template<std::size_t N, bool Signed> struct sized_integer;
-    template<> struct sized_integer<1, true>
-    {
-      using type = std::int8_t;
-    };
-    template<> struct sized_integer<2, true>
-    {
-      using type = std::int16_t;
-    };
-    template<> struct sized_integer<4, true>
-    {
-      using type = std::int32_t;
-    };
-    template<> struct sized_integer<8, true>
-    {
-      using type = std::int64_t;
-    };
-    template<> struct sized_integer<1, false>
-    {
-      using type = std::uint8_t;
-    };
-    template<> struct sized_integer<2, false>
-    {
-      using type = std::uint16_t;
-    };
-    template<> struct sized_integer<4, false>
-    {
-      using type = std::uint32_t;
-    };
-    template<> struct sized_integer<8, false>
-    {
-      using type = std::uint64_t;
-    };
-    template<typename T, bool Signed = false>
-    using sized_integer_t = typename sized_integer<sizeof(T), Signed>::type;
     template<typename T, typename V> struct builtin_conversion
     {
       static auto from(V const& v)
@@ -3614,6 +3665,46 @@ namespace tts
       T mone           = static_cast<T>(-1.0);
     };
   }
+}
+namespace tts::_
+{
+  template<typename T, bool Complete = false> struct bounded_range
+  {
+    T             lo;
+    T             hi;
+    std::uint64_t samples = 0;
+  };
+  struct whole_sweep
+  {
+    template<typename T> constexpr bounded_range<T, true> operator()(T lo, T hi) const
+    {
+      return {lo, hi};
+    }
+  };
+  struct whole_sample
+  {
+    std::uint64_t samples;
+  };
+}
+namespace tts
+{
+#if defined(TTS_DOXYGEN_INVOKED)
+  template<typename T> struct limits_set
+  {
+    T valmax;
+    T valmin;
+    T zero;
+    T one;
+    T nan;
+    T inf;
+    T minf;
+    T mzero;
+    T maxflint;
+    T mindenormal;
+    T smallestposval;
+    T mone;
+  };
+#else
   template<typename T>
   struct limits_set
       : _::common_limits<T>
@@ -3621,6 +3712,7 @@ namespace tts
   {
     using type = T;
   };
+#endif
   template<typename T> inline auto limits(tts::type<T>)
   {
     return limits_set<T> {};
@@ -3729,12 +3821,18 @@ namespace tts
   };
   template<typename Mx, typename Mn> struct randoms
   {
+    using random_type = void;
     constexpr randoms(Mn mn, Mx mx)
         : mini(mn)
         , maxi(mx)
     {
     }
-    template<typename D> D operator()(tts::type<D>, auto...)
+    template<typename D> D operator()(tts::type<D> t, auto...)
+    {
+      check(t);
+      return random_value(::tts::convert_as(mini, t), ::tts::convert_as(maxi, t));
+    }
+    template<typename D> void check(tts::type<D>) const
     {
       if constexpr(std::is_unsigned_v<D> && requires { mini >= 0; })
       {
@@ -3746,7 +3844,6 @@ namespace tts
         assert(maxi >= 0 &&
                "Maximum value for unsigned type random generator must be non-negative");
       }
-      return random_value(::tts::convert_as(mini, type<D> {}), ::tts::convert_as(maxi, type<D> {}));
     }
     Mn mini;
     Mx maxi;
@@ -3754,7 +3851,9 @@ namespace tts
   template<typename G> struct is_randoms : std::false_type
   {
   };
-  template<typename Mx, typename Mn> struct is_randoms<randoms<Mx, Mn>> : std::true_type
+  template<typename G>
+    requires requires { typename G::random_type; }
+  struct is_randoms<G> : std::true_type
   {
   };
   template<typename G>
@@ -3802,6 +3901,15 @@ namespace tts
     }
     G generator_;
   };
+  inline constexpr _::whole_sweep sweep = {};
+  constexpr _::whole_sample sample(std::uint64_t n)
+  {
+    return {n};
+  }
+  template<typename T> constexpr _::bounded_range<T> sample(T lo, T hi, std::uint64_t n)
+  {
+    return {lo, hi, n};
+  }
 }
 namespace tts::_
 {
@@ -4794,8 +4902,7 @@ namespace tts::_
         {
           auto aa = bitinteger(a);
           auto bb = bitinteger(b);
-          if(aa > bb) std::swap(aa, bb);
-          auto z = static_cast<ui_t>(bb - aa);
+          auto z  = static_cast<ui_t>(a < b ? bb - aa : aa - bb);
           if(signbit(a) != signbit(b)) ++z;
           return static_cast<double>(z) / 2.;
         }
@@ -4805,7 +4912,7 @@ namespace tts::_
         using u_t = typename std::make_unsigned<T>::type;
         auto ua   = static_cast<u_t>(a);
         auto ub   = static_cast<u_t>(b);
-        return static_cast<double>((a < b) ? (ub - ua) : (ua - ub)) / 2.;
+        return static_cast<double>(static_cast<u_t>((a < b) ? (ub - ua) : (ua - ub))) / 2.;
       }
       else
       {
@@ -5380,84 +5487,265 @@ namespace tts
       else ::tts::output().write(spelling);
       ::tts::output().writeln();
     }
-    template<typename T> struct member_scan
+    template<typename T, typename... As> struct member_scan
     {
       static constexpr std::size_t nb_buckets = 2 + 1 + 16;
-      explicit member_scan(std::size_t count)
-          : expected(count)
-          , found(count)
+      explicit member_scan(std::size_t group_size)
+          : expected(group_size)
+          , found(group_size)
+          , inputs {buffer<As>(nb_buckets * group_size)...}
+          , first_expected(nb_buckets * group_size)
+          , first_found(nb_buckets * group_size)
       {
       }
-      void tally()
+      template<std::size_t... Ks>
+      void tally(pack_base<std::index_sequence<Ks...>, buffer<As>...> const& group)
       {
-        for(std::size_t i = 0; i < expected.size(); ++i)
+        std::size_t group_size = expected.size();
+        for(std::size_t e = 0; e < group_size; ++e)
         {
-          auto ulp = ::tts::ulp_check(expected[ i ], found[ i ]);
+          auto ulp = ::tts::ulp_check(expected[ e ], found[ e ]);
           auto b   = last_bucket_less(nb_buckets, ulp);
           max_ulp  = _::max(max_ulp, ulp);
-          if(counts[ b ] == 0) first[ b ] = i;
-          counts[ b ]++;
+          if(counts[ b ]++ == 0)
+          {
+            marks[ b ] = e;
+            for(std::size_t k = 0; k < group_size; ++k)
+            {
+              first_expected[ b * group_size + k ] = expected[ k ];
+              first_found[ b * group_size + k ]    = found[ k ];
+              ((get<Ks>(inputs)[ b * group_size + k ] = get<Ks>(group)[ k ]), ...);
+            }
+          }
         }
-        nb_ulps += expected.size();
+        nb_ulps += group_size;
       }
-      template<typename Inputs> void print(Inputs const& inputs, std::size_t group_size) const
+      void merge(member_scan const& next)
+      {
+        for(std::size_t b = 0; b < nb_buckets; ++b)
+        {
+          if(counts[ b ] == 0 && next.counts[ b ] != 0)
+            take_sample(b, next, std::index_sequence_for<As...> {});
+          counts[ b ] += next.counts[ b ];
+        }
+        nb_ulps += next.nb_ulps;
+        max_ulp  = _::max(max_ulp, next.max_ulp);
+      }
+      template<std::size_t... Ks>
+      void take_sample(std::size_t b, member_scan const& next, std::index_sequence<Ks...>)
+      {
+        std::size_t group_size = expected.size();
+        marks[ b ]             = next.marks[ b ];
+        for(std::size_t k = b * group_size; k < (b + 1) * group_size; ++k)
+        {
+          first_expected[ k ] = next.first_expected[ k ];
+          first_found[ k ]    = next.first_found[ k ];
+          ((get<Ks>(inputs)[ k ] = get<Ks>(next.inputs)[ k ]), ...);
+        }
+      }
+      void print() const
       {
         ::tts::output().writeln(
         "%-16s%-16s%-16s%-16s", "Max ULP", "Count (#)", "Ratio Sum (%)", "Samples");
         _::separator();
-        double ratio = 0.;
+        std::size_t group_size = expected.size();
+        double      ratio      = 0.;
         for(std::size_t b = 0; b < nb_buckets; ++b)
         {
           if(counts[ b ] == 0) continue;
           double ulps  = 0;
-          ratio       += (100. * counts[ b ]) / static_cast<double>(nb_ulps);
+          ratio       += (100. * static_cast<double>(counts[ b ])) / static_cast<double>(nb_ulps);
           if(b <= 3) ulps = static_cast<double>(b) / 2.0;
           else if(b == nb_buckets - 1) ulps = std::numeric_limits<double>::infinity();
           else ulps = 1 << (b - 4);
-          std::size_t i    = first[ b ];
-          std::size_t mark = i % group_size;
-          ::tts::output().write("%-16.1f%-16u%-16gInput:      ", ulps, counts[ b ], ratio);
-          show_inputs(inputs, i, group_size);
+          ::tts::output().write("%-16.1f%-16zu%-16gInput:      ", ulps, counts[ b ], ratio);
+          show_inputs(inputs, b * group_size + marks[ b ], group_size);
           ::tts::output().writeln();
           ::tts::output().write("%48sFound:      ", "");
-          show_group(found.data() + i - mark, group_size, mark);
+          show_group(first_found.data() + b * group_size, group_size, marks[ b ]);
           ::tts::output().writeln();
           ::tts::output().write("%48sinstead of: ", "");
-          show_group(expected.data() + i - mark, group_size, mark);
+          show_group(first_expected.data() + b * group_size, group_size, marks[ b ]);
           ::tts::output().writeln();
           _::separator();
         }
       }
-      buffer<T>            expected;
-      buffer<T>            found;
-      buffer<unsigned int> counts  = buffer<unsigned int>(nb_buckets, 0u);
-      buffer<std::size_t>  first   = buffer<std::size_t>(nb_buckets, 0u);
-      std::size_t          nb_ulps = 0;
-      double               max_ulp = 0.;
+      buffer<T>           expected;
+      buffer<T>           found;
+      pack<buffer<As>...> inputs;
+      buffer<T>           first_expected;
+      buffer<T>           first_found;
+      buffer<std::size_t> counts  = buffer<std::size_t>(nb_buckets, std::size_t {0});
+      buffer<std::size_t> marks   = buffer<std::size_t>(nb_buckets, std::size_t {0});
+      std::size_t         nb_ulps = 0;
+      double              max_ulp = 0.;
     };
-    template<typename... Rs> pack<member_scan<Rs>...> make_scans(types<Rs...>, std::size_t count)
+    template<typename... Rs, typename... As>
+    pack<member_scan<Rs, As...>...> make_scans(types<Rs...>, types<As...>, std::size_t group_size)
     {
-      return pack<member_scan<Rs>...> {member_scan<Rs>(count)...};
+      return pack<member_scan<Rs, As...>...> {member_scan<Rs, As...>(group_size)...};
     }
     template<std::size_t... Js, typename... Ms, typename F>
     void for_each_member(pack_base<std::index_sequence<Js...>, Ms...>& results, F f)
     {
       (f(get<Js>(results), std::integral_constant<std::size_t, Js> {}), ...);
     }
-    template<std::size_t... Ks, typename... As, typename... Gs>
-    void fill_inputs(pack_base<std::index_sequence<Ks...>, buffer<As>...>& inputs,
-                     pack<Gs...> const&                                    generators,
-                     std::size_t                                           side)
+    template<typename T> struct ranks
     {
-      constexpr std::size_t arity = sizeof...(As);
-      for(std::size_t i = 0; i < get<0>(inputs).size(); ++i)
+      T operator()(type<T>, auto i, auto n, auto...) const
       {
+        using e_t = enumeration<T>;
+        auto idx  = static_cast<std::uint64_t>(i);
+        auto sz   = static_cast<std::uint64_t>(n);
+        if(idx == 0) return e_t::value(first);
+        if(idx + 1 == sz) return e_t::value(first + span);
+        std::uint64_t w = span / sz;
+        std::uint64_t r = span % sz;
+        return e_t::value(first + idx * w + _::min(idx, r) +
+                          mix(idx ^ salt) % (w + (idx < r ? 1 : 0)));
+      }
+      std::uint64_t first;
+      std::uint64_t span;
+      std::uint64_t samples;
+      std::uint64_t salt;
+    };
+    template<typename G> inline constexpr bool     is_ranks           = false;
+    template<typename T> inline constexpr bool     is_ranks<ranks<T>> = true;
+    template<typename P> inline constexpr bool     swept              = false;
+    template<typename... Gs> inline constexpr bool swept<pack<Gs...>> = (is_ranks<Gs> && ...);
+    template<typename G> inline constexpr bool     is_bounded_range   = false;
+    template<typename T, bool Complete>
+    inline constexpr bool                      is_bounded_range<bounded_range<T, Complete>> = true;
+    template<typename G> inline constexpr bool is_sample = std::is_same_v<G, whole_sample>;
+    template<typename T> inline constexpr bool is_sample<bounded_range<T>> = true;
+    inline void report_note(check_site const& site, ::tts::text const& message)
+    {
+      if(!::tts::is_quiet())
+        ::tts::output().writeln(
+        "  [!] %s : %s", source_location::current(site.file, site.line).data(), message.data());
+    }
+    template<typename A, typename G>
+    auto
+    bind_generator(type<A> t, G const& g, check_site const& site, int arg, bool& none, bool& skip)
+    {
+      using e_t = enumeration<A>;
+      auto note = [ &site, arg ](A lo, A hi, bool empty)
+      {
+        if(empty)
+          report_note(site,
+                      ::tts::text {"--valmin and --valmax leave no value of argument %d, so the "
+                                   "check makes no call",
+                                   arg});
+        else
+          report_note(site,
+                      ::tts::text {"--valmin and --valmax narrow argument %d to [%s, %s]",
+                                   arg,
+                                   ::tts::as_text(lo).data(),
+                                   ::tts::as_text(hi).data()});
+      };
+      auto over = [ &note, &none ]<typename V>(V lo, V hi, std::uint64_t n)
+      {
+        using v_t  = enumeration<V>;
+        auto a     = _::min(v_t::index(lo), v_t::index(hi));
+        auto b     = _::max(v_t::index(lo), v_t::index(hi));
+        auto first = a;
+        auto last  = b;
+        if constexpr(std::is_arithmetic_v<V>)
+        {
+          first = _::max(a, v_t::index(::tts::arguments().value(v_t::value(a), "--valmin")));
+          last  = _::min(b, v_t::index(::tts::arguments().value(v_t::value(b), "--valmax")));
+        }
+        if(first != a || last != b) note(v_t::value(first), v_t::value(last), first > last);
+        none = none || first > last;
+        return ranks<V> {first, first > last ? 0 : last - first, n, _::next_random()};
+      };
+      if constexpr(is_sample<G>) skip = skip || g.samples == 0;
+      if constexpr(std::is_same_v<G, whole_sweep>)
+        return over(e_t::value(0), e_t::value(e_t::last), 0);
+      else if constexpr(std::is_same_v<G, whole_sample>)
+        return over(e_t::value(0), e_t::value(e_t::last), g.samples);
+      else if constexpr(is_bounded_range<G>)
+        return over(::tts::convert_as(g.lo, t), ::tts::convert_as(g.hi, t), g.samples);
+      else if constexpr(is_randoms_v<G> && std::is_arithmetic_v<A>)
+      {
+        g.check(t);
+        A lo = ::tts::convert_as(g.mini, t);
+        A hi = ::tts::convert_as(g.maxi, t);
+        if(hi < lo) std::swap(lo, hi);
+        A l = _::max(lo, ::tts::arguments().value(lo, "--valmin"));
+        A h = _::min(hi, ::tts::arguments().value(hi, "--valmax"));
+        if(l != lo || h != hi) note(l, h, h < l);
+        none = none || h < l;
+        return randoms<A, A> {l, h};
+      }
+      else return g;
+    }
+    template<typename... As, std::size_t... Ks, typename... Gs>
+    auto bind_generators(types<As...>,
+                         std::index_sequence<Ks...>,
+                         pack<Gs...> const& generators,
+                         check_site const&  site,
+                         bool&              none,
+                         bool&              skip)
+    {
+      return pack {bind_generator(type<As> {},
+                                  get<(sizeof...(Gs) == 1 ? 0 : Ks)>(generators),
+                                  site,
+                                  static_cast<int>(Ks) + 1,
+                                  none,
+                                  skip)...};
+    }
+    template<typename G> std::size_t side_of(G const& g, std::size_t side)
+    {
+      if constexpr(is_ranks<G>)
+      {
+        std::uint64_t all = g.span + 1;
+        std::uint64_t n   = g.samples && (all == 0 || g.samples < all) ? g.samples : all;
+        return n > std::numeric_limits<std::size_t>::max() ? 0 : static_cast<std::size_t>(n);
+      }
+      else return side;
+    }
+    template<std::size_t... Ks, typename... Gs>
+    std::size_t layout_of(pack_base<std::index_sequence<Ks...>, Gs...> const& generators,
+                          std::size_t*                                        sides)
+    {
+      constexpr std::size_t others = (std::size_t {!is_ranks<Gs>} + ... + 0);
+      std::size_t           side   = 1;
+      if constexpr(others > 0)
+      {
+        while(power(side, others) < 4096)
+          ++side;
+      }
+      ((sides[ Ks ] = side_of(get<Ks>(generators), side)), ...);
+      std::size_t calls = 1;
+      for(std::size_t k = 0; k < sizeof...(Gs); ++k)
+      {
+        if(sides[ k ] == 0 || calls > std::numeric_limits<std::size_t>::max() / sides[ k ])
+          return 0;
+        calls *= sides[ k ];
+      }
+      return calls;
+    }
+    template<std::size_t... Ks, typename... As, typename... Gs>
+    void fill_group(pack_base<std::index_sequence<Ks...>, buffer<As>...>& group,
+                    pack<Gs...> const&                                    generators,
+                    std::size_t const*                                    sides,
+                    std::size_t                                           first)
+    {
+      for(std::size_t e = 0; e < get<0>(group).size(); ++e)
+      {
+        std::size_t i = first + e;
+        std::size_t idx[ sizeof...(As) ];
+        for(std::size_t k = sizeof...(As); k-- > 0;)
+        {
+          idx[ k ]  = i % sides[ k ];
+          i        /= sides[ k ];
+        }
         (
-        (get<Ks>(inputs)[ i ] =
-         ::tts::produce(type<As> {},
-                        get<(sizeof...(Gs) == 1 ? 0 : Ks)>(generators),
-                        static_cast<std::ptrdiff_t>(i / power(side, arity - 1 - Ks) % side),
-                        static_cast<std::ptrdiff_t>(side))),
+        (get<Ks>(group)[ e ] = ::tts::produce(type<As> {},
+                                              get<Ks>(generators),
+                                              static_cast<std::ptrdiff_t>(idx[ Ks ]),
+                                              static_cast<std::ptrdiff_t>(sides[ Ks ]))),
         ...);
       }
     }
@@ -5471,10 +5759,27 @@ namespace tts
     template<typename... Ws, typename F, std::size_t... Ks, typename... As>
     auto call_challenger(types<Ws...>,
                          F&                                                          f,
-                         pack_base<std::index_sequence<Ks...>, buffer<As>...> const& inputs,
-                         std::size_t                                                 i)
+                         pack_base<std::index_sequence<Ks...>, buffer<As>...> const& inputs)
     {
-      return f(adapter<Ws>::load(get<Ks>(inputs).data() + i)...);
+      return f(adapter<Ws>::load(get<Ks>(inputs).data())...);
+    }
+    template<typename... Ws, typename S, typename G, typename RefFun, typename NewFun>
+    void scan_group(types<Ws...>, S& results, G const& group, RefFun& reference, NewFun& challenger)
+    {
+      for(std::size_t e = 0; e < get<0>(group).size(); ++e)
+      {
+        auto res = call_reference(reference, group, e);
+        for_each_member(results,
+                        [ &res, e ](auto& m, auto j) { m.expected[ e ] = result_member<j>(res); });
+      }
+      auto res = call_challenger(types<Ws...> {}, challenger, group);
+      for_each_member(results,
+                      [ &res ](auto& m, auto j)
+                      {
+                        auto const& v = result_member<j>(res);
+                        adapter<std::decay_t<decltype(v)>>::store(v, m.found.data());
+                      });
+      for_each_member(results, [ &group ](auto& m, auto) { m.tally(group); });
     }
     template<typename T>
     concept legacy_adapter = requires { &adapter<T>::retrieve; };
@@ -5503,7 +5808,6 @@ namespace tts
       using ref_result                 = std::decay_t<std::invoke_result_t<RefFun, As...>>;
       using new_result                 = std::decay_t<std::invoke_result_t<NewFun, Ws...>>;
       using ref_members                = typename result_members<ref_result>::type;
-      constexpr std::size_t arity      = sizeof...(As);
       constexpr std::size_t group_size = result_members<new_result>::size;
       constexpr std::size_t members    = result_members<ref_result>::count;
       static_assert(((adapter<Ws>::size == group_size) && ...),
@@ -5519,35 +5823,75 @@ namespace tts
       static_assert(sizeof...(Us) == 1 || sizeof...(Us) == members,
                     "[TTS] TTS_ULP_RANGE_CHECK needs one bound per member of the result, or one "
                     "for all.");
-      std::size_t block = ::tts::arguments().value(std::size_t {4096}, "--block");
-      std::size_t side  = 1;
-      while(power(side, arity) < block)
-        ++side;
-      std::size_t         count = (power(side, arity) + group_size - 1) / group_size * group_size;
-      pack<buffer<As>...> inputs {buffer<As>(count)...};
-      fill_inputs(inputs, generators, side);
-      auto        results    = make_scans(ref_members {}, count);
-      std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
-      for(std::size_t r = 0; r < repetition; ++r)
+      bool none    = false;
+      bool skip    = false;
+      auto bounded = bind_generators(
+      types<As...> {}, std::index_sequence_for<As...> {}, generators, site, none, skip);
+      if(skip) return;
+      if(none)
       {
-        for(std::size_t i = 0; i < count; ++i)
-        {
-          auto res = call_reference(reference, inputs, i);
-          for_each_member(
-          results, [ &res, i ](auto& m, auto j) { m.expected[ i ] = result_member<j>(res); });
-        }
-        for(std::size_t i = 0; i < count; i += group_size)
-        {
-          auto res = call_challenger(types<Ws...> {}, challenger, inputs, i);
-          for_each_member(results,
-                          [ &res, i ](auto& m, auto j)
-                          {
-                            auto const& v = result_member<j>(res);
-                            adapter<std::decay_t<decltype(v)>>::store(v, m.found.data() + i);
-                          });
-        }
-        for_each_member(results, [](auto& m, auto) { m.tally(); });
+        if(check_passed())
+          check_report(
+          site, ::tts::text {"Expression: %s similar to %s, on no value", site.rhs, site.lhs});
+        return;
       }
+      std::size_t sides[ sizeof...(As) ];
+      std::size_t calls = layout_of(bounded, sides);
+      if(calls == 0 || calls > std::numeric_limits<std::size_t>::max() - group_size)
+      {
+        check_failed(
+        site,
+        ::tts::text {
+        "Expecting: %s similar to %s over more calls than std::size_t holds", site.rhs, site.lhs});
+        return;
+      }
+      std::size_t count      = (calls + group_size - 1) / group_size * group_size;
+      std::size_t repetition = ::tts::arguments().value(std::size_t {1}, "--loop");
+      std::size_t groups     = count / group_size;
+      using scans            = decltype(make_scans(ref_members {}, types<As...> {}, group_size));
+      constexpr bool reseed  = swept<decltype(bounded)>;
+      std::uint64_t  base    = reseed ? _::next_random() : 0;
+      std::uint64_t  resume  = _::prng_state;
+#if defined(_OPENMP)
+      std::size_t threads =
+      swept<decltype(bounded)> ? static_cast<std::size_t>(omp_get_max_threads()) : 1;
+      std::size_t slices = threads == 1 ? 1 : _::min(groups, std::size_t {16} * threads);
+#else
+      std::size_t slices = 1;
+#endif
+      auto scan = [ &reference,
+                    &challenger,
+                    &bounded,
+                    sizes = static_cast<std::size_t const*>(sides),
+                    repetition,
+                    base ](std::size_t from, std::size_t to)
+      {
+        scans               slice = make_scans(ref_members {}, types<As...> {}, group_size);
+        pack<buffer<As>...> group {buffer<As>(group_size)...};
+        for(std::size_t k = from; k < to; ++k)
+        {
+          if(reseed) _::prng_state = _::mix(base + k);
+          fill_group(group, bounded, sizes, k * group_size);
+          for(std::size_t r = 0; r < repetition; ++r)
+            scan_group(types<Ws...> {}, slice, group, reference, challenger);
+        }
+        return slice;
+      };
+      buffer<scans> partial(slices, make_scans(ref_members {}, types<As...> {}, group_size));
+#if defined(_OPENMP)
+#pragma omp parallel for schedule(dynamic) if(slices > 1)
+#endif
+      for(int s = 0; s < static_cast<int>(slices); ++s)
+      {
+        auto u       = static_cast<std::size_t>(s);
+        partial[ u ] = scan(groups / slices * u + _::min(u, groups % slices),
+                            groups / slices * (u + 1) + _::min(u + 1, groups % slices));
+      }
+      if constexpr(reseed) _::prng_state = resume;
+      scans& results = partial[ 0 ];
+      for(std::size_t s = 1; s < slices; ++s)
+        for_each_member(results,
+                        [ &next = partial[ s ] ](auto& m, auto j) { m.merge(get<j()>(next)); });
       std::size_t failed  = members;
       double      limit   = 0.;
       double      found   = 0.;
@@ -5574,12 +5918,12 @@ namespace tts
         ::tts::output().write(" using ");
         show_generators(generators, spelling);
         for_each_member(results,
-                        [ &inputs ](auto const& m, auto j)
+                        [](auto const& m, auto j)
                         {
                           if constexpr(tuple_result<ref_result>)
                             ::tts::output().writeln("Member %d of the result",
                                                     static_cast<int>(j()));
-                          m.print(inputs, group_size);
+                          m.print();
                         });
       }
       if(failed == members)
@@ -5622,31 +5966,3 @@ namespace tts
   TTS_CHECK_SITE(TTS_FAIL, TTS_STRING(RefFunc), "", TTS_STRING(NewFunc), ""),                      \
   TTS_STRING(TTS_REMOVE_PARENS(Producer)))
 #endif
-namespace tts
-{
-  template<typename T> struct realistic_generator
-  {
-    realistic_generator(T mn, T mx)
-        : mini(mn)
-        , maxi(mx)
-    {
-    }
-    T operator()(auto, auto, auto) const
-    {
-      return ::tts::random_value(mini, maxi);
-    }
-  private:
-    template<typename> friend struct display;
-    T mini, maxi;
-  };
-  template<typename T> struct display<realistic_generator<T>>
-  {
-    static text render(realistic_generator<T> const& s)
-    {
-      return text {"realistic_generator<%s>(%s,%s)",
-                   as_text(typename_<T>).data(),
-                   as_text(s.mini).data(),
-                   as_text(s.maxi).data()};
-    }
-  };
-}
