@@ -23,7 +23,7 @@ repos:
   - id: cmake-format
   - id: cmake-lint
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.17.5
+  rev: v0.17.6
   hooks:
   - id: ruff-check
     # The copy of the template's .cmake-format.py runs inside cmake-format, which defines section().
